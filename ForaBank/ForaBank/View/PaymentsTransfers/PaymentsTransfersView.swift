@@ -40,30 +40,56 @@ struct PaymentsTransfersView: View {
                 } //mainVerticalScrollView
             } //mainVStack
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map(destinationView)
-            }
-            
             Color.clear
-                .sheet(item: $viewModel.sheet, content: sheetView)
+                .sheet(
+                    item: .init(
+                        get: { viewModel.route.modal?.sheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }),
+                    content: sheetView
+                )
             
             Color.clear
                 .fullScreenCover(
-                    item: $viewModel.fullScreenSheet,
+                    item: .init(
+                        get: { viewModel.route.modal?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }
+                    ),
                     content: fullScreenCoverView
                 )
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
         }
+        .alert(
+            item: .init(
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: Alert.init(with:)
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route.modal?.bottomSheet },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: bottomSheetView
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() } }
+            ),
+            content: destinationView(link:)
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading: Group {
                 
                 if viewModel.mode == .normal {
                     
-                    MainView.UserAccountButton(viewModel: viewModel.userAccountButton)
+                    UserAccountButton(
+                        viewModel: viewModel.userAccountButton
+                    )
                 }
             },
             trailing:
@@ -71,12 +97,10 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .bottomSheet(
-            item: $viewModel.bottomSheet, 
-            content: bottomSheetView
-        )
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .tabBar(isHidden: $viewModel.isTabBarHidden)
+        .tabBar(isHidden: .init(
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
+        ))
     }
     
     @ViewBuilder
@@ -188,13 +212,13 @@ struct PaymentsTransfersView: View {
             OpenDepositDetailView(viewModel: depositListViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.closeSberQRPaymentViewModel
+                    dismiss: viewModel.resetDestination
                 )
         }
     }
@@ -241,7 +265,7 @@ struct PaymentsTransfersView: View {
             with: .with(
                 title: "Транспорт",
                 navLeadingAction: viewModel.dismiss,
-                navTrailingAction: viewModel.openScannerAction
+                navTrailingAction: viewModel.openScanner
             )
         )
     }
@@ -321,6 +345,14 @@ struct PaymentsTransfersView: View {
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
+    }
+}
+
+private extension PaymentsTransfersViewModel.Route {
+    
+    var isEmpty: Bool {
+        
+        destination == nil && modal == nil
     }
 }
 

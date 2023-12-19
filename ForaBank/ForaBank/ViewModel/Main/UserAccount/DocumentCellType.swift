@@ -43,7 +43,7 @@ extension DocumentCellType {
     var iconBackground: Color {
         
         switch self {
-            
+
         case .passport:     return .bgIconDeepPurpleMedium
         case .inn:          return .bgIconTealLight
         case .adressPass:   return .bgIconDeepPurpleMedium

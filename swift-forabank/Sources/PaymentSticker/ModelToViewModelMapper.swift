@@ -6,86 +6,118 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct ModelToViewModelMapper {
     
     let action: (Event) -> Void
+    
+    public init(
+        action: @escaping (Event) -> Void
+    ) {
+        self.action = action
+    }
 }
 
 public extension ModelToViewModelMapper {
     
-    func map(_ parameter: Operation.Parameter) -> ParameterViewModel {
+    func map(
+        _ operation: Operation?,
+        _ parameter: Operation.Parameter
+    ) -> ParameterViewModel {
         
         switch parameter {
-        case let .sticker(parameterSticker):
+        case let .sticker(parameter):
+            return .sticker(.init(parameter: parameter))
             
-            return .sticker(
-                .init(
-                    header: .init(
-                        title: parameterSticker.title,
-                        detailTitle: parameterSticker.description
-                    ),
-                    options: parameterSticker.options.map {
-                        
-                        .init(
-                            title: $0.title,
-                            icon: .init("Arrow Circle"),
-                            description: $0.description,
-                            iconColor: .green
-                        )
-                    }
-                )
-            )
-            
-        case let .tip(parameterHint):
-            return .tip(
-                .init(
-                    imageName: "message",
-                    text: parameterHint.title
-                )
-            )
+        case let .tip(parameter):
+            return .tip(.init(parameter: parameter))
             
         case let .select(parameter):
             return .select(
                 .init(
                     parameter: parameter,
-                    chevronButtonTapped: {
-                        
-//                        action(.select(.chevronTapped(parameter)))
+                    tapAction: {
+                        tapSelectAction(
+                            operation: operation,
+                            parameter: parameter
+                        )
                     },
                     select: { option in
                         
                         action(.select(.selectOption(option, parameter)))
+                    },
+                    search: { text in
+                        
+                        action(.select(.search(text, parameter)))
                     }
                 )
             )
             
-        case let .product(parameterProduct):
+        case let .productSelector(parameter):
             return .product(
                 .init(
-                    state: parameterProduct.parameterState,
+                    state: parameter.parameterState,
                     chevronTapped: {
                         
-                        action(.product(.chevronTapped(parameterProduct, .list)))
+                        action(.product(.chevronTapped(parameter, parameter.state == .list ? .select : .list)))
+                        
                     }, selectOption: { option in
                         
-                        action(.product(.selectProduct(option, parameterProduct)))
+                        let option = parameter.allProducts.first(where: { $0.id == option.id })
+                        action(.product(.selectProduct(option, parameter)))
                     }
                 )
             )
             
-        case let .amount(amountViewModel):
+        case let .amount(parameter):
             return .amount(
                 .init(
-                    parameter: amountViewModel,
+                    parameter: parameter,
+                    isCompleteOperation: operation?.isOperationComplete ?? false,
                     continueButtonTapped: {
-                        action(.continueButtonTapped)
+                        action(.continueButtonTapped(.getCode))
                     }
                 ))
             
         case let .input(input):
-            return .input(.init(parameter: input))
+            return .input(
+                value: input.value,
+                title: input.title.rawValue,
+                warning: input.warning
+            )
+        }
+    }
+}
+
+extension ModelToViewModelMapper {
+    
+    func tapSelectAction(
+        operation: Operation?,
+        parameter: Operation.Parameter.Select
+    ) -> Void {
+        
+        switch parameter.id {
+        case .citySelector:
+            return action(.select(.chevronTapped(parameter)))
+            
+        case .officeSelector:
+            var location: Location = .init(id: "")
+            let cityID = operation?.parameters.first(where: { $0.id == .city })
+            switch cityID {
+            case let .select(city):
+                if let value = city.value {
+                    
+                    location = .init(id: value)
+                }
+                
+            default:
+                break
+            }
+            
+            return action(.select(.openBranch(location)))
+            
+        default:
+            return action(.select(.chevronTapped(parameter)))
         }
     }
 }

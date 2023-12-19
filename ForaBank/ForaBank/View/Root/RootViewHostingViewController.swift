@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import PaymentSticker
 
 class RootViewHostingViewController: UIHostingController<RootView> {
     

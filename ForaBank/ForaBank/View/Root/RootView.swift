@@ -7,6 +7,7 @@
 
 import SberQR
 import SwiftUI
+import PaymentSticker
 
 struct RootView: View {
     
@@ -29,6 +30,7 @@ struct RootView: View {
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
+                
             } //geo
             
             //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.
@@ -46,10 +48,16 @@ struct RootView: View {
             
             MainView(
                 viewModel: viewModel.mainViewModel,
+                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
+                    httpClient: viewModel.model.authenticatedHTTPClient(),
+                    model: viewModel.model,
+                    dismissAll: viewModel.rootActions.dismissAll
+                ),
                 makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMainButton")
     }
     
@@ -63,6 +71,7 @@ struct RootView: View {
             )
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarTransferButton")
     }
     

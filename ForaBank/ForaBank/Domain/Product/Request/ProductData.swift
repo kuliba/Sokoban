@@ -411,6 +411,15 @@ extension ProductData {
         return paymentSystem.paymentSystemImage?.image
     }
     
+    var paymentSystemData: Data? {
+        
+        guard let paymentSystem = self as? ProductCardData else {
+            return nil
+        }
+        
+        return paymentSystem.paymentSystemImage?.imageData
+    }
+    
     var description: [String] {
         
         [

@@ -31,7 +31,8 @@
       <Testables>
          <TestableReference
             skipped = "NO"
-            testExecutionOrdering = "random">
+            testExecutionOrdering = "random"
+            useTestSelectionWhitelist = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EDB14392265FDA430028EF5A"
@@ -64,14 +65,14 @@
       </BuildableProductRunnable>
       <AdditionalOptions>
          <AdditionalOption
+            isEnabled = "YES"
             key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
+            value = "">
          </AdditionalOption>
          <AdditionalOption
+            isEnabled = "YES"
             key = "PrefersMallocStackLoggingLite"
-            value = ""
-            isEnabled = "YES">
+            value = "">
          </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>

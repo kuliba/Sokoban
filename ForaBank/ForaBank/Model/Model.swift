@@ -29,6 +29,9 @@ class Model {
     //MARK: Pre-Auth
     let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    
+    //MARK: Sticker
+    let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
 
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
@@ -58,6 +61,7 @@ class Model {
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let authCatalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
+    let productListBannersWithSticker: CurrentValueSubject<[StickerBannersMyProductList], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
@@ -181,11 +185,13 @@ class Model {
         self.statementsUpdating = .init([:])
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
+        self.stickerLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.authCatalogBanners = .init([])
         self.catalogBanners = .init([])
+        self.productListBannersWithSticker = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
@@ -376,6 +382,7 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.ProductTemplate.List.Request())
                     action.send(ModelAction.C2B.GetC2BSubscription.Request())
+                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannersMyProductListWithSticker]))
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -872,6 +879,9 @@ class Model {
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload.serial)
                         
+                    case .bannersMyProductListWithSticker:
+                        handleDictionaryBannersMyProductListWithSticker(payload.serial)
+                        
                     case .atmList:
                         handleDictionaryAtmDataList(payload.serial)
                         
@@ -1143,6 +1153,11 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let productListBannersWithSticker = localAgent.load(type: [StickerBannersMyProductList].self) {
+            
+            self.productListBannersWithSticker.value = productListBannersWithSticker
         }
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
@@ -1469,6 +1484,11 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadOrderCard.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .sticker:
+            return load(type: LocalAgentDomain.AbroadSticker.self)
+                .map(\.landing)
+                .map(UILanding.init)
         }
     }
 }
@@ -1491,6 +1511,11 @@ extension LocalAgentDomain {
     }
     
     struct AbroadTransfer: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AbroadSticker: Codable {
         
         let landing: Landing
     }

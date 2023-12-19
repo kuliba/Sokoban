@@ -6,18 +6,20 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct StickerViewModel {
     
     let header: HeaderViewModel
+    let sticker: ImageData
     let options: [OptionViewModel]
     
     public init(
         header: HeaderViewModel,
+        sticker: ImageData,
         options: [OptionViewModel]
     ) {
         self.header = header
+        self.sticker = sticker
         self.options = options
     }
 }
@@ -36,8 +38,31 @@ extension StickerViewModel {
 
         public var id: String { title }
         public let title: String
-        let icon: Image
-        let description: String
-        let iconColor: Color
+        public let icon: ImageData
+        public let description: String
+        public let iconColor: String
+    }
+}
+
+//MARK: Helpers
+
+extension StickerViewModel {
+    
+    public init(parameter: Operation.Parameter.Sticker) {
+        self.header = .init(
+            title: parameter.title,
+            detailTitle: parameter.description
+        )
+        
+        self.sticker = .named("StickerPreview")
+        self.options = parameter.options.map {
+            
+            .init(
+                title: $0.title,
+                icon: .named("Arrow Circle"),
+                description: "\($0.description.dropLast(2)) ₽",
+                iconColor: ""
+            )
+        }
     }
 }

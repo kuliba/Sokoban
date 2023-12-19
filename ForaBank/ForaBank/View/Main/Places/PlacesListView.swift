@@ -13,6 +13,20 @@ struct PlacesListView: View {
     
     var body: some View {
         
+        PlacesListInternalView(
+            items: viewModel.items,
+            selectItem: viewModel.selectItem
+        )
+    }
+}
+        
+struct PlacesListInternalView: View {
+    
+    let items: [PlacesListViewModel.ItemViewModel]
+    let selectItem: (PlacesListViewModel.ItemViewModel) -> Void
+    
+    var body: some View {
+    
         ZStack {
             
             Color.white
@@ -24,16 +38,19 @@ struct PlacesListView: View {
                     
                     LazyVStack(spacing: 12) {
                         
-                        ForEach(viewModel.items) { itemViewModel in
-                            
-                            PlacesListView.ItemView(viewModel: itemViewModel)
-                        }
+                        ForEach(items, content: itemView)
                     }
                 }
             }
-            .padding(.top, 80)
             .padding(.horizontal, 20)
         }
+    }
+    
+    private func itemView(
+        item: PlacesListViewModel.ItemViewModel
+    ) -> some View {
+    
+        PlacesListView.ItemView(viewModel: item, selectAction: selectItem)
     }
 }
 
@@ -42,7 +59,8 @@ extension PlacesListView {
     struct ItemView: View {
         
         let viewModel: PlacesListViewModel.ItemViewModel
-
+        let selectAction: (PlacesListViewModel.ItemViewModel) -> Void
+        
         var body: some View {
             
             HStack(spacing: 0) {
@@ -100,7 +118,7 @@ extension PlacesListView {
             .background(RoundedRectangle(cornerRadius: 16).foregroundColor(.mainColorsGrayLightest))
             .onTapGesture {
                 
-                viewModel.action()
+                selectAction(viewModel)
             }
         }
     }
@@ -126,14 +144,14 @@ extension PlacesListView {
 }
 
 struct PlacesListView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        
+
         Group {
-            
+
             PlacesListView(viewModel: .sample)
-            
-            PlacesListView.ItemView(viewModel: .sampleOne)
+
+            PlacesListView.ItemView(viewModel: .sampleOne, selectAction: { _ in })
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }

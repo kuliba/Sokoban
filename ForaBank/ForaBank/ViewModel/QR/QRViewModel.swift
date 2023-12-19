@@ -60,7 +60,7 @@ class QRViewModel: ObservableObject {
         
         self.init(
             scanner: QRScannerView.ViewModel(),
-            title: "Наведите камеру", 
+            title: "Наведите камеру",
             subTitle: "на QR-код",
             buttons: [],
             closeButton: closeButton,

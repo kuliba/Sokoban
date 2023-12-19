@@ -138,6 +138,9 @@ extension Model {
         case .bannerCatalogList:
             return localAgent.load(type: [BannerCatalogListData].self) != nil
             
+        case .bannersMyProductListWithSticker:
+            return localAgent.load(type: [StickerBannersMyProductList].self) != nil
+            
         case .atmList:
             return localAgent.load(type: [AtmData].self) != nil
             
@@ -224,6 +227,9 @@ extension Model {
         case .bannerCatalogList:
             return localAgent.serial(for: [BannerCatalogListData].self)
             
+        case .bannersMyProductListWithSticker:
+            return localAgent.serial(for: [StickerBannersMyProductList].self)
+            
         case .atmList:
             return localAgent.serial(for: [AtmData].self)
             
@@ -309,6 +315,9 @@ extension Model {
             
         case .bannerCatalogList:
             try? localAgent.clear(type: [BannerCatalogListData].self)
+            
+        case .bannersMyProductListWithSticker:
+            try? localAgent.clear(type: [StickerBannersMyProductList].self)
             
         case .atmList:
             try? localAgent.clear(type: [AtmData].self)
@@ -1552,6 +1561,61 @@ extension Model {
         }
     }
     
+    // Get BannersMyProductList, with Sticker
+    func handleDictionaryBannersMyProductListWithSticker(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .bannersMyProductListWithSticker
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetBannersMyProductListWithSticker(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    guard data.stickerCardData.count > 0 else {
+                        return
+                    }
+                    
+                    self.productListBannersWithSticker.value = data.stickerCardData
+                    if let md5hashImage = data.stickerCardData.first?.md5hash {
+                        
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [md5hashImage]))
+                    }
+                   
+                    do {
+                        
+                        try self.localAgent.store(data.stickerCardData, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                
+            }
+        }
+    }
+    
     //BannerCatalogListData
     func handleDictionaryBannerCatalogList(_ serial: String?) {
         
@@ -1960,7 +2024,7 @@ extension Model {
         }
         
         let command = ServerCommands.QRController.GetQRPaymentType(
-            token: token, 
+            token: token,
             serial: serial
         )
         serverAgent.executeCommand(command: command) { [unowned self] result in

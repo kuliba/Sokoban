@@ -8,5 +8,5 @@
 import Foundation
 
 enum AbroadType {
-    case orderCard, transfer
+    case orderCard, transfer, sticker
 }

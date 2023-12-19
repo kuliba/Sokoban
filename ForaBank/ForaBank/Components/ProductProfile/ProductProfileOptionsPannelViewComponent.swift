@@ -41,7 +41,20 @@ extension ProductProfileOptionsPannelView {
             
             switch type {
             case .refillFromOtherBank:
-                return .init(icon: .circleSmall(image: .ic40Sbp, style: .original), title: .bold(text: "С моего счета в другом банке"), orientation: .horizontal, action: action)
+                return .init(
+                    icon: .init(
+                        image: .ic40Sbp,
+                        style: .original,
+                        background: .circleSmall
+                    ),
+                    title: .init(
+                        text: "С моего счета в другом банке",
+                        style: .bold
+                    ),
+                    orientation: .horizontal,
+                    action: action
+                )
+
                 
             case .refillFromOtherProduct:
                 return .init(icon: .circleSmall(image: .ic24Between), title: .bold(text: "Со своего счета"), orientation: .horizontal, action: action)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OperationDetailData: Codable, Equatable {
+struct OperationDetailData: Codable, Hashable {
 
     let oktmo: String?
     let account: String?
@@ -89,14 +89,14 @@ struct OperationDetailData: Codable, Equatable {
     let printData: PrintMapData?
     let paymentMethod: PaymentMethod?
     
-    enum PaymentMethod: String, Codable, Unknownable {
+    enum PaymentMethod: String, Codable, Hashable, Unknownable {
     
         case cash = "Наличные"
         case cashless = "Безналичный"
         case unknown
     }
     
-    enum ExternalTransferType: String, Codable, Unknownable {
+    enum ExternalTransferType: String, Codable, Hashable, Unknownable {
         
         case entity = "ENTITY"
         case individual = "INDIVIDUAL"
@@ -111,7 +111,7 @@ struct OperationDetailData: Codable, Equatable {
         case unknown
     }
     
-    enum TransferEnum: String, Codable, Unknownable {
+    enum TransferEnum: String, Codable, Hashable, Unknownable {
         
         case accountToAccount = "ACCOUNT_2_ACCOUNT"
         case accountToCard = "ACCOUNT_2_CARD"
@@ -152,10 +152,12 @@ struct OperationDetailData: Codable, Equatable {
         case c2bPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
         case sberQRPayment = "SBER_QR_PAYMENT"
+        case productPaymentOffice = "PRODUCT_PAYMENT_OFFICE"
+        case productPaymentCourier = "PRODUCT_PAYMENT_COURIER"
         case unknown
     }
     
-    struct PrintMapData: Codable, Equatable {
+    struct PrintMapData: Codable, Hashable {
         
         let claimId: String
         let requestDate: String

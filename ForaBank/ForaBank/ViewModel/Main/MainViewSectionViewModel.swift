@@ -66,6 +66,8 @@ enum MainSectionViewModelAction {
             let productId: ProductData.ID
         }
         
+        struct StickerDidTapped: Action {}
+        
         struct ResetScroll: Action {}
         
         struct MoreButtonTapped: Action {}

@@ -26,7 +26,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
-    private let model: Model
+    let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
@@ -137,7 +137,7 @@ class RootViewModel: ObservableObject, Resetable {
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
                         else { return }
                         
-                        self.mainViewModel.bottomSheet = .init(type: .clientInform(clientInformViewModel))
+                        self.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
                     }
                 }
             }
@@ -377,6 +377,62 @@ class RootViewModel: ObservableObject, Resetable {
         
         return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
+}
+
+private extension Model {
+    
+    var eventPublishers: AuthLoginViewModel.EventPublishers {
+        
+        .init(
+            clientInformMessage: clientInform
+                .filter { [self] _ in
+                    
+                    !clientInformStatus.isShowNotAuthorized
+                }
+                .compactMap(\.data?.notAuthorized)
+                .handleEvents(receiveOutput: { [self] _ in
+                    
+                    clientInformStatus.isShowNotAuthorized = true
+                })
+                .eraseToAnyPublisher(),
+            
+            checkClientResponse: action
+                .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
+                .eraseToAnyPublisher(),
+            
+            catalogProducts: catalogProducts
+                .eraseToAnyPublisher(),
+            
+            sessionStateFcmToken: sessionState
+                .combineLatest(fcmToken)
+                .eraseToAnyPublisher()
+        )
+    }
+    
+    func register(cardNumber: String) -> Void {
+        
+        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
+        
+        action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
+    }
+    
+    func catalogProduct(
+        for request: AuthLoginViewModel.EventHandlers.Request
+    ) -> CatalogProductData? {
+        
+        switch request {
+        case let .id(id):
+            return catalogProducts.value.first {
+                $0.id == id
+            }
+            
+        case let .tarif(tarif, type: type):
+            return catalogProducts.value.first {
+                $0.tariff == tarif &&
+                $0.productType == type
+            }
+        }
+    }
 }
 
 // MARK: - Types

@@ -53,6 +53,7 @@ public extension UILanding.Multi {
                 
                 case goMain
                 case orderCard
+                case sticker
             }
             
             var actionType: ActionType? {
@@ -101,14 +102,14 @@ extension MultiTypeButtonsView {
         @Published private(set) var images: [String: Image] = [:]
 
         private let selectDetail: SelectDetail
-        private let action: (LandingAction) -> Void
+        private let action: (LandingEvent) -> Void
         private let orderCard: (Int, Int) -> Void
 
         init(
             data: UILanding.Multi.TypeButtons,
             images: [String: Image],
             selectDetail: @escaping SelectDetail,
-            action: @escaping (LandingAction) -> Void,
+            action: @escaping (LandingEvent) -> Void,
             orderCard: @escaping (Int, Int) -> Void
         ) {
             self.data = data
@@ -132,12 +133,16 @@ extension MultiTypeButtonsView {
                     switch $0 {
                         
                     case .goMain:
-                        action(.goToMain)
+                        
+                        action(.card(.goToMain))
                     case .orderCard:
+                        
                         if let outputData = actionValue.outputData {
-                            
                             self.orderCard(outputData.tarif.rawValue, outputData.type.rawValue)
                         }
+                    case .sticker:
+                        
+                        action(.sticker(.order))
                     }
                 }
             } else if let detailDestination = item.detailDestination {

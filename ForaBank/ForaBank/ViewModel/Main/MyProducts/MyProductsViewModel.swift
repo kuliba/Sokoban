@@ -10,6 +10,7 @@ import Combine
 import UIKit
 import SwiftUI
 import PinCodeUI
+import LandingUIComponent
 
 class MyProductsViewModel: ObservableObject {
     
@@ -32,6 +33,8 @@ class MyProductsViewModel: ObservableObject {
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
     
+    let openOrderSticker: () -> Void
+    
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
     private let cardAction: CardAction?
@@ -48,7 +51,8 @@ class MyProductsViewModel: ObservableObject {
          cardAction: CardAction? = nil,
          makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
-         showOnboarding: [Onboarding: Bool] = [:]
+         showOnboarding: [Onboarding: Bool] = [:],
+         openOrderSticker: @escaping () -> Void
     ) {
         self.model = model
         self.cardAction = cardAction
@@ -60,12 +64,14 @@ class MyProductsViewModel: ObservableObject {
         self.sections = productSections
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
+        self.openOrderSticker = openOrderSticker
     }
     
     convenience init(
         _ model: Model,
         cardAction: CardAction? = nil,
-        makeProductProfileViewModel: @escaping MakeProductProfileViewModel
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        openOrderSticker: @escaping () -> Void
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
@@ -77,7 +83,8 @@ class MyProductsViewModel: ObservableObject {
             cardAction: cardAction,
             makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
-            showOnboarding: [:]
+            showOnboarding: [:],
+            openOrderSticker: openOrderSticker
         )
         
         updateNavBar(state: .normal)
@@ -298,7 +305,7 @@ class MyProductsViewModel: ObservableObject {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
-                            let openDepositViewModel = OpenDepositViewModel(
+                            let openDepositViewModel = OpenDepositListViewModel(
                                 self.model,
                                 catalogType: .deposit,
                                 dismissAction: {[weak self] in
@@ -324,7 +331,10 @@ class MyProductsViewModel: ObservableObject {
                             self.link = .openCard(authProductsViewModel)
                         }
                         
-                    default: bottomSheet = nil
+                    default: 
+                        bottomSheet = nil
+                        
+                        openOrderSticker()
                     }
                     
                 default: break
@@ -534,7 +544,7 @@ extension MyProductsViewModel {
     enum Link {
         
         case openCard(AuthProductsViewModel)
-        case openDeposit(OpenDepositViewModel)
+        case openDeposit(OpenDepositListViewModel)
         case productProfile(ProductProfileViewModel)
     }
     
@@ -561,12 +571,6 @@ extension MyProductsViewModel {
 enum MyProductsViewModelAction {
     
     enum Tapped {
-        
-        struct Product: Action {
-            let productId: ProductData.ID
-        }
-        
-        struct OpenDeposit: Action {}
         
         struct NewProduct: Action {
             let productType: ProductType

@@ -1624,10 +1624,13 @@ extension OperationDetailInfoViewModel {
             ]
             
             if let payeeProductNumber {
+                
                 let payeeCellViewModel = PropertyCellViewModel(
                     title: "Номер карты получателя",
                     iconType: Image("otherCard"),
-                    value: payeeProductNumber)
+                    value: payeeProductNumber
+                )
+                
                 cells.insert(payeeCellViewModel, at: 0)
             }
             
@@ -1673,6 +1676,27 @@ extension OperationDetailInfoViewModel {
                 purposeViewModel,
                 operationNumberViewModel
             ].compactMap { $0 }
+            
+            return cells
+        
+        case .productPaymentOffice, .productPaymentCourier:
+            var cells = [
+                amountViewModel,
+                payerViewModel,
+                dateViewModel
+            ]
+            if let comment = operation.comment {
+                
+                let commentCell = PropertyCellViewModel(
+                    title: "Наименование операции",
+                    iconType: .ic40BankServices,
+                    value: comment
+                )
+                
+                cells.insert(commentCell, at: 0)
+            }
+            
+            return cells.compactMap {$0}
             
         default:
             

@@ -224,14 +224,14 @@ final class RootViewModelTests: XCTestCase {
             infoDictionary: infoDictionary,
             model,
             showLoginAction: { _ in
-            
+                
                     .init(viewModel: .init(authLoginViewModel: .preview))
             }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-
+        
         trackForMemoryLeaks(sut, file: file, line: line)
         
         // TODO: restore model memory tracking after model fix
