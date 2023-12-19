@@ -33,8 +33,8 @@ final public class BusinessLogic {
     let processMakeTransferService: ProcessMakeTransferService
     let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
-    let products: [Product]
-    let cityList: [City]
+    let products: () -> [Product]
+    let cityList: () -> [City]
     
     public init(
         processDictionaryService: @escaping ProcessDictionaryService,
@@ -42,8 +42,8 @@ final public class BusinessLogic {
         processMakeTransferService: @escaping ProcessMakeTransferService,
         processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
-        products: [Product],
-        cityList: [City]
+        products: @escaping () -> [Product],
+        cityList: @escaping () -> [City]
     ) {
         self.processDictionaryService = processDictionaryService
         self.processTransferService = processTransferService
@@ -218,31 +218,34 @@ public extension BusinessLogic {
             case let .openBranch(location):
                 
                 let location = Location(id: location.id)
-                selectOffice(location) { result in
+                
+                if location.id != "" {
                     
-                    switch result {
-                    case let .some(office):
+                    selectOffice(location) { result in
                         
-                        if let _ = operation.parameters.first(where: { $0.id == .input }) {
+                        switch result {
+                        case let .some(office):
                             
-                            let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
-                            completion(.success(.operation(.init(parameters: parameters))))
+                            if let _ = operation.parameters.first(where: { $0.id == .input }) {
+                                
+                                let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
+                                completion(.success(.operation(.init(parameters: parameters))))
+                                
+                            } else {
+                                
+                                let newOperation = operation.updateOperation(
+                                    operation: operation,
+                                    newParameter: .select(.officeSelect(office: office))
+                                )
+                                
+                                completion(.success(.operation(newOperation)))
+                            }
                             
-                        } else {
-                         
-                            let newOperation = operation.updateOperation(
-                                operation: operation,
-                                newParameter: .select(.officeSelect(office: office))
-                            )
-                            
-                            completion(.success(.operation(newOperation)))
+                        case .none:
+                            completion(.success(.operation(operation)))
                         }
-                        
-                    case .none:
-                        completion(.success(.operation(operation)))
                     }
                 }
-                
                 completion(.success(.operation(operation)))
 
             case let .chevronTapped(select):
@@ -560,7 +563,7 @@ public extension BusinessLogic {
                     )
                     
                 case .product:
-                    if let product = self.products.first {
+                    if let product = self.products().first {
                         
                         return .productSelector(.init(
                             state: .select,
@@ -616,12 +619,12 @@ public extension BusinessLogic {
                         value: nil,
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
-                        options: self.cityList.map({ Operation.Parameter.Select.Option(
+                        options: self.cityList().map({ Operation.Parameter.Select.Option(
                             id: $0.id,
                             name: $0.name,
                             iconName: ""
                         )}),
-                        staticOptions: self.cityList.map({ Operation.Parameter.Select.Option(
+                        staticOptions: self.cityList().map({ Operation.Parameter.Select.Option(
                             id: $0.id,
                             name: $0.name,
                             iconName: ""

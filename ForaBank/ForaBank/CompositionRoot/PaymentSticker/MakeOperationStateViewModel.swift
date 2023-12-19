@@ -38,8 +38,8 @@ extension RootViewModelFactory {
                 processMakeTransferService: makeTransferService.makeTransferProcess,
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
-                products: model.productsMapper(model: model),
-                cityList: model.citiesMapper(model: model)
+                products: { model.productsMapper(model: model) },
+                cityList: { model.citiesMapper(model: model) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
