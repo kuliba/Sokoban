@@ -43,7 +43,7 @@ private extension SberQRConfirmPaymentState {
         guard case let .editableAmount(editableAmount) = self
         else { return nil }
         
-        return editableAmount.bottom.value
+        return editableAmount.amount.value
     }
     
     var product: ProductSelect.Product {
@@ -129,7 +129,7 @@ private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
             brandName: map(editableAmount.brandName),
             recipientBank: map(editableAmount.recipientBank),
             currency: editableAmount.currency,
-            bottom: editableAmount.bottom
+            amount: editableAmount.amount
         )
     }
 }

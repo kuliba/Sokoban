@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AmountView: View {
     
-    typealias Amount = SberQRConfirmPaymentState.EditableAmount.Amount
+    typealias Amount = SberQRConfirmPaymentState.Amount
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
@@ -84,19 +84,30 @@ struct AmountView: View {
         .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
     }
     
+    @ViewBuilder
     private func buttonView() -> some View {
+        
+        if amount.button.isEnabled {
+            
+            Button(action: pay) { buttonLabel(config: config.button.active) }
+            
+        } else {
+            
+            buttonLabel(config: config.button.inactive)
+        }
+    }
+
+    private func buttonLabel(
+        config: ButtonStateConfig
+    ) -> some View {
         
         ZStack {
             
-            config.button.active.backgroundColor
+            config.backgroundColor
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
-            #warning("add button state")
-            Button(action: pay) {
-                
-                text(amount.button.title, config: config.button.active.text)
-            }
+            text(amount.button.title, config: config.text)
         }
     }
     
@@ -117,8 +128,19 @@ struct AmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
+        VStack(spacing: 32) {
+            
+            amountView(amount: .preview)
+            amountView(amount: .disabled)
+        }
+    }
+    
+    private static func amountView(
+        amount: SberQRConfirmPaymentState.Amount
+    ) -> some View {
+        
         AmountView(
-            amount: .preview,
+            amount: amount,
             event: { _ in },
             pay: {},
             currencySymbol: "$",

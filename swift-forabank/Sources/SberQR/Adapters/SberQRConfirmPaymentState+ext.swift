@@ -55,7 +55,7 @@ public extension SberQRConfirmPaymentState {
         else { return nil }
         
         return .init(
-            amount: editableAmount.bottom.value,
+            amount: editableAmount.amount.value,
             currency: .init(editableAmount.currency.value)
         )
     }
