@@ -69,12 +69,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToTemplates() {
          
          let (sut, _) = makeSUT()
-         let linkSpy = ValueSpy(sut.$route.map(\.case))
-         XCTAssertNoDiff(linkSpy.values, [nil])
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
+         XCTAssertNoDiff(linkSpy.values, [.other])
          
          sut.section?.tapTemplatesAndWait()
          
-         XCTAssertNoDiff(linkSpy.values, [nil, .template])
+         XCTAssertNoDiff(linkSpy.values, [.other, .template])
      }
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
@@ -85,7 +85,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         sut.templatesListViewModel?.closeAndWait()
         
-        XCTAssertNoDiff(linkSpy.values, [nil, .template])
+        XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
     
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
@@ -96,7 +96,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
         
-        XCTAssertNoDiff(linkSpy.values, [nil, .template, nil])
+        XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
     }
     
     // MARK: SBER QR
@@ -108,12 +108,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 .invalid(statusCode: 200, data: anyData())
             ))
         )
-        let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
         try sut.scanAndWait()
         
         XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            nil,
             nil,
             "Возникла техническая ошибка"
         ])
@@ -132,6 +134,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         try sut.tapPrimaryAlertButton()
         
         XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            nil,
             nil,
             "Возникла техническая ошибка",
             nil
@@ -152,6 +156,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(alertMessageSpy.values, [
             nil,
+            nil,
+            nil,
             "Возникла техническая ошибка"
         ])
     }
@@ -170,6 +176,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(alertMessageSpy.values, [
             nil,
+            nil,
+            nil,
             "Возникла техническая ошибка",
             nil
         ])
@@ -182,7 +190,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.scanAndWait()
         
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil, nil, nil])
     }
     
     func test_sberQR_shouldNavigateToSberQRPaymentWithURLAndData() throws {
@@ -193,12 +201,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$route.map(\.case))
-        XCTAssertNoDiff(navigationSpy.values, [nil])
+        XCTAssertNoDiff(navigationSpy.values, [.other])
         
         try sut.scanAndWait(sberQRURL)
         
         XCTAssertNoDiff(navigationSpy.values, [
-            nil,
+            .other,
+            .other,
+            .other,
             .sberQRPayment
         ])
     }
