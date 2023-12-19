@@ -50,11 +50,3 @@ public extension ProductSelectReducer {
         return newState
     }
 }
-
-extension Array where Element == ProductSelect.Product {
-    
-    subscript(id: ProductSelect.Product.ID) -> Element? {
-     
-        first(where: { $0.id == id })
-    }
-}
