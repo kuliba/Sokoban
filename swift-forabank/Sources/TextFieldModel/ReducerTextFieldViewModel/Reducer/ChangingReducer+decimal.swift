@@ -38,31 +38,30 @@ public extension ChangingReducer {
             )
             
             let text = {
-                // trailing zero after decimal separator
-                let filtered = formatter.clean(
-                    text: textState.text,
-                    allowDecimalSeparator: true
-                )
-                let isLastDecimalSeparator = formatter.isDecimalSeparator(.init(filtered.last ?? .init("")))
-                if replacementText == "0",
-                   isLastDecimalSeparator {
+                if formatter.isDecimalSeparator(replacementText) {
                     return changed
                 }
                 
-                if formatter.isDecimalSeparator(replacementText) {
+                // trailing zero after decimal separator
+                let cleanText = formatter.clean(
+                    text: textState.text,
+                    allowDecimalSeparator: true
+                )
+                let isLastDecimalSeparator = formatter.isDecimalSeparator(.init(cleanText.last ?? .init("")))
+                if replacementText == "0" && isLastDecimalSeparator {
                     return changed
-                } else {
-                    let filtered = formatter.clean(
-                        text: changed,
-                        allowDecimalSeparator: true
-                    )
-                    let decimal = Decimal(
-                        string: filtered,
-                        locale: formatter.locale
-                    )
-                    
-                    return formatter.format(decimal ?? 0) ?? ""
                 }
+                
+                let cleanChange = formatter.clean(
+                    text: changed,
+                    allowDecimalSeparator: true
+                )
+                let decimal = Decimal(
+                    string: cleanChange,
+                    locale: formatter.locale
+                )
+                
+                return formatter.format(decimal ?? 0) ?? ""
             }()
             
             let cursorPosition = text.count - cursorPositionFromEnd

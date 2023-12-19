@@ -214,6 +214,13 @@ final class ChangingReducer_decimalTests: XCTestCase {
         assert(newState, hasText: "12,0 ₽", cursorAt: 4)
     }
     
+    func test_change_shouldRemoveDecimalSeparatorOnSecondDecimalZero() throws {
+        
+        let newState = try change("12,0 ₽", with: "0", at: 4)
+
+        assert(newState, hasText: "12 ₽", cursorAt: 2)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ChangingReducer
