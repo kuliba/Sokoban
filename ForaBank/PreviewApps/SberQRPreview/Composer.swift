@@ -9,11 +9,11 @@ import SwiftUI
 
 final class Composer {
     
-    let routeModel: RouteModel
+    let navigationModel: NavigationModel
     
-    init(route: Route = .empty) {
+    init(navigation: Navigation? = nil) {
         
-        self.routeModel = .init(route: route)
+        self.navigationModel = .init(navigation: navigation)
     }
 }
 
@@ -21,37 +21,37 @@ final class Composer {
 
 extension Composer {
     
-    // MARK: - Navigation Destination
+    // MARK: - Alert
+    
+    func makeAlertView(
+        _ alert: Navigation.Alert
+    ) -> SwiftUI.Alert {
+        
+        .init(title: Text(alert.message))
+    }
+
+    // MARK: - Navigation
     
     @ViewBuilder
     func makeDestinationView(
-        _ destination: Route.Destination
+        _ destination: Navigation.Destination
     ) -> some View {
         
         switch destination {
         case let .sberQRPayment(url):
             
-            makeSberQRFeatureView(
+            makeSberQRPaymentView(
                 url: url,
-                dismiss: routeModel.resetDestination
+                dismiss: navigationModel.resetNavigation
             )
         }
     }
     
-    // MARK: - Modal: Alert
-    
-    func makeAlertView(
-        _ alert: Route.Modal.Alert
-    ) -> SwiftUI.Alert {
-        
-        .init(title: Text(alert.message))
-    }
-    
-    // MARK: - Modal: FullScreenCover
+    // MARK: - FullScreenCover
     
     @ViewBuilder
     func makeFullScreenCoverView(
-        _ fullScreenCover: Route.Modal.FullScreenCover
+        _ fullScreenCover: Navigation.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -64,42 +64,20 @@ extension Composer {
         }
     }
     
-    // MARK: - Modal: FullScreenCover
+    // MARK: - FullScreenCover
     
     @ViewBuilder
     func makeSheet(
-        _ sheet: Route.Modal.Sheet
+        _ sheet: Navigation.Sheet
     ) -> some View {
         
         switch sheet {
         case let .sberQRPayment(url):
             
-            makeSberQRFeatureView(
+            makeSberQRPaymentView(
                 url: url,
-                dismiss: routeModel.resetSheet
+                dismiss: navigationModel.resetNavigation
             )
-            .sheet(
-                item: .init(
-                    get: {
-#warning("extract as property or helper")
-                        guard case let .sheet(.picker(wrapped)) = self.routeModel.route.modal
-                        else { return nil }
-                        
-                        return wrapped
-                    },
-                    set: { _ in
-                        
-#warning("fix this empty setter")
-                    }
-                ),
-                content: { (wrapped: Route.Modal.Sheet.Wrapped) in
-                    
-                    TextPickerView(commit: wrapped.closure)
-                }
-            )
-            
-        case let .picker(wrapped):
-            TextPickerView(commit: wrapped.closure)
         }
     }
 }
@@ -110,10 +88,23 @@ private extension Composer {
         
         switch qrResult {
         case let .sberQR(url):
-                routeModel.setModal(to: .sheet(.sberQRPayment(url)))
+            changeNavigation(to: .sheet(.sberQRPayment(url)))
             
         case let .error(text):
-            routeModel.setModal(to: .alert(.init(message: text)))
+            changeNavigation(to: .alert(.init(message: text)))
+        }
+    }
+}
+
+private extension Composer {
+    
+    func changeNavigation(to navigation: Navigation) {
+        
+        navigationModel.resetNavigation()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            
+            self?.navigationModel.setNavigation(to: navigation)
         }
     }
 }
@@ -131,7 +122,7 @@ extension Composer {
         
         QRReaderButton { [weak self] in
             
-            self?.routeModel.setFullScreenCover(to: .qrReader)
+            self?.navigationModel.setFullScreenCover(to: .qrReader)
         }
     }
     
@@ -142,14 +133,12 @@ extension Composer {
         QRReaderStub(commit: commit)
     }
     
-    func makeSberQRFeatureView(
-        route: SberQRFeatureRoute? = nil,
+    func makeSberQRPaymentView(
         url: URL,
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        SberQRFeatureView(
-            viewModel: .init(route: route),
+        SberQRPaymentView(
             url: url,
             dismiss: dismiss
         )

@@ -61,18 +61,29 @@ final class ModelAuthLoginViewModelFactory {
         )
     }
     
-    func makeLandingViewModel(
+    func makeCardLandingViewModel(
         _ type: AbroadType,
-        config: UILanding.Component.Config,
-        goMain: @escaping GoMainAction,
-        orderCard: @escaping OrderCardAction
-    ) -> LandingWrapperViewModel {
+        config: LandingUIComponent.UILanding.Component.Config,
+        landingActions: @escaping (LandingUIComponent.LandingEvent.Card) -> () -> Void
+    ) -> LandingUIComponent.LandingWrapperViewModel {
         
-        self.model.landingViewModelFactory(
+        self.model.landingCardViewModelFactory(
             abroadType: type,
             config: config,
-            goMain: goMain,
-            orderCard: orderCard
+            landingActions: landingActions
         )
     }
+    
+    func makeStickerLandingViewModel(
+        _ type: AbroadType,
+        config: LandingUIComponent.UILanding.Component.Config,
+        landingActions: @escaping (LandingUIComponent.LandingEvent.Sticker) -> () -> Void
+    ) -> LandingUIComponent.LandingWrapperViewModel {
+            
+            self.model.landingStickerViewModelFactory(
+                abroadType: type,
+                config: config,
+                landingActions: landingActions
+            )
+        }
 }

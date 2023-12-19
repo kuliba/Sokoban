@@ -9,11 +9,11 @@ public struct PlaceholderView: View {
     private let spacing: Placeholder.Config.Spacing
     private let padding: Placeholder.Config.Padding
     private let cornerRadius: Placeholder.Config.CornerRadius
-    private let action: (LandingAction) -> Void
+    private let action: (LandingEvent) -> Void
 
     public init(
         config: Placeholder.Config,
-        action: @escaping (LandingAction) -> Void
+        action: @escaping (LandingEvent) -> Void
     ) {
         self.config = config
         self.width = config.width
@@ -27,7 +27,7 @@ public struct PlaceholderView: View {
     var backButton : some View {
         
         Button(action: {
-            action(.goToMain)
+            action(.card(.goToMain))
         }) { Image(systemName: "chevron.backward") }
     }
 

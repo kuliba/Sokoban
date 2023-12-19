@@ -11,5 +11,6 @@ enum LandingActionType: String {
     
     case goToMain
     case orderCard
+    case goToOrderSticker
 }
 

@@ -79,7 +79,47 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
         XCTAssertEqual(content.firstGroup(ofType: .card)?.id, "CARD")
     }
     
+    func test_sticker_shouldBeNilOnEmptyStickerBannersMyProductList()  {
+        
+        let (sut, model) = makeSUT()
+        
+        XCTAssertNil(sut.stickerViewModel)
+        XCTAssertNoDiff(model.productListBannersWithSticker.value, [])
+    }
+    
     // MARK: - Helpers
+    
+    typealias productVM = ProductCarouselView.ViewModel
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: productVM,
+        model: Model
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        let sut = ProductCarouselView.ViewModel(mode: .main, style: .regular, model: .emptyMock)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
+    private func makeSUTProdVM(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: ProductView.ViewModel,
+        model: Model
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        let sut = ProductView.ViewModel(with: .stub(), size: .normal, style: .main, model: .emptyMock)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, model)
+    }
     
     typealias ProductTypeCounts = [(ProductType, Int)]
 
@@ -155,4 +195,18 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
     }
     
     #warning("add tests for products inside group")
+}
+
+private extension ProductCarouselViewViewModelContentTests {
+    
+    static let cardIsMainFalse: ProductCardData = ProductCardData(id: 22, currency: .usd, isMain: false)
+    static let cardIsMainTrue = ProductCardData(id: 21, currency: .usd)
+}
+
+private extension ProductCardData {
+    
+    convenience init(id: Int, currency: Currency, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active, loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil, statusPc: ProductData.StatusPC = .active, isMain: Bool = true) {
+        
+        self.init(id: id, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: ownerId, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: status, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: loanBaseParam, statusPc: statusPc, isMain: isMain, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+    }
 }

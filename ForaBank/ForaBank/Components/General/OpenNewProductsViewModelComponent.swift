@@ -20,7 +20,12 @@ class OpenNewProductsViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    var displayButtons: [String] { displayButtonsTypes.map {$0.rawValue} + ["INSURANCE", "MORTGAGE"] }
+    var displayButtons: [String] {
+        
+        var items = (displayButtonsTypes.map { $0.rawValue } + ["INSURANCE", "MORTGAGE"])
+        items.insert(contentsOf: ["STICKER"], at: 3)
+        return items
+    }
     
     init(items: [ButtonNewProduct.ViewModel], model: Model = .emptyMock) {
         
@@ -85,7 +90,18 @@ class OpenNewProductsViewModel: ObservableObject {
                         
                     case "MORTGAGE":
                         viewModel.append(ButtonNewProduct.ViewModel(id: typeStr, icon: .ic24Mortgage, title: "Ипотеку", subTitle: "Удобно", url: model.productsOpenMortgageURL))
-                        
+                    
+                    case "STICKER":
+                        viewModel.append(ButtonNewProduct.ViewModel(
+                            id: typeStr,
+                            icon: .ic24Sticker,
+                            title: "Стикер",
+                            subTitle: "Быстро",
+                            action: { [weak self] in
+                                
+                                self?.action.send(OpenNewProductsViewModelAction.Tapped.NewProduct(productType: .loan))
+                            }
+                        ))
                     default: break
                     }
                 } //if

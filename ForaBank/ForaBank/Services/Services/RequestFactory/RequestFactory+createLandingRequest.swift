@@ -31,13 +31,14 @@ extension RequestFactory {
     }
 }
 
-private extension AbroadType {
+extension AbroadType {
     
     var rawValue: String {
         
         switch self {
         case .orderCard: return "abroadOrderCard"
         case .transfer:  return "abroadTransfer"
+        case .sticker:   return "abroadSticker"
         }
     }
 }

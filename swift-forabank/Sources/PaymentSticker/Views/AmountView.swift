@@ -7,18 +7,18 @@
 
 import Foundation
 import SwiftUI
-//import TextFieldComponent
 
 // MARK: - View
 
 struct AmountView: View {
     
     let viewModel: AmountViewModel
-    @State var text: String
+    let configuration: AmountViewConfiguration
+    let text: String
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 8) {
             
             HStack(alignment: .bottom, spacing: 28) {
                 
@@ -26,8 +26,9 @@ struct AmountView: View {
                     
                     HStack {
                         
-                        TextField("Сумма", text: $text)
-                            .foregroundColor(.white)
+                        Text("\(text) ₽")
+                            .foregroundColor(configuration.amountColor)
+                            .font(configuration.amountFont)
                     }
                     
                     Divider()
@@ -37,20 +38,26 @@ struct AmountView: View {
                 }
                 
                 TransferButtonView(
-                    viewModel: .active(action: viewModel.continueButtonTapped )
+                    viewModel: viewModel.reduceState(
+                        state: viewModel.parameter.state,
+                        isCompleteOperation: viewModel.isCompleteOperation,
+                        action: viewModel.continueButtonTapped
+                    ),
+                    configuration: configuration
                 )
-                    .frame(width: 113, height: 40)
+                .frame(width: 113, height: 40)
             }
             
             Text("Включая стоимость доставки")
-                .font(.body)
-                .foregroundColor(.gray.opacity(0.5))
+                .font(configuration.hintFont)
+                .foregroundColor(configuration.hintColor)
             
         }
         .padding(.horizontal, 20)
         .padding(.top, 15)
         .background(
-            Color.black
+            
+            configuration.background
                 .ignoresSafeArea(.container, edges: .bottom)
         )
     }
@@ -58,6 +65,7 @@ struct AmountView: View {
     struct TransferButtonView: View {
         
         let viewModel: TransferButtonViewModel
+        let configuration: AmountViewConfiguration
         let title = "Продолжить"
         
         var body: some View {
@@ -67,11 +75,15 @@ struct AmountView: View {
                 inactiveView(with: title)
                 
             case let .active(action):
-                activeView(title: title, action: action)
+                activeView(
+                    title: title,
+                    configuration: configuration,
+                    action: action
+                )
                 
             case .loading:
                 SpinnerRefreshView(
-                    icon: .init(systemName: "photo.artframe"),
+                    icon: .init("Logo Fora Bank"),
                     iconSize: .init(width: 32, height: 32)
                 )
             }
@@ -85,18 +97,22 @@ struct AmountView: View {
         }
         
         @ViewBuilder
-        private func activeView(title: String, action: @escaping () -> Void) -> some View {
+        private func activeView(
+            title: String,
+            configuration: AmountViewConfiguration,
+            action: @escaping () -> Void
+        ) -> some View {
         
             Button(action: action) {
                 
                 ZStack {
                     
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.red)
+                        .foregroundColor(configuration.buttonColor)
                     
                     Text(title)
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(configuration.buttonTextFont)
+                        .foregroundColor(configuration.buttonTextColor)
                 }
             }
         }

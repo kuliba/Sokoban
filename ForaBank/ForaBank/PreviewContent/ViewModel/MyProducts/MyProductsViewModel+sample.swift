@@ -25,7 +25,8 @@ extension MyProductsViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
-        refreshingIndicator: .init(isActive: true)
+        refreshingIndicator: .init(isActive: true),
+        openOrderSticker: {}
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -45,6 +46,7 @@ extension MyProductsViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
         refreshingIndicator: .init(isActive: true),
-        showOnboarding: [.hide: true, .ordered: false]
+        showOnboarding: [.hide: true, .ordered: false],
+        openOrderSticker: {}
     )
 }

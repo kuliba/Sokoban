@@ -36,5 +36,6 @@ struct ImageView: View {
             }
         }
         .background(config.backgroundColor(model.data.backgroundColor.rawValue, defaultColor: config.background.defaultColor))
+        .padding(.bottom, -config.negativeBottomPadding)
     }
 }

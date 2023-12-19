@@ -9,19 +9,29 @@ extension Operation.Parameter {
     
     public struct Select: Hashable, Identifiable {
         
-        public let id: String
-        let value: String
-        let title: String
+        public let id: ParameterID
+        let value: String?
+        public let title: String
         let placeholder: String
-        let options: [Option]
-        let state: State
+        public let options: [Option]
+        public let staticOptions: [Option]
+        public let state: State
+        
+        public enum ParameterID: String {
+        
+            case selector
+            case transferTypeSticker
+            case citySelector
+            case officeSelector
+        }
         
         public init(
-            id: String,
-            value: String,
+            id: ParameterID,
+            value: String?,
             title: String,
             placeholder: String,
             options: [Operation.Parameter.Select.Option],
+            staticOptions: [Operation.Parameter.Select.Option],
             state: Operation.Parameter.Select.State
         ) {
             self.id = id
@@ -29,14 +39,15 @@ extension Operation.Parameter {
             self.title = title
             self.placeholder = placeholder
             self.options = options
+            self.staticOptions = staticOptions
             self.state = state
         }
         
-        public struct Option: Hashable {
+        public struct Option: Hashable, Identifiable {
             
-            let id: String
+            public let id: String
             let name: String
-            let iconName: String
+            public let iconName: String
             
             public init(
                 id: String,
@@ -57,13 +68,13 @@ extension Operation.Parameter {
             
             public struct IdleViewModel: Hashable {
                 
-                let iconName: String
-                let title: String
+                public let iconName: String
+                public let title: String
                 
                 public init(
                     iconName: String,
                     title: String
-                ) {
+                ) { 
                     self.iconName = iconName
                     self.title = title
                 }
@@ -71,10 +82,10 @@ extension Operation.Parameter {
             
             public struct SelectedOptionViewModel: Hashable {
                 
-                let title: String
+                public let title: String
                 let placeholder: String
-                let name: String
-                let iconName: String
+                public let name: String
+                public let iconName: String
                 
                 public init(
                     title: String,
@@ -91,8 +102,8 @@ extension Operation.Parameter {
             
             public struct OptionsListViewModel: Hashable {
                 
-                let iconName: String
-                let title: String
+                public let iconName: String
+                public let title: String
                 let placeholder: String
                 let options: [OptionViewModel]
                 
@@ -100,7 +111,7 @@ extension Operation.Parameter {
                     iconName: String,
                     title: String,
                     placeholder: String,
-                    options: [Operation.Parameter.Select.State.OptionsListViewModel.OptionViewModel]
+                    options: [OptionViewModel]
                 ) {
                     self.iconName = iconName
                     self.title = title
@@ -110,16 +121,14 @@ extension Operation.Parameter {
                 
                 public struct OptionViewModel: Hashable, Identifiable {
                     
-                    public let id: String
+                    public var id: Self { self }
                     let iconName: String
                     let name: String
                     
                     public init(
-                        id: String,
                         iconName: String,
                         name: String
                     ) {
-                        self.id = id
                         self.iconName = iconName
                         self.name = name
                     }
@@ -133,9 +142,9 @@ extension Operation.Parameter {
 
 extension Operation.Parameter.Select {
 
-    typealias IdleViewModel = Operation.Parameter.Select.State.IdleViewModel
+    public typealias IdleViewModel = Operation.Parameter.Select.State.IdleViewModel
     
-    func updateSelect(
+    public func updateSelect(
         parameter: Operation.Parameter.Select,
         idleViewModel: IdleViewModel
     ) -> Operation.Parameter.Select {
@@ -144,14 +153,17 @@ extension Operation.Parameter.Select {
             id: parameter.id,
             value: parameter.value,
             title: parameter.title,
-            placeholder: parameter.title,
+            placeholder: parameter.placeholder,
             options: parameter.options,
+            staticOptions: parameter.staticOptions,
             state: .list(
                 .init(
                     iconName: idleViewModel.iconName,
                     title: parameter.title,
                     placeholder: parameter.placeholder,
-                    options: parameter.options.map(Option.optionViewModelMapper(option:))
+                    options: parameter.options.map(
+                        Option.optionViewModelMapper(option:)
+                    )
                 )
             )
         )
@@ -174,6 +186,7 @@ extension Operation.Parameter.Select {
             title: self.title,
             placeholder: self.placeholder,
             options: options,
+            staticOptions: parameter.staticOptions,
             state: self.state
         )
     }
@@ -183,6 +196,38 @@ extension Operation.Parameter.Select.Option {
     
     static func optionViewModelMapper(option: Select.Option) -> OptionViewModel {
         
-        return .init(id: option.id, iconName: option.iconName, name: option.name)
+        return .init(iconName: option.iconName, name: option.name)
+    }
+}
+
+extension Operation.Parameter.Select {
+    
+    static let branchSelect: Self = .init(
+        id: .officeSelector,
+        value: nil,
+        title: "Выберите отделение",
+        placeholder: "",
+        options: [],
+        staticOptions: [],
+        state: .idle(.init(
+            iconName: "ic24Bank",
+            title: "Выберите отделение"
+        )))
+    
+    static func officeSelect(office: Office) -> Self {
+        
+        .init(
+            id: .officeSelector,
+            value: office.id,
+            title: "Выберите отделение",
+            placeholder: "",
+            options: [],
+            staticOptions: [],
+            state: .selected(.init(
+                title: "Выберите отделение",
+                placeholder: "",
+                name: office.name,
+                iconName: ""
+            )))
     }
 }

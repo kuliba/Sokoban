@@ -78,39 +78,3 @@ final class QRViewModelScanResultTests: XCTestCase {
         try XCTUnwrap(URL(string: string))
     }
 }
-
-extension QRViewModel.ScanResult {
-    
-    var equatable: EquatableScanResult {
-        
-        switch self {
-        case let .qrCode(qrCode):
-            return .qrCode(original: qrCode.original, rawData: qrCode.rawData)
-
-        case let .c2bURL(c2bURL):
-            return .c2bURL(c2bURL)
-
-        case let .c2bSubscribeURL(c2bSubscribeURL):
-            return .c2bSubscribeURL(c2bSubscribeURL)
-
-        case let .sberQR(url):
-            return .sberQR(url)
-            
-        case let .url(url):
-            return .url(url)
-
-        case .unknown:
-            return .unknown
-        }
-    }
-    
-    enum EquatableScanResult: Equatable {
-        
-        case qrCode(original: String, rawData: [String : String])
-        case c2bURL(URL)
-        case c2bSubscribeURL(URL)
-        case sberQR(URL)
-        case url(URL)
-        case unknown
-    }
-}

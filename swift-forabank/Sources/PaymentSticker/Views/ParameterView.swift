@@ -7,32 +7,35 @@
 
 import SwiftUI
 
-public struct ParameterView: View {
+struct ParameterView: View {
     
     let viewModel: ParameterViewModel
+    let configuration: OperationViewConfiguration
+    let event: (Event.InputEvent) -> Void
     
-    public init(
-        viewModel: ParameterViewModel
+    init(
+        viewModel: ParameterViewModel,
+        configuration: OperationViewConfiguration,
+        event: @escaping (Event.InputEvent) -> Void
     ) {
         self.viewModel = viewModel
+        self.configuration = configuration
+        self.event = event
     }
     
-    public var body: some View {
+    var body: some View {
         
         switch viewModel {
         case let .tip(tipViewModel):
-            TipView(viewModel: tipViewModel)
+            TipView(
+                viewModel: tipViewModel,
+                configuration: configuration.tipViewConfig
+            )
             
         case let .sticker(stickerViewModel):
             StickerView(
                 viewModel: stickerViewModel,
-                openAccountCardView: {
-                    
-                    Color.red
-                        .frame(width: 120)
-                    
-                },
-                config: .default
+                config: configuration.stickerViewConfig
             )
             
         case let .select(selectViewModel):
@@ -43,23 +46,25 @@ public struct ParameterView: View {
             
         case let .product(productViewModel):
             ProductView(
-                appearance: .default,
+                appearance: configuration.productViewConfig,
                 viewModel: productViewModel
             )
             
         case let .amount(amountViewModel):
             AmountView(
-                viewModel: .init(
-                    parameter: .init(
-                        value: amountViewModel.parameter.value
-                    ),
-                    continueButtonTapped: amountViewModel.continueButtonTapped
-                ),
+                viewModel: amountViewModel,
+                configuration: configuration.amountViewConfig,
                 text: amountViewModel.parameter.value
             )
         
-        case let .input(inputViewModel):
-            InputView(model: inputViewModel)
+        case let .input(value, title, error):
+            InputView(
+                code: value,
+                title: title,
+                commit: { event(.valueUpdate($0)) },
+                warning: error,
+                configuration: configuration.inputViewConfig
+            )
         }
     }
 }

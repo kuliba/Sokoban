@@ -15,34 +15,29 @@ struct QRReaderStub: View {
     
     var body: some View {
         
-        NavigationView {
-            
-            VStack(spacing: 32) {
+        VStack(spacing: 32) {
+            VStack {
                 
-                VStack {
-                    
-                    Text(stubbedURL.absoluteString)
-                        .foregroundColor(.secondary)
-                        .font(.caption)
-                    
-                    Button {
-                        commit(.sberQR(stubbedURL))
-                    } label: {
-                        Label("Use link above", systemImage: "qrcode")
-                            .foregroundColor(.green)
-                    }
-                }
+                Text(stubbedURL.absoluteString)
+                    .foregroundColor(.secondary)
+                    .font(.caption)
                 
-                Button(role: .destructive) {
-                    commit(.error("QR Parsing Error"))
+                Button {
+                    commit(.sberQR(stubbedURL))
                 } label: {
-                    Label("QR Parsing Error", systemImage: "exclamationmark.octagon")
+                    Label("Use link above", systemImage: "qrcode")
+                        .foregroundColor(.green)
                 }
             }
-            .buttonStyle(.bordered)
-            .padding()
-            .navigationTitle("QR Reader Stub")
+            
+            Button(role: .destructive) {
+                commit(.error("QR Parsing Error"))
+            } label: {
+                Label("QR Parsing Error", systemImage: "exclamationmark.octagon")
+            }
         }
+        .buttonStyle(.bordered)
+        .padding()
     }
 }
 
@@ -50,34 +45,6 @@ struct QRReaderStub_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRReaderStub_Demo()
-    }
-    
-    struct QRReaderStub_Demo: View {
-        
-        @State private var message: String?
-        
-        var body: some View {
-            
-            QRReaderStub { result in
-                
-                switch result {
-                case let .sberQR(url):
-                    message = url.absoluteString
-                    
-                case let .error(string):
-                    message = string
-                }
-            }
-            .alert(
-                "QR Reader Stub Result",
-                isPresented: .init(
-                    get: { message != nil },
-                    set: { if !$0 { message = nil }}
-                ),
-                actions: { Button("OK") { message = nil } },
-                message: { Text(message ?? "n/a") }
-            )
-        }
+        QRReaderStub { _ in }
     }
 }

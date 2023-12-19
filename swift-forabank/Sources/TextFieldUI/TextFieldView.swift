@@ -63,28 +63,31 @@ public struct TextFieldView: UIViewRepresentable {
     
     public func updateUIView(_ textView: UITextView, context: Context) {
         
-        switch state {
-        case let .editing(textState):
-            textView.text = textState.text
-            textView.setCursorPosition(to: textState.cursorPosition)
-            textView.textColor = .init(textFieldConfig.textColor)
-            textView.becomeFirstResponder()
+        DispatchQueue.main.async {
             
-        case let .noFocus(text):
-            textView.text = text
-            textView.textColor = .init(textFieldConfig.textColor)
-            if textView.isFirstResponder {
-                DispatchQueue.main.async { [weak textView] in
-                    textView?.resignFirstResponder()
+            switch state {
+            case let .editing(textState):
+                textView.text = textState.text
+                textView.setCursorPosition(to: textState.cursorPosition)
+                textView.textColor = .init(textFieldConfig.textColor)
+                textView.becomeFirstResponder()
+                
+            case let .noFocus(text):
+                textView.text = text
+                textView.textColor = .init(textFieldConfig.textColor)
+                if textView.isFirstResponder {
+                    DispatchQueue.main.async { [weak textView] in
+                        textView?.resignFirstResponder()
+                    }
                 }
-            }
-            
-        case let .placeholder(placeholderText):
-            textView.text = placeholderText
-            textView.textColor = .init(textFieldConfig.placeholderColor)
-            if textView.isFirstResponder {
-                DispatchQueue.main.async { [weak textView] in
-                    textView?.resignFirstResponder()
+                
+            case let .placeholder(placeholderText):
+                textView.text = placeholderText
+                textView.textColor = .init(textFieldConfig.placeholderColor)
+                if textView.isFirstResponder {
+                    DispatchQueue.main.async { [weak textView] in
+                        textView?.resignFirstResponder()
+                    }
                 }
             }
         }
@@ -127,12 +130,18 @@ extension TextFieldView {
         
         @objc func handleDoneAction() {
             
-            send(.finishEditing)
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.send(.finishEditing)
+            }
         }
         
         @objc func handleCloseAction() {
             
-            send(.finishEditing)
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.send(.finishEditing)
+            }
         }
         
         // title "Готово"
@@ -183,21 +192,30 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        send(.startEditing)
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.send(.startEditing)
+        }
     }
         
     public func textViewDidEndEditing(_ textView: UITextView) {
         
-        send(.finishEditing)
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.send(.finishEditing)
+        }
     }
-        
+    
     public func textView(
         _ textView: UITextView,
         shouldChangeTextIn range: NSRange,
         replacementText text: String
     ) -> Bool {
         
-        send(.changeText(text, in: range))
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.send(.changeText(text, in: range))
+        }
         return false
     }
 }

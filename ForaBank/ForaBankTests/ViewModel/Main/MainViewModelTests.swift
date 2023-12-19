@@ -14,7 +14,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.fastPayment?.tapTemplatesAndWait()
@@ -25,7 +25,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait()
@@ -36,7 +36,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
@@ -52,7 +52,7 @@ final class MainViewModelTests: XCTestCase {
         let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.C2B.GetC2BSubscription.Request })
         XCTAssertNoDiff(spy.values.count, 0)
         XCTAssertNoDiff(model.subscriptions.value, nil)
-        
+
         sut.tapUserAccount()
         
         XCTAssertNoDiff(spy.values.count, 1)
@@ -68,164 +68,55 @@ final class MainViewModelTests: XCTestCase {
         )
     }
     
-    // MARK: SBER QR
+    typealias mainSectionVMAction = MainSectionViewModelAction.Products
     
-    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
+    func test_productCarouselStickerDidTapped()  {
         
-        let (sut, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .invalid(statusCode: 200, data: anyData())
-            ))
-        )
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        let (sut, _) = makeSUTWithMainSectionProcutsViewVM()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
-        try sut.scanAndWait()
+        let sutActionSpy = ValueSpy(
+            sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.StickerDidTapped })
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка"
-        ])
+        XCTAssertNoDiff(sutActionSpy.values.count, 0)
+        
+        sut.productCarouselViewModel.action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(sutActionSpy.values.count, 1)
+       
+        XCTAssertNotNil(sutActionSpy.values.first)
     }
-    
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
+ 
+    func test_orderSticker_showsAlert_whenNoCards() {
         
-        let (sut, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .invalid(statusCode: 200, data: anyData())
-            ))
+        let localAgentDataStubClear: [String: Data] = [
+            "Array<OperatorGroupData>": .init(),
+        ]
+        let localAgent = LocalAgentStub(stub: localAgentDataStubClear)
+        let model = Model.mockWithEmptyExcept(
+          localAgent: localAgent
         )
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
-        try sut.scanAndWait()
-        try sut.tapPrimaryAlertButton()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка",
-            nil
-        ])
-    }
-    
-    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
-        
-        let (sut, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .server(statusCode: 200, errorMessage: UUID().uuidString)
-            ))
+        let qrViewModelFactory = QRViewModelFactory.preview()
+
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            onRegister: {}
         )
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
-        
-        try sut.scanAndWait()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка"
-        ])
-    }
-    
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
-        
-        let (sut, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .server(statusCode: 200, errorMessage: UUID().uuidString)
-            ))
-        )
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        
-        try sut.scanAndWait()
-        try sut.tapPrimaryAlertButton()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка",
-            nil
-        ])
-    }
-    
-    func test_sberQR_shouldNotSetAlertOnSuccess() throws {
-        
-        let (sut, _) = makeSUT()
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        
-        try sut.scanAndWait()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
-    }
-    
-    func test_sberQR_shouldNavigateToSberQRPaymentWithURLAndData() throws {
-        
-        let sberQRURL = anyURL()
-        let sberQRData = anyGetSberQRDataResponse()
-        let (sut, _) = makeSUT(
-            getSberQRDataResultStub: .success(sberQRData)
-        )
-        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
-        XCTAssertNoDiff(navigationSpy.values, [nil])
-        
-        try sut.scanAndWait(sberQRURL)
-        
-        XCTAssertNoDiff(navigationSpy.values, [
-            nil,
-            .sberQRPayment
-        ])
-    }
-    
-    func test_sberQR_shouldNotResetNavigationLinkOnSberQRPaymentFailure() throws {
-        
-        let sberQRURL = anyURL()
-        let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError: SberQRError = .createRequest(
-            anyError("SberQRPayment Failure")
-        )
-        let (sut, _) = makeSUT(
-            createSberQRPaymentStub: .failure(sberQRError),
-            getSberQRDataResultStub: .success(sberQRData)
-        )
-        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
-        
-        try sut.scanAndWait(sberQRURL)
+     
+      sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(navigationSpy.values, [
-            nil,
-            .sberQRPayment
-        ])
+        XCTAssertNotNil(sut.route.modal?.alert)
     }
     
-//    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
-//        
-//        let (sut, _) = makeSUT()
-//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-//        
-//        try sut.scanAndWait(anyURL())
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        
-//        XCTAssertNoDiff(alertMessageSpy.values, [
-//            nil,
-//            "Возникла техническая ошибка"
-//        ])
-//    }
-    
-//    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
-//        
-//        let (sut, _) = makeSUT()
-//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-//        
-//        try sut.scanAndWait(anyURL())
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        try sut.tapPrimaryAlertButton()
-//        
-//        XCTAssertNoDiff(alertMessageSpy.values, [
-//            nil,
-//            "Возникла техническая ошибка",
-//            nil
-//        ])
-//    }
-    
     // MARK: - Helpers
-    
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
 
@@ -239,7 +130,6 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        
         let sberQRServices = SberQRServices.preview(
             createSberQRPaymentResultStub: createSberQRPaymentStub,
             getSberQRDataResultStub: getSberQRDataResultStub
@@ -254,10 +144,29 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             onRegister: {}
         )
+
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
+    typealias MainSectionViewVM = MainSectionProductsView.ViewModel
+    typealias StickerViewModel = ProductCarouselView.StickerViewModel
+    
+    private func makeSUTWithMainSectionProcutsViewVM(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: MainSectionViewVM,
+        model: Model
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        let sut = MainSectionViewVM(model, stickerViewModel: nil)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, model)
     }
@@ -270,7 +179,7 @@ final class MainViewModelTests: XCTestCase {
         sut: MainViewModel,
         model: Model
     ) {
-        
+    
         let sessionAgent = ActiveSessionAgentStub()
         let serverAgent = ServerAgentTestStub(getC2bResponseStub)
         
@@ -287,7 +196,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             onRegister: {}
         )
-        
+
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
@@ -359,7 +268,7 @@ private extension MainViewModel {
     
     var templatesListViewModel: TemplatesListViewModel? {
         
-        switch link {
+        switch route.destination {
         case let .templates(templatesListViewModel):
             return templatesListViewModel
             
@@ -368,35 +277,41 @@ private extension MainViewModel {
         }
     }
     
-    var qrScanner: QRViewModel? {
+    var openProductSection: MainSectionOpenProductView.ViewModel? {
         
-        guard case let .qrScanner(qrScanner) = fullScreenSheet?.type
-        else { return nil }
+        sections.compactMap {
+            
+            $0 as? MainSectionOpenProductView.ViewModel
+        }
+        .first
+    }
+    
+    var authProductsViewModel: AuthProductsViewModel? {
         
-        return qrScanner
+        switch route.destination {
+        case let .openCard(authProductsViewModel):
+            return authProductsViewModel
+            
+        default:
+            return nil
+        }
     }
 }
 
-private extension MainViewModel.Link {
+private extension MainViewModel.Route {
     
     var `case`: Case? {
         
-        switch self {
-        case .templates:
-            return .templates
-            
-        case .sberQRPayment:
-            return .sberQRPayment
-            
-        default:
-            return .other
+        switch destination {
+        case .none:      return .none
+        case .templates: return .templates
+        default:         return .other
         }
     }
     
     enum Case: Equatable {
         
         case templates
-        case sberQRPayment
         case other
     }
 }
@@ -407,14 +322,6 @@ private extension MainSectionFastOperationView.ViewModel {
         
         let templatesAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: .templates)
         action.send(templatesAction)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
-    
-    func tapOpenScanner(timeout: TimeInterval = 0.05) {
-        
-        let openScannerAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: .byQr)
-        action.send(openScannerAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -432,39 +339,68 @@ private extension TemplatesListViewModel {
 
 private extension MainViewModel {
     
-    func tapPrimaryAlertButton(
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws {
-        
-        let alert = try XCTUnwrap(alert, "Expected to have alert but got nil.", file: file, line: line)
-        alert.primary.action()
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
-    
     func tapUserAccount(timeout: TimeInterval = 0.05) {
         
         action.send(MainViewModelAction.ButtonTapped.UserAccount())
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
+}
+
+private extension MainViewModel {
     
-    func scanAndWait(
-        _ url: URL = anyURL(),
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws {
+    func closeAndWait(timeout: TimeInterval = 0.05) {
         
-        let fastPayment = try XCTUnwrap(fastPayment, "Expected to have a fast payment section.", file: file, line: line)
-        fastPayment.tapOpenScanner()
-        
-        let qrScanner = try XCTUnwrap(qrScanner, "Expected to have a QR Scanner but got nil.", file: file, line: line)
-        let result = QRViewModelAction.Result(result: .sberQR(url))
-        qrScanner.action.send(result)
+        action.send(MainViewModelAction.Close.Link())
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
+}
+
+private extension MainSectionOpenProductView.ViewModel {
+    
+    func tapStickerAndWait(timeout: TimeInterval = 0.05) {
+        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
+        action.send(stickerAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension MainViewModel {
+    
+    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+        
+        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
+        action.send(stickerAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension ProductCardData {
+    
+    convenience init(id: Int, currency: Currency, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active, loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil, statusPc: ProductData.StatusPC = .active, isMain: Bool = true) {
+        
+        self.init(id: id, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: ownerId, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: status, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: loanBaseParam, statusPc: statusPc, isMain: isMain, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+    }
+}
+
+private extension MainViewModelTests {
+    
+    static let cardActiveMainDebitOnlyMain = ProductCardData(id: 11, currency: .rub, allowCredit: false)
+    static let cardBlockedMainRub = ProductCardData(id: 12, currency: .rub, status: .blocked, statusPc: .blockedByBank)
+    
+    static let cardActiveAddUsdIsMainFalse = ProductCardData(id: 22, currency: .usd, isMain: false)
+    static let cardActiveAddUsdIsMainTrue = ProductCardData(id: 21, currency: .usd)
+}
+
+private extension MainViewModelTests {
+    
+    static let cardProducts = [cardActiveAddUsdIsMainFalse,
+                               cardActiveAddUsdIsMainTrue]
+}
+
+extension MainSectionViewModelAction.Products.StickerDidTapped: Equatable {
+    public static func == (lhs: MainSectionViewModelAction.Products.StickerDidTapped, rhs: MainSectionViewModelAction.Products.StickerDidTapped) -> Bool { return true }
 }

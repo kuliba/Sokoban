@@ -12,7 +12,7 @@ extension Services {
     struct Endpoint {
         
         let pathPrefix: PathPrefix
-        let version: Version
+        let version: Version?
         let serviceName: ServiceName
         
         enum PathPrefix {
@@ -20,6 +20,7 @@ extension Services {
             case processing(Processing)
             case dict
             case binding
+            case rest
             case transfer
             
             var path: String {
@@ -33,6 +34,9 @@ extension Services {
 
                 case .binding:
                     return "rest/binding"
+
+                case .rest:
+                    return "rest"
 
                 case .transfer:
                     return "rest/transfer"
@@ -58,15 +62,20 @@ extension Services {
             
             case bindPublicKeyWithEventId
             case changePIN
+            case createCommissionProductTransfer
             case createStickerPayment
             case createSberQRPayment
             case formSessionKey
             case getJsonAbroad
             case getSberQRData
+            case getOperationDetailByPaymentId
+            case getPINConfirmationCode
+            case getPrintForm
+            case getProcessingSessionCode
+            case getSvgImageList
             case getScenarioQRData
             case getStickerPayment
-            case getPINConfirmationCode
-            case getProcessingSessionCode
+            case makeTransfer
             case processPublicKeyAuthenticationRequest
             case showCVV
         }
@@ -77,7 +86,8 @@ extension Services.Endpoint {
     
     private var path: String {
         
-        "/\(pathPrefix.path)/\(version.rawValue)/\(serviceName.rawValue)"
+        let version = version.map { "\($0.rawValue)/"} ?? ""
+        return "/\(pathPrefix.path)/\(version)\(serviceName.rawValue)"
     }
     
     func url(
@@ -144,6 +154,12 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let createCommissionProductTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .createCommissionProductTransfer
+    )
+    
     static let createLandingRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
@@ -168,10 +184,28 @@ extension Services.Endpoint {
         serviceName: .formSessionKey
     )
     
+    static let getImageList: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getSvgImageList
+    )
+    
+    static let getOperationDetailByPaymentID: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getOperationDetailByPaymentId
+    )
+    
     static let getPINConfirmationCode: Self = .init(
         pathPrefix: .processing(.cardInfo),
         version: .v1,
         serviceName: .getPINConfirmationCode
+    )
+    
+    static let getPrintForm: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getPrintForm
     )
     
     static let getProcessingSessionCode: Self = .init(
@@ -195,7 +229,13 @@ extension Services.Endpoint {
     static let getStickerPaymentRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
-        serviceName: .getStickerPayment
+        serviceName: .getJsonAbroad
+    )
+    
+    static let makeTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .makeTransfer
     )
     
     static let processPublicKeyAuthenticationRequest: Self = .init(

@@ -8,10 +8,27 @@
 import SwiftUI
 import Combine
 
-
 struct OperationDetailInfoView: View {
     
-    var viewModel: OperationDetailInfoViewModel
+    let viewModel: OperationDetailInfoViewModel
+    
+    var body: some View {
+        
+        OperationDetailInfoInternalView(
+            title: viewModel.title,
+            logo: viewModel.logo,
+            cells: viewModel.cells,
+            dismissAction: viewModel.dismissAction
+        )
+    }
+}
+
+struct OperationDetailInfoInternalView: View {
+    
+    var title = "Детали операции"
+    let logo: Image?
+    let cells: [OperationDetailInfoViewModel.DefaultCellViewModel]
+    let dismissAction: () -> Void
     
     var body: some View {
         
@@ -21,7 +38,7 @@ struct OperationDetailInfoView: View {
                 
                 Button {
                     
-                    viewModel.dismissAction()
+                    dismissAction()
                     
                 } label: {
                     
@@ -32,14 +49,14 @@ struct OperationDetailInfoView: View {
                 
                 Spacer()
                 
-                Text(viewModel.title)
+                Text(title)
                     .foregroundColor(.textSecondary)
                     .font(.textH4Sb16240())
                     .accessibilityIdentifier("OperationDetailInfoPageTitle")
                 
                 Spacer()
                 
-                if let logo = viewModel.logo {
+                if let logo {
                     
                     logo
                         .resizable()
@@ -60,7 +77,7 @@ struct OperationDetailInfoView: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     
-                    ForEach(viewModel.cells) { item in
+                    ForEach(cells) { item in
                         
                         switch item{
                             
@@ -88,7 +105,7 @@ struct OperationDetailInfoView: View {
     
 }
 
-extension OperationDetailInfoView {
+extension OperationDetailInfoInternalView {
     
     struct PropertyCellView: View {
         
@@ -125,6 +142,7 @@ extension OperationDetailInfoView {
             if let image = viewModel.iconType {
                 image
                     .resizable()
+                    .renderingMode(.original)
                     .accessibilityIdentifier("OperationDetailInfoItemIcon")
             } else {
                 Color.clear

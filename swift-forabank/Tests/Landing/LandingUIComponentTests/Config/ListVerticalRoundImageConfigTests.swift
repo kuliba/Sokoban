@@ -106,7 +106,8 @@ final class ListVerticalRoundImageConfigTests: XCTestCase {
                 buttonHStack: 5,
                 itemVStackBetweenTitleSubtitle: 6),
             item: .init(
-                imageWidthHeight: 7,
+                imageWidthHeight: 7, 
+                hstackAlignment: .center,
                 font: .init(title: .title2, titleWithOutSubtitle: .title2, subtitle: .title3),
                 color: .init(title: .blue, subtitle: .clear),
                 padding: .init(horizontal: 8, vertical: 9)),

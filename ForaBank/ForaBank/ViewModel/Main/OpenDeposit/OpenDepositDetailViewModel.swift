@@ -20,10 +20,21 @@ class OpenDepositDetailViewModel: ObservableObject {
     let condition: ConditionViewModel
     let percents: PercentsViewModel?
     
+    @Published private(set) var route: Route
+    
     let model: Model
 
-    init(id: DepositProductData.ID, productDetail: ProductDetailViewModel, calculator: DepositCalculatorViewModel, details: [DetailsViewModel], documents: DocumentsViewModel, condition: ConditionViewModel, percents: PercentsViewModel?, model: Model = .emptyMock) {
-        
+    init(
+        id: DepositProductData.ID, 
+        productDetail: ProductDetailViewModel,
+        calculator: DepositCalculatorViewModel,
+        details: [DetailsViewModel],
+        documents: DocumentsViewModel,
+        condition: ConditionViewModel,
+        percents: PercentsViewModel?,
+        model: Model = .emptyMock,
+        route: Route = .empty
+    ) {
         self.id = id
         self.productDetail = productDetail
         self.calculator = calculator
@@ -32,10 +43,14 @@ class OpenDepositDetailViewModel: ObservableObject {
         self.condition = condition
         self.percents = percents
         self.model = model
+        self.route = route
     }
     
-    convenience init?(depositId: DepositProductData.ID, model: Model) {
-        
+    convenience init?(
+        depositId: DepositProductData.ID, 
+        model: Model,
+        route: Route = .empty
+    ) {
         guard let deposit = model.deposits.value.first(where: { $0.depositProductID == depositId }) else {
             
             return nil
@@ -48,7 +63,43 @@ class OpenDepositDetailViewModel: ObservableObject {
         let condition = ConditionViewModel(conditions: deposit.txtСondition)
         let percents = PercentsViewModel(with: deposit)
         
-        self.init(id: depositId, productDetail: productDetail, calculator: calculator, details: details, documents: documents, condition: condition, percents: percents, model: model)
+        self.init(id: depositId, productDetail: productDetail, calculator: calculator, details: details, documents: documents, condition: condition, percents: percents, model: model, route: route)
+    }
+    
+    struct Route {
+        
+        var destination: Link?
+        
+        static let empty: Self = .init(destination: nil)
+        
+        enum Link: Identifiable {
+            
+            case confirm(OpenDepositDetailViewModel)
+            
+            var id: Case {
+                
+                switch self {
+                    
+                case let .confirm(viewModel):
+                    return .confirm(viewModel.id)
+                }
+            }
+            
+            enum Case: Hashable {
+                
+                case confirm(DepositProductData.ID)
+            }
+        }
+    }
+    
+    func resetDestination() {
+        
+        route.destination = nil
+    }
+    
+    func confirmButtonTapped() {
+        
+        route.destination = .confirm(self)
     }
 }
 

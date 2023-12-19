@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PrintFormType: String, Codable, Unknownable {
+enum PrintFormType: String, Codable, Hashable, Unknownable {
     
     case sbp
     case direct
@@ -28,5 +28,6 @@ enum PrintFormType: String, Codable, Unknownable {
     case returnOutgoing
     case changeOutgoing
     case sberQR
+    case sticker
     case unknown
 }

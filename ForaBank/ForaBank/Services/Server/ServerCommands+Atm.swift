@@ -191,7 +191,7 @@ extension ServerCommands {
         struct GetCityList: ServerCommand {
             
             let token: String
-            let endpoint = "/atm/v2/getCityList"
+            let endpoint = "/atm/v3/getCityList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             

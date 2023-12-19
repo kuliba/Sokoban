@@ -8,10 +8,13 @@
 import ScrollViewProxy
 import SberQR
 import SwiftUI
+import LandingUIComponent
+import PaymentSticker
 
-struct MainView: View {
+struct MainView<NavigationOperationView: View>: View {
     
     @ObservedObject var viewModel: MainViewModel
+    let navigationOperationView: () -> NavigationOperationView
     
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
@@ -77,25 +80,49 @@ struct MainView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map(destinationView)
-            }
-            
             Color.clear
-                .sheet(item: $viewModel.sheet, content: sheetView)
+                .sheet(
+                    item: .init(
+                        get: { viewModel.route.modal?.sheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }),
+                    content: sheetView
+                )
             
             Color.clear
                 .fullScreenCover(
-                    item: $viewModel.fullScreenSheet,
+                    item: .init(
+                        get: { viewModel.route.modal?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }
+                    ),
                     content: fullScreenSheetView
                 )
         }
         .ignoreKeyboard()
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .tabBar(isHidden: $viewModel.isTabBarHidden)
-        .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
+        .alert(
+            item: .init(
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: Alert.init(with:)
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route.modal?.bottomSheet },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: bottomSheetView
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() } }
+            ),
+            content: destinationView
+        )
+        .tabBar(isHidden: .init(
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
+        ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -132,7 +159,7 @@ struct MainView: View {
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
@@ -182,8 +209,19 @@ struct MainView: View {
             makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.closeSberQRPaymentViewModel
+                    dismiss: viewModel.resetDestination
                 )
+        case let .landing(viewModel):
+                LandingWrapperView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+            
+        case let .orderSticker(viewModel):
+                LandingWrapperView(viewModel: viewModel)
+            
+        case .paymentSticker:
+            navigationOperationView()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -246,89 +284,95 @@ struct MainView: View {
     }
 }
 
-extension MainView {
+private extension MainViewModel.Route {
     
-    struct ScrollOffsetKey: PreferenceKey {
+    var isEmpty: Bool {
         
-        typealias Value = CGFloat
-        static var defaultValue = CGFloat.zero
-        static func reduce(value: inout Value, nextValue: () -> Value) {
-            value += nextValue()
-        }
+        destination == nil && modal == nil
     }
 }
 
 extension MainView {
     
-    struct UserAccountButton: View {
+    struct ScrollOffsetKey: PreferenceKey {
         
-        @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
-        
-        var body: some View {
-            
-            Button(action: viewModel.action) {
-                
-                HStack {
-                    
-                    ZStack {
-                        
-                        if let avatar = viewModel.avatar {
-                            
-                            avatar
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 40, height: 40)
-                                .clipShape(Circle())
-                            
-                        } else {
-                            
-                            ZStack {
-                                
-                                Circle()
-                                    .foregroundColor(.bgIconGrayLightest)
-                                    .frame(width: 40, height: 40)
-                                
-                                Image.ic24User
-                                    .renderingMode(.template)
-                                    .foregroundColor(.iconGray)
-                            }
-                        }
-                        
-                        ZStack{
-                            
-                            Circle()
-                                .foregroundColor(.iconWhite)
-                                .frame(width: 20, height: 20)
-                            
-                            viewModel.logo
-                                .renderingMode(.original)
-                        }
-                        .offset(x: 18, y: -14)
-                        
-                    }
-                    
-                    Text(viewModel.name)
-                        .foregroundColor(.textSecondary)
-                        .font(.textH4R16240())
-                        .accessibilityIdentifier("mainUserName")
-                }
-            }
-            .accessibilityIdentifier("mainUserButton")
+        typealias Value = CGFloat
+        static var defaultValue: CGFloat { .zero }
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
         }
     }
+}
     
-    struct NavBarButton: View {
+struct UserAccountButton: View {
+    
+    @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
+    
+    var body: some View {
         
-        let viewModel: NavigationBarButtonViewModel
-        
-        var body: some View {
+        Button(action: viewModel.action) {
             
-            Button(action: viewModel.action) {
+            HStack {
                 
-                viewModel.icon
-                    .renderingMode(.template)
-                    .foregroundColor(.iconBlack)
+                ZStack {
+                    
+                    if let avatar = viewModel.avatar {
+                        
+                        avatar
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                        
+                    } else {
+                        
+                        ZStack {
+                            
+                            Circle()
+                                .foregroundColor(.bgIconGrayLightest)
+                                .frame(width: 40, height: 40)
+                            
+                            Image.ic24User
+                                .renderingMode(.template)
+                                .foregroundColor(.iconGray)
+                        }
+                    }
+                    
+                    ZStack{
+                        
+                        Circle()
+                            .foregroundColor(.iconWhite)
+                            .frame(width: 20, height: 20)
+                        
+                        viewModel.logo
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                    }
+                    .offset(x: 18, y: -14)
+                    
+                }
+                
+                Text(viewModel.name)
+                    .foregroundColor(.textSecondary)
+                    .font(.textH4R16240())
+                    .accessibilityIdentifier("mainUserName")
             }
+        }
+        .accessibilityIdentifier("mainUserButton")
+    }
+}
+    
+struct NavBarButton: View {
+    
+    let viewModel: NavigationBarButtonViewModel
+    
+    var body: some View {
+        
+        Button(action: viewModel.action) {
+            
+            viewModel.icon
+                .renderingMode(.template)
+                .foregroundColor(.iconBlack)
         }
     }
 }
@@ -349,6 +393,7 @@ struct MainView_Previews: PreviewProvider {
         
         MainView(
             viewModel: .sample,
+            navigationOperationView: EmptyView.init,
             makeSberQRConfirmPaymentView: {
                 
                 .init(
@@ -364,17 +409,7 @@ struct MainView_Previews: PreviewProvider {
 extension MainViewModel {
     
     static let sample = MainViewModel(
-        navButtonsRight: [
-            .init(icon: .ic24Search, action: {}),
-            .init(icon: .ic24Bell, action: {})
-        ],
-        sections: [
-            MainSectionProductsView.ViewModel.sample,
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyMetallView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
+        .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             sberQRServices: .empty(),
@@ -387,16 +422,7 @@ extension MainViewModel {
     )
     
     static let sampleProducts = MainViewModel(
-        navButtonsRight: [
-            .init(icon: .ic24Search, action: {}),
-            .init(icon: .ic24Bell, action: {})
-        ], sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
+        .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             sberQRServices: .empty(),
@@ -409,17 +435,7 @@ extension MainViewModel {
     )
     
     static let sampleOldCurrency = MainViewModel(
-        navButtonsRight: [
-            .init(icon: .ic24Search, action: {}),
-            .init(icon: .ic24Bell, action: {})
-        ],
-        sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
+        .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             sberQRServices: .empty(),
@@ -430,4 +446,131 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         onRegister: {}
     )
+}
+
+private extension NavigationOperationView
+where OperationView == Color,
+      ListView == Color {
+    
+    static func preview() -> Self {
+        .init(
+            location: .init(id: ""),
+            viewModel: .init(),
+            operationView: { _ in Color.red },
+            listView: { _,_ in Color.yellow }
+        )
+    }
+}
+
+extension PaymentSticker.OperationViewConfiguration {
+    
+    static let `default`: Self = .init(
+        tipViewConfig: .init(
+            titleFont: .textBodyMR14200(),
+            titleForeground: .textSecondary,
+            backgroundView: .mainColorsGrayLightest
+        ), stickerViewConfig: .init(
+            rectangleColor: .mainColorsGrayLightest,
+            configHeader: .init(
+                titleFont: .textH3Sb18240(),
+                titleColor: .mainColorsBlack,
+                descriptionFont: .textBodySR12160(),
+                descriptionColor: .textPlaceholder
+            ),
+            configOption: .init(
+                titleFont: .textBodySR12160(),
+                titleColor: .textPlaceholder,
+                iconColor: .systemColorActive,
+                descriptionFont: .textH4M16240(),
+                descriptionColor: .secondary,
+                optionFont: .textH4M16240(),
+                optionColor: .textSecondary
+            )),
+        selectViewConfig: .init(
+            selectOptionConfig: .init(
+                titleFont: .textBodyMR14180(),
+                titleForeground: .textPlaceholder,
+                placeholderForeground: .textTertiary,
+                placeholderFont: .textBodyMR14180()
+            ),
+            optionsListConfig: .init(
+                titleFont: .textH4M16240(),
+                titleForeground: .textSecondary
+            ),
+            optionConfig: .init(
+                nameFont: .textH4M16240(),
+                nameForeground: .textSecondary
+            ), 
+            textFieldConfig: .init(
+                font: .textH4M16240(),
+                textColor: .textSecondary,
+                tintColor: .textSecondary,
+                backgroundColor: .clear,
+                placeholderColor: .textTertiary
+            )
+        ),
+        productViewConfig: .init(
+            headerTextColor: .textPlaceholder,
+            headerTextFont: .textBodyMR14180(),
+            textColor: .textSecondary,
+            textFont: .textH4M16240(),
+            optionConfig: .init(
+                numberColor: .textWhite,
+                numberFont: .textBodyXsR11140(),
+                nameColor: .textWhite.opacity(0.4),
+                nameFont: .textBodyXsR11140(),
+                balanceColor: .textWhite,
+                balanceFont: .textBodyXsSb11140()
+            ),
+            background: .init(color: .mainColorsGrayLightest)
+        ),
+        inputViewConfig: .init(
+            titleFont: .textBodyMR14180(),
+            titleColor: .textPlaceholder,
+            iconColor: .iconGray,
+            iconName: "ic24SmsCode",
+            warningFont: .textBodySR12160(),
+            warningColor: .systemColorError,
+            textFieldFont: .body,
+            textFieldColor: .textSecondary,
+            textFieldTintColor: .textSecondary,
+            textFieldBackgroundColor: .clear,
+            textFieldPlaceholderColor: .textPlaceholder
+        ),
+        amountViewConfig: .init(
+            amountFont: .textH2Sb20282(),
+            amountColor: .textWhite,
+            buttonTextFont: .buttonMediumM14160(),
+            buttonTextColor: .textWhite,
+            buttonColor: .mainColorsRed,
+            hintFont: .textBodySR12160(),
+            hintColor: .textPlaceholder,
+            background: .mainColorsBlackMedium
+        ),
+        resultViewConfiguration: .init(
+            colorSuccess: Color.systemColorActive,
+            colorWait: Color.systemColorWarning,
+            colorFailed: Color.systemColorError,
+            titleColor: Color.textSecondary,
+            titleFont: .textH3Sb18240(),
+            descriptionColor: .textPlaceholder,
+            descriptionFont: .textBodyMR14200(),
+            amountColor: .textSecondary,
+            amountFont: .textH1Sb24322(),
+            mainButtonColor: .textWhite,
+            mainButtonFont: .textH3Sb18240(),
+            mainButtonBackgroundColor: .buttonPrimary
+        ),
+        continueButtonConfiguration: .init(
+            activeColor: .buttonPrimary,
+            inActiveColor: .buttonPrimaryDisabled,
+            textFont: .textH3Sb18240(),
+            textColor: .textWhite
+        )
+    )
+}
+
+extension OperationStateViewModel {
+
+    static let empty = OperationStateViewModel { _,_ in }
 }

@@ -17,7 +17,7 @@ struct SberQRPreviewApp: App {
             NavigationView {
                 
                 ContentView(
-                    route: .init(modal: .fullScreenCover(.qrReader))
+                    navigation: .fullScreenCover(.qrReader)
                 )
             }
         }

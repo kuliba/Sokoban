@@ -13,7 +13,7 @@ import PinCodeUI
 import Tagged
 
 class ProductProfileViewModel: ObservableObject {
-        
+    
     typealias CardAction = CardDomain.CardAction
     typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
@@ -834,7 +834,8 @@ private extension ProductProfileViewModel {
                         let myProductsViewModel = MyProductsViewModel(
                             model,
                             cardAction: cardAction,
-                            makeProductProfileViewModel: makeProductProfileViewModel
+                            makeProductProfileViewModel: makeProductProfileViewModel,
+                            openOrderSticker: {}
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1968,11 +1969,6 @@ enum ProductProfileViewModelAction {
     }
     
     enum MyProductsTapped {
-        
-        struct ProductProfile: Action {
-            
-            let productId: ProductData.ID
-        }
         
         struct OpenDeposit: Action {}
     }

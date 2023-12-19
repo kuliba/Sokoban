@@ -1,6 +1,6 @@
 //
 //  OperationView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -8,77 +8,113 @@
 import Foundation
 import SwiftUI
 
-struct OperationView: View {
+public struct OperationView<OperationResultView: View>: View {
     
-    @ObservedObject var model: OperationStateViewModel
+    @StateObject var model: OperationStateViewModel
+    let operationResultView: (OperationResult) -> OperationResultView
+    let configuration: OperationViewConfiguration
     
-    var body: some View {
+    public init(
+        model: OperationStateViewModel,
+        operationResultView: @escaping (OperationResult) -> OperationResultView,
+        configuration: OperationViewConfiguration
+    ) {
+        self._model = .init(wrappedValue: model)
+        self.operationResultView = operationResultView
+        self.configuration = configuration
+    }
+    
+    public var body: some View {
 
         switch model.state {
         case .operation:
-            OperationProcessView(model: model)
+            OperationProcessView(
+                model: model,
+                configuration: configuration
+            )
+            .padding(.bottom, 20)
         
         case let .result(result):
-            OperationResultView(
-                title: result.title,
-                description: result.description,
-                amount: result.amount
-            ) {
-                
-                Button("details") {
-                    
-                    print("details")
-                }
-            }
+            operationResultView(result)
+                .navigationBarBackButtonHidden()
+                .navigationTitle("")
         }
     }
 }
 
-struct OperationResultView<ButtonsView: View>: View {
+public struct OperationResultView<ButtonsView: View>: View {
     
-    let title: String
-    let description: String
-    let amount: String
-    let buttonsView: () -> ButtonsView
+    let model: OperationResult
+    let buttonsView: (OperationResult.PaymentID) -> ButtonsView
+    let configuration: OperationViewConfiguration
+    let mainButtonAction: () -> Void
     
-    var body: some View {
+    public init(
+        model: OperationResult,
+        buttonsView: @escaping (OperationResult.PaymentID) -> ButtonsView,
+        mainButtonAction: @escaping () -> Void,
+        configuration: OperationViewConfiguration
+    ) {
+        self.model = model
+        self.buttonsView = buttonsView
+        self.mainButtonAction = mainButtonAction
+        self.configuration = configuration
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 20) {
             
-            Image(systemName: "photo.artframe")
-                .frame(width: 88, height: 88)
+            Spacer()
+                .frame(minHeight: 20, maxHeight: 112)
             
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.black)
-            
-            Text(description)
-                .font(.body)
-                .foregroundColor(.gray.opacity(0.4))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 28)
-            
-            Text(amount)
-                .font(.largeTitle)
-                .foregroundColor(.black)
+            VStack(spacing: 24) {
+                
+                ZStack(alignment: .center) {
+                    
+                    Circle()
+                        .foregroundColor(configuration.resultViewConfiguration.colorSuccess)
+                        .frame(width: 88, height: 88, alignment: .center)
+                    
+                    Image("ic48Check")
+                        .foregroundColor(.white)
+                        .frame(width: 88, height: 88)
+                }
+                
+                VStack(spacing: 12) {
+                    
+                    Text(model.title)
+                        .font(configuration.resultViewConfiguration.titleFont)
+                        .foregroundColor(configuration.resultViewConfiguration.titleColor)
+                    
+                    Text(model.description)
+                        .font(configuration.resultViewConfiguration.descriptionFont)
+                        .foregroundColor(configuration.resultViewConfiguration.descriptionColor)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 28)
+                        .frame(minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
+                    
+                }
+                
+                Text("\(model.amount) ₽")
+                    .font(configuration.resultViewConfiguration.amountFont)
+                    .foregroundColor(configuration.resultViewConfiguration.amountColor)
+            }
             
             Spacer()
             
             VStack(spacing: 56) {
              
-                buttonsView()
+                buttonsView(model.paymentID)
                 
-                Button {
-                    
-                    print("button end tapped")
-                    
-                } label: {
+                Button(action: mainButtonAction) {
                     
                     Text("На главный")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.red)
-                        .foregroundColor(.white)
+                        .background(configuration.resultViewConfiguration.mainButtonBackgroundColor)
+                        .font(configuration.resultViewConfiguration.mainButtonFont)
+                        .foregroundColor(configuration.resultViewConfiguration.mainButtonColor)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }
@@ -92,57 +128,233 @@ struct OperationResultView<ButtonsView: View>: View {
 struct OperationProcessView: View {
     
     @ObservedObject var model: OperationStateViewModel
+    let configuration: OperationViewConfiguration
     
+    @State private var value: CGFloat = 0
+
     var body: some View {
         
         VStack {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 32) {
+                VStack(spacing: 16) {
                     
-                    ForEach(model.scrollParameters, content: parameterView)
+                    ForEach(model.scrollParameters) { parameter in
+                        
+                        parameterView(
+                            operation: model.operation,
+                            parameter: parameter,
+                            configuration: configuration
+                        )
+                    }
                 }
             }
             .padding(.horizontal)
+            .offset(y: -self.value)
+            .onAppear {
+                
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (notification) in
+                    
+                    if let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                        
+                        let height = value.height - 100
+                        self.value = height
+                    }
+                }
+                
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { (notification) in
+                    
+                    self.value = 0
+                }
+            }
             
-            continueButton()
+            continueButton(
+                viewModel: .init(isActive: model.isOperationComplete()),
+                model: model,
+                configuration: configuration
+            )
+            .background(Color.clear)
         }
     }
     
-    @ViewBuilder
-    private func continueButton() -> some View {
+    struct ContinueButtonViewModel {
+    
+        let isActive: Bool
+    }
+    
+    struct ContinueButton: View {
         
-        if let amount = model.amountParameter {
+        let viewModel: ContinueButtonViewModel
+        let model: OperationStateViewModel
+        let configuration: OperationViewConfiguration
+        
+        var body: some View {
             
-            parameterView(parameter: amount)
-            
-        } else {
-            
-            Button {
-                model.event(.continueButtonTapped)
-            } label: {
+            Button { model.event(.continueButtonTapped(.continue)) } label: {
                 
                 Text("Продолжить")
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.red)
+                    .background(viewModel.isActive ? Color.red : Color.gray)
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .allowsHitTesting(viewModel.isActive ? true : false)
             }
             .padding(.horizontal)
+        }
+    }
+    
+    @ViewBuilder
+    private func continueButton(
+        viewModel: ContinueButtonViewModel,
+        model: OperationStateViewModel,
+        configuration: OperationViewConfiguration
+    ) -> some View {
+        
+        if let amount = model.amountParameter {
+            
+            parameterView(
+                operation: model.operation,
+                parameter: amount,
+                configuration: configuration
+            )
+            
+        } else if case let .operation(operation) = model.state {
+            
+            switch operation.state {
+            case .process:
+                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                
+            case .userInteraction:
+                
+                ContinueButton(
+                    viewModel: viewModel,
+                    model: model,
+                    configuration: configuration
+                )
+                .allowsHitTesting(model.isOperationComplete())
+            }
         }
     }
     
     @ViewBuilder
     private func parameterView(
-        parameter: Operation.Parameter
+        operation: Operation?,
+        parameter: Operation.Parameter,
+        configuration: OperationViewConfiguration
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
-        let viewModel = mapper.map(parameter)
+        let viewModel = mapper.map(operation, parameter)
         
-        ParameterView(viewModel: viewModel)
+        ParameterView(
+            viewModel: viewModel,
+            configuration: configuration,
+            event: { inputEvent in
+                
+                model.event(.input(inputEvent))
+            }
+        )
+    }
+}
+
+//MARK: Helper
+
+extension OperationStateViewModel {
+
+    public var scrollParameters: [Operation.Parameter] {
+        
+        operation?.parameters.filter { $0.id != .amount } ?? []
+    }
+    
+    public var amountParameter: Operation.Parameter? {
+        
+        operation?.parameters.first { $0.id == .amount }
+    }
+    
+    public var product: Operation.Parameter.ProductSelector? {
+        
+        let product = operation?.parameters.first { $0.id == .productSelector }
+        
+        switch product {
+        case let .productSelector(product):
+            return product
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var banner: Operation.Parameter.Sticker? {
+        
+        let product = operation?.parameters.first { $0.id == .sticker }
+        
+        switch product {
+        case let .sticker(sticker):
+            return sticker
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var transferType: Operation.Parameter.Select? {
+        
+        let product = operation?.parameters.first { $0.id == .transferType }
+        
+        switch product {
+        case let .select(select):
+            return select
+            
+        default:
+            return nil
+        }
+    }
+    
+    public func isOperationComplete() -> Bool {
+        
+        var complete: Bool = true
+        
+        guard let parameters = operation?.parameters else {
+            return false
+        }
+    
+        for parameter in parameters {
+            
+            if transferType?.id == .transferTypeSticker {
+                
+                if transferType?.value == "typeDeliveryCourier" {
+                    
+                    if let maxAmount = self.banner?.options.map({ $0.price }).max(),
+                       self.product?.selectedProduct.balance ?? 0 < maxAmount {
+                        
+                        return false
+                    }
+                } else if transferType?.value == "typeDeliveryOffice" {
+                    
+                    if let minAmount = self.banner?.options.map({ $0.price }).min(),
+                       self.product?.selectedProduct.balance ?? 0 < minAmount {
+                        
+                        complete = false
+                    }
+                }
+            }
+            
+            switch parameter {
+            case let .select(select):
+                
+                if select.value == nil {
+                    
+                    complete = false
+                }
+                
+            default:
+                break
+            }
+        }
+        
+        return complete
     }
 }
 
@@ -156,15 +368,16 @@ extension Operation.Parameter: Identifiable {
         case let .select(select):
             
             switch select.id {
-            case "city":
+            case .citySelector:
                 return .city
-            case "transferType":
+                
+            case .transferTypeSticker:
                 return .transferType
-            
+        
             default:
                 return .branches
             }
-        case .product: return .product
+        case .productSelector: return .productSelector
         case .amount: return .amount
         case .input: return .input
         }
@@ -177,15 +390,15 @@ extension Operation.Parameter: Identifiable {
         case city
         case transferType
         case branches
-        case product
+        case productSelector
         case amount
         case input
     }
 }
 
-extension ModelToViewModelMapper {
+private extension ModelToViewModelMapper {
     
-    public init(_ model: OperationStateViewModel) {
+    init(_ model: OperationStateViewModel) {
         
         self.action = model.event(_:)
     }

@@ -24,6 +24,7 @@ struct PlacesView: View {
                     
                     PlacesListView(viewModel: listViewModel)
                         .transition(.opacity)
+                        .padding(.top, 80)
                 }
                 
                 PlacesControlView(viewModel: viewModel.control)
