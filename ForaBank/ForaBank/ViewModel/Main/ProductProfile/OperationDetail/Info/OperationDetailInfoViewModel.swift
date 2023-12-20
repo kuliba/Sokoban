@@ -1676,8 +1676,6 @@ extension OperationDetailInfoViewModel {
                 purposeViewModel,
                 operationNumberViewModel
             ].compactMap { $0 }
-            
-            return cells
         
         case .productPaymentOffice, .productPaymentCourier:
             var cells = [
