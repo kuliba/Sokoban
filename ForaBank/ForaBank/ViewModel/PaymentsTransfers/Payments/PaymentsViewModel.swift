@@ -478,7 +478,8 @@ extension PaymentsViewModel {
                 let operationViewModel = PaymentsOperationViewModel(
                     operation: operation,
                     model: model,
-                    closeAction: closeAction)
+                    closeAction: closeAction
+                )
                 operationViewModel.rootActions = rootActions
                 bind(operationViewModel: operationViewModel)
                 
