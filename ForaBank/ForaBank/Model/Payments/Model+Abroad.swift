@@ -804,6 +804,54 @@ extension Model {
         }
     }
     
+    private func titleDropDownList(
+        _ operation: Payments.Operation
+    ) -> String {
+        
+        var (country, optionID): (String?, String?)
+
+        switch operation.source {
+        case let .direct(phone: _, countryId: countryId, serviceData: _):
+            country = countryId.description
+            
+        case let .latestPayment(latestPaymentId):
+            guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                  let latestPayment = latestPayment as? PaymentServiceData else {
+                return "Перевести"
+            }
+            
+            country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+            optionID = latestPayment.puref
+            
+        case let .template(templateId):
+            let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+            
+            guard let list = template?.parameterList as? [TransferAnywayData],
+                  let additional = list.last?.additional else {
+                return "Перевести"
+            }
+            
+            country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
+            
+        default:
+            country = nil
+        }
+        
+        let countryWithService = countriesListWithSevice.value.first(where: {($0.code == country || $0.contactCode == country)})
+        let operatorsList = self.dictionaryAnywayOperators()
+        
+        let options = getOptions(countryWithService, operatorsList)
+        
+        if let defaultService = optionID ?? options.first?.id,
+           defaultService.description.contained(in: [
+            Payments.Operator.contactCash.rawValue
+        ]) {
+            return "Способ выплаты"
+        } else {
+            return "Перевести"
+        }
+    }
+    
 }
 
 private extension Payments.Operation {
