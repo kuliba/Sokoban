@@ -32,7 +32,7 @@ extension SberQRConfirmPaymentState.Amount {
     
     static func paymentAmount(
         value: Decimal,
-        isEnabled: Bool = false
+        isEnabled: Bool
     ) -> Self {
         
         .init(
@@ -131,6 +131,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "5678",
         amountFormatted: "12.67 $",
+        balance: 12.67,
         look: .test(color: "red")
     )
     
@@ -141,6 +142,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "6789",
         amountFormatted: "4.21 $",
+        balance: 4.21,
         look: .test(color: "blue")
     )
     
@@ -151,6 +153,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "1111",
         amountFormatted: "12.67 $",
+        balance: 12.67,
         look: .test(color: "red")
     )
 }
@@ -170,7 +173,8 @@ extension ProductSelect.Product.Look {
 func makeEditableAmount(
     brandName: String = UUID().uuidString,
     productSelect: ProductSelect = .compact(.test),
-    amount: Decimal = 123.45
+    amount: Decimal = 123.45,
+    isEnabled: Bool = false
 ) -> SberQRConfirmPaymentState.EditableAmount {
     
     .init(
@@ -179,7 +183,10 @@ func makeEditableAmount(
         brandName: .brandName(value: brandName),
         recipientBank: .recipientBank,
         currency: .rub,
-        amount: .paymentAmount(value: amount)
+        amount: .paymentAmount(
+            value: amount,
+            isEnabled: isEnabled
+        )
     )
 }
 

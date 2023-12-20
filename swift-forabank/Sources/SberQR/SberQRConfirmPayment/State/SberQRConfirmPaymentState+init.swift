@@ -38,7 +38,7 @@ private extension SberQRConfirmPaymentState.EditableAmount {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: .compact(product),
+            productSelect: .init(selected: product),
             brandName: response.parameters.info(withID: .brandName),
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),
@@ -56,7 +56,7 @@ private extension SberQRConfirmPaymentState.FixedAmount {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: .compact(product),
+            productSelect: .init(selected: product),
             brandName: response.parameters.info(withID: .brandName),
             amount: response.parameters.info(withID: .amount),
             recipientBank: response.parameters.info(withID: .recipientBank),
@@ -73,15 +73,15 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
         
-        #warning("isEnabled depends on amount due (amount value) and product balance")
+        #warning("isEnabled also depends product balance")
         
         return .init(
             title: amount.title,
             value: amount.value,
             button: .init(
                 title: amount.button.title,
-                // for simplicity - as most likely default value in zero
-                isEnabled: false
+                // TODO: add product balance as a cap
+                isEnabled: 0 < amount.value
             )
         )
     }

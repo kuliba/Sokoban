@@ -21,7 +21,7 @@ struct ProductSelectView: View {
         
         VStack(spacing: 10) {
             
-            selectedProductView(state.product)
+            selectedProductView(state.selected)
                 .padding(.default)
             
             state.products.map(productsView)
@@ -122,38 +122,7 @@ struct ProductSelectView: View {
 
 private extension ProductSelect {
     
-    var isExpanded: Bool {
-        
-        switch self {
-        case .compact:
-            return false
-            
-        case .expanded:
-            return true
-        }
-    }
-    
-    var product: ProductSelect.Product {
-        
-        switch self {
-        case let .compact(product):
-            return product
-            
-        case let .expanded(product, _):
-            return product
-        }
-    }
-    
-    var products: [ProductSelect.Product]? {
-        
-        switch self {
-        case .compact:
-            return nil
-            
-        case let .expanded(_, products):
-            return products
-        }
-    }
+    var isExpanded: Bool { products != nil }
 }
 
 // MARK: - Previews
@@ -164,10 +133,9 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            ProductSelectView_Demo(.compact(.cardPreview))
-            ProductSelectView_Demo(.expanded(.cardPreview, .allProducts))
+            ProductSelectView_Demo(.compact())
+            ProductSelectView_Demo(.expanded())
         }
-//        .padding()
     }
     
     private struct ProductSelectView_Demo: View {
@@ -193,5 +161,22 @@ struct ProductSelectView_Previews: PreviewProvider {
             )
             .border(.red)
         }
+    }
+}
+
+private extension ProductSelect {
+    
+    static func compact(
+        selected: ProductSelect.Product = .cardPreview
+    ) -> Self {
+        
+        .init(selected: selected)
+    }
+    
+    static func expanded(
+        selected: ProductSelect.Product = .cardPreview
+    ) -> Self {
+        
+        .init(selected: selected, products: .allProducts)
     }
 }

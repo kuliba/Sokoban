@@ -50,6 +50,7 @@ extension ProductData {
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
                 amountFormatted: formatBalance(card),
+                balance: .init(card.balanceValue),
                 look: .init(
                     background: .svg(card.largeDesign.description),
                     color: card.backgroundColor.description,
@@ -67,6 +68,7 @@ extension ProductData {
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
                 amountFormatted: formatBalance(account),
+                balance: .init(account.balanceValue),
                 look: .init(
                     background: .svg(account.largeDesign.description),
                     color: account.backgroundColor.description,

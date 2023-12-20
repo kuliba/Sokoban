@@ -13,7 +13,7 @@ public extension SberQRConfirmPaymentState {
         
         let title: String
         let value: Decimal
-        let button: AmountButton
+        public var button: AmountButton
         
         public init(
             title: String,
@@ -32,7 +32,7 @@ public extension SberQRConfirmPaymentState.Amount {
     struct AmountButton: Equatable {
         
         let title: String
-        let isEnabled: Bool
+        public var isEnabled: Bool
         
         public init(
             title: String,
