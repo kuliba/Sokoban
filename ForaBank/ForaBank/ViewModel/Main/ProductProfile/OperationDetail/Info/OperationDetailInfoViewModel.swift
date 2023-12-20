@@ -100,6 +100,12 @@ final class OperationDetailInfoViewModel: Identifiable {
         self.cells = [DefaultCellViewModel]()
         let bankList = Model.shared.bankList.value
         
+        let dateTimeCell = PropertyCellViewModel(
+            title: "Дата и время операции (МСК)",
+            iconType: IconType.date.icon,
+            value: dateString
+        )
+        
         switch statement.paymentDetailType {
         case .otherBank:
             if let payeeCardNumber = operation?.payeeCardNumber {
@@ -136,10 +142,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .betweenTheir:
             
@@ -218,10 +221,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 }
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .insideBank:
             
@@ -288,10 +288,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 iconType: IconType.purpose.icon,
                 value: statement.comment))
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .contactAddressless:
             
@@ -364,10 +361,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: transferReference))
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .direct:
             
@@ -460,10 +454,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .externalIndivudual, .externalEntity:
             
@@ -560,10 +551,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(comissionCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .mobile:
             
@@ -617,10 +605,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .internet:
             
@@ -668,10 +653,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .housingAndCommunalService:
             
@@ -735,10 +717,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
             
         case .notFinance:
@@ -772,10 +751,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(comissionCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .outsideOther:
             
@@ -833,10 +809,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .sfp:
             let sfpLogoImage = Image("sbp-logo")
@@ -940,10 +913,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: transferNumber))
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .transport:
             
@@ -1024,10 +994,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                     name: statement.merchant))
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
             if let status = operation?.operationStatus {
                 
@@ -1141,10 +1108,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: amount))
             }
             
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .taxes:
             
@@ -1208,18 +1172,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     }
                 }
             }
-            cells.append(PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString))
+            cells.append(dateTimeCell)
             
         case .sberQRPayment:
-            let dateTimeCell = PropertyCellViewModel(
-                title: "Дата и время операции (МСК)",
-                iconType: IconType.date.icon,
-                value: dateString
-            )
-
             cells = Self.sberQRPayment(
                 statement: statement,
                 operation: operation,
