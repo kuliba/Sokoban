@@ -1213,6 +1213,22 @@ final class OperationDetailInfoViewModel: Identifiable {
                 iconType: IconType.date.icon,
                 value: dateString))
             
+        case .sberQRPayment:
+            let dateTimeCell = PropertyCellViewModel(
+                title: "Дата и время операции (МСК)",
+                iconType: IconType.date.icon,
+                value: dateString
+            )
+
+            cells = Self.sberQRPayment(
+                statement: statement,
+                operation: operation,
+                product: product,
+                model: model,
+                dateTimeCell: dateTimeCell,
+                currency: currency
+            )
+            
         default:
             break
         }
@@ -1220,6 +1236,129 @@ final class OperationDetailInfoViewModel: Identifiable {
         self.logo = logo
         //FIXME: why dismissAction is commented?
         //        self.dismissAction = dismissAction
+    }
+}
+
+extension OperationDetailInfoViewModel {
+    
+    static func sberQRPayment(
+        statement: ProductStatementData,
+        operation: OperationDetailData?,
+        product: ProductData,
+        model: Model,
+        dateTimeCell: PropertyCellViewModel,
+        currency: String
+    ) -> [DefaultCellViewModel] {
+        
+        let amount = Self.amount(statement: statement, currency: currency, model: model)
+        
+        let payee = Self.payee(statement: statement, model: model)
+                
+        //    icon: Image("OkOperators"),
+        //    name: "Успешно"))
+        //    icon: Image("waiting"),
+        //    name: "В обработке"))
+        //    icon: Image("rejected"),
+        //    name: "Отказ"))
+        let status = BankCellViewModel(
+            title: "TBD: OPERATION STATUS: Статус операции",
+            icon: IconType.date.icon,
+            name: "SUCCESS"
+        )
+        
+        let account = accountCell(
+            with: product,
+            model: model,
+            currency: currency,
+            operationType: statement.operationType
+        )
+        
+        let merchant = merchant(statement: statement)
+        let bank = bank(statement: statement, model: model)
+        
+        return [
+            amount,
+            payee,
+            dateTimeCell,
+            status,
+            account,
+            merchant,
+            bank,
+        ].compactMap { $0 }
+    }
+    
+    static func amount(
+        statement: ProductStatementData,
+        currency: String,
+        model: Model
+    ) -> PropertyCellViewModel? {
+        
+        let formattedAmount = model.amountFormatted(
+            amount: statement.amount,
+            currencyCode: currency,
+            style: .fraction)
+        
+        return formattedAmount.map {
+            
+            .init(
+                title: "Сумма перевода",
+                iconType: IconType.balance.icon,
+                value: $0
+            )
+        }
+    }
+    
+    static func payee(
+        statement: ProductStatementData,
+        model: Model
+    ) -> BankCellViewModel? {
+        
+        model.images.value[statement.md5hash]?.image.map { image in
+            
+            BankCellViewModel(
+                title: "Наименование ТСП",
+                icon: image,
+                name: statement.merchant)
+        }
+    }
+    
+    static func merchant(
+        statement: ProductStatementData
+    ) -> BankCellViewModel {
+        
+        let title = statement.operationType == .debit ? "Получатель" : "Отправитель"
+        
+        return .init(
+            title: title,
+            icon: Image("hash"),
+            name: statement.merchantNameRus ?? ""
+        )
+    }
+    
+    static func bank(
+        statement: ProductStatementData,
+        model: Model
+    ) -> BankCellViewModel {
+        
+        let title = statement.operationType == .debit ? "Банк получателя" : "Банк отправителя"
+
+        let bankImage: Image? = {
+            
+            guard let bank = model.dictionaryFullBankInfoList().first(where: { $0.bic == statement.fastPayment?.foreignBankBIC }),
+                  let uiImage = bank.svgImage.uiImage else {
+                return nil
+            }
+            
+            return .init(uiImage: uiImage)
+        }()
+        
+        let bankName = statement.fastPayment?.foreignBankName
+
+        return .init(
+            title: title,
+            icon: bankImage ?? Image("BankIcon"),
+            name: bankName ?? ""
+        )
     }
 }
 
