@@ -70,6 +70,9 @@ extension OperationDetailViewModel {
             case .c2b:
                 self.init(logo: Image("sbpindetails"), status: statement.isReturn ? .purchase_return : .success, title: "\(statement.groupName)", category: nil)
  
+            case .sberQRPayment:
+                self.init(logo: image, status: nil, title: "\(statement.groupName)", category: nil)
+ 
             default:
                 //FIXME: taxes
                 self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName)")

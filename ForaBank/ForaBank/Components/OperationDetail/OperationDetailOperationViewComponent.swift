@@ -112,7 +112,7 @@ extension OperationDetailViewModel {
                 self.init(bankLogo: bankLogo, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
                 
             case .sberQRPayment:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             default:
                 //FIXME: taxes
