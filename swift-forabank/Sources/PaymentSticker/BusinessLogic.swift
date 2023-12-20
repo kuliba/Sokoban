@@ -515,8 +515,6 @@ public extension BusinessLogic {
             case let .failure(error):
                 completion(.failure(error))
             }
-            
-            completion(.success(.operation(operation)))
         }
     }
     
