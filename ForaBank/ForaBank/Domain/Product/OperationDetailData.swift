@@ -425,7 +425,7 @@ extension OperationDetailData {
         )
     }
     
-    var restrictedTemplateButton: Bool {
+    var shouldHaveTemplateButton: Bool {
         
         switch self.transferEnum {
         case .interestDeposit,
