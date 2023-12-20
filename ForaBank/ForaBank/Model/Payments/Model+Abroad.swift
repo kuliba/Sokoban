@@ -19,6 +19,7 @@ extension Model {
             }
                 
             var country: String?
+            var optionID: String?
             
             switch source {
             case let .direct(countryId: countryId):
@@ -42,6 +43,7 @@ extension Model {
                 }
                 
                 country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+                optionID = latestPayment.puref
                 
             default:
                 throw Payments.Error.missingSource(operation.service)
@@ -61,7 +63,8 @@ extension Model {
                     title: "Переводы за рубеж",
                     subtitle: "Денежные переводы МИГ",
                     icon: .image(.init(named: "ic24Edit2") ?? .iconPlaceholder),
-                    style: .large)
+                    style: .large
+                )
             )
             
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
@@ -88,7 +91,8 @@ extension Model {
                 }
             }
             
-            guard let defaultService = options.first?.id,
+            
+            guard let defaultService = optionID ?? options.first?.id,
                   let operatorParameterValue: Payments.Operator = .init(rawValue: defaultService) else {
                 throw Payments.Error.missingValueForParameter(Payments.Parameter.Identifier.operator.rawValue)
             }
@@ -108,56 +112,71 @@ extension Model {
             let productId = productWithSource(source: operation.source, productId: String(product.id))
             let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
-            if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
+            switch source {
+            case .latestPayment:
+                let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
+                    id: dropDownListId,
+                    value: defaultService
+                ), title: "Перевести", options: options)
                 
-                let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
+                return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 
-                let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
+            default:
                 
-                var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
-                                                                       headerParameter,
-                                                                       dropDownListParameter,
-                                                                       countryParameter,
-                                                                       productParameter]
-                
-                let paymentsSystemId = Payments.Parameter.Identifier.paymentSystem.rawValue
-
-                if case .template = source {
+                if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
                     
-                    let countrySwitch = try parameters.parameter(forIdentifier: .countryDropDownList)
+                    let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
                     
-                    if let value = countrySwitch.value,
-                       let puref = Payments.Operator(rawValue: value) {
+                    let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
+                    
+                    var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
+                                                                            headerParameter,
+                                                                            dropDownListParameter,
+                                                                            countryParameter,
+                                                                            productParameter]
+                    
+                    let paymentsSystemId = Payments.Parameter.Identifier.paymentSystem.rawValue
+                    
+                    if case .template = source {
                         
-                        let `operator` = self.dictionaryAnywayGroupOperatorData(for: value)
+                        let countrySwitch = try parameters.parameter(forIdentifier: .countryDropDownList)
                         
-                        if let parentCode = `operator`?.parentCode,
-                           let parentOperator = self.dictionaryAnywayOperatorGroup(for: parentCode) {
+                        if let value = countrySwitch.value,
+                           let puref = Payments.Operator(rawValue: value) {
                             
-                            if let svgImage = parentOperator.logotypeList.last?.svgImage,
-                               let icon = ImageData(with: svgImage) {
+                            let `operator` = self.dictionaryAnywayGroupOperatorData(for: value)
+                            
+                            if let parentCode = `operator`?.parentCode,
+                               let parentOperator = self.dictionaryAnywayOperatorGroup(for: parentCode) {
                                 
-                                switch puref {
-                                case .contact, .contactCash:
-                                    let value = "CONTACT"
-                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                if let svgImage = parentOperator.logotypeList.last?.svgImage,
+                                   let icon = ImageData(with: svgImage) {
                                     
-                                default:
-                                    let value = "МИГ"
-                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                    switch puref {
+                                    case .contact, .contactCash:
+                                        let value = "CONTACT"
+                                        parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                        
+                                    default:
+                                        let value = "МИГ"
+                                        parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                    }
                                 }
                             }
                         }
                     }
+                    
+                    return .init(parameters: parameters, front: .init(visible: [headerParameter.id, dropDownListId, paymentsSystemId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
+                    
+                } else {
+                    
+                    let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
+                        id: dropDownListId,
+                        value: defaultService
+                    ), title: "Перевести", options: options)
+                    
+                    return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 }
-                
-                return .init(parameters: parameters, front: .init(visible: [headerParameter.id, dropDownListId, paymentsSystemId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
-                
-            } else {
-                
-                let dropDownListParameter = Payments.ParameterSelectDropDownList.init(.init(id: dropDownListId, value: defaultService), title: "Перевести", options: options)
-                
-                return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
             }
             
         default:
@@ -203,7 +222,7 @@ extension Model {
         case Payments.Parameter.Identifier.operator.rawValue:
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
             
-            guard let service = parameters.first(where: { $0.id == dropDownListId}) as? Payments.ParameterSelectDropDownList,
+            guard let service = parameters.first(where: { $0.id == dropDownListId }) as? Payments.ParameterSelectDropDownList,
                   let value = service.value?.description else {
                 return nil
             }
