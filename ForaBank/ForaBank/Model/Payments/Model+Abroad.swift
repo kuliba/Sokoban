@@ -18,36 +18,9 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
                 
-            var country: String?
-            var optionID: String?
+            var (country, optionID): (String?, String?)
             
-            switch source {
-            case let .direct(countryId: countryId):
-                country = countryId.countryId.description
-                    
-            case let .template(templateId):
-                        
-                let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
-                
-                guard let list = template?.parameterList as? [TransferAnywayData],
-                    let additional = list.last?.additional else {
-                    throw Payments.Error.missingSource(operation.service)
-                }
-                        
-                country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
-            
-            case let .latestPayment(latestPaymentId):
-                guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
-                      let latestPayment = latestPayment as? PaymentServiceData else {
-                    throw Payments.Error.missingSource(operation.service)
-                }
-                
-                country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
-                optionID = latestPayment.puref
-                
-            default:
-                throw Payments.Error.missingSource(operation.service)
-            }
+            try getCountyAndOptionId(source, &country, operation, &optionID)
                 
             guard let country = country else {
                 throw Payments.Error.missingSource(operation.service)
@@ -69,28 +42,7 @@ extension Model {
             
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
             
-            var options: [Payments.ParameterSelectDropDownList.Option] = []
-            
-            if let services = countryWithService?.servicesList {
-                
-                for service in services {
-                    
-                    if let option = operatorsList?.filter({$0.code == service.code.rawValue}).first {
-                        
-                        let icon: Payments.ParameterSelectDropDownList.Option.Icon? = {
-                            
-                            guard let imageData = option.logotypeList.first?.iconData else {
-                                return nil
-                            }
-                            
-                            return .image(imageData)
-                        }()
-                        
-                        options.append(.init(id: option.code, name: option.name, icon: icon))
-                    }
-                }
-            }
-            
+            var options: [Payments.ParameterSelectDropDownList.Option] = getOptions(countryWithService, operatorsList)
             
             guard let defaultService = optionID ?? options.first?.id,
                   let operatorParameterValue: Payments.Operator = .init(rawValue: defaultService) else {
@@ -117,7 +69,7 @@ extension Model {
                 let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
                     id: dropDownListId,
                     value: defaultService
-                ), title: "Перевести", options: options)
+                ), title: titleDropDownList(operation), options: options)
                 
                 return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 
@@ -127,7 +79,10 @@ extension Model {
                     
                     let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
                     
-                    let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
+                    let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
+                        id: dropDownListId,
+                        value: option
+                    ), title: titleDropDownList(operation), options: options)
                     
                     var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
                                                                             headerParameter,
@@ -173,7 +128,7 @@ extension Model {
                     let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
                         id: dropDownListId,
                         value: defaultService
-                    ), title: "Перевести", options: options)
+                    ), title: titleDropDownList(operation), options: options)
                     
                     return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 }
@@ -268,7 +223,10 @@ extension Model {
                 return nil
             }
             
-            let dropDownListParameter = Payments.ParameterSelectDropDownList.init(.init(id: service.id, value: options.first?.id), title: "Перевести", options: options)
+            let dropDownListParameter = Payments.ParameterSelectDropDownList.init(.init(
+                id: service.id,
+                value: options.first?.id
+            ), title: titleDropDownList(operation), options: options)
             
             return dropDownListParameter
             
@@ -768,6 +726,7 @@ extension Model {
         
         return identifiers.map(\.rawValue)
     }
+    
     private func getCountyAndOptionId(
         _ source: Payments.Operation.Source,
         _ country: inout String?,
