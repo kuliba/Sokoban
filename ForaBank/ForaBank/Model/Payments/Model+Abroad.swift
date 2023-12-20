@@ -71,7 +71,31 @@ extension Model {
                     value: defaultService
                 ), title: titleDropDownList(operation), options: options)
                 
-                return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
+                return .init(
+                    parameters: [
+                        operatorParameter,
+                        headerParameter,
+                        dropDownListParameter,
+                        countryParameter,
+                        productParameter
+                    ],
+                    front: .init(
+                        visible: [
+                            headerParameter.id,
+                            dropDownListId,
+                            countryId
+                        ],
+                        isCompleted: true
+                    ),
+                    back: .init(
+                        stage: .remote(.start),
+                        required: [
+                            dropDownListId,
+                            countryId
+                        ],
+                        processed: nil
+                    )
+                )
                 
             default:
                 
@@ -130,7 +154,31 @@ extension Model {
                         value: defaultService
                     ), title: titleDropDownList(operation), options: options)
                     
-                    return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
+                    return .init(
+                        parameters: [
+                            operatorParameter,
+                            headerParameter,
+                            dropDownListParameter,
+                            countryParameter,
+                            productParameter
+                        ],
+                        front: .init(
+                            visible: [
+                                headerParameter.id,
+                                dropDownListId,
+                                countryId
+                            ],
+                            isCompleted: true
+                        ),
+                        back: .init(
+                            stage: .remote(.start),
+                            required: [
+                                dropDownListId,
+                                countryId
+                            ],
+                            processed: nil
+                        )
+                    )
                 }
             }
             
