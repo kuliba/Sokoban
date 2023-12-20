@@ -1193,20 +1193,28 @@ extension OperationDetailInfoViewModel {
         currency: String
     ) -> [DefaultCellViewModel] {
         
-        let amount = amount(statement: statement, currency: currency, model: model)
-        
-        let payee = payee(statement: statement, model: model)
-        
+        let amount = amount(
+            statement: statement,
+            currency: currency,
+            model: model
+        )
+        let payee = payee(
+            statement: statement,
+            operation: operation,
+            model: model
+        )
         let status = operation.flatMap(operationStatus)
-        
         let account = accountCell(
             with: product,
             model: model,
             operationType: statement.operationType
         )
-        
         let merchant = merchant(statement: statement)
-        let bank = bank(statement: statement, model: model)
+        let bank = bank(
+            operationType: statement.operationType,
+            operation: operation,
+            model: model
+        )
         
         return [
             amount,
@@ -1242,16 +1250,23 @@ extension OperationDetailInfoViewModel {
     
     static func payee(
         statement: ProductStatementData,
+        operation: OperationDetailData?,
         model: Model
     ) -> BankCellViewModel? {
         
-        model.images.value[statement.md5hash]?.image.map { image in
+        let image: Image? = {
+            guard let merchantIcon = operation?.merchantIcon,
+                  let image = model.images.value[merchantIcon]?.image
+            else { return nil }
             
-            BankCellViewModel(
-                title: "Наименование ТСП",
-                icon: image,
-                name: statement.merchant)
-        }
+            return image
+        }()
+        
+        return .init(
+            title: "Наименование ТСП",
+            icon: image ?? .ic64Goods,
+            name: operation?.merchantSubName ?? ""
+        )
     }
     
     static func operationStatus(
@@ -1293,34 +1308,29 @@ extension OperationDetailInfoViewModel {
         
         return .init(
             title: title,
-            icon: Image("hash"),
+            icon: Image("customer"),
             name: statement.merchantNameRus ?? ""
         )
     }
     
     static func bank(
-        statement: ProductStatementData,
+        operationType: OperationType,
+        operation: OperationDetailData?,
         model: Model
-    ) -> BankCellViewModel {
+    ) -> BankCellViewModel? {
         
-        let title = statement.operationType == .debit ? "Банк получателя" : "Банк отправителя"
+        let title = operationType == .debit ? "Банк получателя" : "Банк отправителя"
         
-        let bankImage: Image? = {
+        let bankList = model.bankList.value
+        
+        guard let memberId = operation?.memberId,
+              let bank = bankList.first(where: { $0.memberId == memberId })
+        else { return nil }
             
-            guard let bank = model.dictionaryFullBankInfoList().first(where: { $0.bic == statement.fastPayment?.foreignBankBIC }),
-                  let uiImage = bank.svgImage.uiImage else {
-                return nil
-            }
-            
-            return .init(uiImage: uiImage)
-        }()
-        
-        let bankName = statement.fastPayment?.foreignBankName
-        
         return .init(
             title: title,
-            icon: bankImage ?? Image("BankIcon"),
-            name: bankName ?? ""
+            icon: bank.svgImage.image ?? Image("BankIcon"),
+            name: bank.memberNameRus
         )
     }
 }
@@ -1396,7 +1406,7 @@ private extension OperationDetailInfoViewModel {
         guard let amountFormatted = model.amountFormatted(
             amount: amount,
             currencyCode: currency,
-            style: .clipped) 
+            style: .clipped)
         else { return nil }
         
         return .init(title: title,
