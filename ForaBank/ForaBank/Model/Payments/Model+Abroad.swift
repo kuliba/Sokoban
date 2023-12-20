@@ -768,6 +768,42 @@ extension Model {
         
         return identifiers.map(\.rawValue)
     }
+    private func getCountyAndOptionId(
+        _ source: Payments.Operation.Source,
+        _ country: inout String?,
+        _ operation: Payments.Operation,
+        _ optionID: inout String?
+    ) throws {
+        
+        switch source {
+        case let .direct(countryId: countryId):
+            country = countryId.countryId.description
+            
+        case let .template(templateId):
+            
+            let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+            
+            guard let list = template?.parameterList as? [TransferAnywayData],
+                  let additional = list.last?.additional else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+            
+            country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
+            
+        case let .latestPayment(latestPaymentId):
+            guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                  let latestPayment = latestPayment as? PaymentServiceData else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+            
+            country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+            optionID = latestPayment.puref
+            
+        default:
+            throw Payments.Error.missingSource(operation.service)
+        }
+    }
+    
 }
 
 private extension Payments.Operation {
