@@ -17,8 +17,7 @@ extension Model {
                 self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0.map(\.rawValue)))
             },
             imagesPublisher: images,
-            fallback: ImageCacheFallback.image(forKey:),
-            defaultImage: .ic40Lock
+            fallback: ImageCacheFallback.image(forKey:)
         )
     }
 }
