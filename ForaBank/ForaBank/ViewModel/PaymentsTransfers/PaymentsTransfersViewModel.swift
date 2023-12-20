@@ -1257,12 +1257,13 @@ extension PaymentsTransfersViewModel {
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
-                model: model) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                }
+                model: model
+            ) { [weak self] in
+                
+                guard let self else { return }
+                
+                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
             
             bind(paymentsViewModel)
             
