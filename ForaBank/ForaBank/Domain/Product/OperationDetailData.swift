@@ -425,7 +425,7 @@ extension OperationDetailData {
         )
     }
     
-    var restrictedTemplateButton: Bool {
+    var shouldHaveTemplateButton: Bool {
         
         switch self.transferEnum {
         case .interestDeposit,
@@ -440,6 +440,7 @@ extension OperationDetailData {
              .c2bQrData,
              .c2bPayment,
              .bankDef,
+             .sberQRPayment,
              .other:
             return false
         default:

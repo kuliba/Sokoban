@@ -45,33 +45,24 @@ extension OperationDetailViewModel {
             let image = productStatement.svgImage?.image
             let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
 
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
+            
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
+            
             switch productStatement.paymentDetailType {
             case .insideBank:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
-                
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .betweenTheir:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant
-                )
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .otherBank:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .contactAddressless, .direct:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .externalIndivudual, .externalEntity:
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
-                
                 if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                     
                     self.init(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, date: dateFormatted)
@@ -82,16 +73,12 @@ extension OperationDetailViewModel {
                 }
                 
             case .housingAndCommunalService, .insideOther, .internet, .mobile:
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                  
             case .outsideCash:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .outsideOther:
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .sfp:
@@ -107,7 +94,6 @@ extension OperationDetailViewModel {
                     
                     payeeViewModel = .singleRow(productStatement.merchant)
                 }
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                     
                     self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: dateFormatted)
@@ -116,20 +102,20 @@ extension OperationDetailViewModel {
                     
                     self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 }
+                
             case .transport:
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .c2b:
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
-
                 let bankLogo = Self.bankLogo(with: productStatement, model: model)
                 
-                self.init(bankLogo: bankLogo, payee: .singleRow(productStatement.merchant), amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
+                self.init(bankLogo: bankLogo, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
+                
+            case .sberQRPayment:
+                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             default:
                 //FIXME: taxes
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
             }
         }

@@ -440,17 +440,17 @@ final class OperationDetailDataTests: XCTestCase {
     
     //MARK: RestrictedTemplateButton
     
-    func test_restrictedTemplateButton_withOperationDetailStub_forAccountClose_shouldReturnFalse() {
+    func test_shouldHaveTemplateButton_withOperationDetailStub_forAccountClose_shouldReturnFalse() {
         
         let sut = Detail.stub(transferEnum: .accountClose)
         
-        XCTAssertFalse(sut.restrictedTemplateButton)
+        XCTAssertFalse(sut.shouldHaveTemplateButton)
     }
     
-    func test_restrictedTemplateButton_withOperationDetailStub_forCardToCard_shouldReturnTrue() {
+    func test_shouldHaveTemplateButton_withOperationDetailStub_forCardToCard_shouldReturnTrue() {
         
         let sut = Detail.stub(transferEnum: .cardToCard)
         
-        XCTAssertTrue(sut.restrictedTemplateButton)
+        XCTAssertTrue(sut.shouldHaveTemplateButton)
     }
 }

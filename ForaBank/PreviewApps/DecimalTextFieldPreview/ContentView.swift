@@ -15,7 +15,9 @@ struct ContentView: View {
     
     init() {
         
-        self._viewModel = .init(wrappedValue: .decimal())
+        self._viewModel = .init(wrappedValue: .decimal(
+            formatter: .init(currencySymbol: "₽")
+        ))
     }
     
     var body: some View {

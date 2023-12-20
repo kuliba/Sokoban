@@ -106,6 +106,7 @@ extension ProductStatementData {
         case taxes = "TAX_AND_STATE_SERVICE"
         case c2b = "C2B_PAYMENT"
         case insideDeposit = "INSIDE_DEPOSIT"
+        case sberQRPayment = "SBER_QR_PAYMENT"
         case unknown
     }
 }

@@ -40,18 +40,33 @@ public extension ChangingReducer {
             let text = {
                 if formatter.isDecimalSeparator(replacementText) {
                     return changed
-                } else {
-                    let filtered = formatter.clean(
-                        text: changed,
-                        allowDecimalSeparator: true
-                    )
-                    let decimal = Decimal(
-                        string: filtered,
-                        locale: formatter.locale
-                    )
-                    
-                    return formatter.format(decimal ?? 0) ?? ""
                 }
+                
+                // trailing zero after decimal separator
+                let cleanText = formatter.clean(
+                    text: textState.text,
+                    allowDecimalSeparator: true
+                )
+                let isLastDecimalSeparator = {
+                    
+                    guard let last = cleanText.last else { return false }
+                    
+                    return formatter.isDecimalSeparator(.init(last))
+                }()
+                if replacementText == "0" && isLastDecimalSeparator {
+                    return changed
+                }
+                
+                let cleanChange = formatter.clean(
+                    text: changed,
+                    allowDecimalSeparator: true
+                )
+                let decimal = Decimal(
+                    string: cleanChange,
+                    locale: formatter.locale
+                )
+                
+                return formatter.format(decimal ?? 0) ?? ""
             }()
             
             let cursorPosition = text.count - cursorPositionFromEnd
