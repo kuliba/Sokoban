@@ -852,6 +852,35 @@ extension Model {
         }
     }
     
+    private func getOptions(
+        _ countryWithService: CountryWithServiceData?,
+        _ operatorsList: [OperatorGroupData.OperatorData]?
+    ) -> [Payments.ParameterSelectDropDownList.Option] {
+
+        var options: [Payments.ParameterSelectDropDownList.Option] = []
+
+        if let services = countryWithService?.servicesList {
+            
+            for service in services {
+                
+                if let option = operatorsList?.filter({$0.code == service.code.rawValue}).first {
+                    
+                    let icon: Payments.ParameterSelectDropDownList.Option.Icon? = {
+                        
+                        guard let imageData = option.logotypeList.first?.iconData else {
+                            return nil
+                        }
+                        
+                        return .image(imageData)
+                    }()
+                    
+                    options.append(.init(id: option.code, name: option.name, icon: icon))
+                }
+            }
+        }
+        
+        return options
+    }
 }
 
 private extension Payments.Operation {
