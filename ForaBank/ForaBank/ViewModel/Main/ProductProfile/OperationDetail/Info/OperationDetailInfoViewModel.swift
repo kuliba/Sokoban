@@ -1205,21 +1205,11 @@ extension OperationDetailInfoViewModel {
         currency: String
     ) -> [DefaultCellViewModel] {
         
-        let amount = Self.amount(statement: statement, currency: currency, model: model)
+        let amount = amount(statement: statement, currency: currency, model: model)
         
-        let payee = Self.payee(statement: statement, model: model)
-                
-        //    icon: Image("OkOperators"),
-        //    name: "Успешно"))
-        //    icon: Image("waiting"),
-        //    name: "В обработке"))
-        //    icon: Image("rejected"),
-        //    name: "Отказ"))
-        let status = BankCellViewModel(
-            title: "TBD: OPERATION STATUS: Статус операции",
-            icon: IconType.date.icon,
-            name: "SUCCESS"
-        )
+        let payee = payee(statement: statement, model: model)
+        
+        let status = operation.flatMap(operationStatus)
         
         let account = accountCell(
             with: product,
@@ -1274,6 +1264,37 @@ extension OperationDetailInfoViewModel {
                 title: "Наименование ТСП",
                 icon: image,
                 name: statement.merchant)
+        }
+    }
+    
+    static func operationStatus(
+        operation: OperationDetailData
+    ) -> BankCellViewModel? {
+        
+        let title = "Статус операции"
+        
+        switch operation.operationStatus {
+            
+        case .complete:
+            return .init(
+                title: title,
+                icon: Image("OkOperators"),
+                name: "Успешно")
+            
+        case .inProgress:
+            return .init(
+                title: title,
+                icon: Image("waiting"),
+                name: "В обработке")
+            
+        case .rejected:
+            return .init(
+                title: title,
+                icon: Image("rejected"),
+                name: "Отказ")
+            
+        case .none, .unknown:
+            return nil
         }
     }
     
