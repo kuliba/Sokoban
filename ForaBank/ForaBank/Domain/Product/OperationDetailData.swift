@@ -440,6 +440,7 @@ extension OperationDetailData {
              .c2bQrData,
              .c2bPayment,
              .bankDef,
+             .sberQRPayment,
              .other:
             return false
         default:

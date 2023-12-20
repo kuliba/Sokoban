@@ -130,7 +130,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
-                              statement.paymentDetailType != .sberQRPayment,
                               details.restrictedTemplateButton
                         else { return }
                         
