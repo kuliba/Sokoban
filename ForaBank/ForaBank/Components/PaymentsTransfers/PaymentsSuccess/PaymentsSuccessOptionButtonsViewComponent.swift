@@ -66,9 +66,8 @@ extension Model {
             case .template:
                 
                 guard let operationDetail = source.operationDetail,
-                      operationDetail.restrictedTemplateButton else {
-                    return nil
-                }
+                      operationDetail.shouldHaveTemplateButton 
+                else { return nil }
                 
                 switch source.templateID {
                 case let .some(templateID):

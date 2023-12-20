@@ -130,9 +130,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
-                              details.restrictedTemplateButton else {
-                            return
-                        }
+                              details.shouldHaveTemplateButton
+                        else { return }
                         
                         self.templateButton = .init(
                             model: model,
