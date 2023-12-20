@@ -18,9 +18,7 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
                 
-            var (country, optionID): (String?, String?)
-            
-            try getCountyAndOptionId(source, &country, operation, &optionID)
+            var (country, optionID): (String?, String?) = try getCountyAndOptionId(source, operation)
                 
             guard let country = country else {
                 throw Payments.Error.missingSource(operation.service)
@@ -777,15 +775,14 @@ extension Model {
     
     private func getCountyAndOptionId(
         _ source: Payments.Operation.Source,
-        _ country: inout String?,
-        _ operation: Payments.Operation,
-        _ optionID: inout String?
-    ) throws {
+        _ operation: Payments.Operation
+    ) throws -> (country: String?, optionID: String?) {
         
         switch source {
         case let .direct(countryId: countryId):
-            country = countryId.countryId.description
-            
+            let country = countryId.countryId.description
+            return (country, nil)
+
         case let .template(templateId):
             
             let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
@@ -795,16 +792,22 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
             
-            country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
+            let country = additional.first(where: {
+                $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue
+            })?.fieldvalue
             
+            return (country, nil)
+
         case let .latestPayment(latestPaymentId):
             guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
                   let latestPayment = latestPayment as? PaymentServiceData else {
                 throw Payments.Error.missingSource(operation.service)
             }
             
-            country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
-            optionID = latestPayment.puref
+            let country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+            let optionID = latestPayment.puref
+
+            return (country, optionID)
             
         default:
             throw Payments.Error.missingSource(operation.service)
@@ -818,7 +821,7 @@ extension Model {
         var (country, optionID): (String?, String?)
 
         switch operation.source {
-        case let .direct(phone: _, countryId: countryId, serviceData: _):
+        case let .direct(_, countryId: countryId,_):
             country = countryId.description
             
         case let .latestPayment(latestPaymentId):
