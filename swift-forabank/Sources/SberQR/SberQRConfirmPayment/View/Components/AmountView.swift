@@ -89,7 +89,13 @@ struct AmountView: View {
         
         if amount.button.isEnabled {
             
-            Button(action: pay) { buttonLabel(config: config.button.active) }
+            Button {
+                
+                textFieldModel.finishEditing()
+                pay()
+            } label: {
+                buttonLabel(config: config.button.active)
+            }
             
         } else {
             
