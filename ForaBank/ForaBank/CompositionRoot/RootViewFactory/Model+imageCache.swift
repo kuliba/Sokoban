@@ -24,10 +24,14 @@ extension Model {
 
 private enum ImageCacheFallback {
     
-    static func image(forKey key: ImageCache.ImageKey) -> Image? {
+    static func image(forKey key: ImageCache.ImageKey) -> Image {
         
-        fallbacks[key]
+        let image = fallbacks[key] ?? Self.default
+        
+        return image
     }
+    
+    private static let `default`: Image = .ic24MoreHorizontal
     
     private static let fallbacks: [ImageCache.ImageKey: Image] = [
         "b6e5b5b8673544184896724799e50384": .ic40Goods

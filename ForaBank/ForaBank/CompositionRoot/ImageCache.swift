@@ -17,11 +17,14 @@ final class ImageCache {
     typealias RequestImages = ([ImageKey]) -> Void
     // TODO: replace with better polymorphic interface instead of CurrentValueSubject and ImageKey as key
     typealias ImagesPublisher = CurrentValueSubject<[String: ImageData], Never>
-    typealias Fallback = (ImageKey) -> Image?
+    typealias Fallback = (ImageKey) -> Image
+    typealias ImageSubject = CurrentValueSubject<Image, Never>
     
     private let requestImages: RequestImages
     private let imagesPublisher: ImagesPublisher
     private let fallback: Fallback
+    
+    private var cancellable: AnyCancellable?
     
     init(
         requestImages: @escaping RequestImages,
@@ -35,24 +38,33 @@ final class ImageCache {
     
     func image(
         forKey imageKey: ImageKey
-    ) -> AnyPublisher<Image, Never> {
+    ) -> ImageSubject {
         
         let imageID = imageKey.rawValue
         
-        // current value or fallback
-        if let image = imagesPublisher.value[imageID]?.image ?? fallback(imageKey) {
+        // current value
+        if let image = imagesPublisher.value[imageID]?.image {
             
-            return Just(image).eraseToAnyPublisher()
+            return .init(image)
             
         } else {
+            
+            // or fallback
+            let imageSubject = ImageSubject(fallback(imageKey))
+            
             // TODO: add queue to remove duplicated inflight requests
             requestImages([imageKey])
             
-            return imagesPublisher
-                .compactMap { $0[imageID] }
-                .compactMap(\.image)
+            cancellable = imagesPublisher
                 .removeDuplicates()
-                .eraseToAnyPublisher()
+            // .handleEvents(receiveOutput: { print("### imagesPublisher, all", $0) })
+                .compactMap { $0[imageID] }
+            // .handleEvents(receiveOutput: { print("### imagesPublisher filtered by \(imageID)", $0) })
+                .compactMap(\.image)
+            // .handleEvents(receiveOutput: { print("### image for \(imageID)", $0) })
+                .sink(receiveValue: imageSubject.send)
+            
+            return imageSubject
         }
     }
 }
