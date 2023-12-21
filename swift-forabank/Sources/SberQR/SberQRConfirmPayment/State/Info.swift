@@ -11,7 +11,7 @@ import SwiftUI
 public struct Info {
     
     public typealias ID = GetSberQRDataIDs.InfoID
-    public typealias ImagePublisher = AnyPublisher<Image, Never>
+    public typealias ImagePublisher = CurrentValueSubject<Image, Never>
     
     let id: ID
     let value: String

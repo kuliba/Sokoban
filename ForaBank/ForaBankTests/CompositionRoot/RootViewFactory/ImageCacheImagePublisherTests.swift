@@ -21,14 +21,14 @@ final class ImageCacheImagePublisherTests: XCTestCase {
         XCTAssertFalse(spy.values.isEmpty)
     }
     
-    func test_remote_shouldNotDeliverImageOnEmptyImages() {
+    func test_remote_shouldDeliverImageOnEmptyImages() {
         
         let key = "c37971b7264d55c3c467d2127ed600aa"
         let icon = makeRemoteIcon(key: key)
         let (model, imageCache) = makeSUT()
         let spy = ValueSpy(imageCache.imagePublisher(for: icon))
         
-        XCTAssert(spy.values.isEmpty)
+        XCTAssertFalse(spy.values.isEmpty)
         XCTAssertNil(model.images.value[key])
     }
     
