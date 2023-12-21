@@ -174,6 +174,7 @@ extension OperationDetailInfoInternalView {
             HStack(alignment: .bottom, spacing: 15) {
                 
                 viewModel.icon
+                    .renderingMode(.original)
                     .resizable()
                     .frame(width: 32, height: 32, alignment: .bottom)
                     .foregroundColor(.mainColorsGrayLightest)
