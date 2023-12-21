@@ -12,7 +12,16 @@ struct InfoView: View {
     let info: Info
     let config: InfoConfig
     
-    @State private var image: Image?
+    @State private var image: Image
+    
+    init(
+        info: Info,
+        config: InfoConfig
+    ) {
+        self.info = info
+        self.config = config
+        self.image = info.image.value
+    }
     
     var body: some View {
         
@@ -35,14 +44,10 @@ struct InfoView: View {
     @ViewBuilder
     private func icon() -> some View {
         
-        if let image {
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-        } else {
-            // TODO: add shimmering
-            Color.clear
-        }
+        image
+            .renderingMode(.original)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
     }
     
     private func text(
