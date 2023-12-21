@@ -1214,9 +1214,9 @@ extension OperationDetailInfoViewModel {
         )
         let merchant = merchant(statement: statement)
         let bank = bank(
-            operationType: statement.operationType,
+            operationType: statement.operationType, 
             operation: operation,
-            model: model
+            bank: model.bank(memberID:)
         )
         
         return [
@@ -1331,17 +1331,31 @@ extension OperationDetailInfoViewModel {
     static func bank(
         operationType: OperationType,
         operation: OperationDetailData?,
-        model: Model
+        bank: @escaping (String) -> BankData?
     ) -> BankCellViewModel? {
         
-        let title = operationType == .debit ? "Банк получателя" : "Банк отправителя"
+        let title: String
+        let memberID: String
         
-        let bankList = model.bankList.value
-        
-        guard let memberId = operation?.memberId,
-              let bank = bankList.first(where: { $0.memberId == memberId })
-        else { return nil }
+        switch operationType {
+        case .credit:
+            title = "Банк плательщика"
+            memberID = "100000000111"
             
+        case .debit:
+            title = "Банк получателя"
+            guard let id = operation?.memberId
+            else { return nil }
+                
+            memberID = id
+
+        case .demandDepositFromAccount, .open, .unknown:
+            return nil
+        }
+        
+        guard let bank = bank(memberID)
+        else { return nil }
+        
         return .init(
             title: title,
             icon: bank.svgImage.image ?? Image("BankIcon"),
@@ -1351,6 +1365,22 @@ extension OperationDetailInfoViewModel {
 }
 
 //MARK: - Private helpers
+
+private extension Model {
+
+    func bank(memberID: String) ->BankData? {
+        
+        bankList.value[memberID]
+    }
+}
+
+private extension Array where Element == BankData {
+    
+    subscript(memberId: String) -> Element? {
+        
+        first { $0.memberId == memberId }
+    }
+}
 
 private extension OperationDetailInfoViewModel {
     
