@@ -123,7 +123,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
     }
-
+    
     private func bind() {
         
         action
@@ -163,6 +163,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 .Close.Link())
                         }
                     ))
+                    
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
+                    // на экране платежей верхний переход
+                    self.openScanner()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     resetModal()
@@ -386,7 +390,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     self?.resetDestination()
                                     self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
                                 }
-
+                                
                             )
                             let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
                             let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
@@ -517,7 +521,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     self.resetDestination()
                     self.openScanner()
-
+                    
                 case let payload as PaymentsViewModelAction.ContactAbroad:
                     let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
                         
@@ -727,7 +731,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }
             .store(in: &bindings)
     }
-
+    
     private func handleQRMapping(
         _ qr: QRCode,
         _ qrMapping: QRMapping
@@ -831,7 +835,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
     }
-
+    
     private func handleUnknownQR() {
         
         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -870,7 +874,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             self.route.destination = .failedView(failedView)
         }
     }
-
+    
     private func handleFailure(qr: QRCode) {
         
         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -946,7 +950,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }
         }
     }
-
+    
     private func handleGetSberQRDataResult(
         _ url: URL,
         _ result: SberQRServices.GetSberQRDataResult
@@ -971,7 +975,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }
         }
     }
-
+    
     private func sberQRPay(
         url: URL,
         state: SberQRConfirmPaymentState
@@ -990,7 +994,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }
         }
     }
-
+    
     private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
@@ -1006,7 +1010,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             self.route.modal = .fullScreenSheet(.init(type: .success(successViewModel)))
         }
     }
-
+    
     private func handleURL() {
         
         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -1045,7 +1049,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             self.route.destination = .failedView(failedView)
         }
     }
-
+    
     
     private func makeAlert(_ message: String) {
         
