@@ -1221,7 +1221,7 @@ extension OperationDetailInfoViewModel {
         
         return [
             amount,
-            payee,
+            statement.operationType == .debit ? payee : nil,
             dateTimeCell,
             status,
             account,
