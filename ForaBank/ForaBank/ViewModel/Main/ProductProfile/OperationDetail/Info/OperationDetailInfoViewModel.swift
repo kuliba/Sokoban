@@ -1203,7 +1203,10 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             model: model
         )
-        let status = operation.flatMap(operationStatus)
+        let status = operationStatus(
+            operationType: statement.operationType,
+            operation: operation
+        )
         let account = accountCell(
             with: product,
             model: model,
@@ -1270,32 +1273,44 @@ extension OperationDetailInfoViewModel {
     }
     
     static func operationStatus(
-        operation: OperationDetailData
+        operationType: OperationType,
+        operation: OperationDetailData?
     ) -> BankCellViewModel? {
         
         let title = "Статус операции"
         
-        switch operation.operationStatus {
-            
-        case .complete:
+        switch operationType {
+        case .credit:
             return .init(
                 title: title,
                 icon: Image("OkOperators"),
                 name: "Успешно")
+                        
+        case .debit:
+            switch operation?.operationStatus {
+            case .complete:
+                return .init(
+                    title: title,
+                    icon: Image("OkOperators"),
+                    name: "Успешно")
+                
+            case .inProgress:
+                return .init(
+                    title: title,
+                    icon: Image("waiting"),
+                    name: "В обработке")
+                
+            case .rejected:
+                return .init(
+                    title: title,
+                    icon: Image("rejected"),
+                    name: "Отказ")
+                
+            case .none, .unknown:
+                return nil
+            }
             
-        case .inProgress:
-            return .init(
-                title: title,
-                icon: Image("waiting"),
-                name: "В обработке")
-            
-        case .rejected:
-            return .init(
-                title: title,
-                icon: Image("rejected"),
-                name: "Отказ")
-            
-        case .none, .unknown:
+        case .demandDepositFromAccount, .open, .unknown:
             return nil
         }
     }
