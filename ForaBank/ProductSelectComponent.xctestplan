@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ProductSelectTests",
-        "name" : "ProductSelectTests"
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
       }
     }
   ],

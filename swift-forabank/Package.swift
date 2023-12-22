@@ -48,7 +48,7 @@ let package = Package(
         .textFieldComponent,
         .uiKitHelpers,
         // UI Components
-        .productSelect,
+        .productSelectComponent,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -133,8 +133,8 @@ let package = Package(
         .textFieldUITests,
         .uiKitHelpers,
         // UI Components
-        .productSelect,
-        .productSelectTests,
+        .productSelectComponent,
+        .productSelectComponentTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -302,10 +302,10 @@ private extension Product {
     
     // MARK: - UI Components
     
-    static let productSelect = library(
-        name: .productSelect,
+    static let productSelectComponent = library(
+        name: .productSelectComponent,
         targets: [
-            .productSelect,
+            .productSelectComponent,
         ]
     )
     
@@ -496,7 +496,7 @@ private extension Target {
             .tagged,
             // internal modules
             .foraTools,
-            .productSelect,
+            .productSelectComponent,
             .textFieldComponent
         ]
     )
@@ -932,17 +932,20 @@ private extension Target {
     
     // MARK: - UI Components
 
-    static let productSelect = target(
-        name: .productSelect,
-        path: "Sources/UI/Components/\(String.productSelect)"
+    static let productSelectComponent = target(
+        name: .productSelectComponent,
+        dependencies: [
+            .foraTools,
+        ],
+        path: "Sources/UI/Components/\(String.productSelectComponent)"
 
     )
-    static let productSelectTests = testTarget(
-        name: .productSelectTests,
+    static let productSelectComponentTests = testTarget(
+        name: .productSelectComponentTests,
         dependencies: [
-            .productSelect
+            .productSelectComponent
         ],
-        path: "Tests/UI/Components/\(String.productSelectTests)"
+        path: "Tests/UI/Components/\(String.productSelectComponentTests)"
 
     )
 
@@ -1081,8 +1084,8 @@ private extension Target.Dependency {
     
     // MARK: - UI Components
 
-    static let productSelect = byName(
-        name: .productSelect
+    static let productSelectComponent = byName(
+        name: .productSelectComponent
     )
     
     // MARK: - Infra
@@ -1217,8 +1220,8 @@ private extension String {
     
     // MARK: - UI Components
 
-    static let productSelect = "ProductSelect"
-    static let productSelectTests = "ProductSelectTests"
+    static let productSelectComponent = "ProductSelectComponent"
+    static let productSelectComponentTests = "ProductSelectComponentTests"
 
     // MARK: - Infra
     
