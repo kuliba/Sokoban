@@ -101,9 +101,9 @@ public extension BusinessLogic {
                     
                 case .selector:
                     completion(.success(.operation(operation)))
+                    
                 case .officeSelector:
                     completion(.success(.operation(operation)))
-
                 }
                 
                 break
@@ -393,8 +393,19 @@ public extension BusinessLogic {
     ) {
         if operation.parameters.first(where: { $0.id == .input }) != nil {
             
-            let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
-            completion(.success(.operation(.init(parameters: parameters))))
+            let parameters = operation.parameters.filter({ 
+                $0.id != .input
+            }).filter({
+                $0.id != .amount
+            })
+            
+            let newOperation = Operation(parameters: parameters)
+            let updateOperation = newOperation.updateOperation(
+                operation: newOperation,
+                newParameter: .select(.branchSelect)
+            )
+            
+            completion(.success(.operation(updateOperation)))
             
         } else {
             
