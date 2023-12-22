@@ -496,6 +496,7 @@ private extension Target {
             .tagged,
             // internal modules
             .foraTools,
+            .productSelect,
             .textFieldComponent
         ]
     )
