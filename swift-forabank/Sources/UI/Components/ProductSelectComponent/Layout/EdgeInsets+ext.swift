@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension EdgeInsets {
+public extension EdgeInsets {
     
     static let `default`: Self = .init(
         top: 13,

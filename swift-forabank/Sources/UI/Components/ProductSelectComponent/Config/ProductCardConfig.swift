@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProductCardConfig {
+public struct ProductCardConfig {
     
     let balance: TextConfig
     let number: TextConfig
@@ -15,7 +15,7 @@ struct ProductCardConfig {
     let shadowColor: Color // main colors/Black background: #1C1C1C;
 }
 
-extension ProductSelectConfig.Card {
+public extension ProductSelectConfig.Card {
     
     var productCardConfig: ProductCardConfig {
         

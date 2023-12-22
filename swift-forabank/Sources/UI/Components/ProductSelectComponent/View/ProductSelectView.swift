@@ -7,18 +7,30 @@
 
 import SwiftUI
 
-struct ProductSelectView<ProductView: View>: View {
-    
-    typealias Event = SberQRConfirmPaymentEvent.ProductSelectEvent
+public struct ProductSelectView<ProductView: View>: View {
     
     let state: ProductSelect
-    let event: (Event) -> Void
+    let event: (ProductSelectEvent) -> Void
     let config: ProductSelectConfig
     let productView: (ProductSelect.Product) -> ProductView
+    #warning("move cardSize into config")
+    private let cardSize: CGSize
     
-    private let cardSize = CGSize(width: 112, height: 71)
+    public init(
+        state: ProductSelect,
+        event: @escaping (ProductSelectEvent) -> Void,
+        config: ProductSelectConfig,
+        cardSize: CGSize = .init(width: 112, height: 71),
+        productView: @escaping (ProductSelect.Product) -> ProductView
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.cardSize = cardSize
+        self.productView = productView
+    }
     
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: 10) {
             
@@ -140,7 +152,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         @State private var state: ProductSelect
         
-        private let reduce: (ProductSelectReducer.State, ProductSelectReducer.Event) -> ProductSelectReducer.State
+        private let reduce: (ProductSelect, ProductSelectEvent) -> ProductSelect
         
         init(_ state: ProductSelect) {
             

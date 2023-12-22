@@ -936,6 +936,7 @@ private extension Target {
         name: .productSelectComponent,
         dependencies: [
             .foraTools,
+            .tagged,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
 
@@ -943,6 +944,11 @@ private extension Target {
     static let productSelectComponentTests = testTarget(
         name: .productSelectComponentTests,
         dependencies: [
+            // external
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal
             .productSelectComponent
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
