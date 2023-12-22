@@ -133,7 +133,12 @@ public extension BusinessLogic {
                                 
                             } else {
                                 
-                                let parameters = operation.parameters
+                                let newOperation = operation.updateOperation(
+                                    operation: operation,
+                                    newParameter: .select(.officeSelect(office: office))
+                                )
+                                
+                                let parameters = newOperation.parameters
                                     .filter { $0.id != .amount }
                                     .filter { $0.id != .input }
                                 
