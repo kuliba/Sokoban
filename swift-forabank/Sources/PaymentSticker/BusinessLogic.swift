@@ -34,8 +34,7 @@ final public class BusinessLogic {
     let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
     let products: () -> [Product]
-    let cityList: () -> [City]
-    let cityCourierList: () -> [City]
+    let cityList: (TransferType) -> [City]
     
     public init(
         processDictionaryService: @escaping ProcessDictionaryService,
@@ -44,8 +43,7 @@ final public class BusinessLogic {
         processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
         products: @escaping () -> [Product],
-        cityList: @escaping () -> [City],
-        cityCourierList: @escaping () -> [City]
+        cityList: @escaping (TransferType) -> [City]
     ) {
         self.processDictionaryService = processDictionaryService
         self.processTransferService = processTransferService
@@ -54,7 +52,6 @@ final public class BusinessLogic {
         self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
-        self.cityCourierList = cityCourierList
     }
 }
 
@@ -671,12 +668,12 @@ public extension BusinessLogic {
                             value: nil,
                             title: citySelector.title,
                             placeholder: citySelector.subtitle,
-                            options: self.cityList().map({ Operation.Parameter.Select.Option(
+                            options: self.cityList(.office).map({ Operation.Parameter.Select.Option(
                                 id: $0.id,
                                 name: $0.name,
                                 iconName: ""
                             )}),
-                            staticOptions: self.cityList().map({ Operation.Parameter.Select.Option(
+                            staticOptions: self.cityList(.office).map({ Operation.Parameter.Select.Option(
                                 id: $0.id,
                                 name: $0.name,
                                 iconName: ""
@@ -691,12 +688,12 @@ public extension BusinessLogic {
                             value: nil,
                             title: citySelector.title,
                             placeholder: citySelector.subtitle,
-                            options: self.cityCourierList().map({ Operation.Parameter.Select.Option(
+                            options: self.cityList(.courier).map({ Operation.Parameter.Select.Option(
                                 id: $0.id,
                                 name: $0.name,
                                 iconName: ""
                             )}),
-                            staticOptions: self.cityCourierList().map({ Operation.Parameter.Select.Option(
+                            staticOptions: self.cityList(.courier).map({ Operation.Parameter.Select.Option(
                                 id: $0.id,
                                 name: $0.name,
                                 iconName: ""
@@ -874,6 +871,12 @@ extension BusinessLogic {
             self.id = id
             self.name = name
         }
+    }
+    
+    public enum TransferType {
+        
+        case office
+        case courier
     }
 }
 

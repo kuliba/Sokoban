@@ -39,8 +39,7 @@ extension RootViewModelFactory {
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
                 products: { model.productsMapper(model: model) },
-                cityList: { model.citiesMapper(model: model) },
-                cityCourierList: { model.citiesCourier(model: model) }
+                cityList: { transferType in model.citiesMapper(transferType, model: model) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
@@ -415,42 +414,40 @@ private extension Model {
         return allProducts
     }
     
-    func citiesCourier(
-        model: Model
-    ) -> [BusinessLogic.City] {
-        
-        let cities = model.localAgent.load(type: [AtmCityData].self)?
-            .filter({ $0.productList?.contains(where: { $0 == .sticker } ) ?? false })
-        
-        return (cities?.compactMap{ $0 }.map({
-            
-            BusinessLogic.City(id: $0.id.description, name: $0.name)
-        })) ?? []
-    }
-    
     func citiesMapper(
+        _ transferType: BusinessLogic.TransferType,
         model: Model
     ) -> [BusinessLogic.City] {
-        
-        let atmData = model.dictionaryAtmList()?
-            .filter({ $0.serviceIdList.contains(where: { $0 == 140 } ) })
         
         let cities = model.localAgent.load(type: [AtmCityData].self)
         
-        let atmID = atmData?.compactMap({ $0 }).map({ $0.cityId }) ?? []
-        
-        let atmIDUniq = atmID.uniqued()
-        
-        let filteredCity = cities?.filter({ city in
+        switch transferType {
+        case .courier:
             
-            atmIDUniq.contains(where: { $0 == city.id })
-        })
-        
-        let mapCities = (filteredCity?.compactMap{ $0 }.map({
+            return cities?
+                .filter({ $0.productList?.contains(where: { $0 == .sticker } ) ?? false })
+                .map({ BusinessLogic.City(id: $0.id.description, name: $0.name) })
+                ?? []
             
-            BusinessLogic.City(id: $0.id.description, name: $0.name)
-        })) ?? []
-        
-        return mapCities
+        case .office:
+            let atmData = model.dictionaryAtmList()?
+                .filter({ $0.serviceIdList.contains(where: { $0 == 140 } ) })
+            
+            let atmID = atmData?.compactMap({ $0 }).map({ $0.cityId }) ?? []
+            
+            let atmIDUniq = atmID.uniqued()
+            
+            let filteredCity = cities?.filter({ city in
+                
+                atmIDUniq.contains(where: { $0 == city.id })
+            })
+            
+            let mapCities = (filteredCity?.map({
+                
+                BusinessLogic.City(id: $0.id.description, name: $0.name)
+            })) ?? []
+            
+            return mapCities
+        }
     }
 }
