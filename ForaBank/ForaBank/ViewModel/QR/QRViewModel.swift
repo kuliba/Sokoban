@@ -179,8 +179,10 @@ class QRViewModel: ObservableObject {
                             self?.action.send(QRViewModelAction.CloseSheet())
                         }
                         
-                        self.sheet = .init(sheetType: .imagePicker(imagePicker))
-                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                            
+                            self.sheet = .init(sheetType: .imagePicker(imagePicker))
+                        }
                     } else {
                         self.action.send(QRViewModelAction.AccessPhotoGallery())
                     }
