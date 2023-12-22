@@ -1001,13 +1001,20 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         rootActions?.spinner.hide()
         resetDestination()
         
-        switch result {
-        case .failure:
-            self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + .milliseconds(400)
+        ) { [weak self] in
             
-        case let .success(success):
-            let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
-            self.route.modal = .fullScreenSheet(.init(type: .success(successViewModel)))
+            guard let self else { return }
+            
+            switch result {
+            case .failure:
+                self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
+                
+            case let .success(success):
+                let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
+                self.route.modal = .fullScreenSheet(.init(type: .success(successViewModel)))
+            }
         }
     }
     
