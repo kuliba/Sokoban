@@ -38,11 +38,11 @@ extension ImageCache {
     
     func imagePublisher(
         for icon: GetSberQRDataResponse.Parameter.Info.Icon
-    ) -> AnyPublisher<Image, Never> {
+    ) -> ImageSubject {
         
         switch icon.type {
         case .local:
-            return Just(.init(icon.value)).eraseToAnyPublisher()
+            return .init(.init(icon.value))
             
         case .remote:
             return image(forKey: .init(icon.value))
