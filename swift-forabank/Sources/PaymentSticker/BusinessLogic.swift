@@ -35,6 +35,7 @@ final public class BusinessLogic {
     let selectOffice: SelectOffice
     let products: () -> [Product]
     let cityList: () -> [City]
+    let cityCourierList: () -> [City]
     
     public init(
         processDictionaryService: @escaping ProcessDictionaryService,
@@ -43,7 +44,8 @@ final public class BusinessLogic {
         processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
         products: @escaping () -> [Product],
-        cityList: @escaping () -> [City]
+        cityList: @escaping () -> [City],
+        cityCourierList: @escaping () -> [City]
     ) {
         self.processDictionaryService = processDictionaryService
         self.processTransferService = processTransferService
@@ -52,6 +54,7 @@ final public class BusinessLogic {
         self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
+        self.cityCourierList = cityCourierList
     }
 }
 
@@ -653,23 +656,50 @@ public extension BusinessLogic {
                 
                 switch main.data {
                 case let .citySelector(citySelector):
-                    return Operation.Parameter.select(.init(
-                        id: .citySelector,
-                        value: nil,
-                        title: citySelector.title,
-                        placeholder: citySelector.subtitle,
-                        options: self.cityList().map({ Operation.Parameter.Select.Option(
-                            id: $0.id,
-                            name: $0.name,
-                            iconName: ""
-                        )}),
-                        staticOptions: self.cityList().map({ Operation.Parameter.Select.Option(
-                            id: $0.id,
-                            name: $0.name,
-                            iconName: ""
-                        )}),
-                        state: .idle(.init(iconName: "", title: citySelector.title)))
-                    )
+                    
+                    let transferType = operation.parameters.getParameterTransferType()
+                    
+                    if transferType?.value == "typeDeliveryOffice" {
+                        
+                        return Operation.Parameter.select(.init(
+                            id: .citySelector,
+                            value: nil,
+                            title: citySelector.title,
+                            placeholder: citySelector.subtitle,
+                            options: self.cityList().map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            staticOptions: self.cityList().map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            state: .idle(.init(iconName: "", title: citySelector.title)))
+                        )
+                        
+                    } else {
+                     
+                        return Operation.Parameter.select(.init(
+                            id: .citySelector,
+                            value: nil,
+                            title: citySelector.title,
+                            placeholder: citySelector.subtitle,
+                            options: self.cityCourierList().map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            staticOptions: self.cityCourierList().map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            state: .idle(.init(iconName: "", title: citySelector.title)))
+                        )
+                        
+                    }
                     
                 case let .officeSelector(officeSelector):
                     return Operation.Parameter.select(.init(

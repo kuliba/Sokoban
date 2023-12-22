@@ -39,7 +39,8 @@ extension RootViewModelFactory {
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
                 products: { model.productsMapper(model: model) },
-                cityList: { model.citiesMapper(model: model) }
+                cityList: { model.citiesMapper(model: model) },
+                cityCourierList: { model.citiesCourier(model: model) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
@@ -414,6 +415,21 @@ private extension Model {
         return allProducts
     }
     
+    //Получение курьером
+    func citiesCourier(
+        model: Model
+    ) -> [BusinessLogic.City] {
+        
+        let cities = model.localAgent.load(type: [AtmCityData].self)?
+            .filter({ $0.productList?.contains(where: { $0 == .sticker } ) ?? false })
+        
+        return (cities?.compactMap{ $0 }.map({
+            
+            BusinessLogic.City(id: $0.id.description, name: $0.name)
+        })) ?? []
+    }
+    
+    //Получение в офисе
     func citiesMapper(
         model: Model
     ) -> [BusinessLogic.City] {
@@ -428,6 +444,7 @@ private extension Model {
                     .filter({ $0.serviceIdList.contains(where: { $0 == 140 } )})
                     .contains(where: {$0.cityId == item.id }) ?? false
             })
+        
         return (cities?.compactMap{ $0 }.map({
             
             BusinessLogic.City(id: $0.id.description, name: $0.name)
