@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "DCECF880-49CF-42B5-BFB1-971A6B449CC9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectTests",
+        "name" : "ProductSelectTests"
+      }
+    }
+  ],
+  "version" : 1
+}
