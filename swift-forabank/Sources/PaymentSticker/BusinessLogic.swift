@@ -122,21 +122,26 @@ public extension BusinessLogic {
                         switch result {
                         case let .some(office):
                             
-                            let parametersWithInput = operation.parameters.filter { $0.id != .input }
+                            let parametersWithInput = operation.parameters
+                                .filter { $0.id == .input }
                             
                             if parametersWithInput.isEmpty {
-                                
-                                let parameters = parametersWithInput.filter({ $0.id != .amount })
-                                completion(.success(.operation(.init(parameters: parameters))))
 
-                            } else {
-                                
                                 let newOperation = operation.updateOperation(
                                     operation: operation,
                                     newParameter: .select(.officeSelect(office: office))
                                 )
                                 
                                 completion(.success(.operation(newOperation)))
+                                
+                            } else {
+                                
+                                let parameters = operation.parameters
+                                    .filter { $0.id != .amount }
+                                    .filter { $0.id != .input }
+                                
+                                completion(.success(.operation(.init(parameters: parameters))))
+                            
                             }
                             
                         case .none:
