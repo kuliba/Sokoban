@@ -240,6 +240,20 @@
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectTests",
+        "name" : "ProductSelectTests"
+      }
     }
   ],
   "version" : 1
