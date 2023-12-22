@@ -1203,7 +1203,10 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             model: model
         )
-        let status = operation.flatMap(operationStatus)
+        let status = operationStatus(
+            operationType: statement.operationType,
+            operation: operation
+        )
         let account = accountCell(
             with: product,
             model: model,
@@ -1211,14 +1214,14 @@ extension OperationDetailInfoViewModel {
         )
         let merchant = merchant(statement: statement)
         let bank = bank(
-            operationType: statement.operationType,
+            operationType: statement.operationType, 
             operation: operation,
-            model: model
+            bank: model.bank(memberID:)
         )
         
         return [
             amount,
-            payee,
+            statement.operationType == .debit ? payee : nil,
             dateTimeCell,
             status,
             account,
@@ -1270,32 +1273,44 @@ extension OperationDetailInfoViewModel {
     }
     
     static func operationStatus(
-        operation: OperationDetailData
+        operationType: OperationType,
+        operation: OperationDetailData?
     ) -> BankCellViewModel? {
         
         let title = "Статус операции"
         
-        switch operation.operationStatus {
-            
-        case .complete:
+        switch operationType {
+        case .credit:
             return .init(
                 title: title,
                 icon: Image("OkOperators"),
                 name: "Успешно")
+                        
+        case .debit:
+            switch operation?.operationStatus {
+            case .complete:
+                return .init(
+                    title: title,
+                    icon: Image("OkOperators"),
+                    name: "Успешно")
+                
+            case .inProgress:
+                return .init(
+                    title: title,
+                    icon: Image("waiting"),
+                    name: "В обработке")
+                
+            case .rejected:
+                return .init(
+                    title: title,
+                    icon: Image("rejected"),
+                    name: "Отказ")
+                
+            case .none, .unknown:
+                return nil
+            }
             
-        case .inProgress:
-            return .init(
-                title: title,
-                icon: Image("waiting"),
-                name: "В обработке")
-            
-        case .rejected:
-            return .init(
-                title: title,
-                icon: Image("rejected"),
-                name: "Отказ")
-            
-        case .none, .unknown:
+        case .demandDepositFromAccount, .open, .unknown:
             return nil
         }
     }
@@ -1316,17 +1331,31 @@ extension OperationDetailInfoViewModel {
     static func bank(
         operationType: OperationType,
         operation: OperationDetailData?,
-        model: Model
+        bank: @escaping (String) -> BankData?
     ) -> BankCellViewModel? {
         
-        let title = operationType == .debit ? "Банк получателя" : "Банк отправителя"
+        let title: String
+        let memberID: String
         
-        let bankList = model.bankList.value
-        
-        guard let memberId = operation?.memberId,
-              let bank = bankList.first(where: { $0.memberId == memberId })
-        else { return nil }
+        switch operationType {
+        case .credit:
+            title = "Банк плательщика"
+            memberID = "100000000111"
             
+        case .debit:
+            title = "Банк получателя"
+            guard let id = operation?.memberId
+            else { return nil }
+                
+            memberID = id
+
+        case .demandDepositFromAccount, .open, .unknown:
+            return nil
+        }
+        
+        guard let bank = bank(memberID)
+        else { return nil }
+        
         return .init(
             title: title,
             icon: bank.svgImage.image ?? Image("BankIcon"),
@@ -1336,6 +1365,22 @@ extension OperationDetailInfoViewModel {
 }
 
 //MARK: - Private helpers
+
+private extension Model {
+
+    func bank(memberID: String) ->BankData? {
+        
+        bankList.value[memberID]
+    }
+}
+
+private extension Array where Element == BankData {
+    
+    subscript(memberId: String) -> Element? {
+        
+        first { $0.memberId == memberId }
+    }
+}
 
 private extension OperationDetailInfoViewModel {
     
