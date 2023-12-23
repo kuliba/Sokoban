@@ -7,7 +7,7 @@
 
 import CombineSchedulers
 import Foundation
-import ProductSelectComponent
+import PaymentComponents
 
 extension SberQRConfirmPaymentViewModel {
     

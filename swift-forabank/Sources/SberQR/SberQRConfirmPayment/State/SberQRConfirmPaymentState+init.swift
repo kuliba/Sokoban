@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 17.12.2023.
 //
 
-import AmountComponent
-import ButtonComponent
-import ProductSelectComponent
+import PaymentComponents
 
 public extension SberQRConfirmPaymentState {
     

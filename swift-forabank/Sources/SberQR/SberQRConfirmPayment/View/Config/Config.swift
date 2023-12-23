@@ -5,11 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
-import AmountComponent
-import ButtonComponent
-import InfoComponent
-import SharedConfigs
-import ProductSelectComponent
+import PaymentComponents
 import SwiftUI
 
 public struct Config {

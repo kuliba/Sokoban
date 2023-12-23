@@ -6,7 +6,7 @@
 //
 
 import Combine
-import InfoComponent
+import PaymentComponents
 import SwiftUI
 
 extension Info {

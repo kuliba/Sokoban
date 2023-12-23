@@ -6,6 +6,5 @@
 //
 
 import SharedConfigs
-import ProductSelectComponent
 
 public typealias TextConfig = SharedConfigs.TextConfig

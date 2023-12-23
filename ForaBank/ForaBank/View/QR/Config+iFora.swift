@@ -5,10 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
-import AmountComponent
-import ButtonComponent
-import InfoComponent
-import ProductSelectComponent
+import PaymentComponents
 import SberQR
 
 extension SberQR.Config {
