@@ -515,6 +515,7 @@ private extension Target {
             // internal modules
             .amountComponent,
             .foraTools,
+            .primitiveComponents,
             .productSelectComponent,
             .textFieldComponent
         ]
@@ -955,6 +956,7 @@ private extension Target {
         name: .amountComponent,
         dependencies: [
             .foraTools,
+            .primitiveComponents,
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.amountComponent)"
@@ -973,6 +975,7 @@ private extension Target {
         name: .productSelectComponent,
         dependencies: [
             .foraTools,
+            .primitiveComponents,
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
