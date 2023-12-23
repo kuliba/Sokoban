@@ -49,6 +49,7 @@ let package = Package(
         .uiKitHelpers,
         // UI Components
         .amountComponent,
+        .primitiveComponents,
         .productSelectComponent,
         // tools
         .foraTools,
@@ -135,6 +136,7 @@ let package = Package(
         .uiKitHelpers,
         // UI Components
         .amountComponent,
+        .primitiveComponents,
         .productSelectComponent,
         .productSelectComponentTests,
         // tools
@@ -308,6 +310,13 @@ private extension Product {
         name: .amountComponent,
         targets: [
             .amountComponent,
+        ]
+    )
+    
+    static let primitiveComponents = library(
+        name: .primitiveComponents,
+        targets: [
+            .primitiveComponents,
         ]
     )
     
@@ -951,6 +960,15 @@ private extension Target {
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
     
+    static let primitiveComponents = target(
+        name: .primitiveComponents,
+        dependencies: [
+            .foraTools,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.primitiveComponents)"
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -1113,6 +1131,10 @@ private extension Target.Dependency {
         name: .amountComponent
     )
     
+    static let primitiveComponents = byName(
+        name: .primitiveComponents
+    )
+    
     static let productSelectComponent = byName(
         name: .productSelectComponent
     )
@@ -1250,6 +1272,8 @@ private extension String {
     // MARK: - UI Components
 
     static let amountComponent = "AmountComponent"
+    
+    static let primitiveComponents = "PrimitiveComponents"
 
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
