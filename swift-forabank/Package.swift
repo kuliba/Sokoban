@@ -49,6 +49,7 @@ let package = Package(
         .uiKitHelpers,
         // UI Components
         .amountComponent,
+        .buttonComponent,
         .infoComponent,
         .primitiveComponents,
         .productSelectComponent,
@@ -137,6 +138,7 @@ let package = Package(
         .uiKitHelpers,
         // UI Components
         .amountComponent,
+        .buttonComponent,
         .infoComponent,
         .primitiveComponents,
         .productSelectComponent,
@@ -312,6 +314,13 @@ private extension Product {
         name: .amountComponent,
         targets: [
             .amountComponent,
+        ]
+    )
+    
+    static let buttonComponent = library(
+        name: .buttonComponent,
+        targets: [
+            .buttonComponent,
         ]
     )
     
@@ -523,6 +532,7 @@ private extension Target {
             .tagged,
             // internal modules
             .amountComponent,
+            .buttonComponent,
             .foraTools,
             .infoComponent,
             .primitiveComponents,
@@ -538,6 +548,7 @@ private extension Target {
             .tagged,
             // internal modules
             .amountComponent,
+            .buttonComponent,
             .sberQR,
         ],
         resources: [
@@ -975,6 +986,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
     
+    static let buttonComponent = target(
+        name: .buttonComponent,
+        dependencies: [
+            .primitiveComponents
+        ],
+        path: "Sources/UI/Components/\(String.buttonComponent)"
+    )
+    
     static let infoComponent = target(
         name: .infoComponent,
         dependencies: [
@@ -1155,6 +1174,10 @@ private extension Target.Dependency {
         name: .amountComponent
     )
     
+    static let buttonComponent = byName(
+        name: .buttonComponent
+    )
+    
     static let infoComponent = byName(
         name: .infoComponent
     )
@@ -1300,6 +1323,8 @@ private extension String {
     // MARK: - UI Components
 
     static let amountComponent = "AmountComponent"
+    
+    static let buttonComponent = "ButtonComponent"
     
     static let infoComponent = "InfoComponent"
     
