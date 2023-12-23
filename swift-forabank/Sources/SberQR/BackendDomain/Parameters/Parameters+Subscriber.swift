@@ -1,6 +1,6 @@
 //
 //  Parameters+Subscriber.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 16.12.2023.
 //
@@ -30,7 +30,10 @@ public extension Parameters {
             self.icon = icon
             self.subscriptionPurpose = subscriptionPurpose
         }
-        
-        public struct SubscriptionPurpose: Equatable {}
     }
+}
+
+public extension Parameters.Subscriber {
+    
+    struct SubscriptionPurpose: Equatable {}
 }
