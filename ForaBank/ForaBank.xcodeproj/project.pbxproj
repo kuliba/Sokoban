@@ -10831,8 +10831,8 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
-				2AC67EE02B35BC8B00CC456D /* ProductSelectComponent.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				2AC67EE02B35BC8B00CC456D /* ProductSelectComponent.xctestplan */,
 				2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */,
 				2A6AF2162AF8E52700655156 /* Fetcher.xctestplan */,
 				2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */,

@@ -20,8 +20,6 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
-        // PaymentsComponents
-        .paymentsComponents,
         // Infra
         .fetcher,
         .keyChainStore,
@@ -89,9 +87,6 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
-        // PaymentsComponents
-        .paymentsComponents,
-        .paymentsComponentsTests,
         // Infra
         .fetcher,
         .fetcherTests,
@@ -231,15 +226,6 @@ private extension Product {
         name: .landingUIComponent,
         targets: [
             .landingUIComponent
-        ]
-    )
-    
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = library(
-        name: .paymentsComponents,
-        targets: [
-            .paymentsComponents,
         ]
     )
     
@@ -644,25 +630,6 @@ private extension Target {
             .landingUIComponent,
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
-    )
-    
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = target(
-        name: .paymentsComponents,
-        dependencies: [
-            .textFieldComponent,
-        ],
-        path: "Sources/\(String.paymentsComponents)"
-    )
-    
-    static let paymentsComponentsTests = testTarget(
-        name: .paymentsComponentsTests,
-        dependencies: [
-            // internal modules
-            .paymentsComponents,
-        ],
-        path: "Tests/\(String.paymentsComponentsTests)"
     )
     
     // MARK: - Infra
@@ -1133,12 +1100,6 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
 
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = byName(
-        name: .paymentsComponents
-    )
-    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -1291,11 +1252,6 @@ private extension String {
     static let landingMappingTests = "LandingMappingTests"
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
-    
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = "PaymentsComponents"
-    static let paymentsComponentsTests = "PaymentsComponentsTests"
     
     // MARK: - UI
     
