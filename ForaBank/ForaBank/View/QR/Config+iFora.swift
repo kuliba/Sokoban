@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
+import AmountComponent
+import PrimitiveComponents
 import ProductSelectComponent
 import SberQR
 
@@ -21,7 +23,7 @@ extension SberQR.Config {
     )
 }
 
-private extension SberQR.ButtonConfig {
+private extension PrimitiveComponents.ButtonConfig {
     
     static let iFora: Self = .init(
         active: .init(
@@ -41,7 +43,7 @@ private extension SberQR.ButtonConfig {
     )
 }
 
-private extension SberQR.AmountConfig {
+private extension AmountComponent.AmountConfig {
     
     static let iFora: Self = .init(
         amount: .init(

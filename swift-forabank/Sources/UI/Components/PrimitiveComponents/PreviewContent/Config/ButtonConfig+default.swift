@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension ButtonConfig {
+public extension ButtonConfig {
     
     static let `default`: Self = .init(
         active: .active,

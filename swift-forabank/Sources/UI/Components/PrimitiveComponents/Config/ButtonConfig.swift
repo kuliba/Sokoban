@@ -9,8 +9,8 @@ import SwiftUI
 
 public struct ButtonConfig {
     
-    let active: ButtonStateConfig
-    let inactive: ButtonStateConfig
+    public let active: ButtonStateConfig
+    public let inactive: ButtonStateConfig
     
     public init(
         active: ButtonStateConfig,

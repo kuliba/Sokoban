@@ -608,6 +608,8 @@
 		2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2442B29D44D00191B8E /* ImageCache.swift */; };
 		2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2462B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift */; };
 		2A8CC2492B29FA5A00191B8E /* View+navigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */; };
+		2A8DC4EB2B36F28900D55CC8 /* PrimitiveComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */; };
+		2A8DC4ED2B36F2AC00D55CC8 /* AmountComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */; };
 		2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
@@ -4515,6 +4517,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A8DC4ED2B36F2AC00D55CC8 /* AmountComponent in Frameworks */,
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
 				77AC9159277A518B00E49D5D /* Shimmer in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
@@ -4543,6 +4546,7 @@
 				C14F85532AF537B000749534 /* PaymentSticker in Frameworks */,
 				2AC67EE22B35C70C00CC456D /* ProductSelectComponent in Frameworks */,
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
+				2A8DC4EB2B36F28900D55CC8 /* PrimitiveComponents in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
 				2A3599B02ADA816800820369 /* KeyChainStore in Frameworks */,
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
@@ -11947,6 +11951,8 @@
 				2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */,
 				C1AF2EA22B2C882100569F2B /* SberQR */,
 				2AC67EE12B35C70C00CC456D /* ProductSelectComponent */,
+				2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */,
+				2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -16521,6 +16527,14 @@
 		2A8142602A0B9237005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PrimitiveComponents;
+		};
+		2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AmountComponent;
 		};
 		2A95CBB02B2C80C80041F5EC /* SberQR */ = {
 			isa = XCSwiftPackageProductDependency;

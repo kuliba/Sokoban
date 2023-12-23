@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension ButtonStateConfig {
+public extension ButtonStateConfig {
     
     static let active: Self = .init(
         backgroundColor: .green,

@@ -9,8 +9,8 @@ import SwiftUI
 
 public struct ButtonStateConfig {
     
-    let backgroundColor: Color
-    let text: TextConfig
+    public let backgroundColor: Color
+    public let text: TextConfig
     
     public init(
         backgroundColor: Color,
