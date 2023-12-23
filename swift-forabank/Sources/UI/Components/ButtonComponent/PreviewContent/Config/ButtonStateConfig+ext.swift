@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import PrimitiveComponents
 import SwiftUI
 
 public extension ButtonStateConfig {

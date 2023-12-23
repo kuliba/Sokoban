@@ -979,6 +979,7 @@ private extension Target {
             // external packages
             .tagged,
             // internal modules
+            .buttonComponent,
             .foraTools,
             .primitiveComponents,
             .textFieldComponent,

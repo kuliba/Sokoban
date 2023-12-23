@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 17.12.2023.
 //
 
+import ButtonComponent
 import ProductSelectComponent
 
 public extension SberQRConfirmPaymentStateOf {
@@ -34,11 +35,6 @@ public extension SberQRConfirmPaymentStateOf {
             self.bottom = bottom
         }
     }
-}
-
-public extension SberQRConfirmPaymentStateOf.FixedAmount {
-    
-    typealias Button = GetSberQRDataResponse.Parameter.Button
 }
 
 extension SberQRConfirmPaymentStateOf.FixedAmount: Equatable where Info: Equatable {}

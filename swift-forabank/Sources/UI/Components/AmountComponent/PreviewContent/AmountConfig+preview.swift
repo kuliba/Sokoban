@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import ButtonComponent
 import PrimitiveComponents
 import SwiftUI
 

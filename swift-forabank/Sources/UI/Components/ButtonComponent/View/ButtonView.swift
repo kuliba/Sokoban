@@ -8,26 +8,34 @@
 import PrimitiveComponents
 import SwiftUI
 
-struct ButtonView: View {
+public struct ButtonView: View {
     
-    let state: SberQRConfirmPaymentState.FixedAmount.Button
+    let state: Button
     let event: () -> Void
     let config: ButtonConfig
     
-    private let buttonHeight: CGFloat = 56
+    public init(
+        state: Button, 
+        event: @escaping () -> Void,
+        config: ButtonConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+    }
     
-    var body: some View {
+    public var body: some View {
         
         ZStack {
             
             config.active.backgroundColor
             
-            Button(action: event) {
+            SwiftUI.Button(action: event) {
                 
                 state.value.text(withConfig: config.active.text)
             }
         }
-        .frame(height: buttonHeight)
+        .frame(height: config.buttonHeight)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
@@ -42,7 +50,7 @@ struct ButtonView_Previews: PreviewProvider {
     }
     
     private static func buttonView(
-        _ button: SberQRConfirmPaymentState.FixedAmount.Button
+        _ button: Button
     ) -> some View {
         
         ButtonView(state: .preview, event: {}, config: .preview)

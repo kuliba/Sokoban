@@ -155,6 +155,6 @@ func makeFixedAmount(
         brandName: .brandName(value: brandName),
         amount: .amount,
         recipientBank: .recipientBank,
-        bottom: .buttonPay
+        bottom: .preview
     )
 }

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import ButtonComponent
 import InfoComponent
 import ProductSelectComponent
 import SwiftUI

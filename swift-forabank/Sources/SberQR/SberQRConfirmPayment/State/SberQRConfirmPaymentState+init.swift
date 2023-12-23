@@ -6,6 +6,7 @@
 //
 
 import AmountComponent
+import ButtonComponent
 import ProductSelectComponent
 
 public extension SberQRConfirmPaymentState {
@@ -76,7 +77,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
         
-        #warning("isEnabled also depends product balance")
+#warning("isEnabled also depends product balance")
         
         return .init(
             title: amount.title,
@@ -90,12 +91,12 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
     }
     
     func button(
-    ) throws -> GetSberQRDataResponse.Parameter.Button {
+    ) throws -> ButtonComponent.Button {
         
         guard case let .button(button) = first(where: { $0.case == .button })
         else { throw ParameterError(missing: .button) }
         
-        return button
+        return .init(button)
     }
     
     func dataString(
@@ -217,5 +218,61 @@ private extension GetSberQRDataResponse.Parameter {
         case header
         case info
         case productSelect
+    }
+}
+
+// MARK: - Mapping
+
+private extension ButtonComponent.Button {
+    
+    init(_ button: GetSberQRDataResponse.Parameter.Button) {
+        
+        self.init(
+            id: .init(button.id),
+            value: button.value,
+            color: .init(button.color),
+            action: .init(button.action),
+            placement: .init(button.placement)
+        )
+    }
+}
+
+private extension ButtonComponent.Button.Action {
+    
+    init(_ action: GetSberQRDataResponse.Parameter.Action) {
+        
+        switch action {
+        case .pay: self = .pay
+        }
+    }
+}
+
+private extension ButtonComponent.Button.Color {
+    
+    init(_ color: Parameters.Color) {
+        
+        switch color {
+        case .red: self = .red
+        }
+    }
+}
+
+private extension ButtonComponent.Button.ID {
+    
+    init(_ id: GetSberQRDataIDs.ButtonID) {
+        
+        switch id {
+        case .buttonPay: self = .buttonPay
+        }
+    }
+}
+
+private extension ButtonComponent.Button.Placement {
+    
+    init(_ placement: Parameters.Placement) {
+        
+        switch placement {
+        case .bottom: self = .bottom
+        }
     }
 }

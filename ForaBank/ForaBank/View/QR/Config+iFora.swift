@@ -6,6 +6,7 @@
 //
 
 import AmountComponent
+import ButtonComponent
 import InfoComponent
 import PrimitiveComponents
 import ProductSelectComponent
@@ -24,7 +25,7 @@ extension SberQR.Config {
     )
 }
 
-private extension PrimitiveComponents.ButtonConfig {
+private extension ButtonComponent.ButtonConfig {
     
     static let iFora: Self = .init(
         active: .init(

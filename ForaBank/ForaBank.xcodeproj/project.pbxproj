@@ -571,6 +571,7 @@
 		2A7688D12AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */; };
 		2A7688D32AF3914C00045293 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D22AF3914C00045293 /* Store.swift */; };
 		2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */; };
+		2A769F882B37121500385754 /* ButtonComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A769F872B37121500385754 /* ButtonComponent */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -4568,6 +4569,7 @@
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */,
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
+				2A769F882B37121500385754 /* ButtonComponent in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
@@ -11956,6 +11958,7 @@
 				2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */,
 				2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */,
 				2A8DC4EE2B36F80000D55CC8 /* InfoComponent */,
+				2A769F872B37121500385754 /* ButtonComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -16518,6 +16521,10 @@
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TransferPublicKey;
+		};
+		2A769F872B37121500385754 /* ButtonComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ButtonComponent;
 		};
 		2A7AB1922AA1065400D37BD6 /* LinkableText */ = {
 			isa = XCSwiftPackageProductDependency;
