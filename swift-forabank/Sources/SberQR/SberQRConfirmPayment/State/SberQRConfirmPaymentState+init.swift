@@ -64,7 +64,7 @@ private extension SberQRConfirmPaymentState.FixedAmount {
             brandName: response.parameters.info(withID: .brandName),
             amount: response.parameters.info(withID: .amount),
             recipientBank: response.parameters.info(withID: .recipientBank),
-            bottom: response.parameters.button()
+            button: response.parameters.button()
         )
     }
 }

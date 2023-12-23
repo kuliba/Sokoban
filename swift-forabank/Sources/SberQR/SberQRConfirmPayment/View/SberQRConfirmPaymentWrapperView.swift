@@ -134,7 +134,7 @@ private extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
             brandName: map(fixedAmount.brandName),
             amount: map(fixedAmount.amount),
             recipientBank: map(fixedAmount.recipientBank),
-            bottom: fixedAmount.bottom
+            button: fixedAmount.button
         )
     }
 }

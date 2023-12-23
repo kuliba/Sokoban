@@ -17,7 +17,7 @@ public extension SberQRConfirmPaymentStateOf {
         public let brandName: Info
         public let amount: Info
         public let recipientBank: Info
-        public let bottom: Button
+        public let button: Button
         
         public init(
             header: Header,
@@ -25,14 +25,14 @@ public extension SberQRConfirmPaymentStateOf {
             brandName: Info,
             amount: Info,
             recipientBank: Info,
-            bottom: Button
+            button: Button
         ) {
             self.header = header
             self.productSelect = productSelect
             self.brandName = brandName
             self.amount = amount
             self.recipientBank = recipientBank
-            self.bottom = bottom
+            self.button = button
         }
     }
 }

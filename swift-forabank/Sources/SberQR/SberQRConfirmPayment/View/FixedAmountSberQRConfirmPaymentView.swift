@@ -27,7 +27,7 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             backgroundColor: config.background.color
         ) {
             ButtonView(
-                state: state.bottom,
+                state: state.button,
                 event: pay,
                 config: config.button
             )
