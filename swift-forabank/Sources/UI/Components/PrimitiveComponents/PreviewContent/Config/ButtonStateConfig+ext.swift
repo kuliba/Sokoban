@@ -1,5 +1,5 @@
 //
-//  ButtonStateConfig+default.swift
+//  ButtonStateConfig+ext.swift
 //  
 //
 //  Created by Igor Malyarov on 13.12.2023.

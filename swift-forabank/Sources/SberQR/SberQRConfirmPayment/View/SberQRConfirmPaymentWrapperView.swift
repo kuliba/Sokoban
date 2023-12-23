@@ -83,7 +83,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 pay: { print("pay!", String(describing: $0.amount), $0.product.type, $0.product.id) }
             ), 
             map: Info.preview,
-            config: .default
+            config: .preview
         )
     }
 }

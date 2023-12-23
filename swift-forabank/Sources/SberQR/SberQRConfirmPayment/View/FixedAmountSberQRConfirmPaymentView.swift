@@ -89,7 +89,7 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
             state: state,
             event: { _ in },
             pay: {},
-            config: .default
+            config: .preview
         )
     }
 }

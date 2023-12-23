@@ -139,7 +139,7 @@ struct AmountView_Previews: PreviewProvider {
             event: { _ in },
             pay: {},
             currencySymbol: "$",
-            config: .default
+            config: .preview
         )
     }
 }

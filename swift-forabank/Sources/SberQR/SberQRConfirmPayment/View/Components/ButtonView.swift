@@ -45,6 +45,6 @@ struct ButtonView_Previews: PreviewProvider {
         _ button: SberQRConfirmPaymentState.FixedAmount.Button
     ) -> some View {
         
-        ButtonView(state: .preview, event: {}, config: .default)
+        ButtonView(state: .preview, event: {}, config: .preview)
     }
 }

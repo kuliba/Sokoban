@@ -1,5 +1,5 @@
 //
-//  ProductSelectConfig+default.swift
+//  ProductSelectConfig+preview.swift
 //
 //
 //  Created by Igor Malyarov on 12.12.2023.
@@ -9,12 +9,12 @@ import SwiftUI
 
 public extension ProductSelectConfig {
     
-    static let `default`: Self = .init(
+    static let preview: Self = .init(
         amount: .init(
             textFont: .body,
             textColor: .purple
         ),
-        card: .`default`,
+        card: .preview,
         chevronColor: .gray.opacity(0.4),
         footer: .init(
             textFont: .caption,
@@ -33,7 +33,7 @@ public extension ProductSelectConfig {
 
 extension ProductSelectConfig.Card {
     
-    static let `default`: Self = .init(
+    static let preview: Self = .init(
         amount: .init(
             textFont: .body,
             textColor: .gray

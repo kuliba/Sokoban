@@ -1,6 +1,6 @@
 //
-//  ProductCardConfig+default.swift
-//  
+//  ProductCardConfig+preview.swift
+//
 //
 //  Created by Igor Malyarov on 14.12.2023.
 //
@@ -10,7 +10,7 @@ import SwiftUI
 
 extension ProductCardConfig {
     
-    static let `default`: Self = .init(
+    static let preview: Self = .init(
         balance: .init(
             textFont: .caption.bold(),
             textColor: .orange

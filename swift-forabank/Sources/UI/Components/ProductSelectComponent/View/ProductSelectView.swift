@@ -158,11 +158,11 @@ struct ProductSelectView_Previews: PreviewProvider {
             ProductSelectView(
                 state: state,
                 event: { state = reduce(state, $0) },
-                config: .default
+                config: .preview
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),
-                    config: .default
+                    config: .preview
                 )
             }
             .border(.red)

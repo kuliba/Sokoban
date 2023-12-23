@@ -123,6 +123,6 @@ struct ProductCardView_Previews: PreviewProvider {
         _ productCard: ProductCard
     ) -> some View {
         
-        ProductCardView(productCard: productCard, config: .default)
+        ProductCardView(productCard: productCard, config: .preview)
     }
 }

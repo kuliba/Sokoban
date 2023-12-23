@@ -56,7 +56,7 @@ struct SberQRConfirmPaymentView_Previews: PreviewProvider {
         SberQRConfirmPaymentView(
             state: state,
             event: { _ in },
-            config: .default
+            config: .preview
         )
     }
 }

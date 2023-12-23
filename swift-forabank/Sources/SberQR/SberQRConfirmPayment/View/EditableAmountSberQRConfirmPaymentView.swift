@@ -94,7 +94,7 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
             state: state,
             event: { _ in },
             pay: {},
-            config: .default
+            config: .preview
         )
     }
 }

@@ -1,6 +1,6 @@
 //
-//  Config+default.swift
-//  
+//  Config+preview.swift
+//
 //
 //  Created by Igor Malyarov on 12.12.2023.
 //
@@ -12,18 +12,18 @@ import SwiftUI
 
 extension Config {
     
-    static let `default`: Self = .init(
-        amount: .default,
-        background: .default,
-        button: .default,
+    static let preview: Self = .init(
+        amount: .preview,
+        background: .preview,
+        button: .preview,
         info: .preview,
-        productSelect: .default
+        productSelect: .preview
     )
 }
 
 extension Config.Background {
     
-    static let `default`: Self = .init(
+    static let preview: Self = .init(
         color: .gray.opacity(0.2)
     )
 }
