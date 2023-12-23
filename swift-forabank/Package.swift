@@ -131,6 +131,7 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
+        .paymentComponents,
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
@@ -298,6 +299,7 @@ private extension Product {
             .amountComponent,
             .buttonComponent,
             .infoComponent,
+            .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
         ]
@@ -493,6 +495,7 @@ private extension Target {
             .buttonComponent,
             .foraTools,
             .infoComponent,
+            .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
         ]
@@ -942,6 +945,18 @@ private extension Target {
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
+    static let paymentComponents = target(
+        name: .paymentComponents,
+        dependencies: [
+            .amountComponent,
+            .buttonComponent,
+            .infoComponent,
+            .productSelectComponent,
+            .sharedConfigs,
+        ],
+        path: "Sources/UI/Components/\(String.paymentComponents)"
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -1113,6 +1128,10 @@ private extension Target.Dependency {
     
     static let infoComponent = byName(
         name: .infoComponent
+    )
+    
+    static let paymentComponents = byName(
+        name: .paymentComponents
     )
     
     static let productSelectComponent = byName(
