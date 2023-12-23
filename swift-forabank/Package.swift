@@ -504,6 +504,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .amountComponent,
             .foraTools,
             .productSelectComponent,
             .textFieldComponent
@@ -1108,6 +1109,10 @@ private extension Target.Dependency {
     
     // MARK: - UI Components
 
+    static let amountComponent = byName(
+        name: .amountComponent
+    )
+    
     static let productSelectComponent = byName(
         name: .productSelectComponent
     )
