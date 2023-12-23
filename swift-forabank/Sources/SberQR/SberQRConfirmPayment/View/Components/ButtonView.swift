@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ButtonView: View {
     
-    let button: SberQRConfirmPaymentState.FixedAmount.Button
+    let state: SberQRConfirmPaymentState.FixedAmount.Button
     let pay: () -> Void
     
     let config: ButtonConfig
@@ -24,7 +24,7 @@ struct ButtonView: View {
             
             Button(action: pay) {
                 
-                text(button.value, config: config.active.text)
+                text(state.value, config: config.active.text)
             }
         }
         .frame(height: buttonHeight)
@@ -55,6 +55,6 @@ struct ButtonView_Previews: PreviewProvider {
         _ button: SberQRConfirmPaymentState.FixedAmount.Button
     ) -> some View {
         
-        ButtonView(button: .preview, pay: {}, config: .default)
+        ButtonView(state: .preview, pay: {}, config: .default)
     }
 }
