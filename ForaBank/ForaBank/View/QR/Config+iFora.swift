@@ -8,7 +8,6 @@
 import AmountComponent
 import ButtonComponent
 import InfoComponent
-import PrimitiveComponents
 import ProductSelectComponent
 import SberQR
 

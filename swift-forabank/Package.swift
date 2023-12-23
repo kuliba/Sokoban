@@ -46,11 +46,7 @@ let package = Package(
         .textFieldComponent,
         .uiKitHelpers,
         // UI Components
-        .amountComponent,
-        .buttonComponent,
-        .infoComponent,
-        .primitiveComponents,
-        .productSelectComponent,
+        .paymentComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -296,37 +292,13 @@ private extension Product {
     
     // MARK: - UI Components
     
-    static let amountComponent = library(
-        name: .amountComponent,
+    static let paymentComponents = library(
+        name: .paymentComponents,
         targets: [
             .amountComponent,
-        ]
-    )
-    
-    static let buttonComponent = library(
-        name: .buttonComponent,
-        targets: [
             .buttonComponent,
-        ]
-    )
-    
-    static let infoComponent = library(
-        name: .infoComponent,
-        targets: [
             .infoComponent,
-        ]
-    )
-    
-    static let primitiveComponents = library(
-        name: .primitiveComponents,
-        targets: [
             .primitiveComponents,
-        ]
-    )
-    
-    static let productSelectComponent = library(
-        name: .productSelectComponent,
-        targets: [
             .productSelectComponent,
         ]
     )
@@ -1285,6 +1257,8 @@ private extension String {
     
     static let infoComponent = "InfoComponent"
     
+    static let paymentComponents = "PaymentComponents"
+
     static let primitiveComponents = "PrimitiveComponents"
 
     static let productSelectComponent = "ProductSelectComponent"
