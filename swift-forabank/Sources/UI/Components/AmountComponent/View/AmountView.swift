@@ -9,7 +9,7 @@ import PrimitiveComponents
 import TextFieldComponent
 import SwiftUI
 
-struct AmountView: View {
+public struct AmountView: View {
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
@@ -21,7 +21,7 @@ struct AmountView: View {
     
     private let getDecimal: (TextFieldState) -> Decimal
     
-    init(
+    public init(
         amount: Amount,
         event: @escaping (Decimal) -> Void,
         pay: @escaping () -> Void,
@@ -46,7 +46,7 @@ struct AmountView: View {
     private let buttonSize = CGSize(width: 114, height: 40)
     private let frameInsets = EdgeInsets(top: 4, leading: 20, bottom: 16, trailing: 19)
     
-    var body: some View {
+    public var body: some View {
         
         HStack(spacing: 24) {
             

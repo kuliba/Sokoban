@@ -5,9 +5,10 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import PrimitiveComponents
 import SwiftUI
 
-extension AmountConfig {
+public extension AmountConfig {
     
     static let `default`: Self = .init(
         amount: .init(

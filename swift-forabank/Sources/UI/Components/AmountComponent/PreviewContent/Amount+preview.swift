@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.12.2023.
 //
 
-extension Amount {
+public extension Amount {
     
     static let preview: Self = .init(
         title: "Сумма перевода",

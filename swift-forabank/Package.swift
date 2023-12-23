@@ -516,8 +516,7 @@ private extension Target {
             .amountComponent,
             .foraTools,
             .primitiveComponents,
-            .productSelectComponent,
-            .textFieldComponent
+            .productSelectComponent
         ]
     )
     static let sberQRTests = testTarget(
@@ -528,6 +527,7 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .amountComponent,
             .sberQR,
         ],
         resources: [
@@ -599,7 +599,7 @@ private extension Target {
     static let landingMappingTests = testTarget(
         name: .landingMappingTests,
         dependencies: [
-            // external
+            // external packages
             .customDump,
             // internal modules
             .landingMapping,
@@ -955,9 +955,12 @@ private extension Target {
     static let amountComponent = target(
         name: .amountComponent,
         dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
             .foraTools,
             .primitiveComponents,
-            .tagged,
+            .textFieldComponent,
         ],
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
@@ -984,11 +987,11 @@ private extension Target {
     static let productSelectComponentTests = testTarget(
         name: .productSelectComponentTests,
         dependencies: [
-            // external
+            // external packages
             .combineSchedulers,
             .customDump,
             .tagged,
-            // internal
+            // internal modules
             .productSelectComponent
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"

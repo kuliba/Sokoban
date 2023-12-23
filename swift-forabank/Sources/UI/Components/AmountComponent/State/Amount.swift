@@ -9,8 +9,8 @@ import Foundation
 
 public struct Amount: Equatable {
     
-    let title: String
-    let value: Decimal
+    public let title: String
+    public let value: Decimal
     public var button: AmountButton
     
     public init(
@@ -28,7 +28,7 @@ public extension Amount {
 
     struct AmountButton: Equatable {
         
-        let title: String
+        public let title: String
         public var isEnabled: Bool
         
         public init(

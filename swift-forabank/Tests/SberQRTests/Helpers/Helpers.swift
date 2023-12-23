@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AmountComponent
 import ProductSelectComponent
 import SberQR
 
