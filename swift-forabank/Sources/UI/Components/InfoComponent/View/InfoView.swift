@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct InfoView: View {
+public struct InfoView: View {
     
     let info: Info
     let config: InfoConfig
     
     @State private var image: Image
     
-    init(
+    public init(
         info: Info,
         config: InfoConfig
     ) {
@@ -23,7 +23,7 @@ struct InfoView: View {
         self.image = info.image.value
     }
     
-    var body: some View {
+    public var body: some View {
         
         HStack(spacing: 12) {
             

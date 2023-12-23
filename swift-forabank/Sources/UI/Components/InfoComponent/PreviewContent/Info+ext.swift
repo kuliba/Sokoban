@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-extension Info {
+public extension Info {
     
     static let amount: Self = .init(
         id: .amount,

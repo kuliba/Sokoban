@@ -6,6 +6,7 @@
 //
 
 import AmountComponent
+import InfoComponent
 import ProductSelectComponent
 
 extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {

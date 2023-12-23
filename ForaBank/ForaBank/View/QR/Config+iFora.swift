@@ -6,6 +6,7 @@
 //
 
 import AmountComponent
+import InfoComponent
 import PrimitiveComponents
 import ProductSelectComponent
 import SberQR
@@ -60,7 +61,7 @@ private extension AmountComponent.AmountConfig {
     )
 }
 
-private extension SberQR.InfoConfig {
+private extension InfoComponent.InfoConfig {
     
     static let iFora: Self = .init(
         title: .placeholder,

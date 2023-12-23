@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
+import InfoComponent
 import PrimitiveComponents
 import ProductSelectComponent
 import SwiftUI
@@ -15,7 +16,7 @@ extension Config {
         amount: .default,
         background: .default,
         button: .default,
-        info: .default,
+        info: .preview,
         productSelect: .default
     )
 }

@@ -610,6 +610,7 @@
 		2A8CC2492B29FA5A00191B8E /* View+navigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */; };
 		2A8DC4EB2B36F28900D55CC8 /* PrimitiveComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */; };
 		2A8DC4ED2B36F2AC00D55CC8 /* AmountComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */; };
+		2A8DC4EF2B36F80000D55CC8 /* InfoComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DC4EE2B36F80000D55CC8 /* InfoComponent */; };
 		2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
@@ -4535,6 +4536,7 @@
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
+				2A8DC4EF2B36F80000D55CC8 /* InfoComponent in Frameworks */,
 				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
 				2A1F08532A79057500C5B11B /* GetProcessingSessionCodeService in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
@@ -11953,6 +11955,7 @@
 				2AC67EE12B35C70C00CC456D /* ProductSelectComponent */,
 				2A8DC4EA2B36F28900D55CC8 /* PrimitiveComponents */,
 				2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */,
+				2A8DC4EE2B36F80000D55CC8 /* InfoComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -16535,6 +16538,10 @@
 		2A8DC4EC2B36F2AC00D55CC8 /* AmountComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AmountComponent;
+		};
+		2A8DC4EE2B36F80000D55CC8 /* InfoComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InfoComponent;
 		};
 		2A95CBB02B2C80C80041F5EC /* SberQR */ = {
 			isa = XCSwiftPackageProductDependency;

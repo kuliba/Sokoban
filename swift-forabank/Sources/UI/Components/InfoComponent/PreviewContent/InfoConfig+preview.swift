@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension InfoConfig {
+public extension InfoConfig {
     
     static let preview: Self = .init(
         title: .init(
