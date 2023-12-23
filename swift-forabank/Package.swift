@@ -48,6 +48,7 @@ let package = Package(
         .textFieldComponent,
         .uiKitHelpers,
         // UI Components
+        .amountComponent,
         .productSelectComponent,
         // tools
         .foraTools,
@@ -133,6 +134,7 @@ let package = Package(
         .textFieldUITests,
         .uiKitHelpers,
         // UI Components
+        .amountComponent,
         .productSelectComponent,
         .productSelectComponentTests,
         // tools
@@ -301,6 +303,13 @@ private extension Product {
     )
     
     // MARK: - UI Components
+    
+    static let amountComponent = library(
+        name: .amountComponent,
+        targets: [
+            .amountComponent,
+        ]
+    )
     
     static let productSelectComponent = library(
         name: .productSelectComponent,
@@ -932,6 +941,15 @@ private extension Target {
     
     // MARK: - UI Components
 
+    static let amountComponent = target(
+        name: .amountComponent,
+        dependencies: [
+            .foraTools,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.amountComponent)"
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -939,8 +957,8 @@ private extension Target {
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
-
     )
+    
     static let productSelectComponentTests = testTarget(
         name: .productSelectComponentTests,
         dependencies: [
@@ -1225,6 +1243,8 @@ private extension String {
     static let uiKitHelpers = "UIKitHelpers"
     
     // MARK: - UI Components
+
+    static let amountComponent = "AmountComponent"
 
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
