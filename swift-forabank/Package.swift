@@ -524,6 +524,7 @@ private extension Target {
             // internal modules
             .amountComponent,
             .foraTools,
+            .infoComponent,
             .primitiveComponents,
             .productSelectComponent
         ]
