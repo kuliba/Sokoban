@@ -66,17 +66,17 @@ public struct ProductCardView: View {
     
     private func cardNumber() -> some View {
         
-        text(productCard.data.number, config: config.number)
+        productCard.data.number.text(withConfig: config.number)
     }
     
     private func cardTitle() -> some View {
         
-        text(productCard.data.title, config: config.title)
+        productCard.data.title.text(withConfig: config.title)
     }
     
     private func balanceView() -> some View {
         
-        text(productCard.data.balanceFormatted, config: config.balance)
+        productCard.data.balanceFormatted.text(withConfig: config.balance)
     }
     
     private func selectedCardMarkView() -> some View {
@@ -103,16 +103,6 @@ public struct ProductCardView: View {
             .padding(.top, offsetY)
             .padding(.bottom, 4)
             .blur(radius: 4)
-    }
-    
-    private func text(
-        _ text: String,
-        config: TextConfig
-    ) -> some View {
-        
-        Text(text)
-            .font(config.textFont)
-            .foregroundColor(config.textColor)
     }
 }
 

@@ -23,21 +23,11 @@ struct ButtonView: View {
             
             Button(action: event) {
                 
-                text(state.value, config: config.active.text)
+                state.value.text(withConfig: config.active.text)
             }
         }
         .frame(height: buttonHeight)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-    
-    private func text(
-        _ text: String,
-        config: TextConfig
-    ) -> some View {
-        
-        Text(text)
-            .font(config.textFont)
-            .foregroundColor(config.textColor)
     }
 }
 

@@ -69,32 +69,22 @@ public struct ProductSelectView<ProductView: View>: View {
         
         VStack(alignment: .leading, spacing: 0) {
             
-            text(product.header, config: config.header)
+            product.header.text(withConfig: config.header)
             
             HStack(alignment: .center, spacing: 8) {
                 
-                text(product.title, config: config.title)
+                product.title.text(withConfig: config.title)
                 
                 Spacer()
                 
-                text(product.amountFormatted, config: config.amount)
+                product.amountFormatted.text(withConfig: config.amount)
                 
                 chevron()
             }
             
-            text(product.number, config: config.footer)
+            product.number.text(withConfig: config.footer)
                 .padding(.top, 4)
         }
-    }
-    
-    private func text(
-        _ text: String,
-        config: TextConfig
-    ) -> some View {
-        
-        Text(text)
-            .font(config.textFont)
-            .foregroundColor(config.textColor)
     }
     
     @ViewBuilder

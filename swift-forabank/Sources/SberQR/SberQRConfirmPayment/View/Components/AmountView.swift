@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PrimitiveComponents
 import TextFieldComponent
 import SwiftUI
 
@@ -60,7 +61,7 @@ struct AmountView: View {
         
         VStack(alignment: .leading, spacing: 4) {
             
-            text(amount.title, config: config.title)
+            amount.title.text(withConfig: config.title)
             textField()
             Divider().background(config.dividerColor)
                 .padding(.top, 4)
@@ -111,18 +112,8 @@ struct AmountView: View {
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
-            text(amount.button.title, config: config.text)
+            amount.button.title.text(withConfig: config.text)
         }
-    }
-    
-    private func text(
-        _ text: String,
-        config: TextConfig
-    ) -> some View {
-        
-        Text(text)
-            .font(config.textFont)
-            .foregroundColor(config.textColor)
     }
 }
 

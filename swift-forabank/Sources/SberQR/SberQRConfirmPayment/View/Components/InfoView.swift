@@ -33,8 +33,8 @@ struct InfoView: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 
-                text(info.title, config: config.title)
-                text(info.value, config: config.value)
+                info.title.text(withConfig: config.title)
+                info.value.text(withConfig: config.value)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -48,16 +48,6 @@ struct InfoView: View {
             .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)
-    }
-    
-    private func text(
-        _ text: String,
-        config: TextConfig
-    ) -> some View {
-        
-        Text(text)
-            .foregroundColor(config.textColor)
-            .font(config.textFont)
     }
 }
 
