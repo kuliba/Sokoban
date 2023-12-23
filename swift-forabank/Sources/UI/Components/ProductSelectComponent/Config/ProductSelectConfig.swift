@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
+import PrimitiveComponents
 import SwiftUI
 
 public struct ProductSelectConfig {
