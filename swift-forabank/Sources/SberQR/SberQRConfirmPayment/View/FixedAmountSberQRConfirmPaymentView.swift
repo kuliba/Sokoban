@@ -26,7 +26,7 @@ struct FixedAmountSberQRConfirmPaymentView: View {
         ) {
             ButtonView(
                 state: state.bottom,
-                pay: pay,
+                event: pay,
                 config: config.button
             )
             .padding(.leading, 16)
