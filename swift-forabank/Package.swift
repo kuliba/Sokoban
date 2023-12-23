@@ -976,6 +976,9 @@ private extension Target {
     
     static let infoComponent = target(
         name: .infoComponent,
+        dependencies: [
+            .primitiveComponents
+        ],
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
