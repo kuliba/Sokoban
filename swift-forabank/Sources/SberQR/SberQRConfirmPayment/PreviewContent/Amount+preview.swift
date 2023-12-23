@@ -1,11 +1,11 @@
 //
-//  SberQRConfirmPaymentState.Amount+preview.swift
+//  Amount+preview.swift
 //  
 //
 //  Created by Igor Malyarov on 18.12.2023.
 //
 
-extension SberQRConfirmPaymentState.Amount {
+extension Amount {
     
     static let preview: Self = .init(
         title: "Сумма перевода",

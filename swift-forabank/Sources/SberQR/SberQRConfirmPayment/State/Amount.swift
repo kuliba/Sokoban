@@ -7,27 +7,24 @@
 
 import Foundation
 
-public extension SberQRConfirmPaymentState {
+public struct Amount: Equatable {
     
-    struct Amount: Equatable {
-        
-        let title: String
-        let value: Decimal
-        public var button: AmountButton
-        
-        public init(
-            title: String,
-            value: Decimal,
-            button: AmountButton
-        ) {
-            self.title = title
-            self.value = value
-            self.button = button
-        }
+    let title: String
+    let value: Decimal
+    public var button: AmountButton
+    
+    public init(
+        title: String,
+        value: Decimal,
+        button: AmountButton
+    ) {
+        self.title = title
+        self.value = value
+        self.button = button
     }
 }
 
-public extension SberQRConfirmPaymentState.Amount {
+public extension Amount {
 
     struct AmountButton: Equatable {
         

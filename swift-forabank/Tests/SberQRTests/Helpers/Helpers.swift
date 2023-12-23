@@ -29,7 +29,7 @@ extension GetSberQRDataResponse.Parameter.Amount {
     }
 }
 
-extension SberQRConfirmPaymentState.Amount {
+extension Amount {
     
     static func paymentAmount(
         value: Decimal,

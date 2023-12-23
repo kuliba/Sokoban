@@ -38,7 +38,6 @@ public extension SberQRConfirmPaymentStateOf {
 
 public extension SberQRConfirmPaymentStateOf.EditableAmount {
     
-    typealias Amount = SberQRConfirmPaymentState.Amount
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
 }
 

@@ -70,7 +70,7 @@ private extension SberQRConfirmPaymentState.FixedAmount {
 private extension Array where Element == GetSberQRDataResponse.Parameter {
     
     func amount(
-    ) throws -> SberQRConfirmPaymentState.Amount {
+    ) throws -> Amount {
         
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
