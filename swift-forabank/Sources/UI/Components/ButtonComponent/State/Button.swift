@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.12.2023.
 //
 
-import PrimitiveComponents
+import SharedConfigs
 
 public struct Button: Equatable {
     

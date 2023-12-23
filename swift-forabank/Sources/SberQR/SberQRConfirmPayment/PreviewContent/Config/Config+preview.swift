@@ -6,7 +6,7 @@
 //
 
 import InfoComponent
-import PrimitiveComponents
+import SharedConfigs
 import ProductSelectComponent
 import SwiftUI
 

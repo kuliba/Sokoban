@@ -812,20 +812,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PrimitiveComponents"
-               BuildableName = "PrimitiveComponents"
-               BlueprintName = "PrimitiveComponents"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "InfoComponent"
                BuildableName = "InfoComponent"
                BlueprintName = "InfoComponent"

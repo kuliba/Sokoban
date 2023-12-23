@@ -131,9 +131,9 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
-        .primitiveComponents,
         .productSelectComponent,
         .productSelectComponentTests,
+        .sharedConfigs,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -298,8 +298,8 @@ private extension Product {
             .amountComponent,
             .buttonComponent,
             .infoComponent,
-            .primitiveComponents,
             .productSelectComponent,
+            .sharedConfigs,
         ]
     )
     
@@ -493,8 +493,8 @@ private extension Target {
             .buttonComponent,
             .foraTools,
             .infoComponent,
-            .primitiveComponents,
-            .productSelectComponent
+            .productSelectComponent,
+            .sharedConfigs,
         ]
     )
     static let sberQRTests = testTarget(
@@ -920,8 +920,8 @@ private extension Target {
             // internal modules
             .buttonComponent,
             .foraTools,
-            .primitiveComponents,
             .textFieldComponent,
+            .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
@@ -929,7 +929,7 @@ private extension Target {
     static let buttonComponent = target(
         name: .buttonComponent,
         dependencies: [
-            .primitiveComponents
+            .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.buttonComponent)"
     )
@@ -937,25 +937,16 @@ private extension Target {
     static let infoComponent = target(
         name: .infoComponent,
         dependencies: [
-            .primitiveComponents
+            .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.infoComponent)"
-    )
-    
-    static let primitiveComponents = target(
-        name: .primitiveComponents,
-        dependencies: [
-            .foraTools,
-            .tagged,
-        ],
-        path: "Sources/UI/Components/\(String.primitiveComponents)"
     )
     
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
             .foraTools,
-            .primitiveComponents,
+            .sharedConfigs,
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
@@ -972,9 +963,17 @@ private extension Target {
             .productSelectComponent
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
-
     )
 
+    static let sharedConfigs = target(
+        name: .sharedConfigs,
+        dependencies: [
+            .foraTools,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.sharedConfigs)"
+    )
+    
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -1116,12 +1115,12 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
-    static let primitiveComponents = byName(
-        name: .primitiveComponents
-    )
-    
     static let productSelectComponent = byName(
         name: .productSelectComponent
+    )
+    
+    static let sharedConfigs = byName(
+        name: .sharedConfigs
     )
     
     // MARK: - Infra
@@ -1259,11 +1258,11 @@ private extension String {
     
     static let paymentComponents = "PaymentComponents"
 
-    static let primitiveComponents = "PrimitiveComponents"
-
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
 
+    static let sharedConfigs = "SharedConfigs"
+    
     // MARK: - Infra
     
     static let fetcher = "Fetcher"
