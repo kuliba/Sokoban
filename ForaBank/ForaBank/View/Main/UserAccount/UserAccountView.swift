@@ -76,30 +76,7 @@ struct UserAccountView: View {
                 
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
-            switch sheet.sheetType {
-                
-            case let .deleteInfo(model):
-                UserAccountExitInfoView(viewModel: model)
-                
-            case let .inn(model):
-                UserAccountDocumentInfoView(viewModel: model)
-                
-            case let .camera(model):
-                UserAccountPhotoSourceView(viewModel: model)
-                
-            case let .avatarOptions(optionViewModel):
-                OptionsButtonsViewComponent(viewModel: optionViewModel)
-                
-            case let .imageCapture(imageCapture):
-                ImageCapture(viewModel: imageCapture)
-                    .edgesIgnoringSafeArea(.all)
-                    .navigationBarBackButtonHidden(false)
-                
-            case let .sbpay(viewModel):
-                SbpPayView(viewModel: viewModel)
-            }
-        })
+        .bottomSheet(item: $viewModel.bottomSheet, content: sheetView)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
@@ -196,6 +173,35 @@ struct UserAccountView: View {
             
         case let .successView(successViewModel):
             PaymentsSuccessView(viewModel: successViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        sheet: UserAccountViewModel.BottomSheet
+    ) -> some View { 
+        
+        switch sheet.sheetType {
+            
+        case let .deleteInfo(model):
+            UserAccountExitInfoView(viewModel: model)
+            
+        case let .inn(model):
+            UserAccountDocumentInfoView(viewModel: model)
+            
+        case let .camera(model):
+            UserAccountPhotoSourceView(viewModel: model)
+            
+        case let .avatarOptions(optionViewModel):
+            OptionsButtonsViewComponent(viewModel: optionViewModel)
+            
+        case let .imageCapture(imageCapture):
+            ImageCapture(viewModel: imageCapture)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarBackButtonHidden(false)
+            
+        case let .sbpay(viewModel):
+            SbpPayView(viewModel: viewModel)
         }
     }
 }
