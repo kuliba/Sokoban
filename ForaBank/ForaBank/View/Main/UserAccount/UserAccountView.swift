@@ -23,27 +23,7 @@ struct UserAccountView: View {
                 
                 avatarView
                 
-                ForEach(viewModel.sections) { section in
-                    
-                    switch section {
-                        
-                    case let sectionViewModel as UserAccountContactsView.ViewModel:
-                        UserAccountContactsView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountPaymentsView.ViewModel:
-                        UserAccountPaymentsView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountSecurityView.ViewModel:
-                        UserAccountSecurityView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountDocumentsView.ViewModel:
-                        UserAccountDocumentsView(viewModel: sectionViewModel)
-                        
-                    default:
-                        EmptyView()
-                    }
-                    
-                }
+                ForEach(viewModel.sections, content: sectionView) 
                 
                 if let button = viewModel.exitButton {
                     AccountCellFullButtonView(viewModel: button)
@@ -127,6 +107,30 @@ struct UserAccountView: View {
                 }
                 .offset(x: 32, y: -32)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: UserAccountViewModel.AccountSectionViewModel
+    ) -> some View {
+        
+        switch section {
+            
+        case let sectionViewModel as UserAccountContactsView.ViewModel:
+            UserAccountContactsView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountPaymentsView.ViewModel:
+            UserAccountPaymentsView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountSecurityView.ViewModel:
+            UserAccountSecurityView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountDocumentsView.ViewModel:
+            UserAccountDocumentsView(viewModel: sectionViewModel)
+            
+        default:
+            EmptyView()
         }
     }
     
