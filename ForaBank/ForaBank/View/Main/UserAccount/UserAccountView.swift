@@ -50,14 +50,7 @@ struct UserAccountView: View {
                 content: destinationView(link:)
             )
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.sheetType {
-                
-            case let .userDocument(userDocumentViewModel):
-                UserDocumentView(viewModel: userDocumentViewModel)
-                
-            }
-        })
+        .sheet(item: $viewModel.sheet, content: sheetView)
         .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
         .alert(item: $viewModel.alert, content: Alert.init(with:))
         .textfieldAlert(alert: $viewModel.textFieldAlert)
@@ -177,6 +170,18 @@ struct UserAccountView: View {
             
         case let .successView(successViewModel):
             PaymentsSuccessView(viewModel: successViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        sheet: UserAccountViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.sheetType {
+            
+        case let .userDocument(userDocumentViewModel):
+            UserDocumentView(viewModel: userDocumentViewModel)
         }
     }
     
