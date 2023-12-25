@@ -22,23 +22,9 @@ struct PaymentsTransfersView: View {
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     
-                    ForEach(viewModel.sections) { section in
-                        
-                        switch section {
-                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
-                            
-                        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                            PTSectionTransfersView(viewModel: transfersSectionVM)
-                            
-                        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
-                            PTSectionPaymentsView(viewModel: payGroupSectionVM)
-                        default:
-                            EmptyView()
-                        }
-                    }
-                } //mainVerticalScrollView
-            } //mainVStack
+                    ForEach(viewModel.sections, content: sectionView)
+                }
+            }
             
             Color.clear
                 .sheet(
@@ -101,6 +87,25 @@ struct PaymentsTransfersView: View {
             get: { !viewModel.route.isEmpty },
             set: { if !$0 { viewModel.reset() } }
         ))
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: PaymentsTransfersSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+            
+        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+            PTSectionTransfersView(viewModel: transfersSectionVM)
+            
+        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+            PTSectionPaymentsView(viewModel: payGroupSectionVM)
+        default:
+            EmptyView()
+        }
     }
     
     @ViewBuilder
