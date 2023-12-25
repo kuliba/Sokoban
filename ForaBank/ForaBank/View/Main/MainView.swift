@@ -17,6 +17,7 @@ struct MainView<NavigationOperationView: View>: View {
     let navigationOperationView: () -> NavigationOperationView
     
     let viewFactory: MainViewFactory
+    let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -155,7 +156,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: viewFactory.makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -179,7 +180,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                makeSberQRConfirmPaymentView: viewFactory.makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .country(countyViewModel):
@@ -243,7 +244,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: viewFactory.makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -404,6 +405,17 @@ struct MainView_Previews: PreviewProvider {
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
             viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            ),
+            paymentsTransfersViewFactory: .init(
                 makeSberQRConfirmPaymentView: {
                     
                     .init(

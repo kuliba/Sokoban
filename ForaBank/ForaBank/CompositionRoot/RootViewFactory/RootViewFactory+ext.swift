@@ -30,16 +30,21 @@ extension RootViewFactory {
                 )
         }
         
+        let makeUserAccountView = UserAccountView.init(viewModel:)
+        
         self.init(
             makePaymentsTransfersView: { viewModel in
                 
                     .init(
                         viewModel: viewModel,
-                        makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                        viewFactory: .init(
+                            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                            makeUserAccountView: makeUserAccountView
+                        )
                     )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: makeUserAccountView
         )
     }
 }

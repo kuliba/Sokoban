@@ -14,7 +14,7 @@ struct ProductProfileView: View {
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: PaymentsTransfersViewFactory
 
     var accentColor: some View {
         
@@ -164,13 +164,13 @@ struct ProductProfileView: View {
         case let .myProducts(viewModel):
             MyProductsView(
                 viewModel: viewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
             
         case let .paymentsTransfers(viewModel):
             PaymentsTransfersView(
                 viewModel: viewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
         }
     }
@@ -358,7 +358,7 @@ struct ProductProfileView: View {
     }
 }
 
-//MARK: - Internal Views
+// MARK: - Internal Views
 
 extension ProductProfileView {
     
@@ -372,7 +372,7 @@ extension ProductProfileView {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct ProfileView_Previews: PreviewProvider {
     
@@ -391,14 +391,17 @@ struct ProfileView_Previews: PreviewProvider {
         
         ProductProfileView(
             viewModel: viewModel,
-            makeSberQRConfirmPaymentView: {
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }

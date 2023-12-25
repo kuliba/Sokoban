@@ -12,7 +12,7 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -205,7 +205,7 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
             
         case let .openDeposit(depositListViewModel):
@@ -215,7 +215,7 @@ struct PaymentsTransfersView: View {
             OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+            viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
@@ -230,7 +230,7 @@ struct PaymentsTransfersView: View {
         
         TransportPaymentsView(
             viewModel: transportPaymentsViewModel
-        ) {    
+        ) {
             MosParkingView(
                 viewModel: .init(
                     operation: viewModel.getMosParkingPickerData
@@ -423,14 +423,17 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         
         PaymentsTransfersView(
             viewModel: .sample,
-            makeSberQRConfirmPaymentView: { 
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }

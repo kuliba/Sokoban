@@ -35,3 +35,20 @@ extension RootViewFactory {
         )
     }
 }
+
+struct PaymentsTransfersViewFactory {
+    
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let makeUserAccountView: MakeUserAccountView
+}
+
+extension RootViewFactory {
+    
+    var paymentsTransfersViewFactory: PaymentsTransfersViewFactory {
+ 
+        .init(
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: makeUserAccountView
+        )
+    }
+}
