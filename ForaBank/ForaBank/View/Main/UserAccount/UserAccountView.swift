@@ -65,45 +65,7 @@ struct UserAccountView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case .userDocument(let userDocumentViewModel):
-                        UserDocumentView(viewModel: userDocumentViewModel)
-                        
-                    case let .fastPaymentSettings(meToMeSettingsViewModel):
-                        MeToMeSettingView(viewModel: meToMeSettingsViewModel)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("", displayMode: .inline)
-                        
-                    case let .deleteUserInfo(deleteInfoViewModel):
-                        DeleteAccountView(viewModel: deleteInfoViewModel)
-                            .navigationBarBackButtonHidden(true)
-                        
-                    case .imagePicker(let imagePicker):
-                        ImagePicker(viewModel: imagePicker)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("Выберите фото", displayMode: .inline)
-                        
-                    case let .managingSubscription(subscriptionViewModel):
-                        ManagingSubscriptionView(
-                            subscriptionViewModel: subscriptionViewModel,
-                            configurator: .init(
-                                titleFont: .textBodyMR14180(),
-                                titleColor: .textPlaceholder,
-                                nameFont: .textH4M16240(),
-                                nameColor: .mainColorsBlack,
-                                descriptionFont: .textBodyMR14180()
-                            ),
-                            footerImage: Image.ic72Sbp,
-                            searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
-                        )
-                        
-                    case let .successView(successViewModel):
-                        PaymentsSuccessView(viewModel: successViewModel)
-                    }
-                }
+                viewModel.link.map(destinationView)
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
@@ -190,6 +152,50 @@ struct UserAccountView: View {
                 }
                 .offset(x: 32, y: -32)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        link: UserAccountViewModel.Link
+    ) -> some View {
+        
+        switch link {
+            
+        case let .userDocument(userDocumentViewModel):
+            UserDocumentView(viewModel: userDocumentViewModel)
+            
+        case let .fastPaymentSettings(meToMeSettingsViewModel):
+            MeToMeSettingView(viewModel: meToMeSettingsViewModel)
+                .navigationBarBackButtonHidden(false)
+                .navigationBarTitle("", displayMode: .inline)
+            
+        case let .deleteUserInfo(deleteInfoViewModel):
+            DeleteAccountView(viewModel: deleteInfoViewModel)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .imagePicker(imagePicker):
+            ImagePicker(viewModel: imagePicker)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarBackButtonHidden(false)
+                .navigationBarTitle("Выберите фото", displayMode: .inline)
+            
+        case let .managingSubscription(subscriptionViewModel):
+            ManagingSubscriptionView(
+                subscriptionViewModel: subscriptionViewModel,
+                configurator: .init(
+                    titleFont: .textBodyMR14180(),
+                    titleColor: .textPlaceholder,
+                    nameFont: .textH4M16240(),
+                    nameColor: .mainColorsBlack,
+                    descriptionFont: .textBodyMR14180()
+                ),
+                footerImage: Image.ic72Sbp,
+                searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
+            )
+            
+        case let .successView(successViewModel):
+            PaymentsSuccessView(viewModel: successViewModel)
         }
     }
 }
