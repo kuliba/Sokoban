@@ -5,6 +5,7 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
+import LandingUIComponent
 import SwiftUI
 import Presentation
 import ManageSubscriptionsUI
@@ -62,11 +63,10 @@ struct UserAccountView: View {
                         .font(.textH4R16240())
                 }
             }
-            
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map(destinationView)
-            }
+            .navigationDestination(
+                item: $viewModel.link,
+                content: destinationView(link:)
+            )
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.sheetType {
