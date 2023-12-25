@@ -13,9 +13,8 @@ extension RootViewFactory {
     
     init(with imageCache: ImageCache) {
         
-        self.init(
-            makeSberQRConfirmPaymentView: { viewModel in
-                
+        let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = { viewModel in
+            
                 .init(
                     viewModel: viewModel,
                     map: { info in
@@ -30,6 +29,16 @@ extension RootViewFactory {
                     config: .iFora
                 )
             }
+        
+        self.init(
+            makePaymentsTransfersView: { viewModel in
+                
+                    .init(
+                        viewModel: viewModel,
+                        makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                    )
+            },
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
         )
     }
 }

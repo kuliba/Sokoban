@@ -24,14 +24,13 @@ struct RootView: View {
                 TabView(selection: $viewModel.selected) {
                     
                     mainViewTab()
-                    paymentsViewTab()
+                    paymentsViewTab(viewModel.paymentsViewModel)
                     chatViewTab()
-                } //tabView
+                }
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
-                
-            } //geo
+            }
             
             //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.
             viewModel.link.map(destinationView(link:))
@@ -61,14 +60,13 @@ struct RootView: View {
         .accessibilityIdentifier("tabBarMainButton")
     }
     
-    private func paymentsViewTab() -> some View {
+    private func paymentsViewTab(
+        _ paymentsViewModel: PaymentsTransfersViewModel
+    ) -> some View {
         
         NavigationView {
             
-            PaymentsTransfersView(
-                viewModel: viewModel.paymentsViewModel,
-                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
-            )
+            rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
@@ -193,8 +191,9 @@ struct RootView_Previews: PreviewProvider {
 
 private extension RootViewFactory {
     
-    static let preview: Self = .init(
-        makeSberQRConfirmPaymentView: {
+    static var preview: Self {
+        
+        let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = {
             
             .init(
                 viewModel: $0,
@@ -202,5 +201,16 @@ private extension RootViewFactory {
                 config: .iFora
             )
         }
-    )
+        
+        return .init(
+            makePaymentsTransfersView: {
+                
+                .init(
+                    viewModel: $0,
+                    makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                )
+            },
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+        )
+    }
 }
