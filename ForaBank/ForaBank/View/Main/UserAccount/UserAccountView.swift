@@ -58,7 +58,7 @@ struct UserAccountView: View {
                 
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet, content: sheetView)
+        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
         .alert(item: $viewModel.alert, content: Alert.init(with:))
         .textfieldAlert(alert: $viewModel.textFieldAlert)
         .navigationBarTitle("", displayMode: .inline)
@@ -181,7 +181,7 @@ struct UserAccountView: View {
     }
     
     @ViewBuilder
-    private func sheetView(
+    private func bottomSheetView(
         sheet: UserAccountViewModel.BottomSheet
     ) -> some View { 
         
