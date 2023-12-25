@@ -26,49 +26,19 @@ struct MainView<NavigationOperationView: View>: View {
                 
                 VStack(spacing: 0) {
                     
-                    ForEach(viewModel.sections) { section in
-                        
-                        switch section {
-                        case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                            MainSectionProductsView(viewModel: productsSectionViewModel)
-                                .padding(.bottom, 19)
-                            
-                        case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                            MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let promoViewModel  as MainSectionPromoView.ViewModel:
-                            MainSectionPromoView(viewModel: promoViewModel)
-                                .padding(.horizontal, 20)
-                                .padding(.bottom, 32)
-                            
-                        case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                            MainSectionCurrencyView(viewModel: currencyViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
-                            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                            MainSectionOpenProductView(viewModel: openProductViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let atmViewModel as MainSectionAtmView.ViewModel:
-                            MainSectionAtmView(viewModel: atmViewModel)
-                            
-                        default:
-                            EmptyView()
-                        }
-                    }
+                    ForEach(viewModel.sections, content: sectionView)
                 }
                 .padding(.vertical, 20)
-                .background(GeometryReader { geo in
-                    
-                    Color.clear
-                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-                    
-                })
+                .background(
+                    GeometryReader { geo in
+                        
+                        Color.clear
+                            .preference(
+                                key: ScrollOffsetKey.self,
+                                value: -geo.frame(in: .named("scroll")).origin.y
+                            )
+                    }
+                )
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
                     if offset < -100 {
@@ -132,6 +102,45 @@ struct MainView<NavigationOperationView: View>: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: MainSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+            MainSectionProductsView(viewModel: productsSectionViewModel)
+                .padding(.bottom, 19)
+            
+        case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+            MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                .padding(.bottom, 32)
+            
+        case let promoViewModel  as MainSectionPromoView.ViewModel:
+            MainSectionPromoView(viewModel: promoViewModel)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+            
+        case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+            MainSectionCurrencyView(viewModel: currencyViewModel)
+                .padding(.bottom, 32)
+            
+        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
+            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+                .padding(.bottom, 32)
+            
+        case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+            MainSectionOpenProductView(viewModel: openProductViewModel)
+                .padding(.bottom, 32)
+            
+        case let atmViewModel as MainSectionAtmView.ViewModel:
+            MainSectionAtmView(viewModel: atmViewModel)
+            
+        default:
+            EmptyView()
+        }
     }
     
     @ViewBuilder
