@@ -52,7 +52,7 @@ struct RootView: View {
                     model: viewModel.model,
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
-                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
+                viewFactory: rootViewFactory.mainViewFactory
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
@@ -210,7 +210,8 @@ private extension RootViewFactory {
                     makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
                 )
             },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }

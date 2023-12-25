@@ -19,16 +19,16 @@ extension RootViewFactory {
                     viewModel: viewModel,
                     map: { info in
                         
-                        .init(
-                            id: info.id,
-                            value: info.value,
-                            title: info.title,
-                            image: imageCache.imagePublisher(for: info.icon)
-                        )
+                            .init(
+                                id: info.id,
+                                value: info.value,
+                                title: info.title,
+                                image: imageCache.imagePublisher(for: info.icon)
+                            )
                     },
                     config: .iFora
                 )
-            }
+        }
         
         self.init(
             makePaymentsTransfersView: { viewModel in
@@ -38,7 +38,8 @@ extension RootViewFactory {
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
                     )
             },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }
