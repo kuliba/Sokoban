@@ -77,9 +77,7 @@ struct UserAccountView: View {
             }
         })
         .bottomSheet(item: $viewModel.bottomSheet, content: sheetView)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .textfieldAlert(alert: $viewModel.textFieldAlert)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
