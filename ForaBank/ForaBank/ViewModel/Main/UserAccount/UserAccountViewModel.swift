@@ -21,8 +21,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published var link: Link?
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
