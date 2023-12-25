@@ -169,6 +169,7 @@ extension DepositSliderViewComponent {
 
                 stickToPoint()
             })
+            .accessibilityIdentifier("DepositSliderThumbPoint")
     }
 
     private func makePoints() -> some View {
@@ -189,6 +190,7 @@ extension DepositSliderViewComponent {
                         offset = offset(viewModel.value)
                     }
                 }
+                .accessibilityIdentifier("DepositSliderPoint")
         }
     }
 

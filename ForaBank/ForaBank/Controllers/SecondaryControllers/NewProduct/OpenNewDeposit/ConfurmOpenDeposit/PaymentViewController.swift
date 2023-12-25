@@ -16,6 +16,8 @@ class PaymentViewController: UIViewController {
         let inputView = BottomInputView(formater: SumTextInputFormatter(textPattern: "# ###,## ₽"))
         inputView.buttomLabel.isHidden = true
         inputView.doneButton.setTitle("Продолжить", for: .normal)
+        inputView.doneButton.accessibilityIdentifier = "PaymentViewContinueButton"
+        inputView.amountTextField.accessibilityIdentifier = "PaymentViewAmountInput"
         return inputView
     }()
     private weak var bottomViewAncor: NSLayoutConstraint!

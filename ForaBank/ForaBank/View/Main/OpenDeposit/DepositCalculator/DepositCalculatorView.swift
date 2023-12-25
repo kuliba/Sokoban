@@ -46,6 +46,7 @@ extension DepositCalculatorView {
                 .font(.textH2Sb20282())
                 .foregroundColor(.mainColorsWhite)
                 .padding(20)
+                .accessibilityIdentifier("DepositCalculatorTitle")
         }
     }
 
