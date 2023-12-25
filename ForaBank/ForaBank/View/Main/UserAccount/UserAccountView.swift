@@ -25,25 +25,9 @@ struct UserAccountView: View {
                 
                 ForEach(viewModel.sections, content: sectionView)
                 
-                viewModel.exitButton.map {
-                    
-                    AccountCellFullButtonView(viewModel: $0)
-                        .padding(.horizontal, 20)
-                }
-                
-                viewModel.deleteAccountButton.map {
-                    
-                    AccountCellFullButtonWithInfoView(viewModel: $0)
-                        .padding(.horizontal, 20)
-                }
-                
-                viewModel.appVersionFull.map {
-                    
-                    Text($0)
-                        .foregroundColor(Color.textPlaceholder)
-                        .lineLimit(1)
-                        .font(.textH4R16240())
-                }
+                exitButton
+                deleteAccountButton
+                appVersionFullView
             }
             .navigationDestination(
                 item: $viewModel.link,
@@ -126,6 +110,38 @@ struct UserAccountView: View {
             
         default:
             EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    private var exitButton: some View {
+        
+        viewModel.exitButton.map {
+            
+            AccountCellFullButtonView(viewModel: $0)
+                .padding(.horizontal, 20)
+        }
+    }
+    
+    @ViewBuilder
+    private var deleteAccountButton: some View {
+        
+        viewModel.deleteAccountButton.map {
+            
+            AccountCellFullButtonWithInfoView(viewModel: $0)
+                .padding(.horizontal, 20)
+        }
+    }
+    
+    @ViewBuilder
+    private var appVersionFullView: some View {
+        
+        viewModel.appVersionFull.map {
+            
+            Text($0)
+                .foregroundColor(Color.textPlaceholder)
+                .lineLimit(1)
+                .font(.textH4R16240())
         }
     }
     
