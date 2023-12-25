@@ -19,6 +19,7 @@ class DepositInfoViewController: UIViewController {
         let image = UIImage(named: "info")
         let imView = UIImageView(image: image)
         imView.tintColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1)
+        imView.accessibilityIdentifier = "DepositInfoSheetIcon"
         
         view.addSubview(imView)
         imView.setDimensions(height: 40, width: 40)
@@ -30,6 +31,7 @@ class DepositInfoViewController: UIViewController {
         let label = UILabel(text: "Ваш потенциальный доход рассчитан с учетом капитализации процентов за весь срок действия вклада",
                             font: UIFont(name: "Inter-SemiBold", size: 16))
         label.numberOfLines = 0
+        label.accessibilityIdentifier = "DepositInfoSheetText"
         label.textAlignment = .center
         return label
     }()

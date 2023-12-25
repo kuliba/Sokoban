@@ -32,6 +32,7 @@ struct DepositBottomSheetItemView: View {
 
                     Text("до \(viewModel.ratePercent)")
                         .font(.textH4M16240())
+                        .accessibilityIdentifier("DepositBottomSheetRate")
                     Text(viewModel.capitalizationTitle)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)

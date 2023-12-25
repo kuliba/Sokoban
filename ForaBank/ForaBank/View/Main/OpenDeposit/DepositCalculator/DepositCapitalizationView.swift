@@ -25,16 +25,19 @@ struct DepositCapitalizationView: View {
                     .foregroundColor(viewModel.isOn ? .mainColorsWhite : .mainColorsGray)
                     .font(.textBodyMR14200())
                     .padding(.leading)
+                    .accessibilityIdentifier("DepositCapitalizationText")
                 
                 Spacer()
                 
                 DepositToggleViewComponent(viewModel: .init(isOn: $viewModel.isOn))
+                    .accessibilityIdentifier("DepositCapitalizationToggle")
             }
             
             Divider()
                 .background(Color.init(hex: "#292929"))
                 .padding(.top, 8)
                 .padding(.bottom, 12)
+                .accessibilityIdentifier("DepositCapitalizationDivider")
             
         }.padding([.leading, .trailing], 20)
     }
