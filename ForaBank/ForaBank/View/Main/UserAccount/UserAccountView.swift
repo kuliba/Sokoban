@@ -23,21 +23,23 @@ struct UserAccountView: View {
                 
                 avatarView
                 
-                ForEach(viewModel.sections, content: sectionView) 
+                ForEach(viewModel.sections, content: sectionView)
                 
-                if let button = viewModel.exitButton {
-                    AccountCellFullButtonView(viewModel: button)
-                        .padding(.horizontal, 20)
-                }
-                
-                if let button = viewModel.deleteAccountButton {
-                    AccountCellFullButtonWithInfoView(viewModel: button)
-                        .padding(.horizontal, 20)
-                }
-                
-                if let version = viewModel.appVersionFull {
+                viewModel.exitButton.map {
                     
-                    Text(version)
+                    AccountCellFullButtonView(viewModel: $0)
+                        .padding(.horizontal, 20)
+                }
+                
+                viewModel.deleteAccountButton.map {
+                    
+                    AccountCellFullButtonWithInfoView(viewModel: $0)
+                        .padding(.horizontal, 20)
+                }
+                
+                viewModel.appVersionFull.map {
+                    
+                    Text($0)
                         .foregroundColor(Color.textPlaceholder)
                         .lineLimit(1)
                         .font(.textH4R16240())
