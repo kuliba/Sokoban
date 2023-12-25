@@ -17,3 +17,11 @@ struct RootViewFactory {
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
 }
+
+struct MainViewFactory {
+    
+    typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+    
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let makeUserAccountView: MakeUserAccountView
+}
