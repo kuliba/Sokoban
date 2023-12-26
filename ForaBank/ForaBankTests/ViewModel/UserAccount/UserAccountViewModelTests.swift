@@ -118,7 +118,12 @@ final class UserAccountViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept(
             settingsAgent: spy
         )
-        let sut = SUT(model: model, clientInfo: .sample, dismissAction: {})
+        let sut = SUT(
+            model: model,
+            getFastPaymentContractFindList: {},
+            clientInfo: .sample,
+            dismissAction: {}
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)

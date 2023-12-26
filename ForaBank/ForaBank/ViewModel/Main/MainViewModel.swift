@@ -183,6 +183,7 @@ private extension MainViewModel {
                     // TODO: replace with injected factory
                     route.destination = .userAccount(.init(
                         model: model,
+                        getFastPaymentContractFindList: model.getFastPaymentContractFindList,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in self?.resetDestination() }
                     ))

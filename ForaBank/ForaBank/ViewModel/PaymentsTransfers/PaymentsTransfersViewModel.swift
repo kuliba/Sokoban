@@ -156,6 +156,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     // TODO: replace with factory
                     route.destination = .userAccount(.init(
                         model: model,
+                        getFastPaymentContractFindList: model.getFastPaymentContractFindList,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             

@@ -13,6 +13,8 @@ import TextFieldModel
 
 class UserAccountViewModel: ObservableObject {
     
+    typealias GetFastPaymentContractFindList = () -> Void
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -37,6 +39,7 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
+    private let getFastPaymentContractFindList: GetFastPaymentContractFindList
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -45,9 +48,11 @@ class UserAccountViewModel: ObservableObject {
         sections: [AccountSectionViewModel],
         exitButton: AccountCellFullButtonView.ViewModel,
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
-        model: Model = .emptyMock
+        model: Model = .emptyMock,
+        getFastPaymentContractFindList: @escaping GetFastPaymentContractFindList
     ) {
         self.model = model
+        self.getFastPaymentContractFindList = getFastPaymentContractFindList
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -57,23 +62,24 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         model: Model,
+        getFastPaymentContractFindList: @escaping GetFastPaymentContractFindList,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil
     ) {
-        
         self.model = model
-        sections = []
-        navigationBar = .init(title: "Профиль", leftItems: [
+        self.getFastPaymentContractFindList = getFastPaymentContractFindList
+        self.sections = []
+        self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
         
-        exitButton = .init(
+        self.exitButton = .init(
             icon: .ic24LogOut, content: "Выход из приложения", action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.ExitAction())
             })
         
-        deleteAccountButton = .init(
+        self.deleteAccountButton = .init(
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteInfoAction())
@@ -82,6 +88,7 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
+        getFastPaymentContractFindList()
         bind()
                 
         if let action = action {

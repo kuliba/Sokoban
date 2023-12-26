@@ -265,6 +265,7 @@ extension UserAccountViewModel {
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
-        )
+        ),
+        getFastPaymentContractFindList: {}
     )
 }

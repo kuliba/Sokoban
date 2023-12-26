@@ -180,7 +180,8 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     link = .userAccount(.init(
-                        model: model,
+                        model: model, 
+                        getFastPaymentContractFindList: model.getFastPaymentContractFindList,
                         clientInfo: clientInfo,
                         dismissAction: {[weak self] in
                             self?.action.send(RootViewModelAction.CloseLink())
@@ -377,6 +378,16 @@ class RootViewModel: ObservableObject, Resetable {
         
         return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
+}
+
+extension Model {
+    
+    // TODO: - Move to the Composition Root
+    func getFastPaymentContractFindList() {
+        
+        let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
+        action.send(request)
+    }
 }
 
 private extension Model {
