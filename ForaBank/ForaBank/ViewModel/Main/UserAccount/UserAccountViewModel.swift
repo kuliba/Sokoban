@@ -5,22 +5,19 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
+import SwiftUI
 
 class UserAccountViewModel: ObservableObject {
-    
-    typealias FPSCFLResponsePublisher = AnyPublisher<FPSCFLResponse, Never>
-    typealias GetFastPaymentContractFindList = () -> FPSCFLResponsePublisher
     
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
     
-    @Published private(set) var fpsCFLResponse: FPSCFLResponse?
+    @Published private(set) var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse?
     @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
@@ -41,6 +38,7 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
+    private let fastPaymentsServices: FastPaymentsServices
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -50,9 +48,10 @@ class UserAccountViewModel: ObservableObject {
         exitButton: AccountCellFullButtonView.ViewModel,
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
         model: Model = .emptyMock,
-        getFastPaymentContractFindList: @escaping GetFastPaymentContractFindList
+        fastPaymentsServices: FastPaymentsServices
     ) {
         self.model = model
+        self.fastPaymentsServices = fastPaymentsServices
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -62,12 +61,13 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         model: Model,
-        getFastPaymentContractFindList: @escaping GetFastPaymentContractFindList,
+        fastPaymentsServices: FastPaymentsServices,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil
     ) {
         self.model = model
+        self.fastPaymentsServices = fastPaymentsServices
         self.sections = []
         self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -87,7 +87,7 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
-        getFastPaymentContractFindList()
+        fastPaymentsServices.getFastPaymentContractFindList()
             .map(Optional.some)
             .receive(on: DispatchQueue.main)
             .assign(to: &$fpsCFLResponse)
@@ -594,12 +594,6 @@ private extension Alert.ViewModel {
 }
 
 extension UserAccountViewModel {
-    
-    /// `FPSCFL` stands for `FastPaymentContractFindList`
-    enum FPSCFLResponse {
-        
-        case active, inactive, missing, error
-    }
     
     class AvatarViewModel: ObservableObject {
         

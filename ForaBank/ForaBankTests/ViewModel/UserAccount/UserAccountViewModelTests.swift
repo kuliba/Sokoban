@@ -121,9 +121,7 @@ final class UserAccountViewModelTests: XCTestCase {
         )
         let sut = SUT(
             model: model,
-            getFastPaymentContractFindList: {
-                Empty().eraseToAnyPublisher()
-            },
+            fastPaymentsServices: .empty,
             clientInfo: .sample,
             dismissAction: {}
         )

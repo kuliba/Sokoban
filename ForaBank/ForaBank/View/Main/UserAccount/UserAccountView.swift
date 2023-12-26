@@ -267,7 +267,15 @@ extension UserAccountViewModel {
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
         ),
+        fastPaymentsServices: .empty
+    )
+}
+
+extension FastPaymentsServices {
+    
+    static let empty: Self = .init(
         getFastPaymentContractFindList: {
+            
             Empty().eraseToAnyPublisher()
         }
     )

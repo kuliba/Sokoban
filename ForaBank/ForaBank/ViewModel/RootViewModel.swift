@@ -181,7 +181,7 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     link = .userAccount(.init(
                         model: model, 
-                        getFastPaymentContractFindList: model.getFastPaymentContractFindList,
+                        fastPaymentsServices: model.fastPaymentsServices(),
                         clientInfo: clientInfo,
                         dismissAction: {[weak self] in
                             self?.action.send(RootViewModelAction.CloseLink())
@@ -383,21 +383,30 @@ class RootViewModel: ObservableObject, Resetable {
 extension Model {
     
     // TODO: - Move to the Composition Root
-    func getFastPaymentContractFindList(
-    ) -> AnyPublisher<UserAccountViewModel.FPSCFLResponse, Never> {
+    func fastPaymentsServices() -> FastPaymentsServices {
         
-        let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
-        action.send(request)
-        
-        return fastPaymentContractFullInfo
-            .map(\.fpsCFLResponse)
-            .eraseToAnyPublisher()
+        .init(
+            getFastPaymentContractFindList: { [weak self] in
+                
+                guard let self else {
+                
+                    return Empty().eraseToAnyPublisher()
+                }
+                
+                let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
+                action.send(request)
+                
+                return fastPaymentContractFullInfo
+                    .map(\.fpsCFLResponse)
+                    .eraseToAnyPublisher()
+            }
+        )
     }
 }
 
 extension Array where Element == FastPaymentContractFullInfoType {
     
-    var fpsCFLResponse: UserAccountViewModel.FPSCFLResponse {
+    var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse {
         
         guard let first else { return .missing }
         

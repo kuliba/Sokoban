@@ -67,8 +67,9 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = UserAccountViewModel
-    private typealias FindListSpy = Spy<SUT.FPSCFLResponse>
-    private typealias ResponseSpy = ValueSpy<SUT.FPSCFLResponse?>
+    private typealias FPSCFLResponse = FastPaymentsServices.FPSCFLResponse
+    private typealias FindListSpy = Spy<FPSCFLResponse>
+    private typealias ResponseSpy = ValueSpy<FPSCFLResponse?>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -82,7 +83,9 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         let findListSpy = FindListSpy()
         let sut = SUT(
             model: model,
-            getFastPaymentContractFindList: findListSpy.get,
+            fastPaymentsServices: .init(
+                getFastPaymentContractFindList: findListSpy.get
+            ),
             clientInfo: .stub(),
             dismissAction: {}
         )

@@ -16,7 +16,7 @@ final class Model_getFastPaymentContractFindListTests: XCTestCase {
         let (sut, spy) = makeSUT()
         XCTAssertNoDiff(spy.values.count, 0)
         
-        _ = sut.getFastPaymentContractFindList()
+        _ = sut.fastPaymentsServices().getFastPaymentContractFindList()
         
         XCTAssertNoDiff(spy.values.count, 1)
     }
