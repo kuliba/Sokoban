@@ -41,6 +41,12 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
+        let fastPaymentsServices = Services.makeFastPaymentsServices(
+            httpClient: httpClient,
+            model: model,
+            log: infoNetworkLog
+        )
+        
         let sberQRServices = Services.makeSberQRServices(
             httpClient: httpClient,
             log: infoNetworkLog
@@ -53,7 +59,8 @@ extension RootViewModelFactory {
         )
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
-            with: model,
+            with: model, 
+            fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient
@@ -62,6 +69,7 @@ extension RootViewModelFactory {
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
@@ -197,6 +205,7 @@ extension ProductProfileViewModel {
 
     static func make(
         with model: Model,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient
@@ -204,7 +213,8 @@ extension ProductProfileViewModel {
         
         return { product, rootView, dismissAction in
                 .init(
-                    model,
+                    model, 
+                    fastPaymentsServices: fastPaymentsServices,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     cvvPINServicesClient: cvvPINServicesClient,
@@ -248,6 +258,7 @@ private extension RootViewModelFactory {
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
@@ -256,6 +267,7 @@ private extension RootViewModelFactory {
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: onRegister
@@ -264,6 +276,7 @@ private extension RootViewModelFactory {
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory
         )
@@ -286,6 +299,7 @@ private extension RootViewModelFactory {
         }
         
         return .init(
+            fastPaymentsServices: fastPaymentsServices,
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,

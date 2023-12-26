@@ -79,10 +79,12 @@ extension PaymentsTransfersViewModel {
         model: .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         navButtonsRight: [

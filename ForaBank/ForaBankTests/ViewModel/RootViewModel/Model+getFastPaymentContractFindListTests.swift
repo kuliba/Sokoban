@@ -12,18 +12,18 @@ import XCTest
 final class Model_getFastPaymentContractFindListTests: XCTestCase {
     
     func test_getFastPaymentContractFindList_shouldSendFPSCFLRequest() {
-    
-        let (sut, spy) = makeSUT()
+        
+        let (sut, _, spy) = makeSUT()
         XCTAssertNoDiff(spy.values.count, 0)
         
-        _ = sut.fastPaymentsServices().getFastPaymentContractFindList()
+        _ = sut.getFastPaymentContractFindList()
         
         XCTAssertNoDiff(spy.values.count, 1)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = Model
+    private typealias SUT = FastPaymentsServices
     private typealias Spy = ValueSpy<Model.FPSCFLRequest>
     
     private func makeSUT(
@@ -31,15 +31,22 @@ final class Model_getFastPaymentContractFindListTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
+        model: Model,
         spy: Spy
     ) {
-        let sut: Model = .mockWithEmptyExcept()
-        let spy = ValueSpy(sut.fastPaymentSettingsContractFindList)
+        let model: Model = .mockWithEmptyExcept()
+        let httpClient = HTTPClientSpy()
+        let sut = Services.makeFastPaymentsServices(
+            httpClient: httpClient,
+            model: model,
+            log: { _,_,_ in }
+        )
+        let spy = ValueSpy(model.fastPaymentSettingsContractFindList)
         
-        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, model, spy)
     }
 }
 

@@ -206,16 +206,19 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
+            fastPaymentsServices: .empty,
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                sberQRServices: .empty(),
+                fastPaymentsServices: .empty,
+                                sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
                 makeProductProfileViewModel: { _,_,_ in nil },
+                fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview()
             ),

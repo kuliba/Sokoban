@@ -105,6 +105,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             onRegister: {}
@@ -140,6 +141,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
+            fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: {}
@@ -192,6 +194,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             onRegister: {}

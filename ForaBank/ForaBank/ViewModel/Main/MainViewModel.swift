@@ -31,6 +31,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let onRegister: () -> Void
@@ -41,6 +42,7 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         route: Route = .empty,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping () -> Void
@@ -58,6 +60,7 @@ class MainViewModel: ObservableObject, Resetable {
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.route = route
@@ -183,7 +186,7 @@ private extension MainViewModel {
                     // TODO: replace with injected factory
                     route.destination = .userAccount(.init(
                         model: model,
-                        fastPaymentsServices: model.fastPaymentsServices(),
+                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in self?.resetDestination() }
                     ))
