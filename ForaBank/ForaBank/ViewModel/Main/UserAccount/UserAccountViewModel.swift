@@ -13,12 +13,14 @@ import TextFieldModel
 
 class UserAccountViewModel: ObservableObject {
     
-    typealias GetFastPaymentContractFindList = () -> Void
+    typealias FPSCFLResponsePublisher = AnyPublisher<FPSCFLResponse, Never>
+    typealias GetFastPaymentContractFindList = () -> FPSCFLResponsePublisher
     
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
     
+    @Published private(set) var fpsCFLResponse: FPSCFLResponse?
     @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
@@ -39,7 +41,6 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
-    private let getFastPaymentContractFindList: GetFastPaymentContractFindList
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -52,7 +53,6 @@ class UserAccountViewModel: ObservableObject {
         getFastPaymentContractFindList: @escaping GetFastPaymentContractFindList
     ) {
         self.model = model
-        self.getFastPaymentContractFindList = getFastPaymentContractFindList
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -68,7 +68,6 @@ class UserAccountViewModel: ObservableObject {
         action: Action? = nil
     ) {
         self.model = model
-        self.getFastPaymentContractFindList = getFastPaymentContractFindList
         self.sections = []
         self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -89,6 +88,10 @@ class UserAccountViewModel: ObservableObject {
             })
         
         getFastPaymentContractFindList()
+            .map(Optional.some)
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$fpsCFLResponse)
+        
         bind()
                 
         if let action = action {
@@ -591,6 +594,12 @@ private extension Alert.ViewModel {
 }
 
 extension UserAccountViewModel {
+    
+    /// `FPSCFL` stands for `FastPaymentContractFindList`
+    enum FPSCFLResponse {
+        
+        case active, inactive, missing, error
+    }
     
     class AvatarViewModel: ObservableObject {
         

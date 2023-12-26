@@ -5,6 +5,7 @@
 //  Created by Andrew Kurdin on 19.10.2023.
 //
 
+import Combine
 @testable import ForaBank
 import XCTest
 
@@ -120,7 +121,9 @@ final class UserAccountViewModelTests: XCTestCase {
         )
         let sut = SUT(
             model: model,
-            getFastPaymentContractFindList: {},
+            getFastPaymentContractFindList: {
+                Empty().eraseToAnyPublisher()
+            },
             clientInfo: .sample,
             dismissAction: {}
         )
@@ -131,7 +134,6 @@ final class UserAccountViewModelTests: XCTestCase {
         
         return (sut, model, spy)
     }
-    
 }
 
 // MARK: - DSL

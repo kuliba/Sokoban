@@ -5,30 +5,78 @@
 //  Created by Igor Malyarov on 26.12.2023.
 //
 
+import Combine
 @testable import ForaBank
 import XCTest
 
 final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     
-    func test_init_shouldCallGetFastPaymentContractFindList() {
+    func test_init_shouldSetFPSCFLResponseToNil() {
+        
+        let (_,_, responseSpy) = makeSUT()
+        
+        XCTAssertNoDiff(responseSpy.values, [nil])
+    }
     
-        let (_,_, findListSpy) = makeSUT()
+    func test_init_shouldCallGetFastPaymentContractFindList() {
+        
+        let (_, findListSpy, _) = makeSUT()
         
         XCTAssertNoDiff(findListSpy.callCount, 1)
+    }
+    
+    func test_shouldSetFPSCFLResponse() {
+        
+        let (_, findListSpy, responseSpy) = makeSUT()
+        
+        findListSpy.emitAndWait(.active)
+        
+        XCTAssertNoDiff(responseSpy.values, [
+            nil,
+            .active,
+        ])
+        
+        findListSpy.emitAndWait(.inactive)
+        
+        XCTAssertNoDiff(responseSpy.values, [
+            nil,
+            .active,
+            .inactive,
+        ])
+        
+        findListSpy.emitAndWait(.missing)
+        
+        XCTAssertNoDiff(responseSpy.values, [
+            nil,
+            .active,
+            .inactive,
+            .missing,
+        ])
+        
+        findListSpy.emitAndWait(.error)
+        
+        XCTAssertNoDiff(responseSpy.values, [
+            nil,
+            .active,
+            .inactive,
+            .missing,
+            .error,
+        ])
     }
     
     // MARK: - Helpers
     
     private typealias SUT = UserAccountViewModel
-    private typealias FindListSpy = Spy
+    private typealias FindListSpy = Spy<SUT.FPSCFLResponse>
+    private typealias ResponseSpy = ValueSpy<SUT.FPSCFLResponse?>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        model: Model,
-        findListSpy: FindListSpy
+        findListSpy: FindListSpy,
+        responseSpy: ResponseSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         let findListSpy = FindListSpy()
@@ -38,20 +86,30 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             clientInfo: .stub(),
             dismissAction: {}
         )
+        let responseSpy = ValueSpy(sut.$fpsCFLResponse)
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(model, file: file, line: line)
+        trackForMemoryLeaks(findListSpy, file: file, line: line)
+        trackForMemoryLeaks(responseSpy, file: file, line: line)
         
-        return (sut, model, findListSpy)
+        return (sut, findListSpy, responseSpy)
     }
     
-    private final class Spy {
+    private final class Spy<Value> {
         
         private(set) var callCount = 0
+        private let subject = PassthroughSubject<Value, Never>()
         
-        func get() {
+        func get() -> AnyPublisher<Value, Never> {
             
             callCount += 1
+            return subject.eraseToAnyPublisher()
+        }
+        
+        func emitAndWait(_ value: Value) {
+            
+            subject.send(value)
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         }
     }
 }

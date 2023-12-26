@@ -383,10 +383,41 @@ class RootViewModel: ObservableObject, Resetable {
 extension Model {
     
     // TODO: - Move to the Composition Root
-    func getFastPaymentContractFindList() {
+    func getFastPaymentContractFindList(
+    ) -> AnyPublisher<UserAccountViewModel.FPSCFLResponse, Never> {
         
         let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
         action.send(request)
+        
+        return fastPaymentContractFullInfo
+            .map(\.fpsCFLResponse)
+            .eraseToAnyPublisher()
+    }
+}
+
+extension Array where Element == FastPaymentContractFullInfoType {
+    
+    var fpsCFLResponse: UserAccountViewModel.FPSCFLResponse {
+        
+        guard let first else { return .missing }
+        
+        guard first.hasTripleYes else { return .inactive }
+        
+        return .active
+    }
+}
+
+private extension FastPaymentContractFullInfoType {
+    
+    var hasTripleYes: Bool {
+        
+        guard let accountAttributeList = fastPaymentContractAccountAttributeList?.first,
+              let contractAttributeList = fastPaymentContractAttributeList?.first
+        else { return false }
+        
+        return accountAttributeList.flagPossibAddAccount == .yes
+        && contractAttributeList.flagClientAgreementIn == .yes
+        && contractAttributeList.flagClientAgreementOut == .yes
     }
 }
 

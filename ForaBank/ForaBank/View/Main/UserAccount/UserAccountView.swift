@@ -5,6 +5,7 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
+import Combine
 import LandingUIComponent
 import SwiftUI
 import Presentation
@@ -266,6 +267,8 @@ extension UserAccountViewModel {
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
         ),
-        getFastPaymentContractFindList: {}
+        getFastPaymentContractFindList: {
+            Empty().eraseToAnyPublisher()
+        }
     )
 }
