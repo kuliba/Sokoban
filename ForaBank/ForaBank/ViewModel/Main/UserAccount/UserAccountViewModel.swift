@@ -373,14 +373,7 @@ class UserAccountViewModel: ObservableObject {
                         )
                         
                     case _ as UserAccountViewModelAction.OpenFastPayment:
-                        link = .fastPaymentSettings(MeToMeSettingView.ViewModel(
-                            model: model.fastPaymentContractFullInfo.value
-                                .map { $0.getFastPaymentContractFindListDatum() },
-                            newModel: model,
-                            closeAction: { [weak self] in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseLink())
-                            }))
+                        openFastPaymentsSettings()
                         
                     case let payload as UserAccountViewModelAction.Switch:
                         switch payload.type {
@@ -547,6 +540,19 @@ class UserAccountViewModel: ObservableObject {
         }
         
         return products
+    }
+    
+    private func openFastPaymentsSettings() {
+        
+        link = .fastPaymentSettings(.init(
+            model: model.fastPaymentContractFullInfo.value
+                .map { $0.getFastPaymentContractFindListDatum() },
+            newModel: model,
+            closeAction: { [weak self] in
+                
+                self?.action.send(UserAccountViewModelAction.CloseLink())
+            }
+        ))
     }
 }
 
