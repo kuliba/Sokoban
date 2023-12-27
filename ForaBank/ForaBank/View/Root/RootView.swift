@@ -175,6 +175,7 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
+                fastPaymentsFactory: .default,
                 fastPaymentsServices: .empty,
                 mainViewModel: .sample,
                 paymentsViewModel: .sample,

@@ -83,6 +83,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         let findListSpy = FindListSpy()
         let sut = SUT(
             model: model,
+            fastPaymentsFactory: .default,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get
             ),

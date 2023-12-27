@@ -11,6 +11,19 @@ import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
 
+struct FastPaymentsFactory {
+    
+    let makeFastPaymentsViewModel: MakeFastPaymentsViewModel
+}
+
+extension FastPaymentsFactory {
+    
+    typealias CloseAction = () -> Void
+    typealias FastPaymentsViewModel = MeToMeSettingView.ViewModel
+    // TODO: remove unnecessary details
+    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, Model, @escaping CloseAction) -> FastPaymentsViewModel
+}
+
 class UserAccountViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -34,6 +47,7 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
+    private let fastPaymentsFactory: FastPaymentsFactory
     private let fastPaymentsServices: FastPaymentsServices
     private var bindings = Set<AnyCancellable>()
     
@@ -44,9 +58,11 @@ class UserAccountViewModel: ObservableObject {
         exitButton: AccountCellFullButtonView.ViewModel,
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
         model: Model = .emptyMock,
+        fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices
     ) {
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
         self.navigationBar = navigationBar
         self.avatar = avatar
@@ -57,12 +73,14 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil
     ) {
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
         self.sections = []
         self.navigationBar = .init(title: "Профиль", leftItems: [
@@ -540,15 +558,17 @@ class UserAccountViewModel: ObservableObject {
     
     private func openFastPaymentsSettings() {
         
-        link = .fastPaymentSettings(.init(
-            model: model.fastPaymentContractFullInfo.value
-                .map { $0.getFastPaymentContractFindListDatum() },
-            newModel: model,
-            closeAction: { [weak self] in
-                
-                self?.action.send(UserAccountViewModelAction.CloseLink())
-            }
-        ))
+        link = .fastPaymentSettings(
+            fastPaymentsFactory.makeFastPaymentsViewModel(
+                model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() },
+                model,
+                { [weak self] in
+                    
+                    self?.action.send(UserAccountViewModelAction.CloseLink())
+                }
+            )
+        )
     }
 }
 
