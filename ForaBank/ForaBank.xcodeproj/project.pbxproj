@@ -5478,6 +5478,14 @@
 			path = PaymentsSucccess;
 			sourceTree = "<group>";
 		};
+		2A09C2AD2B3C588C0076DC93 /* FastPayments */ = {
+			isa = PBXGroup;
+			children = (
+				2A9E054A2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift */,
+			);
+			path = FastPayments;
+			sourceTree = "<group>";
+		};
 		2A0F2F6329AE3ED40054B920 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -6717,7 +6725,6 @@
 				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
-				2A9E054A2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
 				2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */,
@@ -6914,6 +6921,7 @@
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
 				2AD7EBDB2B0CB1F3009FDCAB /* Buttons */,
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
+				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
 				2AC2ADBC2B2243780049EE9B /* SberQR */,
 			);
