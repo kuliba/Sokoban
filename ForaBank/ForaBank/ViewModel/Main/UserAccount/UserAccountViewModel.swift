@@ -549,7 +549,6 @@ class UserAccountViewModel: ObservableObject {
             fastPaymentsFactory.makeFastPaymentsViewModel(
                 model.fastPaymentContractFullInfo.value
                     .map { $0.getFastPaymentContractFindListDatum() },
-                model,
                 { [weak self] in
                     
                     self?.action.send(UserAccountViewModelAction.CloseLink())

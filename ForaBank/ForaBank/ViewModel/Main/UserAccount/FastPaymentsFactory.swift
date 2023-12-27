@@ -15,5 +15,5 @@ extension FastPaymentsFactory {
     typealias CloseAction = () -> Void
     typealias FastPaymentsViewModel = MeToMeSettingView.ViewModel
     // TODO: remove unnecessary details
-    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, Model, @escaping CloseAction) -> FastPaymentsViewModel
+    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, @escaping CloseAction) -> FastPaymentsViewModel
 }

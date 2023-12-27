@@ -41,8 +41,8 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            makeFastPaymentsViewModel: MeToMeSettingView.ViewModel.init
+        let fastPaymentsFactory = makeFastPaymentsFactory(
+            model: model
         )
         
         let fastPaymentsServices = Services.makeFastPaymentsServices(

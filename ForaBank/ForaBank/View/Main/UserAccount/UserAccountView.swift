@@ -275,7 +275,14 @@ extension UserAccountViewModel {
 extension FastPaymentsFactory {
     
     static let `default`: Self = .init(
-        makeFastPaymentsViewModel: FastPaymentsViewModel.init
+        makeFastPaymentsViewModel: {
+            
+            MeToMeSettingView.ViewModel(
+                model: $0,
+                newModel: .emptyMock,
+                closeAction: $1
+            )
+        }
     )
 }
 
