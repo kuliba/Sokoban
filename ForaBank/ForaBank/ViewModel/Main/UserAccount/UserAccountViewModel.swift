@@ -27,14 +27,10 @@ class UserAccountViewModel: ObservableObject {
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
-    
+
     var appVersionFull: String? {
         
-        guard let version = model.authAppVersion else {
-            return nil
-        }
-        
-        return "Версия \(version)"
+        model.authAppVersion.map { "Версия \($0)" }
     }
     
     private let model: Model
