@@ -58,7 +58,7 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
         let phone = UUID().uuidString
         let list: [FastPaymentContractFullInfoType] = [makeTripleNo(phone: phone)]
         
-        XCTAssertEqual(list.fpsCFLResponse, .inactive)
+        XCTAssertEqual(list.fpsCFLResponse, .inactive(.init(phone)))
     }
     
     func test_shouldReturnErrorOnDoubleYesWithoutPhone() {

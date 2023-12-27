@@ -573,8 +573,25 @@ private extension UserAccountViewModel {
     func openFastPaymentsSettings() {
         
         switch fpsCFLResponse {
-        case .active, .inactive, .missing:
+        case let .active(phone),
+            let .inactive(phone):
+            
             showSpinner()
+            
+            fastPaymentsServices
+                .getDefaultAndConsent(phone) { [weak self] result in
+                    
+                    self?.hideSpinner()
+                    
+                    DispatchQueue.main.asyncAfter(
+                        deadline: .now() + .microseconds(200)
+                    ) { [weak self] in
+                        
+                        self?.handleGetDefaultAndConsentResult(result)
+                    }
+                }
+                        
+        case .missing:
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
                 
@@ -602,6 +619,22 @@ private extension UserAccountViewModel {
                 message: "Превышено время ожидания.\nПопробуйте позже."
             ) { [weak self] in self?.dismissAlert() }
         }
+    }
+    
+    func handleGetDefaultAndConsentResult(
+        _ result: FastPaymentsServices.GetDefaultAndConsentResult
+    ) {
+        
+        // TODO: use result to create ViewModel
+        
+        let data = model.fastPaymentContractFullInfo.value
+            .map { $0.getFastPaymentContractFindListDatum() }
+        link = .fastPaymentSettings(
+            fastPaymentsFactory.makeFastPaymentsViewModel(
+                data,
+                { [weak self] in self?.dismissDestination() }
+            )
+        )
     }
 }
 

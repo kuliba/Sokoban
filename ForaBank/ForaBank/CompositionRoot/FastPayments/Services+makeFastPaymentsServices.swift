@@ -44,7 +44,7 @@ extension Array where Element == FastPaymentContractFullInfoType {
         guard let phone else { return .fixedError }
         
         if first.hasTripleYes { return .active(phone) }
-        if first.hasTripleNo { return .inactive }
+        if first.hasTripleNo { return .inactive(phone) }
         
         return .fixedError
     }

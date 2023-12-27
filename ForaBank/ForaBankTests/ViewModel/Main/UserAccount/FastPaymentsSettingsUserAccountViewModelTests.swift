@@ -36,12 +36,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             .active("abcd123"),
         ])
         
-        findListSpy.emitAndWait(.inactive)
+        findListSpy.emitAndWait(.inactive("321dcba"))
         
         XCTAssertNoDiff(responseSpy.values, [
             nil,
             .active("abcd123"),
-            .inactive,
+            .inactive("321dcba"),
         ])
         
         findListSpy.emitAndWait(.missing)
@@ -49,7 +49,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(responseSpy.values, [
             nil,
             .active("abcd123"),
-            .inactive,
+            .inactive("321dcba"),
             .missing,
         ])
         
@@ -58,7 +58,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(responseSpy.values, [
             nil,
             .active("abcd123"),
-            .inactive,
+            .inactive("321dcba"),
             .missing,
             .fixedError,
         ])
