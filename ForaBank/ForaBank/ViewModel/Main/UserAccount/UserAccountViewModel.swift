@@ -27,7 +27,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
-
+    
     var appVersionFull: String? {
         
         model.authAppVersion.map { "Версия \($0)" }
@@ -94,7 +94,7 @@ class UserAccountViewModel: ObservableObject {
             .assign(to: &$fpsCFLResponse)
         
         bind()
-                
+        
         if let action = action {
             
             self.action.send(action)
@@ -175,7 +175,7 @@ class UserAccountViewModel: ObservableObject {
                 case let payload as ModelAction.C2B.CancelC2BSub.Response:
                     let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
                     self.link = .successView(paymentSuccessViewModel)
-
+                    
                 case let payload as ModelAction.C2B.GetC2BDetail.Response:
                     self.link = .successView(.init(paymentSuccess: .init(operation: nil, parameters: payload.params), model))
                     
@@ -295,7 +295,7 @@ class UserAccountViewModel: ObservableObject {
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
                     bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
-                
+                    
                 case let payload as UserAccountViewModelAction.OpenSbpPay:
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
@@ -339,7 +339,7 @@ class UserAccountViewModel: ObservableObject {
                             }))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                            
+                        
                         let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
                         let reducer = TransformingReducer(
@@ -370,7 +370,7 @@ class UserAccountViewModel: ObservableObject {
                                   emptyViewModel: emptyViewModel,
                                   configurator: .init(
                                     backgroundColor: .mainColorsGrayLightest
-                                ))
+                                  ))
                         )
                         
                     case _ as UserAccountViewModelAction.OpenFastPayment:
@@ -542,8 +542,32 @@ class UserAccountViewModel: ObservableObject {
         
         return products
     }
+}
+
+private extension UserAccountViewModel {
     
-    private func openFastPaymentsSettings() {
+    func showSpinner() {
+        
+    }
+    
+    func hideSpinner() {
+        
+    }
+    
+    func dismissAlert() {
+        
+        alert = nil
+    }
+    
+    func dismissDestination() {
+        
+        action.send(UserAccountViewModelAction.CloseLink())
+    }
+}
+    
+private extension UserAccountViewModel {
+    
+    func openFastPaymentsSettings() {
         
         link = .fastPaymentSettings(
             fastPaymentsFactory.makeFastPaymentsViewModel(
