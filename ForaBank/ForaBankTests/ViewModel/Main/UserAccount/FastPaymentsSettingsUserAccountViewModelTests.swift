@@ -64,6 +64,56 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         ])
     }
     
+    func test_init_shouldNotCallGetDefaultAndConsent() throws {
+        
+        let (_, _,_, getDefaultAndConsentSpy) = makeSUT()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+    }
+    
+    func test_tapFastPaymentsSettings_shouldCallGetDefaultAndConsentOnActiveFPSCFLResponse() throws {
+        
+        let phone = "abc123"
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        findListSpy.emitAndWait(.active(.init(phone)))
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.map(\.payload), [.init(phone)])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldCallGetDefaultAndConsentOnInactiveFPSCFLResponse() throws {
+        
+        let phone = "abc123"
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        findListSpy.emitAndWait(.inactive(.init(phone)))
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.map(\.payload), [.init(phone)])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnMissingFPSCFLResponse() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        findListSpy.emitAndWait(.missing)
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+    }
+    
+    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnErrorFPSCFLResponse() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        findListSpy.emitAndWait(.fixedError)
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+    }
+        
     // MARK: - Helpers
     
     private typealias SUT = UserAccountViewModel
@@ -73,6 +123,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     private typealias GetDefaultAndConsentSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.DefaultForaBank, Error>
     
     private func makeSUT(
+        clientInfo: ClientInfoData = .stub(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -81,7 +132,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         responseSpy: ResponseSpy,
         getDefaultAndConsentSpy: GetDefaultAndConsentSpy
     ) {
-        let model: Model = .mockWithEmptyExcept()
+        let sessionAgent = ActiveSessionAgentStub()
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent
+        )
+        model.clientInfo.value = clientInfo
+        
         let findListSpy = FindListSpy()
         let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
         let sut = SUT(
@@ -170,5 +226,44 @@ private extension ClientInfoData {
             inn: inn,
             customName: customName
         )
+    }
+}
+
+// MARK: - DSL
+
+private extension UserAccountViewModel {
+    
+    func tapFastPaymentsSettingsAndWait(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let button = try XCTUnwrap(
+            fastPaymentSettingButton,
+            "\nExpected to have Fast Payments Settings Button but got nil instead.",
+            file: file, line: line
+        )
+        button.action()
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    var fastPaymentSettingButton: AccountCellButtonView.ButtonView.ViewModel? {
+        
+        let viewModel = sections
+            .compactMap { $0 as? UserAccountPaymentsView.ViewModel }
+            .flatMap(\.items)
+            .compactMap { $0 as? AccountCellButtonView.ViewModel }
+            .first { $0.content == "Система быстрых платежей" }
+        
+        return viewModel?.button
+    }
+    
+    var fastPaymentsSettings: MeToMeSettingView.ViewModel? {
+        
+        guard case let .fastPaymentSettings(fastPaymentsSettings) = link
+        else { return nil }
+        
+        return fastPaymentsSettings
     }
 }
