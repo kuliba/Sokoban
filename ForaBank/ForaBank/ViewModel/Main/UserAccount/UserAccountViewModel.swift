@@ -11,19 +11,6 @@ import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
 
-struct FastPaymentsFactory {
-    
-    let makeFastPaymentsViewModel: MakeFastPaymentsViewModel
-}
-
-extension FastPaymentsFactory {
-    
-    typealias CloseAction = () -> Void
-    typealias FastPaymentsViewModel = MeToMeSettingView.ViewModel
-    // TODO: remove unnecessary details
-    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, Model, @escaping CloseAction) -> FastPaymentsViewModel
-}
-
 class UserAccountViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
