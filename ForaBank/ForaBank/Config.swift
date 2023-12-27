@@ -39,7 +39,7 @@ enum Config {
         #if DEBUG
             "pl.forabank.ru/dbo/api/v3"
         #elseif MOCK
-            "http://10.1.206.85:8443"
+            "10.1.206.85:8443"
         #elseif PREPROD
             "https://pl.forabank.ru/preprod/dbo/api/v3/"
         #else
