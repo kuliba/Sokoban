@@ -13,21 +13,21 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     
     func test_init_shouldSetFPSCFLResponseToNil() {
         
-        let (_,_, responseSpy) = makeSUT()
+        let (_,_, responseSpy, _) = makeSUT()
         
         XCTAssertNoDiff(responseSpy.values, [nil])
     }
     
     func test_init_shouldCallGetFastPaymentContractFindList() {
         
-        let (_, findListSpy, _) = makeSUT()
+        let (_, findListSpy, _,_) = makeSUT()
         
         XCTAssertNoDiff(findListSpy.callCount, 1)
     }
     
     func test_shouldSetFPSCFLResponse() {
         
-        let (_, findListSpy, responseSpy) = makeSUT()
+        let (_, findListSpy, responseSpy, _) = makeSUT()
         
         findListSpy.emitAndWait(.active("abcd123"))
         
@@ -68,8 +68,9 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     
     private typealias SUT = UserAccountViewModel
     private typealias FPSCFLResponse = FastPaymentsServices.FPSCFLResponse
-    private typealias FindListSpy = Spy<FPSCFLResponse>
+    private typealias FindListSpy = GetSpy<FPSCFLResponse>
     private typealias ResponseSpy = ValueSpy<FPSCFLResponse?>
+    private typealias GetDefaultAndConsentSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.DefaultForaBank, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -77,16 +78,18 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     ) -> (
         sut: SUT,
         findListSpy: FindListSpy,
-        responseSpy: ResponseSpy
+        responseSpy: ResponseSpy,
+        getDefaultAndConsentSpy: GetDefaultAndConsentSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         let findListSpy = FindListSpy()
+        let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
         let sut = SUT(
             model: model,
             fastPaymentsFactory: .default,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get,
-                getDefaultAndConsent: { _,_ in }
+                getDefaultAndConsent: getDefaultAndConsentSpy.process(_:completion:)
             ),
             clientInfo: .stub(),
             dismissAction: {}
@@ -96,11 +99,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(findListSpy, file: file, line: line)
         trackForMemoryLeaks(responseSpy, file: file, line: line)
+        trackForMemoryLeaks(getDefaultAndConsentSpy, file: file, line: line)
         
-        return (sut, findListSpy, responseSpy)
+        return (sut, findListSpy, responseSpy, getDefaultAndConsentSpy)
     }
     
-    private final class Spy<Value> {
+    private final class GetSpy<Value> {
         
         private(set) var callCount = 0
         private let subject = PassthroughSubject<Value, Never>()
