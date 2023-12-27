@@ -624,17 +624,24 @@ private extension UserAccountViewModel {
     func handleGetDefaultAndConsentResult(
         _ result: FastPaymentsServices.GetDefaultAndConsentResult
     ) {
-        
-        // TODO: use result to create ViewModel
-        
-        let data = model.fastPaymentContractFullInfo.value
-            .map { $0.getFastPaymentContractFindListDatum() }
-        link = .fastPaymentSettings(
-            fastPaymentsFactory.makeFastPaymentsViewModel(
-                data,
-                { [weak self] in self?.dismissDestination() }
+        switch result {
+        case let .failure(error):
+            
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case let .success(defaultForaBank):
+            
+            let data = model.fastPaymentContractFullInfo.value
+                .map { $0.getFastPaymentContractFindListDatum() }
+            link = .fastPaymentSettings(
+                fastPaymentsFactory.makeFastPaymentsViewModel(
+                    data,
+                    { [weak self] in self?.dismissDestination() }
+                )
             )
-        )
+        }
     }
 }
 

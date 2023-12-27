@@ -114,6 +114,115 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
     }
         
+    func test_init_shouldNotSetDestination() throws {
+        
+        let (sut, _,_,_) = makeSUT()
+        let destinationSpy = ValueSpy(sut.$link)
+
+        XCTAssertNoDiff(destinationSpy.values, [nil])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetAlertOnActiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        findListSpy.emitAndWait(anyActive())
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        getDefaultAndConsentSpy.complete(with: .failure(anyError()))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
+            nil,
+            "Превышено время ожидания.\nПопробуйте позже."
+        ])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetDestinationOnActiveFPSCFLResponseGetDefaultAndConsentSuccess() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let destinationSpy = ValueSpy(sut.$link)
+        findListSpy.emitAndWait(anyActive())
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        getDefaultAndConsentSpy.complete(with: .success(true))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
+            nil,
+            .fastPaymentSettings
+        ])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetAlertOnInactiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        findListSpy.emitAndWait(anyInactive())
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        getDefaultAndConsentSpy.complete(with: .failure(anyError()))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
+            nil,
+            "Превышено время ожидания.\nПопробуйте позже."
+        ])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetDestinationOnInactiveFPSCFLResponseGetDefaultAndConsentSuccess() throws {
+        
+        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let destinationSpy = ValueSpy(sut.$link)
+        findListSpy.emitAndWait(anyInactive())
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        getDefaultAndConsentSpy.complete(with: .success(true))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
+            nil,
+            .fastPaymentSettings
+        ])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetDestinationOnMissingFPSCFLResponse() throws {
+        
+        let (sut, findListSpy, _,_) = makeSUT()
+        let destinationSpy = ValueSpy(sut.$link)
+        findListSpy.emitAndWait(.missing)
+        
+        #warning("long timeout")
+        try sut.tapFastPaymentsSettingsAndWait(timeout: 3)
+        
+        XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
+            nil,
+            .fastPaymentSettings
+        ])
+    }
+    
+    func test_init_shouldNotSetAlert() throws {
+        
+        let (sut, _,_,_) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        XCTAssertNoDiff(alertSpy.values, [nil])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetAlertOnErrorFPSCFLResponse() throws {
+        
+        let (sut, findListSpy, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        findListSpy.emitAndWait(.fixedError)
+        
+        try sut.tapFastPaymentsSettingsAndWait(timeout: 1)
+        
+        XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
+            nil,
+            "Превышено время ожидания.\nПопробуйте позже."
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UserAccountViewModel
@@ -177,6 +286,20 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         }
     }
+}
+
+private func anyActive(
+    _ value: String = UUID().uuidString
+) -> FastPaymentsServices.FPSCFLResponse {
+    
+    .active(.init(value))
+}
+
+private func anyInactive(
+    _ value: String = UUID().uuidString
+) -> FastPaymentsServices.FPSCFLResponse {
+    
+    .inactive(.init(value))
 }
 
 private extension ClientInfoData {
