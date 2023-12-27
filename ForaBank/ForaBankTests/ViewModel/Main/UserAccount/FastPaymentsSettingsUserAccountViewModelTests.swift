@@ -122,7 +122,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(destinationSpy.values, [nil])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetAlertOnActiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnActiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
         
         let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
@@ -132,9 +132,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         getDefaultAndConsentSpy.complete(with: .failure(anyError()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
+        try sut.tapPrimaryAlertButtonAndWait()
+        
         XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
             nil,
-            "Превышено время ожидания.\nПопробуйте позже."
+            "Превышено время ожидания.\nПопробуйте позже.",
+            nil
         ])
     }
     
@@ -154,7 +157,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         ])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetAlertOnInactiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnInactiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
         
         let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
@@ -164,9 +167,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         getDefaultAndConsentSpy.complete(with: .failure(anyError()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
+        try sut.tapPrimaryAlertButtonAndWait()
+        
         XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
             nil,
-            "Превышено время ожидания.\nПопробуйте позже."
+            "Превышено время ожидания.\nПопробуйте позже.",
+            nil
         ])
     }
     
@@ -209,17 +215,19 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertSpy.values, [nil])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetAlertOnErrorFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnErrorFPSCFLResponse() throws {
         
         let (sut, findListSpy, _, _) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         findListSpy.emitAndWait(.fixedError)
         
-        try sut.tapFastPaymentsSettingsAndWait(timeout: 1)
+        try sut.tapFastPaymentsSettingsAndWait()
+        try sut.tapPrimaryAlertButtonAndWait()
         
         XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
             nil,
-            "Превышено время ожидания.\nПопробуйте позже."
+            "Превышено время ожидания.\nПопробуйте позже.",
+            nil
         ])
     }
     
@@ -355,6 +363,21 @@ private extension ClientInfoData {
 // MARK: - DSL
 
 private extension UserAccountViewModel {
+    
+    func tapPrimaryAlertButtonAndWait(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let button = try XCTUnwrap(
+            alert?.primary,
+            "\nExpected to have Primary Alert Button but got nil instead.",
+            file: file, line: line
+        )
+        button.action()
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
     
     func tapFastPaymentsSettingsAndWait(
         timeout: TimeInterval = 0.05,
