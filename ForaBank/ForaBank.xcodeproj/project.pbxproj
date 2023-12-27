@@ -8133,6 +8133,7 @@
 			isa = PBXGroup;
 			children = (
 				774A8B192865FBFF00B81140 /* UserAccountViewModel.swift */,
+				2A9E05482B3B652700463CE8 /* FastPaymentsServices.swift */,
 				774A8B1A2865FBFF00B81140 /* UserDocumentViewModel.swift */,
 				774A8B182865FBFF00B81140 /* DocumentCellType.swift */,
 			);
@@ -8163,7 +8164,6 @@
 			isa = PBXGroup;
 			children = (
 				774A8B362865FCDD00B81140 /* UserAccountView.swift */,
-				2A9E05482B3B652700463CE8 /* FastPaymentsServices.swift */,
 				774A8B2F2865FCDD00B81140 /* UserDocumentView.swift */,
 				774A8B302865FCDD00B81140 /* AccountsViews */,
 				6828806E28A2D8F400186F32 /* DeleteAccountView.swift */,
