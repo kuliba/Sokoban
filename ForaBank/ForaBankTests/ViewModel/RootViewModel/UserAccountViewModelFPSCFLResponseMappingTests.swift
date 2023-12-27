@@ -21,14 +21,14 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
         
         let list: [FastPaymentContractFullInfoType] = [makeTripleYes(phone: nil)]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnErrorOnTripleYesWithEmptyPhone() {
         
         let list: [FastPaymentContractFullInfoType] = [makeTripleYes(phone: "")]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnActiveWithPhoneOnTripleYesWithPhone() {
@@ -43,14 +43,14 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
         
         let list: [FastPaymentContractFullInfoType] = [makeTripleNo(phone: nil)]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnErrorOnTripleNoWithEmptyPhone() {
         
         let list: [FastPaymentContractFullInfoType] = [makeTripleNo(phone: "")]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnInactiveWithPhoneOnTripleNoWithPhone() {
@@ -65,21 +65,21 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
         
         let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: nil)]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnErrroOnDoubleYesWithEmptyPhone() {
         
         let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: "")]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     func test_shouldReturnErrorOnDoubleYesWithPhone() {
         
         let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: "abc123")]
         
-        XCTAssertEqual(list.fpsCFLResponse, .error)
+        XCTAssertEqual(list.fpsCFLResponse, .fixedError)
     }
     
     // MARK: - Helpers

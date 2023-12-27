@@ -25,6 +25,7 @@ extension FastPaymentsServices {
     enum FPSCFLResponse: Equatable {
         
         case active(Phone)
-        case inactive, missing, error
+        case inactive, missing
+        case error(String)
     }
 }

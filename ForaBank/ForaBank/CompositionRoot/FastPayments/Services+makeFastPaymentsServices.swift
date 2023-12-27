@@ -35,12 +35,13 @@ extension Array where Element == FastPaymentContractFullInfoType {
     var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse {
         
         guard let first else { return .missing }
-        guard let phone else { return .error}
+        #warning("replacing `FastPaymentContractFullInfoType` with Result would allow to have a berr way to construct error case")
+        guard let phone else { return .fixedError }
         
         if first.hasTripleYes { return .active(phone) }
         if first.hasTripleNo { return .inactive }
         
-        return .error
+        return .fixedError
     }
     
     private var phone: FastPaymentsServices.Phone? {
@@ -53,6 +54,11 @@ extension Array where Element == FastPaymentContractFullInfoType {
         
         return .init(phoneNumber)
     }
+}
+
+extension FastPaymentsServices.FPSCFLResponse {
+    
+    static let fixedError: Self = .error("Превышено время ожидания.\nПопробуйте позже.")
 }
 
 private extension FastPaymentContractFullInfoType {

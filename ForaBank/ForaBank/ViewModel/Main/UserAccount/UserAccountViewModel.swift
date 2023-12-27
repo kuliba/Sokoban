@@ -592,8 +592,15 @@ private extension UserAccountViewModel {
                 )
             }
             
-        case .error, .none:
-            alert = .techError { [weak self] in self?.dismissAlert() }
+        case let .error(message):
+            alert = .techError(
+                message: message
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case .none:
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
         }
     }
 }

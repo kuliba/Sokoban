@@ -53,14 +53,14 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             .missing,
         ])
         
-        findListSpy.emitAndWait(.error)
+        findListSpy.emitAndWait(.fixedError)
         
         XCTAssertNoDiff(responseSpy.values, [
             nil,
             .active("abcd123"),
             .inactive,
             .missing,
-            .error,
+            .fixedError,
         ])
     }
     
