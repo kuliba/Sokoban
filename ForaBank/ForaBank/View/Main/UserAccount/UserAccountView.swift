@@ -302,6 +302,7 @@ extension FastPaymentsServices {
         getFastPaymentContractFindList: {
             
             Empty().eraseToAnyPublisher()
-        }
+        },
+        getDefaultAndConsent: { _,_ in }
     )
 }

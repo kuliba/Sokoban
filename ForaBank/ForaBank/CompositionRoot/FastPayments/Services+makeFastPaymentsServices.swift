@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 import Tagged
 
 extension Services {
@@ -21,10 +22,14 @@ extension Services {
                 
                 let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
                 model.action.send(request)
-                
+             
                 return model.fastPaymentContractFullInfo
                     .map(\.fpsCFLResponse)
                     .eraseToAnyPublisher()
+            },
+            getDefaultAndConsent: { phone, completion in
+            
+                completion(.failure(NSError(domain: "GetDefaultAndConsent Error", code: -1)))
             }
         )
     }

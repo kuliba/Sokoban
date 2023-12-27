@@ -85,7 +85,8 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             model: model,
             fastPaymentsFactory: .default,
             fastPaymentsServices: .init(
-                getFastPaymentContractFindList: findListSpy.get
+                getFastPaymentContractFindList: findListSpy.get,
+                getDefaultAndConsent: { _,_ in }
             ),
             clientInfo: .stub(),
             dismissAction: {}
