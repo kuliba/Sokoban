@@ -548,15 +548,17 @@ private extension UserAccountViewModel {
     
     func showSpinner() {
         
+        // TODO: implement
     }
     
     func hideSpinner() {
         
+        // TODO: implement
     }
     
     func dismissAlert() {
         
-        alert = nil
+        DispatchQueue.main.async { [weak self] in self?.alert = nil }
     }
     
     func dismissDestination() {
@@ -569,16 +571,22 @@ private extension UserAccountViewModel {
     
     func openFastPaymentsSettings() {
         
-        link = .fastPaymentSettings(
-            fastPaymentsFactory.makeFastPaymentsViewModel(
-                model.fastPaymentContractFullInfo.value
-                    .map { $0.getFastPaymentContractFindListDatum() },
-                { [weak self] in
-                    
-                    self?.action.send(UserAccountViewModelAction.CloseLink())
-                }
+        switch fpsCFLResponse {
+        case .active, .inactive, .missing:
+            showSpinner()
+            
+            let data = model.fastPaymentContractFullInfo.value
+                .map { $0.getFastPaymentContractFindListDatum() }
+            link = .fastPaymentSettings(
+                fastPaymentsFactory.makeFastPaymentsViewModel(
+                    data,
+                    { [weak self] in self?.dismissDestination() }
+                )
             )
-        )
+            
+        case .error, .none:
+            alert = .techError { [weak self] in self?.dismissAlert() }
+        }
     }
 }
 
