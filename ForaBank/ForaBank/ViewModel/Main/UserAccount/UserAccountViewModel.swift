@@ -22,6 +22,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
+    @Published private(set) var spinner: SpinnerView.ViewModel?
     @Published var link: Link?
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
@@ -548,12 +549,12 @@ private extension UserAccountViewModel {
     
     func showSpinner() {
         
-        // TODO: implement
+        DispatchQueue.main.async { [weak self] in self?.spinner = .init() }
     }
     
     func hideSpinner() {
         
-        // TODO: implement
+        DispatchQueue.main.async { [weak self] in self?.spinner = nil }
     }
     
     func dismissAlert() {
@@ -575,14 +576,21 @@ private extension UserAccountViewModel {
         case .active, .inactive, .missing:
             showSpinner()
             
-            let data = model.fastPaymentContractFullInfo.value
-                .map { $0.getFastPaymentContractFindListDatum() }
-            link = .fastPaymentSettings(
-                fastPaymentsFactory.makeFastPaymentsViewModel(
-                    data,
-                    { [weak self] in self?.dismissDestination() }
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
+                
+                guard let self else { return }
+                
+                hideSpinner()
+                
+                let data = model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() }
+                link = .fastPaymentSettings(
+                    fastPaymentsFactory.makeFastPaymentsViewModel(
+                        data,
+                        { [weak self] in self?.dismissDestination() }
+                    )
                 )
-            )
+            }
             
         case .error, .none:
             alert = .techError { [weak self] in self?.dismissAlert() }

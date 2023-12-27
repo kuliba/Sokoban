@@ -18,6 +18,16 @@ struct UserAccountView: View {
         
     var body: some View {
         
+        ZStack {
+            
+            scrollView
+            
+            viewModel.spinner.map(SpinnerView.init(viewModel:))
+        }
+    }
+    
+    var scrollView: some View {
+        
         ScrollView(showsIndicators: false) {
             
             VStack(spacing: 20) {
