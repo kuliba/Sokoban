@@ -10,18 +10,47 @@ import XCTest
 
 final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
     
-    func test_shouldReturnInActiveOnDoubleYes() {
+    func test_shouldReturnMissingOnDoubleYesWithoutPhone() {
         
-        let list: [FastPaymentContractFullInfoType] = [makeDoubleYes()]
+        let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: nil)]
+        
+        XCTAssertEqual(list.fpsCFLResponse, .missing)
+    }
+    
+    func test_shouldReturnMissingOnDoubleYesWithEmptyPhone() {
+        
+        let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: "")]
+        
+        XCTAssertEqual(list.fpsCFLResponse, .missing)
+    }
+    
+    func test_shouldReturnInactiveOnDoubleYesWithPhone() {
+        
+        let list: [FastPaymentContractFullInfoType] = [makeDoubleYes(phone: "abc123")]
         
         XCTAssertEqual(list.fpsCFLResponse, .inactive)
     }
     
-    func test_shouldReturnActiveOnTripleYes() {
+    func test_shouldReturnMissingOnTripleYesWithoutPhone() {
         
-        let list: [FastPaymentContractFullInfoType] = [makeTripleYes()]
+        let list: [FastPaymentContractFullInfoType] = [makeTripleYes(phone: nil)]
         
-        XCTAssertEqual(list.fpsCFLResponse, .active)
+        XCTAssertEqual(list.fpsCFLResponse, .missing)
+    }
+    
+    func test_shouldReturnMissingOnTripleYesWithEmptyPhone() {
+        
+        let list: [FastPaymentContractFullInfoType] = [makeTripleYes(phone: "")]
+        
+        XCTAssertEqual(list.fpsCFLResponse, .missing)
+    }
+    
+    func test_shouldReturnActiveWithPhoneOnTripleYesWithPhone() {
+        
+        let phone = UUID().uuidString
+        let list: [FastPaymentContractFullInfoType] = [makeTripleYes(phone: phone)]
+        
+        XCTAssertEqual(list.fpsCFLResponse, .active(.init(phone)))
     }
     
     func test_shouldReturnMissingOnEmptyList() {
@@ -33,19 +62,24 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
     
     // MARK: - Helpers
     
-    func makeDoubleYes() -> FastPaymentContractFullInfoType {
+    private func makeDoubleYes(
+        phone: String?
+    ) -> FastPaymentContractFullInfoType {
         
         .init(
             fastPaymentContractAccountAttributeList: nil,
             fastPaymentContractAttributeList: [.stub(
                 flagClientAgreementIn: .yes,
-                flagClientAgreementOut: .yes
+                flagClientAgreementOut: .yes,
+                phoneNumber: phone
             )],
             fastPaymentContractClAttributeList: nil
         )
     }
     
-    func makeTripleYes() -> FastPaymentContractFullInfoType {
+    private func makeTripleYes(
+        phone: String?
+    ) -> FastPaymentContractFullInfoType {
         
         .init(
             fastPaymentContractAccountAttributeList: [.stub(
@@ -53,7 +87,8 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
             )],
             fastPaymentContractAttributeList: [.stub(
                 flagClientAgreementIn: .yes,
-                flagClientAgreementOut: .yes
+                flagClientAgreementOut: .yes,
+                phoneNumber: phone
             )],
             fastPaymentContractClAttributeList: nil
         )

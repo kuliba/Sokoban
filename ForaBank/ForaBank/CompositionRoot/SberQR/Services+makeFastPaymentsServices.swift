@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Tagged
 
 extension Services {
     
@@ -33,11 +34,21 @@ extension Array where Element == FastPaymentContractFullInfoType {
     
     var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse {
         
-        guard let first else { return .missing }
+        guard let first, let phone
+        else { return .missing }
         
         guard first.hasTripleYes else { return .inactive }
         
-        return .active
+        return .active(phone)
+    }
+    
+    private var phone: FastPaymentsServices.Phone? {
+        
+        guard let phoneNumber = first?.fastPaymentContractAttributeList?.first?.phoneNumber,
+              !phoneNumber.isEmpty
+        else { return nil }
+        
+        return .init(phoneNumber)
     }
 }
 

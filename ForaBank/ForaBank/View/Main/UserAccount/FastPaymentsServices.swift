@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Tagged
 
 struct FastPaymentsServices {
     
@@ -17,9 +18,13 @@ struct FastPaymentsServices {
 
 extension FastPaymentsServices {
     
+    typealias Phone = Tagged<_Phone, String>
+    enum _Phone {}
+    
     /// `FPSCFL` stands for `FastPaymentContractFindList`
-    enum FPSCFLResponse {
+    enum FPSCFLResponse: Equatable {
         
-        case active, inactive, missing, error
+        case active(Phone)
+        case inactive, missing, error
     }
 }
