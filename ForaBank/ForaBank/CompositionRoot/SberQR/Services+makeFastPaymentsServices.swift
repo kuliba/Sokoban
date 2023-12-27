@@ -34,18 +34,21 @@ extension Array where Element == FastPaymentContractFullInfoType {
     
     var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse {
         
-        guard let first, let phone
-        else { return .missing }
+        guard let first else { return .missing }
+        guard let phone else { return .error}
         
-        guard first.hasTripleYes else { return .inactive }
+        if first.hasTripleYes { return .active(phone) }
+        if first.hasTripleNo { return .inactive }
         
-        return .active(phone)
+        return .error
     }
     
     private var phone: FastPaymentsServices.Phone? {
         
-        guard let phoneNumber = first?.fastPaymentContractAttributeList?.first?.phoneNumber,
-              !phoneNumber.isEmpty
+        guard
+            let list = first?.fastPaymentContractAttributeList,
+            let phoneNumber = list.first?.phoneNumber,
+            !phoneNumber.isEmpty
         else { return nil }
         
         return .init(phoneNumber)
@@ -63,5 +66,16 @@ private extension FastPaymentContractFullInfoType {
         return accountAttributeList.flagPossibAddAccount == .yes
         && contractAttributeList.flagClientAgreementIn == .yes
         && contractAttributeList.flagClientAgreementOut == .yes
+    }
+    
+    var hasTripleNo: Bool {
+        
+        guard let accountAttributeList = fastPaymentContractAccountAttributeList?.first,
+              let contractAttributeList = fastPaymentContractAttributeList?.first
+        else { return false }
+        
+        return accountAttributeList.flagPossibAddAccount == .no
+        && contractAttributeList.flagClientAgreementIn == .no
+        && contractAttributeList.flagClientAgreementOut == .no
     }
 }
