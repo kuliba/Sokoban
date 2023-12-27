@@ -129,8 +129,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.complete(with: .failure(anyError()))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        getDefaultAndConsentSpy.completeAndWait(with: .failure(anyError()))
         
         try sut.tapPrimaryAlertButtonAndWait()
         
@@ -148,8 +147,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.complete(with: .success(true))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        getDefaultAndConsentSpy.completeAndWait(with: .success(true))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
@@ -164,8 +162,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.complete(with: .failure(anyError()))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        getDefaultAndConsentSpy.completeAndWait(with: .failure(anyError()))
         
         try sut.tapPrimaryAlertButtonAndWait()
         
@@ -183,8 +180,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.complete(with: .success(true))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        getDefaultAndConsentSpy.completeAndWait(with: .success(true))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
@@ -411,5 +407,17 @@ private extension UserAccountViewModel {
         else { return nil }
         
         return fastPaymentsSettings
+    }
+}
+
+extension Spy {
+    
+    func completeAndWait(
+        with result: Result,
+        at index: Int = 0,
+        timeout: TimeInterval = 0.05
+    ) {
+        complete(with: result, at: index)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
