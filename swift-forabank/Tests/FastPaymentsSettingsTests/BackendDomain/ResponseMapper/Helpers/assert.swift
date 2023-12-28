@@ -8,9 +8,9 @@
 import FastPaymentsSettings
 import XCTest
 
-func assert<T: Equatable>(
-    _ receivedResult: Result<T, MappingError>,
-    equals expectedResult: Result<T, MappingError>,
+func assert<T: Equatable, E: Equatable>(
+    _ receivedResult: Result<T, E>,
+    equals expectedResult: Result<T, E>,
     file: StaticString = #file,
     line: UInt = #line
 ) {
@@ -32,9 +32,9 @@ func assert<T: Equatable>(
     }
 }
 
-func assert(
-    _ receivedResult: Result<Void, MappingError>,
-    equals expectedResult: Result<Void, MappingError>,
+func assert<E: Equatable>(
+    _ receivedResult: Result<Void, E>,
+    equals expectedResult: Result<Void, E>,
     file: StaticString = #file,
     line: UInt = #line
 ) {
