@@ -1,12 +1,12 @@
 //
-//  GetC2BSubResponse.swift
+//  GetC2BSubscription.swift
 //
 //
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
 /// - Warning: this data type resembles deficiencies of the backend data type. Could be improved: no need in `subscriptionType`, no need in optional arrays.
-struct GetC2BSubResponse: Equatable {
+struct GetC2BSubscription: Equatable {
     
     let title: String
     let subscriptionType: SubscriptionType

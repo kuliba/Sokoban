@@ -97,7 +97,7 @@ final class ResponseMapper_mapGetC2BSubResponseResponseTests: XCTestCase {
     }
 }
 
-private extension GetC2BSubResponse {
+private extension GetC2BSubscription {
     
     static let j1: Self = .init(
         title: "Управление подписками",

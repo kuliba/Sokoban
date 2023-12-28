@@ -10,7 +10,7 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias GetC2BSubResponseResult = Result<GetC2BSubResponse, MappingError>
+    typealias GetC2BSubResponseResult = Result<GetC2BSubscription, MappingError>
     
     static func mapGetC2BSubResponseResponse(
         _ data: Data,
@@ -22,15 +22,15 @@ extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> GetC2BSubResponse {
+    ) throws -> GetC2BSubscription {
         
-        data.getC2BSubResponse
+        data.getC2BSubscription
     }
 }
 
 private extension ResponseMapper._Data {
     
-    var getC2BSubResponse: GetC2BSubResponse {
+    var getC2BSubscription: GetC2BSubscription {
         
         .init(
             title: title,
@@ -44,7 +44,7 @@ private extension ResponseMapper._Data {
 
 private extension ResponseMapper._Data.SubscriptionType {
     
-    var dto: GetC2BSubResponse.SubscriptionType {
+    var dto: GetC2BSubscription.SubscriptionType {
         
         switch self {
         case .control: return .control
@@ -55,7 +55,7 @@ private extension ResponseMapper._Data.SubscriptionType {
 
 private extension ResponseMapper._Data.ProductSubscription {
     
-    var dto: GetC2BSubResponse.ProductSubscription {
+    var dto: GetC2BSubscription.ProductSubscription {
         
         .init(
             productId: productId,
@@ -68,7 +68,7 @@ private extension ResponseMapper._Data.ProductSubscription {
 
 private extension ResponseMapper._Data.ProductSubscription.ProductType {
     
-    var dto: GetC2BSubResponse.ProductSubscription.ProductType {
+    var dto: GetC2BSubscription.ProductSubscription.ProductType {
         
         switch self {
         case .account: return .account
@@ -79,7 +79,7 @@ private extension ResponseMapper._Data.ProductSubscription.ProductType {
 
 private extension ResponseMapper._Data.ProductSubscription.Subscription {
     
-    var dto: GetC2BSubResponse.ProductSubscription.Subscription {
+    var dto: GetC2BSubscription.ProductSubscription.Subscription {
         
         .init(
             subscriptionToken: subscriptionToken,
