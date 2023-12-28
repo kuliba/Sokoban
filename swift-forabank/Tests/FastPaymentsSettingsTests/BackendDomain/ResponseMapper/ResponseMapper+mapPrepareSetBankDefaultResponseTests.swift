@@ -5,32 +5,6 @@
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
-import Foundation
-
-extension ResponseMapper {
-    
-    typealias PrepareSetBankDefaultResult = Result<Void, MappingError>
-    
-    static func mapPrepareSetBankDefaultResponse(
-        _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> PrepareSetBankDefaultResult {
-        
-        map(data, httpURLResponse, mapOrThrow: map)
-    }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
-}
-
 import FastPaymentsSettings
 import XCTest
 
@@ -69,7 +43,7 @@ final class ResponseMapper_mapPrepareSetBankDefaultResponseTests: XCTestCase {
             errorMessage: "Возникла техническая ошибка"
         )))
     }
-
+    
     func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCode() throws {
         
         let statusCode = 400
@@ -95,7 +69,7 @@ final class ResponseMapper_mapPrepareSetBankDefaultResponseTests: XCTestCase {
             data: badData
         )))
     }
-
+    
     func test_map_shouldDeliverVoidOnOkHTTPURLResponseStatusCodeWithValidData_f1() throws {
         
         let validData = Data(jsonString_f1.utf8)
