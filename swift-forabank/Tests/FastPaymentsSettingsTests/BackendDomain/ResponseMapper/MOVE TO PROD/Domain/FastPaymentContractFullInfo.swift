@@ -7,11 +7,11 @@
 
 struct FastPaymentContractFullInfo: Equatable {
     
-    let accountAttribute: AccountAttribute
+    let account: Account
     let clientInfo: ClientInfo
-    let contractAttribute: ContractAttribute
+    let contract: Contract
     
-    struct AccountAttribute: Equatable {
+    struct Account: Equatable {
         
         let accountID: Int
         let flagPossibAddAccount: Flag
@@ -35,7 +35,7 @@ struct FastPaymentContractFullInfo: Equatable {
         let address: String
     }
     
-    struct ContractAttribute: Equatable {
+    struct Contract: Equatable {
         
         let accountID: Int
         let branchID: Int
@@ -54,5 +54,3 @@ struct FastPaymentContractFullInfo: Equatable {
         case yes, no, empty
     }
 }
-
-

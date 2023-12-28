@@ -108,7 +108,7 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
 private extension FastPaymentContractFullInfo {
     
     static let a1: Self = .init(
-        accountAttribute: .init(
+        account: .init(
             accountID: 10004203497,
             flagPossibAddAccount: .yes,
             maxAddAccount: 0,
@@ -128,7 +128,7 @@ private extension FastPaymentContractFullInfo {
             regNumber: "990428",
             address: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Ново-Садовая ,  д. 7Г,  кв. 5"
         ),
-        contractAttribute: .init(
+        contract: .init(
             accountID: 10004203497,
             branchID: 2000,
             clientID: 10002076204,
@@ -143,7 +143,7 @@ private extension FastPaymentContractFullInfo {
     )
     
     static let a2: Self = .init(
-        accountAttribute: .init(
+        account: .init(
             accountID: 10004203497,
             flagPossibAddAccount: .no,
             maxAddAccount: 0,
@@ -163,7 +163,7 @@ private extension FastPaymentContractFullInfo {
             regNumber: "990428",
             address: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
         ),
-        contractAttribute: .init(
+        contract: .init(
             accountID: 10004203497,
             branchID: 2000,
             clientID: 10002076204,

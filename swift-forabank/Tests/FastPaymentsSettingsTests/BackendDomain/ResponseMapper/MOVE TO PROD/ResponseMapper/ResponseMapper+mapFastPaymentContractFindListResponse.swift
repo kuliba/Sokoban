@@ -24,7 +24,7 @@ extension ResponseMapper {
         _ data: _Data
     ) throws -> FastPaymentContractFullInfo? {
         
-        data.first?.dto
+        data.first?.info
     }
 }
 
@@ -35,7 +35,7 @@ private extension ResponseMapper {
 
 private extension ResponseMapper._DTO {
     
-    var dto: FastPaymentContractFullInfo? {
+    var info: FastPaymentContractFullInfo? {
         
         guard
             let accountAttribute = fastPaymentContractAccountAttributeList.first?.dto,
@@ -44,9 +44,9 @@ private extension ResponseMapper._DTO {
         else { return nil }
         
         return .init(
-            accountAttribute: accountAttribute,
+            account: accountAttribute,
             clientInfo: clientInfo,
-            contractAttribute: contractAttribute
+            contract: contractAttribute
         )
     }
 }
@@ -55,11 +55,11 @@ private extension ResponseMapper {
     
     struct _DTO: Decodable {
         
-        let fastPaymentContractAccountAttributeList: [_AccountAttribute]
-        let fastPaymentContractAttributeList: [_ContractAttribute]
-        let fastPaymentContractClAttributeList: [_ClientAttribute]
+        let fastPaymentContractAccountAttributeList: [_Account]
+        let fastPaymentContractAttributeList: [_Contract]
+        let fastPaymentContractClAttributeList: [_Client]
         
-        struct _AccountAttribute: Decodable {
+        struct _Account: Decodable {
             
             let accountID: Int
             let flagPossibAddAccount: Flag
@@ -68,7 +68,7 @@ private extension ResponseMapper {
             let accountNumber: String
         }
         
-        struct _ContractAttribute: Decodable {
+        struct _Contract: Decodable {
             
             let accountID: Int
             let branchID: Int
@@ -82,7 +82,7 @@ private extension ResponseMapper {
             let branchBIC: String
         }
         
-        struct _ClientAttribute: Decodable {
+        struct _Client: Decodable {
             
             let clientInfo: ClientInfo
             
@@ -111,9 +111,9 @@ private extension ResponseMapper {
     }
 }
 
-private extension ResponseMapper._DTO._AccountAttribute {
+private extension ResponseMapper._DTO._Account {
     
-    var dto: FastPaymentContractFullInfo.AccountAttribute {
+    var dto: FastPaymentContractFullInfo.Account {
         
         .init(
             accountID: accountID,
@@ -125,9 +125,9 @@ private extension ResponseMapper._DTO._AccountAttribute {
     }
 }
 
-private extension ResponseMapper._DTO._ContractAttribute {
+private extension ResponseMapper._DTO._Contract {
     
-    var dto: FastPaymentContractFullInfo.ContractAttribute {
+    var dto: FastPaymentContractFullInfo.Contract {
         
         .init(
             accountID: accountID,
@@ -144,7 +144,7 @@ private extension ResponseMapper._DTO._ContractAttribute {
     }
 }
 
-private extension ResponseMapper._DTO._ClientAttribute {
+private extension ResponseMapper._DTO._Client {
     
     var dto: FastPaymentContractFullInfo.ClientInfo {
         
@@ -175,4 +175,3 @@ private extension ResponseMapper._DTO.Flag {
         }
     }
 }
-
