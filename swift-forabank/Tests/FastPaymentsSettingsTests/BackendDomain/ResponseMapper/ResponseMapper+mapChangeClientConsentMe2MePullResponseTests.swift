@@ -9,7 +9,7 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias ChangeClientConsentMe2MePullResult = Result<Int, MappingError>
+    typealias ChangeClientConsentMe2MePullResult = Result<Void, MappingError>
     
     static func mapChangeClientConsentMe2MePullResponse(
         _ data: Data,
@@ -21,17 +21,14 @@ extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> Int {
+    ) throws -> Void {
         
-        throw anyError("unimplemented")
+        if data != nil { throw InvalidResponse() }
     }
-}
-
-private extension ResponseMapper {
     
-    struct _Data: Decodable {
-        
-    }
+    private struct InvalidResponse: Error {}
+    
+    private typealias _Data = Data?
 }
 
 import FastPaymentsSettings
@@ -99,6 +96,14 @@ final class ResponseMapper_mapChangeClientConsentMe2MePullResponseTests: XCTestC
         )))
     }
 
+    func test_map_shouldDeliverVoidOnOkHTTPURLResponseStatusCodeWithValidData_h1() throws {
+        
+        let validData = Data(jsonString_h1.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(()))
+    }
+    
     // MARK: - Helpers
     
     private func map(
@@ -109,3 +114,11 @@ final class ResponseMapper_mapChangeClientConsentMe2MePullResponseTests: XCTestC
         ResponseMapper.mapChangeClientConsentMe2MePullResponse(data, httpURLResponse)
     }
 }
+
+private let jsonString_h1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": null
+}
+"""
