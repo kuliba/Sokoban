@@ -6,10 +6,14 @@
 //
 
 import Foundation
+import Tagged
+
+typealias GetBankDefault = Tagged<_GetBankDefault, Bool>
+enum _GetBankDefault {}
 
 extension ResponseMapper {
-    
-    typealias GetBankDefaultResult = Result<Int, MappingError>
+    #warning("change error type to add limit error")
+    typealias GetBankDefaultResult = Result<GetBankDefault, MappingError>
     
     static func mapGetBankDefaultResponse(
         _ data: Data,
@@ -21,9 +25,9 @@ extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> Int {
+    ) throws -> GetBankDefault {
         
-        throw anyError("unimplemented")
+        .init(data.foraBank)
     }
 }
 
@@ -31,6 +35,7 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
+        let foraBank: Bool
     }
 }
 
@@ -86,6 +91,35 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
         )))
     }
     
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCodeWithBadData() throws {
+        
+        let badData = Data(jsonStringWithBadData.utf8)
+        let statusCode = 400
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = map(badData, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: badData
+        )))
+    }
+
+    func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidData_c1() throws {
+        
+        let validData = Data(jsonString_c1.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(.c1))
+    }
+    
+    func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidData_c2() throws {
+        
+        let validData = Data(jsonString_c2.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(.c2))
+    }
+    
     // MARK: - Helpers
     
     private func map(
@@ -96,3 +130,29 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
         ResponseMapper.mapGetBankDefaultResponse(data, httpURLResponse)
     }
 }
+
+private extension GetBankDefault {
+    
+    static let c1: Self = true
+    static let c2: Self = false
+}
+
+private let jsonString_c1 = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "foraBank": true
+  }
+}
+"""
+
+private let jsonString_c2 = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "foraBank": false
+  }
+}
+"""
