@@ -89,10 +89,4 @@ final class ResponseMapper_mapChangeClientConsentMe2MePullResponseTests: XCTestC
     }
 }
 
-private let jsonString_h1 = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": null
-}
-"""
+private let jsonString_h1 = nullServerResponse

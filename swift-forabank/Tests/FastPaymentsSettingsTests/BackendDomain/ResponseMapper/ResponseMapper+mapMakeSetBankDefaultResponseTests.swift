@@ -99,13 +99,7 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
     private let retryErrorMessage = "Введен некорректный код. Попробуйте еще раз."
 }
 
-private let jsonString_g1 = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": null
-}
-"""
+private let jsonString_g1 = nullServerResponse
 
 private let jsonString_g2 = """
 {

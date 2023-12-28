@@ -89,10 +89,4 @@ final class ResponseMapper_mapPrepareSetBankDefaultResponseTests: XCTestCase {
     }
 }
 
-private let jsonString_f1 = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": null
-}
-"""
+private let jsonString_f1 = nullServerResponse

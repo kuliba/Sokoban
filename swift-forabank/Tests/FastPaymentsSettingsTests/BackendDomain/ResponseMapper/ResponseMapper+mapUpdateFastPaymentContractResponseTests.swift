@@ -89,10 +89,4 @@ final class ResponseMapper_mapUpdateFastPaymentContractResponseTests: XCTestCase
     }
 }
 
-private let jsonString_d1 = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": null
-}
-"""
+private let jsonString_d1 = nullServerResponse
