@@ -86,6 +86,19 @@ final class ResponseMapper_mapChangeClientConsentMe2MePullResponseTests: XCTestC
         )))
     }
     
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCodeWithBadData() throws {
+        
+        let badData = Data(jsonStringWithBadData.utf8)
+        let statusCode = 400
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = map(badData, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: badData
+        )))
+    }
+
     // MARK: - Helpers
     
     private func map(
