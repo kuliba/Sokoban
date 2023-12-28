@@ -17,12 +17,27 @@ extension ResponseMapper {
         mapOrThrow: (D) throws -> T
     ) -> Result<T, MappingError> {
         
+        map(data, httpURLResponse) { (data: D?) in
+            
+            guard let data else { throw InvalidResponse() }
+            
+            return try mapOrThrow(data)
+        }
+    }
+    
+    /// Generic map.
+    static func map<D: Decodable, T>(
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse,
+        mapOrThrow: (D?) throws -> T
+    ) -> Result<T, MappingError> {
+        
         do {
             
             let response = try JSONDecoder().decode(_Response<D>.self, from: data)
             
             switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
-            case let (200, .none, .some(data)):
+            case let (200, .none, data):
                 return try .success(mapOrThrow(data))
                 
             case let (_, .some(errorMessage), .none):
