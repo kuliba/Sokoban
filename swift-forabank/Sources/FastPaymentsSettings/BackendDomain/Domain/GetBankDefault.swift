@@ -7,5 +7,5 @@
 
 import Tagged
 
-typealias GetBankDefault = Tagged<_GetBankDefault, Bool>
-enum _GetBankDefault {}
+public typealias GetBankDefault = Tagged<_GetBankDefault, Bool>
+public enum _GetBankDefault {}

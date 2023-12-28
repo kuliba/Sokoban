@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
-import FastPaymentsSettings
 import Foundation
 
 public enum MakeSetBankDefaultMappingError: Error, Equatable {
@@ -15,7 +14,7 @@ public enum MakeSetBankDefaultMappingError: Error, Equatable {
     case server(statusCode: Int, errorMessage: String)
 }
 
-extension ResponseMapper {
+public extension ResponseMapper {
     
     typealias MakeSetBankDefaultResponseResult = Result<Void, MakeSetBankDefaultMappingError>
     

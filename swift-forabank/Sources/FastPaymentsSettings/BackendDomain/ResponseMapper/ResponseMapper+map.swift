@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 03.12.2023.
 //
 
-import FastPaymentsSettings
 import Foundation
 
-extension ResponseMapper {
+public extension ResponseMapper {
     
     /// Generic map.
     static func map<D: Decodable, T>(

@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
-import FastPaymentsSettings
 import Foundation
 
-extension ResponseMapper {
+public extension ResponseMapper {
     
     typealias OkMappingResult = Result<Void, MappingError>
     
