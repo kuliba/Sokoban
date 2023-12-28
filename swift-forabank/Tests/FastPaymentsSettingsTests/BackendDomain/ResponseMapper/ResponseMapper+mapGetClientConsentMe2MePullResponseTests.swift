@@ -7,9 +7,23 @@
 
 import Foundation
 
+struct ConsentMe2MePull: Equatable {
+    
+    let consentID: Int
+    let bankID: String
+    #warning("replace with Date")
+    let beginDate: String
+    #warning("replace with Date")
+    let endDate: String
+    #warning("replace with non optional")
+    let active: Bool?
+    #warning("replace with non optional")
+    let oneTimeConsent: Bool?
+}
+
 extension ResponseMapper {
     
-    typealias GetClientConsentMe2MePullResult = Result<Int, MappingError>
+    typealias GetClientConsentMe2MePullResult = Result<[ConsentMe2MePull], MappingError>
     
     static func mapGetClientConsentMe2MePullResponse(
         _ data: Data,
@@ -21,9 +35,9 @@ extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> Int {
+    ) throws -> [ConsentMe2MePull] {
         
-        throw anyError("unimplemented")
+        data.consentList.map(\.consent)
     }
 }
 
@@ -31,6 +45,35 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
+        let consentList: [_DTO]
+    }
+}
+
+private extension ResponseMapper._DTO {
+    
+    var consent: ConsentMe2MePull {
+        
+        .init(
+            consentID: consentId,
+            bankID: bankId,
+            beginDate: beginDate,
+            endDate: endDate,
+            active: active,
+            oneTimeConsent: oneTimeConsent
+        )
+    }
+}
+
+private extension ResponseMapper {
+    
+    struct _DTO: Decodable {
+        
+        let consentId: Int
+        let bankId: String
+        let beginDate: String
+        let endDate: String
+        let active: Bool?
+        let oneTimeConsent: Bool?
     }
 }
 
@@ -86,6 +129,35 @@ final class ResponseMapper_mapGetClientConsentMe2MePullResponseTests: XCTestCase
         )))
     }
     
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCodeWithBadData() throws {
+        
+        let badData = Data(jsonStringWithBadData.utf8)
+        let statusCode = 400
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = map(badData, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: badData
+        )))
+    }
+    
+    func test_map_shouldDeliverEmptyResponseOnOkHTTPURLResponseStatusCodeWithValidData_b1() throws {
+        
+        let validData = Data(jsonStringWithEmptyConsentList_b1.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success([]))
+    }
+    
+    func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidData_b2() throws {
+        
+        let validData = Data(jsonString_b2.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(.b2))
+    }
+    
     // MARK: - Helpers
     
     private func map(
@@ -96,3 +168,159 @@ final class ResponseMapper_mapGetClientConsentMe2MePullResponseTests: XCTestCase
         ResponseMapper.mapGetClientConsentMe2MePullResponse(data, httpURLResponse)
     }
 }
+
+private extension Array where Element == ConsentMe2MePull {
+    
+    static let b2: Self = [
+        .b2_01,
+        .b2_02,
+        .b2_03,
+        .b2_04,
+        .b2_05,
+        .b2_06,
+        .b2_07,
+    ]
+}
+
+private extension ConsentMe2MePull {
+    
+    static let b2_01: Self = .init(
+        consentID: 774,
+        bankID: "100000000095",
+        beginDate: "15.05.2023 14:46:15",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_02: Self = .init(
+        consentID: 775,
+        bankID: "100000000108",
+        beginDate: "15.05.2023 14:46:15",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_03: Self = .init(
+        consentID: 778,
+        bankID: "100000000127",
+        beginDate: "15.05.2023 14:46:32",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_04: Self = .init(
+        consentID: 779,
+        bankID: "100000000031",
+        beginDate: "15.05.2023 14:46:32",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_05: Self = .init(
+        consentID: 765,
+        bankID: "100000000008",
+        beginDate: "15.05.2023 14:45:22",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_06: Self = .init(
+        consentID: 769,
+        bankID: "100000000004",
+        beginDate: "15.05.2023 14:45:41",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+    
+    static let b2_07: Self = .init(
+        consentID: 771,
+        bankID: "100000000007",
+        beginDate: "15.05.2023 14:45:41",
+        endDate: "01.01.3000 00:00:00",
+        active: true,
+        oneTimeConsent: false
+    )
+}
+
+private let jsonStringWithEmptyConsentList_b1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "consentList": []
+    }
+}
+"""
+
+private let jsonString_b2 = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "consentList": [
+      {
+        "consentId": 774,
+        "bankId": "100000000095",
+        "beginDate": "15.05.2023 14:46:15",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 775,
+        "bankId": "100000000108",
+        "beginDate": "15.05.2023 14:46:15",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 778,
+        "bankId": "100000000127",
+        "beginDate": "15.05.2023 14:46:32",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 779,
+        "bankId": "100000000031",
+        "beginDate": "15.05.2023 14:46:32",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 765,
+        "bankId": "100000000008",
+        "beginDate": "15.05.2023 14:45:22",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 769,
+        "bankId": "100000000004",
+        "beginDate": "15.05.2023 14:45:41",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      },
+      {
+        "consentId": 771,
+        "bankId": "100000000007",
+        "beginDate": "15.05.2023 14:45:41",
+        "endDate": "01.01.3000 00:00:00",
+        "active": true,
+        "oneTimeConsent": false
+      }
+    ]
+  }
+}
+"""

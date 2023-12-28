@@ -178,15 +178,7 @@ private extension FastPaymentContractFullInfo {
     )
 }
 
-private let jsonStringWithBadData = """
-{
-    "statusCode": 102,
-    "errorMessage": null,
-    "data": { "a": "junk" }
-}
-"""
-
-private let jsonStringWithEmpty = """
+let jsonStringWithEmpty = """
 {
     "statusCode": 0,
     "errorMessage": null,
