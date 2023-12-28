@@ -78,7 +78,7 @@ private extension ResponseMapper {
             let flagClientAgreementOut: Flag
             let fpcontractID: Int
             let phoneNumber: String
-            let phoneNumberMask: String?
+            let phoneNumberMask: String
             let branchBIC: String
         }
         
@@ -138,7 +138,7 @@ private extension ResponseMapper._DTO._Contract {
             flagClientAgreementOut: flagClientAgreementOut.dto,
             fpcontractID: fpcontractID,
             phoneNumber: phoneNumber,
-            phoneNumberMask: phoneNumberMask ?? "",
+            phoneNumberMask: phoneNumberMask,
             branchBIC: branchBIC
         )
     }

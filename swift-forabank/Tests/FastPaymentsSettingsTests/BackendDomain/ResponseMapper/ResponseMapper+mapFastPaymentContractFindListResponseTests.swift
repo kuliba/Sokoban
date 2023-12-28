@@ -118,15 +118,15 @@ private extension FastPaymentContractFullInfo {
         clientInfo: .init(
             clientID: 10002076204,
             inn: "631226829894",
-            name: "Иванова Юлия Александровна",
+            name: "Ваняркина Юлия Александровна",
             nm: "Юлия Александровна В",
-            clientSurName: "Иванова",
+            clientSurName: "Ваняркина",
             clientPatronymicName: "Александровна",
             clientName: "Юлия",
             docType: "21",
             regSeries: "36 12",
             regNumber: "990428",
-            address: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Ново-Садовая ,  д. 7Г,  кв. 5"
+            address: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
         ),
         contract: .init(
             accountID: 10004203497,
@@ -137,7 +137,7 @@ private extension FastPaymentContractFullInfo {
             flagClientAgreementOut: .yes,
             fpcontractID: 10000084818,
             phoneNumber: "79171044913",
-            phoneNumberMask: "",
+            phoneNumberMask: "+7 ... ... 49 13",
             branchBIC: "044525341"
         )
     )
@@ -172,7 +172,7 @@ private extension FastPaymentContractFullInfo {
             flagClientAgreementOut: .no,
             fpcontractID: 10000084818,
             phoneNumber: "79171044913",
-            phoneNumberMask: "",
+            phoneNumberMask: "+7 ... ... 49 13",
             branchBIC: "044525341"
         )
     )
@@ -188,100 +188,102 @@ let jsonStringWithEmpty = """
 
 private let jsonString_a1 = """
 {
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": [
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [
         {
-            "fastPaymentContractAccountAttributeList": [
-                {
-                    "accountID": 10004203497,
-                    "flagPossibAddAccount": "YES",
-                    "maxAddAccount": 0E-10,
-                    "minAddAccount": 0E-10,
-                    "accountNumber": "40817810752005000662"
-                }
-            ],
-            "fastPaymentContractAttributeList": [
-                {
-                    "accountID": 10004203497,
-                    "branchID": 2000,
-                    "clientID": 10002076204,
-                    "flagBankDefault": "EMPTY",
-                    "flagClientAgreementIn": "YES",
-                    "flagClientAgreementOut": "YES",
-                    "phoneNumber": "79171044913",
-                    "branchBIC": "044525341",
-                    "fpcontractID": 10000084818
-                }
-            ],
-            "fastPaymentContractClAttributeList": [
-                {
-                    "clientInfo": {
-                        "clientID": 10002076204,
-                        "inn": "631226829894",
-                        "name": "Иванова Юлия Александровна",
-                        "nm": "Юлия Александровна В",
-                        "clientSurName": "Иванова",
-                        "clientPatronymicName": "Александровна",
-                        "clientName": "Юлия",
-                        "docType": "21",
-                        "regSeries": "36 12",
-                        "regNumber": "990428",
-                        "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Ново-Садовая ,  д. 7Г,  кв. 5"
-                    }
-                }
-            ]
+          "accountID": 10004203497,
+          "flagPossibAddAccount": "YES",
+          "maxAddAccount": 0E-10,
+          "minAddAccount": 0E-10,
+          "accountNumber": "40817810752005000662"
         }
-    ]
+      ],
+      "fastPaymentContractAttributeList": [
+        {
+          "accountID": 10004203497,
+          "branchID": 2000,
+          "clientID": 10002076204,
+          "flagBankDefault": "EMPTY",
+          "flagClientAgreementIn": "YES",
+          "flagClientAgreementOut": "YES",
+          "phoneNumber": "79171044913",
+          "phoneNumberMask": "+7 ... ... 49 13",
+          "branchBIC": "044525341",
+          "fpcontractID": 10000084818
+        }
+      ],
+      "fastPaymentContractClAttributeList": [
+        {
+          "clientInfo": {
+            "clientID": 10002076204,
+            "inn": "631226829894",
+            "name": "Ваняркина Юлия Александровна",
+            "nm": "Юлия Александровна В",
+            "clientSurName": "Ваняркина",
+            "clientPatronymicName": "Александровна",
+            "clientName": "Юлия",
+            "docType": "21",
+            "regSeries": "36 12",
+            "regNumber": "990428",
+            "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
+          }
+        }
+      ]
+    }
+  ]
 }
 """
 
 private let jsonString_a2 = """
 {
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": [
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [
         {
-            "fastPaymentContractAccountAttributeList": [
-                {
-                    "accountID": 10004203497,
-                    "flagPossibAddAccount": "NO",
-                    "maxAddAccount": 0E-10,
-                    "minAddAccount": 0E-10,
-                    "accountNumber": "40817810752005000662"
-                }
-            ],
-            "fastPaymentContractAttributeList": [
-                {
-                    "accountID": 10004203497,
-                    "branchID": 2000,
-                    "clientID": 10002076204,
-                    "flagBankDefault": "EMPTY",
-                    "flagClientAgreementIn": "NO",
-                    "flagClientAgreementOut": "NO",
-                    "phoneNumber": "79171044913",
-                    "branchBIC": "044525341",
-                    "fpcontractID": 10000084818
-                }
-            ],
-            "fastPaymentContractClAttributeList": [
-                {
-                    "clientInfo": {
-                        "clientID": 10002076204,
-                        "inn": "631226829894",
-                        "name": "Ваняркина Юлия Александровна",
-                        "nm": "Юлия Александровна В",
-                        "clientSurName": "Ваняркина",
-                        "clientPatronymicName": "Александровна",
-                        "clientName": "Юлия",
-                        "docType": "21",
-                        "regSeries": "36 12",
-                        "regNumber": "990428",
-                        "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
-                    }
-                }
-            ]
+          "accountID": 10004203497,
+          "flagPossibAddAccount": "NO",
+          "maxAddAccount": 0E-10,
+          "minAddAccount": 0E-10,
+          "accountNumber": "40817810752005000662"
         }
-    ]
+      ],
+      "fastPaymentContractAttributeList": [
+        {
+          "accountID": 10004203497,
+          "branchID": 2000,
+          "clientID": 10002076204,
+          "flagBankDefault": "EMPTY",
+          "flagClientAgreementIn": "NO",
+          "flagClientAgreementOut": "NO",
+          "phoneNumber": "79171044913",
+          "phoneNumberMask": "+7 ... ... 49 13",
+          "branchBIC": "044525341",
+          "fpcontractID": 10000084818
+        }
+      ],
+      "fastPaymentContractClAttributeList": [
+        {
+          "clientInfo": {
+            "clientID": 10002076204,
+            "inn": "631226829894",
+            "name": "Ваняркина Юлия Александровна",
+            "nm": "Юлия Александровна В",
+            "clientSurName": "Ваняркина",
+            "clientPatronymicName": "Александровна",
+            "clientName": "Юлия",
+            "docType": "21",
+            "regSeries": "36 12",
+            "regNumber": "990428",
+            "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
+          }
+        }
+      ]
+    }
+  ]
 }
 """
