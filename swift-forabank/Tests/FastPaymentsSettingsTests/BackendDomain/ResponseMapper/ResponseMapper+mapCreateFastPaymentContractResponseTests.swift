@@ -5,32 +5,6 @@
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
-import Foundation
-
-extension ResponseMapper {
-    
-    typealias CreateFastPaymentContractResult = Result<Void, MappingError>
-    
-    static func mapCreateFastPaymentContractResponse(
-        _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> CreateFastPaymentContractResult {
-        
-        map(data, httpURLResponse, mapOrThrow: map)
-    }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
-}
-
 import FastPaymentsSettings
 import XCTest
 
@@ -96,7 +70,7 @@ final class ResponseMapper_mapCreateFastPaymentContractResponseTests: XCTestCase
         )))
     }
 
-    func test_map_shouldDeliverVoidOnOkHTTPURLResponseStatusCodeWithValidData_d1() throws {
+    func test_map_shouldDeliverVoidOnOkHTTPURLResponseStatusCodeWithValidData_e1() throws {
         
         let validData = Data(jsonString_e1.utf8)
         let result = map(validData)
