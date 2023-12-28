@@ -50,7 +50,20 @@ final class ResponseMapper_mapGetC2BSubResponseResponseTests: XCTestCase {
             data: invalidData
         )))
     }
-
+    
+    func test_map_shouldDeliverInvalidOnNonOKHTTPURLResponseStatusCode() throws {
+        
+        let statusCode = 400
+        let data = anyData()
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = map(data, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: data
+        )))
+    }
+    
     // MARK: - Helpers
     
     private func map(

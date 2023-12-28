@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+mapFastPaymentContractFindListResponseTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 28.12.2023.
 //
@@ -48,6 +48,19 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
         assert(result, equals: .failure(.invalid(
             statusCode: 200,
             data: invalidData
+        )))
+    }
+    
+    func test_map_shouldDeliverInvalidOnNonOKHTTPURLResponseStatusCode() throws {
+        
+        let statusCode = 400
+        let data = anyData()
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = map(data, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: data
         )))
     }
     
