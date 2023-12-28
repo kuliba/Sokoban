@@ -9,33 +9,55 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias MakeSetBankDefaultResult = Result<Int, MappingError>
+    typealias MakeSetBankDefaultResponseResult = Result<Int, MappingError>
     
-    static func mapMakeSetBankDefaultResponse(
+    static func mapMakeSetBankDefaultResponseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MakeSetBankDefaultResult {
+    ) -> MakeSetBankDefaultResponseResult {
         
-        .failure(.invalid(statusCode: -1, data: .init()))
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> Int {
+        
+        throw anyError("unimplemented")
+    }
+}
+
+private extension ResponseMapper {
+    
+    struct _Data: Decodable {
+        
     }
 }
 
 import FastPaymentsSettings
 import XCTest
 
-final class ResponseMapper_mapMakeSetBankDefaultResponseTests: XCTestCase {
+final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCase {
     
-    func test() {
+    func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
+        let invalidData = anyData()
+        
+        let result = map(invalidData)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
     }
-    
+
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> ResponseMapper.MakeSetBankDefaultResult {
+        _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
+    ) -> ResponseMapper.MakeSetBankDefaultResponseResult {
         
-        ResponseMapper.mapMakeSetBankDefaultResponse(data, httpURLResponse)
+        ResponseMapper.mapMakeSetBankDefaultResponseResponse(data, httpURLResponse)
     }
 }

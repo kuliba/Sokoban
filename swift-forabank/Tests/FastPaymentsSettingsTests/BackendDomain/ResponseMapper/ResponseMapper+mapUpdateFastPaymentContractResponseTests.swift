@@ -16,7 +16,21 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> UpdateFastPaymentContractResult {
         
-        .failure(.invalid(statusCode: -1, data: .init()))
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> Int {
+        
+        throw anyError("unimplemented")
+    }
+}
+
+private extension ResponseMapper {
+    
+    struct _Data: Decodable {
+        
     }
 }
 
@@ -25,15 +39,23 @@ import XCTest
 
 final class ResponseMapper_mapUpdateFastPaymentContractResponseTests: XCTestCase {
     
-    func test() {
+    func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
+        let invalidData = anyData()
+        
+        let result = map(invalidData)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
     }
-    
+
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
+        _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> ResponseMapper.UpdateFastPaymentContractResult {
         
         ResponseMapper.mapUpdateFastPaymentContractResponse(data, httpURLResponse)

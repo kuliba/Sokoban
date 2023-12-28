@@ -9,33 +9,55 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias GetC2BSubResult = Result<Int, MappingError>
+    typealias GetC2BSubResponseResult = Result<Int, MappingError>
     
-    static func mapGetC2BSubResponse(
+    static func mapGetC2BSubResponseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetC2BSubResult {
+    ) -> GetC2BSubResponseResult {
         
-        .failure(.invalid(statusCode: -1, data: .init()))
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> Int {
+        
+        throw anyError("unimplemented")
+    }
+}
+
+private extension ResponseMapper {
+    
+    struct _Data: Decodable {
+        
     }
 }
 
 import FastPaymentsSettings
 import XCTest
 
-final class ResponseMapper_mapGetC2BSubResponseTests: XCTestCase {
+final class ResponseMapper_mapGetC2BSubResponseResponseTests: XCTestCase {
     
-    func test() {
+    func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
+        let invalidData = anyData()
+        
+        let result = map(invalidData)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
     }
-    
+
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> ResponseMapper.GetC2BSubResult {
+        _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
+    ) -> ResponseMapper.GetC2BSubResponseResult {
         
-        ResponseMapper.mapGetC2BSubResponse(data, httpURLResponse)
+        ResponseMapper.mapGetC2BSubResponseResponse(data, httpURLResponse)
     }
 }
