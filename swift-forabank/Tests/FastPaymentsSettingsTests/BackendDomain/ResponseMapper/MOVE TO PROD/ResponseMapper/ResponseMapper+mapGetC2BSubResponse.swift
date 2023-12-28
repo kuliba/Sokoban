@@ -1,0 +1,134 @@
+//
+//  ResponseMapper+mapGetC2BSubResponse.swift
+//
+//
+//  Created by Igor Malyarov on 28.12.2023.
+//
+
+import FastPaymentsSettings
+import Foundation
+
+extension ResponseMapper {
+    
+    typealias GetC2BSubResponseResult = Result<GetC2BSubResponse, MappingError>
+    
+    static func mapGetC2BSubResponseResponse(
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse
+    ) -> GetC2BSubResponseResult {
+        
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> GetC2BSubResponse {
+        
+        data.getC2BSubResponse
+    }
+}
+
+private extension ResponseMapper._Data {
+    
+    var getC2BSubResponse: GetC2BSubResponse {
+        
+        .init(
+            title: title,
+            subscriptionType: subscriptionType.dto,
+            emptyList: emptyList,
+            emptySearch: emptySearch,
+            list: list?.map(\.dto)
+        )
+    }
+}
+
+private extension ResponseMapper._Data.SubscriptionType {
+    
+    var dto: GetC2BSubResponse.SubscriptionType {
+        
+        switch self {
+        case .control: return .control
+        case .empty:   return .empty
+        }
+    }
+}
+
+private extension ResponseMapper._Data.ProductSubscription {
+    
+    var dto: GetC2BSubResponse.ProductSubscription {
+        
+        .init(
+            productId: productId,
+            productType: productType.dto,
+            productTitle: productTitle,
+            subscription: subscription.map(\.dto)
+        )
+    }
+}
+
+private extension ResponseMapper._Data.ProductSubscription.ProductType {
+    
+    var dto: GetC2BSubResponse.ProductSubscription.ProductType {
+        
+        switch self {
+        case .account: return .account
+        case .card:    return .card
+        }
+    }
+}
+
+private extension ResponseMapper._Data.ProductSubscription.Subscription {
+    
+    var dto: GetC2BSubResponse.ProductSubscription.Subscription {
+        
+        .init(
+            subscriptionToken: subscriptionToken,
+            brandIcon: brandIcon,
+            brandName: brandName,
+            subscriptionPurpose: subscriptionPurpose,
+            cancelAlert: cancelAlert
+        )
+    }
+}
+
+private extension ResponseMapper {
+    
+    struct _Data: Decodable {
+        
+        let title: String
+        let subscriptionType: SubscriptionType
+        let emptyList: [String]?
+        let emptySearch: String?
+        let list: [ProductSubscription]?
+        
+        enum SubscriptionType: String, Decodable {
+            
+            case control = "SUBSCRIPTION_CONTROL"
+            case empty = "SUBSCRIPTION_EMPTY"
+        }
+        
+        struct ProductSubscription: Decodable {
+            
+            let productId: String
+            let productType: ProductType
+            let productTitle: String
+            let subscription: [Subscription]
+            
+            enum ProductType: String, Decodable {
+                
+                case account = "ACCOUNT"
+                case card = "CARD"
+            }
+            
+            struct Subscription: Decodable {
+                
+                let subscriptionToken: String
+                let brandIcon: String
+                let brandName: String
+                let subscriptionPurpose: String
+                let cancelAlert: String
+            }
+        }
+    }
+}
+
