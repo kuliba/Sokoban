@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "CCA4F692-676D-4199-80EF-09F519348843",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
+      }
+    }
+  ],
+  "version" : 1
+}
