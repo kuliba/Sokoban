@@ -51,6 +51,16 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
         )))
     }
     
+    func test_map_shouldDeliverServerErrorOnDataWithServerError() throws {
+        
+        let result = map(jsonWithServerError())
+        
+        assert(result, equals: .failure(.server(
+            statusCode: 102,
+            errorMessage: "Возникла техническая ошибка"
+        )))
+    }
+    
     func test_map_shouldDeliverInvalidOnNonOKHTTPURLResponseStatusCode() throws {
         
         let statusCode = 400
