@@ -19,7 +19,7 @@ extension FastPaymentsServices {
     typealias FPSCFLResponsePublisher = AnyPublisher<FPSCFLResponse, Never>
     typealias GetFastPaymentContractFindList = () -> FPSCFLResponsePublisher
     
-    #warning("change to typed Error")
+#warning("change to typed Error")
     typealias GetDefaultAndConsentResult = Result<DefaultForaBank, Error>
     typealias GetDefaultAndConsentCompletion = (GetDefaultAndConsentResult) -> Void
     typealias GetDefaultAndConsent = (Phone, @escaping GetDefaultAndConsentCompletion) -> Void
@@ -33,9 +33,20 @@ extension FastPaymentsServices {
     /// `FPSCFL` stands for `FastPaymentContractFindList`
     enum FPSCFLResponse: Equatable {
         
-        case active(Phone)
-        case inactive(Phone)
-        case missing
+        case contract(Contract)
+        case noContract
         case error(String)
+        
+        struct Contract: Equatable {
+ 
+            let phone: Phone
+            let status: Status
+            
+            enum Status: Equatable {
+                
+                case active
+                case inactive
+            }
+        }
     }
 }

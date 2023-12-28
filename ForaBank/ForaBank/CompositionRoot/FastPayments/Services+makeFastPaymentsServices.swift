@@ -39,12 +39,12 @@ extension Array where Element == FastPaymentContractFullInfoType {
     
     var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse {
         
-        guard let first else { return .missing }
+        guard let first else { return .noContract }
         #warning("replacing `FastPaymentContractFullInfoType` with Result would allow to have a berr way to construct error case")
         guard let phone else { return .fixedError }
         
-        if first.hasTripleYes { return .active(phone) }
-        if first.hasTripleNo { return .inactive(phone) }
+        if first.hasTripleYes { return .contract(.init(phone: phone, status: .active)) }
+        if first.hasTripleNo { return .contract(.init(phone: phone, status: .inactive)) }
         
         return .fixedError
     }
