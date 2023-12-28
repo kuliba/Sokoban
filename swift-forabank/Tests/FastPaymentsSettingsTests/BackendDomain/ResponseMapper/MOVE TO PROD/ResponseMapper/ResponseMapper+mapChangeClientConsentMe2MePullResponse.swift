@@ -10,24 +10,13 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias ChangeClientConsentMe2MePullResult = Result<Void, MappingError>
+    typealias ChangeClientConsentMe2MePullResult = OkMappingResult
     
     static func mapChangeClientConsentMe2MePullResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> ChangeClientConsentMe2MePullResult {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        mapToOk(data, httpURLResponse)
     }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
 }

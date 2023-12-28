@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+mapCreateFastPaymentContractResponse.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 28.12.2023.
 //
@@ -10,24 +10,13 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias CreateFastPaymentContractResult = Result<Void, MappingError>
+    typealias CreateFastPaymentContractResult = OkMappingResult
     
     static func mapCreateFastPaymentContractResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> CreateFastPaymentContractResult {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        mapToOk(data, httpURLResponse)
     }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
 }

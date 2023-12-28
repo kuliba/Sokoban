@@ -10,24 +10,13 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias UpdateFastPaymentContractResult = Result<Void, MappingError>
+    typealias UpdateFastPaymentContractResult = OkMappingResult
     
     static func mapUpdateFastPaymentContractResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> UpdateFastPaymentContractResult {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        mapToOk(data, httpURLResponse)
     }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
 }
