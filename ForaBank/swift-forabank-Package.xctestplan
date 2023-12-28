@@ -235,6 +235,13 @@
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
+      }
     }
   ],
   "version" : 1

@@ -237,6 +237,13 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
