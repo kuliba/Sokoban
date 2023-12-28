@@ -578,22 +578,25 @@ private extension UserAccountViewModel {
             
             showSpinner()
             
-            fastPaymentsServices
-                .getDefaultAndConsent(phone) { [weak self] result in
+            fastPaymentsServices.getDefaultAndConsent(
+                phone
+            ) { [weak self] result in
+                
+                self?.hideSpinner()
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + .microseconds(200)
+                ) { [weak self] in
                     
-                    self?.hideSpinner()
-                    
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + .microseconds(200)
-                    ) { [weak self] in
-                        
-                        self?.handleGetDefaultAndConsentResult(result)
-                    }
+                    self?.handleGetDefaultAndConsentResult(result)
                 }
-                        
+            }
+            
         case .missing:
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .seconds(2)
+            ) { [weak self] in
                 
                 guard let self else { return }
                 
