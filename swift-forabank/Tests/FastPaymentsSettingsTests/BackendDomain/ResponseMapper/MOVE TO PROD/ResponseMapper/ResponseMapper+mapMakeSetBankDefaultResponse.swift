@@ -24,20 +24,9 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> MakeSetBankDefaultResponseResult {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        mapToOk(data, httpURLResponse)
             .mapError(MakeSetBankDefaultMappingError.init(error:))
     }
-    
-    private static func map(
-        _ data: _Data
-    ) throws -> Void {
-        
-        if data != nil { throw InvalidResponse() }
-    }
-    
-    private struct InvalidResponse: Error {}
-    
-    private typealias _Data = Data?
 }
 
 private extension MakeSetBankDefaultMappingError {
