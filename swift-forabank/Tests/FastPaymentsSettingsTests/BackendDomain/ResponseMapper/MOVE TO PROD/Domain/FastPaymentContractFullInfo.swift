@@ -1,11 +1,11 @@
 //
-//  FastPaymentContractFullInfoTypeDTO.swift
-//  
+//  FastPaymentContractFullInfo.swift
+//
 //
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
-struct FastPaymentContractFullInfoTypeDTO: Equatable {
+struct FastPaymentContractFullInfo: Equatable {
     
     let accountAttribute: AccountAttribute
     let clientInfo: ClientInfo

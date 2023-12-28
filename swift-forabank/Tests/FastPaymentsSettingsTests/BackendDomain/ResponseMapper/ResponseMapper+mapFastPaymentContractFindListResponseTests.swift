@@ -105,7 +105,7 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
     }
 }
 
-private extension FastPaymentContractFullInfoTypeDTO {
+private extension FastPaymentContractFullInfo {
     
     static let a1: Self = .init(
         accountAttribute: .init(

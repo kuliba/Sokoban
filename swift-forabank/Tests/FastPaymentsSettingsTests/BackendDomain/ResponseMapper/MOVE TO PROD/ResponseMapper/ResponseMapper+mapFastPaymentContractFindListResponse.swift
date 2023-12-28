@@ -10,7 +10,7 @@ import Foundation
 
 extension ResponseMapper {
     
-    typealias FastPaymentContractFindListResult = Result<FastPaymentContractFullInfoTypeDTO?, MappingError>
+    typealias FastPaymentContractFindListResult = Result<FastPaymentContractFullInfo?, MappingError>
     
     static func mapFastPaymentContractFindListResponse(
         _ data: Data,
@@ -22,7 +22,7 @@ extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> FastPaymentContractFullInfoTypeDTO? {
+    ) throws -> FastPaymentContractFullInfo? {
         
         data.first?.dto
     }
@@ -35,7 +35,7 @@ private extension ResponseMapper {
 
 private extension ResponseMapper._DTO {
     
-    var dto: FastPaymentContractFullInfoTypeDTO? {
+    var dto: FastPaymentContractFullInfo? {
         
         guard
             let accountAttribute = fastPaymentContractAccountAttributeList.first?.dto,
@@ -113,7 +113,7 @@ private extension ResponseMapper {
 
 private extension ResponseMapper._DTO._AccountAttribute {
     
-    var dto: FastPaymentContractFullInfoTypeDTO.AccountAttribute {
+    var dto: FastPaymentContractFullInfo.AccountAttribute {
         
         .init(
             accountID: accountID,
@@ -127,7 +127,7 @@ private extension ResponseMapper._DTO._AccountAttribute {
 
 private extension ResponseMapper._DTO._ContractAttribute {
     
-    var dto: FastPaymentContractFullInfoTypeDTO.ContractAttribute {
+    var dto: FastPaymentContractFullInfo.ContractAttribute {
         
         .init(
             accountID: accountID,
@@ -146,7 +146,7 @@ private extension ResponseMapper._DTO._ContractAttribute {
 
 private extension ResponseMapper._DTO._ClientAttribute {
     
-    var dto: FastPaymentContractFullInfoTypeDTO.ClientInfo {
+    var dto: FastPaymentContractFullInfo.ClientInfo {
         
         .init(
             clientID: clientInfo.clientID,
@@ -166,7 +166,7 @@ private extension ResponseMapper._DTO._ClientAttribute {
 
 private extension ResponseMapper._DTO.Flag {
     
-    var dto: FastPaymentContractFullInfoTypeDTO.Flag {
+    var dto: FastPaymentContractFullInfo.Flag {
         
         switch self {
         case .yes:   return .yes
