@@ -114,6 +114,17 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
     }
         
+    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnNilFPSCFLResponse() throws {
+        
+        let (sut, _, _, getDefaultAndConsentSpy) = makeSUT()
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        
+        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNil(sut.fpsCFLResponse)
+    }
+        
     func test_init_shouldNotSetDestination() throws {
         
         let (sut, _,_,_) = makeSUT()
@@ -213,7 +224,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     
     func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnErrorFPSCFLResponse() throws {
         
-        let (sut, findListSpy, _, _) = makeSUT()
+        let (sut, findListSpy, _,_) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         findListSpy.emitAndWait(.fixedError)
         
@@ -225,6 +236,22 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             "Превышено время ожидания.\nПопробуйте позже.",
             nil
         ])
+    }
+    
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnNilFPSCFLResponse() throws {
+        
+        let (sut, _,_,_) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        try sut.tapFastPaymentsSettingsAndWait()
+        try sut.tapPrimaryAlertButtonAndWait()
+        
+        XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
+            nil,
+            "Превышено время ожидания.\nПопробуйте позже.",
+            nil
+        ])
+        XCTAssertNil(sut.fpsCFLResponse)
     }
     
     // MARK: - Helpers
@@ -270,6 +297,8 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         trackForMemoryLeaks(responseSpy, file: file, line: line)
         trackForMemoryLeaks(getDefaultAndConsentSpy, file: file, line: line)
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
         return (sut, findListSpy, responseSpy, getDefaultAndConsentSpy)
     }
     
