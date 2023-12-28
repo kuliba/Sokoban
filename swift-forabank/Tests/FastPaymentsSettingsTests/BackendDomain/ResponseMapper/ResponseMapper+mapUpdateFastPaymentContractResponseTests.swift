@@ -16,7 +16,7 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> UpdateFastPaymentContractResult {
         
-        map(data, httpURLResponse, map: map)
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(

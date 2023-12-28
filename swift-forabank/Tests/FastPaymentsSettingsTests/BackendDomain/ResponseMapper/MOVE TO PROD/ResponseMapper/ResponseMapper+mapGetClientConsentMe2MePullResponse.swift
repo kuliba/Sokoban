@@ -17,7 +17,7 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> GetClientConsentMe2MePullResult {
         
-        map(data, httpURLResponse, map: map)
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(

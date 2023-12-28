@@ -17,7 +17,7 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> GetBankDefaultResult {
         
-        map(data, httpURLResponse, map: map)
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(

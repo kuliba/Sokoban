@@ -14,7 +14,7 @@ extension ResponseMapper {
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
-        map: (D) throws -> T
+        mapOrThrow: (D) throws -> T
     ) -> Result<T, MappingError> {
         
         do {
@@ -23,7 +23,7 @@ extension ResponseMapper {
             
             switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
             case let (200, .none, .some(data)):
-                return try .success(map(data))
+                return try .success(mapOrThrow(data))
                 
             case let (_, .some(errorMessage), .none):
                 return .failure(.server(
