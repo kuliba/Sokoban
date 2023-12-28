@@ -32,7 +32,7 @@ extension ResponseMapper {
                 ))
                 
             default:
-                throw InvalidResponseError()
+                throw InvalidResponse()
             }
             
         } catch {
@@ -43,7 +43,7 @@ extension ResponseMapper {
         }
     }
     
-    private struct InvalidResponseError: Error {}
+    private struct InvalidResponse: Error {}
     
     private struct _Response<T: Decodable>: Decodable {
         
