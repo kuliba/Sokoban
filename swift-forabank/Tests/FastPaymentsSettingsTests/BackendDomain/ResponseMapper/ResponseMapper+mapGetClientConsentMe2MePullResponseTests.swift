@@ -51,9 +51,10 @@ final class ResponseMapper_mapGetClientConsentMe2MePullResponseTests: XCTestCase
         )))
     }
     
-    func test_map_shouldDeliverServerErrorOnDataWithServerError() throws {
+    func test_map_shouldDeliverServerErrorOnDataWithServerErrorWithOkHTTPURLResponseStatusCode() throws {
         
-        let result = map(jsonWithServerError())
+        let okResponse = anyHTTPURLResponse(statusCode: 200)
+        let result = map(jsonWithServerError(), okResponse)
         
         assert(result, equals: .failure(.server(
             statusCode: 102,
@@ -61,6 +62,17 @@ final class ResponseMapper_mapGetClientConsentMe2MePullResponseTests: XCTestCase
         )))
     }
     
+    func test_map_shouldDeliverServerErrorOnDataWithServerErrorWithNonOkHTTPURLResponseStatusCode() throws {
+        
+        let nonOkResponse = anyHTTPURLResponse(statusCode: 400)
+        let result = map(jsonWithServerError(), nonOkResponse)
+        
+        assert(result, equals: .failure(.server(
+            statusCode: 102,
+            errorMessage: "Возникла техническая ошибка"
+        )))
+    }
+
     func test_map_shouldDeliverInvalidOnNonOKHTTPURLResponseStatusCode() throws {
         
         let statusCode = 400
