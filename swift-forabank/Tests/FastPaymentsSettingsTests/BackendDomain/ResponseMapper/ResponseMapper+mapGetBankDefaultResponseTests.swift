@@ -86,10 +86,10 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
         assert(result, equals: .success(.c2))
     }
     
-    func test_map_shouldDeliverLimitErrorOnSpecialMessage_c3() throws {
+    func test_map_shouldDeliverLimitErrorOnSpecificMessage_c3() throws {
         
-        let specialMessageData = Data(jsonString_c3.utf8)
-        let result = map(specialMessageData)
+        let specificMessageData = Data(jsonString_c3.utf8)
+        let result = map(specificMessageData)
         
         assert(result, equals: .failure(.limit(errorMessage: limitErrorMessage)))
     }

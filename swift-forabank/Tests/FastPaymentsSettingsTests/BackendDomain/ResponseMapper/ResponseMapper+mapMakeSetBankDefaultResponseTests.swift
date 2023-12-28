@@ -7,9 +7,16 @@
 
 import Foundation
 
+public enum MakeSetBankDefaultMappingError: Error, Equatable {
+    
+    case invalid(statusCode: Int, data: Data)
+    case retry(errorMessage: String)
+    case server(statusCode: Int, errorMessage: String)
+}
+
 extension ResponseMapper {
     
-    typealias MakeSetBankDefaultResponseResult = Result<Int, MappingError>
+    typealias MakeSetBankDefaultResponseResult = Result<Void, MakeSetBankDefaultMappingError>
     
     static func mapMakeSetBankDefaultResponseResponse(
         _ data: Data,
@@ -17,21 +24,42 @@ extension ResponseMapper {
     ) -> MakeSetBankDefaultResponseResult {
         
         map(data, httpURLResponse, mapOrThrow: map)
+            .mapError(MakeSetBankDefaultMappingError.init(error:))
     }
     
     private static func map(
         _ data: _Data
-    ) throws -> Int {
+    ) throws -> Void {
         
-        throw anyError("unimplemented")
+        if data != nil { throw InvalidResponse() }
+    }
+    
+    private struct InvalidResponse: Error {}
+    
+    private typealias _Data = Data?
+}
+
+private extension MakeSetBankDefaultMappingError {
+    
+    init(error: MappingError) {
+        
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .server(_, .retryErrorMessage):
+            self = .retry(errorMessage: .retryErrorMessage)
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        }
     }
 }
 
-private extension ResponseMapper {
+private extension String {
     
-    struct _Data: Decodable {
-        
-    }
+    static let retryErrorMessage = "Введен некорректный код. Попробуйте еще раз."
 }
 
 import FastPaymentsSettings
@@ -72,7 +100,7 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
             errorMessage: "Возникла техническая ошибка"
         )))
     }
-
+    
     func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCode() throws {
         
         let statusCode = 400
@@ -98,6 +126,23 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
             data: badData
         )))
     }
+    
+    func test_map_shouldDeliverVoidOnOkHTTPURLResponseStatusCodeWithValidData_g1() throws {
+        
+        let validData = Data(jsonString_g1.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(()))
+    }
+    
+    func test_map_shouldDeliverRetryErrorOnSpecificMessage_g3() throws {
+        
+        let SpecificMessageData = Data(jsonString_g2.utf8)
+        let result = map(SpecificMessageData)
+        
+        assert(result, equals: .failure(.retry(errorMessage: retryErrorMessage)))
+    }
+    
     // MARK: - Helpers
     
     private func map(
@@ -107,4 +152,22 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
         
         ResponseMapper.mapMakeSetBankDefaultResponseResponse(data, httpURLResponse)
     }
+    
+    private let retryErrorMessage = "Введен некорректный код. Попробуйте еще раз."
 }
+
+private let jsonString_g1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": null
+}
+"""
+
+private let jsonString_g2 = """
+{
+  "statusCode": 102,
+  "errorMessage": "Введен некорректный код. Попробуйте еще раз.",
+  "data": null
+}
+"""
