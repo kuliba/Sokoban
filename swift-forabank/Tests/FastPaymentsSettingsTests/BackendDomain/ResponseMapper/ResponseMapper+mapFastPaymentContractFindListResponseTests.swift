@@ -73,7 +73,7 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
         )))
     }
     
-    func test_map_shouldDeliverInvalidOnNonOKHTTPURLResponseStatusCode() throws {
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCode() throws {
         
         let statusCode = 400
         let data = anyData()
