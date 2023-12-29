@@ -5,6 +5,7 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
+import LandingUIComponent
 import SwiftUI
 import Presentation
 import ManageSubscriptionsUI
@@ -22,125 +23,20 @@ struct UserAccountView: View {
                 
                 avatarView
                 
-                ForEach(viewModel.sections) { section in
-                    
-                    switch section {
-                        
-                    case let sectionViewModel as UserAccountContactsView.ViewModel:
-                        UserAccountContactsView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountPaymentsView.ViewModel:
-                        UserAccountPaymentsView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountSecurityView.ViewModel:
-                        UserAccountSecurityView(viewModel: sectionViewModel)
-                        
-                    case let sectionViewModel as UserAccountDocumentsView.ViewModel:
-                        UserAccountDocumentsView(viewModel: sectionViewModel)
-                        
-                    default:
-                        EmptyView()
-                    }
-                    
-                }
+                ForEach(viewModel.sections, content: sectionView)
                 
-                if let button = viewModel.exitButton {
-                    AccountCellFullButtonView(viewModel: button)
-                        .padding(.horizontal, 20)
-                }
-                
-                if let button = viewModel.deleteAccountButton {
-                    AccountCellFullButtonWithInfoView(viewModel: button)
-                        .padding(.horizontal, 20)
-                }
-                
-                if let version = viewModel.appVersionFull {
-                    
-                    Text(version)
-                        .foregroundColor(Color.textPlaceholder)
-                        .lineLimit(1)
-                        .font(.textH4R16240())
-                }
+                exitButton
+                deleteAccountButton
+                appVersionFullView
             }
-            
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case .userDocument(let userDocumentViewModel):
-                        UserDocumentView(viewModel: userDocumentViewModel)
-                        
-                    case let .fastPaymentSettings(meToMeSettingsViewModel):
-                        MeToMeSettingView(viewModel: meToMeSettingsViewModel)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("", displayMode: .inline)
-                        
-                    case let .deleteUserInfo(deleteInfoViewModel):
-                        DeleteAccountView(viewModel: deleteInfoViewModel)
-                            .navigationBarBackButtonHidden(true)
-                        
-                    case .imagePicker(let imagePicker):
-                        ImagePicker(viewModel: imagePicker)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("Выберите фото", displayMode: .inline)
-                        
-                    case let .managingSubscription(subscriptionViewModel):
-                        ManagingSubscriptionView(
-                            subscriptionViewModel: subscriptionViewModel,
-                            configurator: .init(
-                                titleFont: .textBodyMR14180(),
-                                titleColor: .textPlaceholder,
-                                nameFont: .textH4M16240(),
-                                nameColor: .mainColorsBlack,
-                                descriptionFont: .textBodyMR14180()
-                            ),
-                            footerImage: Image.ic72Sbp,
-                            searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
-                        )
-                        
-                    case let .successView(successViewModel):
-                        PaymentsSuccessView(viewModel: successViewModel)
-                    }
-                }
-            }
+            .navigationDestination(
+                item: $viewModel.link,
+                content: destinationView(link:)
+            )
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.sheetType {
-                
-            case let .userDocument(userDocumentViewModel):
-                UserDocumentView(viewModel: userDocumentViewModel)
-                
-            }
-        })
-        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
-            switch sheet.sheetType {
-                
-            case let .deleteInfo(model):
-                UserAccountExitInfoView(viewModel: model)
-                
-            case let .inn(model):
-                UserAccountDocumentInfoView(viewModel: model)
-                
-            case let .camera(model):
-                UserAccountPhotoSourceView(viewModel: model)
-                
-            case let .avatarOptions(optionViewModel):
-                OptionsButtonsViewComponent(viewModel: optionViewModel)
-                
-            case let .imageCapture(imageCapture):
-                ImageCapture(viewModel: imageCapture)
-                    .edgesIgnoringSafeArea(.all)
-                    .navigationBarBackButtonHidden(false)
-                
-            case let .sbpay(viewModel):
-                SbpPayView(viewModel: viewModel)
-            }
-        })
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .sheet(item: $viewModel.sheet, content: sheetView)
+        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .textfieldAlert(alert: $viewModel.textFieldAlert)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -190,6 +86,147 @@ struct UserAccountView: View {
                 }
                 .offset(x: 32, y: -32)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: UserAccountViewModel.AccountSectionViewModel
+    ) -> some View {
+        
+        switch section {
+            
+        case let sectionViewModel as UserAccountContactsView.ViewModel:
+            UserAccountContactsView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountPaymentsView.ViewModel:
+            UserAccountPaymentsView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountSecurityView.ViewModel:
+            UserAccountSecurityView(viewModel: sectionViewModel)
+            
+        case let sectionViewModel as UserAccountDocumentsView.ViewModel:
+            UserAccountDocumentsView(viewModel: sectionViewModel)
+            
+        default:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    private var exitButton: some View {
+        
+        viewModel.exitButton.map {
+            
+            AccountCellFullButtonView(viewModel: $0)
+                .padding(.horizontal, 20)
+        }
+    }
+    
+    @ViewBuilder
+    private var deleteAccountButton: some View {
+        
+        viewModel.deleteAccountButton.map {
+            
+            AccountCellFullButtonWithInfoView(viewModel: $0)
+                .padding(.horizontal, 20)
+        }
+    }
+    
+    @ViewBuilder
+    private var appVersionFullView: some View {
+        
+        viewModel.appVersionFull.map {
+            
+            Text($0)
+                .foregroundColor(Color.textPlaceholder)
+                .lineLimit(1)
+                .font(.textH4R16240())
+        }
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        link: UserAccountViewModel.Link
+    ) -> some View {
+        
+        switch link {
+            
+        case let .userDocument(userDocumentViewModel):
+            UserDocumentView(viewModel: userDocumentViewModel)
+            
+        case let .fastPaymentSettings(meToMeSettingsViewModel):
+            MeToMeSettingView(viewModel: meToMeSettingsViewModel)
+                .navigationBarBackButtonHidden(false)
+                .navigationBarTitle("", displayMode: .inline)
+            
+        case let .deleteUserInfo(deleteInfoViewModel):
+            DeleteAccountView(viewModel: deleteInfoViewModel)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .imagePicker(imagePicker):
+            ImagePicker(viewModel: imagePicker)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarBackButtonHidden(false)
+                .navigationBarTitle("Выберите фото", displayMode: .inline)
+            
+        case let .managingSubscription(subscriptionViewModel):
+            ManagingSubscriptionView(
+                subscriptionViewModel: subscriptionViewModel,
+                configurator: .init(
+                    titleFont: .textBodyMR14180(),
+                    titleColor: .textPlaceholder,
+                    nameFont: .textH4M16240(),
+                    nameColor: .mainColorsBlack,
+                    descriptionFont: .textBodyMR14180()
+                ),
+                footerImage: Image.ic72Sbp,
+                searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
+            )
+            
+        case let .successView(successViewModel):
+            PaymentsSuccessView(viewModel: successViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        sheet: UserAccountViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.sheetType {
+            
+        case let .userDocument(userDocumentViewModel):
+            UserDocumentView(viewModel: userDocumentViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetView(
+        sheet: UserAccountViewModel.BottomSheet
+    ) -> some View { 
+        
+        switch sheet.sheetType {
+            
+        case let .deleteInfo(model):
+            UserAccountExitInfoView(viewModel: model)
+            
+        case let .inn(model):
+            UserAccountDocumentInfoView(viewModel: model)
+            
+        case let .camera(model):
+            UserAccountPhotoSourceView(viewModel: model)
+            
+        case let .avatarOptions(optionViewModel):
+            OptionsButtonsViewComponent(viewModel: optionViewModel)
+            
+        case let .imageCapture(imageCapture):
+            ImageCapture(viewModel: imageCapture)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarBackButtonHidden(false)
+            
+        case let .sbpay(viewModel):
+            SbpPayView(viewModel: viewModel)
         }
     }
 }

@@ -21,8 +21,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published var link: Link?
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
@@ -635,7 +634,7 @@ extension UserAccountViewModel {
         }
     }
     
-    enum Link {
+    enum Link: Hashable, Identifiable {
         
         case userDocument(UserDocumentViewModel)
         case fastPaymentSettings(MeToMeSettingView.ViewModel)
@@ -643,6 +642,44 @@ extension UserAccountViewModel {
         case imagePicker(ImagePickerViewModel)
         case managingSubscription(SubscriptionsViewModel)
         case successView(PaymentsSuccessViewModel)
+        
+        static func == (lhs: Link, rhs: Link) -> Bool {
+            
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id.hashValue)
+        }
+        
+        var id: Case {
+            
+            switch self {
+            case .userDocument:
+                return .userDocument
+            case .fastPaymentSettings:
+                return .fastPaymentSettings
+            case .deleteUserInfo:
+                return .deleteUserInfo
+            case .imagePicker:
+                return .imagePicker
+            case .managingSubscription:
+                return .managingSubscription
+            case .successView:
+                return .successView
+            }
+        }
+        
+        enum Case: Hashable {
+            
+            case userDocument
+            case fastPaymentSettings
+            case deleteUserInfo
+            case imagePicker
+            case managingSubscription
+            case successView
+        }
     }
     
     struct Sheet: Identifiable {
