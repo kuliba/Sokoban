@@ -75,6 +75,19 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
         XCTAssertNoDiff(body.verificationCode, payload.rawValue)
     }
     
+    func test_makeRequest_shouldSetHTTPBody_JSON() throws {
+        
+        let payload = anyPayload()
+        let request = try makeRequest(payload: payload)
+        
+        try assertBody(of: request, hasJSON: """
+        {
+            "verificationCode": "\(payload.rawValue)"
+        }
+        """
+        )
+    }
+    
     // MARK: - Helpers
     
     private func makeRequest(

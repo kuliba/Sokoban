@@ -75,6 +75,19 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         XCTAssertNoDiff(body.phoneNumber, payload.rawValue)
     }
     
+    func test_makeRequest_shouldSetHTTPBody_JSON() throws {
+        
+        let phoneNumber = "987654321"
+        let request = try makeRequest(payload: .init(phoneNumber))
+        
+        try assertBody(of: request, hasJSON: """
+        {
+            "phoneNumber": "\(phoneNumber)"
+        }
+        """
+        )
+    }
+    
     // MARK: - Helpers
     
     private func makeRequest(
