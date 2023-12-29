@@ -175,6 +175,7 @@ struct UserAccountView: View {
                 
             case let .new(fastPaymentsSettingsViewModel):
                 Text("TBD: FastPaymentsSettingsView with \(String(describing: fastPaymentsSettingsViewModel))")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationBar(with: .fastPayments(
                         action: viewModel.dismissDestination
                     ))

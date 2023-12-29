@@ -20,7 +20,7 @@ extension FastPaymentsServices {
     typealias GetFastPaymentContractFindList = () -> FPSCFLResponsePublisher
     
 #warning("change to typed Error")
-    typealias GetDefaultAndConsentResult = Result<DefaultForaBank, Error>
+    typealias GetDefaultAndConsentResult = Result<DefaultAndConsent, Error>
     typealias GetDefaultAndConsentCompletion = (GetDefaultAndConsentResult) -> Void
     typealias GetDefaultAndConsent = (Phone, @escaping GetDefaultAndConsentCompletion) -> Void
     
@@ -48,5 +48,14 @@ extension FastPaymentsServices {
                 case inactive
             }
         }
+    }
+    
+    struct DefaultAndConsent {
+        
+        let consentList: [BankID]
+        let defaultForaBank: DefaultForaBank
+        
+        typealias BankID = Tagged<_BankID, String>
+        enum _BankID {}
     }
 }
