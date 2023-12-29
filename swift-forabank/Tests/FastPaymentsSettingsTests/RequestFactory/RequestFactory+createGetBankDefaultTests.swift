@@ -41,41 +41,41 @@ import XCTest
 
 final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
-    func test_makeRequest_shouldSetURL() throws {
+    func test_createRequest_shouldSetURL() throws {
         
         let url = anyURL()
-        let request = try makeRequest(url: url)
+        let request = try createRequest(url: url)
         
         XCTAssertNoDiff(request.url, url)
     }
     
-    func test_makeRequest_shouldSetHTTPMethodToPOST() throws {
+    func test_createRequest_shouldSetHTTPMethodToPOST() throws {
         
-        let request = try makeRequest()
+        let request = try createRequest()
         
         XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
-    func test_makeRequest_shouldSetCachePolicy() throws {
+    func test_createRequest_shouldSetCachePolicy() throws {
         
-        let request = try makeRequest()
+        let request = try createRequest()
         
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_makeRequest_shouldSetHTTPBody() throws {
+    func test_createRequest_shouldSetHTTPBody() throws {
         
         let payload = anyPayload()
-        let request = try makeRequest(payload: payload)
+        let request = try createRequest(payload: payload)
      
         let body = try request.decodedBody(as: Body.self)
         XCTAssertNoDiff(body.phoneNumber, payload.rawValue)
     }
     
-    func test_makeRequest_shouldSetHTTPBody_JSON() throws {
+    func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
         let phoneNumber = "987654321"
-        let request = try makeRequest(payload: .init(phoneNumber))
+        let request = try createRequest(payload: .init(phoneNumber))
         
         try assertBody(of: request, hasJSON: """
         {
@@ -87,7 +87,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeRequest(
+    private func createRequest(
         url: URL = anyURL(),
         payload: RequestFactory.PhoneNumber = .init(UUID().uuidString)
     ) throws -> URLRequest {

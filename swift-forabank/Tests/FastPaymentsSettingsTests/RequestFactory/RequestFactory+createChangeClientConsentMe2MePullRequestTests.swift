@@ -42,45 +42,45 @@ import XCTest
 
 final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTestCase {
     
-    func test_makeRequest_shouldSetURL() throws {
+    func test_createRequest_shouldSetURL() throws {
         
         let url = anyURL()
-        let request = try makeRequest(url: url)
+        let request = try createRequest(url: url)
         
         XCTAssertNoDiff(request.url, url)
     }
     
-    func test_makeRequest_shouldSetHTTPMethodToPOST() throws {
+    func test_createRequest_shouldSetHTTPMethodToPOST() throws {
         
-        let request = try makeRequest()
+        let request = try createRequest()
         
         XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
-    func test_makeRequest_shouldSetCachePolicy() throws {
+    func test_createRequest_shouldSetCachePolicy() throws {
         
-        let request = try makeRequest()
+        let request = try createRequest()
         
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_makeRequest_shouldSetHTTPBody() throws {
+    func test_createRequest_shouldSetHTTPBody() throws {
         
         let payload = anyPayload()
-        let request = try makeRequest(payload: payload)
+        let request = try createRequest(payload: payload)
         
         let body = try request.decodedBody(as: Body.self)
         XCTAssertNoDiff(body.payload, payload)
     }
     
-    func test_makeRequest_shouldSetHTTPBody_JSON() throws {
+    func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
         let id = UUID().uuidString
         let id2 = UUID().uuidString
         let id3 = UUID().uuidString
         let id4 = UUID().uuidString
         let payload = anyPayload([id, id2, id3, id4])
-        let request = try makeRequest(payload: payload)
+        let request = try createRequest(payload: payload)
         
         try assertBody(of: request, hasJSON: """
         {
@@ -97,7 +97,7 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
     
     // MARK: - Helpers
     
-    private func makeRequest(
+    private func createRequest(
         url: URL = anyURL(),
         payload: RequestFactory.BankIDList = [.init(UUID().uuidString)]
     ) throws -> URLRequest {

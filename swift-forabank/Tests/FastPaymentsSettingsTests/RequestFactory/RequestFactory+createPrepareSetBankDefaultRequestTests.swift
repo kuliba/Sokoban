@@ -21,38 +21,38 @@ import XCTest
 
 final class RequestFactory_createPrepareSetBankDefaultRequestTests: XCTestCase {
     
-    func test_makeRequest_shouldSetURL() {
+    func test_createRequest_shouldSetURL() {
         
         let url = anyURL()
-        let request = makeRequest(url: url)
+        let request = createRequest(url: url)
         
         XCTAssertNoDiff(request.url, url)
     }
     
-    func test_makeRequest_shouldSetHTTPMethodToGET() {
+    func test_createRequest_shouldSetHTTPMethodToGET() {
         
-        let request = makeRequest()
+        let request = createRequest()
         
         XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
-    func test_makeRequest_shouldSetCachePolicy() {
+    func test_createRequest_shouldSetCachePolicy() {
         
-        let request = makeRequest()
+        let request = createRequest()
         
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_makeRequest_shouldSetHTTPBodyToNil() throws {
+    func test_createRequest_shouldSetHTTPBodyToNil() throws {
         
-        let request = makeRequest()
+        let request = createRequest()
      
         XCTAssertNil(request.httpBody)
     }
     
     // MARK: - Helpers
     
-    private func makeRequest(
+    private func createRequest(
         url: URL = anyURL()
     ) -> URLRequest {
         
