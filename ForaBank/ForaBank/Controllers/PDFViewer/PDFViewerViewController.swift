@@ -28,6 +28,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         pdfView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
         self.view.addSubview(self.button)
         button.anchor(left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 48)
+        button.accessibilityIdentifier = "PDFViewSaveButton"
         
         guard  let pdfId = id else {
             return
@@ -98,6 +99,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
                     self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
                     self.pdfView.autoScales = true
                     self.pdfView.document = document
+                    self.pdfView.accessibilityIdentifier = "PDFView"
                 }
             }
         }.resume()
