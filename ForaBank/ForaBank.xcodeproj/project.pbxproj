@@ -468,6 +468,7 @@
 		2A3DB9B82B3EA304003080CC /* URLRequest+decodedBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DB9B72B3EA304003080CC /* URLRequest+decodedBody.swift */; };
 		2A3DB9BA2B3EA3AD003080CC /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DB9B92B3EA3AD003080CC /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift */; };
 		2A3DB9BC2B3EAFF6003080CC /* RequestFactory+createCreateFastPaymentContractRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DB9BB2B3EAFF5003080CC /* RequestFactory+createCreateFastPaymentContractRequestTests.swift */; };
+		2A3DB9BE2B3EB199003080CC /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DB9BD2B3EB199003080CC /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift */; };
 		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B152A47763000D8FE55 /* MosParkingView.swift */; };
@@ -2737,6 +2738,7 @@
 		2A3DB9B72B3EA304003080CC /* URLRequest+decodedBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+decodedBody.swift"; sourceTree = "<group>"; };
 		2A3DB9B92B3EA3AD003080CC /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createUpdateFastPaymentContractRequestTests.swift"; sourceTree = "<group>"; };
 		2A3DB9BB2B3EAFF5003080CC /* RequestFactory+createCreateFastPaymentContractRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateFastPaymentContractRequestTests.swift"; sourceTree = "<group>"; };
+		2A3DB9BD2B3EB199003080CC /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareSetBankDefaultRequestTests.swift"; sourceTree = "<group>"; };
 		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2A3F1B152A47763000D8FE55 /* MosParkingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingView.swift; sourceTree = "<group>"; };
 		2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapperTests.swift; sourceTree = "<group>"; };
@@ -5955,6 +5957,7 @@
 				2A3DB9B42B3E9F72003080CC /* RequestFactory+createGetBankDefaultTests.swift */,
 				2A3DB9B92B3EA3AD003080CC /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift */,
 				2A3DB9BB2B3EAFF5003080CC /* RequestFactory+createCreateFastPaymentContractRequestTests.swift */,
+				2A3DB9BD2B3EB199003080CC /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift */,
 			);
 			path = FastPayments;
 			sourceTree = "<group>";
@@ -14184,6 +14187,7 @@
 				83E2F6162A41A4A0000B64CF /* InfoProductViewModelTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
 				2A9E05472B3B4A6400463CE8 /* UserAccountViewModelFPSCFLResponseMappingTests.swift in Sources */,
+				2A3DB9BE2B3EB199003080CC /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift in Sources */,
 				2A8B173B2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift in Sources */,
 				2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
