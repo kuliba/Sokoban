@@ -146,13 +146,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PaymentsComponentsTests",
-        "name" : "PaymentsComponentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ServerAgentTests",
         "name" : "ServerAgentTests"
       }
@@ -236,14 +229,21 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "FastPaymentsSettingsTests",
         "name" : "FastPaymentsSettingsTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }

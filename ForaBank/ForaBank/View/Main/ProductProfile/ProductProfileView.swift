@@ -5,6 +5,7 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI

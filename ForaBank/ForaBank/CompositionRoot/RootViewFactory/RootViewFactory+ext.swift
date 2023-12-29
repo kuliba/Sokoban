@@ -6,6 +6,7 @@
 //
 
 import Combine
+import InfoComponent
 import SberQR
 import SwiftUI
 
@@ -20,7 +21,7 @@ extension RootViewFactory {
                     map: { info in
                         
                             .init(
-                                id: info.id,
+                                id: info.infoID,
                                 value: info.value,
                                 title: info.title,
                                 image: imageCache.imagePublisher(for: info.icon)
@@ -46,6 +47,18 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView
         )
+    }
+}
+
+private extension GetSberQRDataResponse.Parameter.Info {
+    
+    var infoID: InfoComponent.Info.ID {
+        
+        switch id {
+        case .amount:        return .amount
+        case .brandName:     return .brandName
+        case .recipientBank: return .recipientBank
+        }
     }
 }
 

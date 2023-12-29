@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
 import SwiftUI
 
 struct SberQRConfirmPaymentStateWrapperView: View {
@@ -49,7 +50,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
                     initialState: .fixedAmount(.preview)
                 ),
                 map: Info.preview,
-                config: .default
+                config: .preview
             )
             
             SberQRConfirmPaymentStateWrapperView(
@@ -57,7 +58,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
                     initialState: .editableAmount(.preview)
                 ),
                 map: Info.preview,
-                config: .default
+                config: .preview
             )
         }
     }

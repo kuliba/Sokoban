@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import PaymentComponents
 
 public final class SberQRConfirmPaymentStateEditableAmountReducer {
     
     public typealias State = SberQRConfirmPaymentState.EditableAmount
     public typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
-    public typealias ProductSelectReduce = (ProductSelect, SberQRConfirmPaymentEvent.ProductSelectEvent) -> ProductSelect
+    public typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect
     
     private let productSelectReduce: ProductSelectReduce
     

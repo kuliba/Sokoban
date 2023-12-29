@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import ProductSelectComponent
 import SberQR
 import XCTest
 

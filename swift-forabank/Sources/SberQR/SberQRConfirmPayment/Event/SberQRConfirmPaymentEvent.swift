@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PaymentComponents
 
 public enum SberQRConfirmPaymentEvent: Equatable {
     
@@ -25,11 +26,5 @@ public extension SberQRConfirmPaymentEvent {
     enum FixedAmount: Equatable {
         
         case productSelect(ProductSelectEvent)
-    }
-    
-    enum ProductSelectEvent: Equatable {
-        
-        case toggleProductSelect
-        case select(ProductSelect.Product.ID)
     }
 }
