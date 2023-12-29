@@ -1,0 +1,65 @@
+//
+//  RequestFactory+createGetC2BSubRequestTests.swift
+//  ForaBankTests
+//
+//  Created by Igor Malyarov on 29.12.2023.
+//
+
+import Foundation
+
+extension RequestFactory {
+    
+    static func createGetC2BSubRequest(
+        url: URL
+    ) -> URLRequest {
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return request
+    }
+}
+
+@testable import ForaBank
+import XCTest
+
+final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
+    
+    func test_makeRequest_shouldSetURL() {
+        
+        let url = anyURL()
+        let request = makeRequest(url: url)
+        
+        XCTAssertNoDiff(request.url, url)
+    }
+    
+    func test_makeRequest_shouldSetHTTPMethodToPOST() {
+        
+        let request = makeRequest()
+        
+        XCTAssertNoDiff(request.httpMethod, "POST")
+    }
+    
+    func test_makeRequest_shouldSetCachePolicy() {
+        
+        let request = makeRequest()
+        
+        XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
+    }
+    
+    func test_makeRequest_shouldSetHTTPBodyToNil() throws {
+        
+        let request = makeRequest()
+     
+        XCTAssertNil(request.httpBody)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeRequest(
+        url: URL = anyURL(string: "any-url")
+    ) -> URLRequest {
+        
+        RequestFactory.createGetC2BSubRequest(url: url)
+    }
+}
