@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.12.2023.
 //
 
+import ForaTools
 import SwiftUI
 
 public struct ProductCard: Equatable {
@@ -21,7 +22,7 @@ public struct ProductCard: Equatable {
     }
 }
 
-extension ProductCard {
+public extension ProductCard {
     
     init(product: ProductSelect.Product) {
         

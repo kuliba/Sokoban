@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 09.12.2023.
 //
 
+import ProductSelectComponent
+
 public extension SberQRConfirmPaymentViewModel {
     
     typealias GetProducts = () -> [ProductSelect.Product]

@@ -1,20 +1,10 @@
 //
 //  TextConfig.swift
-//  
 //
-//  Created by Igor Malyarov on 12.12.2023.
+//
+//  Created by Igor Malyarov on 22.12.2023.
 //
 
-import SwiftUI
+import ProductSelectComponent
 
-public struct TextConfig {
-    
-    let textFont: Font
-    let textColor: Color
-    
-    public init(textFont: Font, textColor: Color) {
-     
-        self.textFont = textFont
-        self.textColor = textColor
-    }
-}
+public typealias TextConfig = ProductSelectComponent.TextConfig

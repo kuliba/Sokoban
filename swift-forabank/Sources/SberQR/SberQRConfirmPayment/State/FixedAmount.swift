@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 17.12.2023.
 //
 
+import ProductSelectComponent
+
 public extension SberQRConfirmPaymentStateOf {
     
     struct FixedAmount {

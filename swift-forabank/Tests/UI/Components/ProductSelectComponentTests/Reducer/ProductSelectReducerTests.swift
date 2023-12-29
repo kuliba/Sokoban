@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import SberQR
+import ProductSelectComponent
 import XCTest
 
 final class ProductSelectReducerTests: XCTestCase {

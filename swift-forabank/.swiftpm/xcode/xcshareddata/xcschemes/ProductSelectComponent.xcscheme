@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1500"
+   LastUpgradeVersion = "1510"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ProductSelect"
-               BuildableName = "ProductSelect"
-               BlueprintName = "ProductSelect"
+               BlueprintIdentifier = "ProductSelectComponent"
+               BuildableName = "ProductSelectComponent"
+               BlueprintName = "ProductSelectComponent"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,22 +29,10 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/ProductSelect.xctestplan"
+            reference = "container:../ForaBank/ProductSelectComponent.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ProductSelectTests"
-               BuildableName = "ProductSelectTests"
-               BlueprintName = "ProductSelectTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -66,9 +54,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ProductSelect"
-            BuildableName = "ProductSelect"
-            BlueprintName = "ProductSelect"
+            BlueprintIdentifier = "ProductSelectComponent"
+            BuildableName = "ProductSelectComponent"
+            BlueprintName = "ProductSelectComponent"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

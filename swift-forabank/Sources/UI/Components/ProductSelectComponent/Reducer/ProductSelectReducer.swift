@@ -10,7 +10,7 @@ import Foundation
 public final class ProductSelectReducer {
     
     public typealias State = ProductSelect
-    public typealias Event = SberQRConfirmPaymentEvent.ProductSelectEvent
+    public typealias Event = ProductSelectEvent
     
     public typealias GetProducts = () -> [ProductSelect.Product]
     

@@ -10,7 +10,7 @@ import SwiftUI
 public struct ProductSelectConfig {
     
     let amount: TextConfig
-    let card: Card
+    public let card: Card
     let chevronColor: Color
     let footer: TextConfig
     let header: TextConfig

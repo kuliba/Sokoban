@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ProductSelectComponent
 
 public extension SberQRConfirmPaymentState {
     

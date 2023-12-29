@@ -7,10 +7,18 @@
 
 import SwiftUI
 
-struct ProductCardView: View {
+public struct ProductCardView: View {
     
     let productCard: ProductCard
     let config: ProductCardConfig
+    
+    public init(
+        productCard: ProductCard,
+        config: ProductCardConfig
+    ) {
+        self.productCard = productCard
+        self.config = config
+    }
     
     private let cardSize = CGSize(width: 112, height: 71)
     private let logoSize = CGSize(width: 22, height: 36)
@@ -22,7 +30,7 @@ struct ProductCardView: View {
         (cardSize.height - shadowSize.height) + 4
     }
     
-    var body: some View {
+    public var body: some View {
         
         ZStack(alignment: .top) {
             

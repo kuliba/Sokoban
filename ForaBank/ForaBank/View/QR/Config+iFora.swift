@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
+import ProductSelectComponent
 import SberQR
 
 extension SberQR.Config {
@@ -65,7 +66,7 @@ private extension SberQR.InfoConfig {
     )
 }
 
-private extension SberQR.ProductSelectConfig {
+private extension ProductSelectComponent.ProductSelectConfig {
     
     static let iFora: Self = .init(
         amount: .secondary,

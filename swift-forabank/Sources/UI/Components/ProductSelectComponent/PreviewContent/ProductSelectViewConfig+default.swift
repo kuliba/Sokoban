@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension ProductSelectConfig {
+public extension ProductSelectConfig {
     
     static let `default`: Self = .init(
         amount: .init(

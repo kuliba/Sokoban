@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import ProductSelectComponent
 import SwiftUI
 
 struct FixedAmountSberQRConfirmPaymentView: View {
@@ -41,7 +42,12 @@ struct FixedAmountSberQRConfirmPaymentView: View {
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
                 config: config.productSelect
-            )
+            ) {
+                ProductCardView(
+                    productCard: .init(product: $0),
+                    config: config.productSelect.card.productCardConfig
+                )
+            }
             
             Group {
                 

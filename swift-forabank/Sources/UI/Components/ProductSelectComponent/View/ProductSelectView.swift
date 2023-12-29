@@ -7,17 +7,30 @@
 
 import SwiftUI
 
-struct ProductSelectView: View {
-    
-    typealias Event = SberQRConfirmPaymentEvent.ProductSelectEvent
+public struct ProductSelectView<ProductView: View>: View {
     
     let state: ProductSelect
-    let event: (Event) -> Void
+    let event: (ProductSelectEvent) -> Void
     let config: ProductSelectConfig
+    let productView: (ProductSelect.Product) -> ProductView
+    #warning("move cardSize into config")
+    private let cardSize: CGSize
     
-    private let cardSize = CGSize(width: 112, height: 71)
+    public init(
+        state: ProductSelect,
+        event: @escaping (ProductSelectEvent) -> Void,
+        config: ProductSelectConfig,
+        cardSize: CGSize = .init(width: 112, height: 71),
+        productView: @escaping (ProductSelect.Product) -> ProductView
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.cardSize = cardSize
+        self.productView = productView
+    }
     
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: 10) {
             
@@ -92,22 +105,19 @@ struct ProductSelectView: View {
             
             HStack(spacing: 10) {
                 
-                ForEach(products, content: productCardView)
+                ForEach(products, content: _productView)
             }
             .padding(.horizontal)
             .padding(.bottom, 8)
         }
     }
     
-    private func productCardView(
+    private func _productView(
         product: ProductSelect.Product
     ) -> some View {
         
-        ProductCardView(
-            productCard: .init(product: product),
-            config: config.card.productCardConfig
-        )
-        .onTapGesture { event(.select(product.id)) }
+        productView(product)
+            .onTapGesture { event(.select(product.id)) }
     }
     
     private func chevron() -> some View {
@@ -142,7 +152,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         @State private var state: ProductSelect
         
-        private let reduce: (ProductSelectReducer.State, ProductSelectReducer.Event) -> ProductSelectReducer.State
+        private let reduce: (ProductSelect, ProductSelectEvent) -> ProductSelect
         
         init(_ state: ProductSelect) {
             
@@ -158,7 +168,12 @@ struct ProductSelectView_Previews: PreviewProvider {
                 state: state,
                 event: { state = reduce(state, $0) },
                 config: .default
-            )
+            ) {
+                ProductCardView(
+                    productCard: .init(product: $0),
+                    config: .default
+                )
+            }
             .border(.red)
         }
     }
