@@ -57,15 +57,11 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetHTTPBody() throws {
         
-        let payload = anyPhoneNumber()
+        let payload = anyPayload()
         let request = try makeRequest(payload: payload)
      
-        let data = try XCTUnwrap(request.httpBody)
-        let decodedRequest = try JSONDecoder().decode(PhoneNumber.self, from: data)
-        let body = try request.decodedBody(as: PhoneNumber.self)
+        let body = try request.decodedBody(as: Payload.self)
         XCTAssertNoDiff(body.phoneNumber, payload.rawValue)
-        
-        XCTAssertNoDiff(decodedRequest.phoneNumber, payload.rawValue)
     }
     
     // MARK: - Helpers
@@ -81,14 +77,14 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         )
     }
     
-    private func anyPhoneNumber(
+    private func anyPayload(
         _ value: String = UUID().uuidString
     ) -> RequestFactory.PhoneNumber {
         
         .init(value)
     }
     
-    private struct PhoneNumber: Decodable {
+    private struct Payload: Decodable {
         
         let phoneNumber: String
     }
