@@ -23,7 +23,7 @@ public extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> MakeSetBankDefaultResponseResult {
         
-        mapToOk(data, httpURLResponse)
+        mapToVoid(data, httpURLResponse)
             .mapError(MakeSetBankDefaultMappingError.init(error:))
     }
 }

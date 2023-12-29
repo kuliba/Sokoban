@@ -9,13 +9,13 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias PrepareSetBankDefaultResult = OkMappingResult
+    typealias PrepareSetBankDefaultResult = VoidMappingResult
     
     static func mapPrepareSetBankDefaultResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> PrepareSetBankDefaultResult {
         
-        mapToOk(data, httpURLResponse)
+        mapToVoid(data, httpURLResponse)
     }
 }

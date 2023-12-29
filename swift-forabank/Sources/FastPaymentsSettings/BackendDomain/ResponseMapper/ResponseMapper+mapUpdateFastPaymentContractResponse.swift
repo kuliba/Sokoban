@@ -9,13 +9,13 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias UpdateFastPaymentContractResult = OkMappingResult
+    typealias UpdateFastPaymentContractResult = VoidMappingResult
     
     static func mapUpdateFastPaymentContractResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> UpdateFastPaymentContractResult {
         
-        mapToOk(data, httpURLResponse)
+        mapToVoid(data, httpURLResponse)
     }
 }

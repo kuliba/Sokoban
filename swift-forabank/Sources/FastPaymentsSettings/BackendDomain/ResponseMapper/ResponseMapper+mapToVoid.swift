@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapVoid.swift
+//  ResponseMapper+mapToVoid.swift
 //
 //
 //  Created by Igor Malyarov on 28.12.2023.
@@ -9,12 +9,12 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias OkMappingResult = Result<Void, MappingError>
+    typealias VoidMappingResult = Result<Void, MappingError>
     
-    static func mapToOk(
+    static func mapToVoid(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> OkMappingResult {
+    ) -> VoidMappingResult {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
