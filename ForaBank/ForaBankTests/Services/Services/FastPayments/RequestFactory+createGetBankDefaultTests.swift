@@ -19,7 +19,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.httpBody = try JSONSerialization.data(withJSONObject: [
             "phoneNumber": payload.rawValue
         ] as [String: String])
@@ -41,11 +41,11 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         XCTAssertNoDiff(request.url, url)
     }
     
-    func test_makeRequest_shouldSetHTTPMethodToGET() throws {
+    func test_makeRequest_shouldSetHTTPMethodToPOST() throws {
         
         let request = try makeRequest()
         
-        XCTAssertNoDiff(request.httpMethod, "GET")
+        XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
     func test_makeRequest_shouldSetCachePolicy() throws {
