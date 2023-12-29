@@ -47,6 +47,8 @@ let package = Package(
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        // UI Components
+        .productSelect,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -130,6 +132,9 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        // UI Components
+        .productSelect,
+        .productSelectTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -292,6 +297,15 @@ private extension Product {
         name: .uiKitHelpers,
         targets: [
             .uiKitHelpers,
+        ]
+    )
+    
+    // MARK: - UI Components
+    
+    static let productSelect = library(
+        name: .productSelect,
+        targets: [
+            .productSelect,
         ]
     )
     
@@ -915,6 +929,22 @@ private extension Target {
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
+    // MARK: - UI Components
+
+    static let productSelect = target(
+        name: .productSelect,
+        path: "Sources/UI/Components/\(String.productSelect)"
+
+    )
+    static let productSelectTests = testTarget(
+        name: .productSelectTests,
+        dependencies: [
+            .productSelect
+        ],
+        path: "Tests/UI/Components/\(String.productSelectTests)"
+
+    )
+
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -1048,6 +1078,12 @@ private extension Target.Dependency {
         name: .uiKitHelpers
     )
     
+    // MARK: - UI Components
+
+    static let productSelect = byName(
+        name: .productSelect
+    )
+    
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1178,6 +1214,11 @@ private extension String {
     
     static let uiKitHelpers = "UIKitHelpers"
     
+    // MARK: - UI Components
+
+    static let productSelect = "ProductSelect"
+    static let productSelectTests = "ProductSelectTests"
+
     // MARK: - Infra
     
     static let fetcher = "Fetcher"

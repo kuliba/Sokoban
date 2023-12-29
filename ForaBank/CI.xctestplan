@@ -240,6 +240,27 @@
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectTests",
+        "name" : "ProductSelectTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductSelectTests",
+        "name" : "ProductSelectTests"
+      }
     }
   ],
   "version" : 1

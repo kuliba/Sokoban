@@ -751,7 +751,6 @@
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
 		2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */; };
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
-		2AF543252B0B374000A0C2E6 /* SberQRFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
 		2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */; };
 		2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F2F4329AE338E0054B920 /* MCError.swift */; };
@@ -2846,6 +2845,7 @@
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
 		2A84C4A42B25D90900F314BD /* sberQRProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sberQRProducts.swift; sourceTree = "<group>"; };
 		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
+		2A85CBC52B35A3C2002A3D28 /* ProductSelect.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductSelect.xctestplan; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
 		2A872E8E2B00DE50007A8E72 /* SessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCode.swift; sourceTree = "<group>"; };
 		2A872E902B00DE6C007A8E72 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
@@ -3006,7 +3006,6 @@
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
-		2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRFeatureView.swift; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WIPTests.xctestplan; sourceTree = "<group>"; };
@@ -6927,16 +6926,6 @@
 			path = RootViewFactory;
 			sourceTree = "<group>";
 		};
-		2AF543222B0A5BF000A0C2E6 /* SberQRFeature */ = {
-			isa = PBXGroup;
-			children = (
-				2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */,
-				2A00058A2B0B66290057E578 /* SberQRFeatureViewModel.swift */,
-				2A0005882B0B66040057E578 /* SberQRFeatureRoute.swift */,
-			);
-			path = SberQRFeature;
-			sourceTree = "<group>";
-		};
 		501BCFC82936A23C003F81DF /* Promo */ = {
 			isa = PBXGroup;
 			children = (
@@ -10832,6 +10821,7 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
+				2A85CBC52B35A3C2002A3D28 /* ProductSelect.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */,
 				2A6AF2162AF8E52700655156 /* Fetcher.xctestplan */,
