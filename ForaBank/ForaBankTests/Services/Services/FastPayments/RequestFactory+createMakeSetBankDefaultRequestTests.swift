@@ -20,11 +20,22 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "verificationCode": payload.rawValue
-        ] as [String: String])
+        request.httpBody = try payload.httpBody
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
+    }
+}
+
+private extension RequestFactory.VerificationCode {
+    
+    var httpBody: Data {
+        
+        get throws {
+            
+            try JSONSerialization.data(withJSONObject: [
+                "verificationCode": rawValue
+            ] as [String: String])
+        }
     }
 }
 

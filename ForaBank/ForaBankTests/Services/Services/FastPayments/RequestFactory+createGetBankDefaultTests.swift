@@ -20,11 +20,22 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "phoneNumber": payload.rawValue
-        ] as [String: String])
+        request.httpBody = try payload.httpBody
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
+    }
+}
+
+private extension RequestFactory.PhoneNumber {
+    
+    var httpBody: Data {
+        
+        get throws {
+            
+            try JSONSerialization.data(withJSONObject: [
+                "phoneNumber": rawValue
+            ] as [String: String])
+        }
     }
 }
 
