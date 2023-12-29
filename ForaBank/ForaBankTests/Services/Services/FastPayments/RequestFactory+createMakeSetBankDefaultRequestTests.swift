@@ -18,10 +18,8 @@ extension RequestFactory {
         payload: VerificationCode
     ) throws -> URLRequest {
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        var request = createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody
-        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
     }
 }

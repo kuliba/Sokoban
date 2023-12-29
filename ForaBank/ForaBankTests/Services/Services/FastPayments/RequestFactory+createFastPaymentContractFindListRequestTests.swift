@@ -13,10 +13,7 @@ extension RequestFactory {
         url: URL
     ) -> URLRequest {
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        return request
+        createEmptyRequest(.get, with: url)
     }
 }
 

@@ -13,10 +13,7 @@ extension RequestFactory {
         url: URL
     ) -> URLRequest {
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        return request
+        createEmptyRequest(.post, with: url)
     }
 }
 
@@ -37,7 +34,7 @@ final class RequestFactory_createPrepareSetBankDefaultRequestTests: XCTestCase {
         
         let request = makeRequest()
         
-        XCTAssertNoDiff(request.httpMethod, "GET")
+        XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
     func test_makeRequest_shouldSetCachePolicy() {
