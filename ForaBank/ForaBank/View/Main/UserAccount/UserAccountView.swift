@@ -339,6 +339,13 @@ extension FastPaymentsFactory {
             )
         })
     )
+    
+    static let new: Self = .init(
+        fastPaymentsViewModel: .new({ _ in
+            
+                .init()
+        })
+    )
 }
 
 extension FastPaymentsServices {

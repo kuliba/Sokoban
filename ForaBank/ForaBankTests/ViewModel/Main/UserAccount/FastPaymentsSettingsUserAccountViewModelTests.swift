@@ -162,7 +162,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings(.legacy)
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -195,7 +195,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings(.legacy)
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -210,7 +210,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings(.legacy)
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -282,7 +282,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
         let sut = SUT(
             model: model,
-            fastPaymentsFactory: .legacy,
+            fastPaymentsFactory: .new,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get,
                 getDefaultAndConsent: getDefaultAndConsentSpy.process(_:completion:)
