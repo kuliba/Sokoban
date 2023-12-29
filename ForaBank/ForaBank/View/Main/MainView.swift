@@ -436,10 +436,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}
@@ -449,10 +453,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}
@@ -462,10 +470,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}

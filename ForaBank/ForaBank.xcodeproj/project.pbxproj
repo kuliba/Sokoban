@@ -625,6 +625,8 @@
 		2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A95CBB22B2C818A0041F5EC /* TextFieldComponent */; };
 		2A9E05452B3B0F8B00463CE8 /* Model+getFastPaymentContractFindListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E05442B3B0F8B00463CE8 /* Model+getFastPaymentContractFindListTests.swift */; };
 		2A9E05472B3B4A6400463CE8 /* UserAccountViewModelFPSCFLResponseMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E05462B3B4A6400463CE8 /* UserAccountViewModelFPSCFLResponseMappingTests.swift */; };
+		2A9E05492B3B652700463CE8 /* FastPaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E05482B3B652700463CE8 /* FastPaymentsServices.swift */; };
+		2A9E054B2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E054A2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2A55F2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */; };
 		2AA429052AC1D54E00919C4A /* PaymentsProductViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */; };
@@ -2882,6 +2884,8 @@
 		2A95CBA92B2C80580041F5EC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A9E05442B3B0F8B00463CE8 /* Model+getFastPaymentContractFindListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getFastPaymentContractFindListTests.swift"; sourceTree = "<group>"; };
 		2A9E05462B3B4A6400463CE8 /* UserAccountViewModelFPSCFLResponseMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModelFPSCFLResponseMappingTests.swift; sourceTree = "<group>"; };
+		2A9E05482B3B652700463CE8 /* FastPaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsServices.swift; sourceTree = "<group>"; };
+		2A9E054A2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFastPaymentsServices.swift"; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelTests.swift; sourceTree = "<group>"; };
 		2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsProductViewModelTests.swift; sourceTree = "<group>"; };
@@ -6713,6 +6717,7 @@
 				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
+				2A9E054A2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
 				2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */,
@@ -8150,6 +8155,7 @@
 			isa = PBXGroup;
 			children = (
 				774A8B362865FCDD00B81140 /* UserAccountView.swift */,
+				2A9E05482B3B652700463CE8 /* FastPaymentsServices.swift */,
 				774A8B2F2865FCDD00B81140 /* UserDocumentView.swift */,
 				774A8B302865FCDD00B81140 /* AccountsViews */,
 				6828806E28A2D8F400186F32 /* DeleteAccountView.swift */,
@@ -13153,6 +13159,7 @@
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
+				2A9E054B2B3B6E7B00463CE8 /* Services+makeFastPaymentsServices.swift in Sources */,
 				2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
@@ -13276,6 +13283,7 @@
 				77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */,
 				774A8B5F2865FDAF00B81140 /* PaymentsInputViewComponent.swift in Sources */,
 				2A58FAAD2AD71DD600BD1967 /* RequestFactory+makeChangePINRequest.swift in Sources */,
+				2A9E05492B3B652700463CE8 /* FastPaymentsServices.swift in Sources */,
 				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
 				EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,

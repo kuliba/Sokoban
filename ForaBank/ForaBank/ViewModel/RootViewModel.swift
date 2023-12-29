@@ -26,6 +26,8 @@ class RootViewModel: ObservableObject, Resetable {
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -33,6 +35,8 @@ class RootViewModel: ObservableObject, Resetable {
     private var auithBinding: AnyCancellable?
     
     init(
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
@@ -41,6 +45,8 @@ class RootViewModel: ObservableObject, Resetable {
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction
     ) {
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -180,10 +186,12 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     link = .userAccount(.init(
-                        model: model, 
-                        getFastPaymentContractFindList: model.getFastPaymentContractFindList,
+                        model: model,
+                        fastPaymentsFactory: fastPaymentsFactory,
+                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
-                        dismissAction: {[weak self] in
+                        dismissAction: { [weak self] in
+                            
                             self?.action.send(RootViewModelAction.CloseLink())
                         },
                         action: UserAccountViewModelAction.OpenSbpPay(
@@ -378,47 +386,6 @@ class RootViewModel: ObservableObject, Resetable {
         
         return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
-}
-
-extension Model {
-    
-    // TODO: - Move to the Composition Root
-    func getFastPaymentContractFindList(
-    ) -> AnyPublisher<UserAccountViewModel.FPSCFLResponse, Never> {
-        
-        let request = ModelAction.FastPaymentSettings.ContractFindList.Request()
-        action.send(request)
-        
-        return fastPaymentContractFullInfo
-            .map(\.fpsCFLResponse)
-            .eraseToAnyPublisher()
-    }
-}
-
-extension Array where Element == FastPaymentContractFullInfoType {
-    
-    var fpsCFLResponse: UserAccountViewModel.FPSCFLResponse {
-        
-        guard let first else { return .missing }
-        
-        guard first.hasTripleYes else { return .inactive }
-        
-        return .active
-    }
-}
-
-private extension FastPaymentContractFullInfoType {
-    
-    var hasTripleYes: Bool {
-        
-        guard let accountAttributeList = fastPaymentContractAccountAttributeList?.first,
-              let contractAttributeList = fastPaymentContractAttributeList?.first
-        else { return false }
-        
-        return accountAttributeList.flagPossibAddAccount == .yes
-        && contractAttributeList.flagClientAgreementIn == .yes
-        && contractAttributeList.flagClientAgreementOut == .yes
-    }
 }
 
 private extension Model {
