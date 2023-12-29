@@ -18,6 +18,16 @@ struct UserAccountView: View {
         
     var body: some View {
         
+        ZStack {
+            
+            scrollView
+            
+            viewModel.spinner.map(SpinnerView.init(viewModel:))
+        }
+    }
+    
+    var scrollView: some View {
+        
         ScrollView(showsIndicators: false) {
             
             VStack(spacing: 20) {
@@ -275,7 +285,14 @@ extension UserAccountViewModel {
 extension FastPaymentsFactory {
     
     static let `default`: Self = .init(
-        makeFastPaymentsViewModel: FastPaymentsViewModel.init
+        makeFastPaymentsViewModel: {
+            
+            MeToMeSettingView.ViewModel(
+                model: $0,
+                newModel: .emptyMock,
+                closeAction: $1
+            )
+        }
     )
 }
 
@@ -285,6 +302,7 @@ extension FastPaymentsServices {
         getFastPaymentContractFindList: {
             
             Empty().eraseToAnyPublisher()
-        }
+        },
+        getDefaultAndConsent: { _,_ in }
     )
 }

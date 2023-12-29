@@ -11,19 +11,6 @@ import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
 
-struct FastPaymentsFactory {
-    
-    let makeFastPaymentsViewModel: MakeFastPaymentsViewModel
-}
-
-extension FastPaymentsFactory {
-    
-    typealias CloseAction = () -> Void
-    typealias FastPaymentsViewModel = MeToMeSettingView.ViewModel
-    // TODO: remove unnecessary details
-    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, Model, @escaping CloseAction) -> FastPaymentsViewModel
-}
-
 class UserAccountViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -35,12 +22,13 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
+    @Published private(set) var spinner: SpinnerView.ViewModel?
     @Published var link: Link?
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
-
+    
     var appVersionFull: String? {
         
         model.authAppVersion.map { "Версия \($0)" }
@@ -107,7 +95,7 @@ class UserAccountViewModel: ObservableObject {
             .assign(to: &$fpsCFLResponse)
         
         bind()
-                
+        
         if let action = action {
             
             self.action.send(action)
@@ -188,7 +176,7 @@ class UserAccountViewModel: ObservableObject {
                 case let payload as ModelAction.C2B.CancelC2BSub.Response:
                     let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
                     self.link = .successView(paymentSuccessViewModel)
-
+                    
                 case let payload as ModelAction.C2B.GetC2BDetail.Response:
                     self.link = .successView(.init(paymentSuccess: .init(operation: nil, parameters: payload.params), model))
                     
@@ -308,7 +296,7 @@ class UserAccountViewModel: ObservableObject {
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
                     bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
-                
+                    
                 case let payload as UserAccountViewModelAction.OpenSbpPay:
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
@@ -352,7 +340,7 @@ class UserAccountViewModel: ObservableObject {
                             }))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                            
+                        
                         let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
                         let reducer = TransformingReducer(
@@ -383,7 +371,7 @@ class UserAccountViewModel: ObservableObject {
                                   emptyViewModel: emptyViewModel,
                                   configurator: .init(
                                     backgroundColor: .mainColorsGrayLightest
-                                ))
+                                  ))
                         )
                         
                     case _ as UserAccountViewModelAction.OpenFastPayment:
@@ -555,20 +543,108 @@ class UserAccountViewModel: ObservableObject {
         
         return products
     }
+}
+
+private extension UserAccountViewModel {
     
-    private func openFastPaymentsSettings() {
+    func showSpinner() {
         
-        link = .fastPaymentSettings(
-            fastPaymentsFactory.makeFastPaymentsViewModel(
-                model.fastPaymentContractFullInfo.value
-                    .map { $0.getFastPaymentContractFindListDatum() },
-                model,
-                { [weak self] in
+        DispatchQueue.main.async { [weak self] in self?.spinner = .init() }
+    }
+    
+    func hideSpinner() {
+        
+        DispatchQueue.main.async { [weak self] in self?.spinner = nil }
+    }
+    
+    func dismissAlert() {
+        
+        DispatchQueue.main.async { [weak self] in self?.alert = nil }
+    }
+    
+    func dismissDestination() {
+        
+        action.send(UserAccountViewModelAction.CloseLink())
+    }
+}
+    
+private extension UserAccountViewModel {
+    
+    func openFastPaymentsSettings() {
+        
+        switch fpsCFLResponse {
+        case let .contract(contract):
+            
+            showSpinner()
+            
+            fastPaymentsServices.getDefaultAndConsent(
+                contract.phone
+            ) { [weak self] result in
+                
+                self?.hideSpinner()
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + .microseconds(200)
+                ) { [weak self] in
                     
-                    self?.action.send(UserAccountViewModelAction.CloseLink())
+                    self?.handleGetDefaultAndConsentResult(result, contract)
                 }
+            }
+            
+        case .noContract:
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .seconds(2)
+            ) { [weak self] in
+                
+                guard let self else { return }
+                
+                hideSpinner()
+                
+                let data = model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() }
+                link = .fastPaymentSettings(
+                    fastPaymentsFactory.makeFastPaymentsViewModel(
+                        data,
+                        { [weak self] in self?.dismissDestination() }
+                    )
+                )
+            }
+            
+        case let .error(message):
+            alert = .techError(
+                message: message
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case .none:
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
+        }
+    }
+    
+    func handleGetDefaultAndConsentResult(
+        _ result: FastPaymentsServices.GetDefaultAndConsentResult,
+        _ contract: FastPaymentsServices.FPSCFLResponse.Contract
+    ) {
+        switch result {
+        case let .failure(error):
+            
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case let .success(defaultForaBank):
+            
+            let data = model.fastPaymentContractFullInfo.value
+                .map { $0.getFastPaymentContractFindListDatum() }
+            link = .fastPaymentSettings(
+                fastPaymentsFactory.makeFastPaymentsViewModel(
+                    data,
+                    { [weak self] in self?.dismissDestination() }
+                )
             )
-        )
+        }
     }
 }
 
