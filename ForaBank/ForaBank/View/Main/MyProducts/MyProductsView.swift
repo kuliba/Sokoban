@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import InfoComponent
 import SberQR
 import SwiftUI
 

@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 17.12.2023.
 //
 
+import PaymentComponents
+
 public extension SberQRConfirmPaymentStateOf {
     
     struct EditableAmount {
@@ -36,7 +38,6 @@ public extension SberQRConfirmPaymentStateOf {
 
 public extension SberQRConfirmPaymentStateOf.EditableAmount {
     
-    typealias Amount = SberQRConfirmPaymentState.Amount
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
 }
 

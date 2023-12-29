@@ -35,62 +35,6 @@
                ReferencedContainer = "container:ForaBank.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UIKitHelpers"
-               BuildableName = "UIKitHelpers"
-               BlueprintName = "UIKitHelpers"
-               ReferencedContainer = "container:../swift-forabank">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SearchBarComponent"
-               BuildableName = "SearchBarComponent"
-               BlueprintName = "SearchBarComponent"
-               ReferencedContainer = "container:../swift-forabank">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TextFieldComponent"
-               BuildableName = "TextFieldComponent"
-               BlueprintName = "TextFieldComponent"
-               ReferencedContainer = "container:../swift-forabank">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PinCodeUI"
-               BuildableName = "PinCodeUI"
-               BlueprintName = "PinCodeUI"
-               ReferencedContainer = "container:../swift-forabank">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
