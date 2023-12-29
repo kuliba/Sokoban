@@ -53,7 +53,7 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url")
+        url: URL = anyURL()
     ) -> URLRequest {
         
         RequestFactory.createGetClientConsentMe2MePullRequest(url: url)

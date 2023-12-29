@@ -53,7 +53,7 @@ final class RequestFactory_createPrepareSetBankDefaultRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url")
+        url: URL = anyURL()
     ) -> URLRequest {
         
         RequestFactory.createPrepareSetBankDefaultRequest(url: url)

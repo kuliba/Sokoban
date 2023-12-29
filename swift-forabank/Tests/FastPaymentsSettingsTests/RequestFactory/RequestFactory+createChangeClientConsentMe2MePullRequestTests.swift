@@ -98,7 +98,7 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url"),
+        url: URL = anyURL(),
         payload: RequestFactory.BankIDList = [.init(UUID().uuidString)]
     ) throws -> URLRequest {
         

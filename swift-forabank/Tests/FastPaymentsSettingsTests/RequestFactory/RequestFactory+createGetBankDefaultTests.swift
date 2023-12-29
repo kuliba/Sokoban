@@ -88,7 +88,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url"),
+        url: URL = anyURL(),
         payload: RequestFactory.PhoneNumber = .init(UUID().uuidString)
     ) throws -> URLRequest {
         

@@ -53,7 +53,7 @@ final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url")
+        url: URL = anyURL()
     ) -> URLRequest {
         
         RequestFactory.createGetC2BSubRequest(url: url)

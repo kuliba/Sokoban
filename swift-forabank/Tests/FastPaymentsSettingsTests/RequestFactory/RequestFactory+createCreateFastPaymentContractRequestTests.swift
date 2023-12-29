@@ -99,7 +99,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url"),
+        url: URL = anyURL(),
         payload: RequestFactory.CreateFastPaymentContractPayload = anyPayload()
     ) throws -> URLRequest {
         

@@ -53,7 +53,7 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL("any-url")
+        url: URL = anyURL()
     ) -> URLRequest {
         
         RequestFactory.createFastPaymentContractFindListRequest(url: url)
