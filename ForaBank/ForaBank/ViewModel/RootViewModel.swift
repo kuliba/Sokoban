@@ -26,6 +26,8 @@ class RootViewModel: ObservableObject, Resetable {
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -33,6 +35,8 @@ class RootViewModel: ObservableObject, Resetable {
     private var auithBinding: AnyCancellable?
     
     init(
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
@@ -41,6 +45,8 @@ class RootViewModel: ObservableObject, Resetable {
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction
     ) {
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -181,8 +187,11 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     link = .userAccount(.init(
                         model: model,
+                        fastPaymentsFactory: fastPaymentsFactory,
+                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
-                        dismissAction: {[weak self] in
+                        dismissAction: { [weak self] in
+                            
                             self?.action.send(RootViewModelAction.CloseLink())
                         },
                         action: UserAccountViewModelAction.OpenSbpPay(

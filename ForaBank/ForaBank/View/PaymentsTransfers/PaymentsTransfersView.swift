@@ -13,7 +13,7 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -23,23 +23,9 @@ struct PaymentsTransfersView: View {
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     
-                    ForEach(viewModel.sections) { section in
-                        
-                        switch section {
-                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
-                            
-                        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                            PTSectionTransfersView(viewModel: transfersSectionVM)
-                            
-                        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
-                            PTSectionPaymentsView(viewModel: payGroupSectionVM)
-                        default:
-                            EmptyView()
-                        }
-                    }
-                } //mainVerticalScrollView
-            } //mainVStack
+                    ForEach(viewModel.sections, content: sectionView)
+                }
+            }
             
             Color.clear
                 .sheet(
@@ -102,6 +88,25 @@ struct PaymentsTransfersView: View {
             get: { !viewModel.route.isEmpty },
             set: { if !$0 { viewModel.reset() } }
         ))
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: PaymentsTransfersSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+            
+        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+            PTSectionTransfersView(viewModel: transfersSectionVM)
+            
+        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+            PTSectionPaymentsView(viewModel: payGroupSectionVM)
+        default:
+            EmptyView()
+        }
     }
     
     @ViewBuilder
@@ -206,7 +211,7 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
             
         case let .openDeposit(depositListViewModel):
@@ -216,7 +221,7 @@ struct PaymentsTransfersView: View {
             OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+            viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
@@ -231,7 +236,7 @@ struct PaymentsTransfersView: View {
         
         TransportPaymentsView(
             viewModel: transportPaymentsViewModel
-        ) {    
+        ) {
             MosParkingView(
                 viewModel: .init(
                     operation: viewModel.getMosParkingPickerData
@@ -424,14 +429,17 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         
         PaymentsTransfersView(
             viewModel: .sample,
-            makeSberQRConfirmPaymentView: { 
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }

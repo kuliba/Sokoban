@@ -17,7 +17,8 @@ struct MainView<NavigationOperationView: View>: View {
     @ObservedObject var viewModel: MainViewModel
     let navigationOperationView: () -> NavigationOperationView
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: MainViewFactory
+    let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -27,49 +28,19 @@ struct MainView<NavigationOperationView: View>: View {
                 
                 VStack(spacing: 0) {
                     
-                    ForEach(viewModel.sections) { section in
-                        
-                        switch section {
-                        case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                            MainSectionProductsView(viewModel: productsSectionViewModel)
-                                .padding(.bottom, 19)
-                            
-                        case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                            MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let promoViewModel  as MainSectionPromoView.ViewModel:
-                            MainSectionPromoView(viewModel: promoViewModel)
-                                .padding(.horizontal, 20)
-                                .padding(.bottom, 32)
-                            
-                        case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                            MainSectionCurrencyView(viewModel: currencyViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
-                            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                            MainSectionOpenProductView(viewModel: openProductViewModel)
-                                .padding(.bottom, 32)
-                            
-                        case let atmViewModel as MainSectionAtmView.ViewModel:
-                            MainSectionAtmView(viewModel: atmViewModel)
-                            
-                        default:
-                            EmptyView()
-                        }
-                    }
+                    ForEach(viewModel.sections, content: sectionView)
                 }
                 .padding(.vertical, 20)
-                .background(GeometryReader { geo in
-                    
-                    Color.clear
-                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-                    
-                })
+                .background(
+                    GeometryReader { geo in
+                        
+                        Color.clear
+                            .preference(
+                                key: ScrollOffsetKey.self,
+                                value: -geo.frame(in: .named("scroll")).origin.y
+                            )
+                    }
+                )
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
                     if offset < -100 {
@@ -136,18 +107,57 @@ struct MainView<NavigationOperationView: View>: View {
     }
     
     @ViewBuilder
+    private func sectionView(
+        section: MainSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+            MainSectionProductsView(viewModel: productsSectionViewModel)
+                .padding(.bottom, 19)
+            
+        case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+            MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                .padding(.bottom, 32)
+            
+        case let promoViewModel  as MainSectionPromoView.ViewModel:
+            MainSectionPromoView(viewModel: promoViewModel)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+            
+        case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+            MainSectionCurrencyView(viewModel: currencyViewModel)
+                .padding(.bottom, 32)
+            
+        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
+            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+                .padding(.bottom, 32)
+            
+        case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+            MainSectionOpenProductView(viewModel: openProductViewModel)
+                .padding(.bottom, 32)
+            
+        case let atmViewModel as MainSectionAtmView.ViewModel:
+            MainSectionAtmView(viewModel: atmViewModel)
+            
+        default:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
     private func destinationView(
         link: MainViewModel.Link
     ) -> some View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            UserAccountView(viewModel: userAccountViewModel)
+            viewFactory.makeUserAccountView(userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -171,7 +181,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .country(countyViewModel):
@@ -207,17 +217,17 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+            viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
         case let .landing(viewModel):
-                LandingWrapperView(viewModel: viewModel)
+            LandingWrapperView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
             
         case let .orderSticker(viewModel):
-                LandingWrapperView(viewModel: viewModel)
+            LandingWrapperView(viewModel: viewModel)
             
         case .paymentSticker:
             navigationOperationView()
@@ -235,7 +245,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: paymentsTransfersViewFactory
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -304,7 +314,7 @@ extension MainView {
         }
     }
 }
-    
+
 struct UserAccountButton: View {
     
     @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
@@ -362,7 +372,7 @@ struct UserAccountButton: View {
         .accessibilityIdentifier("mainUserButton")
     }
 }
-    
+
 struct NavBarButton: View {
     
     let viewModel: NavigationBarButtonViewModel
@@ -395,14 +405,28 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            makeSberQRConfirmPaymentView: {
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            ),
+            paymentsTransfersViewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }
@@ -413,10 +437,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}
@@ -426,10 +454,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}
@@ -439,10 +471,14 @@ extension MainViewModel {
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
+            fastPaymentsFactory: .default,
+            fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         onRegister: {}
@@ -501,7 +537,7 @@ extension PaymentSticker.OperationViewConfiguration {
             optionConfig: .init(
                 nameFont: .textH4M16240(),
                 nameForeground: .textSecondary
-            ), 
+            ),
             textFieldConfig: .init(
                 font: .textH4M16240(),
                 textColor: .textSecondary,
@@ -572,6 +608,6 @@ extension PaymentSticker.OperationViewConfiguration {
 }
 
 extension OperationStateViewModel {
-
+    
     static let empty = OperationStateViewModel { _,_ in }
 }

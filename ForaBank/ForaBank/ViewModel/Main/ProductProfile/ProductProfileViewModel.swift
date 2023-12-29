@@ -46,6 +46,8 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let cvvPINServicesClient: CVVPINServicesClient
@@ -66,7 +68,8 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         sberQRServices: SberQRServices,
+         fastPaymentsFactory: FastPaymentsFactory,
+         fastPaymentsServices: FastPaymentsServices,         sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
@@ -80,6 +83,8 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.cvvPINServicesClient = cvvPINServicesClient
@@ -96,6 +101,8 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
@@ -115,7 +122,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, fastPaymentsFactory: fastPaymentsFactory, fastPaymentsServices: fastPaymentsServices, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -340,6 +347,8 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     makeProductProfileViewModel: makeProductProfileViewModel,
+                    fastPaymentsFactory: fastPaymentsFactory,
+                    fastPaymentsServices: fastPaymentsServices,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     isTabBarHidden: true,
@@ -1467,6 +1476,8 @@ private extension ProductProfileViewModel {
         
         .init(
             model,
+            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,

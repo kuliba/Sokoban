@@ -5,6 +5,7 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
+import Combine
 import LandingUIComponent
 import SwiftUI
 import Presentation
@@ -16,6 +17,16 @@ struct UserAccountView: View {
     @ObservedObject var viewModel: UserAccountViewModel
         
     var body: some View {
+        
+        ZStack {
+            
+            scrollView
+            
+            viewModel.spinner.map(SpinnerView.init(viewModel:))
+        }
+    }
+    
+    var scrollView: some View {
         
         ScrollView(showsIndicators: false) {
             
@@ -265,6 +276,33 @@ extension UserAccountViewModel {
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
-        )
+        ),
+        fastPaymentsFactory: .default,
+        fastPaymentsServices: .empty
+    )
+}
+
+extension FastPaymentsFactory {
+    
+    static let `default`: Self = .init(
+        makeFastPaymentsViewModel: {
+            
+            MeToMeSettingView.ViewModel(
+                model: $0,
+                newModel: .emptyMock,
+                closeAction: $1
+            )
+        }
+    )
+}
+
+extension FastPaymentsServices {
+    
+    static let empty: Self = .init(
+        getFastPaymentContractFindList: {
+            
+            Empty().eraseToAnyPublisher()
+        },
+        getDefaultAndConsent: { _,_ in }
     )
 }
