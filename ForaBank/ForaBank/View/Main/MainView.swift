@@ -5,11 +5,12 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
-import ScrollViewProxy
-import SberQR
-import SwiftUI
+import InfoComponent
 import LandingUIComponent
 import PaymentSticker
+import SberQR
+import ScrollViewProxy
+import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
     

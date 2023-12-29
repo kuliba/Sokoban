@@ -5,6 +5,6 @@
 //  Created by Igor Malyarov on 22.12.2023.
 //
 
-import ProductSelectComponent
+import SharedConfigs
 
-public typealias TextConfig = ProductSelectComponent.TextConfig
+public typealias TextConfig = SharedConfigs.TextConfig

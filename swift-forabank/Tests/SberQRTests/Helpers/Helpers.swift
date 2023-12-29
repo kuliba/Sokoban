@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ProductSelectComponent
+import PaymentComponents
 import SberQR
 
 extension GetSberQRDataResponse.Parameter.Amount {
@@ -29,7 +29,7 @@ extension GetSberQRDataResponse.Parameter.Amount {
     }
 }
 
-extension SberQRConfirmPaymentState.Amount {
+extension Amount {
     
     static func paymentAmount(
         value: Decimal,
@@ -154,6 +154,6 @@ func makeFixedAmount(
         brandName: .brandName(value: brandName),
         amount: .amount,
         recipientBank: .recipientBank,
-        bottom: .buttonPay
+        button: .preview
     )
 }

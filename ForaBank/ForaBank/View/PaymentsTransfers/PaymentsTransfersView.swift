@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import InfoComponent
 import SberQR
 import SwiftUI
 

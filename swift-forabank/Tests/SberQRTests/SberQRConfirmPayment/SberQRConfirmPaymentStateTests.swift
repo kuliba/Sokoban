@@ -24,7 +24,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: "сббол енот_QR"),
             amount: .amount,
             recipientBank: .recipientBank,
-            bottom: .buttonPay
+            button: .preview
         )))
     }
     

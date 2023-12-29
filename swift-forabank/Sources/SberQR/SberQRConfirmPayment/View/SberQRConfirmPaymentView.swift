@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
 import SwiftUI
 
 struct SberQRConfirmPaymentView: View {
@@ -55,7 +56,7 @@ struct SberQRConfirmPaymentView_Previews: PreviewProvider {
         SberQRConfirmPaymentView(
             state: state,
             event: { _ in },
-            config: .default
+            config: .preview
         )
     }
 }

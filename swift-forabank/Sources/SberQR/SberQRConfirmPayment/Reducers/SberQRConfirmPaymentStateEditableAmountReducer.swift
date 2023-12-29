@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ProductSelectComponent
+import PaymentComponents
 
 public final class SberQRConfirmPaymentStateEditableAmountReducer {
     

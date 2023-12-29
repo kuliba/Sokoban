@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 07.12.2023.
 //
 
-import ProductSelectComponent
+import PaymentComponents
 
 public final class SberQRConfirmPaymentStateFixedAmountReducer {
     

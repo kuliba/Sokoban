@@ -5,6 +5,7 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import InfoComponent
 import SberQR
 import SwiftUI
 import PaymentSticker

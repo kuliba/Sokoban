@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import ProductSelectComponent
+import PaymentComponents
 
 extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     
@@ -32,7 +32,7 @@ extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
             brandName: .brandName,
             amount: .amount,
             recipientBank: .recipientBank,
-            bottom: .preview
+            button: .preview
         )
     }
 }
@@ -62,7 +62,7 @@ public extension SberQRConfirmPaymentState.FixedAmount {
             brandName: .brandName,
             amount: .amount,
             recipientBank: .recipientBank,
-            bottom: .preview
+            button: .preview
         )
     }
 }
