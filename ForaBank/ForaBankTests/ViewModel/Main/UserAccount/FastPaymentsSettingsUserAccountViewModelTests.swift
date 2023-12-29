@@ -282,7 +282,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
         let sut = SUT(
             model: model,
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .legacy,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get,
                 getDefaultAndConsent: getDefaultAndConsentSpy.process(_:completion:)

@@ -322,14 +322,14 @@ extension UserAccountViewModel {
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
         ),
-        fastPaymentsFactory: .default,
+        fastPaymentsFactory: .legacy,
         fastPaymentsServices: .empty
     )
 }
 
 extension FastPaymentsFactory {
     
-    static let `default`: Self = .init(
+    static let legacy: Self = .init(
         fastPaymentsViewModel: .legacy({
             
             MeToMeSettingView.ViewModel(
