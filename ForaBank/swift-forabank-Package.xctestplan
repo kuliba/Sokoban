@@ -232,6 +232,13 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductSelectComponentTests",
         "name" : "ProductSelectComponentTests"
       }

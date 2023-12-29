@@ -2594,6 +2594,7 @@
 		2A09C2AE2B3C59510076DC93 /* FastPaymentsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsFactory.swift; sourceTree = "<group>"; };
 		2A09C2B02B3C5CEC0076DC93 /* RootViewModelFactory+makeFastPaymentsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeFastPaymentsFactory.swift"; sourceTree = "<group>"; };
 		2A09C2B22B3D439D0076DC93 /* FPSCFLResponse+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FPSCFLResponse+ext.swift"; sourceTree = "<group>"; };
+		2A09C2B42B3D53FE0076DC93 /* FastPaymentsSettings.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FastPaymentsSettings.xctestplan; sourceTree = "<group>"; };
 		2A0D9B7A2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequestTests.swift"; sourceTree = "<group>"; };
 		2A0D9B7C2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequest.swift"; sourceTree = "<group>"; };
 		2A0D9B7E2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetPrintFormResponseTests.swift"; sourceTree = "<group>"; };
@@ -10862,6 +10863,7 @@
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				2A09C2B42B3D53FE0076DC93 /* FastPaymentsSettings.xctestplan */,
 				2A67A4532B3717C700149C9E /* PaymentComponents.xctestplan */,
 				2AC67EE02B35BC8B00CC456D /* ProductSelectComponent.xctestplan */,
 				2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */,

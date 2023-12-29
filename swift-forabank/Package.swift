@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .fastPaymentsSettings,
         .loadableModel,
         .loadableResourceComponent,
         .paymentSticker,
@@ -61,6 +62,8 @@ let package = Package(
         .svgKit,
     ],
     targets: [
+        .fastPaymentsSettings,
+        .fastPaymentsSettingsTests,
         .loadableModel,
         .loadableModelTests,
         .loadableResourceComponent,
@@ -146,6 +149,13 @@ let package = Package(
 )
 
 private extension Product {
+    
+    static let fastPaymentsSettings = library(
+        name: .fastPaymentsSettings,
+        targets: [
+            .fastPaymentsSettings,
+        ]
+    )
     
     static let loadableModel = library(
         name: .loadableModel,
@@ -412,6 +422,26 @@ private extension Product {
 }
 
 private extension Target {
+    
+    static let fastPaymentsSettings = target(
+        name: .fastPaymentsSettings,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+        ]
+    )
+    static let fastPaymentsSettingsTests = testTarget(
+        name: .fastPaymentsSettingsTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .fastPaymentsSettings,
+        ]
+    )
     
     static let loadableModel = target(
         name: .loadableModel,
@@ -1034,6 +1064,10 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let fastPaymentsSettings = byName(
+        name: .fastPaymentsSettings
+    )
+    
     static let loadableModel = byName(
         name: .loadableModel
     )
@@ -1202,6 +1236,9 @@ private extension Target.Dependency {
 }
 
 private extension String {
+    
+    static let fastPaymentsSettings = "FastPaymentsSettings"
+    static let fastPaymentsSettingsTests = "FastPaymentsSettingsTests"
     
     static let loadableModel = "LoadableModel"
     static let loadableModelTests = "LoadableModelTests"
