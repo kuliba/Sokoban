@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createMakeSetBankDefaultRequestTests.swift
+//  RequestFactory+createGetBankDefaultRequestTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 29.12.2023.
@@ -10,12 +10,12 @@ import Tagged
 
 extension RequestFactory {
     
-    typealias VerificationCode = Tagged<_VerificationCode, String>
-    enum _VerificationCode {}
+    typealias PhoneNumber = Tagged<_PhoneNumber, String>
+    enum _PhoneNumber {}
     
-    static func createMakeSetBankDefaultRequest(
+    static func createGetBankDefaultRequest(
         url: URL,
-        payload: VerificationCode
+        payload: PhoneNumber
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -24,23 +24,22 @@ extension RequestFactory {
     }
 }
 
-private extension RequestFactory.VerificationCode {
+private extension RequestFactory.PhoneNumber {
     
     var httpBody: Data {
         
         get throws {
             
             try JSONSerialization.data(withJSONObject: [
-                "verificationCode": rawValue
+                "phoneNumber": rawValue
             ] as [String: String])
         }
     }
 }
 
-@testable import ForaBank
 import XCTest
 
-final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
+final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetURL() throws {
         
@@ -70,17 +69,17 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
         let request = try makeRequest(payload: payload)
      
         let body = try request.decodedBody(as: Body.self)
-        XCTAssertNoDiff(body.verificationCode, payload.rawValue)
+        XCTAssertNoDiff(body.phoneNumber, payload.rawValue)
     }
     
     func test_makeRequest_shouldSetHTTPBody_JSON() throws {
         
-        let payload = anyPayload()
-        let request = try makeRequest(payload: payload)
+        let phoneNumber = "987654321"
+        let request = try makeRequest(payload: .init(phoneNumber))
         
         try assertBody(of: request, hasJSON: """
         {
-            "verificationCode": "\(payload.rawValue)"
+            "phoneNumber": "\(phoneNumber)"
         }
         """
         )
@@ -89,11 +88,11 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL(string: "any-url"),
-        payload: RequestFactory.VerificationCode = .init(UUID().uuidString)
+        url: URL = anyURL("any-url"),
+        payload: RequestFactory.PhoneNumber = .init(UUID().uuidString)
     ) throws -> URLRequest {
         
-        try RequestFactory.createMakeSetBankDefaultRequest(
+        try RequestFactory.createGetBankDefaultRequest(
             url: url,
             payload: payload
         )
@@ -101,13 +100,13 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
     
     private func anyPayload(
         _ value: String = UUID().uuidString
-    ) -> RequestFactory.VerificationCode {
+    ) -> RequestFactory.PhoneNumber {
         
         .init(value)
     }
     
     private struct Body: Decodable {
         
-        let verificationCode: String
+        let phoneNumber: String
     }
 }

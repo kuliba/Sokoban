@@ -17,7 +17,6 @@ extension RequestFactory {
     }
 }
 
-@testable import ForaBank
 import XCTest
 
 final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTestCase {
@@ -54,7 +53,7 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL(string: "any-url")
+        url: URL = anyURL("any-url")
     ) -> URLRequest {
         
         RequestFactory.createFastPaymentContractFindListRequest(url: url)

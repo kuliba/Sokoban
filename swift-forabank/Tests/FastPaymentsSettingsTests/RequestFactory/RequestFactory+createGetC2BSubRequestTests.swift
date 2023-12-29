@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetClientConsentMe2MePullRequestTests.swift
+//  RequestFactory+createGetC2BSubRequestTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 29.12.2023.
@@ -9,18 +9,17 @@ import Foundation
 
 extension RequestFactory {
     
-    static func createGetClientConsentMe2MePullRequest(
+    static func createGetC2BSubRequest(
         url: URL
     ) -> URLRequest {
         
-        createEmptyRequest(.get, with: url)
+        createEmptyRequest(.post, with: url)
     }
 }
 
-@testable import ForaBank
 import XCTest
 
-final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCase {
+final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetURL() {
         
@@ -30,11 +29,11 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
         XCTAssertNoDiff(request.url, url)
     }
     
-    func test_makeRequest_shouldSetHTTPMethodToGET() {
+    func test_makeRequest_shouldSetHTTPMethodToPOST() {
         
         let request = makeRequest()
         
-        XCTAssertNoDiff(request.httpMethod, "GET")
+        XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
     func test_makeRequest_shouldSetCachePolicy() {
@@ -54,9 +53,9 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL(string: "any-url")
+        url: URL = anyURL("any-url")
     ) -> URLRequest {
         
-        RequestFactory.createGetClientConsentMe2MePullRequest(url: url)
+        RequestFactory.createGetC2BSubRequest(url: url)
     }
 }

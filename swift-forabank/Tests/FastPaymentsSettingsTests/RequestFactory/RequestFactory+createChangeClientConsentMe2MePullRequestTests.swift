@@ -38,7 +38,6 @@ private extension RequestFactory.BankIDList {
     }
 }
 
-@testable import ForaBank
 import XCTest
 
 final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTestCase {
@@ -99,7 +98,7 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL(string: "any-url"),
+        url: URL = anyURL("any-url"),
         payload: RequestFactory.BankIDList = [.init(UUID().uuidString)]
     ) throws -> URLRequest {
         

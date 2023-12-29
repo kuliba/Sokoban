@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 29.12.2023.
 //
 
-@testable import ForaBank
 import Foundation
 
 extension RequestFactory {

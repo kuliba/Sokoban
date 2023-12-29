@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createCreateFastPaymentContractRequestTests.swift
+//  RequestFactory+createUpdateFastPaymentContractRequestTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 29.12.2023.
@@ -9,8 +9,9 @@ import Foundation
 
 extension RequestFactory {
     
-    struct CreateFastPaymentContractPayload: Equatable {
+    struct UpdateFastPaymentContractPayload: Equatable {
         
+        let contractID: Int
         let accountID: Int
         let flagBankDefault: Flag
         let flagClientAgreementIn: Flag
@@ -22,9 +23,9 @@ extension RequestFactory {
         }
     }
     
-    static func createCreateFastPaymentContractRequest(
+    static func createUpdateFastPaymentContractRequest(
         url: URL,
-        payload: CreateFastPaymentContractPayload
+        payload: UpdateFastPaymentContractPayload
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -33,13 +34,14 @@ extension RequestFactory {
     }
 }
 
-private extension RequestFactory.CreateFastPaymentContractPayload {
+private extension RequestFactory.UpdateFastPaymentContractPayload {
     
     var httpBody: Data {
         
         get throws {
         
             try JSONSerialization.data(withJSONObject: [
+                "contractId" : contractID,
                 "accountId" : accountID,
                 "flagBankDefault" : flagBankDefault.rawValue,
                 "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
@@ -49,7 +51,7 @@ private extension RequestFactory.CreateFastPaymentContractPayload {
     }
 }
 
-private extension RequestFactory.CreateFastPaymentContractPayload.Flag {
+private extension RequestFactory.UpdateFastPaymentContractPayload.Flag {
     
     var rawValue: String {
         
@@ -61,10 +63,9 @@ private extension RequestFactory.CreateFastPaymentContractPayload.Flag {
     }
 }
 
-@testable import ForaBank
 import XCTest
 
-final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCase {
+final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetURL() throws {
         
@@ -100,11 +101,11 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     // MARK: - Helpers
     
     private func makeRequest(
-        url: URL = anyURL(string: "any-url"),
-        payload: RequestFactory.CreateFastPaymentContractPayload = anyPayload()
+        url: URL = anyURL("any-url"),
+        payload: RequestFactory.UpdateFastPaymentContractPayload = anyPayload()
     ) throws -> URLRequest {
         
-        try RequestFactory.createCreateFastPaymentContractRequest(
+        try RequestFactory.createUpdateFastPaymentContractRequest(
             url: url,
             payload: payload
         )
@@ -112,16 +113,17 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     
     private struct Body: Decodable {
         
-        let accountId: Int // 10004526647
+        let contractId: Int // 10000084818
+        let accountId: Int // 10004203497
         let flagBankDefault: String // "EMPTY"
         let flagClientAgreementIn: String // "YES"
         let flagClientAgreementOut: String // "YES"
         
-        var payload: RequestFactory.CreateFastPaymentContractPayload {
+        var payload: RequestFactory.UpdateFastPaymentContractPayload {
             
             get throws {
                 
-                typealias Flag = RequestFactory.CreateFastPaymentContractPayload.Flag
+                typealias Flag = RequestFactory.UpdateFastPaymentContractPayload.Flag
                 
                 guard
                     let flagBankDefault = Flag(rawValue: flagBankDefault),
@@ -130,6 +132,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
                 else { throw MappingError() }
                 
                 return .init(
+                    contractID: contractId,
                     accountID: accountId,
                     flagBankDefault: flagBankDefault,
                     flagClientAgreementIn: flagClientAgreementIn,
@@ -142,7 +145,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     }
 }
 
-private typealias Flag = RequestFactory.CreateFastPaymentContractPayload.Flag
+private typealias Flag = RequestFactory.UpdateFastPaymentContractPayload.Flag
 
 private extension Flag {
     
@@ -158,13 +161,15 @@ private extension Flag {
 }
 
 private func anyPayload(
-    accountID: Int = 10004526647,
+    contractID: Int = 10000084818,
+    accountID: Int = 10004203497,
     flagBankDefault: Flag = .empty,
     flagClientAgreementIn: Flag = .yes,
     flagClientAgreementOut: Flag = .yes
-) -> RequestFactory.CreateFastPaymentContractPayload {
+) -> RequestFactory.UpdateFastPaymentContractPayload {
     
     .init(
+        contractID: contractID,
         accountID: accountID,
         flagBankDefault: flagBankDefault,
         flagClientAgreementIn: flagClientAgreementIn,
