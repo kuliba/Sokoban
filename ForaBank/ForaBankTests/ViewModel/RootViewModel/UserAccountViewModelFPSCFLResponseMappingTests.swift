@@ -14,7 +14,7 @@ final class UserAccountViewModelFPSCFLResponseMappingTests: XCTestCase {
         
         let list: [FastPaymentContractFullInfoType] = []
         
-        XCTAssertEqual(list.fpsCFLResponse, .missing)
+        XCTAssertEqual(list.fpsCFLResponse, .noContract)
     }
     
     func test_shouldReturnErrorOnTripleYesWithoutPhone() {

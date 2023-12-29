@@ -44,13 +44,13 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             .inactive("321dcba"),
         ])
         
-        findListSpy.emitAndWait(.missing)
+        findListSpy.emitAndWait(.noContract)
         
         XCTAssertNoDiff(responseSpy.values, [
             nil,
             .active("abcd123"),
             .inactive("321dcba"),
-            .missing,
+            .noContract,
         ])
         
         findListSpy.emitAndWait(.fixedError)
@@ -59,7 +59,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
             nil,
             .active("abcd123"),
             .inactive("321dcba"),
-            .missing,
+            .noContract,
             .fixedError,
         ])
     }
@@ -96,7 +96,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnMissingFPSCFLResponse() throws {
         
         let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
-        findListSpy.emitAndWait(.missing)
+        findListSpy.emitAndWait(.noContract)
         
         try sut.tapFastPaymentsSettingsAndWait()
         
@@ -203,7 +203,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         let (sut, findListSpy, _,_) = makeSUT()
         let destinationSpy = ValueSpy(sut.$link)
-        findListSpy.emitAndWait(.missing)
+        findListSpy.emitAndWait(.noContract)
         
         #warning("long timeout")
         try sut.tapFastPaymentsSettingsAndWait(timeout: 3)

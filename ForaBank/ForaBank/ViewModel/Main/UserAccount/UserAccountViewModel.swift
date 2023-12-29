@@ -573,27 +573,29 @@ private extension UserAccountViewModel {
     func openFastPaymentsSettings() {
         
         switch fpsCFLResponse {
-        case let .active(phone),
-            let .inactive(phone):
+        case let .contract(contract):
             
             showSpinner()
             
-            fastPaymentsServices
-                .getDefaultAndConsent(phone) { [weak self] result in
+            fastPaymentsServices.getDefaultAndConsent(
+                contract.phone
+            ) { [weak self] result in
+                
+                self?.hideSpinner()
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + .microseconds(200)
+                ) { [weak self] in
                     
-                    self?.hideSpinner()
-                    
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + .microseconds(200)
-                    ) { [weak self] in
-                        
-                        self?.handleGetDefaultAndConsentResult(result)
-                    }
+                    self?.handleGetDefaultAndConsentResult(result, contract)
                 }
-                        
-        case .missing:
+            }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
+        case .noContract:
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .seconds(2)
+            ) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -622,7 +624,8 @@ private extension UserAccountViewModel {
     }
     
     func handleGetDefaultAndConsentResult(
-        _ result: FastPaymentsServices.GetDefaultAndConsentResult
+        _ result: FastPaymentsServices.GetDefaultAndConsentResult,
+        _ contract: FastPaymentsServices.FPSCFLResponse.Contract
     ) {
         switch result {
         case let .failure(error):
