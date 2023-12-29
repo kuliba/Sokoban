@@ -6,7 +6,7 @@
 //
 
 import SberQR
-import ProductSelectComponent
+import PaymentComponents
 import XCTest
 
 final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {

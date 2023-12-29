@@ -5,8 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import InfoComponent
-import ProductSelectComponent
+import PaymentComponents
 import SwiftUI
 
 public struct SberQRConfirmPaymentWrapperView: View {

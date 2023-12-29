@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import ProductSelectComponent
+import PaymentComponents
 
 extension SberQRConfirmPaymentStateReducer {
     

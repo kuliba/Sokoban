@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
-import InfoComponent
-import PrimitiveComponents
-import ProductSelectComponent
+import PaymentComponents
 import SwiftUI
 
 extension Config {

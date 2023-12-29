@@ -6,7 +6,7 @@
 //
 
 import ButtonComponent
-import PrimitiveComponents
+import SharedConfigs
 import TextFieldComponent
 import SwiftUI
 

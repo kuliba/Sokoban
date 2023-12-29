@@ -532,20 +532,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PaymentsComponents"
-               BuildableName = "PaymentsComponents"
-               BlueprintName = "PaymentsComponents"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "PhoneNumberWrapper"
                BuildableName = "PhoneNumberWrapper"
                BlueprintName = "PhoneNumberWrapper"
@@ -714,20 +700,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PaymentsComponents"
-               BuildableName = "PaymentsComponents"
-               BlueprintName = "PaymentsComponents"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "PhoneNumberWrapper"
                BuildableName = "PhoneNumberWrapper"
                BlueprintName = "PhoneNumberWrapper"
@@ -840,20 +812,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PrimitiveComponents"
-               BuildableName = "PrimitiveComponents"
-               BlueprintName = "PrimitiveComponents"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "InfoComponent"
                BuildableName = "InfoComponent"
                BlueprintName = "InfoComponent"
@@ -871,6 +829,20 @@
                BlueprintIdentifier = "ButtonComponent"
                BuildableName = "ButtonComponent"
                BlueprintName = "ButtonComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PaymentComponents"
+               BuildableName = "PaymentComponents"
+               BlueprintName = "PaymentComponents"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>

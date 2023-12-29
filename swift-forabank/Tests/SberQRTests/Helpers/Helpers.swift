@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import AmountComponent
-import ProductSelectComponent
+import PaymentComponents
 import SberQR
 
 extension GetSberQRDataResponse.Parameter.Amount {

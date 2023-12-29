@@ -20,8 +20,6 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
-        // PaymentsComponents
-        .paymentsComponents,
         // Infra
         .fetcher,
         .keyChainStore,
@@ -48,11 +46,7 @@ let package = Package(
         .textFieldComponent,
         .uiKitHelpers,
         // UI Components
-        .amountComponent,
-        .buttonComponent,
-        .infoComponent,
-        .primitiveComponents,
-        .productSelectComponent,
+        .paymentComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -89,9 +83,6 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
-        // PaymentsComponents
-        .paymentsComponents,
-        .paymentsComponentsTests,
         // Infra
         .fetcher,
         .fetcherTests,
@@ -140,9 +131,10 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
-        .primitiveComponents,
+        .paymentComponents,
         .productSelectComponent,
         .productSelectComponentTests,
+        .sharedConfigs,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -234,15 +226,6 @@ private extension Product {
         ]
     )
     
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = library(
-        name: .paymentsComponents,
-        targets: [
-            .paymentsComponents,
-        ]
-    )
-    
     // MARK: - UI
     
     static let buttonWithSheet = library(
@@ -310,38 +293,15 @@ private extension Product {
     
     // MARK: - UI Components
     
-    static let amountComponent = library(
-        name: .amountComponent,
+    static let paymentComponents = library(
+        name: .paymentComponents,
         targets: [
             .amountComponent,
-        ]
-    )
-    
-    static let buttonComponent = library(
-        name: .buttonComponent,
-        targets: [
             .buttonComponent,
-        ]
-    )
-    
-    static let infoComponent = library(
-        name: .infoComponent,
-        targets: [
             .infoComponent,
-        ]
-    )
-    
-    static let primitiveComponents = library(
-        name: .primitiveComponents,
-        targets: [
-            .primitiveComponents,
-        ]
-    )
-    
-    static let productSelectComponent = library(
-        name: .productSelectComponent,
-        targets: [
+            .paymentComponents,
             .productSelectComponent,
+            .sharedConfigs,
         ]
     )
     
@@ -535,8 +495,9 @@ private extension Target {
             .buttonComponent,
             .foraTools,
             .infoComponent,
-            .primitiveComponents,
-            .productSelectComponent
+            .paymentComponents,
+            .productSelectComponent,
+            .sharedConfigs,
         ]
     )
     static let sberQRTests = testTarget(
@@ -644,25 +605,6 @@ private extension Target {
             .landingUIComponent,
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
-    )
-    
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = target(
-        name: .paymentsComponents,
-        dependencies: [
-            .textFieldComponent,
-        ],
-        path: "Sources/\(String.paymentsComponents)"
-    )
-    
-    static let paymentsComponentsTests = testTarget(
-        name: .paymentsComponentsTests,
-        dependencies: [
-            // internal modules
-            .paymentsComponents,
-        ],
-        path: "Tests/\(String.paymentsComponentsTests)"
     )
     
     // MARK: - Infra
@@ -981,8 +923,8 @@ private extension Target {
             // internal modules
             .buttonComponent,
             .foraTools,
-            .primitiveComponents,
             .textFieldComponent,
+            .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
@@ -990,7 +932,7 @@ private extension Target {
     static let buttonComponent = target(
         name: .buttonComponent,
         dependencies: [
-            .primitiveComponents
+            .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.buttonComponent)"
     )
@@ -998,25 +940,28 @@ private extension Target {
     static let infoComponent = target(
         name: .infoComponent,
         dependencies: [
-            .primitiveComponents
+            .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
-    static let primitiveComponents = target(
-        name: .primitiveComponents,
+    static let paymentComponents = target(
+        name: .paymentComponents,
         dependencies: [
-            .foraTools,
-            .tagged,
+            .amountComponent,
+            .buttonComponent,
+            .infoComponent,
+            .productSelectComponent,
+            .sharedConfigs,
         ],
-        path: "Sources/UI/Components/\(String.primitiveComponents)"
+        path: "Sources/UI/Components/\(String.paymentComponents)"
     )
     
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
             .foraTools,
-            .primitiveComponents,
+            .sharedConfigs,
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
@@ -1033,9 +978,17 @@ private extension Target {
             .productSelectComponent
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
-
     )
 
+    static let sharedConfigs = target(
+        name: .sharedConfigs,
+        dependencies: [
+            .foraTools,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.sharedConfigs)"
+    )
+    
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -1133,12 +1086,6 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
 
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = byName(
-        name: .paymentsComponents
-    )
-    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -1183,12 +1130,16 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
-    static let primitiveComponents = byName(
-        name: .primitiveComponents
+    static let paymentComponents = byName(
+        name: .paymentComponents
     )
     
     static let productSelectComponent = byName(
         name: .productSelectComponent
+    )
+    
+    static let sharedConfigs = byName(
+        name: .sharedConfigs
     )
     
     // MARK: - Infra
@@ -1292,11 +1243,6 @@ private extension String {
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
     
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = "PaymentsComponents"
-    static let paymentsComponentsTests = "PaymentsComponentsTests"
-    
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
@@ -1329,11 +1275,13 @@ private extension String {
     
     static let infoComponent = "InfoComponent"
     
-    static let primitiveComponents = "PrimitiveComponents"
+    static let paymentComponents = "PaymentComponents"
 
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
 
+    static let sharedConfigs = "SharedConfigs"
+    
     // MARK: - Infra
     
     static let fetcher = "Fetcher"

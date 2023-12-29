@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import AmountComponent
-import InfoComponent
-import ProductSelectComponent
+import PaymentComponents
 
 extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     

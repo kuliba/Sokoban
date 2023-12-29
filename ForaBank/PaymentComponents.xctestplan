@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "CA984F10-A466-4876-8120-FA5C4D955EB6",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

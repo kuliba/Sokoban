@@ -6,7 +6,7 @@
 //
 
 import ButtonComponent
-import PrimitiveComponents
+import SharedConfigs
 import SwiftUI
 
 public struct AmountConfig {
