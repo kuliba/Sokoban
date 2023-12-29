@@ -561,13 +561,16 @@ private extension UserAccountViewModel {
         
         DispatchQueue.main.async { [weak self] in self?.alert = nil }
     }
+}
+
+extension UserAccountViewModel {
     
     func dismissDestination() {
         
         action.send(UserAccountViewModelAction.CloseLink())
     }
 }
-    
+
 private extension UserAccountViewModel {
     
     func openFastPaymentsSettings() {
@@ -603,12 +606,8 @@ private extension UserAccountViewModel {
                 
                 let data = model.fastPaymentContractFullInfo.value
                     .map { $0.getFastPaymentContractFindListDatum() }
-                link = .fastPaymentSettings(
-                    fastPaymentsFactory.makeFastPaymentsViewModel(
-                        data,
-                        { [weak self] in self?.dismissDestination() }
-                    )
-                )
+                
+                openFastPaymentsSettings(data: data)
             }
             
         case let .error(message):
@@ -620,6 +619,23 @@ private extension UserAccountViewModel {
             alert = .techError(
                 message: "Превышено время ожидания.\nПопробуйте позже."
             ) { [weak self] in self?.dismissAlert() }
+        }
+    }
+    
+    func openFastPaymentsSettings(
+        data: [FastPaymentContractFindListDatum]
+    ) {
+        switch fastPaymentsFactory.fastPaymentsViewModel {
+        case let .legacy(makeLegacy):
+            link = .fastPaymentSettings(.legacy(
+                makeLegacy(
+                    data,
+                    { [weak self] in self?.dismissDestination() }
+                )
+            ))
+            
+        case let .new(makeNew):
+            link = .fastPaymentSettings(.new(makeNew(data)))
         }
     }
     
@@ -638,12 +654,7 @@ private extension UserAccountViewModel {
             
             let data = model.fastPaymentContractFullInfo.value
                 .map { $0.getFastPaymentContractFindListDatum() }
-            link = .fastPaymentSettings(
-                fastPaymentsFactory.makeFastPaymentsViewModel(
-                    data,
-                    { [weak self] in self?.dismissDestination() }
-                )
-            )
+            openFastPaymentsSettings(data: data)
         }
     }
 }
@@ -745,11 +756,29 @@ extension UserAccountViewModel {
     enum Link: Hashable, Identifiable {
         
         case userDocument(UserDocumentViewModel)
-        case fastPaymentSettings(MeToMeSettingView.ViewModel)
+        case fastPaymentSettings(FastPaymentSettings)
         case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
         case imagePicker(ImagePickerViewModel)
         case managingSubscription(SubscriptionsViewModel)
         case successView(PaymentsSuccessViewModel)
+        
+        enum FastPaymentSettings {
+            
+            case legacy(MeToMeSettingView.ViewModel)
+            case new(FastPaymentsSettingsViewModel)
+            
+            var id: ID {
+                switch self {
+                case .legacy: return .legacy
+                case .new:    return .new
+                }
+            }
+            
+            enum ID {
+                
+                case legacy, new
+            }
+        }
         
         static func == (lhs: Link, rhs: Link) -> Bool {
             
@@ -766,14 +795,25 @@ extension UserAccountViewModel {
             switch self {
             case .userDocument:
                 return .userDocument
-            case .fastPaymentSettings:
-                return .fastPaymentSettings
+                
+            case let .fastPaymentSettings(fastPaymentSettings):
+                switch fastPaymentSettings {
+                case .legacy:
+                    return .fastPaymentSettings(.legacy)
+                    
+                case .new:
+                    return .fastPaymentSettings(.new)
+                }
+                
             case .deleteUserInfo:
                 return .deleteUserInfo
+                
             case .imagePicker:
                 return .imagePicker
+                
             case .managingSubscription:
                 return .managingSubscription
+                
             case .successView:
                 return .successView
             }
@@ -782,11 +822,16 @@ extension UserAccountViewModel {
         enum Case: Hashable {
             
             case userDocument
-            case fastPaymentSettings
+            case fastPaymentSettings(FastPaymentSettings)
             case deleteUserInfo
             case imagePicker
             case managingSubscription
             case successView
+            
+            enum FastPaymentSettings {
+                
+                case legacy, new
+            }
         }
     }
     

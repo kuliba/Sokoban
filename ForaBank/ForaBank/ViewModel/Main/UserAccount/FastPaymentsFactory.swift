@@ -7,13 +7,22 @@
 
 struct FastPaymentsFactory {
     
-    let makeFastPaymentsViewModel: MakeFastPaymentsViewModel
+    let fastPaymentsViewModel: FastPaymentsViewModel
 }
 
 extension FastPaymentsFactory {
     
-    typealias CloseAction = () -> Void
-    typealias FastPaymentsViewModel = MeToMeSettingView.ViewModel
-    // TODO: remove unnecessary details
-    typealias MakeFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, @escaping CloseAction) -> FastPaymentsViewModel
+    enum FastPaymentsViewModel {
+        
+        typealias CloseAction = () -> Void
+        typealias MakeLegacyFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, @escaping CloseAction) -> MeToMeSettingView.ViewModel
+        
+        typealias MakeNewFastPaymentsViewModel = ([FastPaymentContractFindListDatum]) -> FastPaymentsSettingsViewModel
+        
+        case legacy(MakeLegacyFastPaymentsViewModel)
+        case new(MakeNewFastPaymentsViewModel)
+    }
 }
+
+#warning("extract to module")
+struct FastPaymentsSettingsViewModel {}

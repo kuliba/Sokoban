@@ -12,14 +12,14 @@ extension RootViewModelFactory {
     ) -> FastPaymentsFactory {
         
         .init(
-            makeFastPaymentsViewModel: {
+            fastPaymentsViewModel: .legacy({
                 
                 MeToMeSettingView.ViewModel(
                     model: $0,
                     newModel: model,
                     closeAction: $1
                 )
-            }
+            })
         )
     }
 }
