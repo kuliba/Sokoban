@@ -60,7 +60,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         let payload = anyPayload()
         let request = try makeRequest(payload: payload)
      
-        let body = try request.decodedBody(as: Payload.self)
+        let body = try request.decodedBody(as: Body.self)
         XCTAssertNoDiff(body.phoneNumber, payload.rawValue)
     }
     
@@ -84,7 +84,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         .init(value)
     }
     
-    private struct Payload: Decodable {
+    private struct Body: Decodable {
         
         let phoneNumber: String
     }
