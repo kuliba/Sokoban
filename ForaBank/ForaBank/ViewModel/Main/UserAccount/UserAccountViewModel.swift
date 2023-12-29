@@ -375,7 +375,21 @@ class UserAccountViewModel: ObservableObject {
                         )
                         
                     case _ as UserAccountViewModelAction.OpenFastPayment:
-                        openFastPaymentsSettings()
+                        switch fastPaymentsFactory.fastPaymentsViewModel {
+                        case let .legacy(makeLegacy):
+                            let data = model.fastPaymentContractFullInfo.value
+                                .map { $0.getFastPaymentContractFindListDatum() }
+                            
+                            link = .fastPaymentSettings(.legacy(
+                                makeLegacy(
+                                    data,
+                                    { [weak self] in self?.dismissDestination() }
+                                )
+                            ))
+                            
+                        case let .new(makeNew):
+                            openNewFastPaymentsSettings(makeNew)
+                        }
                         
                     case let payload as UserAccountViewModelAction.Switch:
                         switch payload.type {
@@ -573,8 +587,11 @@ extension UserAccountViewModel {
 
 private extension UserAccountViewModel {
     
-    func openFastPaymentsSettings() {
-        
+    typealias MakeNewFastPaymentsViewModel = FastPaymentsFactory.FastPaymentsViewModel.MakeNewFastPaymentsViewModel
+    
+    func openNewFastPaymentsSettings(
+        _ makeNew: @escaping MakeNewFastPaymentsViewModel
+    ) {
         switch fpsCFLResponse {
         case let .contract(contract):
             
@@ -590,7 +607,7 @@ private extension UserAccountViewModel {
                     deadline: .now() + .microseconds(200)
                 ) { [weak self] in
                     
-                    self?.handleGetDefaultAndConsentResult(result, contract)
+                    self?.handleGetDefaultAndConsentResult(result, contract, makeNew)
                 }
             }
             
@@ -607,7 +624,7 @@ private extension UserAccountViewModel {
                 let data = model.fastPaymentContractFullInfo.value
                     .map { $0.getFastPaymentContractFindListDatum() }
                 
-                openFastPaymentsSettings(data: data)
+                link = .fastPaymentSettings(.new(makeNew(data)))
             }
             
         case let .error(message):
@@ -622,26 +639,10 @@ private extension UserAccountViewModel {
         }
     }
     
-    func openFastPaymentsSettings(
-        data: [FastPaymentContractFindListDatum]
-    ) {
-        switch fastPaymentsFactory.fastPaymentsViewModel {
-        case let .legacy(makeLegacy):
-            link = .fastPaymentSettings(.legacy(
-                makeLegacy(
-                    data,
-                    { [weak self] in self?.dismissDestination() }
-                )
-            ))
-            
-        case let .new(makeNew):
-            link = .fastPaymentSettings(.new(makeNew(data)))
-        }
-    }
-    
     func handleGetDefaultAndConsentResult(
         _ result: FastPaymentsServices.GetDefaultAndConsentResult,
-        _ contract: FastPaymentsServices.FPSCFLResponse.Contract
+        _ contract: FastPaymentsServices.FPSCFLResponse.Contract,
+        _ makeNew: MakeNewFastPaymentsViewModel
     ) {
         switch result {
         case let .failure(error):
@@ -654,7 +655,7 @@ private extension UserAccountViewModel {
             
             let data = model.fastPaymentContractFullInfo.value
                 .map { $0.getFastPaymentContractFindListDatum() }
-            openFastPaymentsSettings(data: data)
+            link = .fastPaymentSettings(.new(makeNew(data)))
         }
     }
 }
