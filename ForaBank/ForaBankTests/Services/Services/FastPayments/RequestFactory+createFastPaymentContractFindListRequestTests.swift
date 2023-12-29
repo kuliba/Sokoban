@@ -47,6 +47,13 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
+    func test_makeRequest_shouldSetHTTPBodyToNil() throws {
+        
+        let request = makeRequest()
+     
+        XCTAssertNil(request.httpBody)
+    }
+    
     // MARK: - Helpers
     
     private func makeRequest(
