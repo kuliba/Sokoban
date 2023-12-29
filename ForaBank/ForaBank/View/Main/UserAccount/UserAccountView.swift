@@ -356,6 +356,6 @@ extension FastPaymentsServices {
             
             Empty().eraseToAnyPublisher()
         },
-        getDefaultAndConsent: { _,_ in }
+        getConsentAndDefault: { _,_ in }
     )
 }
