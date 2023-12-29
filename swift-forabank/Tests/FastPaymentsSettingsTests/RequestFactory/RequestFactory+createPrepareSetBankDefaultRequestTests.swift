@@ -1,22 +1,11 @@
 //
 //  RequestFactory+createPrepareSetBankDefaultRequestTests.swift
-//  ForaBankTests
+//  
 //
 //  Created by Igor Malyarov on 29.12.2023.
 //
 
-import Foundation
-
-extension RequestFactory {
-    
-    static func createPrepareSetBankDefaultRequest(
-        url: URL
-    ) -> URLRequest {
-        
-        createEmptyRequest(.post, with: url)
-    }
-}
-
+import FastPaymentsSettings
 import XCTest
 
 final class RequestFactory_createPrepareSetBankDefaultRequestTests: XCTestCase {

@@ -1,22 +1,11 @@
 //
 //  RequestFactory+createGetC2BSubRequestTests.swift
-//  ForaBankTests
+//  
 //
 //  Created by Igor Malyarov on 29.12.2023.
 //
 
-import Foundation
-
-extension RequestFactory {
-    
-    static func createGetC2BSubRequest(
-        url: URL
-    ) -> URLRequest {
-        
-        createEmptyRequest(.post, with: url)
-    }
-}
-
+import FastPaymentsSettings
 import XCTest
 
 final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {

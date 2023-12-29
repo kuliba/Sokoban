@@ -1,22 +1,11 @@
 //
 //  RequestFactory+createGetClientConsentMe2MePullRequestTests.swift
-//  ForaBankTests
+//  
 //
 //  Created by Igor Malyarov on 29.12.2023.
 //
 
-import Foundation
-
-extension RequestFactory {
-    
-    static func createGetClientConsentMe2MePullRequest(
-        url: URL
-    ) -> URLRequest {
-        
-        createEmptyRequest(.get, with: url)
-    }
-}
-
+import FastPaymentsSettings
 import XCTest
 
 final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCase {

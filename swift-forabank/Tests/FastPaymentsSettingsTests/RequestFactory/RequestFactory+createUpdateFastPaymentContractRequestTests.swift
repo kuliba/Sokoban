@@ -1,68 +1,11 @@
 //
 //  RequestFactory+createUpdateFastPaymentContractRequestTests.swift
-//  ForaBankTests
+//
 //
 //  Created by Igor Malyarov on 29.12.2023.
 //
 
-import Foundation
-
-extension RequestFactory {
-    
-    struct UpdateFastPaymentContractPayload: Equatable {
-        
-        let contractID: Int
-        let accountID: Int
-        let flagBankDefault: Flag
-        let flagClientAgreementIn: Flag
-        let flagClientAgreementOut: Flag
-        
-        enum Flag: Equatable {
-            
-            case yes, no, empty
-        }
-    }
-    
-    static func createUpdateFastPaymentContractRequest(
-        url: URL,
-        payload: UpdateFastPaymentContractPayload
-    ) throws -> URLRequest {
-        
-        var request = createEmptyRequest(.post, with: url)
-        request.httpBody = try payload.httpBody
-        return request
-    }
-}
-
-private extension RequestFactory.UpdateFastPaymentContractPayload {
-    
-    var httpBody: Data {
-        
-        get throws {
-        
-            try JSONSerialization.data(withJSONObject: [
-                "contractId" : contractID,
-                "accountId" : accountID,
-                "flagBankDefault" : flagBankDefault.rawValue,
-                "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
-                "flagClientAgreementOut" : flagClientAgreementOut.rawValue
-            ] as [String: Any])
-        }
-    }
-}
-
-private extension RequestFactory.UpdateFastPaymentContractPayload.Flag {
-    
-    var rawValue: String {
-        
-        switch self {
-        case .yes:   return "YES"
-        case .no:    return "NO"
-        case .empty: return "EMPTY"
-        }
-    }
-}
-
+import FastPaymentsSettings
 import XCTest
 
 final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCase {

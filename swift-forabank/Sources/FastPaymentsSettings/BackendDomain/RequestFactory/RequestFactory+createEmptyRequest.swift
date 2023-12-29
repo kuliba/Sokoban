@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RequestFactory {
+public extension RequestFactory {
     
     static func createEmptyRequest(
         _ httpMethod: URLRequest.HTTPMethod,
@@ -21,7 +21,7 @@ extension RequestFactory {
     }
 }
 
-extension URLRequest {
+public extension URLRequest {
     
     enum HTTPMethod: String {
         
