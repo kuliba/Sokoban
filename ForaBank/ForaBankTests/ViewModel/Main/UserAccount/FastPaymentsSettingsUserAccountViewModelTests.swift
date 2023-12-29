@@ -158,7 +158,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getConsentAndDefaultSpy.completeAndWait(with: .success(true))
+        getConsentAndDefaultSpy.completeAndWait(with: .success(.init(consentList: [], defaultForaBank: true)))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
@@ -191,7 +191,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getConsentAndDefaultSpy.completeAndWait(with: .success(true))
+        getConsentAndDefaultSpy.completeAndWait(with: .success(.init(consentList: [], defaultForaBank: true)))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
@@ -260,7 +260,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     private typealias FPSCFLResponse = FastPaymentsServices.FPSCFLResponse
     private typealias FindListSpy = GetSpy<FPSCFLResponse>
     private typealias ResponseSpy = ValueSpy<FPSCFLResponse?>
-    private typealias GetConsentAndDefaultSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.DefaultForaBank, Error>
+    private typealias GetConsentAndDefaultSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.ConsentAndDefault, Error>
     
     private func makeSUT(
         clientInfo: ClientInfoData = .stub(),
