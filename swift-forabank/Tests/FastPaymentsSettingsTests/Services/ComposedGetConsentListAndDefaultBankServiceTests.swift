@@ -518,8 +518,8 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         
         sut.process(payload) { receivedValue in
             
-            assert(receivedValue.consentListResult, expectedValue.consentListResult, file: file, line: line)
-            assert(receivedValue.defaultBankResult, expectedValue.defaultBankResult, file: file, line: line)
+            assert(receivedValue.consentListResult, equals: expectedValue.consentListResult, file: file, line: line)
+            assert(receivedValue.defaultBankResult, equals: expectedValue.defaultBankResult, file: file, line: line)
             
             exp.fulfill()
         }
@@ -527,56 +527,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-}
-
-private func assert<T: Equatable, E: Equatable>(
-    _ receivedValue: Result<T, E>,
-    _ expectedValue: Result<T, E>,
-    file: StaticString = #file,
-    line: UInt = #line
-) {
-    switch (receivedValue, expectedValue) {
-        
-    case let (
-        .failure(receivedError),
-        .failure(expectedError)
-    ):
-        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
-        
-    case let (
-        .success(receivedValue),
-        .success(expectedValue)
-    ):
-        XCTAssertNoDiff(receivedValue, expectedValue, file: file, line: line)
-        
-    default:
-        XCTFail("Expected \(expectedValue), but got \(receivedValue) instead.", file: file, line: line)
-    }
-}
-
-private func assert<T: Equatable>(
-    _ receivedValue: Result<T, Error>,
-    _ expectedValue: Result<T, Error>,
-    file: StaticString = #file,
-    line: UInt = #line
-) {
-    switch (receivedValue, expectedValue) {
-        
-    case let (
-        .failure(receivedError as NSError),
-        .failure(expectedError as NSError)
-    ):
-        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
-        
-    case let (
-        .success(receivedValue),
-        .success(expectedValue)
-    ):
-        XCTAssertNoDiff(receivedValue, expectedValue, file: file, line: line)
-        
-    default:
-        XCTFail("Expected \(expectedValue), but got \(receivedValue) instead.", file: file, line: line)
     }
 }
 

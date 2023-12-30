@@ -15,18 +15,12 @@ func assert<T: Equatable, E: Equatable>(
     line: UInt = #line
 ) {
     switch (receivedResult, expectedResult) {
-    case let (
-        .failure(received),
-        .failure(expected)
-    ):
-        XCTAssertNoDiff(received, expected, file: file, line: line)
+    case let (.failure(receivedError), .failure(expectedError)):
+        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
         
-    case let (
-        .success(received),
-        .success(expected)
-    ):
-        XCTAssertNoDiff(received, expected, file: file, line: line)
-        
+    case let (.success(receivedValue), .success(expectedValue)):
+        XCTAssertNoDiff(receivedValue, expectedValue, file: file, line: line)
+
     default:
         XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
     }
