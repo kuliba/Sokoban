@@ -9,11 +9,11 @@ import Tagged
 
 final class ComposedGetConsentListAndDefaultBankService {
     
-    typealias GetConsentListResult = GetConsentListAndDefaultBank.ConsentListResult
+    typealias GetConsentListResult = GetConsentListAndDefaultBankResults.ConsentListResult
     typealias GetConsentListCompletion = (GetConsentListResult) -> Void
     typealias GetConsentList = (@escaping GetConsentListCompletion) -> Void
     
-    typealias GetDefaultBankResult = GetConsentListAndDefaultBank.DefaultBankResult
+    typealias GetDefaultBankResult = GetConsentListAndDefaultBankResults.DefaultBankResult
     typealias GetDefaultBankCompletion = (GetDefaultBankResult) -> Void
     typealias GetDefaultBank = (PhoneNumber, @escaping GetDefaultBankCompletion) -> Void
     
@@ -31,7 +31,7 @@ final class ComposedGetConsentListAndDefaultBankService {
 
 extension ComposedGetConsentListAndDefaultBankService {
     
-    typealias Completion = (GetConsentListAndDefaultBank) -> Void
+    typealias Completion = (GetConsentListAndDefaultBankResults) -> Void
     
     func process(
         _ payload: PhoneNumber,
@@ -444,7 +444,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         var sut: SUT?
         let getConsentListSpy: GetConsentListSpy
         (sut, getConsentListSpy, _) = makeSUT()
-        var result: GetConsentListAndDefaultBank?
+        var result: GetConsentListAndDefaultBankResults?
         
         sut?.process(anyPhoneNumber()) { result = $0 }
         sut = nil
@@ -460,7 +460,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         let getConsentListSpy: GetConsentListSpy
         let getDefaultBankSpy: GetDefaultBankSpy
         (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
-        var result: GetConsentListAndDefaultBank?
+        var result: GetConsentListAndDefaultBankResults?
         
         sut?.process(anyPhoneNumber()) { result = $0 }
         getConsentListSpy.complete(with: .success([]))
@@ -509,7 +509,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     private func expect(
         _ sut: SUT,
         with payload: PhoneNumber = anyPhoneNumber(),
-        toDeliver expectedValue: GetConsentListAndDefaultBank,
+        toDeliver expectedValue: GetConsentListAndDefaultBankResults,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line

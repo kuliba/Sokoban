@@ -7,7 +7,7 @@
 
 protocol GetConsentListAndDefaultBankService {
     
-    typealias Completion = (GetConsentListAndDefaultBank) -> Void
+    typealias Completion = (GetConsentListAndDefaultBankResults) -> Void
     
     func process(
         _ payload: PhoneNumber,

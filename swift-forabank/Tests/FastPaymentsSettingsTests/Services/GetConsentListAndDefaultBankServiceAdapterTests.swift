@@ -51,7 +51,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = GetConsentListAndDefaultBankServiceAdapter
-    private typealias ServiceSpy = ResponseSpy<PhoneNumber, GetConsentListAndDefaultBank>
+    private typealias ServiceSpy = ResponseSpy<PhoneNumber, GetConsentListAndDefaultBankResults>
     private typealias LoadSpy = Spy<Void, DefaultBank, Error>
     
     private func makeSUT(
@@ -79,4 +79,4 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
 
 extension ResponseSpy: GetConsentListAndDefaultBankService
 where Payload == PhoneNumber,
-      Response == GetConsentListAndDefaultBank {}
+      Response == GetConsentListAndDefaultBankResults {}
