@@ -7,6 +7,21 @@
 
 struct GetConsentListAndDefaultBank {
     
-    let consentListResult: Result<[BankID], Error>
-    let defaultBankResult: Result<DefaultBank, Error>
+    typealias ConsentListResult = Result<[BankID], GetConsentListError>
+    typealias DefaultBankResult = Result<DefaultBank, GetDefaultBankError>
+    
+    let consentListResult: ConsentListResult
+    let defaultBankResult: DefaultBankResult
+}
+
+#warning("move error types to separate files?")
+
+#warning("replace with typed error")
+    typealias GetConsentListError = Error
+
+enum GetDefaultBankError: Error, Equatable {
+    
+    case connectivity
+    case limit(message: String)
+    case server(statusCode: Int, errorMessage: String)
 }

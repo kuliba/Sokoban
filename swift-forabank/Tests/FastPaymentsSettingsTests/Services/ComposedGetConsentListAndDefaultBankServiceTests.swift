@@ -9,11 +9,11 @@ import Tagged
 
 final class ComposedGetConsentListAndDefaultBankService {
     
-    typealias GetConsentListResult = Result<[BankID], GetConsentListError>
+    typealias GetConsentListResult = GetConsentListAndDefaultBank.ConsentListResult
     typealias GetConsentListCompletion = (GetConsentListResult) -> Void
     typealias GetConsentList = (@escaping GetConsentListCompletion) -> Void
     
-    typealias GetDefaultBankResult = Result<DefaultBank, GetDefaultBankError>
+    typealias GetDefaultBankResult = GetConsentListAndDefaultBank.DefaultBankResult
     typealias GetDefaultBankCompletion = (GetDefaultBankResult) -> Void
     typealias GetDefaultBank = (PhoneNumber, @escaping GetDefaultBankCompletion) -> Void
     
@@ -63,15 +63,6 @@ private extension ComposedGetConsentListAndDefaultBankService {
     }
 }
 
-extension ComposedGetConsentListAndDefaultBankService {
-    
-#warning("replace with typed error")
-    typealias GetConsentListError = Error
-    
-#warning("replace with typed error")
-    typealias GetDefaultBankError = Error
-}
-
 import XCTest
 
 final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
@@ -84,10 +75,40 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         XCTAssertNoDiff(getDefaultBankSpy.callCount, 0)
     }
     
-    func test_process_shouldDeliverConsentErrorOnGetConsentListFailure_defaultBantFailure() {
+    func test_process_shouldDeliverConsentErrorOnGetConsentListFailure_defaultBantFailure_connectivity() {
         
         let consentError = anyError("GetConsentList Failure")
-        let defaultBankError = anyError("GetDefaultBank Failure")
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .failure(consentError),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .failure(consentError))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentErrorOnGetConsentListFailure_defaultBantFailure_limit() {
+        
+        let consentError = anyError("GetConsentList Failure")
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .failure(consentError),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .failure(consentError))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentErrorOnGetConsentListFailure_defaultBantFailure_server() {
+        
+        let consentError = anyError("GetConsentList Failure")
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 231, errorMessage: UUID().uuidString)
         let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
         
         expect(sut, toDeliver: .init(
@@ -127,10 +148,40 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure() {
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure_connectivity() {
         
         let consentList = makeConsentList(count: 0)
-        let defaultBankError = anyError("GetDefaultBank Failure")
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure_limit() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure_server() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 321, errorMessage: UUID().uuidString)
         let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
         
         expect(sut, toDeliver: .init(
@@ -170,10 +221,40 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure() {
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_connectivity() {
         
         let consentList = makeConsentList(count: 1)
-        let defaultBankError = anyError("GetDefaultBank Failure")
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_limit() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_server() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 342, errorMessage: UUID().uuidString)
         let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
         
         expect(sut, toDeliver: .init(
@@ -213,10 +294,40 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure() {
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_connectivity() {
         
         let consentList = makeConsentList(count: 2)
-        let defaultBankError = anyError("GetDefaultBank Failure")
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_limit() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+            getDefaultBankSpy.complete(with: .failure(defaultBankError))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_server() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 315, errorMessage: UUID().uuidString)
         let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
         
         expect(sut, toDeliver: .init(
@@ -292,7 +403,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
     private typealias GetConsentListSpy = Spy<Void, [BankID], Error>
-    private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, Error>
+    private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, GetDefaultBankError>
     
     private func makeSUT(
         file: StaticString = #file,
