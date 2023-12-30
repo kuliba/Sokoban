@@ -1,5 +1,5 @@
 //
-//  GetConsentListAndDefaultBankServiceTests.swift
+//  ComposedGetConsentListAndDefaultBankServiceTests.swift
 //
 //
 //  Created by Igor Malyarov on 30.12.2023.
@@ -7,7 +7,7 @@
 
 import Tagged
 
-final class GetConsentListAndDefaultBankService {
+final class ComposedGetConsentListAndDefaultBankService {
     
     typealias GetConsentListResult = Result<[BankID], GetConsentListError>
     typealias GetConsentListCompletion = (GetConsentListResult) -> Void
@@ -29,25 +29,33 @@ final class GetConsentListAndDefaultBankService {
     }
 }
 
-extension GetConsentListAndDefaultBankService {
+extension ComposedGetConsentListAndDefaultBankService {
+    
+    typealias Completion = (GetConsentListAndDefaultBank) -> Void
+    
+    func process(
+        _ payload: PhoneNumber,
+        completion: Completion
+    ) {
+        
+    }
+}
+
+extension ComposedGetConsentListAndDefaultBankService {
     
     typealias BankID = Tagged<_BankID, String>
     enum _BankID {}
     
+#warning("replace with typed error")
     typealias GetConsentListError = Error
     
-    typealias DefaultBank = Tagged<_DefaultBank, Bool>
-    enum _DefaultBank {}
-    
-    typealias PhoneNumber = Tagged<_PhoneNumber, String>
-    enum _PhoneNumber {}
-    
+#warning("replace with typed error")
     typealias GetDefaultBankError = Error
 }
 
 import XCTest
 
-final class GetConsentListAndDefaultBankServiceTests: XCTestCase {
+final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -59,9 +67,9 @@ final class GetConsentListAndDefaultBankServiceTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = GetConsentListAndDefaultBankService
+    private typealias SUT = ComposedGetConsentListAndDefaultBankService
     private typealias GetConsentListSpy = Spy<Void, [SUT.BankID], Error>
-    private typealias GetDefaultBankSpy = Spy<SUT.PhoneNumber, SUT.DefaultBank, Error>
+    private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, Error>
     
     private func makeSUT(
         file: StaticString = #file,
