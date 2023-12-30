@@ -32,8 +32,38 @@ final class GetConsentListAndDefaultBankServiceAdapter {
 
 extension GetConsentListAndDefaultBankServiceAdapter {
     
+   typealias GetConsentListAndDefaultBankResult = Result<GetConsentListAndDefaultBank, GetConsentListAndDefaultBankError>
+    typealias Completion = (GetConsentListAndDefaultBankResult) -> Void
+
+    func process(
+        _ payload: PhoneNumber,
+        completion: @escaping Completion
+    ) {
+        service.process(payload) { results in
+            
+            switch (results.consentListResult, results.defaultBankResult) {
+                
+            case let (.success(consentList), .success(defaultBank)):
+                completion(.success(.init(
+                    consentList: consentList,
+                    defaultBank: defaultBank
+                )))
+                
+            default:
+                fatalError()
+            }
+        }
+    }
+}
+
+extension GetConsentListAndDefaultBankServiceAdapter {
+    
 #warning("replace with typed error")
     typealias LoadError = Error
+    
+    enum GetConsentListAndDefaultBankError: Error, Equatable {
+        
+    }
 }
 
 import XCTest
@@ -46,6 +76,121 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         
         XCTAssertNoDiff(serviceSpy.callCount, 0)
         XCTAssertNoDiff(loadSpy.callCount, 0)
+    }
+    
+    func test_process_shouldNotCallLoadOnSuccesses() {
+        
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _  in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .success(true)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 0)
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_empty_true() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBank: DefaultBank = true
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_empty_false() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBank: DefaultBank = false
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_one_true() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBank: DefaultBank = true
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_one_false() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBank: DefaultBank = false
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_many_true() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBank: DefaultBank = true
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverSameResultsOnSuccesses_many_false() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBank: DefaultBank = false
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
     }
     
     // MARK: - Helpers
@@ -74,6 +219,28 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         trackForMemoryLeaks(loadSpy, file: file, line: line)
         
         return (sut, serviceSpy, loadSpy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with payload: PhoneNumber = anyPhoneNumber(),
+        toDeliver expectedResult: SUT.GetConsentListAndDefaultBankResult,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.process(payload) { receivedResult in
+            
+            assert(receivedResult, equals: expectedResult, file: file, line: line)
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
 }
 
