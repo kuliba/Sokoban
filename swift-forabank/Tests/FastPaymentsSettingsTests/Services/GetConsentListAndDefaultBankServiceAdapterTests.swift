@@ -39,7 +39,9 @@ extension GetConsentListAndDefaultBankServiceAdapter {
         _ payload: PhoneNumber,
         completion: @escaping Completion
     ) {
-        service.process(payload) { results in
+        service.process(payload) { [weak self] results in
+            
+            guard let self else { return }
             
             switch (results.consentListResult, results.defaultBankResult) {
                 
@@ -49,9 +51,31 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     defaultBank: defaultBank
                 )))
                 
+            case let (_, .failure(error)):
+                handleGetDefaultBankError(results.consentListResult, error, completion)
+                
             default:
                 fatalError()
             }
+        }
+    }
+    
+    private func handleGetDefaultBankError(
+        _ consentListResult: GetConsentListAndDefaultBankResults.ConsentListResult,
+        _ error: GetDefaultBankError,
+        _ completion: @escaping Completion
+    ) {
+        load { [weak self] loadResult in
+            
+//            guard let self else { return }
+//            
+//            switch loadResult {
+//            case let .failure(loadError):
+//                <#code#>
+//                
+//            case let .success(defaultBank):
+//                completion
+//            }
         }
     }
 }
@@ -191,6 +215,141 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
                 defaultBankResult: .success(defaultBank)
             ))
         }
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_connectivity() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_connectivity() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_connectivity() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_limit() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_limit() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_limit() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_server() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_server() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_server() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .failure(defaultBankError)
+        ))
+        
+        XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
     // MARK: - Helpers
