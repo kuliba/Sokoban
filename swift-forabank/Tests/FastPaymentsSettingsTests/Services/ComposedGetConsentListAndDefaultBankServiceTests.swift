@@ -81,6 +81,45 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         }
     }
     
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty() {
+        
+        let consentList = makeConsentList(count: 0)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .success(true)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one() {
+        
+        let consentList = makeConsentList(count: 1)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .success(true)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+        }
+    }
+    
+    func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many() {
+        
+        let consentList = makeConsentList(count: 2)
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .success(consentList),
+            defaultBankResult: .success(true)
+        )) {
+            getConsentListSpy.complete(with: .success(consentList))
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
@@ -107,6 +146,13 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         trackForMemoryLeaks(getDefaultBankSpy, file: file, line: line)
         
         return (sut, getConsentListSpy, getDefaultBankSpy)
+    }
+    
+    private func makeConsentList(
+        count: Int
+    ) -> [BankID] {
+        
+        (0..<count).map { _ in .init(UUID().uuidString) }
     }
     
     private func expect(
