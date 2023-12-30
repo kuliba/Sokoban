@@ -56,15 +56,71 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     defaultBank: defaultBank
                 )))
                 
-            case let (.failure(.connectivity), .failure(defaultBankError)):
+            case let (
+                .failure(.server(_, errorMessage: errorMessage)),
+                .success(defaultBank)
+            ):
+                completion(.failure(.server(
+                    message: errorMessage,
+                    .init(consentList: [], defaultBank: defaultBank)
+                )))
+                
+            case let (
+                .failure(.connectivity),
+                .failure(defaultBankError)
+            ):
                 handleGetDefaultBankError([], defaultBankError, completion)
+                
+            case let (
+                .failure(.server(_, errorMessage: errorMessage)),
+                .failure(.connectivity)
+            ),
+                let (
+                    .failure(.server(_, errorMessage: errorMessage)),
+                    .failure(.server)
+                ):
+                handleErrors(errorMessage, completion)
+                
+            case let (
+                .failure(.server),
+                .failure(.limit(message: message))
+            ):
+                // defaultBankError has higher priority, consentListError is ignored
+                handleLimit(message, completion)
                 
             case let (.success(consentList), .failure(defaultBankError)):
                 handleGetDefaultBankError(consentList, defaultBankError, completion)
-                
-            default:
-                fatalError()
             }
+        }
+    }
+    
+    private func handleErrors(
+        _ errorMessage: String,
+        _ completion: @escaping Completion
+    ) {
+        load { [weak self] defaultBank in
+            
+            guard self != nil else { return }
+            
+            completion(.failure(.server(
+                message: errorMessage,
+                .init(consentList: [], defaultBank: defaultBank)
+            )))
+        }
+    }
+    
+    private func handleLimit(
+        _ message: String,
+        _ completion: @escaping Completion
+    ) {
+        load { [weak self] defaultBank in
+            
+            guard self != nil else { return }
+            
+            completion(.failure(.limit(
+                message: message,
+                .init(consentList: [], defaultBank: defaultBank)
+            )))
         }
     }
     
@@ -102,6 +158,7 @@ extension GetConsentListAndDefaultBankServiceAdapter {
     enum GetConsentListAndDefaultBankError: Error, Equatable {
         
         case limit(message: String, GetConsentListAndDefaultBank)
+        case server(message: String, GetConsentListAndDefaultBank)
     }
 }
 
@@ -386,8 +443,8 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
             .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )))
-        ) {
+            )
+        ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
                 defaultBankResult: .failure(defaultBankError)
@@ -409,8 +466,8 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
             .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )))
-        ) {
+            )
+        ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
                 defaultBankResult: .failure(defaultBankError)
@@ -432,8 +489,8 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
             .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )))
-        ) {
+            )
+        ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
                 defaultBankResult: .failure(defaultBankError)
@@ -545,11 +602,8 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.limit(
             message: message,
-            .init(
-                consentList: [],
-                defaultBank: loadedDefaultBank
-            )))
-        ) {
+            .init(consentList: [], defaultBank: loadedDefaultBank)
+        ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
                 defaultBankResult: .failure(defaultBankError)
@@ -568,6 +622,88 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         expect(sut, toDeliver: .success(.init(
             consentList: [],
             defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverErrorWithEmptyConsentListOnGetConsentListFailure_server_defaultBankSuccess_b3c1c2() {
+        
+        let errorMessage = UUID().uuidString
+        let consentListError: GetConsentListError = .server(statusCode: 321, errorMessage: errorMessage)
+        let defaultBank = anyDefaultBank()
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.server(
+            message: errorMessage,
+            .init(consentList: [],defaultBank: defaultBank)
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_server_defaultBankFailure_connectivity_b3c5() {
+        
+        let errorMessage = UUID().uuidString
+        let consentListError: GetConsentListError = .server(statusCode: 321, errorMessage: errorMessage)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.server(
+            message: errorMessage,
+            .init(consentList: [], defaultBank: loadedDefaultBank)
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_server_defaultBankFailure_limit_b3c3() {
+        
+        let errorMessage = UUID().uuidString
+        let consentListError: GetConsentListError = .server(statusCode: 321, errorMessage: errorMessage)
+        let message = UUID().uuidString
+        let defaultBankError: GetDefaultBankError = .limit(message: message)
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.limit(
+            message: message,
+            .init(
+                consentList: [],
+                defaultBank: loadedDefaultBank
+            )
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_server_defaultBankFailure_server_b3c4() {
+        
+        let errorMessage = UUID().uuidString
+        let consentListError: GetConsentListError = .server(statusCode: 321, errorMessage: errorMessage)
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.server(
+            message: errorMessage,
+            .init(consentList: [], defaultBank: loadedDefaultBank)
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
