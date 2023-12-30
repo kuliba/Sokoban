@@ -529,10 +529,3 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 }
-
-private func anyPhoneNumber(
-    _ value: String = UUID().uuidString
-) -> PhoneNumber {
-    
-    .init(value)
-}
