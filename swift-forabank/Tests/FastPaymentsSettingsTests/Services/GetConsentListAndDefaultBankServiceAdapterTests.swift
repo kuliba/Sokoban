@@ -60,7 +60,7 @@ extension GetConsentListAndDefaultBankServiceAdapter {
     }
     
     private func handleGetDefaultBankError(
-        _ consentList: [BankID],
+        _ consentList: ConsentList,
         _ defaultBankError: GetDefaultBankError,
         _ completion: @escaping Completion
     ) {

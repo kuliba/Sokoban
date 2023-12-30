@@ -474,7 +474,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
-    private typealias GetConsentListSpy = Spy<Void, [BankID], GetConsentListError>
+    private typealias GetConsentListSpy = Spy<Void, ConsentList, GetConsentListError>
     private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, GetDefaultBankError>
     
     private func makeSUT(

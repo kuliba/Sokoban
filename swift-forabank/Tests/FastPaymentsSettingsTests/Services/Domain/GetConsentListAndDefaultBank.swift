@@ -7,6 +7,6 @@
 
 struct GetConsentListAndDefaultBank: Equatable {
     
-    let consentList: [BankID]
+    let consentList: ConsentList
     let defaultBank: DefaultBank
 }

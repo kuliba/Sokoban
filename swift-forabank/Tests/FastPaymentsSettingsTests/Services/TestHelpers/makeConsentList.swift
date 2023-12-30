@@ -11,7 +11,7 @@ func makeConsentList(
     count: Int,
     file: StaticString = #file,
     line: UInt = #line
-) -> [BankID] {
+) -> ConsentList {
     
     let list = (0..<count).map { _ in BankID(UUID().uuidString) }
     XCTAssertNoDiff(list.count, count, file: file, line: line)

@@ -7,7 +7,7 @@
 
 struct GetConsentListAndDefaultBankResults {
     
-    typealias ConsentListResult = Result<[BankID], GetConsentListError>
+    typealias ConsentListResult = Result<ConsentList, GetConsentListError>
     typealias DefaultBankResult = Result<DefaultBank, GetDefaultBankError>
     
     let consentListResult: ConsentListResult
