@@ -39,7 +39,11 @@ extension ComposedGetConsentListAndDefaultBankService {
     ) {
         getConsentList { [weak self] getConsentListResult in
             
-            self?.getDefaultBank(payload) { getDefaultBankResult in
+            guard let self else { return }
+            
+            getDefaultBank(payload) { [weak self] getDefaultBankResult in
+                
+                guard self != nil else { return }
                 
                 completion(.init(
                     consentListResult: getConsentListResult,
@@ -241,6 +245,38 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(true))
         }
+    }
+    
+    func test_process_shouldNotDeliverGetConsentListResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let getConsentListSpy: GetConsentListSpy
+        (sut, getConsentListSpy, _) = makeSUT()
+        var result: GetConsentListAndDefaultBank?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        sut = nil
+        getConsentListSpy.complete(with: .success([]))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(result)
+    }
+    
+    func test_process_shouldNotDeliverGetDefaultBankResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let getConsentListSpy: GetConsentListSpy
+        let getDefaultBankSpy: GetDefaultBankSpy
+        (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        var result: GetConsentListAndDefaultBank?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        getConsentListSpy.complete(with: .success([]))
+        sut = nil
+        getDefaultBankSpy.complete(with: .success(false))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(result)
     }
     
     // MARK: - Helpers
