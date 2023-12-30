@@ -9,20 +9,11 @@ import Tagged
 
 final class GetConsentListAndDefaultBankService {
     
-    typealias BankID = Tagged<_BankID, String>
-    enum _BankID {}
-    
-    typealias GetConsentListResult = Result<[BankID], Error>
+    typealias GetConsentListResult = Result<[BankID], GetConsentListError>
     typealias GetConsentListCompletion = (GetConsentListResult) -> Void
     typealias GetConsentList = (@escaping GetConsentListCompletion) -> Void
     
-    typealias DefaultBank = Tagged<_DefaultBank, Bool>
-    enum _DefaultBank {}
-    
-    typealias PhoneNumber = Tagged<_PhoneNumber, String>
-    enum _PhoneNumber {}
-    
-    typealias GetDefaultBankResult = Result<DefaultBank, Error>
+    typealias GetDefaultBankResult = Result<DefaultBank, GetDefaultBankError>
     typealias GetDefaultBankCompletion = (GetDefaultBankResult) -> Void
     typealias GetDefaultBank = (PhoneNumber, @escaping GetDefaultBankCompletion) -> Void
     
@@ -36,6 +27,22 @@ final class GetConsentListAndDefaultBankService {
         self.getConsentList = getConsentList
         self.getDefaultBank = getDefaultBank
     }
+}
+
+extension GetConsentListAndDefaultBankService {
+    
+    typealias BankID = Tagged<_BankID, String>
+    enum _BankID {}
+    
+    typealias GetConsentListError = Error
+    
+    typealias DefaultBank = Tagged<_DefaultBank, Bool>
+    enum _DefaultBank {}
+    
+    typealias PhoneNumber = Tagged<_PhoneNumber, String>
+    enum _PhoneNumber {}
+    
+    typealias GetDefaultBankError = Error
 }
 
 import XCTest
