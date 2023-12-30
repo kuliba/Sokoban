@@ -37,19 +37,28 @@ extension ComposedGetConsentListAndDefaultBankService {
         _ payload: PhoneNumber,
         completion: @escaping Completion
     ) {
-        getConsentList { [weak self] getConsentListResult in
+        getConsentList { [weak self] in
             
-            guard let self else { return }
+            self?._getDefaultBank(payload, $0, completion)
+        }
+    }
+}
+
+private extension ComposedGetConsentListAndDefaultBankService {
+    
+    func _getDefaultBank(
+        _ payload: PhoneNumber,
+        _ getConsentListResult: GetConsentListResult,
+        _ completion: @escaping Completion
+    ) {
+        getDefaultBank(payload) { [weak self] in
             
-            getDefaultBank(payload) { [weak self] getDefaultBankResult in
-                
-                guard self != nil else { return }
-                
-                completion(.init(
-                    consentListResult: getConsentListResult,
-                    defaultBankResult: getDefaultBankResult
-                ))
-            }
+            guard self != nil else { return }
+            
+            completion(.init(
+                consentListResult: getConsentListResult,
+                defaultBankResult: $0
+            ))
         }
     }
 }
