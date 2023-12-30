@@ -50,8 +50,8 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     defaultBank: defaultBank
                 )))
                 
-            case let (_, .failure(defaultBankError)):
-                handleGetDefaultBankError(results.consentListResult, defaultBankError, completion)
+            case let (.success(consentList), .failure(defaultBankError)):
+                handleGetDefaultBankError(consentList, defaultBankError, completion)
                 
             default:
                 fatalError()
@@ -60,21 +60,27 @@ extension GetConsentListAndDefaultBankServiceAdapter {
     }
     
     private func handleGetDefaultBankError(
-        _ consentListResult: GetConsentListAndDefaultBankResults.ConsentListResult,
+        _ consentList: [BankID],
         _ defaultBankError: GetDefaultBankError,
         _ completion: @escaping Completion
     ) {
         load { [weak self] defaultBank in
             
             guard self != nil else { return }
-            
-            //            switch loadResult {
-            //            case let .failure(loadError):
-            //                <#code#>
-            //
-            //            case let .success(defaultBank):
-            //                completion
-            //            }
+
+            switch defaultBankError {
+            case .connectivity:
+                completion(.success(.init(
+                 consentList: consentList,
+                 defaultBank: defaultBank
+                )))
+
+            case let .limit(message):
+                break
+
+            case let .server(statusCode, errorMessage):
+                break
+            }
         }
     }
 }
@@ -348,6 +354,64 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_connectivity_false() {
+        
+        let consentList = makeConsentList(count: 0)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let loadedDefaultBank: DefaultBank = false
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_connectivity_false() {
+        
+        let consentList = makeConsentList(count: 1)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let loadedDefaultBank: DefaultBank = false
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_connectivity_false() {
+        
+        let consentList = makeConsentList(count: 2)
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let loadedDefaultBank: DefaultBank = false
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: consentList,
+            defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .success(consentList),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    #warning("add tests for consent list failure")
     // MARK: - Helpers
     
     private typealias SUT = GetConsentListAndDefaultBankServiceAdapter
