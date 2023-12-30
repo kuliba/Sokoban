@@ -50,6 +50,15 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     defaultBank: defaultBank
                 )))
                 
+            case let (.failure(.connectivity), .success(defaultBank)):
+                completion(.success(.init(
+                    consentList: [],
+                    defaultBank: defaultBank
+                )))
+                
+            case let (.failure(.connectivity), .failure(defaultBankError)):
+                handleGetDefaultBankError([], defaultBankError, completion)
+                
             case let (.success(consentList), .failure(defaultBankError)):
                 handleGetDefaultBankError(consentList, defaultBankError, completion)
                 
@@ -484,6 +493,84 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankSuccess() {
+        
+        let consentListError: GetConsentListError = .connectivity
+        let defaultBank = anyDefaultBank()
+        let (sut, serviceSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: [],
+            defaultBank: defaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .success(defaultBank)
+            ))
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_connectivity() {
+        
+        let consentListError: GetConsentListError = .connectivity
+        let defaultBankError: GetDefaultBankError = .connectivity
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: [],
+            defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_limit() {
+        
+        let consentListError: GetConsentListError = .connectivity
+        let message = UUID().uuidString
+        let defaultBankError: GetDefaultBankError = .limit(message: message)
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.limit(
+            message: message,
+            .init(
+                consentList: [],
+                defaultBank: loadedDefaultBank
+            )))
+        ) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
+                defaultBankResult: .failure(defaultBankError)
+            ))
+            loadSpy.complete(with: loadedDefaultBank)
+        }
+    }
+    
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_server() {
+        
+        let consentListError: GetConsentListError = .connectivity
+        let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
+        let loadedDefaultBank = anyDefaultBank()
+        let (sut, serviceSpy, loadSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(
+            consentList: [],
+            defaultBank: loadedDefaultBank
+        ))) {
+            serviceSpy.complete(with: .init(
+                consentListResult: .failure(consentListError),
                 defaultBankResult: .failure(defaultBankError)
             ))
             loadSpy.complete(with: loadedDefaultBank)
