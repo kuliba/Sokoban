@@ -35,9 +35,15 @@ extension ComposedGetConsentListAndDefaultBankService {
     
     func process(
         _ payload: PhoneNumber,
-        completion: Completion
+        completion: @escaping Completion
     ) {
-        
+        getConsentList { result in
+            
+            completion(.init(
+                consentListResult: result,
+                defaultBankResult: .success(true)
+            ))
+        }
     }
 }
 
@@ -60,6 +66,19 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         
         XCTAssertNoDiff(getConsentListSpy.callCount, 0)
         XCTAssertNoDiff(getDefaultBankSpy.callCount, 0)
+    }
+    
+    func test_process_shouldDeliverConsentErrorOnGetConsentListFailure() {
+        
+        let consentError = anyError("GetConsentList Failure")
+        let (sut, getConsentListSpy, getDefaultBankSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .init(
+            consentListResult: .failure(consentError),
+            defaultBankResult: .success(true)
+        )) {
+            getConsentListSpy.complete(with: .failure(anyError()))
+        }
     }
     
     // MARK: - Helpers
@@ -89,4 +108,84 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         
         return (sut, getConsentListSpy, getDefaultBankSpy)
     }
+    
+    private func expect(
+        _ sut: SUT,
+        with payload: PhoneNumber = anyPhoneNumber(),
+        toDeliver expectedValue: GetConsentListAndDefaultBank,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.process(payload) { receivedValue in
+            
+            assert(receivedValue.consentListResult, expectedValue.consentListResult, file: file, line: line)
+            assert(receivedValue.defaultBankResult, expectedValue.defaultBankResult, file: file, line: line)
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+}
+
+private func assert<T: Equatable, E: Equatable>(
+    _ receivedValue: Result<T, E>,
+    _ expectedValue: Result<T, E>,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    switch (receivedValue, expectedValue) {
+        
+    case let (
+        .failure(receivedError),
+        .failure(expectedError)
+    ):
+        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
+        
+    case let (
+        .success(receivedValue),
+        .success(expectedValue)
+    ):
+        XCTAssertNoDiff(receivedValue, expectedValue, file: file, line: line)
+        
+    default:
+        XCTFail("Expected \(expectedValue), but got \(receivedValue) instead.", file: file, line: line)
+    }
+}
+
+private func assert<T: Equatable>(
+    _ receivedValue: Result<T, Error>,
+    _ expectedValue: Result<T, Error>,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    switch (receivedValue, expectedValue) {
+        
+    case let (
+        .failure(receivedError as NSError),
+        .failure(expectedError as NSError)
+    ):
+        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
+        
+    case let (
+        .success(receivedValue),
+        .success(expectedValue)
+    ):
+        XCTAssertNoDiff(receivedValue, expectedValue, file: file, line: line)
+        
+    default:
+        XCTFail("Expected \(expectedValue), but got \(receivedValue) instead.", file: file, line: line)
+    }
+}
+
+private func anyPhoneNumber(
+    _ value: String = UUID().uuidString
+) -> PhoneNumber {
+    
+    .init(value)
 }
