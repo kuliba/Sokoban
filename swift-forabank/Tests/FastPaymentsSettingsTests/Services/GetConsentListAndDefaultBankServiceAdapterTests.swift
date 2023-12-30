@@ -195,6 +195,23 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 0)
     }
     
+    func test_process_shouldNotDeliverResultsOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let serviceSpy: ServiceSpy
+        (sut, serviceSpy, _) = makeSUT()
+        var result: SUT.GetConsentListAndDefaultBankResult?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        sut = nil
+        serviceSpy.complete(with: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .success(true)
+        ))
+        
+        XCTAssertNil(result)
+    }
+    
     func test_process_shouldDeliverSameResultsOnSuccesses_empty_b1c1c2() {
         
         let consentList = makeConsentList(count: 0)
@@ -304,6 +321,25 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         ))
         
         XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_process_shouldNotDeliverLoadResultOnInstanceDeallocation_b1c3() {
+        
+        var sut: SUT?
+        let serviceSpy: ServiceSpy
+        let loadSpy: LoadSpy
+        (sut, serviceSpy, loadSpy) = makeSUT()
+        var result: SUT.GetConsentListAndDefaultBankResult?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        serviceSpy.complete(with: .init(
+            consentListResult: .success([]),
+            defaultBankResult: .failure(.limit(message: UUID().uuidString))
+        ))
+        sut = nil
+        loadSpy.complete(with: true)
+        
+        XCTAssertNil(result)
     }
     
     func test_process_shouldCallLoadOnDefaultBankFailure_one_limit_b2c3() {
@@ -677,6 +713,25 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
+    func test_process_shouldNotDeliverLoadResultOnInstanceDeallocation_b3c5() {
+        
+        var sut: SUT?
+        let serviceSpy: ServiceSpy
+        let loadSpy: LoadSpy
+        (sut, serviceSpy, loadSpy) = makeSUT()
+        var result: SUT.GetConsentListAndDefaultBankResult?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        serviceSpy.complete(with: .init(
+            consentListResult: .failure(.server(statusCode: 123, errorMessage: UUID().uuidString)),
+            defaultBankResult: .failure(.connectivity)
+        ))
+        sut = nil
+        loadSpy.complete(with: true)
+        
+        XCTAssertNil(result)
+    }
+    
     func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_server_defaultBankFailure_limit_b3c3() {
         
         let errorMessage = UUID().uuidString
@@ -699,6 +754,25 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
             ))
             loadSpy.complete(with: loadedDefaultBank)
         }
+    }
+    
+    func test_process_shouldNotDeliverLoadResultOnInstanceDeallocation_b3c3() {
+        
+        var sut: SUT?
+        let serviceSpy: ServiceSpy
+        let loadSpy: LoadSpy
+        (sut, serviceSpy, loadSpy) = makeSUT()
+        var result: SUT.GetConsentListAndDefaultBankResult?
+        
+        sut?.process(anyPhoneNumber()) { result = $0 }
+        serviceSpy.complete(with: .init(
+            consentListResult: .failure(.server(statusCode: 123, errorMessage: UUID().uuidString)),
+            defaultBankResult: .failure(.limit(message: UUID().uuidString))
+        ))
+        sut = nil
+        loadSpy.complete(with: true)
+        
+        XCTAssertNil(result)
     }
     
     func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_server_defaultBankFailure_server_b3c4() {
