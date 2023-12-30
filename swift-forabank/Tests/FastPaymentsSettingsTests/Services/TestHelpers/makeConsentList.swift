@@ -8,8 +8,13 @@
 import Foundation
 
 func makeConsentList(
-    count: Int
+    count: Int,
+    file: StaticString = #file,
+    line: UInt = #line
 ) -> [BankID] {
     
-    (0..<count).map { _ in .init(UUID().uuidString) }
+    let list = (0..<count).map { _ in BankID(UUID().uuidString) }
+    XCTAssertNoDiff(list.count, count, file: file, line: line)
+    
+    return list
 }

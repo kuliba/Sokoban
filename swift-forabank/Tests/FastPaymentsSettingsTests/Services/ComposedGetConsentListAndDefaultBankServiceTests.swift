@@ -233,7 +233,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 0)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure_limit() {
@@ -249,7 +248,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 0)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantFailure_server() {
@@ -265,7 +263,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 0)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantSuccess_false() {
@@ -280,7 +277,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(false))
         }
-        XCTAssertNoDiff(consentList.count, 0)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_empty_defaultBantSuccess_true() {
@@ -295,7 +291,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(true))
         }
-        XCTAssertNoDiff(consentList.count, 0)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_connectivity() {
@@ -311,7 +306,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 1)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_limit() {
@@ -327,7 +321,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 1)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantFailure_server() {
@@ -343,7 +336,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 1)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantSuccess_false() {
@@ -358,7 +350,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(false))
         }
-        XCTAssertNoDiff(consentList.count, 1)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_one_defaultBantSuccess_true() {
@@ -373,7 +364,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(true))
         }
-        XCTAssertNoDiff(consentList.count, 1)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_connectivity() {
@@ -389,7 +379,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 2)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_limit() {
@@ -405,7 +394,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 2)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantFailure_server() {
@@ -421,7 +409,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .failure(defaultBankError))
         }
-        XCTAssertNoDiff(consentList.count, 2)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantSuccess_false() {
@@ -436,7 +423,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(false))
         }
-        XCTAssertNoDiff(consentList.count, 2)
     }
     
     func test_process_shouldDeliverConsentListOnGetConsentListSuccess_many_defaultBantSuccess_true() {
@@ -451,7 +437,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
             getConsentListSpy.complete(with: .success(consentList))
             getDefaultBankSpy.complete(with: .success(true))
         }
-        XCTAssertNoDiff(consentList.count, 2)
     }
     
     func test_process_shouldNotDeliverGetConsentListResultOnInstanceDeallocation() {
