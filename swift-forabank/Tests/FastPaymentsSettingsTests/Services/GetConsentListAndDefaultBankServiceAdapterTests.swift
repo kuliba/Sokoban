@@ -14,8 +14,7 @@ final class GetConsentListAndDefaultBankServiceAdapter {
     
     typealias Service = GetConsentListAndDefaultBankService
     
-    typealias LoadResult = Result<DefaultBank, LoadError>
-    typealias LoadCompletion = (LoadResult) -> Void
+    typealias LoadCompletion = (DefaultBank) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
     
     private let service: Service
@@ -32,9 +31,9 @@ final class GetConsentListAndDefaultBankServiceAdapter {
 
 extension GetConsentListAndDefaultBankServiceAdapter {
     
-   typealias GetConsentListAndDefaultBankResult = Result<GetConsentListAndDefaultBank, GetConsentListAndDefaultBankError>
+    typealias GetConsentListAndDefaultBankResult = Result<GetConsentListAndDefaultBank, GetConsentListAndDefaultBankError>
     typealias Completion = (GetConsentListAndDefaultBankResult) -> Void
-
+    
     func process(
         _ payload: PhoneNumber,
         completion: @escaping Completion
@@ -51,8 +50,8 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     defaultBank: defaultBank
                 )))
                 
-            case let (_, .failure(error)):
-                handleGetDefaultBankError(results.consentListResult, error, completion)
+            case let (_, .failure(defaultBankError)):
+                handleGetDefaultBankError(results.consentListResult, defaultBankError, completion)
                 
             default:
                 fatalError()
@@ -62,28 +61,25 @@ extension GetConsentListAndDefaultBankServiceAdapter {
     
     private func handleGetDefaultBankError(
         _ consentListResult: GetConsentListAndDefaultBankResults.ConsentListResult,
-        _ error: GetDefaultBankError,
+        _ defaultBankError: GetDefaultBankError,
         _ completion: @escaping Completion
     ) {
-        load { [weak self] loadResult in
+        load { [weak self] defaultBank in
             
-//            guard let self else { return }
-//            
-//            switch loadResult {
-//            case let .failure(loadError):
-//                <#code#>
-//                
-//            case let .success(defaultBank):
-//                completion
-//            }
+            guard self != nil else { return }
+            
+            //            switch loadResult {
+            //            case let .failure(loadError):
+            //                <#code#>
+            //
+            //            case let .success(defaultBank):
+            //                completion
+            //            }
         }
     }
 }
 
 extension GetConsentListAndDefaultBankServiceAdapter {
-    
-#warning("replace with typed error")
-    typealias LoadError = Error
     
     enum GetConsentListAndDefaultBankError: Error, Equatable {
         
@@ -356,7 +352,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
     
     private typealias SUT = GetConsentListAndDefaultBankServiceAdapter
     private typealias ServiceSpy = ResponseSpy<PhoneNumber, GetConsentListAndDefaultBankResults>
-    private typealias LoadSpy = Spy<Void, DefaultBank, Error>
+    private typealias LoadSpy = ResponseSpy<Void, DefaultBank>
     
     private func makeSUT(
         file: StaticString = #file,
