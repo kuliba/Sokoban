@@ -7,5 +7,5 @@
 
 import Tagged
 
-typealias BankID = Tagged<_BankID, String>
-enum _BankID {}
+public typealias BankID = Tagged<_BankID, String>
+public enum _BankID {}

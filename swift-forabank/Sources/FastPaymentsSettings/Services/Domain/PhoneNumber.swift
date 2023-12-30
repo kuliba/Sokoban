@@ -7,5 +7,5 @@
 
 import Tagged
 
-typealias PhoneNumber = Tagged<_PhoneNumber, String>
-enum _PhoneNumber {}
+public typealias PhoneNumber = Tagged<_PhoneNumber, String>
+public enum _PhoneNumber {}
