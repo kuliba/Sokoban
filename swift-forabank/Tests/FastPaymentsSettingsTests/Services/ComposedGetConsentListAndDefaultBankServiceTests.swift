@@ -43,9 +43,6 @@ extension ComposedGetConsentListAndDefaultBankService {
 
 extension ComposedGetConsentListAndDefaultBankService {
     
-    typealias BankID = Tagged<_BankID, String>
-    enum _BankID {}
-    
 #warning("replace with typed error")
     typealias GetConsentListError = Error
     
@@ -68,7 +65,7 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
-    private typealias GetConsentListSpy = Spy<Void, [SUT.BankID], Error>
+    private typealias GetConsentListSpy = Spy<Void, [BankID], Error>
     private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, Error>
     
     private func makeSUT(
