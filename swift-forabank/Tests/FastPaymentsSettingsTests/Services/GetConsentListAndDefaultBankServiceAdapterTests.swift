@@ -44,18 +44,21 @@ extension GetConsentListAndDefaultBankServiceAdapter {
             
             switch (results.consentListResult, results.defaultBankResult) {
                 
+                // b1c1, b1c2, b2c1, b2c2
             case let (.success(consentList), .success(defaultBank)):
                 completion(.success(.init(
                     consentList: consentList,
                     defaultBank: defaultBank
                 )))
                 
+                // b4c1, b4c2
             case let (.failure(.connectivity), .success(defaultBank)):
                 completion(.success(.init(
                     consentList: [],
                     defaultBank: defaultBank
                 )))
                 
+                // b3c1, b3c2
             case let (
                 .failure(.server(_, errorMessage: errorMessage)),
                 .success(defaultBank)
@@ -65,29 +68,34 @@ extension GetConsentListAndDefaultBankServiceAdapter {
                     .init(consentList: [], defaultBank: defaultBank)
                 )))
                 
+                // b4c3, b4c4, b4c5
             case let (
                 .failure(.connectivity),
                 .failure(defaultBankError)
             ):
                 handleGetDefaultBankError([], defaultBankError, completion)
                 
+                // b3c5
             case let (
                 .failure(.server(_, errorMessage: errorMessage)),
                 .failure(.connectivity)
             ),
+                // b3c4
                 let (
                     .failure(.server(_, errorMessage: errorMessage)),
                     .failure(.server)
                 ):
                 handleErrors(errorMessage, completion)
                 
+                // b3c3
             case let (
                 .failure(.server),
                 .failure(.limit(message: message))
             ):
                 // defaultBankError has higher priority, consentListError is ignored
                 handleLimit(message, completion)
-                
+               
+                // b1c3, b2c3, b1c4, b2c4, b1c5, b2c5
             case let (.success(consentList), .failure(defaultBankError)):
                 handleGetDefaultBankError(consentList, defaultBankError, completion)
             }
@@ -187,7 +195,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 0)
     }
     
-    func test_process_shouldDeliverSameResultsOnSuccesses_empty() {
+    func test_process_shouldDeliverSameResultsOnSuccesses_empty_b1c1c2() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBank = anyDefaultBank()
@@ -204,7 +212,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverSameResultsOnSuccesses_one() {
+    func test_process_shouldDeliverSameResultsOnSuccesses_one_b2c1c2() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBank = anyDefaultBank()
@@ -221,7 +229,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverSameResultsOnSuccesses_many() {
+    func test_process_shouldDeliverSameResultsOnSuccesses_many_b2c1c2() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBank = anyDefaultBank()
@@ -238,7 +246,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_empty_connectivity() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_connectivity_b1c5() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -253,7 +261,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_one_connectivity() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_connectivity_b2c5() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -268,7 +276,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_many_connectivity() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_connectivity_b2c5() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -283,7 +291,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_empty_limit() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_limit_b1c3() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
@@ -298,7 +306,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_one_limit() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_limit_b2c3() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
@@ -313,7 +321,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_many_limit() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_limit_b2c3() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBankError: GetDefaultBankError = .limit(message: UUID().uuidString)
@@ -328,7 +336,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_empty_server() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_empty_server_b1c4() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -343,7 +351,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_one_server() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_one_serverb2c4() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -358,7 +366,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldCallLoadOnDefaultBankFailure_many_server() {
+    func test_process_shouldCallLoadOnDefaultBankFailure_many_server_b2c4() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -373,7 +381,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.callCount, 1)
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_connectivity() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_connectivity_b1c5() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -392,7 +400,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_connectivity_false() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_connectivity_b2c5() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -411,7 +419,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_connectivity() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_connectivity_b2c5() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -430,7 +438,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_limit() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_limit_b1c3() {
         
         let consentList = makeConsentList(count: 0)
         let message = UUID().uuidString
@@ -453,7 +461,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_limit() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_limit_b2c3() {
         
         let consentList = makeConsentList(count: 1)
         let message = UUID().uuidString
@@ -476,7 +484,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_limit() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_limit_b2c3() {
         
         let consentList = makeConsentList(count: 2)
         let message = UUID().uuidString
@@ -499,7 +507,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_server() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_empty_server_b1c4() {
         
         let consentList = makeConsentList(count: 0)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -518,7 +526,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_server() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_one_server_b2c4() {
         
         let consentList = makeConsentList(count: 1)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -537,7 +545,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_server() {
+    func test_process_shouldDeliverLoadedDefaultBankOnDefaultBankFailure_many_server_b2c4() {
         
         let consentList = makeConsentList(count: 2)
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -556,7 +564,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankSuccess() {
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankSuccess_b4c1c2() {
         
         let consentListError: GetConsentListError = .connectivity
         let defaultBank = anyDefaultBank()
@@ -573,7 +581,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_connectivity() {
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_connectivity_b4c5() {
         
         let consentListError: GetConsentListError = .connectivity
         let defaultBankError: GetDefaultBankError = .connectivity
@@ -592,7 +600,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_limit() {
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_limit_b4c3() {
         
         let consentListError: GetConsentListError = .connectivity
         let message = UUID().uuidString
@@ -612,7 +620,7 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_server() {
+    func test_process_shouldDeliverEmptyConsentListOnGetConsentListFailure_connectivity_defaultBankFailure_server_b4c4() {
         
         let consentListError: GetConsentListError = .connectivity
         let defaultBankError: GetDefaultBankError = .server(statusCode: 123, errorMessage: UUID().uuidString)
@@ -713,7 +721,6 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         }
     }
     
-#warning("add tests for consent list failure")
     // MARK: - Helpers
     
     private typealias SUT = GetConsentListAndDefaultBankServiceAdapter
