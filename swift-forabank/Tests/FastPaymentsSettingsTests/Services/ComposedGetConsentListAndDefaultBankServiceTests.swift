@@ -499,13 +499,6 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
         return (sut, getConsentListSpy, getDefaultBankSpy)
     }
     
-    private func makeConsentList(
-        count: Int
-    ) -> [BankID] {
-        
-        (0..<count).map { _ in .init(UUID().uuidString) }
-    }
-    
     private func expect(
         _ sut: SUT,
         with payload: PhoneNumber = anyPhoneNumber(),
