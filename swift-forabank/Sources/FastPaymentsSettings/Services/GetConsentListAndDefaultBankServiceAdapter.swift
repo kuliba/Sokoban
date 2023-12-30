@@ -132,6 +132,8 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
         }
     }
     
+    private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
+
     private func handleGetDefaultBankError(
         _ consentList: ConsentList,
         _ defaultBankError: GetDefaultBankError,

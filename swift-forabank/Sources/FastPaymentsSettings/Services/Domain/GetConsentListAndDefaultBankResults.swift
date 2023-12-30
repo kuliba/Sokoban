@@ -1,6 +1,6 @@
 //
 //  GetConsentListAndDefaultBankResults.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 30.12.2023.
 //
@@ -14,7 +14,7 @@ public struct GetConsentListAndDefaultBankResults {
     public let defaultBankResult: DefaultBankResult
     
     public init(
-        consentListResult: ConsentListResult, 
+        consentListResult: ConsentListResult,
         defaultBankResult: DefaultBankResult
     ) {
         self.consentListResult = consentListResult
@@ -22,17 +22,18 @@ public struct GetConsentListAndDefaultBankResults {
     }
 }
 
-#warning("move error types to separate files?")
-
-public enum GetConsentListError: Error, Equatable {
+public extension GetConsentListAndDefaultBankResults {
     
-    case connectivity
-    case server(statusCode: Int, errorMessage: String)
-}
-
-public enum GetDefaultBankError: Error, Equatable {
+    enum GetConsentListError: Error, Equatable {
+        
+        case connectivity
+        case server(statusCode: Int, errorMessage: String)
+    }
     
-    case connectivity
-    case limit(message: String)
-    case server(statusCode: Int, errorMessage: String)
+    enum GetDefaultBankError: Error, Equatable {
+        
+        case connectivity
+        case limit(message: String)
+        case server(statusCode: Int, errorMessage: String)
+    }
 }

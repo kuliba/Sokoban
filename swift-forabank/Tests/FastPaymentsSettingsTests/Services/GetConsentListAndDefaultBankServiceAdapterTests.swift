@@ -634,6 +634,8 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = GetConsentListAndDefaultBankServiceAdapter
+    private typealias GetConsentListError = GetConsentListAndDefaultBankResults.GetConsentListError
+    private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
     private typealias ServiceSpy = ResponseSpy<PhoneNumber, GetConsentListAndDefaultBankResults>
     private typealias LoadSpy = ResponseSpy<Void, DefaultBank>
     

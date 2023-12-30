@@ -417,6 +417,8 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
+    private typealias GetConsentListError = GetConsentListAndDefaultBankResults.GetConsentListError
+    private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
     private typealias GetConsentListSpy = Spy<Void, ConsentList, GetConsentListError>
     private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, GetDefaultBankError>
     
