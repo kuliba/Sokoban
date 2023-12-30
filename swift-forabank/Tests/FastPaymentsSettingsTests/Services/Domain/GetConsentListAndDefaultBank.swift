@@ -16,8 +16,11 @@ struct GetConsentListAndDefaultBank {
 
 #warning("move error types to separate files?")
 
-#warning("replace with typed error")
-    typealias GetConsentListError = Error
+enum GetConsentListError: Error, Equatable {
+    
+    case connectivity
+    case server(statusCode: Int, errorMessage: String)
+}
 
 enum GetDefaultBankError: Error, Equatable {
     
