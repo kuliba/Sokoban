@@ -33,7 +33,7 @@ public extension ComposedGetConsentListAndDefaultBankService {
     
     func process(
         _ payload: PhoneNumber,
-    completion: @escaping Completion
+        completion: @escaping Completion
     ) {
         getConsentList { [weak self] in
             
@@ -60,4 +60,3 @@ private extension ComposedGetConsentListAndDefaultBankService {
         }
     }
 }
-
