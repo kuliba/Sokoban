@@ -16,17 +16,37 @@ final class BanksReducerTests: XCTestCase {
         XCTAssertNoDiff(applySelectionSpy.callCount, 0)
     }
     
-    func test_reduce_shouldCallApplySelectionWithSelectedBankIDsOnApplySelection() {
+    func test_reduce_shouldCallApplySelectionWithEmptySelectedBankIDsOnApplySelection() {
         
         let state = anyState()
-        let event = makeApplySelection(.c, .a)
+        let event: BanksEvent = .applySelection(makeIDs())
         let (sut, applySelectionSpy) = makeSUT()
         
         _ = sut.reduce(state, event)
         
-        XCTAssertNoDiff(applySelectionSpy.payloads, [
-            .init([Bank.c, .a].map(\.id))
-        ])
+        XCTAssertNoDiff(applySelectionSpy.payloads, [makeIDs()])
+    }
+    
+    func test_reduce_shouldCallApplySelectionWithOneSelectedBankIDsOnApplySelection() {
+        
+        let state = anyState()
+        let event: BanksEvent = .applySelection(makeIDs(.c))
+        let (sut, applySelectionSpy) = makeSUT()
+        
+        _ = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(applySelectionSpy.payloads, [makeIDs(.c)])
+    }
+    
+    func test_reduce_shouldCallApplySelectionWithSelectedBankIDsOnApplySelection() {
+        
+        let state = anyState()
+        let event: BanksEvent = .applySelection(makeIDs(.c, .a))
+        let (sut, applySelectionSpy) = makeSUT()
+        
+        _ = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(applySelectionSpy.payloads, [makeIDs(.c, .a)])
     }
     
     // MARK: - Helpers
@@ -50,18 +70,21 @@ final class BanksReducerTests: XCTestCase {
         return (sut, applySelectionSpy)
     }
     
-    private func anyState() -> Banks {
+    private func anyState(
+        all allBanks: [Bank] = [.d, .b, .a, .c],
+        selected: [Bank] = [.b, .d]
+    ) -> Banks {
         
         .stub(
-            all: [.d, .b, .a, .c],
-            selected: [.b, .d]
+            all: allBanks,
+            selected: selected
         )
     }
     
-    private func makeApplySelection(
-        _ banks: Bank...
-    ) -> BanksEvent {
+    private func makeIDs(
+        _ banks: Bank?...
+    ) -> Set<Bank.ID> {
         
-        .applySelection(.init(banks.map(\.id)))
+        .init(banks.compactMap(\.?.id))
     }
 }
