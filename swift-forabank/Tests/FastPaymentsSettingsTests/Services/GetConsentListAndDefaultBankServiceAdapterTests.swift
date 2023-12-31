@@ -318,12 +318,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.limit(
-            message: message,
-            .init(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )
+            ),
+            message: message,
+            type: .limit
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
@@ -341,12 +342,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.limit(
-            message: message,
-            .init(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )
+            ),
+            message: message,
+            type: .limit
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
@@ -364,12 +366,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.limit(
-            message: message,
-            .init(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
                 consentList: consentList,
                 defaultBank: loadedDefaultBank
-            )
+            ),
+            message: message,
+            type: .limit
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .success(consentList),
@@ -480,9 +483,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.limit(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
+                consentList: [],
+                defaultBank: loadedDefaultBank
+            ),
             message: message,
-            .init(consentList: [], defaultBank: loadedDefaultBank)
+            type: .limit
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
@@ -518,9 +525,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let defaultBank = anyDefaultBank()
         let (sut, serviceSpy, _) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.server(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
+                consentList: [],
+                defaultBank: defaultBank
+            ),
             message: errorMessage,
-            .init(consentList: [],defaultBank: defaultBank)
+            type: .server
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
@@ -537,9 +548,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.server(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
+                consentList: [],
+                defaultBank: loadedDefaultBank
+            ),
             message: errorMessage,
-            .init(consentList: [], defaultBank: loadedDefaultBank)
+            type: .server
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
@@ -577,12 +592,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.limit(
-            message: message,
-            .init(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
                 consentList: [],
                 defaultBank: loadedDefaultBank
-            )
+            ),
+            message: message,
+            type: .limit
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),
@@ -619,9 +635,13 @@ final class GetConsentListAndDefaultBankServiceAdapterTests: XCTestCase {
         let loadedDefaultBank = anyDefaultBank()
         let (sut, serviceSpy, loadSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.server(
+        expect(sut, toDeliver: .failure(.init(
+            getConsentListAndDefaultBank: .init(
+                consentList: [],
+                defaultBank: loadedDefaultBank
+            ),
             message: errorMessage,
-            .init(consentList: [], defaultBank: loadedDefaultBank)
+            type: .server
         ))) {
             serviceSpy.complete(with: .init(
                 consentListResult: .failure(consentListError),

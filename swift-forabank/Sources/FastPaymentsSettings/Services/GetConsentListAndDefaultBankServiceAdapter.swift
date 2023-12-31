@@ -66,9 +66,13 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
             .failure(.server(_, errorMessage: errorMessage)),
             .success(defaultBank)
         ):
-            completion(.failure(.server(
+            completion(.failure(.init(
+                getConsentListAndDefaultBank: .init(
+                    consentList: [],
+                    defaultBank: defaultBank
+                ),
                 message: errorMessage,
-                .init(consentList: [], defaultBank: defaultBank)
+                type: .server
             )))
             
             // b4c3, b4c4, b4c5
@@ -112,9 +116,13 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
             
             guard self != nil else { return }
             
-            completion(.failure(.server(
+            completion(.failure(.init(
+                getConsentListAndDefaultBank: .init(
+                    consentList: [],
+                    defaultBank: defaultBank
+                ),
                 message: errorMessage,
-                .init(consentList: [], defaultBank: defaultBank)
+                type: .server
             )))
         }
     }
@@ -127,9 +135,13 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
             
             guard self != nil else { return }
             
-            completion(.failure(.limit(
+            completion(.failure(.init(
+                getConsentListAndDefaultBank: .init(
+                    consentList: [],
+                    defaultBank: defaultBank
+                ),
                 message: message,
-                .init(consentList: [], defaultBank: defaultBank)
+                type: .limit
             )))
         }
     }
@@ -153,12 +165,13 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
                 )))
                 
             case let .limit(message):
-                completion(.failure(.limit(
-                    message: message,
-                    .init(
+                completion(.failure(.init(
+                    getConsentListAndDefaultBank: .init(
                         consentList: consentList,
                         defaultBank: defaultBank
-                    )
+                    ),
+                    message: message,
+                    type: .limit
                 )))
             }
         }
@@ -167,9 +180,26 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
 
 public extension GetConsentListAndDefaultBankServiceAdapter {
     
-    enum GetConsentListAndDefaultBankError: Error, Equatable {
+    struct GetConsentListAndDefaultBankError: Error, Equatable {
         
-        case limit(message: String, GetConsentListAndDefaultBank)
-        case server(message: String, GetConsentListAndDefaultBank)
+        public let getConsentListAndDefaultBank: GetConsentListAndDefaultBank
+        public let message: String
+        public let type: ErrorType
+        
+        public init(
+            getConsentListAndDefaultBank: GetConsentListAndDefaultBank,
+            message: String,
+            type: ErrorType
+        ) {
+            self.getConsentListAndDefaultBank = getConsentListAndDefaultBank
+            self.message = message
+            self.type = type
+        }
+        
+        public enum ErrorType {
+            
+            case limit
+            case server
+        }
     }
 }
