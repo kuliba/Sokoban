@@ -39,25 +39,3 @@ final class BanksTests: XCTestCase {
         ])
     }
 }
-
-private extension Banks {
-    
-    static func stub(
-        all allBanks: [Bank],
-        selected: [Bank]
-    ) -> Self {
-        
-        .init(
-            allBanks: allBanks,
-            selected: .init(selected.map(\.id))
-        )
-    }
-}
-
-private extension Bank {
-    
-    static let a: Self = .init(id: "a", name: "A")
-    static let b: Self = .init(id: "b", name: "B")
-    static let c: Self = .init(id: "c", name: "C")
-    static let d: Self = .init(id: "d", name: "D")
-}
