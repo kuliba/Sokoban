@@ -88,7 +88,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
                 .failure(.server(_, errorMessage: errorMessage)),
                 .failure(.server)
             ):
-            handleErrors(errorMessage, completion)
+            handleConsentListServerError(errorMessage, completion)
             
             // b3c3
         case let (
@@ -96,7 +96,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
             .failure(.limit(message: message))
         ):
             // defaultBankError has higher priority, consentListError is ignored
-            handleLimit(message, completion)
+            handleDefaultBankLimitErrorIgnoringConsentListError(message, completion)
             
             // b1c3, b2c3, b1c4, b2c4, b1c5, b2c5
         case let (.success(consentList), .failure(defaultBankError)):
@@ -104,7 +104,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
         }
     }
     
-    private func handleErrors(
+    private func handleConsentListServerError(
         _ errorMessage: String,
         _ completion: @escaping Completion
     ) {
@@ -119,7 +119,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
         }
     }
     
-    private func handleLimit(
+    private func handleDefaultBankLimitErrorIgnoringConsentListError(
         _ message: String,
         _ completion: @escaping Completion
     ) {
@@ -173,4 +173,3 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
         case server(message: String, GetConsentListAndDefaultBank)
     }
 }
-
