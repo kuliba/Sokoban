@@ -38,67 +38,69 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
         _ payload: PhoneNumber,
         completion: @escaping Completion
     ) {
-        service.process(payload) { [weak self] results in
+        service.process(payload) { [weak self] in self?.combine($0, completion) }
+    }
+    
+    private func combine(
+        _ results: GetConsentListAndDefaultBankResults,
+        _ completion: @escaping Completion
+    ) {
+        switch (results.consentListResult, results.defaultBankResult) {
             
-            guard let self else { return }
+            // b1c1, b1c2, b2c1, b2c2
+        case let (.success(consentList), .success(defaultBank)):
+            completion(.success(.init(
+                consentList: consentList,
+                defaultBank: defaultBank
+            )))
             
-            switch (results.consentListResult, results.defaultBankResult) {
-                
-                // b1c1, b1c2, b2c1, b2c2
-            case let (.success(consentList), .success(defaultBank)):
-                completion(.success(.init(
-                    consentList: consentList,
-                    defaultBank: defaultBank
-                )))
-                
-                // b4c1, b4c2
-            case let (.failure(.connectivity), .success(defaultBank)):
-                completion(.success(.init(
-                    consentList: [],
-                    defaultBank: defaultBank
-                )))
-                
-                // b3c1, b3c2
-            case let (
+            // b4c1, b4c2
+        case let (.failure(.connectivity), .success(defaultBank)):
+            completion(.success(.init(
+                consentList: [],
+                defaultBank: defaultBank
+            )))
+            
+            // b3c1, b3c2
+        case let (
+            .failure(.server(_, errorMessage: errorMessage)),
+            .success(defaultBank)
+        ):
+            completion(.failure(.server(
+                message: errorMessage,
+                .init(consentList: [], defaultBank: defaultBank)
+            )))
+            
+            // b4c3, b4c4, b4c5
+        case let (
+            .failure(.connectivity),
+            .failure(defaultBankError)
+        ):
+            handleGetDefaultBankError([], defaultBankError, completion)
+            
+            // b3c5
+        case let (
+            .failure(.server(_, errorMessage: errorMessage)),
+            .failure(.connectivity)
+        ),
+            // b3c4
+            let (
                 .failure(.server(_, errorMessage: errorMessage)),
-                .success(defaultBank)
+                .failure(.server)
             ):
-                completion(.failure(.server(
-                    message: errorMessage,
-                    .init(consentList: [], defaultBank: defaultBank)
-                )))
-                
-                // b4c3, b4c4, b4c5
-            case let (
-                .failure(.connectivity),
-                .failure(defaultBankError)
-            ):
-                handleGetDefaultBankError([], defaultBankError, completion)
-                
-                // b3c5
-            case let (
-                .failure(.server(_, errorMessage: errorMessage)),
-                .failure(.connectivity)
-            ),
-                // b3c4
-                let (
-                    .failure(.server(_, errorMessage: errorMessage)),
-                    .failure(.server)
-                ):
-                handleErrors(errorMessage, completion)
-                
-                // b3c3
-            case let (
-                .failure(.server),
-                .failure(.limit(message: message))
-            ):
-                // defaultBankError has higher priority, consentListError is ignored
-                handleLimit(message, completion)
-               
-                // b1c3, b2c3, b1c4, b2c4, b1c5, b2c5
-            case let (.success(consentList), .failure(defaultBankError)):
-                handleGetDefaultBankError(consentList, defaultBankError, completion)
-            }
+            handleErrors(errorMessage, completion)
+            
+            // b3c3
+        case let (
+            .failure(.server),
+            .failure(.limit(message: message))
+        ):
+            // defaultBankError has higher priority, consentListError is ignored
+            handleLimit(message, completion)
+            
+            // b1c3, b2c3, b1c4, b2c4, b1c5, b2c5
+        case let (.success(consentList), .failure(defaultBankError)):
+            handleGetDefaultBankError(consentList, defaultBankError, completion)
         }
     }
     
@@ -133,7 +135,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
     }
     
     private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
-
+    
     private func handleGetDefaultBankError(
         _ consentList: ConsentList,
         _ defaultBankError: GetDefaultBankError,
