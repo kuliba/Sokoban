@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 09.01.2024.
 //
 
+import Tagged
+
 final class FPSReducer {
     
     private let getClientConsentMe2MePull: GetClientConsentMe2MePull
@@ -31,16 +33,16 @@ extension FPSReducer {
         switch event {
         case .fpsButtonTapped:
             switch state {
-            case .tripleYes:
+            case let .tripleYes(phoneNumber):
                 getClientConsentMe2MePull { [weak self] _ in
                 
-                    self?.getBankDefault { _ in }
+                    self?.getBankDefault(phoneNumber) { _ in }
                 }
                 
-            case .tripleNo:
+            case let .tripleNo(phoneNumber):
                 getClientConsentMe2MePull { [weak self] _ in
                     
-                    self?.getBankDefault { _ in }
+                    self?.getBankDefault(phoneNumber) { _ in }
                 }
                 
             case .emptyList:
@@ -68,14 +70,26 @@ extension FPSReducer {
     typealias GetBankDefaultError = Error
     typealias GetBankDefaultResult = Result<GetBankDefaultResponse, GetBankDefaultError>
     typealias GetBankDefaultCompletion = (GetBankDefaultResult) -> Void
-    typealias GetBankDefault = (@escaping GetBankDefaultCompletion) -> Void
+    typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
 }
 
 extension FPSReducer {
     
+    typealias PhoneNumber = Tagged<_PhoneNumber, String>
+    enum _PhoneNumber {}
+    
     enum State: Equatable {
         
-        case tripleYes, tripleNo, emptyList, serverError, connectivityError
+        // a1
+        case tripleYes(phoneNumber: PhoneNumber)
+        // a2
+        case tripleNo(phoneNumber: PhoneNumber)
+        // a3
+        case emptyList
+        // a4
+        case serverError
+        // a5
+        case connectivityError
     }
     
     enum Event: Equatable {
@@ -150,48 +164,52 @@ final class FPSReducerTests: XCTestCase {
     
     // MARK: - getBankDefault
     
-    func test_fpsButtonTapped_shouldCallGetBankDefaultOnGetClientConsentMe2MePullSuccessFastPaymentContractFindListTripleYesResponse_a1() {
+    func test_fpsButtonTapped_shouldCallGetBankDefaultWithPayloadOnGetClientConsentMe2MePullSuccessFastPaymentContractFindListTripleYesResponse_a1() {
         
+        let phoneNumber = "79998887766"
+        let tripleYes = tripleYesResponse(phoneNumber: "79998887766")
         let (sut, getClientConsentMe2MePullSpy, getBankDefaultSpy) = makeSUT()
-        let tripleYes = tripleYesResponse()
         
         reduce(sut, tripleYes)
         getClientConsentMe2MePullSpy.complete(with: anySuccess())
         
-        XCTAssertNoDiff(getBankDefaultSpy.callCount, 1)
+        XCTAssertNoDiff(getBankDefaultSpy.payloads, [.init(phoneNumber)])
     }
     
-    func test_fpsButtonTapped_shouldCallGetBankDefaultOnGetClientConsentMe2MePullFailureFastPaymentContractFindListTripleYesResponse_failure_a1() {
+    func test_fpsButtonTapped_shouldCallGetBankDefaultWithPayloadOnGetClientConsentMe2MePullFailureFastPaymentContractFindListTripleYesResponse_failure_a1() {
         
+        let phoneNumber = "79998887766"
+        let tripleYes = tripleYesResponse(phoneNumber: phoneNumber)
         let (sut, getClientConsentMe2MePullSpy, getBankDefaultSpy) = makeSUT()
-        let tripleYes = tripleYesResponse()
         
         reduce(sut, tripleYes)
         getClientConsentMe2MePullSpy.complete(with: anyFailure())
         
-        XCTAssertNoDiff(getBankDefaultSpy.callCount, 1)
+        XCTAssertNoDiff(getBankDefaultSpy.payloads, [.init(phoneNumber)])
     }
     
-    func test_fpsButtonTapped_shouldCallGetBankDefaultOnGetClientConsentMe2MePullSuccessFastPaymentContractFindListTripleNoResponse_a2() {
+    func test_fpsButtonTapped_shouldCallGetBankDefaultWithPayloadOnGetClientConsentMe2MePullSuccessFastPaymentContractFindListTripleNoResponse_a2() {
         
+        let phoneNumber = "79998887766"
+        let tripleNo = tripleNoResponse(phoneNumber: phoneNumber)
         let (sut, getClientConsentMe2MePullSpy, getBankDefaultSpy) = makeSUT()
-        let tripleNo = tripleNoResponse()
         
         reduce(sut, tripleNo)
         getClientConsentMe2MePullSpy.complete(with: anySuccess())
         
-        XCTAssertNoDiff(getBankDefaultSpy.callCount, 1)
+        XCTAssertNoDiff(getBankDefaultSpy.payloads, [.init(phoneNumber)])
     }
     
-    func test_fpsButtonTapped_shouldCallGetBankDefaultOnGetClientConsentMe2MePullFailureFastPaymentContractFindListTripleNoResponse_a2() {
+    func test_fpsButtonTapped_shouldCallGetBankDefaultWithPayloadOnGetClientConsentMe2MePullFailureFastPaymentContractFindListTripleNoResponse_a2() {
         
+        let phoneNumber = "79998887766"
+        let tripleNo = tripleNoResponse(phoneNumber: phoneNumber)
         let (sut, getClientConsentMe2MePullSpy, getBankDefaultSpy) = makeSUT()
-        let tripleNo = tripleNoResponse()
-        
+
         reduce(sut, tripleNo)
         getClientConsentMe2MePullSpy.complete(with: anyFailure())
         
-        XCTAssertNoDiff(getBankDefaultSpy.callCount, 1)
+        XCTAssertNoDiff(getBankDefaultSpy.payloads, [.init(phoneNumber)])
     }
     
     func test_fpsButtonTapped_shouldNotCallGetBankDefaultOnFastPaymentContractFindListEmptyList_a3() {
@@ -230,7 +248,7 @@ final class FPSReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias GetClientConsentMe2MePullSpy = Spy<Void, Void, Error>
-    private typealias GetBankDefaultSpy = Spy<Void, Void, Error>
+    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, Void, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -255,14 +273,18 @@ final class FPSReducerTests: XCTestCase {
         return (sut, getClientConsentMe2MePullSpy, getBankDefaultSpy)
     }
     
-    private func tripleYesResponse() -> State {
+    private func tripleYesResponse(
+        phoneNumber: String = UUID().uuidString
+    ) -> State {
         
-        .tripleYes
+        .tripleYes(phoneNumber: .init(phoneNumber))
     }
     
-    private func tripleNoResponse() -> State {
+    private func tripleNoResponse(
+        phoneNumber: String = UUID().uuidString
+    ) -> State {
         
-        .tripleNo
+        .tripleNo(phoneNumber: .init(phoneNumber))
     }
     
     private func emptyListResponse() -> State {
