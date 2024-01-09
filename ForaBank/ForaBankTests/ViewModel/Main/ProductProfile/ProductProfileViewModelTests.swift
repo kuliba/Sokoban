@@ -553,7 +553,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
         return .init(
             model, 
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -587,7 +587,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
-                fastPaymentsFactory: .default,
+                fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),

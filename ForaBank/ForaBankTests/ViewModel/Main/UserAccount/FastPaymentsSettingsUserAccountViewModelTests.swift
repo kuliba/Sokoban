@@ -162,7 +162,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -195,7 +195,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -210,7 +210,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -282,7 +282,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
         let sut = SUT(
             model: model,
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .new,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get,
                 getDefaultAndConsent: getDefaultAndConsentSpy.process(_:completion:)
@@ -432,10 +432,10 @@ private extension UserAccountViewModel {
     
     var fastPaymentsSettings: MeToMeSettingView.ViewModel? {
         
-        guard case let .fastPaymentSettings(fastPaymentsSettings) = link
+        guard case let .fastPaymentSettings(.legacy(legacy)) = link
         else { return nil }
         
-        return fastPaymentsSettings
+        return legacy
     }
 }
 

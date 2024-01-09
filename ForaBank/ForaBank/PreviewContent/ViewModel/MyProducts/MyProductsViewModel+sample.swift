@@ -21,7 +21,7 @@ extension MyProductsViewModel {
         cardAction: { _ in },
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -43,7 +43,7 @@ extension MyProductsViewModel {
         cardAction: { _ in },
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),

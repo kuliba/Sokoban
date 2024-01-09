@@ -166,10 +166,19 @@ struct UserAccountView: View {
         case let .userDocument(userDocumentViewModel):
             UserDocumentView(viewModel: userDocumentViewModel)
             
-        case let .fastPaymentSettings(meToMeSettingsViewModel):
-            MeToMeSettingView(viewModel: meToMeSettingsViewModel)
-                .navigationBarBackButtonHidden(false)
-                .navigationBarTitle("", displayMode: .inline)
+        case let .fastPaymentSettings(fastPaymentSettings):
+            switch fastPaymentSettings {
+            case let .legacy(meToMeSettingsViewModel):
+                MeToMeSettingView(viewModel: meToMeSettingsViewModel)
+                    .navigationBarBackButtonHidden(false)
+                    .navigationBarTitle("", displayMode: .inline)
+                
+            case let .new(fastPaymentsSettingsViewModel):
+                Text("TBD: FastPaymentsSettingsView with \(String(describing: fastPaymentsSettingsViewModel))")
+                    .navigationBar(with: .fastPayments(
+                        action: viewModel.dismissDestination
+                    ))
+            }
             
         case let .deleteUserInfo(deleteInfoViewModel):
             DeleteAccountView(viewModel: deleteInfoViewModel)
@@ -242,6 +251,42 @@ struct UserAccountView: View {
     }
 }
 
+private extension NavigationBarView.ViewModel {
+    
+    static func fastPayments(
+        action: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: "Настройки СБП",
+            subtitle: "Система быстрых платежей",
+            icon: "sfpBig",
+            action: action
+        )
+    }
+    
+    convenience init(
+        title: String,
+        subtitle: String,
+        icon: String,
+        action: @escaping () -> Void
+    ) {
+        self.init(
+            title: title,
+            subtitle: subtitle,
+            leftItems: [
+                BackButtonItemViewModel(action: action)
+            ],
+            rightItems: [
+                IconItemViewModel(
+                    icon: Image(icon),
+                    style: .large
+                )
+            ]
+        )
+    }
+}
+
 struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -277,22 +322,29 @@ extension UserAccountViewModel {
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
         ),
-        fastPaymentsFactory: .default,
+        fastPaymentsFactory: .legacy,
         fastPaymentsServices: .empty
     )
 }
 
 extension FastPaymentsFactory {
     
-    static let `default`: Self = .init(
-        makeFastPaymentsViewModel: {
+    static let legacy: Self = .init(
+        fastPaymentsViewModel: .legacy({
             
             MeToMeSettingView.ViewModel(
                 model: $0,
                 newModel: .emptyMock,
                 closeAction: $1
             )
-        }
+        })
+    )
+    
+    static let new: Self = .init(
+        fastPaymentsViewModel: .new({ _ in
+            
+                .init()
+        })
     )
 }
 

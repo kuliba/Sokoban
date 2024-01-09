@@ -8,18 +8,27 @@
 extension RootViewModelFactory {
     
     static func makeFastPaymentsFactory(
-        model: Model
+        model: Model,
+        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
     ) -> FastPaymentsFactory {
         
-        .init(
-            makeFastPaymentsViewModel: {
-                
-                MeToMeSettingView.ViewModel(
-                    model: $0,
-                    newModel: model,
-                    closeAction: $1
-                )
-            }
-        )
+        switch fastPaymentsSettingsFlag.rawValue {
+        case .active:
+            return .init(
+                fastPaymentsViewModel: .new({ _ in .init() })
+            )
+            
+        case .inactive:
+            return .init(
+                fastPaymentsViewModel: .legacy({
+                    
+                    MeToMeSettingView.ViewModel(
+                        model: $0,
+                        newModel: model,
+                        closeAction: $1
+                    )
+                })
+            )
+        }
     }
 }
