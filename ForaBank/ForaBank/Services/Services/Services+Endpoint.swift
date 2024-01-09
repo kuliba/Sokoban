@@ -96,10 +96,7 @@ extension Services.Endpoint {
     ) throws -> URL {
         
         guard let baseURL = URL(string: base)
-        else {
-            
-            throw URLConstructionError()
-        }
+        else { throw URLConstructionError() }
         
         return try url(withBaseURL: baseURL, parameters: parameters)
     }
@@ -117,8 +114,6 @@ extension Services.Endpoint {
         
         if !parameters.isEmpty {
             
-            components.queryItems = [URLQueryItem]()
-            
             components.queryItems = parameters.map { name, value in
                 
                 let value = value.addingPercentEncoding(
@@ -130,9 +125,7 @@ extension Services.Endpoint {
         }
         
         guard let url = components.url(relativeTo: baseURL)
-        else {
-            throw URLConstructionError()
-        }
+        else { throw URLConstructionError() }
         
         return url
     }

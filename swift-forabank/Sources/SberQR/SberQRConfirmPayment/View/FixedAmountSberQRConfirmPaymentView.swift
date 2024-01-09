@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
 import SwiftUI
 
 struct FixedAmountSberQRConfirmPaymentView: View {
@@ -24,8 +25,8 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             backgroundColor: config.background.color
         ) {
             ButtonView(
-                button: state.bottom,
-                pay: pay,
+                state: state.button,
+                event: pay,
                 config: config.button
             )
             .padding(.leading, 16)
@@ -41,7 +42,12 @@ struct FixedAmountSberQRConfirmPaymentView: View {
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
                 config: config.productSelect
-            )
+            ) {
+                ProductCardView(
+                    productCard: .init(product: $0),
+                    config: config.productSelect.card.productCardConfig
+                )
+            }
             
             Group {
                 
@@ -82,7 +88,7 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
             state: state,
             event: { _ in },
             pay: {},
-            config: .default
+            config: .preview
         )
     }
 }

@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
+
 extension SberQRConfirmPaymentStateReducer {
     
     public typealias GetProducts = () -> [ProductSelect.Product]

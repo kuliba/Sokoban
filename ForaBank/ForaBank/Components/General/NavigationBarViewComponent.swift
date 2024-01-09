@@ -317,6 +317,7 @@ struct NavigationBarView: View {
                     
                     viewModel.titleButton?.icon
                         .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
                         .foregroundColor(viewModel.foreground)
                         .accessibilityIdentifier("navigationSubTitle")
@@ -389,6 +390,7 @@ extension NavigationBarView {
                 
                 viewModel.icon
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
                     .foregroundColor(foregroundColor)
             }
@@ -406,6 +408,7 @@ extension NavigationBarView {
                 
                 viewModel.icon
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
                     .foregroundColor(foregroundColor)
                     .accessibilityIdentifier("NavigationBarIcon1")
@@ -428,6 +431,7 @@ extension NavigationBarView {
                 
                     viewModel.icon
                         .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
                         .foregroundColor(viewModel.isDisabled ? .mainColorsGrayMedium
                                                               : foreground)
@@ -475,15 +479,17 @@ extension NavigationBarView {
             switch viewModel.style {
             case .normal:
                 viewModel.icon
-                    .resizable()
                     .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
                     .accessibilityIdentifier("NavigationBarIconNormal")
                 
             case .large:
                 viewModel.icon
-                    .resizable()
                     .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 32, height: 32)
                     .accessibilityIdentifier("NavigationBarIconLarge")
             }
