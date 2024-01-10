@@ -174,12 +174,10 @@ struct UserAccountView: View {
                     .navigationBarTitle("", displayMode: .inline)
                 
             case let .new(fastPaymentsSettingsViewModel):
-                Text("TBD: FastPaymentsSettingsView with \(String(describing: fastPaymentsSettingsViewModel))")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationBar(with: .fastPayments(
-                        action: viewModel.dismissDestination
-                    ))
-                    .loader(isLoading: fastPaymentsSettingsViewModel.isLoading)
+                FastPaymentsSettingsWrapperView(
+                    viewModel: fastPaymentsSettingsViewModel,
+                    navigationBarViewModel: .fastPayments(action: viewModel.dismissDestination)
+                )
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):

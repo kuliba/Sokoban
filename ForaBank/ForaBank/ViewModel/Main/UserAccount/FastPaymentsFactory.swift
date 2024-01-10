@@ -24,8 +24,20 @@ extension FastPaymentsFactory {
     }
 }
 
-#warning("extract to module")
-struct FastPaymentsSettingsViewModel {
+#warning("replace with implementation from module")
+import Foundation
+
+final class FastPaymentsSettingsViewModel: ObservableObject {
     
-    let isLoading = true
+    @Published private(set) var inFlight: Bool
+    
+    init(isLoading: Bool = true) {
+        
+        self.inFlight = isLoading
+        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 2,
+            execute: { [weak self] in self?.inFlight = false }
+        )
+    }
 }

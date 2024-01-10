@@ -539,6 +539,7 @@
 		2A65D8AB2A333123003B3FEA /* TaxCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AA2A333123003B3FEA /* TaxCodes.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
 		2A65FB3C2B4E62DF00A84F9E /* View+loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */; };
+		2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */; };
 		2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */ = {isa = PBXBuildFile; productRef = 2A669EAB2AE50674009A2F12 /* CVVPIN_Services */; };
 		2A6724102ADADA2A00FAD522 /* Crypto+anySecKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67240F2ADADA2A00FAD522 /* Crypto+anySecKey.swift */; };
 		2A6724122ADB30D000FAD522 /* KeyChainStore+Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */; };
@@ -2801,6 +2802,7 @@
 		2A65D8AA2A333123003B3FEA /* TaxCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxCodes.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
 		2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+loader.swift"; sourceTree = "<group>"; };
+		2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsWrapperView.swift; sourceTree = "<group>"; };
 		2A67240F2ADADA2A00FAD522 /* Crypto+anySecKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Crypto+anySecKey.swift"; sourceTree = "<group>"; };
 		2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+Store.swift"; sourceTree = "<group>"; };
 		2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyTagKeyChainStore.swift; sourceTree = "<group>"; };
@@ -6252,6 +6254,14 @@
 			path = SupportingTypes;
 			sourceTree = "<group>";
 		};
+		2A65FB3D2B4E6F6700A84F9E /* FastPaymentsSettings */ = {
+			isa = PBXGroup;
+			children = (
+				2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */,
+			);
+			path = FastPaymentsSettings;
+			sourceTree = "<group>";
+		};
 		2A67A01C2A43311B003BE637 /* Mappers */ = {
 			isa = PBXGroup;
 			children = (
@@ -8184,6 +8194,7 @@
 				774A8B2F2865FCDD00B81140 /* UserDocumentView.swift */,
 				774A8B302865FCDD00B81140 /* AccountsViews */,
 				6828806E28A2D8F400186F32 /* DeleteAccountView.swift */,
+				2A65FB3D2B4E6F6700A84F9E /* FastPaymentsSettings */,
 			);
 			path = UserAccount;
 			sourceTree = "<group>";
@@ -13565,6 +13576,7 @@
 				0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */,
 				2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */,
 				C1549866290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift in Sources */,
+				2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */,
 				83CA1C952A6013A300672AA5 /* PinCodeChangeView.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				774A8B742865FECB00B81140 /* CircleProgressViewComponent.swift in Sources */,
