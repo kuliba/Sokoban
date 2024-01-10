@@ -18,11 +18,22 @@ extension RootViewModelFactory {
         case .active:
             return .init(fastPaymentsViewModel: .new({ _ in
                 
-                let reducer = MainQueueReducerDecorator(
-                    reducer: FastPaymentsSettingsReducer()
+                // let getContractConsentAndDefaultService = ...
+                let reducer = FastPaymentsSettingsReducer(
+                    getContractConsentAndDefault: { completion in
+                        
+                        DispatchQueue.main.asyncAfter(
+                            deadline: .now() + 2,
+                            execute: { completion(.init()) }
+                        )
+                    }
                 )
                 
-                return .init(reduce: reducer.reduce(_:_:_:))
+                let decorated = MainQueueReducerDecorator(
+                    reducer: reducer
+                )
+                
+                return .init(reduce: decorated.reduce(_:_:_:))
             }))
             
         case .inactive:
@@ -41,7 +52,17 @@ extension RootViewModelFactory {
 }
 
 #warning("move to module")
-final class FastPaymentsSettingsReducer {}
+final class FastPaymentsSettingsReducer {
+    
+    // abc: a service with 3 endpoints under the hood
+    private let getContractConsentAndDefault: GetContractConsentAndDefault
+    
+    init(
+        getContractConsentAndDefault: @escaping GetContractConsentAndDefault
+    ) {
+        self.getContractConsentAndDefault = getContractConsentAndDefault
+    }
+}
 
 extension FastPaymentsSettingsReducer: Reducer {
     
@@ -55,15 +76,18 @@ extension FastPaymentsSettingsReducer: Reducer {
             
             completion(true)
             
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 2,
-                execute: { completion(false) }
-            )
+            getContractConsentAndDefault { response in
+                
+                completion(false)
+            }
         }
     }
 }
  
 extension FastPaymentsSettingsReducer {
+    
+    struct ContractConsentAndDefaultResponse {}
+    typealias GetContractConsentAndDefault = (@escaping (ContractConsentAndDefaultResponse) -> Void) -> Void
     
     typealias State = FastPaymentsSettingsViewModel.State
     typealias Event = FastPaymentsSettingsViewModel.Event
