@@ -8,30 +8,6 @@
 import FastPaymentsSettings
 import XCTest
 
-extension RemoteServiceDecorator {
-    
-    typealias HandleSuccess = (Output, @escaping () -> Void) -> Void
-    
-    convenience init(
-        decoratee: Decoratee,
-        handleSuccess: @escaping HandleSuccess
-    ) {
-        self.init(
-            decoratee: decoratee,
-            decoration: { result, completion in
-                
-                switch result {
-                case .failure:
-                    completion()
-                    
-                case let .success(success):
-                    handleSuccess(success, completion)
-                }
-            }
-        )
-    }
-}
-
 final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborator() {
