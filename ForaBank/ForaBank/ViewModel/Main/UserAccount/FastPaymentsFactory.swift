@@ -29,11 +29,19 @@ import Foundation
 
 final class FastPaymentsSettingsViewModel: ObservableObject {
     
-    @Published private(set) var inFlight: Bool
+    @Published private(set) var inFlight: Bool = false
     
-    init(isLoading: Bool = true) {
+    init() {
         
-        self.inFlight = isLoading
+        
+    }
+}
+
+extension FastPaymentsSettingsViewModel {
+    
+    func load() {
+        
+        inFlight = true
         
         DispatchQueue.main.asyncAfter(
             deadline: .now() + 2,
