@@ -23,13 +23,13 @@ struct FastPaymentsSettingsWrapperView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBar(with: navigationBarViewModel)
-        .loader(isLoading: viewModel.inFlight)
+        .loader(isLoading: viewModel.isLoading)
     }
 }
 
 private extension FastPaymentsSettingsViewModel {
     
-    var isLoading: Bool { inFlight }
+    var isLoading: Bool { state }
 }
 
 struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
@@ -37,7 +37,10 @@ struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
     static var previews: some View {
         
         FastPaymentsSettingsWrapperView(
-            viewModel: .init(), 
+            viewModel: .init(reduce: { state, event, completion in
+                
+                completion(state)
+            }), 
             navigationBarViewModel: .init(action: {})
         )
     }

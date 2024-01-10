@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 27.12.2023.
 //
 
+import Foundation
+
 extension RootViewModelFactory {
     
     static func makeFastPaymentsFactory(
@@ -15,7 +17,21 @@ extension RootViewModelFactory {
         switch fastPaymentsSettingsFlag.rawValue {
         case .active:
             return .init(
-                fastPaymentsViewModel: .new({ _ in .init() })
+                fastPaymentsViewModel: .new({ _ in .init(
+                    reduce: { state, event, completion in
+                        
+                        switch event {
+                        case .appear:
+                            
+                            completion(true)
+                            
+                            DispatchQueue.main.asyncAfter(
+                                deadline: .now() + 2,
+                                execute: { completion(false) }
+                            )
+                        }
+                    }
+                )})
             )
             
         case .inactive:

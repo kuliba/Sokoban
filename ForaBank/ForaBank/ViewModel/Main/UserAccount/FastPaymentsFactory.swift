@@ -29,23 +29,34 @@ import Foundation
 
 final class FastPaymentsSettingsViewModel: ObservableObject {
     
-    @Published private(set) var inFlight: Bool = false
+    @Published private(set) var state: State
     
-    init() {
-        
-        
+    private let reduce: Reduce
+    
+    init(
+        initialState: State = false,
+        reduce: @escaping Reduce
+    ) {
+        self.state = initialState
+        self.reduce = reduce
     }
 }
 
 extension FastPaymentsSettingsViewModel {
     
-    func load() {
+    func event(_ event: Event) {
         
-        inFlight = true
+        reduce(state, event) { [weak self] in self?.state = $0 }
+    }
+}
+
+extension FastPaymentsSettingsViewModel {
+    
+    typealias Reduce = (State, Event, @escaping (State) -> Void) -> Void
+    typealias State = Bool
+    
+    enum Event {
         
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 2,
-            execute: { [weak self] in self?.inFlight = false }
-        )
+        case appear
     }
 }
