@@ -8,30 +8,6 @@
 import FastPaymentsSettings
 import XCTest
 
-extension RemoteServiceDecorator {
-    
-    typealias HandleFailure = (ProcessError, @escaping () -> Void) -> Void
-    
-    convenience init(
-        decoratee: Decoratee,
-        handleFailure: @escaping HandleFailure
-    ) {
-        self.init(
-            decoratee: decoratee,
-            decoration: { result, completion in
-                
-                switch result {
-                case let .failure(error):
-                    handleFailure(error, completion)
-                    
-                case .success:
-                    completion()
-                }
-            }
-        )
-    }
-}
-
 final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborator() {
@@ -82,7 +58,7 @@ final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .failure(failure))
-
+        
         XCTAssertNoDiff(handleFailureSpy.values, [failure])
     }
     
@@ -93,7 +69,7 @@ final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .success(success))
-
+        
         XCTAssertNoDiff(handleFailureSpy.values, [])
     }
     
@@ -170,7 +146,7 @@ final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
     }
     
     private final class _DecorationSpy<Value> {
-
+        
         private(set) var messages = [Message]()
         
         var values: [Value] { messages.map(\.value) }
