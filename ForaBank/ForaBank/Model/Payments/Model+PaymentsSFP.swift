@@ -231,32 +231,35 @@ extension Model {
     }
     
     // map additional data
-    func paymentsParameterRepresentableSFP(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentableSFP(
+        _ operation: Payments.Operation,
+        additionalData: TransferAnywayResponseData.AdditionalData
+    ) throws -> PaymentsParameterRepresentable? {
         
-        switch adittionalData.fieldName {
+        switch additionalData.fieldName {
         case Payments.Parameter.Identifier.sftRecipient.rawValue:
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                .init(id: additionalData.fieldName, value: additionalData.fieldValue),
                 icon: .local("ic24Customer"),
-                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
+                title: additionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAmount.rawValue:
-            guard let amountStringValue = adittionalData.fieldValue,
+            guard let amountStringValue = additionalData.fieldValue,
                   let amountValue = Double(amountStringValue),
                   let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) else {
                 return nil
             }
 
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: amountFormatted),
+                .init(id: additionalData.fieldName, value: amountFormatted),
                 icon: .local("ic24Coins"),
-                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
+                title: additionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAntifraud.rawValue:
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                .init(id: additionalData.fieldName, value: additionalData.fieldValue),
                 icon: .image(.parameterDocument),
-                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
+                title: additionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
 
         default:
             return nil

@@ -366,7 +366,10 @@ extension Model {
     }
     
     //MARK: process remote confirm step
-    func paymentsProcessRemoteStepRequisits(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepRequisits(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
 
         var parameters = [PaymentsParameterRepresentable]()
         
@@ -396,6 +399,15 @@ extension Model {
             
         parameters.append(Payments.ParameterCode.regular)
             
+        if response.scenario == .suspect {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
+        
         return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
     }
     
