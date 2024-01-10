@@ -1,6 +1,6 @@
 //
 //  RemoteServiceDecorator.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 10.01.2024.
 //
@@ -21,13 +21,13 @@ where ProcessError: Error {
 }
 
 extension RemoteServiceDecorator: RemoteServiceInterface {
-
+    
     public func process(
         _ input: Input,
         completion: @escaping ProcessCompletion
     ) {
         decoratee.process(input) { [weak self] result in
-        
+            
             self?.decoration(result) { completion(result) }
         }
     }

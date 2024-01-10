@@ -59,7 +59,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .failure(failure))
-
+        
         XCTAssertNoDiff(decorationSpy.values, [.failure(failure)])
     }
     
@@ -70,7 +70,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .success(success))
-
+        
         XCTAssertNoDiff(decorationSpy.values, [.success(success)])
     }
     
@@ -147,7 +147,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
     }
     
     private final class _DecorationSpy<Value> {
-
+        
         private(set) var messages = [Message]()
         
         var values: [Value] { messages.map(\.value) }

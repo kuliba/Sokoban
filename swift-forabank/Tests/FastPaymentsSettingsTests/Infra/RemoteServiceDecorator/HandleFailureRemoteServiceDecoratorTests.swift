@@ -1,5 +1,5 @@
 //
-//  HandleSuccessRemoteServiceDecoratorTests.swift
+//  HandleFailureRemoteServiceDecoratorTests.swift
 //
 //
 //  Created by Igor Malyarov on 10.01.2024.
@@ -8,14 +8,38 @@
 import FastPaymentsSettings
 import XCTest
 
-final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
+extension RemoteServiceDecorator {
+    
+    typealias HandleFailure = (ProcessError, @escaping () -> Void) -> Void
+    
+    convenience init(
+        decoratee: Decoratee,
+        handleFailure: @escaping HandleFailure
+    ) {
+        self.init(
+            decoratee: decoratee,
+            decoration: { result, completion in
+                
+                switch result {
+                case let .failure(error):
+                    handleFailure(error, completion)
+                    
+                case .success:
+                    completion()
+                }
+            }
+        )
+    }
+}
+
+final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborator() {
         
-        let (_, decoratorSpy, handleSuccessSpy) = makeSUT()
+        let (_, decoratorSpy, handleFailureSpy) = makeSUT()
         
         XCTAssertNoDiff(decoratorSpy.callCount, 0)
-        XCTAssertNoDiff(handleSuccessSpy.callCount, 0)
+        XCTAssertNoDiff(handleFailureSpy.callCount, 0)
     }
     
     func test_process_shouldPassInputToDecoratee() {
@@ -31,46 +55,46 @@ final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
     func test_process_shouldCompleteWithDecorateeFailure() {
         
         let failure = SUT.ProcessError()
-        let (sut, spy, _) = makeSUT()
+        let (sut, spy, handleFailureSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(failure), on: {
             
             spy.complete(with: .failure(failure))
+            handleFailureSpy.complete()
         })
     }
     
     func test_process_shouldCompleteWithDecorateeSuccess() {
         
         let success = SUT.Output()
-        let (sut, spy, handleSuccessSpy) = makeSUT()
+        let (sut, spy, _) = makeSUT()
         
         expect(sut, toDeliver: .success(success), on: {
             
             spy.complete(with: .success(success))
-            handleSuccessSpy.complete()
         })
     }
     
-    func test_process_shouldNotDecorateDecorateeFailure() {
+    func test_process_shouldDecorateDecorateeFailure() {
         
         let failure = SUT.ProcessError()
-        let (sut, decoratorSpy, handleSuccessSpy) = makeSUT()
+        let (sut, decoratorSpy, handleFailureSpy) = makeSUT()
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .failure(failure))
-        
-        XCTAssertNoDiff(handleSuccessSpy.values, [])
+
+        XCTAssertNoDiff(handleFailureSpy.values, [failure])
     }
     
-    func test_process_shouldDecorateDecorateeSuccess() {
+    func test_process_shouldNotDecorateDecorateeSuccess() {
         
         let success = SUT.Output()
-        let (sut, decoratorSpy, handleSuccessSpy) = makeSUT()
+        let (sut, decoratorSpy, handleFailureSpy) = makeSUT()
         
         sut.process(makeInput()) { _ in }
         decoratorSpy.complete(with: .success(success))
-        
-        XCTAssertNoDiff(handleSuccessSpy.values, [success])
+
+        XCTAssertNoDiff(handleFailureSpy.values, [])
     }
     
     // MARK: - Helpers
@@ -79,7 +103,7 @@ final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
     private typealias Input = UUID
     private typealias Result = Swift.Result<SUT.Output, SUT.ProcessError>
     private typealias DecoratorSpy = Spy<Input, Response, ProcessError>
-    private typealias HandleSuccessSpy = _DecorationSpy<Response>
+    private typealias HandleFailureSpy = _DecorationSpy<ProcessError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -87,20 +111,20 @@ final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
     ) -> (
         sut: SUT,
         decoratorSpy: DecoratorSpy,
-        handleSuccessSpy: HandleSuccessSpy
+        handleFailureSpy: HandleFailureSpy
     ) {
         let decoratorSpy = DecoratorSpy()
-        let handleSuccessSpy = HandleSuccessSpy()
+        let handleFailureSpy = HandleFailureSpy()
         let sut = SUT(
             decoratee: decoratorSpy,
-            handleSuccess: handleSuccessSpy.process
+            handleFailure: handleFailureSpy.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(decoratorSpy, file: file, line: line)
-        trackForMemoryLeaks(handleSuccessSpy, file: file, line: line)
+        trackForMemoryLeaks(handleFailureSpy, file: file, line: line)
         
-        return (sut, decoratorSpy, handleSuccessSpy)
+        return (sut, decoratorSpy, handleFailureSpy)
     }
     
     private func expect(
@@ -146,7 +170,7 @@ final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
     }
     
     private final class _DecorationSpy<Value> {
-        
+
         private(set) var messages = [Message]()
         
         var values: [Value] { messages.map(\.value) }
