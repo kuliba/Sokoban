@@ -32,23 +32,31 @@ extension Payments.Success {
         
         let amountFormatted = amountFormatter(amount, productId, .normal)
         
-        let params: [PaymentsParameterRepresentable?] = [
+        var params: [PaymentsParameterRepresentable?] = [
             Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
             Payments.ParameterSuccessStatus(with: status),
             Payments.ParameterSuccessText.title(operation, documentStatus: status),
             Payments.ParameterSuccessLogo.logo(with: logoImage),
             Payments.ParameterSuccessText.amount(amount: amountFormatted),
             Payments.ParameterSuccessLogo.sfpLogo(with: operation),
-            Payments.ParameterSuccessOptionButtons.buttons(
+            Payments.ParameterButton.repeatButton(.normal, documentStatus: status),
+            Payments.ParameterButton.actionButtonMain()
+        ]
+        
+        if status == .suspend {
+            
+            params.insert(Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."), at: 3)
+            
+        } else {
+            
+            params.append(Payments.ParameterSuccessOptionButtons.buttons(
                 with: .normal,
                 documentStatus: status,
                 operationDetail: nil,
                 operation: operation,
                 meToMePayment: nil
-            ),
-            Payments.ParameterButton.repeatButton(.normal, documentStatus: status),
-            Payments.ParameterButton.actionButtonMain()
-        ]
+            ))
+        }
         
         self.init(
             operation: operation,
@@ -62,24 +70,35 @@ extension Payments.Success {
         title: String? = nil
     ) throws {
         
+        print("DEBUG ###: WITH IS INIT ACTIVE")
         guard let status = response.documentStatus else {
             throw Payments.Error.missingParameter(Payments.Parameter.Identifier.successStatus.rawValue)
         }
         
         if let title {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(with: title),
-                Payments.ParameterSuccessOptionButtons.buttons(
-                    with: .normal,
-                    documentStatus: status,
-                    operation: operation,
-                    meToMePayment: nil
-                ),
                 Payments.ParameterButton.actionButtonMain()
             ]
+            
+            if status == .suspend {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
+                )
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
+                    with: .normal,
+                    documentStatus: status,
+                    operationDetail: nil,
+                    operation: operation,
+                    meToMePayment: nil
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -88,19 +107,28 @@ extension Payments.Success {
             
         } else {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(.normal, documentStatus: status),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspend {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
+                )
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: .normal,
                     documentStatus: status,
                     operationDetail: nil,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -134,18 +162,27 @@ extension Payments.Success {
         
         if let title {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(with: title),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspend {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
+                )
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: mode,
                     documentStatus: status,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -154,19 +191,28 @@ extension Payments.Success {
             
         } else {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(.normal, documentStatus: status),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspend {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
+                )
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: mode,
                     documentStatus: status,
                     operationDetail: nil,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -418,15 +464,18 @@ extension Payments.Success {
             break
         }
         
-        // options buttons
-        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
-            with: mode,
-            documentStatus: documentStatus,
-            operationDetail: operationDetail,
-            operation: operation,
-            meToMePayment: nil
-        )
-        parameters.append(optionButtonsParam)
+        if documentStatus != .suspend {
+         
+            // options buttons
+            let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                with: mode,
+                documentStatus: documentStatus,
+                operationDetail: operationDetail,
+                operation: operation,
+                meToMePayment: nil
+            )
+            parameters.append(optionButtonsParam)
+        }
         
         return (parameters.compactMap { $0 }, transferType)
     }
@@ -496,10 +545,19 @@ extension Payments.ParameterSuccessText {
             case .sberQR:
                 return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
+        case .suspend:
+            return .init(
+                id: paramId,
+                value: "Операция временно приостановлена в целях безопасности",
+                style: .warning
+            )
         }
     }
     
-    static func title(_ operation: Payments.Operation, documentStatus: TransferResponseBaseData.DocumentStatus) -> Payments.ParameterSuccessText? {
+    static func title(
+        _ operation: Payments.Operation,
+        documentStatus: TransferResponseBaseData.DocumentStatus
+    ) -> Payments.ParameterSuccessText? {
         
         let paramId = Payments.Parameter.Identifier.successTitle.rawValue
         
@@ -520,6 +578,12 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
+            case .suspend:
+                return .init(
+                    id: paramId,
+                    value: "Операция временно приостановлена в целях безопасности",
+                    style: .warning
+                )
             }
             
         } else {
@@ -539,6 +603,8 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
+            case .suspend:
+                return .init(id: paramId, value: "Операция временно приостановлена в целях безопасности", style: .warning)
             }
         }
     }
@@ -597,6 +663,8 @@ extension Payments.ParameterSuccessOptionButtons {
                 meToMePayment,
                 operation
             )
+        case .suspend:
+            return nil
         }
     }
     
@@ -750,7 +818,7 @@ extension Payments.ParameterButton {
         case .complete:
             return nil
             
-        case .inProgress:
+        case .inProgress, .suspend:
             return nil
             
         case .rejected, .unknown:
