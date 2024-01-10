@@ -25,4 +25,7 @@ extension FastPaymentsFactory {
 }
 
 #warning("extract to module")
-struct FastPaymentsSettingsViewModel {}
+struct FastPaymentsSettingsViewModel {
+    
+    let isLoading = true
+}

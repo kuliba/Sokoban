@@ -179,6 +179,7 @@ struct UserAccountView: View {
                     .navigationBar(with: .fastPayments(
                         action: viewModel.dismissDestination
                     ))
+                    .loader(isLoading: fastPaymentsSettingsViewModel.isLoading)
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
