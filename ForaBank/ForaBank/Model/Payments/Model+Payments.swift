@@ -1128,17 +1128,25 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData, group: Payments.Parameter.Group) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(
+        _ operation: Payments.Operation,
+        additionalData: TransferAnywayResponseData.AdditionalData,
+        group: Payments.Parameter.Group
+    ) throws -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .sfp:
-            return try paymentsParameterRepresentableSFP(operation, adittionalData: adittionalData)
+            return try paymentsParameterRepresentableSFP(operation, additionalData: additionalData)
             
+        case .requisites, .mobileConnection, .fms, .fns, .fssp, .internetTV, .toAnotherCard, .utility, .transport:
+            return try paymentsParameterRepresentableSFP(operation, additionalData: additionalData)
+
         default:
+
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: .image(adittionalData.iconData ?? .parameterDocument),
-                title: adittionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
+                .init(id: additionalData.fieldName, value: additionalData.fieldValue),
+                icon: .image(additionalData.iconData ?? .parameterDocument),
+                title: additionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
         }
     }
     
@@ -1496,19 +1504,17 @@ extension Model {
         switch operation.service {
         case .sfp:
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
-            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId}) else {
+            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
                 return nil
             }
             
-            guard antifraudParameter.value != "G" else {
-                return nil
-            }
+            guard antifraudParameter.value != "G" else { return nil }
             
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             
-            guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId})?.value,
+            guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId })?.value,
             let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
             let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
                 return nil
@@ -1516,7 +1522,29 @@ extension Model {
 
             let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
             return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
+        
+        case .requisites:
+            print("DEBUG: ### REQOISITES ANTIFRATUD")
+            print("DEBUG: ### \(operation)")
+            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
+                return nil
+            }
             
+            guard antifraudParameter.value == "SUSPECT" else { return nil }
+            
+            let name = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsName.rawValue
+            ) ?? ""
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+            )
+            
+            return .init(payeeName: name, phone: "", amount: "- \(amount ?? "")")
+        
         default:
             return nil
         }
