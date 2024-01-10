@@ -16,23 +16,14 @@ extension RootViewModelFactory {
         
         switch fastPaymentsSettingsFlag.rawValue {
         case .active:
-            return .init(
-                fastPaymentsViewModel: .new({ _ in .init(
-                    reduce: { state, event, completion in
-                        
-                        switch event {
-                        case .appear:
-                            
-                            completion(true)
-                            
-                            DispatchQueue.main.asyncAfter(
-                                deadline: .now() + 2,
-                                execute: { completion(false) }
-                            )
-                        }
-                    }
-                )})
-            )
+            return .init(fastPaymentsViewModel: .new({ _ in
+                
+                let reducer = MainQueueReducerDecorator(
+                    reducer: FastPaymentsSettingsReducer()
+                )
+                
+                return .init(reduce: reducer.reduce(_:_:_:))
+            }))
             
         case .inactive:
             return .init(
@@ -47,4 +38,33 @@ extension RootViewModelFactory {
             )
         }
     }
+}
+
+#warning("move to module")
+final class FastPaymentsSettingsReducer {}
+
+extension FastPaymentsSettingsReducer: Reducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event,
+        _ completion: @escaping (State) -> Void
+    ) {
+        switch event {
+        case .appear:
+            
+            completion(true)
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 2,
+                execute: { completion(false) }
+            )
+        }
+    }
+}
+ 
+extension FastPaymentsSettingsReducer {
+    
+    typealias State = FastPaymentsSettingsViewModel.State
+    typealias Event = FastPaymentsSettingsViewModel.Event
 }
