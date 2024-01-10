@@ -25,6 +25,7 @@ public extension Parameters {
             case complete
             case inProgress
             case rejected
+            case suspend
         }
     }
 }

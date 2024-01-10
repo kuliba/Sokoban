@@ -1343,7 +1343,7 @@ extension Payments {
             case .complete:
                 self.init(status: .success)
 
-            case .inProgress:
+            case .inProgress, .suspend:
                 self.init(status: .accepted)
 
             case .rejected, .unknown:

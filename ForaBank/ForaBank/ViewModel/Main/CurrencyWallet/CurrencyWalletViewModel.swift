@@ -973,7 +973,7 @@ extension CurrencyWalletViewModel {
             return .error
         case .unknown:
             return .error
-        case .inProgress:
+        case .inProgress, .suspend:
             return .wait
         }
     }

@@ -751,7 +751,6 @@
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
 		2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */; };
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
-		2AF543252B0B374000A0C2E6 /* SberQRFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
 		2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */; };
 		2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F2F4329AE338E0054B920 /* MCError.swift */; };
@@ -1896,6 +1895,7 @@
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
 		C1CCFC3A29828EF30059212C /* Model+Abroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3929828EF20059212C /* Model+Abroad.swift */; };
 		C1D66EEA2B07AAA2009E50B1 /* RemoteService+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D66EE92B07AAA2009E50B1 /* RemoteService+Extension.swift */; };
+		C1D747642B4E828E00501A1B /* Antifraud.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D747632B4E828E00501A1B /* Antifraud.swift */; };
 		C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */; };
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
@@ -3006,7 +3006,6 @@
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
-		2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRFeatureView.swift; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WIPTests.xctestplan; sourceTree = "<group>"; };
@@ -4122,6 +4121,7 @@
 		C1CCFC3929828EF20059212C /* Model+Abroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Abroad.swift"; sourceTree = "<group>"; };
 		C1D66EE92B07AAA2009E50B1 /* RemoteService+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Extension.swift"; sourceTree = "<group>"; };
 		C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaymentsViewModelMapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1D747632B4E828E00501A1B /* Antifraud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Antifraud.swift; sourceTree = "<group>"; };
 		C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponent.swift; sourceTree = "<group>"; };
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -6927,16 +6927,6 @@
 			path = RootViewFactory;
 			sourceTree = "<group>";
 		};
-		2AF543222B0A5BF000A0C2E6 /* SberQRFeature */ = {
-			isa = PBXGroup;
-			children = (
-				2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */,
-				2A00058A2B0B66290057E578 /* SberQRFeatureViewModel.swift */,
-				2A0005882B0B66040057E578 /* SberQRFeatureRoute.swift */,
-			);
-			path = SberQRFeature;
-			sourceTree = "<group>";
-		};
 		501BCFC82936A23C003F81DF /* Promo */ = {
 			isa = PBXGroup;
 			children = (
@@ -8769,6 +8759,7 @@
 		77DC12592770988B00C917B0 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				C1D747652B4E82A600501A1B /* Antifraud */,
 				833765002A38600400F7C1AB /* CvvPin */,
 				77EC58EA2772375A0054D75C /* Abstract */,
 				77E1805027AC6B790006ACC9 /* General */,
@@ -10068,6 +10059,14 @@
 				2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */,
 			);
 			path = PaymentService;
+			sourceTree = "<group>";
+		};
+		C1D747652B4E82A600501A1B /* Antifraud */ = {
+			isa = PBXGroup;
+			children = (
+				C1D747632B4E828E00501A1B /* Antifraud.swift */,
+			);
+			path = Antifraud;
 			sourceTree = "<group>";
 		};
 		C1F346D42AE25C6000EE1E87 /* StickerPreview */ = {
@@ -13979,6 +13978,7 @@
 				ED374CE92863AEC000A97219 /* CardScannerView.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				68CB588C28ABCA7A003064B0 /* LoggerAgentProtocol.swift in Sources */,
+				C1D747642B4E828E00501A1B /* Antifraud.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */,
 				C113225628CFA84300F90072 /* ContactsViewModel.swift in Sources */,
