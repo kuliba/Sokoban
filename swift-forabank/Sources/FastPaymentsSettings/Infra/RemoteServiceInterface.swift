@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 10.01.2024.
 //
 
-protocol RemoteServiceInterface<Input, Output, ProcessError> {
+public protocol RemoteServiceInterface<Input, Output, ProcessError> {
     
     associatedtype Input
     associatedtype Output

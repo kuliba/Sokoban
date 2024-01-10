@@ -5,13 +5,13 @@
 //  Created by Igor Malyarov on 10.01.2024.
 //
 
-final class RemoteServiceDecorator<Input, Output, ProcessError>
+public final class RemoteServiceDecorator<Input, Output, ProcessError>
 where ProcessError: Error {
     
     private let decoratee: Decoratee
     private let decoration: Decoration
     
-    init(
+    public init(
         decoratee: Decoratee,
         decoration: @escaping Decoration
     ) {
@@ -22,7 +22,7 @@ where ProcessError: Error {
 
 extension RemoteServiceDecorator: RemoteServiceInterface {
 
-    func process(
+    public func process(
         _ input: Input,
         completion: @escaping ProcessCompletion
     ) {
@@ -33,7 +33,7 @@ extension RemoteServiceDecorator: RemoteServiceInterface {
     }
 }
 
-extension RemoteServiceDecorator {
+public extension RemoteServiceDecorator {
     
     typealias Decoratee = any RemoteServiceInterface<Input, Output, ProcessError>
     typealias Decoration = (ProcessResult, @escaping () -> Void) -> Void
