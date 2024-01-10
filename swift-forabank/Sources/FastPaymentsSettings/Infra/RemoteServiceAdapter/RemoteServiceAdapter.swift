@@ -20,9 +20,9 @@ where ProcessError: Error {
     }
 }
 
-public extension RemoteServiceAdapter {
+extension RemoteServiceAdapter: RemoteServiceInterface {
     
-    func process(
+    public func process(
         _ input: Input,
         completion: @escaping ProcessCompletion
     ) {
