@@ -6353,9 +6353,9 @@
 				2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */,
 				2A6EAA7D2B50576D0093EE83 /* ContentView.swift */,
 				2A6EAA892B5058EE0093EE83 /* ViewModel.swift */,
-				2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
+				2A6EAAA72B5076A10093EE83 /* Helpers */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
 				2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */,
 				2A6EAA812B50576F0093EE83 /* Preview Content */,
@@ -6394,6 +6394,14 @@
 				2A6EAAA52B50764A0093EE83 /* ContractConsentAndDefault.swift */,
 			);
 			path = FastPaymentsSettings;
+			sourceTree = "<group>";
+		};
+		2A6EAAA72B5076A10093EE83 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
