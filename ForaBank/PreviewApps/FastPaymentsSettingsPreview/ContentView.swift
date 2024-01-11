@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @ObservedObject var viewModel: ViewModel
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        Button("Fast Payments Settings", action: viewModel.openFastPaymentsSettings)
+            .navigationDestination(
+                item: .init(
+                    get: { viewModel.route.destination },
+                    set: { if $0 == nil { viewModel.resetDestination() }}
+                ),
+                destination: destinationView
+            )
+    }
+    
+    private func destinationView(
+        destination: ViewModel.Route.Destination
+    ) -> some View {
+        
+        switch destination {
+        case .fastPaymentsSettings:
+            Text("TBD")
         }
-        .padding()
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ContentView(viewModel: .init())
+    }
 }
