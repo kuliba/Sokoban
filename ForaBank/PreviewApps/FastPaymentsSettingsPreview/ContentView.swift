@@ -26,7 +26,7 @@ struct ContentView: View {
     private func openFastPaymentsSettingsButton() -> some View {
         
         Button(
-            "Fast Payments Settings", 
+            "Fast Payments Settings",
             action: viewModel.openFastPaymentsSettings
         )
     }

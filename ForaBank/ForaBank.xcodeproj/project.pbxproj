@@ -571,6 +571,8 @@
 		2A6EAA942B5060870093EE83 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA932B5060870093EE83 /* Factory.swift */; };
 		2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */; };
 		2A6EAA982B5061490093EE83 /* Factory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA972B5061490093EE83 /* Factory+preview.swift */; };
+		2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */; };
+		2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2854,6 +2856,8 @@
 		2A6EAA932B5060870093EE83 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+preview.swift"; sourceTree = "<group>"; };
 		2A6EAA972B5061490093EE83 /* Factory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Factory+preview.swift"; sourceTree = "<group>"; };
+		2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
+		2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert+ext.swift"; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -6339,6 +6343,7 @@
 				2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */,
 				2A6EAA7D2B50576D0093EE83 /* ContentView.swift */,
 				2A6EAA892B5058EE0093EE83 /* ViewModel.swift */,
+				2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
@@ -6362,6 +6367,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */,
+				2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -12750,9 +12756,11 @@
 				2A6EAA7E2B50576D0093EE83 /* ContentView.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
+				2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */,
+				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
 				2A6EAA982B5061490093EE83 /* Factory+preview.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
