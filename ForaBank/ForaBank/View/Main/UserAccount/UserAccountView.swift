@@ -173,11 +173,12 @@ struct UserAccountView: View {
                     .navigationBarBackButtonHidden(false)
                     .navigationBarTitle("", displayMode: .inline)
                 
-            case let .new(fastPaymentsSettingsViewModel):
-                Text("TBD: FastPaymentsSettingsView with \(String(describing: fastPaymentsSettingsViewModel))")
-                    .navigationBar(with: .fastPayments(
-                        action: viewModel.dismissDestination
-                    ))
+            case let .new(fpsViewModel):
+                FastPaymentsSettingsWrapperView(
+                    viewModel: fpsViewModel,
+                    navigationBarViewModel: .fastPayments(action: viewModel.dismissDestination)
+                )
+                .onAppear { fpsViewModel.event(.appear) }
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -343,7 +344,10 @@ extension FastPaymentsFactory {
     static let new: Self = .init(
         fastPaymentsViewModel: .new({ _ in
             
-                .init()
+                .init(reduce: { state, event, completion in
+                
+                    completion(state)
+                })
         })
     )
 }
@@ -355,6 +359,6 @@ extension FastPaymentsServices {
             
             Empty().eraseToAnyPublisher()
         },
-        getDefaultAndConsent: { _,_ in }
+        getConsentAndDefault: { _,_ in }
     )
 }

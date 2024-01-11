@@ -597,7 +597,7 @@ private extension UserAccountViewModel {
             
             showSpinner()
             
-            fastPaymentsServices.getDefaultAndConsent(
+            fastPaymentsServices.getConsentAndDefault(
                 contract.phone
             ) { [weak self] result in
                 
@@ -607,7 +607,7 @@ private extension UserAccountViewModel {
                     deadline: .now() + .microseconds(200)
                 ) { [weak self] in
                     
-                    self?.handleGetDefaultAndConsentResult(result, contract, makeNew)
+                    self?.handleGetConsentAndDefaultResult(result, contract, makeNew)
                 }
             }
             
@@ -639,8 +639,8 @@ private extension UserAccountViewModel {
         }
     }
     
-    func handleGetDefaultAndConsentResult(
-        _ result: FastPaymentsServices.GetDefaultAndConsentResult,
+    func handleGetConsentAndDefaultResult(
+        _ result: FastPaymentsServices.GetConsentAndDefaultResult,
         _ contract: FastPaymentsServices.FPSCFLResponse.Contract,
         _ makeNew: MakeNewFastPaymentsViewModel
     ) {

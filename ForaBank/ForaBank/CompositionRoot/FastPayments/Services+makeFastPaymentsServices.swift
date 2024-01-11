@@ -9,6 +9,15 @@ import Combine
 import Foundation
 import Tagged
 
+// stubs: b: 1-4 | c: 1-5
+private extension FastPaymentsServices.GetConsentAndDefaultResult {
+    
+    static let b1c1: Self = .success(.init(
+        consentList: [],
+        defaultForaBank: true
+    ))
+}
+
 extension Services {
     
     static func makeFastPaymentsServices(
@@ -27,9 +36,10 @@ extension Services {
                     .map(\.fpsCFLResponse)
                     .eraseToAnyPublisher()
             },
-            getDefaultAndConsent: { phone, completion in
+            getConsentAndDefault: { phone, completion in
             
-                completion(.failure(NSError(domain: "GetDefaultAndConsent Error", code: -1)))
+                // completion(.failure(NSError(domain: "GetConsentAndDefault Error", code: -1)))
+                completion(.b1c1)
             }
         )
     }
