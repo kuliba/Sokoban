@@ -37,6 +37,11 @@ extension ViewModel {
         
         route.destination = nil
     }
+    
+    func resetModal() {
+        
+        route.modal = nil
+    }
 }
 
 extension ViewModel {
@@ -61,7 +66,16 @@ extension ViewModel {
         
         enum Modal {
             
-            case alert
+            case alert(AlertViewModel)
+            
+            var alert: AlertViewModel? {
+                
+                if case let .alert(alert) = self {
+                    return alert
+                } else {
+                    return nil
+                }
+            }
         }
     }
 }

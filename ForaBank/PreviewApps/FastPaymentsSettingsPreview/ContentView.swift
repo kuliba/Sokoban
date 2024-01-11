@@ -21,6 +21,13 @@ struct ContentView: View {
                 ),
                 destination: destinationView
             )
+            .alert(
+                item: .init(
+                    get: { viewModel.route.modal?.alert },
+                    set: { if $0 == nil { viewModel.resetModal() }}
+                ),
+                content: Alert.init(with:)
+            )
     }
     
     private func openFastPaymentsSettingsButton() -> some View {
