@@ -45,6 +45,7 @@ struct ContentView: View {
         switch destination {
         case let .fastPaymentsSettings(fpsViewModel):
             FastPaymentsSettingsView(viewModel: fpsViewModel)
+                .onAppear { fpsViewModel.event(.appear) }
         }
     }
 }
