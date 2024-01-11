@@ -28,8 +28,8 @@ struct ContentView: View {
     ) -> some View {
         
         switch destination {
-        case .fastPaymentsSettings:
-            Text("TBD")
+        case let .fastPaymentsSettings(fpsViewModel):
+            FastPaymentsSettingsView(viewModel: fpsViewModel)
         }
     }
 }

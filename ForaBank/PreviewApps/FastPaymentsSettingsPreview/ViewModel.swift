@@ -26,7 +26,8 @@ extension ViewModel {
     
     func openFastPaymentsSettings() {
         
-        route.destination = .fastPaymentsSettings
+        let viewModel = factory.makeFastPaymentsSettingsViewModel()
+        route.destination = .fastPaymentsSettings(viewModel)
     }
 }
 
@@ -55,7 +56,7 @@ extension ViewModel {
         
         enum Destination {
             
-            case fastPaymentsSettings
+            case fastPaymentsSettings(FastPaymentsSettingsViewModel)
         }
         
         enum Modal {
