@@ -32,7 +32,11 @@ extension FastPaymentsSettingsViewModel {
 
 extension FastPaymentsSettingsViewModel {
     
-    struct State {}
+    enum State {
+        
+        case contractConsentAndDefault(ContractConsentAndDefault)
+    }
+    
     enum Event {
         
         case appear

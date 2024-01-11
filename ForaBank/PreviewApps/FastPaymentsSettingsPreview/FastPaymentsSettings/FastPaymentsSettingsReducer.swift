@@ -23,7 +23,19 @@ extension FastPaymentsSettingsReducer {
         _ event: Event,
         _ completion: @escaping (State) -> Void
     ) {
-        
+        switch event {
+        case .appear:
+            switch state {
+            case .none:
+                getContractConsentAndDefault {
+                    
+                    completion(.contractConsentAndDefault($0))
+                }
+                
+            default:
+                completion(state)
+            }
+        }
     }
 }
 
