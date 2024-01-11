@@ -64,3 +64,21 @@ extension ViewModel {
         }
     }
 }
+
+extension ViewModel.Route.Destination: Hashable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        
+        switch (lhs, rhs) {
+        case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
+            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .fastPaymentsSettings(viewModel):
+            hasher.combine(ObjectIdentifier(viewModel))
+        }
+    }
+}
