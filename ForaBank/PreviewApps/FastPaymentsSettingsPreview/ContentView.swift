@@ -13,7 +13,7 @@ struct ContentView: View {
     
     var body: some View {
         
-        Button("Fast Payments Settings", action: viewModel.openFastPaymentsSettings)
+        openFastPaymentsSettingsButton()
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.destination },
@@ -21,6 +21,14 @@ struct ContentView: View {
                 ),
                 destination: destinationView
             )
+    }
+    
+    private func openFastPaymentsSettingsButton() -> some View {
+        
+        Button(
+            "Fast Payments Settings", 
+            action: viewModel.openFastPaymentsSettings
+        )
     }
     
     private func destinationView(
