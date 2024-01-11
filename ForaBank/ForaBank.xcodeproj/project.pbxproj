@@ -570,7 +570,6 @@
 		2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */; };
 		2A6EAA942B5060870093EE83 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA932B5060870093EE83 /* Factory.swift */; };
 		2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */; };
-		2A6EAA982B5061490093EE83 /* Factory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA972B5061490093EE83 /* Factory+preview.swift */; };
 		2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */; };
 		2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */; };
 		2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9D2B506E220093EE83 /* FastPaymentsSettingsReducer.swift */; };
@@ -2860,7 +2859,6 @@
 		2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsView.swift; sourceTree = "<group>"; };
 		2A6EAA932B5060870093EE83 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+preview.swift"; sourceTree = "<group>"; };
-		2A6EAA972B5061490093EE83 /* Factory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Factory+preview.swift"; sourceTree = "<group>"; };
 		2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert+ext.swift"; sourceTree = "<group>"; };
 		2A6EAA9D2B506E220093EE83 /* FastPaymentsSettingsReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsReducer.swift; sourceTree = "<group>"; };
@@ -6368,7 +6366,6 @@
 			children = (
 				2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */,
 				2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */,
-				2A6EAA972B5061490093EE83 /* Factory+preview.swift */,
 				2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */,
 				2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */,
 				2A6EAAA32B50759A0093EE83 /* ContractConsentAndDefault+ext.swift */,
@@ -12788,7 +12785,6 @@
 				2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */,
 				2A6EAAA62B50764A0093EE83 /* ContractConsentAndDefault.swift in Sources */,
 				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
-				2A6EAA982B5061490093EE83 /* Factory+preview.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,

@@ -7,8 +7,21 @@
 
 extension ViewModel {
     
-    static func preview(route: Route = .init()) -> ViewModel {
+    static func preview(
+        route: Route = .init()
+    ) -> ViewModel {
         
-        .init(route: route, factory: .preview)
+        let reducer = FastPaymentsSettingsReducer.preview
+        
+        return .init(
+            route: route,
+            factory: .init(
+                makeFastPaymentsSettingsViewModel: {
+                    .init(
+                        reduce: reducer.reduce(_:_:_:)
+                    )
+                }
+            )
+        )
     }
 }
