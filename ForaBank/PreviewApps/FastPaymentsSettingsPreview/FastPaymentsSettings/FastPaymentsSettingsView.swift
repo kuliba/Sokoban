@@ -21,6 +21,6 @@ struct FastPaymentsSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
  
-        FastPaymentsSettingsView(viewModel: .init())
+        FastPaymentsSettingsView(viewModel: .preview)
     }
 }

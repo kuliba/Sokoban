@@ -8,6 +8,6 @@
 extension Factory {
     
     static let preview: Self = .init(
-        makeFastPaymentsSettingsViewModel: FastPaymentsSettingsViewModel.init
+        makeFastPaymentsSettingsViewModel: { .preview }
     )
 }
