@@ -566,6 +566,8 @@
 		2A6EAA832B50576F0093EE83 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */; };
 		2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA892B5058EE0093EE83 /* ViewModel.swift */; };
 		2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */; };
+		2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */; };
+		2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2844,6 +2846,8 @@
 		2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A6EAA892B5058EE0093EE83 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationDestination.swift"; sourceTree = "<group>"; };
+		2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsViewModel.swift; sourceTree = "<group>"; };
+		2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsView.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -6329,6 +6333,7 @@
 				2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */,
 				2A6EAA7D2B50576D0093EE83 /* ContentView.swift */,
 				2A6EAA892B5058EE0093EE83 /* ViewModel.swift */,
+				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
 				2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */,
 				2A6EAA812B50576F0093EE83 /* Preview Content */,
@@ -6350,6 +6355,15 @@
 				2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */ = {
+			isa = PBXGroup;
+			children = (
+				2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */,
+				2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */,
+			);
+			path = FastPaymentsSettings;
 			sourceTree = "<group>";
 		};
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
@@ -12726,6 +12740,8 @@
 			files = (
 				2A6EAA7E2B50576D0093EE83 /* ContentView.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
+				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
+				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 			);
