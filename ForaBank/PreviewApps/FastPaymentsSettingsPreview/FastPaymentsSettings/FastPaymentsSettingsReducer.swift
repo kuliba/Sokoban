@@ -7,6 +7,17 @@
 
 final class FastPaymentsSettingsReducer {
     
+    private let getContractConsentAndDefault: GetContractConsentAndDefault
+    
+    init(
+        getContractConsentAndDefault: @escaping GetContractConsentAndDefault
+    ) {
+        self.getContractConsentAndDefault = getContractConsentAndDefault
+    }
+}
+
+extension FastPaymentsSettingsReducer {
+    
     func reduce(
         _ state: State,
         _ event: Event,
@@ -17,6 +28,8 @@ final class FastPaymentsSettingsReducer {
 }
 
 extension FastPaymentsSettingsReducer {
+    
+    typealias GetContractConsentAndDefault = (@escaping (ContractConsentAndDefault) -> Void) -> Void
     
     typealias State = FastPaymentsSettingsViewModel.State?
     typealias Event = FastPaymentsSettingsViewModel.Event

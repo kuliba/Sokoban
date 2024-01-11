@@ -7,5 +7,8 @@
 
 extension FastPaymentsSettingsReducer {
     
-    static let preview: FastPaymentsSettingsReducer = .init()
+    static let preview: FastPaymentsSettingsReducer = .init(
+        
+        getContractConsentAndDefault: { $0(.active()) }
+    )
 }
