@@ -38,6 +38,6 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView(viewModel: .init())
+        ContentView(viewModel: .preview())
     }
 }

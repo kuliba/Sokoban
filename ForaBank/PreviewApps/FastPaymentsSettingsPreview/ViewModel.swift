@@ -11,9 +11,14 @@ final class ViewModel: ObservableObject {
     
     @Published private(set) var route: Route
     
-    init(route: Route = .init()) {
-        
+    private let factory: Factory
+    
+    init(
+        route: Route = .init(),
+        factory: Factory
+    ) {
         self.route = route
+        self.factory = factory
     }
 }
 

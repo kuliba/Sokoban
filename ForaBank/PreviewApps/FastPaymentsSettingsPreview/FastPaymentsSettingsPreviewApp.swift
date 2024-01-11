@@ -16,7 +16,7 @@ struct FastPaymentsSettingsPreviewApp: App {
             
             NavigationStack {
                 
-                ContentView(viewModel: .init())
+                ContentView(viewModel: .preview())
             }
         }
     }
