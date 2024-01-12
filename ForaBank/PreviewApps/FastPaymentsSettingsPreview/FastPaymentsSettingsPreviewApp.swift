@@ -14,19 +14,7 @@ struct FastPaymentsSettingsPreviewApp: App {
         
         WindowGroup {
             
-            NavigationStack {
-                
-                UserAccountView(viewModel: .preview(
-                    route: .init(),
-                    getContractConsentAndDefault: { completion in
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            
-                            completion(.inactive())
-                        }
-                    }
-                ))
-            }
+            ContentView()
         }
     }
 }
