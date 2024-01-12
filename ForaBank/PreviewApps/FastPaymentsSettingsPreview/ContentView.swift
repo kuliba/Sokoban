@@ -17,7 +17,7 @@ struct ContentView: View {
             route: .init(),
             getContractConsentAndDefault: { completion in
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     
                     completion(flow.contractConsentAndDefault)
                 }

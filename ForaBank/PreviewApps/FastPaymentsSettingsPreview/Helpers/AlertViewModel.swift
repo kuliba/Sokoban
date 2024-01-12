@@ -31,9 +31,10 @@ struct AlertViewModel: Identifiable {
 extension AlertViewModel {
     
     init(
-        title: String,
+        title: String = "",
+        message: String? = nil,
         primaryButton: ButtonViewModel
     ) {
-        self.init(title: title, message: nil, primaryButton: primaryButton, secondaryButton: nil)
+        self.init(title: title, message: message, primaryButton: primaryButton, secondaryButton: nil)
     }
 }

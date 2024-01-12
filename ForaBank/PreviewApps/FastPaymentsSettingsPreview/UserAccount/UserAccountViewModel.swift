@@ -66,6 +66,39 @@ extension UserAccountViewModel {
             .compactMap(\.?.inflight)
             .sink { [weak self] in self?.route.isLoading = $0 }
             .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.alertMessage)
+            .sink { [weak self] in
+                
+                self?.route.modal = .alert(.init(
+                    message: $0,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "OK",
+                        action: { self?.resetModal() }
+                    )
+                ))
+            }
+            .store(in: &cancellables)
+    }
+}
+
+private extension FastPaymentsSettingsViewModel.State {
+    
+    var alertMessage: String? {
+        
+        switch contractConsentAndDefault {
+            
+        case let .serverError(message):
+            return message
+            
+        case .connectivityError:
+            return "Превышено время ожидания. Попробуйте позже"
+            
+        default:
+            return nil
+        }
     }
 }
 

@@ -30,13 +30,6 @@ struct UserAccountView: View {
                     ),
                     destination: destinationView
                 )
-                .alert(
-                    item: .init(
-                        get: { viewModel.route.modal?.alert },
-                        set: { if $0 == nil { viewModel.resetModal() }}
-                    ),
-                    content: Alert.init(with:)
-                )
             }
             
             loader()
@@ -82,6 +75,13 @@ struct UserAccountView: View {
         case let .fastPaymentsSettings(fpsViewModel):
             FastPaymentsSettingsView(viewModel: fpsViewModel)
                 .onAppear { fpsViewModel.event(.appear) }
+                .alert(
+                    item: .init(
+                        get: { viewModel.route.modal?.alert },
+                        set: { if $0 == nil { viewModel.resetModal() }}
+                    ),
+                    content: Alert.init(with:)
+                )
         }
     }
 }
