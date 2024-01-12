@@ -25,22 +25,29 @@ extension FastPaymentsSettingsReducer {
     ) {
         switch event {
         case .appear:
-            switch state {
-            case .none:
+            handleAppear(state, completion)
+        }
+    }
+    
+    private func handleAppear(
+        _ state: State,
+        _ completion: @escaping (State) -> Void
+    ) {
+        switch state {
+        case .none:
+            completion(.init(
+                inflight: true
+            ))
+            
+            getContractConsentAndDefault {
+                
                 completion(.init(
-                    inflight: true
+                    contractConsentAndDefault: $0
                 ))
-                
-                getContractConsentAndDefault {
-                    
-                    completion(.init(
-                        contractConsentAndDefault: $0
-                    ))
-                }
-                
-            default:
-                completion(state)
             }
+            
+        default:
+            completion(state)
         }
     }
 }
