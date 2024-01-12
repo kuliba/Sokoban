@@ -37,11 +37,22 @@ extension FastPaymentsSettingsViewModel {
         
         var inflight = false
         var contractConsentAndDefault: ContractConsentAndDefault?
+        var error: StateError?
+        
+        #warning("improve type by reusing parts of ContractConsentAndDefault?")
+        enum StateError {
+            
+            case serverError(String)
+            case connectivityError
+            case updateFailure
+        }
     }
     
     enum Event {
         
         case appear
+        case activateContract
+        case resetError
     }
 }
 

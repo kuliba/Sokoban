@@ -11,6 +11,7 @@ import Foundation
 final class UserAccountViewModel: ObservableObject {
     
     @Published private(set) var route: Route
+    @Published private(set) var informer: Informer?
     
     private let factory: Factory
     private var cancellables = Set<AnyCancellable>()
@@ -71,20 +72,61 @@ extension UserAccountViewModel {
             .compactMap(\.?.alertMessage)
             .sink { [weak self] in
                 
-                self?.route.modal = .fpsAlert(.init(
+                self?.route.modal = .fpsAlert(.ok(
                     message: $0,
-                    primaryButton: .init(
-                        type: .default,
-                        title: "OK",
-                        action: {
-                            
-                            self?.resetModal()
-                            self?.resetDestination()
-                        }
-                    )
+                    primaryAction: {
+                        
+                        self?.resetModal()
+                        viewModel.event(.resetError)
+                    }
                 ))
             }
             .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.finalAlertMessage)
+            .sink { [weak self] in
+                
+                self?.route.modal = .fpsAlert(.ok(
+                    message: $0,
+                    primaryAction: { self?.resetRoute() }
+                ))
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.informer)
+            .sink { [weak self] informer in
+                
+                self?.informer = .init(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 2
+                ) { [weak self] in
+                    
+                    self?.informer = nil
+                    viewModel.event(.resetError)
+                }
+            }
+            .store(in: &cancellables)
+    }
+}
+
+private extension AlertViewModel {
+    
+    static func ok(
+        message: String? = nil,
+        primaryAction: @escaping () -> Void
+    ) -> Self {
+        
+        self.init(
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                action: primaryAction
+            )
+        )
     }
 }
 
@@ -92,7 +134,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var alertMessage: String? {
         
-        switch contractConsentAndDefault {
+        switch error {
             
         case let .serverError(message):
             return message
@@ -104,18 +146,59 @@ private extension FastPaymentsSettingsViewModel.State {
             return nil
         }
     }
+    
+    var finalAlertMessage: String? {
+        
+        switch contractConsentAndDefault {
+            
+        case let .serverError(message):
+            return message
+            
+        case .connectivityError:
+            return "Превышено время ожидания. Попробуйте позже"
+
+        default:
+            return nil
+        }
+    }
+    
+    var informer: Void? {
+        
+        switch error {
+            
+        case .updateFailure:
+            return ()
+
+        default:
+            return nil
+        }
+    }
 }
 
 extension UserAccountViewModel {
     
+    func resetRoute() {
+        
+        DispatchQueue.main.async { [weak self] in
+         
+            self?.route = .init()
+        }
+    }
+    
     func resetDestination() {
         
-        route.destination = nil
+        DispatchQueue.main.async { [weak self] in
+         
+            self?.route.destination = nil
+        }
     }
     
     func resetModal() {
         
-        route.modal = nil
+        DispatchQueue.main.async { [weak self] in
+         
+            self?.route.modal = nil
+        }
     }
 }
 
@@ -163,6 +246,11 @@ extension UserAccountViewModel {
                 }
             }
         }
+    }
+    
+    struct Informer {
+        
+        let text: String
     }
 }
 

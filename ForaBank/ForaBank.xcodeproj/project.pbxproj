@@ -553,6 +553,7 @@
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
 		2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */; };
 		2A6B8E602AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */; };
+		2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */; };
 		2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */; };
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
 		2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */; };
@@ -2842,6 +2843,7 @@
 		2A6B338D2AA50398001F5603 /* ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
 		2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVServiceTests.swift"; sourceTree = "<group>"; };
+		2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerView.swift; sourceTree = "<group>"; };
 		2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithStoreTests.swift; sourceTree = "<group>"; };
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
 		2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorTests.swift; sourceTree = "<group>"; };
@@ -6408,6 +6410,7 @@
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
+				2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */,
 			);
 			path = UserAccount;
 			sourceTree = "<group>";
@@ -12790,6 +12793,7 @@
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
 				2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */,
+				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* ContractConsentAndDefault+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,

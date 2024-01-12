@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var flow: Flow = .a1
+    @State private var flow: Flow = .a2d2
     
     var body: some View {
         
@@ -17,9 +17,16 @@ struct ContentView: View {
             route: .init(),
             getContractConsentAndDefault: { completion in
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
                     completion(flow.contractConsentAndDefault)
+                }
+            },
+            updateContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flow.updateContractResponse)
                 }
             }
         ))
@@ -44,7 +51,9 @@ private extension ContentView {
     
     enum Flow: String, CaseIterable {
         
-        case a1, a2, a3, a4, a5
+        case a1 
+        case a2d1, a2d2, a2d3
+        case a3, a4, a5
     }
 }
 
@@ -55,14 +64,44 @@ private extension ContentView.Flow {
         switch self {
         case .a1:
             return .active()
-        case .a2:
+            
+        case .a2d1, .a2d2, .a2d3:
             return .inactive()
+        
         case .a3:
             return .missingContract()
+        
         case .a4:
-            return .serverError
+            return .serverError("Server Error #7654")
+        
         case .a5:
             return .connectivityError
+        }
+    }
+    
+    var updateContractResponse: FastPaymentsSettingsReducer.UpdateContractResponse {
+        
+        switch self {
+        case .a1:
+            fatalError("impossible")
+
+        case .a2d1:
+            return .success(.init())
+
+        case .a2d2:
+            return .serverError("Server Error #7654")
+
+        case .a2d3:
+            return .connectivityError
+
+        case .a3:
+            fatalError("impossible")
+
+        case .a4:
+            fatalError("impossible")
+
+        case .a5:
+            fatalError("impossible")
         }
     }
 }

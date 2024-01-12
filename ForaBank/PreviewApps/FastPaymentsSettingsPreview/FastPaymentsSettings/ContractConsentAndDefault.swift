@@ -6,10 +6,11 @@
 //
 
 enum ContractConsentAndDefault: Equatable {
-    
+    #warning("improve type: aggregate contract and error cases")
     case active(ContractDetails)
     case inactive(ContractDetails)
     case missingContract(ConsentResult)
+    #warning("extract cases into one (error) type")
     case serverError(String)
     case connectivityError
 }
@@ -18,7 +19,7 @@ extension ContractConsentAndDefault {
     
     struct ContractDetails: Equatable {
         
-        let contract: Contract
+        var contract: Contract
         let consentResult: ConsentResult
         let bankDefault: BankDefault
     }

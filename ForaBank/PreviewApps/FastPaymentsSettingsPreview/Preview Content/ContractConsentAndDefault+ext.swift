@@ -35,8 +35,6 @@ extension ContractConsentAndDefault {
         
         .missingContract(consent)
     }
-    
-    static let serverError: Self = .serverError("Server Error #4321")
 }
 
 private extension ContractConsentAndDefault.ContractDetails {

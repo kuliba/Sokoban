@@ -24,7 +24,11 @@ struct FastPaymentsSettingsView: View {
                     .foregroundStyle(.green)
                 
             case let .inactive(contractDetails):
-                Text("Inactive.\n\nContractDetails: \(String(describing: contractDetails))")
+                #warning("extract to separate view")
+                Button("Включить переводы СБП") {
+                    
+                    viewModel.event(.activateContract)
+                }
                 
             case let .missingContract(consentResult):
                 Text("Missing Contract.\n\n\(String(describing: consentResult))")

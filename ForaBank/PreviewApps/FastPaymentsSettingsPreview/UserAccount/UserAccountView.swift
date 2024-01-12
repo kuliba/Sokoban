@@ -19,7 +19,7 @@ struct UserAccountView: View {
                 
                 VStack(spacing: 32) {
                     
-                    showLoaderButton()                    
+                    showLoaderButton()
                     showAlertButton()
                     openFastPaymentsSettingsButton()
                 }
@@ -38,6 +38,8 @@ struct UserAccountView: View {
                     destination: destinationView
                 )
             }
+            
+            viewModel.informer.map(informerView)
             
             loader()
         }
@@ -59,6 +61,13 @@ struct UserAccountView: View {
             "Fast Payments Settings",
             action: viewModel.openFastPaymentsSettings
         )
+    }
+    
+    private func informerView(
+        informer: UserAccountViewModel.Informer
+    ) -> some View {
+        
+        InformerView(text: informer.text)
     }
     
     @ViewBuilder
