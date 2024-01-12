@@ -9,7 +9,7 @@ extension ContractConsentAndDefault {
     
     static func active(
         _ consentResult: ContractConsentAndDefault.ConsentResult = .success,
-        _ bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
+        bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
     ) -> Self {
         
         .contracted(
