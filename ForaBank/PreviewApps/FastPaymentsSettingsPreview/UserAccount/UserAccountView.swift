@@ -13,7 +13,12 @@ struct UserAccountView: View {
     
     var body: some View {
         
-        openFastPaymentsSettingsButton()
+        ZStack {
+            
+            openFastPaymentsSettingsButton()
+            
+            loader()
+        }
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.destination },
@@ -36,6 +41,19 @@ struct UserAccountView: View {
             "Fast Payments Settings",
             action: viewModel.openFastPaymentsSettings
         )
+    }
+    
+    @ViewBuilder
+    private func loader() -> some View {
+        
+        ZStack {
+            
+            Color.black.opacity(0.4)
+            
+            ProgressView()
+        }
+        .ignoresSafeArea()
+        .opacity(viewModel.route.loader ? 1 : 0)
     }
     
     private func destinationView(

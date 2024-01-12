@@ -50,6 +50,7 @@ extension UserAccountViewModel {
         
         var destination: Destination?
         var modal: Modal?
+        var loader = false
         
         init(
             destination: Destination? = nil,
