@@ -71,7 +71,7 @@ struct UserAccountView: View {
             ProgressView()
         }
         .ignoresSafeArea()
-        .opacity(viewModel.route.loader ? 1 : 0)
+        .opacity(viewModel.route.isLoading ? 1 : 0)
     }
     
     private func destinationView(

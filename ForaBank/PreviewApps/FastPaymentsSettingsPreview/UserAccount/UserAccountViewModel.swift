@@ -27,14 +27,14 @@ final class UserAccountViewModel: ObservableObject {
 // MARK: - Demo Functionality
 
 extension UserAccountViewModel {
-
+    
     func showDemoLoader() {
         
-        route.loader = true
+        route.isLoading = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             
-            self?.route.loader = false
+            self?.route.isLoading = false
         }
     }
     
@@ -64,7 +64,7 @@ extension UserAccountViewModel {
         
         viewModel.$state
             .compactMap(\.?.inflight)
-            .sink { [weak self] in self?.route.loader = $0 }
+            .sink { [weak self] in self?.route.isLoading = $0 }
             .store(in: &cancellables)
     }
 }
@@ -88,7 +88,7 @@ extension UserAccountViewModel {
         
         var destination: Destination?
         var modal: Modal?
-        var loader = false
+        var isLoading = false
         
         init(
             destination: Destination? = nil,
