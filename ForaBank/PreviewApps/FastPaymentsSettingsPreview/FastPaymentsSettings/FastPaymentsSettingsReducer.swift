@@ -33,10 +33,10 @@ extension FastPaymentsSettingsReducer {
             handleAppear(state, completion)
             
         case .activateContract:
-            handleActivateContract(state, completion)
+            activateContract(state, completion)
             
         case .deactivateContract:
-            handleDeactivateContract(state, completion)
+            deactivateContract(state, completion)
             
         case .resetError:
             completion(state?.noError())
@@ -63,7 +63,7 @@ extension FastPaymentsSettingsReducer {
         }
     }
     
-    private func handleActivateContract(
+    private func activateContract(
         _ state: State,
         _ completion: @escaping Completion
     ) {
@@ -75,7 +75,7 @@ extension FastPaymentsSettingsReducer {
                 
             case .inactive:
                 completion(state?.toInflight())
-                activateInactiveContract(contractDetails, completion)
+                activateContract(contractDetails, completion)
             }
             
         case let .missingContract(consentResult):
@@ -87,7 +87,7 @@ extension FastPaymentsSettingsReducer {
         }
     }
     
-    private func activateInactiveContract(
+    private func activateContract(
         _ contractDetails: ContractConsentAndDefault.ContractDetails,
         _ completion: @escaping Completion
     ) {
@@ -122,7 +122,7 @@ extension FastPaymentsSettingsReducer {
         }
     }
     
-    private func handleDeactivateContract(
+    private func deactivateContract(
         _ state: State,
         _ completion: @escaping Completion
     ) {
@@ -131,7 +131,7 @@ extension FastPaymentsSettingsReducer {
             switch status {
             case .active:
                 completion(state?.toInflight())
-                deactivateActiveContract(contractDetails, completion)
+                deactivateContract(contractDetails, completion)
             
             case .inactive:
                 completion(state)
@@ -142,7 +142,7 @@ extension FastPaymentsSettingsReducer {
         }
     }
     
-    private func deactivateActiveContract(
+    private func deactivateContract(
         _ contractDetails: ContractConsentAndDefault.ContractDetails,
         _ completion: @escaping Completion
     ) {
