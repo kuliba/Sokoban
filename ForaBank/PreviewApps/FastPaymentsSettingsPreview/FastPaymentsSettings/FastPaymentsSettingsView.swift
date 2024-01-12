@@ -16,18 +16,21 @@ struct FastPaymentsSettingsView: View {
         Group {
             
             switch viewModel.state?.contractConsentAndDefault {
-            case .none, .serverError, .connectivityError:
+            case .none, .failure:
                 Text("Empty View").opacity(0.1)
                 
-            case let .active(contractDetails):
-                Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
-                    .foregroundStyle(.green)
-                
-            case let .inactive(contractDetails):
-                #warning("extract to separate view")
-                Button("Включить переводы СБП") {
+            case let .contracted(contractDetails, status):
+                switch status {
+                case .active:
+                    Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
+                        .foregroundStyle(.green)
                     
-                    viewModel.event(.activateContract)
+                case .inactive:
+#warning("extract to separate view")
+                    Button("Включить переводы СБП") {
+                        
+                        viewModel.event(.activateContract)
+                    }
                 }
                 
             case let .missingContract(consentResult):

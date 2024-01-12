@@ -6,13 +6,10 @@
 //
 
 enum ContractConsentAndDefault: Equatable {
-    #warning("improve type: aggregate contract and error cases")
-    case active(ContractDetails)
-    case inactive(ContractDetails)
+    
+    case contracted(ContractDetails, ContractStatus)
     case missingContract(ConsentResult)
-    #warning("extract cases into one (error) type")
-    case serverError(String)
-    case connectivityError
+    case failure(Failure)
 }
 
 extension ContractConsentAndDefault {
@@ -36,5 +33,16 @@ extension ContractConsentAndDefault {
         case onDisabled
         case offEnabled
         case offDisabled
+    }
+    
+    enum ContractStatus: Equatable {
+        
+        case active, inactive
+    }
+    
+    enum Failure: Equatable {
+        
+        case serverError(String)
+        case connectivityError
     }
 }

@@ -72,10 +72,10 @@ private extension ContentView.Flow {
             return .missingContract()
         
         case .a4:
-            return .serverError("Server Error #7654")
+            return .failure(.serverError("Server Error #7654"))
         
         case .a5:
-            return .connectivityError
+            return .failure(.connectivityError)
         }
     }
     

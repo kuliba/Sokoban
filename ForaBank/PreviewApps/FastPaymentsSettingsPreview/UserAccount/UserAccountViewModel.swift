@@ -151,10 +151,10 @@ private extension FastPaymentsSettingsViewModel.State {
         
         switch contractConsentAndDefault {
             
-        case let .serverError(message):
+        case let .failure(.serverError(message)):
             return message
             
-        case .connectivityError:
+        case .failure(.connectivityError):
             return "Превышено время ожидания. Попробуйте позже"
 
         default:

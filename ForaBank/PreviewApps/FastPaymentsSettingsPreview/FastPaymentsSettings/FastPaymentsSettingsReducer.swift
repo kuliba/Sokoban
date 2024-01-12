@@ -65,10 +65,15 @@ extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         switch state?.contractConsentAndDefault {
-        case let .inactive(contractDetails):
-            completion(state?.toInflight())
+        case let .contracted(contractDetails, status):
+            switch status {
+            case .active:
+                fallthrough
             
-            activateInactive(contractDetails, completion)
+            case .inactive:
+                completion(state?.toInflight())
+                activateInactive(contractDetails, completion)
+            }
             
         case let .missingContract(consentResult):
 #warning("TBD")
@@ -94,18 +99,18 @@ extension FastPaymentsSettingsReducer {
                 var contractDetails = contractDetails
                 contractDetails.contract = contract
                 state = .init(
-                    contractConsentAndDefault: .active(contractDetails)
+                    contractConsentAndDefault: .contracted(contractDetails, .active)
                 )
                 
             case let .serverError(message):
                 state = .init(
-                    contractConsentAndDefault: .inactive(contractDetails),
+                    contractConsentAndDefault: .contracted(contractDetails, .inactive),
                     error: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    contractConsentAndDefault: .inactive(contractDetails),
+                    contractConsentAndDefault: .contracted(contractDetails, .inactive),
                     error: .updateFailure
                 )
             }

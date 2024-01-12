@@ -12,10 +12,13 @@ extension ContractConsentAndDefault {
         _ bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
     ) -> Self {
         
-        .active(.preview(
-            consentResult: consentResult,
-            bankDefault: bankDefault
-        ))
+        .contracted(
+            .preview(
+                consentResult: consentResult,
+                bankDefault: bankDefault
+            ),
+            .active
+        )
     }
     
     static func inactive(
@@ -23,10 +26,13 @@ extension ContractConsentAndDefault {
         _ bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
     ) -> Self {
         
-        .inactive(.preview(
-            consentResult: consentResult,
-            bankDefault: bankDefault
-        ))
+        .contracted(
+            .preview(
+                consentResult: consentResult,
+                bankDefault: bankDefault
+            ),
+            .inactive
+        )
     }
     
     static func missingContract(
