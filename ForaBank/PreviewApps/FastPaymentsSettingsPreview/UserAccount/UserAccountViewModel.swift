@@ -22,6 +22,10 @@ final class UserAccountViewModel: ObservableObject {
     ) {
         self.route = route
         self.factory = factory
+        
+//        $route
+//            .sink { print($0) }
+//            .store(in: &cancellables)
     }
 }
 
@@ -105,7 +109,6 @@ extension UserAccountViewModel {
                 ) { [weak self] in
                     
                     self?.informer = nil
-                    viewModel.event(.resetError)
                 }
             }
             .store(in: &cancellables)
@@ -117,7 +120,40 @@ extension UserAccountViewModel {
                 self?.route.modal = .fpsAlert(.ok(
                     title: "Сервис не доступен",
                     message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-                    primaryAction: { self?.resetRoute() }
+                    primaryAction: {
+                        
+                        self?.resetRoute()
+                        viewModel.event(.resetError)
+                    }
+                ))
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.confirmSetBankDefault)
+            .sink { [weak self] in
+                
+                self?.route.modal = .fpsAlert(.init(
+                    title: "Внимание",
+                    message: "Фора-банк будет выбран банком по умолчанию",
+                    primaryButton: .init(
+                        type: .default,
+                        title: "OK",
+                        action: {
+                            
+                            viewModel.event(.resetError)
+                            self?.resetModal()
+                            self?.route.fpsDestination = .confirmSetBankDefault
+                        }),
+                    secondaryButton: .init(
+                        type: .cancel,
+                        title: "Отмена",
+                        action: {
+                        
+                            viewModel.event(.resetError)
+                            self?.resetModal()
+                        }
+                    )
                 ))
             }
             .store(in: &cancellables)
@@ -199,6 +235,18 @@ private extension FastPaymentsSettingsViewModel.State {
             return nil
         }
     }
+    
+    var confirmSetBankDefault: Void? {
+        
+        switch error {
+            
+        case .confirmSetBankDefault:
+            return ()
+
+        default:
+            return nil
+        }
+    }
 }
 
 extension UserAccountViewModel {
@@ -219,6 +267,14 @@ extension UserAccountViewModel {
         }
     }
     
+    func resetFPSDestination() {
+        
+//        DispatchQueue.main.async { [weak self] in
+         
+            /*self?.*/route.fpsDestination = nil
+//        }
+    }
+    
     func resetModal() {
         
         DispatchQueue.main.async { [weak self] in
@@ -233,6 +289,7 @@ extension UserAccountViewModel {
     struct Route {
         
         var destination: Destination?
+        var fpsDestination: FPSDestination?
         var modal: Modal?
         var isLoading = false
         
@@ -247,6 +304,11 @@ extension UserAccountViewModel {
         enum Destination {
             
             case fastPaymentsSettings(FastPaymentsSettingsViewModel)
+        }
+        
+        enum FPSDestination {
+            
+            case confirmSetBankDefault//(phoneNumberMask: String)
         }
         
         enum Modal {

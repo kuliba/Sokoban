@@ -43,6 +43,17 @@ struct UserAccountView: View {
             
             loader()
         }
+        .overlay(alignment: .bottom) {
+            
+            VStack {
+                
+                Text("destination:: \(viewModel.route.destination == nil ? "nil" : "value")")
+                Text("fpsDestination:: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
+                Text("modal:: \(viewModel.route.modal == nil ? "nil" : "value")")
+            }
+            .foregroundStyle(.secondary)
+            .font(.footnote)
+        }
     }
     
     private func showLoaderButton() -> some View {
@@ -98,6 +109,23 @@ struct UserAccountView: View {
                     ),
                     content: Alert.init(with:)
                 )
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route.fpsDestination },
+                        set: { if $0 == nil { viewModel.resetFPSDestination() }}
+                    ),
+                    destination: fpsDestinationView
+                )
+        }
+    }
+
+    private func fpsDestinationView(
+        fpsDestination: UserAccountViewModel.Route.FPSDestination
+    ) -> some View {
+        
+        switch fpsDestination {
+        case .confirmSetBankDefault:
+            Text("TBD: OTP Confirmation")
         }
     }
 }

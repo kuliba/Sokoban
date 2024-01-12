@@ -11,6 +11,7 @@ struct ActiveContractView: View {
     
     let contractDetails: ContractConsentAndDefault.ContractDetails
     let actionOff: () -> Void
+    let setBankDefault: () -> Void
     
     var body: some View {
         
@@ -53,7 +54,7 @@ struct ActiveContractView: View {
                 .frame(width: 32, height: 32)
             
         case .offEnabled:
-            Button(action: {}) {
+            Button(action: setBankDefault) {
                 Color.black
                     .clipShape(.circle)
                     .frame(width: 32, height: 32)
@@ -73,7 +74,8 @@ struct ActiveContractView_Previews: PreviewProvider {
         
         ActiveContractView(
             contractDetails: .preview(),
-            actionOff:  {}
+            actionOff:  {},
+            setBankDefault: {}
         )
     }
 }

@@ -46,6 +46,9 @@ extension FastPaymentsSettingsReducer {
             
         case .resetError:
             completion(state?.noError())
+            
+        case .setBankDefault:
+            setBankDefault(state, completion)
         }
     }
     
@@ -227,6 +230,15 @@ extension FastPaymentsSettingsReducer {
             
             completion(state)
         }
+    }
+    
+    private func setBankDefault(
+        _ state: State,
+       _ completion: @escaping Completion
+    ) {
+        var state = state
+        state?.error = .confirmSetBankDefault
+        completion(state)
     }
 }
 

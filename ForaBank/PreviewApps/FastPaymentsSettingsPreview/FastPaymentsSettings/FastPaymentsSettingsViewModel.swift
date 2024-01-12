@@ -46,6 +46,8 @@ extension FastPaymentsSettingsViewModel {
             case connectivityError
             case missingProduct
             case updateContractFailure
+            #warning("that is alert, but not an error; it makes sense to extract to a different field and type")
+            case confirmSetBankDefault
         }
     }
     
@@ -55,6 +57,7 @@ extension FastPaymentsSettingsViewModel {
         case activateContract
         case deactivateContract
         case resetError
+        case setBankDefault
     }
 }
 

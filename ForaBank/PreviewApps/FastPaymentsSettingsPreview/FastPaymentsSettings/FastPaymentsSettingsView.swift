@@ -22,7 +22,8 @@ struct FastPaymentsSettingsView: View {
             case .active:
                 ActiveContractView(
                     contractDetails: contractDetails,
-                    actionOff: { viewModel.event(.deactivateContract) }
+                    actionOff: { viewModel.event(.deactivateContract) },
+                    setBankDefault: { viewModel.event(.setBankDefault) }
                 )
                 
             case .inactive:
