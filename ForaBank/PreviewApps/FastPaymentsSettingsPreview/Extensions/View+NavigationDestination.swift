@@ -18,10 +18,10 @@ public extension View {
         self.background(
             NavigationLink(
                 titleKey,
-                isActive: .init(
-                    get: { item.wrappedValue != nil },
-                    set: { if !$0 { item.wrappedValue = nil }}
-                ),
+//                isActive: .init(
+//                    get: { item.wrappedValue != nil },
+//                    set: { if !$0 { item.wrappedValue = nil }}
+//                ),
                 destination: {
                     item.wrappedValue.map(content)
                 }
