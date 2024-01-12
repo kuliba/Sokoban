@@ -27,9 +27,15 @@ extension FastPaymentsSettingsReducer {
         case .appear:
             switch state {
             case .none:
+                completion(.init(
+                    inflight: true
+                ))
+                
                 getContractConsentAndDefault {
                     
-                    completion(.contractConsentAndDefault($0))
+                    completion(.init(
+                        contractConsentAndDefault: $0
+                    ))
                 }
                 
             default:

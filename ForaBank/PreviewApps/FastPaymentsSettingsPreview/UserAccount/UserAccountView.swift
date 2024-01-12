@@ -15,24 +15,52 @@ struct UserAccountView: View {
         
         ZStack {
             
-            openFastPaymentsSettingsButton()
+            NavigationStack {
+                
+                VStack(spacing: 32) {
+                    
+                    Button("loader") {
+                        
+                        viewModel.route.loader = true
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            
+                            viewModel.route.loader = false
+                        }
+                    }
+                    
+                    Button("alert") {
+                        
+                        viewModel.route.modal = .alert(.init(
+                            title: "Test Alert",
+                            primaryButton: .init(
+                                type: .default,
+                                title: "OK",
+                                action: viewModel.resetModal
+                            )
+                        ))
+                    }
+                    
+                    openFastPaymentsSettingsButton()
+                }
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route.destination },
+                        set: { if $0 == nil { viewModel.resetDestination() }}
+                    ),
+                    destination: destinationView
+                )
+                .alert(
+                    item: .init(
+                        get: { viewModel.route.modal?.alert },
+                        set: { if $0 == nil { viewModel.resetModal() }}
+                    ),
+                    content: Alert.init(with:)
+                )
+            }
             
             loader()
         }
-            .navigationDestination(
-                item: .init(
-                    get: { viewModel.route.destination },
-                    set: { if $0 == nil { viewModel.resetDestination() }}
-                ),
-                destination: destinationView
-            )
-            .alert(
-                item: .init(
-                    get: { viewModel.route.modal?.alert },
-                    set: { if $0 == nil { viewModel.resetModal() }}
-                ),
-                content: Alert.init(with:)
-            )
     }
     
     private func openFastPaymentsSettingsButton() -> some View {

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Combine
 import Foundation
 
 final class FastPaymentsSettingsViewModel: ObservableObject {
@@ -12,6 +13,7 @@ final class FastPaymentsSettingsViewModel: ObservableObject {
     @Published private(set) var state: State?
     
     private let reduce: Reduce
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         state: State? = nil,
@@ -19,6 +21,10 @@ final class FastPaymentsSettingsViewModel: ObservableObject {
     ) {
         self.state = state
         self.reduce = reduce
+        
+        $state
+            .sink { print("State changed: \($0)") }
+            .store(in: &cancellables)
     }
 }
 
@@ -32,9 +38,10 @@ extension FastPaymentsSettingsViewModel {
 
 extension FastPaymentsSettingsViewModel {
     
-    enum State {
+    struct State {
         
-        case contractConsentAndDefault(ContractConsentAndDefault)
+        var inflight = false
+        var contractConsentAndDefault: ContractConsentAndDefault?
     }
     
     enum Event {
@@ -44,6 +51,6 @@ extension FastPaymentsSettingsViewModel {
 }
 
 extension FastPaymentsSettingsViewModel {
-
+    
     typealias Reduce = (State?, Event, @escaping (State?) -> Void) -> Void
 }

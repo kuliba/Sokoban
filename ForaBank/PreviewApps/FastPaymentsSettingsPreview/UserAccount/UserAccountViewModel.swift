@@ -5,13 +5,15 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Combine
 import Foundation
 
 final class UserAccountViewModel: ObservableObject {
     
-    @Published private(set) var route: Route
+    @Published /*private(set)*/ var route: Route
     
     private let factory: Factory
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         route: Route = .init(),
@@ -19,6 +21,13 @@ final class UserAccountViewModel: ObservableObject {
     ) {
         self.route = route
         self.factory = factory
+        
+        $route.map(\.loader)
+            .sink {
+                
+                print("## loader sink: \(String(describing: $0))")
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -27,7 +36,20 @@ extension UserAccountViewModel {
     func openFastPaymentsSettings() {
         
         let viewModel = factory.makeFastPaymentsSettingsViewModel()
+        bind(viewModel)
         route.destination = .fastPaymentsSettings(viewModel)
+    }
+    
+    private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
+        
+        viewModel.$state
+            .compactMap(\.?.inflight)
+            .sink { [weak self] in
+                
+                self?.route.loader = $0
+                print("## sink: \($0) | \(String(describing: self?.route.loader))")
+            }
+            .store(in: &cancellables)
     }
 }
 

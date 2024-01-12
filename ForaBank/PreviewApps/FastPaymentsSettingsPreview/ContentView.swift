@@ -13,19 +13,16 @@ struct ContentView: View {
     
     var body: some View {
         
-        NavigationStack {
-            
-            UserAccountView(viewModel: .preview(
-                route: .init(),
-                getContractConsentAndDefault: { completion in
+        UserAccountView(viewModel: .preview(
+            route: .init(),
+            getContractConsentAndDefault: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        
-                        completion(flow.contractConsentAndDefault)
-                    }
+                    completion(flow.contractConsentAndDefault)
                 }
-            ))
-        }
+            }
+        ))
         .overlay(alignment: .topTrailing, content: picker)
     }
     

@@ -15,30 +15,27 @@ struct FastPaymentsSettingsView: View {
         
         Group {
             
-            switch viewModel.state {
+            switch viewModel.state?.contractConsentAndDefault {
             case .none:
                 Text("Empty View").opacity(0.2)
                 
-            case let .contractConsentAndDefault(contractConsentAndDefault):
-                switch contractConsentAndDefault {
-                case let .active(contractDetails):
-                    Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
-                        .foregroundStyle(.green)
-                    
-                case let .inactive(contractDetails):
-                    Text("Inactive.\n\nContractDetails: \(String(describing: contractDetails))")
-                    
-                case let .missingContract(consentResult):
-                    Text("Missing Contract.\n\n\(String(describing: consentResult))")
-                    
-                case let .serverError(message):
-                    Text("Here should be alert for message: \(message)")
-                        .foregroundStyle(.red)
-                    
-                case .connectivityError:
-                    Text("Here should be alert for connectivityError.")
-                        .foregroundStyle(.red)
-                }
+            case let .active(contractDetails):
+                Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
+                    .foregroundStyle(.green)
+                
+            case let .inactive(contractDetails):
+                Text("Inactive.\n\nContractDetails: \(String(describing: contractDetails))")
+                
+            case let .missingContract(consentResult):
+                Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                
+            case let .serverError(message):
+                Text("Here should be alert for message: \(message)")
+                    .foregroundStyle(.red)
+                
+            case .connectivityError:
+                Text("Here should be alert for connectivityError.")
+                    .foregroundStyle(.red)
             }
         }
         .padding()
