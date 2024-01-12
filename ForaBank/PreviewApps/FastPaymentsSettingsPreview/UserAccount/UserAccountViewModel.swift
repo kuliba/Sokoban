@@ -21,13 +21,6 @@ final class UserAccountViewModel: ObservableObject {
     ) {
         self.route = route
         self.factory = factory
-        
-        $route.map(\.loader)
-            .sink {
-                
-                print("## loader sink: \(String(describing: $0))")
-            }
-            .store(in: &cancellables)
     }
 }
 
@@ -71,11 +64,7 @@ extension UserAccountViewModel {
         
         viewModel.$state
             .compactMap(\.?.inflight)
-            .sink { [weak self] in
-                
-                self?.route.loader = $0
-                print("## sink: \($0) | \(String(describing: self?.route.loader))")
-            }
+            .sink { [weak self] in self?.route.loader = $0 }
             .store(in: &cancellables)
     }
 }

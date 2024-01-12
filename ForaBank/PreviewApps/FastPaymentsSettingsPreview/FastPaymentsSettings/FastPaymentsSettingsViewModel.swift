@@ -13,7 +13,6 @@ final class FastPaymentsSettingsViewModel: ObservableObject {
     @Published private(set) var state: State?
     
     private let reduce: Reduce
-    private var cancellables = Set<AnyCancellable>()
     
     init(
         state: State? = nil,
@@ -21,10 +20,6 @@ final class FastPaymentsSettingsViewModel: ObservableObject {
     ) {
         self.state = state
         self.reduce = reduce
-        
-        $state
-            .sink { print("State changed: \($0)") }
-            .store(in: &cancellables)
     }
 }
 
