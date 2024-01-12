@@ -166,7 +166,7 @@ private extension FastPaymentsSettingsViewModel.State {
         
         switch error {
             
-        case .updateFailure:
+        case .updateContractFailure:
             return ()
 
         default:

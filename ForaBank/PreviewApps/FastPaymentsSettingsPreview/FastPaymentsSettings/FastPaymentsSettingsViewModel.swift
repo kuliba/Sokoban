@@ -44,7 +44,8 @@ extension FastPaymentsSettingsViewModel {
             
             case serverError(String)
             case connectivityError
-            case updateFailure
+            case missingProduct
+            case updateContractFailure
         }
     }
     

@@ -10,19 +10,26 @@ extension UserAccountViewModel {
     static func preview(
         route: Route = .init(),
         getContractConsentAndDefault: @escaping FastPaymentsSettingsReducer.GetContractConsentAndDefault = { $0(.active()) },
-        updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.init())) }
+        updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.init())) },
+        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: "1234567890") },
+        createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.init())) }
     ) -> UserAccountViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
             
             getContractConsentAndDefault: getContractConsentAndDefault,
-            updateContract: updateContract
+            updateContract: updateContract,
+            getProduct: getProduct,
+            createContract: createContract
         )
         
         return .init(
             route: route,
             factory: .init(
-                makeFastPaymentsSettingsViewModel: { .init(reducer: reducer) }
+                makeFastPaymentsSettingsViewModel: {
+                    
+                    .init(reducer: reducer)
+                }
             )
         )
     }

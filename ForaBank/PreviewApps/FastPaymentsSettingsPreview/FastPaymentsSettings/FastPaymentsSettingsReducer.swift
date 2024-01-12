@@ -9,13 +9,19 @@ final class FastPaymentsSettingsReducer {
     
     private let getContractConsentAndDefault: GetContractConsentAndDefault
     private let updateContract: UpdateContract
+    private let getProduct: GetProduct
+    private let createContract: CreateContract
     
     init(
         getContractConsentAndDefault: @escaping GetContractConsentAndDefault,
-        updateContract: @escaping UpdateContract
+        updateContract: @escaping UpdateContract,
+        getProduct: @escaping GetProduct,
+        createContract: @escaping CreateContract
     ) {
         self.getContractConsentAndDefault = getContractConsentAndDefault
         self.updateContract = updateContract
+        self.getProduct = getProduct
+        self.createContract = createContract
     }
 }
 
@@ -78,9 +84,16 @@ extension FastPaymentsSettingsReducer {
                 activateContract(contractDetails, completion)
             }
             
-        case let .missingContract(consentResult):
-#warning("TBD")
-            break
+        case let .missingContract(consent):
+            completion(state?.toInflight())
+
+            if let product = getProduct() {
+                createContract(product, consent, completion)
+            } else {
+                var state = state
+                state?.error = .missingProduct
+                completion(state)
+            }
             
         default:
             completion(state)
@@ -114,7 +127,7 @@ extension FastPaymentsSettingsReducer {
             case .connectivityError:
                 state = .init(
                     contractConsentAndDefault: .contracted(contractDetails, .inactive),
-                    error: .updateFailure
+                    error: .updateContractFailure
                 )
             }
             
@@ -169,10 +182,49 @@ extension FastPaymentsSettingsReducer {
             case .connectivityError:
                 state = .init(
                     contractConsentAndDefault: .contracted(contractDetails, .active),
-                    error: .updateFailure
+                    error: .updateContractFailure
                 )
             }
 
+            completion(state)
+        }
+    }
+    
+    private func createContract(
+        _ product: Product,
+        _ consent: ContractConsentAndDefault.ConsentResult,
+        _ completion: @escaping Completion
+    ) {
+        createContract(product.id) { result in
+            
+            let state: State
+            
+            switch result {
+            case let .success(contract):
+                state = .init(
+                    contractConsentAndDefault: .contracted(
+                        .init(
+                            contract: contract,
+                            consentResult: consent,
+                            bankDefault: .offEnabled
+                        ),
+                        .active
+                    )
+                )
+                
+            case let .serverError(message):
+                state = .init(
+                    contractConsentAndDefault: .missingContract(consent),
+                    error: .serverError(message)
+                )
+                
+            case .connectivityError:
+                state = .init(
+                    contractConsentAndDefault: .missingContract(consent),
+                    error: .connectivityError
+                )
+            }
+            
             completion(state)
         }
     }
@@ -197,6 +249,34 @@ extension FastPaymentsSettingsReducer {
     }
     
     enum UpdateContractResponse {
+        
+        case success(ContractConsentAndDefault.Contract)
+        case serverError(String)
+        case connectivityError
+    }
+}
+
+extension FastPaymentsSettingsReducer {
+    
+    typealias GetProduct = () -> Product?
+
+    struct Product: Identifiable {
+        
+        let id: ProductID
+        
+        #warning("replace with Tagged")
+        typealias ProductID = String
+    }
+}
+
+// micro-service `ea`
+extension FastPaymentsSettingsReducer {
+    
+    typealias CreateContractPayload = Product.ID
+    typealias CreateContractCompletion = (CreateContractResponse) -> Void
+    typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
+    
+    enum CreateContractResponse {
         
         case success(ContractConsentAndDefault.Contract)
         case serverError(String)
