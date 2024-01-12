@@ -320,9 +320,17 @@ extension Model {
             )
             parameters.append(parameterOperatorLogo)
             parameters.append(Payments.ParameterCode.regular)
+            if response.scenario == .suspect {
+                
+                parameters.append(Payments.ParameterInfo(
+                    .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                    icon: .image(.parameterDocument),
+                    title: "Antifraud"
+                ))
+            }
+            
             return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
-        }
-        else {
+        } else {
             
             return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
         }

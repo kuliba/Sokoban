@@ -1523,7 +1523,7 @@ extension Model {
             let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
             return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
         
-        case .requisites:
+        case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility:
             print("DEBUG: ### REQOISITES ANTIFRATUD")
             print("DEBUG: ### \(operation)")
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
@@ -1546,6 +1546,8 @@ extension Model {
             return .init(payeeName: name, phone: "", amount: "- \(amount ?? "")")
         
         default:
+            print("DEBUG: ### REQOISITES ANTIFRATUD")
+            print("DEBUG: ### \(operation)")
             return nil
         }
     }
