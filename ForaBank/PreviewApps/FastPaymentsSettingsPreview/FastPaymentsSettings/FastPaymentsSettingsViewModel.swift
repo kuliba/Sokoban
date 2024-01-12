@@ -52,6 +52,7 @@ extension FastPaymentsSettingsViewModel {
         
         case appear
         case activateContract
+        case deactivateContract
         case resetError
     }
 }

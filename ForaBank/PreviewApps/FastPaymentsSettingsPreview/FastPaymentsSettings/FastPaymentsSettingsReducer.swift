@@ -35,6 +35,9 @@ extension FastPaymentsSettingsReducer {
         case .activateContract:
             handleActivateContract(state, completion)
             
+        case .deactivateContract:
+            handleDeactivateContract(state, completion)
+            
         case .resetError:
             completion(state?.noError())
         }
@@ -68,11 +71,11 @@ extension FastPaymentsSettingsReducer {
         case let .contracted(contractDetails, status):
             switch status {
             case .active:
-                fallthrough
-            
+                completion(state)
+                
             case .inactive:
                 completion(state?.toInflight())
-                activateInactive(contractDetails, completion)
+                activateInactiveContract(contractDetails, completion)
             }
             
         case let .missingContract(consentResult):
@@ -84,7 +87,7 @@ extension FastPaymentsSettingsReducer {
         }
     }
     
-    private func activateInactive(
+    private func activateInactiveContract(
         _ contractDetails: ContractConsentAndDefault.ContractDetails,
         _ completion: @escaping Completion
     ) {
@@ -115,6 +118,61 @@ extension FastPaymentsSettingsReducer {
                 )
             }
             
+            completion(state)
+        }
+    }
+    
+    private func handleDeactivateContract(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state?.contractConsentAndDefault {
+        case let .contracted(contractDetails, status):
+            switch status {
+            case .active:
+                completion(state?.toInflight())
+                deactivateActiveContract(contractDetails, completion)
+            
+            case .inactive:
+                completion(state)
+            }
+            
+        default:
+            completion(state)
+        }
+    }
+    
+    private func deactivateActiveContract(
+        _ contractDetails: ContractConsentAndDefault.ContractDetails,
+        _ completion: @escaping Completion
+    ) {
+        let payload = (contractDetails.contract, UpdateContractToggle.deactivate)
+        
+        updateContract(payload) { result in
+            
+            let state: State
+            
+            switch result {
+            case let .success(contract):
+                var contractDetails = contractDetails
+                contractDetails.contract = contract
+                state = .init(
+                    contractConsentAndDefault: .contracted(contractDetails, .inactive)
+                )
+                
+            case let .serverError(message):
+                state = .init(
+                    contractConsentAndDefault: .contracted(contractDetails, .active),
+                    error: .serverError(message)
+                )
+                
+            case .connectivityError:
+                state = .init(
+                    contractConsentAndDefault: .contracted(contractDetails, .active),
+                    error: .updateFailure
+                )
+            }
+
             completion(state)
         }
     }
