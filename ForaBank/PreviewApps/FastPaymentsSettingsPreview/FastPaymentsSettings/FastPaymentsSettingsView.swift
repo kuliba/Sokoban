@@ -22,17 +22,9 @@ struct FastPaymentsSettingsView: View {
             case let .contracted(contractDetails, status):
                 switch status {
                 case .active:
-#warning("extract to separate view")
-                    HStack(spacing: 16) {
+                    ActiveContractView {
                         
-                        Color.green
-                            .clipShape(.circle)
-                            .frame(width: 64, height: 64)
-                        
-                        Button("Выключить переводы СБП") {
-                            
-                            viewModel.event(.deactivateContract)
-                        }
+                        viewModel.event(.deactivateContract)
                     }
                     
                 case .inactive:
