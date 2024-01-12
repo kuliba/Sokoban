@@ -18,7 +18,13 @@ struct FastPaymentsSettingsPreviewApp: App {
                 
                 ContentView(viewModel: .preview(
                     route: .init(),
-                    getContractConsentAndDefaultStub: .inactive()
+                    getContractConsentAndDefault: { completion in
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            
+                            completion(.inactive())
+                        }
+                    }
                 ))
             }
         }

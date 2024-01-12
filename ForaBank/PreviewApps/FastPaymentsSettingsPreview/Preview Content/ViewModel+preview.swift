@@ -9,12 +9,12 @@ extension ViewModel {
     
     static func preview(
         route: Route = .init(),
-        getContractConsentAndDefaultStub: ContractConsentAndDefault = .active()
+        getContractConsentAndDefault: @escaping FastPaymentsSettingsReducer.GetContractConsentAndDefault = { $0(.active()) }
     ) -> ViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
             
-            getContractConsentAndDefault: { $0(getContractConsentAndDefaultStub) }
+            getContractConsentAndDefault: getContractConsentAndDefault
         )
         
         return .init(
