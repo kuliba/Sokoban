@@ -43,7 +43,7 @@ extension ContractConsentAndDefault {
     }
 }
 
-private extension ContractConsentAndDefault.ContractDetails {
+extension ContractConsentAndDefault.ContractDetails {
     
     static func preview(
         consentResult: ContractConsentAndDefault.ConsentResult = .success,

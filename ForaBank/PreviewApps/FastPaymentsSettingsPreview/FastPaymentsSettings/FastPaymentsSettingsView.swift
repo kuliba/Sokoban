@@ -13,55 +13,51 @@ struct FastPaymentsSettingsView: View {
     
     var body: some View {
         
-        Group {
+        switch viewModel.state?.contractConsentAndDefault {
+        case .none, .failure:
+            Text("Empty View").opacity(0.1)
             
-            switch viewModel.state?.contractConsentAndDefault {
-            case .none, .failure:
-                Text("Empty View").opacity(0.1)
+        case let .contracted(contractDetails, status):
+            switch status {
+            case .active:
+                ActiveContractView(
+                    contractDetails: contractDetails,
+                    action: { viewModel.event(.deactivateContract) }
+                )
                 
-            case let .contracted(contractDetails, status):
-                switch status {
-                case .active:
-                    ActiveContractView {
-                        
-                        viewModel.event(.deactivateContract)
-                    }
-                    
-                case .inactive:
+            case .inactive:
 #warning("extract to separate view")
-                    HStack(spacing: 16) {
+                HStack(spacing: 16) {
+                    
+                    Color.black
+                        .clipShape(.circle)
+                        .frame(width: 64, height: 64)
+                    
+                    Button("Включить переводы СБП") {
                         
-                        Color.black
-                            .clipShape(.circle)
-                            .frame(width: 64, height: 64)
-                        
-                        Button("Включить переводы СБП") {
-                            
-                            viewModel.event(.activateContract)
-                        }
+                        viewModel.event(.activateContract)
                     }
                 }
+            }
+            
+        case let .missingContract(consentResult):
+            VStack(spacing: 32) {
                 
-            case let .missingContract(consentResult):
-                VStack(spacing: 32) {
-                 
-                    Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                
+                HStack(spacing: 16) {
                     
-                    HStack(spacing: 16) {
+                    Color.black
+                        .clipShape(.circle)
+                        .frame(width: 64, height: 64)
+                    
+                    Button("Включить переводы СБП") {
                         
-                        Color.black
-                            .clipShape(.circle)
-                            .frame(width: 64, height: 64)
-                        
-                        Button("Включить переводы СБП") {
-                            
-                            viewModel.event(.activateContract)
-                        }
+                        viewModel.event(.activateContract)
                     }
                 }
             }
         }
-        .padding()
     }
 }
 
