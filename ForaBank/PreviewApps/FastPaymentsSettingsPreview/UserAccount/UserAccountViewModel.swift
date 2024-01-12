@@ -109,17 +109,31 @@ extension UserAccountViewModel {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.missingProduct)
+            .sink { [weak self] in
+                
+                self?.route.modal = .fpsAlert(.ok(
+                    title: "Сервис не доступен",
+                    message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
+                    primaryAction: { self?.resetRoute() }
+                ))
+            }
+            .store(in: &cancellables)
     }
 }
 
 private extension AlertViewModel {
     
     static func ok(
+        title: String = "",
         message: String? = nil,
         primaryAction: @escaping () -> Void
     ) -> Self {
         
         self.init(
+            title: title,
             message: message,
             primaryButton: .init(
                 type: .default,
@@ -167,6 +181,18 @@ private extension FastPaymentsSettingsViewModel.State {
         switch error {
             
         case .updateContractFailure:
+            return ()
+
+        default:
+            return nil
+        }
+    }
+    
+    var missingProduct: Void? {
+        
+        switch error {
+            
+        case .missingProduct:
             return ()
 
         default:

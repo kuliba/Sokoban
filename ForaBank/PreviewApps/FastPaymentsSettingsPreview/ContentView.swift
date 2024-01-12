@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var flow: Flow = .a1d1
+    @State private var flow: Flow = .a3ea3
     
     var body: some View {
         
@@ -27,6 +27,14 @@ struct ContentView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
                     completion(flow.updateContractResponse)
+                }
+            },
+            getProduct: { flow.product },
+            createContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flow.createContractResponse)
                 }
             }
         ))
@@ -53,7 +61,8 @@ private extension ContentView {
         
         case a1d1, a1d2, a1d3
         case a2d1, a2d2, a2d3
-        case a3, a4, a5
+        case a3ea1, a3ea2, a3ea3, a3nil
+        case a4, a5
     }
 }
 
@@ -68,7 +77,7 @@ private extension ContentView.Flow {
         case .a2d1, .a2d2, .a2d3:
             return .inactive()
         
-        case .a3:
+        case .a3ea1, .a3ea2, .a3ea3, .a3nil:
             return .missingContract()
         
         case .a4:
@@ -100,12 +109,73 @@ private extension ContentView.Flow {
         case .a2d3:
             return .connectivityError
 
-        case .a3:
+        case .a3ea1, .a3ea2, .a3ea3, .a3nil:
             fatalError("impossible")
-
         case .a4:
             fatalError("impossible")
+        case .a5:
+            fatalError("impossible")
+        }
+    }
+    
+    var product: FastPaymentsSettingsReducer.Product? {
+        
+        switch self {
+        case .a1d1:
+            fatalError("impossible")
+        case .a1d2:
+            fatalError("impossible")
+        case .a1d3:
+            fatalError("impossible")
+        case .a2d1:
+            fatalError("impossible")
+        case .a2d2:
+            fatalError("impossible")
+        case .a2d3:
+            fatalError("impossible")
+        
+        case .a3ea1, .a3ea2, .a3ea3:
+            return .init(id: UUID().uuidString)
+        
+        case .a3nil:
+            return nil
+        
+        case .a4:
+            fatalError("impossible")
+        case .a5:
+            fatalError("impossible")
+        }
+    }
+    
+    var createContractResponse: FastPaymentsSettingsReducer.CreateContractResponse {
+        
+        switch self {
+        case .a1d1:
+            fatalError("impossible")
+        case .a1d2:
+            fatalError("impossible")
+        case .a1d3:
+            fatalError("impossible")
+        case .a2d1:
+            fatalError("impossible")
+        case .a2d2:
+            fatalError("impossible")
+        case .a2d3:
+            fatalError("impossible")
 
+        case .a3ea1:
+            return .success(.init())
+            
+        case .a3ea2:
+            return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
+            
+        case .a3ea3:
+            return .connectivityError
+            
+        case .a3nil:
+            fatalError("impossible")
+        case .a4:
+            fatalError("impossible")
         case .a5:
             fatalError("impossible")
         }

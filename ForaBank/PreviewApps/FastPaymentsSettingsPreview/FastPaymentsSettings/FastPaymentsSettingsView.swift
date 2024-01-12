@@ -51,7 +51,22 @@ struct FastPaymentsSettingsView: View {
                 }
                 
             case let .missingContract(consentResult):
-                Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                VStack(spacing: 32) {
+                 
+                    Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                    
+                    HStack(spacing: 16) {
+                        
+                        Color.black
+                            .clipShape(.circle)
+                            .frame(width: 64, height: 64)
+                        
+                        Button("Включить переводы СБП") {
+                            
+                            viewModel.event(.activateContract)
+                        }
+                    }
+                }
             }
         }
         .padding()

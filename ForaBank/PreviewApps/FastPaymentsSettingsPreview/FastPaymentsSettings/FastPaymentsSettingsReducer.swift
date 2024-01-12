@@ -221,7 +221,7 @@ extension FastPaymentsSettingsReducer {
             case .connectivityError:
                 state = .init(
                     contractConsentAndDefault: .missingContract(consent),
-                    error: .connectivityError
+                    error: .updateContractFailure
                 )
             }
             

@@ -5,13 +5,15 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Foundation
+
 extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
         getContractConsentAndDefault: @escaping FastPaymentsSettingsReducer.GetContractConsentAndDefault = { $0(.active()) },
         updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.init())) },
-        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: "1234567890") },
+        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: UUID().uuidString) },
         createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.init())) }
     ) -> UserAccountViewModel {
         
