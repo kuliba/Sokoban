@@ -22,14 +22,31 @@ struct FastPaymentsSettingsView: View {
             case let .contracted(contractDetails, status):
                 switch status {
                 case .active:
-                    Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
-                        .foregroundStyle(.green)
+#warning("extract to separate view")
+                    HStack(spacing: 16) {
+                        
+                        Color.green
+                            .clipShape(.circle)
+                            .frame(width: 64, height: 64)
+                        
+                        Button("Выключить переводы СБП") {
+                            
+                            viewModel.event(.deactivateContract)
+                        }
+                    }
                     
                 case .inactive:
 #warning("extract to separate view")
-                    Button("Включить переводы СБП") {
+                    HStack(spacing: 16) {
                         
-                        viewModel.event(.activateContract)
+                        Color.black
+                            .clipShape(.circle)
+                            .frame(width: 64, height: 64)
+                        
+                        Button("Включить переводы СБП") {
+                            
+                            viewModel.event(.activateContract)
+                        }
                     }
                 }
                 

@@ -178,13 +178,13 @@ extension FastPaymentsSettingsReducer {
     }
 }
 
-// abc
+// micro-service `abc`
 extension FastPaymentsSettingsReducer {
     
     typealias GetContractConsentAndDefault = (@escaping (ContractConsentAndDefault) -> Void) -> Void
 }
 
-// da
+// micro-service `da`
 extension FastPaymentsSettingsReducer {
     
     typealias UpdateContractPayload = (ContractConsentAndDefault.Contract, UpdateContractToggle)
@@ -202,7 +202,6 @@ extension FastPaymentsSettingsReducer {
         case serverError(String)
         case connectivityError
     }
-    
 }
 
 extension FastPaymentsSettingsReducer {

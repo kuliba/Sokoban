@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var flow: Flow = .a2d2
+    @State private var flow: Flow = .a1d1
     
     var body: some View {
         
@@ -51,7 +51,7 @@ private extension ContentView {
     
     enum Flow: String, CaseIterable {
         
-        case a1 
+        case a1d1, a1d2, a1d3
         case a2d1, a2d2, a2d3
         case a3, a4, a5
     }
@@ -62,7 +62,7 @@ private extension ContentView.Flow {
     var contractConsentAndDefault: ContractConsentAndDefault {
         
         switch self {
-        case .a1:
+        case .a1d1, .a1d2, .a1d3:
             return .active()
             
         case .a2d1, .a2d2, .a2d3:
@@ -82,8 +82,14 @@ private extension ContentView.Flow {
     var updateContractResponse: FastPaymentsSettingsReducer.UpdateContractResponse {
         
         switch self {
-        case .a1:
-            fatalError("impossible")
+        case .a1d1:
+            return .success(.init())
+
+        case .a1d2:
+            return .serverError("Server Error #7654")
+
+        case .a1d3:
+            return .connectivityError
 
         case .a2d1:
             return .success(.init())
