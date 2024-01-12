@@ -10,7 +10,7 @@ import SwiftUI
 struct ActiveContractView: View {
     
     let contractDetails: ContractConsentAndDefault.ContractDetails
-    let action: () -> Void
+    let actionOff: () -> Void
     
     var body: some View {
         
@@ -22,7 +22,7 @@ struct ActiveContractView: View {
                     .clipShape(.circle)
                     .frame(width: 64, height: 64)
                 
-                Button("Выключить переводы СБП", action: action)
+                Button("Выключить переводы СБП", action: actionOff)
             }
             
             bankDefaultView(contractDetails.bankDefault)
@@ -73,7 +73,7 @@ struct ActiveContractView_Previews: PreviewProvider {
         
         ActiveContractView(
             contractDetails: .preview(),
-            action:  {}
+            actionOff:  {}
         )
     }
 }
