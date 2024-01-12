@@ -19,28 +19,8 @@ struct UserAccountView: View {
                 
                 VStack(spacing: 32) {
                     
-                    Button("loader") {
-                        
-                        viewModel.route.loader = true
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            
-                            viewModel.route.loader = false
-                        }
-                    }
-                    
-                    Button("alert") {
-                        
-                        viewModel.route.modal = .alert(.init(
-                            title: "Test Alert",
-                            primaryButton: .init(
-                                type: .default,
-                                title: "OK",
-                                action: viewModel.resetModal
-                            )
-                        ))
-                    }
-                    
+                    showLoaderButton()                    
+                    showAlertButton()
                     openFastPaymentsSettingsButton()
                 }
                 .navigationDestination(
@@ -61,6 +41,16 @@ struct UserAccountView: View {
             
             loader()
         }
+    }
+    
+    private func showLoaderButton() -> some View {
+        
+        Button("show loader", action: viewModel.showDemoLoader)
+    }
+    
+    private func showAlertButton() -> some View {
+        
+        Button("show alert", action: viewModel.showDemoAlert)
     }
     
     private func openFastPaymentsSettingsButton() -> some View {

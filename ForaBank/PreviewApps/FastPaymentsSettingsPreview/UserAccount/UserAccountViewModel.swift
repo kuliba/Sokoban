@@ -10,7 +10,7 @@ import Foundation
 
 final class UserAccountViewModel: ObservableObject {
     
-    @Published /*private(set)*/ var route: Route
+    @Published private(set) var route: Route
     
     private let factory: Factory
     private var cancellables = Set<AnyCancellable>()
@@ -28,6 +28,33 @@ final class UserAccountViewModel: ObservableObject {
                 print("## loader sink: \(String(describing: $0))")
             }
             .store(in: &cancellables)
+    }
+}
+
+// MARK: - Demo Functionality
+
+extension UserAccountViewModel {
+
+    func showDemoLoader() {
+        
+        route.loader = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            
+            self?.route.loader = false
+        }
+    }
+    
+    func showDemoAlert() {
+        
+        route.modal = .alert(.init(
+            title: "Test Alert",
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                action: resetModal
+            )
+        ))
     }
 }
 
