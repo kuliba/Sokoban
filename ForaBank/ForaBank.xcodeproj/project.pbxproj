@@ -561,10 +561,10 @@
 		2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */; };
 		2A6DC7382AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */; };
 		2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */; };
-		2A6EAA7E2B50576D0093EE83 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7D2B50576D0093EE83 /* ContentView.swift */; };
+		2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */; };
 		2A6EAA802B50576F0093EE83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */; };
 		2A6EAA832B50576F0093EE83 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */; };
-		2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA892B5058EE0093EE83 /* ViewModel.swift */; };
+		2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */; };
 		2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */; };
 		2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */; };
 		2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */; };
@@ -2850,10 +2850,10 @@
 		2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteServiceDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FastPaymentsSettingsPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsPreviewApp.swift; sourceTree = "<group>"; };
-		2A6EAA7D2B50576D0093EE83 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountView.swift; sourceTree = "<group>"; };
 		2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2A6EAA892B5058EE0093EE83 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationDestination.swift"; sourceTree = "<group>"; };
 		2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsView.swift; sourceTree = "<group>"; };
@@ -6349,9 +6349,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */,
-				2A6EAA7D2B50576D0093EE83 /* ContentView.swift */,
-				2A6EAA892B5058EE0093EE83 /* ViewModel.swift */,
-				2A6EAA932B5060870093EE83 /* Factory.swift */,
+				2A6EAAA82B51060F0093EE83 /* UserAccount */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2A6EAAA72B5076A10093EE83 /* Helpers */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
@@ -6399,6 +6397,16 @@
 				2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		2A6EAAA82B51060F0093EE83 /* UserAccount */ = {
+			isa = PBXGroup;
+			children = (
+				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
+				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
+				2A6EAA932B5060870093EE83 /* Factory.swift */,
+			);
+			path = UserAccount;
 			sourceTree = "<group>";
 		};
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
@@ -12773,7 +12781,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A6EAA7E2B50576D0093EE83 /* ContentView.swift in Sources */,
+				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
 				2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
@@ -12782,7 +12790,7 @@
 				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
-				2A6EAA8A2B5058EE0093EE83 /* ViewModel.swift in Sources */,
+				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
 				2A6EAAA62B50764A0093EE83 /* ContractConsentAndDefault.swift in Sources */,
 				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,

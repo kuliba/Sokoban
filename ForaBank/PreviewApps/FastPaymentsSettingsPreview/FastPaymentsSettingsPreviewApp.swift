@@ -16,7 +16,7 @@ struct FastPaymentsSettingsPreviewApp: App {
             
             NavigationStack {
                 
-                ContentView(viewModel: .preview(
+                UserAccountView(viewModel: .preview(
                     route: .init(),
                     getContractConsentAndDefault: { completion in
                         

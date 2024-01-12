@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  UserAccountView.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 11.01.2024.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct UserAccountView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     
     var body: some View {
         
@@ -39,7 +39,7 @@ struct ContentView: View {
     }
     
     private func destinationView(
-        destination: ViewModel.Route.Destination
+        destination: UserAccountViewModel.Route.Destination
     ) -> some View {
         
         switch destination {
@@ -50,10 +50,10 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView(viewModel: .preview())
+        UserAccountView(viewModel: .preview())
     }
 }

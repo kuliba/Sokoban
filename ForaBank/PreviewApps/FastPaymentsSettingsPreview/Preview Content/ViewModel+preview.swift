@@ -1,16 +1,16 @@
 //
-//  ViewModel+preview.swift
+//  UserAccountViewModel+preview.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
-extension ViewModel {
+extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
         getContractConsentAndDefault: @escaping FastPaymentsSettingsReducer.GetContractConsentAndDefault = { $0(.active()) }
-    ) -> ViewModel {
+    ) -> UserAccountViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
             

@@ -1,5 +1,5 @@
 //
-//  ViewModel.swift
+//  UserAccountViewModel.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 11.01.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ViewModel: ObservableObject {
+final class UserAccountViewModel: ObservableObject {
     
     @Published private(set) var route: Route
     
@@ -22,7 +22,7 @@ final class ViewModel: ObservableObject {
     }
 }
 
-extension ViewModel {
+extension UserAccountViewModel {
     
     func openFastPaymentsSettings() {
         
@@ -31,7 +31,7 @@ extension ViewModel {
     }
 }
 
-extension ViewModel {
+extension UserAccountViewModel {
     
     func resetDestination() {
         
@@ -44,7 +44,7 @@ extension ViewModel {
     }
 }
 
-extension ViewModel {
+extension UserAccountViewModel {
     
     struct Route {
         
@@ -80,7 +80,7 @@ extension ViewModel {
     }
 }
 
-extension ViewModel.Route.Destination: Hashable {
+extension UserAccountViewModel.Route.Destination: Hashable {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
         
