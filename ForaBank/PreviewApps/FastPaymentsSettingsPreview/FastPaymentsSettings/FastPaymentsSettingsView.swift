@@ -16,8 +16,8 @@ struct FastPaymentsSettingsView: View {
         Group {
             
             switch viewModel.state?.contractConsentAndDefault {
-            case .none:
-                Text("Empty View").opacity(0.2)
+            case .none, .serverError, .connectivityError:
+                Text("Empty View").opacity(0.1)
                 
             case let .active(contractDetails):
                 Text("Active.\n\nContractDetails: \(String(describing: contractDetails))")
@@ -28,14 +28,6 @@ struct FastPaymentsSettingsView: View {
                 
             case let .missingContract(consentResult):
                 Text("Missing Contract.\n\n\(String(describing: consentResult))")
-                
-            case let .serverError(message):
-                Text("Here should be alert for message: \(message)")
-                    .foregroundStyle(.red)
-                
-            case .connectivityError:
-                Text("Here should be alert for connectivityError.")
-                    .foregroundStyle(.red)
             }
         }
         .padding()

@@ -23,6 +23,13 @@ struct UserAccountView: View {
                     showAlertButton()
                     openFastPaymentsSettingsButton()
                 }
+                .alert(
+                    item: .init(
+                        get: { viewModel.route.modal?.alert },
+                        set: { if $0 == nil { viewModel.resetModal() }}
+                    ),
+                    content: Alert.init(with:)
+                )
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.destination },
@@ -77,7 +84,7 @@ struct UserAccountView: View {
                 .onAppear { fpsViewModel.event(.appear) }
                 .alert(
                     item: .init(
-                        get: { viewModel.route.modal?.alert },
+                        get: { viewModel.route.modal?.fpsAlert },
                         set: { if $0 == nil { viewModel.resetModal() }}
                     ),
                     content: Alert.init(with:)

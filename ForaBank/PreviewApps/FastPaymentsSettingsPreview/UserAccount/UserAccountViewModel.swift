@@ -71,12 +71,16 @@ extension UserAccountViewModel {
             .compactMap(\.?.alertMessage)
             .sink { [weak self] in
                 
-                self?.route.modal = .alert(.init(
+                self?.route.modal = .fpsAlert(.init(
                     message: $0,
                     primaryButton: .init(
                         type: .default,
                         title: "OK",
-                        action: { self?.resetModal() }
+                        action: {
+                            
+                            self?.resetModal()
+                            self?.resetDestination()
+                        }
                     )
                 ))
             }
@@ -139,11 +143,21 @@ extension UserAccountViewModel {
         enum Modal {
             
             case alert(AlertViewModel)
+            case fpsAlert(AlertViewModel)
             
             var alert: AlertViewModel? {
                 
                 if case let .alert(alert) = self {
                     return alert
+                } else {
+                    return nil
+                }
+            }
+
+            var fpsAlert: AlertViewModel? {
+                
+                if case let .fpsAlert(fpsAlert) = self {
+                    return fpsAlert
                 } else {
                     return nil
                 }
