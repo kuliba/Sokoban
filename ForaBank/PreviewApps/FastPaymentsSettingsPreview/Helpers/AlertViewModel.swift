@@ -27,3 +27,13 @@ struct AlertViewModel: Identifiable {
         }
     }
 }
+
+extension AlertViewModel {
+    
+    init(
+        title: String,
+        primaryButton: ButtonViewModel
+    ) {
+        self.init(title: title, message: nil, primaryButton: primaryButton, secondaryButton: nil)
+    }
+}
