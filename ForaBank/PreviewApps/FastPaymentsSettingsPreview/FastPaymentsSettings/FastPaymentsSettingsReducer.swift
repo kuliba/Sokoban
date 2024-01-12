@@ -36,9 +36,7 @@ extension FastPaymentsSettingsReducer {
             handleActivateContract(state, completion)
             
         case .resetError:
-            var state = state
-            state?.error = nil
-            completion(state)
+            completion(state?.noError())
         }
     }
     
@@ -68,10 +66,7 @@ extension FastPaymentsSettingsReducer {
     ) {
         switch state?.contractConsentAndDefault {
         case let .inactive(contractDetails):
-#warning("repeating pattern - make helper")
-            var state = state
-            state?.inflight = true
-            completion(state)
+            completion(state?.toInflight())
             
             activateInactive(contractDetails, completion)
             
@@ -151,4 +146,23 @@ extension FastPaymentsSettingsReducer {
     
     typealias State = FastPaymentsSettingsViewModel.State?
     typealias Event = FastPaymentsSettingsViewModel.Event
+}
+
+extension FastPaymentsSettingsViewModel.State {
+    
+    func toInflight() -> Self {
+        
+        var state = self
+        state.inflight = true
+        
+        return state
+    }
+    
+    func noError() -> Self {
+        
+        var state = self
+        state.error = nil
+        
+        return state
+    }
 }
