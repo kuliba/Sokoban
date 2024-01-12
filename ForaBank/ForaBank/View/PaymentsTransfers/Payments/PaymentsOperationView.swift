@@ -90,7 +90,12 @@ struct PaymentsOperationView: View {
                         PaymentsPopUpSelectView(viewModel: popUpVewModel)
                         
                     case .antifraud(let antifraudViewModel):
+                        if #available(iOS 15.0, *) {
                         PaymentsAntifraudView(viewModel: antifraudViewModel)
+                            .interactiveDismissDisabled()
+                        } else {
+                            PaymentsAntifraudView(viewModel: antifraudViewModel)
+                        }
                         
                     case .hint(let hintViewModel):
                         HintView(viewModel: hintViewModel)
