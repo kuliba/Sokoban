@@ -11,9 +11,20 @@ struct ConsentListPrototypeView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    init(initialState: ConsentListState) {
-        
-        let reducer = ConsentListReducer(availableBanks: .preview)
+    init(
+        initialState: ConsentListState,
+        changeConsentListResponse: ConsentListReducer.ChangeConsentListResponse = .success
+    ) {
+        let reducer = ConsentListReducer(
+            availableBanks: .preview,
+            changeConsentList: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(changeConsentListResponse)
+                }
+            }
+        )
         
         let viewModel = ViewModel(
             state: initialState,
@@ -25,10 +36,13 @@ struct ConsentListPrototypeView: View {
     
     var body: some View {
         
-        ConsentListView(
-            state: viewModel.state,
-            event: viewModel.event(_:)
-        )
+        ScrollView {
+            
+            ConsentListView(
+                state: viewModel.state,
+                event: viewModel.event(_:)
+            )
+        }
     }
 }
 
@@ -56,9 +70,13 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
     }
     
     private static func consentListPrototypeView(
-        _ state: ConsentListState
+        _ state: ConsentListState,
+        changeConsentListResponse: ConsentListReducer.ChangeConsentListResponse = .success
     ) -> some View {
         
-        ConsentListPrototypeView(initialState: state)
+        ConsentListPrototypeView(
+            initialState: state,
+            changeConsentListResponse: changeConsentListResponse
+        )
     }
 }

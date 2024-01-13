@@ -9,6 +9,14 @@ extension ConsentListState.Collapsed {
     
     static let empty: Self = .init(bankNames: [])
     
+    static let one: Self = .init(
+        bankNames: ["Сбербанк"]
+    )
+    
+    static let two: Self = .init(
+        bankNames: ["Сбербанк", "Альфа-банк"]
+    )
+    
     static let preview: Self = .init(
         bankNames: ["Сбербанк", "Альфа-банк", "ВТБ", "Тинькофф банк", "Открытие", "Сургутнефтегазбанк"]
     )

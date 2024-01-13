@@ -10,10 +10,14 @@ import Foundation
 final class ConsentListReducer {
     
     private let availableBanks: [Bank]
+    private let changeConsentList: ChangeConsentList
     
-    init(availableBanks: [Bank]) {
-        
+    init(
+        availableBanks: [Bank],
+        changeConsentList: @escaping ChangeConsentList
+    ) {
         self.availableBanks = availableBanks
+        self.changeConsentList = changeConsentList
     }
 }
 
@@ -87,7 +91,7 @@ extension ConsentListReducer {
             
             var expanded = expanded
             expanded.banks[index].isSelected.toggle()
-            #warning("this is super-simplified logic for showing `Apply`button")
+#warning("this is super-simplified logic for showing `Apply`button")
             expanded.canApply = true
             
             completion(.expanded(expanded))
@@ -108,8 +112,33 @@ extension ConsentListReducer {
         case .collapsed:
             completion(state)
             
-        case .expanded:
-            fatalError()
+        case let .expanded(expanded):
+            #warning("FINISH THIS")
+            // 1. set isInflight = true (spinner)
+            // 2. send async request
+            // 3. parse response
+            // 4. update state
+            // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
+            let selected = expanded.banks.filter(\.isSelected)
+            let payload = selected.map(\.bank.id)
+
+            changeConsentList(payload) { result in
+                
+                switch result {
+                case .success:
+                    completion(.collapsed(.init(
+                        bankNames: selected.map(\.name)
+                    )))
+                    
+                case let .serverError(message):
+                    // state is the same except error - add field if decoration is not possible
+                    completion(state)
+                    
+                case .connectivityError:
+                    // state is the same except error - add field if decoration is not possible
+                    completion(state)
+                }
+            }
             
         case .collapsedError:
             completion(state)
@@ -117,6 +146,20 @@ extension ConsentListReducer {
         case .expandedError:
             completion(state)
         }
+    }
+}
+
+extension ConsentListReducer {
+    
+    typealias ConsentList = [Bank.ID]
+    // (h) changeClientConsentMe2MePull
+    typealias ChangeConsentList = (ConsentList, @escaping (ChangeConsentListResponse) -> Void) -> Void
+    
+    enum ChangeConsentListResponse {
+        
+        case success
+        case serverError(String)
+        case connectivityError
     }
 }
 

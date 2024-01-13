@@ -52,6 +52,7 @@ struct ConsentListView: View {
                     .rotationEffect(.degrees(chevronRotationAngle))
             }
         }
+        .font(.subheadline)
     }
     
     private var chevronRotationAngle: CGFloat {
@@ -71,7 +72,9 @@ struct ConsentListView: View {
             
             Text(collapsed.bankNames.joined(separator: ", "))
                 .font(.headline)
+                .fontWeight(.medium)
                 .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
@@ -109,8 +112,11 @@ struct ConsentListView_Previews: PreviewProvider {
             VStack(spacing: 16) {
                 
                 consentListView(.collapsed(.empty))
+                consentListView(.collapsed(.one))
+                consentListView(.collapsed(.two))
                 consentListView(.collapsed(.preview))
             }
+            .previewDisplayName("Collapsed")
             
             consentListView(.expanded(.preview))
             consentListView(.collapsedError)

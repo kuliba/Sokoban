@@ -21,7 +21,9 @@ struct ContentView: View {
                 
                 switch demo {
                 case .consent:
-                    ConsentListPrototypeView(initialState: .collapsedError)
+                    ConsentListPrototypeView(
+                        initialState: .expanded(.preview)
+                    )
                     
                 case .fps:
                     FPSPrototypeView()

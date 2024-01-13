@@ -49,6 +49,7 @@ struct ExpandedConsentListView: View {
     private func applyButton() -> some View {
         
         Button("Apply") { event(.apply) }
+            .buttonStyle(.borderedProminent)
     }
 }
 
@@ -57,7 +58,7 @@ struct ExpandedConsentListView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-         
+            
             expandedConsentListView(.preview)
             expandedConsentListView(.search)
             expandedConsentListView(.apply)
@@ -69,6 +70,12 @@ struct ExpandedConsentListView_Previews: PreviewProvider {
         _ expanded: ConsentListState.Expanded
     ) -> some View {
         
-        ExpandedConsentListView(expanded: expanded, event: { _ in })
+        ScrollView {
+            
+            ExpandedConsentListView(expanded: expanded, event: { _ in })
+                .padding()
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+        }
     }
 }
