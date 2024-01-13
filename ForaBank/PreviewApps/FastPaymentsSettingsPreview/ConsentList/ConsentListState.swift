@@ -8,9 +8,7 @@
 enum ConsentListState: Equatable {
     
     case consentList(ConsentList)
-#warning("replace with one error case `failure(Failure), then ConsentListState could be `Result`")
-    case collapsedError
-    case expandedError
+    case failure(Failure)
 }
 
 extension ConsentListState {
@@ -57,14 +55,14 @@ extension ConsentListState {
         case collapsedError
         case expandedError
         
-        mutating func toggle() {
+        func toggled() -> Self {
             
             switch self {
             case .collapsedError:
-                self = .expandedError
+                return .expandedError
                 
             case .expandedError:
-                self = .collapsedError
+                return .collapsedError
             }
         }
     }
@@ -109,11 +107,14 @@ extension ConsentListState {
                 ))
             }
             
-        case .collapsedError:
-            return .collapsedError
-            
-        case .expandedError:
-            return .expandedError
+        case let .failure(failure):
+            switch failure {
+            case .collapsedError:
+                return .collapsedError
+                
+            case .expandedError:
+                return .expandedError
+            }
         }
     }
     

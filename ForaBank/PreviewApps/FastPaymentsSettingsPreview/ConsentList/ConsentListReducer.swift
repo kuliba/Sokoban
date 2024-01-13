@@ -54,11 +54,8 @@ extension ConsentListReducer {
             consentList.mode.toggle()
             completion(.consentList(consentList))
             
-        case .collapsedError:
-            completion(.expandedError)
-            
-        case .expandedError:
-            completion(.collapsedError)
+        case let .failure(failure):
+            completion(.failure(failure.toggled()))
         }
     }
     
@@ -95,10 +92,7 @@ extension ConsentListReducer {
                 completion(.consentList(consentList))
             }
             
-        case .collapsedError:
-            completion(state)
-            
-        case .expandedError:
+        case .failure:
             completion(state)
         }
     }
@@ -144,10 +138,7 @@ extension ConsentListReducer {
                 }
             }
             
-        case .collapsedError:
-            completion(state)
-            
-        case .expandedError:
+        case .failure:
             completion(state)
         }
     }
