@@ -676,6 +676,7 @@
 		2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC72B52C1640061F5DD /* ConsentListState.swift */; };
 		2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */; };
 		2AA70FCC2B52C2120061F5DD /* BankID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCB2B52C2120061F5DD /* BankID.swift */; };
+		2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */; };
 		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
@@ -2976,6 +2977,7 @@
 		2AA70FC72B52C1640061F5DD /* ConsentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListState.swift; sourceTree = "<group>"; };
 		2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEvent.swift; sourceTree = "<group>"; };
 		2AA70FCB2B52C2120061F5DD /* BankID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankID.swift; sourceTree = "<group>"; };
+		2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListView.swift; sourceTree = "<group>"; };
 		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
@@ -6781,6 +6783,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */,
+				2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */,
 				2AA70FC72B52C1640061F5DD /* ConsentListState.swift */,
 				2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */,
 				2AA70FCB2B52C2120061F5DD /* BankID.swift */,
@@ -12855,6 +12858,7 @@
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
+				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
 				2A6EAAA62B50764A0093EE83 /* UserPaymentSettings.swift in Sources */,
 				2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */,

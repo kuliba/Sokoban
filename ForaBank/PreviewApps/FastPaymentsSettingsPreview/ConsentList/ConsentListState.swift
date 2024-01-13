@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-enum ConsentListState {
+enum ConsentListState: Equatable {
     
     case collapsed
     case expanded
