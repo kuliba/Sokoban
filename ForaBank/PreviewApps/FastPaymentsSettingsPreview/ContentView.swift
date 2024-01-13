@@ -11,9 +11,12 @@ struct ContentView: View {
     
     @State private var flow: Flow = .a1c2f1d1
     
-    var body: some View {
-        #warning("move to init; move `overlay` from `UserAccountView` to here")
-        UserAccountView(viewModel: .preview(
+    private let viewModel: UserAccountViewModel
+    
+    init() {
+        
+        let flow: Flow = .a1c2f1d1
+        let viewModel = UserAccountViewModel.preview(
             route: .init(),
             getUserPaymentSettings: { completion in
                 
@@ -44,8 +47,16 @@ struct ContentView: View {
                     completion(flow.prepareSetBankDefaultResponse)
                 }
             }
-        ))
-        .overlay(alignment: .topTrailing, content: picker)
+        )
+        
+        self.flow = flow
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+#warning("move to init; move `overlay` from `UserAccountView` to here")
+        UserAccountView(viewModel: viewModel)
+            .overlay(alignment: .topTrailing, content: picker)
     }
     
     private func picker() -> some View {
@@ -95,13 +106,13 @@ private extension ContentView.Flow {
             
         case .a2d1, .a2d2, .a2d3:
             return .inactive()
-        
+            
         case .a3ea1, .a3ea2, .a3ea3, .a3nil:
             return .missingContract()
-        
+            
         case .a4:
             return .failure(.serverError("Server Error #7654"))
-        
+            
         case .a5:
             return .failure(.connectivityError)
         }
@@ -112,27 +123,27 @@ private extension ContentView.Flow {
         switch self {
         case .a1c1d1, .a1c2f1d1:
             return .success(.active)
-
+            
         case .a1c2f2d1, .a1c2f2d2, .a1c2f2d3:
             fatalError("impossible")
         case .a1c2f3d1, .a1c2f3d2, .a1c2f3d3:
             fatalError("impossible")
-
+            
         case .a1c1d2, .a1c2f1d2:
             return .serverError("Server Error #7654")
-
+            
         case .a1c1d3, .a1c2f1d3:
             return .connectivityError
-
+            
         case .a2d1:
             return .success(.inactive)
-
+            
         case .a2d2:
             return .serverError("Server Error #7654")
-
+            
         case .a2d3:
             return .connectivityError
-
+            
         case .a3ea1, .a3ea2, .a3ea3, .a3nil:
             fatalError("impossible")
         case .a4:
@@ -161,13 +172,13 @@ private extension ContentView.Flow {
             fatalError("impossible")
         case .a2d3:
             fatalError("impossible")
-        
+            
         case .a3ea1, .a3ea2, .a3ea3:
             return .init(id: UUID().uuidString)
-        
+            
         case .a3nil:
             return nil
-        
+            
         case .a4:
             fatalError("impossible")
         case .a5:
@@ -194,7 +205,7 @@ private extension ContentView.Flow {
             fatalError("impossible")
         case .a2d3:
             fatalError("impossible")
-
+            
         case .a3ea1:
             return .success(.active)
             
@@ -222,16 +233,16 @@ private extension ContentView.Flow {
             fatalError("impossible")
         case .a1c1d3:
             fatalError("impossible")
-
+            
         case .a1c2f1d1, .a1c2f1d2, .a1c2f1d3:
             return .success
-
+            
         case .a1c2f2d1, .a1c2f2d2, .a1c2f2d3:
             return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
-
+            
         case .a1c2f3d1, .a1c2f3d2, .a1c2f3d3:
             return .connectivityError
-
+            
         case .a2d1:
             fatalError("impossible")
         case .a2d2:
