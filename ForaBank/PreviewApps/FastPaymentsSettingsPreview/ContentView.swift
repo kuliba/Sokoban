@@ -9,9 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @ObservedObject private var viewModel: UserAccountViewModel
     @State private var flow: Flow = .a1c2f1d1
-    
-    private let viewModel: UserAccountViewModel
     
     init() {
         
@@ -54,9 +53,23 @@ struct ContentView: View {
     }
     
     var body: some View {
-#warning("move to init; move `overlay` from `UserAccountView` to here")
+        
         UserAccountView(viewModel: viewModel)
             .overlay(alignment: .topTrailing, content: picker)
+            .overlay(alignment: .bottom) {
+                
+                VStack {
+                    
+                    Text("destination: \(viewModel.route.destination == nil ? "nil" : "value")")
+                    Text("fpsDestination: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
+                    Text("modal: \(viewModel.route.modal == nil ? "nil" : "value")")
+                    Text("isLoading: \(viewModel.route.isLoading ? "true" : "false")")
+                    Text("informer: \(viewModel.informer.informer?.text == nil ? "nil" : "value")")
+                }
+                .foregroundStyle(.secondary)
+                .font(.footnote)
+            }
+        
     }
     
     private func picker() -> some View {
