@@ -14,10 +14,10 @@ extension UserPaymentSettings {
         
         .contracted(
             .preview(
+                paymentContract: .active,
                 consentResult: consentResult,
                 bankDefault: bankDefault
-            ),
-            .active
+            )
         )
     }
     
@@ -28,10 +28,10 @@ extension UserPaymentSettings {
         
         .contracted(
             .preview(
+                paymentContract: .inactive,
                 consentResult: consentResult,
                 bankDefault: bankDefault
-            ),
-            .inactive
+            )
         )
     }
     
@@ -46,21 +46,23 @@ extension UserPaymentSettings {
 extension UserPaymentSettings.ContractDetails {
     
     static func preview(
+        paymentContract: UserPaymentSettings.PaymentContract = .active,
         consentResult: UserPaymentSettings.ConsentResult = .success,
         bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .init(
-            paymentContract: .preview,
+            paymentContract: paymentContract,
             consentResult: consentResult,
             bankDefault: bankDefault
         )
     }
 }
 
-private extension UserPaymentSettings.PaymentContract {
+extension UserPaymentSettings.PaymentContract {
     
-    static let preview: Self = .init()
+    static let active: Self = .init(contractStatus: .active)
+    static let inactive: Self = .init(contractStatus: .inactive)
 }
 
 private extension UserPaymentSettings.ConsentResult {

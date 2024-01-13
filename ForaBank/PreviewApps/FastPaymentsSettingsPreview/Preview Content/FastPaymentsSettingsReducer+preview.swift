@@ -10,8 +10,8 @@ extension FastPaymentsSettingsReducer {
     static let preview: FastPaymentsSettingsReducer = .init(
         
         getUserPaymentSettings: { $0(.active()) },
-        updateContract: { _, completion in completion(.success(.init())) },
+        updateContract: { _, completion in completion(.success(.active)) },
         getProduct: { .init(id: "1234567890") },
-        createContract: { _, completion in completion(.success(.init())) }
+        createContract: { _, completion in completion(.success(.active)) }
     )
 }

@@ -77,8 +77,8 @@ extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         switch state?.userPaymentSettings {
-        case let .contracted(contractDetails, status):
-            switch status {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
             case .active:
                 completion(state)
                 
@@ -89,7 +89,7 @@ extension FastPaymentsSettingsReducer {
             
         case let .missingContract(consent):
             completion(state?.toInflight())
-
+            
             if let product = getProduct() {
                 createContract(product, consent, completion)
             } else {
@@ -118,18 +118,18 @@ extension FastPaymentsSettingsReducer {
                 var contractDetails = contractDetails
                 contractDetails.paymentContract = contract
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .active)
+                    userPaymentSettings: .contracted(contractDetails)
                 )
                 
             case let .serverError(message):
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .inactive),
+                    userPaymentSettings: .contracted(contractDetails),
                     alert: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .inactive),
+                    userPaymentSettings: .contracted(contractDetails),
                     alert: .updateContractFailure
                 )
             }
@@ -143,12 +143,12 @@ extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         switch state?.userPaymentSettings {
-        case let .contracted(contractDetails, status):
-            switch status {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
             case .active:
                 completion(state?.toInflight())
                 deactivateContract(contractDetails, completion)
-            
+                
             case .inactive:
                 completion(state)
             }
@@ -173,22 +173,22 @@ extension FastPaymentsSettingsReducer {
                 var contractDetails = contractDetails
                 contractDetails.paymentContract = contract
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .inactive)
+                    userPaymentSettings: .contracted(contractDetails)
                 )
                 
             case let .serverError(message):
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .active),
+                    userPaymentSettings: .contracted(contractDetails),
                     alert: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    userPaymentSettings: .contracted(contractDetails, .active),
+                    userPaymentSettings: .contracted(contractDetails),
                     alert: .updateContractFailure
                 )
             }
-
+            
             completion(state)
         }
     }
@@ -205,14 +205,11 @@ extension FastPaymentsSettingsReducer {
             switch result {
             case let .success(contract):
                 state = .init(
-                    userPaymentSettings: .contracted(
-                        .init(
-                            paymentContract: contract,
-                            consentResult: consent,
-                            bankDefault: .offEnabled
-                        ),
-                        .active
-                    )
+                    userPaymentSettings: .contracted(.init(
+                        paymentContract: contract,
+                        consentResult: consent,
+                        bankDefault: .offEnabled
+                    ))
                 )
                 
             case let .serverError(message):
@@ -234,7 +231,7 @@ extension FastPaymentsSettingsReducer {
     
     private func setBankDefault(
         _ state: State,
-       _ completion: @escaping Completion
+        _ completion: @escaping Completion
     ) {
         var state = state
         state?.alert = .confirmSetBankDefault
@@ -271,12 +268,12 @@ extension FastPaymentsSettingsReducer {
 extension FastPaymentsSettingsReducer {
     
     typealias GetProduct = () -> Product?
-
+    
     struct Product: Identifiable {
         
         let id: ProductID
         
-        #warning("replace with Tagged")
+#warning("replace with Tagged")
         typealias ProductID = String
     }
 }

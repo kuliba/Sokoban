@@ -7,7 +7,7 @@
 
 enum UserPaymentSettings: Equatable {
     
-    case contracted(ContractDetails, ContractStatus)
+    case contracted(ContractDetails)
     case missingContract(ConsentResult)
     case failure(Failure)
 }
@@ -21,7 +21,15 @@ extension UserPaymentSettings {
         let bankDefault: BankDefault
     }
     
-    struct PaymentContract: Equatable {}
+    struct PaymentContract: Equatable {
+        
+        let contractStatus: ContractStatus
+        
+        enum ContractStatus: Equatable {
+            
+            case active, inactive
+        }
+    }
     
     typealias ConsentResult = Result<ConsentList, ConsentError>
     
@@ -33,11 +41,6 @@ extension UserPaymentSettings {
         case onDisabled
         case offEnabled
         case offDisabled
-    }
-    
-    enum ContractStatus: Equatable {
-        
-        case active, inactive
     }
     
     enum Failure: Equatable {

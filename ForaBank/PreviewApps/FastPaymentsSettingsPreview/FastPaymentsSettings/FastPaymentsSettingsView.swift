@@ -17,8 +17,8 @@ struct FastPaymentsSettingsView: View {
         case .none, .failure:
             Text("Empty View").opacity(0.1)
             
-        case let .contracted(contractDetails, status):
-            switch status {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
             case .active:
                 ActiveContractView(
                     contractDetails: contractDetails,

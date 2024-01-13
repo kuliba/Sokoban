@@ -96,7 +96,7 @@ private extension ContentView.Flow {
         
         switch self {
         case .a1c1d1, .a1c2d1:
-            return .success(.init())
+            return .success(.active)
 
         case .a1c1d2, .a1c2d2:
             return .serverError("Server Error #7654")
@@ -105,7 +105,7 @@ private extension ContentView.Flow {
             return .connectivityError
 
         case .a2d1:
-            return .success(.init())
+            return .success(.inactive)
 
         case .a2d2:
             return .serverError("Server Error #7654")
@@ -168,7 +168,7 @@ private extension ContentView.Flow {
             fatalError("impossible")
 
         case .a3ea1:
-            return .success(.init())
+            return .success(.active)
             
         case .a3ea2:
             return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
