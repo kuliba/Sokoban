@@ -55,7 +55,7 @@ extension UserAccountViewModel {
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                action: resetModal
+                action: dismissModal
             )
         ))
     }
@@ -73,7 +73,7 @@ extension UserAccountViewModel {
     func handleOTPResult(
         _ result: ConfirmWithOTPResult
     ) {
-        resetFPSDestination()
+        dismissFPSDestination()
         fpsViewModel?.event(.resetError)
         
         switch result {
@@ -90,7 +90,7 @@ extension UserAccountViewModel {
                 self?.route.modal = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
-                    primaryAction: { [weak self] in self?.resetModal() }
+                    primaryAction: { [weak self] in self?.dismissModal() }
                 ))
             }
             
@@ -142,7 +142,7 @@ extension UserAccountViewModel {
                     message: $0,
                     primaryAction: {
                         
-                        self?.resetModal()
+                        self?.dismissModal()
                         viewModel.event(.resetError)
                     }
                 ))
@@ -196,7 +196,7 @@ extension UserAccountViewModel {
                         title: "OK",
                         action: {
                             
-                            self?.resetModal()
+                            self?.dismissModal()
                             viewModel.event(.resetError)
                             viewModel.event(.prepareSetBankDefault)
                         }),
@@ -206,7 +206,7 @@ extension UserAccountViewModel {
                         action: {
                             
                             viewModel.event(.resetError)
-                            self?.resetModal()
+                            self?.dismissModal()
                         }
                     )
                 ))
@@ -321,7 +321,7 @@ private extension FastPaymentsSettingsViewModel.State {
 }
 
 extension UserAccountViewModel {
-#warning("rename `reset` to `dismiss`")
+    
     func resetRoute() {
         
         DispatchQueue.main.async { [weak self] in
@@ -330,7 +330,7 @@ extension UserAccountViewModel {
         }
     }
     
-    func resetDestination() {
+    func dismissDestination() {
         
         DispatchQueue.main.async { [weak self] in
             
@@ -338,7 +338,7 @@ extension UserAccountViewModel {
         }
     }
     
-    func resetFPSDestination() {
+    func dismissFPSDestination() {
         
         //        DispatchQueue.main.async { [weak self] in
         
@@ -346,7 +346,7 @@ extension UserAccountViewModel {
         //        }
     }
     
-    func resetModal() {
+    func dismissModal() {
         
         DispatchQueue.main.async { [weak self] in
             

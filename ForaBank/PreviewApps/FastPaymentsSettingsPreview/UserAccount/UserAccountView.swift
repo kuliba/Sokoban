@@ -24,14 +24,14 @@ struct UserAccountView: View {
                 .alert(
                     item: .init(
                         get: { viewModel.route.modal?.alert },
-                        set: { if $0 == nil { viewModel.resetModal() }}
+                        set: { if $0 == nil { viewModel.dismissModal() }}
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.destination },
-                        set: { if $0 == nil { viewModel.resetDestination() }}
+                        set: { if $0 == nil { viewModel.dismissDestination() }}
                     ),
                     destination: destinationView
                 )
@@ -76,14 +76,14 @@ struct UserAccountView: View {
                 .alert(
                     item: .init(
                         get: { viewModel.route.modal?.fpsAlert },
-                        set: { if $0 == nil { viewModel.resetModal() }}
+                        set: { if $0 == nil { viewModel.dismissModal() }}
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.fpsDestination },
-                        set: { if $0 == nil { viewModel.resetFPSDestination() }}
+                        set: { if $0 == nil { viewModel.dismissFPSDestination() }}
                     ),
                     destination: fpsDestinationView
                 )
