@@ -23,12 +23,12 @@ extension ConsentListState {
     struct Expanded: Equatable {
         
         let searchText: String
-        let banks: [SelectableBank]
+        var banks: [SelectableBank]
         
         struct SelectableBank: Equatable, Identifiable {
             
             let bank: Bank
-            let isSelected: Bool
+            var isSelected: Bool
             
             var id: Bank.ID { bank.id }
             var name: String { bank.name }

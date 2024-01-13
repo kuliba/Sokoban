@@ -12,7 +12,7 @@ final class ConsentListReducer {
     private let availableBanks: [Bank]
     
     init(availableBanks: [Bank]) {
-     
+        
         self.availableBanks = availableBanks
     }
 }
@@ -47,8 +47,10 @@ extension ConsentListReducer {
         case .collapsed:
             fatalError()
             
-        case .expanded:
-            fatalError()
+        case let .expanded(expanded):
+            completion(.collapsed(.init(
+                bankNames: expanded.banks.filter(\.isSelected).map(\.name)
+            )))
             
         case .collapsedError:
             completion(.expandedError)
@@ -71,7 +73,31 @@ extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        fatalError()
+        switch state {
+        case .collapsed:
+            completion(state)
+            
+        case let .expanded(expanded):
+#warning("extract to helper or subscript")
+            guard let index = expanded.banks.firstIndex(where: { $0.id == bankID })
+            else {
+                completion(state)
+                return
+            }
+            
+            var expanded = expanded
+            expanded.banks[index].isSelected.toggle()
+            
+#warning("add button `Apply`")
+            
+            completion(.expanded(expanded))
+            
+        case .collapsedError:
+            completion(state)
+            
+        case .expandedError:
+            completion(state)
+        }
     }
     
     private func apply(
