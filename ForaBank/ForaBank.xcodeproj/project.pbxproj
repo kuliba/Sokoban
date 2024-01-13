@@ -672,6 +672,7 @@
 		2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FBE2B52B2450061F5DD /* InactiveContractView.swift */; };
 		2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC02B52BE1D0061F5DD /* ContentView.swift */; };
 		2AA70FC32B52BE9B0061F5DD /* ConsentListPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */; };
+		2AA70FC62B52C0A20061F5DD /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */; };
 		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
@@ -2968,6 +2969,7 @@
 		2AA70FBE2B52B2450061F5DD /* InactiveContractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InactiveContractView.swift; sourceTree = "<group>"; };
 		2AA70FC02B52BE1D0061F5DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListPrototypeView.swift; sourceTree = "<group>"; };
+		2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
@@ -6370,6 +6372,7 @@
 				2AA70FC02B52BE1D0061F5DD /* ContentView.swift */,
 				2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */,
 				2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */,
+				2AA70FC42B52C0760061F5DD /* ConsentList */,
 				2A6EAAA82B51060F0093EE83 /* UserAccount */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2A6EAAA72B5076A10093EE83 /* Helpers */,
@@ -6766,6 +6769,14 @@
 				2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */,
 			);
 			path = Informer;
+			sourceTree = "<group>";
+		};
+		2AA70FC42B52C0760061F5DD /* ConsentList */ = {
+			isa = PBXGroup;
+			children = (
+				2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */,
+			);
+			path = ConsentList;
 			sourceTree = "<group>";
 		};
 		2AA7EDBA2A783C9A00F5B00D /* SharedAPIInfra */ = {
@@ -12841,6 +12852,7 @@
 				2AA70FC32B52BE9B0061F5DD /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,
+				2AA70FC62B52C0A20061F5DD /* ConsentListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

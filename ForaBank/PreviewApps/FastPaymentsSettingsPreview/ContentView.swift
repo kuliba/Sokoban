@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var demo: Demo = .fps
+    @State private var demo: Demo = .consent
     
     var body: some View {
         
