@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var flow: Flow = .a1c2d1
+    @State private var flow: Flow = .a1c2f1d1
     
     var body: some View {
         
@@ -67,7 +67,9 @@ private extension ContentView {
     enum Flow: String, CaseIterable {
         
         case a1c1d1, a1c1d2, a1c1d3
-        case a1c2d1, a1c2d2, a1c2d3
+        case a1c2f1d1, a1c2f1d2, a1c2f1d3
+//        case a1c2f2d1, a1c2f2d2, a1c2f2d3
+//        case a1c2f3d1, a1c2f3d2, a1c2f3d3
         case a2d1, a2d2, a2d3
         case a3ea1, a3ea2, a3ea3, a3nil
         case a4, a5
@@ -82,8 +84,14 @@ private extension ContentView.Flow {
         case .a1c1d1, .a1c1d2, .a1c1d3:
             return .active(bankDefault: .onDisabled)
             
-        case .a1c2d1, .a1c2d2, .a1c2d3:
+        case .a1c2f1d1, .a1c2f1d2, .a1c2f1d3:
             return .active(bankDefault: .offEnabled)
+            
+//        case .a1c2f2d1, .a1c2f2d2, .a1c2f2d3:
+//            return .active(bankDefault: .offEnabled)
+//            
+//        case .a1c2f3d1, .a1c2f3d2, .a1c2f3d3:
+//            return .active(bankDefault: .offEnabled)
             
         case .a2d1, .a2d2, .a2d3:
             return .inactive()
@@ -102,13 +110,13 @@ private extension ContentView.Flow {
     var updateContractResponse: FastPaymentsSettingsReducer.UpdateContractResponse {
         
         switch self {
-        case .a1c1d1, .a1c2d1:
+        case .a1c1d1, .a1c2f1d1:
             return .success(.active)
 
-        case .a1c1d2, .a1c2d2:
+        case .a1c1d2, .a1c2f1d2:
             return .serverError("Server Error #7654")
 
-        case .a1c1d3, .a1c2d3:
+        case .a1c1d3, .a1c2f1d3:
             return .connectivityError
 
         case .a2d1:
@@ -132,11 +140,11 @@ private extension ContentView.Flow {
     var product: FastPaymentsSettingsReducer.Product? {
         
         switch self {
-        case .a1c1d1, .a1c2d1:
+        case .a1c1d1, .a1c2f1d1:
             fatalError("impossible")
-        case .a1c1d2, .a1c2d2:
+        case .a1c1d2, .a1c2f1d2:
             fatalError("impossible")
-        case .a1c1d3, .a1c2d3:
+        case .a1c1d3, .a1c2f1d3:
             fatalError("impossible")
         case .a2d1:
             fatalError("impossible")
@@ -161,11 +169,11 @@ private extension ContentView.Flow {
     var createContractResponse: FastPaymentsSettingsReducer.CreateContractResponse {
         
         switch self {
-        case .a1c1d1, .a1c2d1:
+        case .a1c1d1, .a1c2f1d1:
             fatalError("impossible")
-        case .a1c1d2, .a1c2d2:
+        case .a1c1d2, .a1c2f1d2:
             fatalError("impossible")
-        case .a1c1d3, .a1c2d3:
+        case .a1c1d3, .a1c2f1d3:
             fatalError("impossible")
         case .a2d1:
             fatalError("impossible")
@@ -201,11 +209,11 @@ private extension ContentView.Flow {
             fatalError("impossible")
         case .a1c1d3:
             fatalError("impossible")
-        case .a1c2d1:
+        case .a1c2f1d1:
             return .success
-        case .a1c2d2:
+        case .a1c2f1d2:
             return .success
-        case .a1c2d3:
+        case .a1c2f1d3:
             return .success
         case .a2d1:
             fatalError("impossible")
