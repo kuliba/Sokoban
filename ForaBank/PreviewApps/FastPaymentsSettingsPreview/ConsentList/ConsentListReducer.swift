@@ -9,6 +9,12 @@ import Foundation
 
 final class ConsentListReducer {
     
+    private let availableBanks: [Bank]
+    
+    init(availableBanks: [Bank]) {
+     
+        self.availableBanks = availableBanks
+    }
 }
 
 extension ConsentListReducer {
@@ -19,11 +25,8 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch event {
-        case .collapse:
-            collapse(state, completion)
-            
-        case .expand:
-            expand(state, completion)
+        case .toggle:
+            toggle(state, completion)
             
         case let .search(text):
             search(text, state, completion)
@@ -36,26 +39,7 @@ extension ConsentListReducer {
         }
     }
     
-    private func collapse(
-        _ state: State,
-        _ completion: @escaping (State) -> Void
-    ) {
-        switch state {
-        case .collapsed:
-            completion(state)
-            
-        case .expanded:
-            fatalError()
-            
-        case .collapsedError:
-            completion(state)
-            
-        case .expandedError:
-            fatalError()
-        }
-    }
-    
-    private func expand(
+    private func toggle(
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
@@ -64,13 +48,13 @@ extension ConsentListReducer {
             fatalError()
             
         case .expanded:
-            completion(state)
-            
-        case .collapsedError:
             fatalError()
             
+        case .collapsedError:
+            completion(.expandedError)
+            
         case .expandedError:
-            completion(state)
+            completion(.collapsedError)
         }
     }
     
@@ -83,7 +67,7 @@ extension ConsentListReducer {
     }
     
     private func tapBank(
-        _ bankID: BankID,
+        _ bankID: Bank.ID,
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {

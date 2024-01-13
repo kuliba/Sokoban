@@ -11,9 +11,9 @@ struct ConsentListPrototypeView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    init(initialState: ConsentListState = .collapsed) {
+    init(initialState: ConsentListState) {
         
-        let reducer = ConsentListReducer()
+        let reducer = ConsentListReducer(availableBanks: .preview)
         
         let viewModel = ViewModel(
             state: initialState,
@@ -41,6 +41,24 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ConsentListPrototypeView()
+        Group {
+            
+            VStack(spacing: 16) {
+                
+                consentListPrototypeView(.collapsed(.empty))
+                consentListPrototypeView(.collapsed(.preview))
+            }
+            
+            consentListPrototypeView(.expanded)
+            consentListPrototypeView(.collapsedError)
+            consentListPrototypeView(.expandedError)
+        }
+    }
+    
+    private static func consentListPrototypeView(
+        _ state: ConsentListState
+    ) -> some View {
+        
+        ConsentListPrototypeView(initialState: state)
     }
 }

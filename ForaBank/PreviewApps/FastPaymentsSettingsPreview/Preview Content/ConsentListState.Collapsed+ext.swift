@@ -1,0 +1,15 @@
+//
+//  ConsentListState.Collapsed+ext.swift
+//  FastPaymentsSettingsPreview
+//
+//  Created by Igor Malyarov on 13.01.2024.
+//
+
+extension ConsentListState.Collapsed {
+    
+    static let empty: Self = .init(bankNames: [])
+    
+    static let preview: Self = .init(
+        bankNames: ["Сбербанк", "Альфа-банк", "ВТБ", "Тинькофф банк", "Открытие", "Сургутнефтегазбанк"]
+    )
+}

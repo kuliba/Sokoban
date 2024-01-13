@@ -644,6 +644,8 @@
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
 		2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */; };
+		2A9536372B52CA7900E874F5 /* ConsentListState.Collapsed+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536362B52CA7900E874F5 /* ConsentListState.Collapsed+ext.swift */; };
+		2A9536392B52D55D00E874F5 /* [Bank]+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
 		2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95CBA22B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift */; };
@@ -676,7 +678,7 @@
 		2AA70FC62B52C0A20061F5DD /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */; };
 		2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC72B52C1640061F5DD /* ConsentListState.swift */; };
 		2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */; };
-		2AA70FCC2B52C2120061F5DD /* BankID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCB2B52C2120061F5DD /* BankID.swift */; };
+		2AA70FCC2B52C2120061F5DD /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCB2B52C2120061F5DD /* Bank.swift */; };
 		2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */; };
 		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
@@ -2948,6 +2950,8 @@
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListReducer.swift; sourceTree = "<group>"; };
+		2A9536362B52CA7900E874F5 /* ConsentListState.Collapsed+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentListState.Collapsed+ext.swift"; sourceTree = "<group>"; };
+		2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "[Bank]+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
 		2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DecimalTextFieldPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2978,7 +2982,7 @@
 		2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2AA70FC72B52C1640061F5DD /* ConsentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListState.swift; sourceTree = "<group>"; };
 		2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEvent.swift; sourceTree = "<group>"; };
-		2AA70FCB2B52C2120061F5DD /* BankID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankID.swift; sourceTree = "<group>"; };
+		2AA70FCB2B52C2120061F5DD /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 		2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListView.swift; sourceTree = "<group>"; };
 		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
@@ -6401,6 +6405,8 @@
 				2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */,
 				2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */,
 				2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */,
+				2A9536362B52CA7900E874F5 /* ConsentListState.Collapsed+ext.swift */,
+				2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -6789,7 +6795,7 @@
 				2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */,
 				2AA70FC72B52C1640061F5DD /* ConsentListState.swift */,
 				2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */,
-				2AA70FCB2B52C2120061F5DD /* BankID.swift */,
+				2AA70FCB2B52C2120061F5DD /* Bank.swift */,
 			);
 			path = ConsentList;
 			sourceTree = "<group>";
@@ -12844,9 +12850,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AA70FCC2B52C2120061F5DD /* BankID.swift in Sources */,
+				2AA70FCC2B52C2120061F5DD /* Bank.swift in Sources */,
 				2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */,
 				2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */,
+				2A9536372B52CA7900E874F5 /* ConsentListState.Collapsed+ext.swift in Sources */,
 				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
 				2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */,
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
@@ -12858,6 +12865,7 @@
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
+				2A9536392B52D55D00E874F5 /* [Bank]+ext.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,

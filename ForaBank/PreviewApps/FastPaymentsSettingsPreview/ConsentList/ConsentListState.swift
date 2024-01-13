@@ -7,8 +7,16 @@
 
 enum ConsentListState: Equatable {
     
-    case collapsed
+    case collapsed(Collapsed)
     case expanded
     case collapsedError
     case expandedError
+}
+
+extension ConsentListState {
+    
+    struct Collapsed: Equatable {
+        
+        let bankNames: [String]
+    }
 }
