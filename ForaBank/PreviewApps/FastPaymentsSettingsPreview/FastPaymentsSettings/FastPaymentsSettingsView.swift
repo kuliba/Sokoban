@@ -27,17 +27,9 @@ struct FastPaymentsSettingsView: View {
                 )
                 
             case .inactive:
-#warning("extract to separate view")
-                HStack(spacing: 16) {
+                InactiveContractView {
                     
-                    Color.black
-                        .clipShape(.circle)
-                        .frame(width: 64, height: 64)
-                    
-                    Button("Включить переводы СБП") {
-                        
-                        viewModel.event(.activateContract)
-                    }
+                    viewModel.event(.activateContract)
                 }
             }
             
