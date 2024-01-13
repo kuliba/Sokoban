@@ -8,7 +8,7 @@
 enum ConsentListState: Equatable {
     
     case collapsed(Collapsed)
-    case expanded
+    case expanded(Expanded)
     case collapsedError
     case expandedError
 }
@@ -18,5 +18,20 @@ extension ConsentListState {
     struct Collapsed: Equatable {
         
         let bankNames: [String]
+    }
+    
+    struct Expanded: Equatable {
+        
+        let searchText: String
+        let banks: [SelectableBank]
+        
+        struct SelectableBank: Equatable, Identifiable {
+            
+            let bank: Bank
+            let isSelected: Bool
+            
+            var id: Bank.ID { bank.id }
+            var name: String { bank.name }
+        }
     }
 }

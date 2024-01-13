@@ -22,8 +22,8 @@ struct ConsentListView: View {
             case let .collapsed(collapsed):
                 collapsedView(collapsed)
                 
-            case .expanded:
-                Text("expanded")
+            case let .expanded(expanded):
+                expandedView(expanded)
                 
             case .collapsedError:
                 EmptyView()
@@ -67,6 +67,32 @@ struct ConsentListView: View {
         }
     }
     
+    private func expandedView(
+        _ expanded: ConsentListState.Expanded
+    ) -> some View {
+        
+        VStack {
+            
+            TextField(
+                "Search Banks",
+                text: .init(
+                    get: { expanded.searchText },
+                    set: { event(.search($0)) }
+                )
+            )
+            
+            ForEach(expanded.banks, content: bankView)
+        }
+    }
+    
+    private func bankView(
+        _ bank: ConsentListState.Expanded.SelectableBank
+    ) -> some View {
+        
+        Button(bank.name) { event(.tapBank(bank.id)) }
+            .foregroundColor(bank.isSelected ? .primary : .secondary)
+    }
+    
     private var chevronRotationAngle: CGFloat {
         
         switch state {
@@ -101,7 +127,7 @@ struct ConsentListView_Previews: PreviewProvider {
                 consentListView(.collapsed(.preview))
             }
             
-            consentListView(.expanded)
+            consentListView(.expanded(.preview))
             consentListView(.collapsedError)
             consentListView(.expandedError)
         }

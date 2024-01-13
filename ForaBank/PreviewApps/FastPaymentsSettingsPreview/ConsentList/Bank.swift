@@ -7,7 +7,7 @@
 
 import Tagged
 
-struct Bank: Identifiable {
+struct Bank: Equatable, Identifiable {
     
     let id: BankID
     let name: String

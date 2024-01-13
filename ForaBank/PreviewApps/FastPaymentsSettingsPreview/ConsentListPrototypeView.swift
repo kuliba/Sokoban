@@ -49,7 +49,7 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
                 consentListPrototypeView(.collapsed(.preview))
             }
             
-            consentListPrototypeView(.expanded)
+            consentListPrototypeView(.expanded(.preview))
             consentListPrototypeView(.collapsedError)
             consentListPrototypeView(.expandedError)
         }
