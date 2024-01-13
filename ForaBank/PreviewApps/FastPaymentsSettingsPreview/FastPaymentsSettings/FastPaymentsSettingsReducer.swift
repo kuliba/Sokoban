@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Tagged
+
 final class FastPaymentsSettingsReducer {
     
     private let getUserPaymentSettings: GetUserPaymentSettings
@@ -338,8 +340,8 @@ extension FastPaymentsSettingsReducer {
         
         let id: ProductID
         
-#warning("replace with Tagged")
-        typealias ProductID = String
+        typealias ProductID = Tagged<_ProductID, String>
+        enum _ProductID {}
     }
 }
 

@@ -13,7 +13,7 @@ extension UserAccountViewModel {
         route: Route = .init(),
         getUserPaymentSettings: @escaping FastPaymentsSettingsReducer.GetUserPaymentSettings = { $0(.active()) },
         updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.active)) },
-        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: UUID().uuidString) },
+        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: .init(UUID().uuidString)) },
         createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.active)) },
         prepareSetBankDefault: @escaping FastPaymentsSettingsReducer.PrepareSetBankDefault = { $0(.success) }
     ) -> UserAccountViewModel {

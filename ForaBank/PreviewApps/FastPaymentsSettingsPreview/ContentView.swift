@@ -222,7 +222,7 @@ private extension ContentView.Flow {
             fatalError("impossible")
             
         case .a3ea1, .a3ea2, .a3ea3:
-            return .init(id: UUID().uuidString)
+            return .init(id: .init(UUID().uuidString))
             
         case .a3nil:
             return nil

@@ -668,6 +668,7 @@
 		2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FB52B51BDCA0061F5DD /* ActiveContractView.swift */; };
 		2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FB82B529F250061F5DD /* InformerViewModel.swift */; };
 		2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FBA2B529F560061F5DD /* Informer.swift */; };
+		2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA70FBC2B52B1940061F5DD /* Tagged */; };
 		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
@@ -4527,6 +4528,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11948,6 +11950,9 @@
 			dependencies = (
 			);
 			name = FastPaymentsSettingsPreview;
+			packageProductDependencies = (
+				2AA70FBC2B52B1940061F5DD /* Tagged */,
+			);
 			productName = FastPaymentsSettingsPreview;
 			productReference = 2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -16957,6 +16962,11 @@
 		2A95CBB22B2C818A0041F5EC /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2AA70FBC2B52B1940061F5DD /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
 		};
 		2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */ = {
 			isa = XCSwiftPackageProductDependency;
