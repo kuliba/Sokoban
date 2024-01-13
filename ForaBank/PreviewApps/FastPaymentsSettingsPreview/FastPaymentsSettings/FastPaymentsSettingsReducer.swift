@@ -262,7 +262,7 @@ extension FastPaymentsSettingsReducer {
                 state?.alert = .serverError(message)
 
             case .connectivityError:
-                state?.alert = .connectivityError
+                state?.alert = .updateContractFailure
             }
             state?.isInflight = false
             

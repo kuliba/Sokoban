@@ -11,6 +11,8 @@ import Foundation
 final class UserAccountViewModel: ObservableObject {
     
     @Published private(set) var route: Route
+    
+    #warning("move informer into Modal")
     @Published private(set) var informer: Informer?
     
     private let factory: Factory
@@ -24,6 +26,7 @@ final class UserAccountViewModel: ObservableObject {
         self.factory = factory
         
 //        $route
+//            .map(\.isLoading)
 //            .sink { print($0) }
 //            .store(in: &cancellables)
     }

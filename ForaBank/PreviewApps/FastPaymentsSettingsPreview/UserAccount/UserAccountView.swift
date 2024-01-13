@@ -47,9 +47,11 @@ struct UserAccountView: View {
             
             VStack {
                 
-                Text("destination:: \(viewModel.route.destination == nil ? "nil" : "value")")
-                Text("fpsDestination:: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
-                Text("modal:: \(viewModel.route.modal == nil ? "nil" : "value")")
+                Text("destination: \(viewModel.route.destination == nil ? "nil" : "value")")
+                Text("fpsDestination: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
+                Text("modal: \(viewModel.route.modal == nil ? "nil" : "value")")
+                Text("isLoading: \(viewModel.route.isLoading ? "true" : "false")")
+                Text("informer: \(viewModel.informer == nil ? "nil" : "value")")
             }
             .foregroundStyle(.secondary)
             .font(.footnote)
