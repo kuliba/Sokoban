@@ -38,7 +38,7 @@ struct ExpandedConsentListView: View {
     }
     
     private func bankView(
-        _ bank: ConsentListState.ConsentList.SelectableBank
+        _ bank: ConsentList.SelectableBank
     ) -> some View {
         
         Button(bank.name) { event(.tapBank(bank.id)) }

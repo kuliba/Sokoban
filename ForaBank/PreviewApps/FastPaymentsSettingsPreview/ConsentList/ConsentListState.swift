@@ -5,76 +5,69 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-enum ConsentListState: Equatable {
-    
-    case consentList(ConsentList)
-    case failure(Failure)
-}
+typealias ConsentListState = Result<ConsentList, ConsentListFailure>
 
-extension ConsentListState {
+struct ConsentList: Equatable {
     
-    struct ConsentList: Equatable {
+    var banks: [SelectableBank]
+    let consent: Set<Bank.ID>
+    var mode: Mode
+    var searchText: String
+    
+    var canApply: Bool {
         
-        var banks: [SelectableBank]
-        let consent: Set<Bank.ID>
-        var mode: Mode
-        var searchText: String
+        Set(banks.filter(\.isSelected).map(\.id)) != consent
+    }
+    
+    enum Mode: Equatable {
         
-        var canApply: Bool {
-            
-            Set(banks.filter(\.isSelected).map(\.id)) != consent
-        }
+        case collapsed, expanded
         
-        enum Mode: Equatable {
+        mutating func toggle() {
             
-            case collapsed, expanded
-            
-            mutating func toggle() {
+            switch self {
+            case .collapsed:
+                self = .expanded
                 
-                switch self {
-                case .collapsed:
-                    self = .expanded
-                    
-                case .expanded:
-                    self = .collapsed
-                }
+            case .expanded:
+                self = .collapsed
             }
-        }
-        
-        struct SelectableBank: Equatable, Identifiable {
-            
-            let bank: Bank
-            var isSelected: Bool
-            
-            var id: Bank.ID { bank.id }
         }
     }
     
-    enum Failure {
+    struct SelectableBank: Equatable, Identifiable {
         
-        case collapsedError
-        case expandedError
+        let bank: Bank
+        var isSelected: Bool
         
-        func toggled() -> Self {
+        var id: Bank.ID { bank.id }
+    }
+}
+
+enum ConsentListFailure: Error, Equatable {
+    
+    case collapsedError
+    case expandedError
+    
+    func toggled() -> Self {
+        
+        switch self {
+        case .collapsedError:
+            return .expandedError
             
-            switch self {
-            case .collapsedError:
-                return .expandedError
-                
-            case .expandedError:
-                return .collapsedError
-            }
+        case .expandedError:
+            return .collapsedError
         }
     }
 }
 
 #warning("move to View")
-extension ConsentListState.ConsentList.SelectableBank {
+extension ConsentList.SelectableBank {
     
     var name: String { bank.name }
 }
 
-extension ConsentListState.ConsentList {
+extension ConsentList {
     
     var selectedBanks: [Bank] {
         
@@ -92,7 +85,7 @@ extension ConsentListState {
     var uiState: UIState {
         
         switch self {
-        case let .consentList(consentList):
+        case let .success(consentList):
             switch consentList.mode {
             case .collapsed:
                 return .collapsed(.init(
@@ -133,7 +126,7 @@ extension ConsentListState {
         struct Expanded: Equatable {
             
             var searchText: String
-            var banks: [ConsentListState.ConsentList.SelectableBank]
+            var banks: [ConsentList.SelectableBank]
             var canApply: Bool
         }
     }

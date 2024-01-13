@@ -7,14 +7,14 @@
 
 extension ConsentListState {
     
-    static let collapsedEmpty: Self = .consentList(.init(
+    static let collapsedEmpty: Self = .success(.init(
         banks: [],
         consent: [],
         mode: .collapsed,
         searchText: ""
     ))
     
-    static let collapsedPreview: Self = .consentList(.init(
+    static let collapsedPreview: Self = .success(.init(
         banks: .preview,
         consent: [],
         mode: .collapsed,
@@ -23,12 +23,12 @@ extension ConsentListState {
     
     
     static func expanded(
-        _ banks: [ConsentListState.ConsentList.SelectableBank],
+        _ banks: [ConsentList.SelectableBank],
         consent: Set<Bank.ID> = [],
         searchText: String = ""
     ) -> Self {
         
-        .consentList(.init(
+        .success(.init(
             banks: banks,
             consent: consent,
             mode: .expanded,

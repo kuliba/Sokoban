@@ -48,11 +48,11 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .consentList(consentList):
+        case let .success(consentList):
 #warning("selection changes should be discarded when collapsing (without tapping `Apply`)")
             var consentList = consentList
             consentList.mode.toggle()
-            completion(.consentList(consentList))
+            completion(.success(consentList))
             
         case let .failure(failure):
             completion(.failure(failure.toggled()))
@@ -73,7 +73,7 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .consentList(consentList):
+        case let .success(consentList):
             switch consentList.mode {
             case .collapsed:
                 completion(state)
@@ -89,7 +89,7 @@ extension ConsentListReducer {
                 var consentList = consentList
                 consentList.banks[index].isSelected.toggle()
                 
-                completion(.consentList(consentList))
+                completion(.success(consentList))
             }
             
         case .failure:
@@ -102,7 +102,7 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .consentList(consentList):
+        case let .success(consentList):
             switch consentList.mode {
             case .collapsed:
                 completion(state)
@@ -120,7 +120,7 @@ extension ConsentListReducer {
                     
                     switch result {
                     case .success:
-                        completion(.consentList(.init(
+                        completion(.success(.init(
                             banks: consentList.banks,
                             consent: .init(payload),
                             mode: .collapsed,
