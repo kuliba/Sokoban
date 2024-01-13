@@ -9,10 +9,32 @@ import SwiftUI
 
 struct ConsentListPrototypeView: View {
     
+    @StateObject private var viewModel: ViewModel
+    
+    init(initialState: ConsentListState = .collapsed) {
+        
+        let reducer = ConsentListReducer()
+        
+        let viewModel = ViewModel(
+            state: initialState,
+            reduce: reducer.reduce
+        )
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+    
     var body: some View {
         
-        Text("ConsentListPrototypeView")
+        ConsentListView(
+            state: viewModel.state,
+            event: viewModel.event(_:)
+        )
     }
+}
+
+extension ConsentListPrototypeView {
+    
+    typealias ViewModel = ConsentListViewModel<ConsentListState, ConsentListEvent>
 }
 
 struct ConsentListPrototypeView_Previews: PreviewProvider {

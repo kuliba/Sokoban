@@ -18,16 +18,16 @@ struct ConsentListView: View {
             
             switch state {
             case .collapsed:
-                Text("ConsentListView: collapsed")
+                Text("collapsed")
                 
             case .expanded:
-                Text("ConsentListView: expanded")
+                Text("expanded")
                 
             case .collapsedError:
-                Text("ConsentListView: collapsedError")
+                Text("collapsedError")
                 
             case .expandedError:
-                Text("ConsentListView: expandedError")
+                Text("expandedError")
             }
         }
         .animation(.easeInOut, value: state)

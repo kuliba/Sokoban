@@ -643,6 +643,7 @@
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
+		2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
 		2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95CBA22B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift */; };
@@ -2946,6 +2947,7 @@
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
+		2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListReducer.swift; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
 		2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DecimalTextFieldPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6783,6 +6785,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */,
+				2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */,
 				2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */,
 				2AA70FC72B52C1640061F5DD /* ConsentListState.swift */,
 				2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */,
@@ -12867,6 +12870,7 @@
 				2AA70FC32B52BE9B0061F5DD /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */,
+				2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,
 				2AA70FC62B52C0A20061F5DD /* ConsentListViewModel.swift in Sources */,
 			);

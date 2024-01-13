@@ -8,6 +8,7 @@
 enum ConsentListEvent {
     
     case collapse, expand
+    case search(String)
     case tapBank(BankID)
     case apply
 }
