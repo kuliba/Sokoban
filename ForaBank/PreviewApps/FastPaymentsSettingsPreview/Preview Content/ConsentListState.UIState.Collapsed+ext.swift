@@ -1,11 +1,11 @@
 //
-//  ConsentListState.Collapsed+ext.swift
+//  ConsentListState.UIState.Collapsed+ext.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-extension ConsentListState.Collapsed {
+extension ConsentListState.UIState.Collapsed {
     
     static let empty: Self = .init(bankNames: [])
     

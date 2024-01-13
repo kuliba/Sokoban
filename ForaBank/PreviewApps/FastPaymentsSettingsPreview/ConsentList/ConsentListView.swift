@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ConsentListView: View {
     
-    let state: ConsentListState
+    let state: ConsentListState.UIState
     let event: (ConsentListEvent) -> Void
     
     var body: some View {
@@ -65,7 +65,7 @@ struct ConsentListView: View {
     
     @ViewBuilder
     private func collapsedView(
-        _ collapsed: ConsentListState.Collapsed
+        _ collapsed: ConsentListState.UIState.Collapsed
     ) -> some View {
         
         if !collapsed.bankNames.isEmpty {
@@ -79,7 +79,7 @@ struct ConsentListView: View {
     }
     
     private func expandedView(
-        _ expanded: ConsentListState.Expanded
+        _ expanded: ConsentListState.UIState.Expanded
     ) -> some View {
         
         ExpandedConsentListView(
@@ -126,7 +126,7 @@ struct ConsentListView_Previews: PreviewProvider {
     }
     
     private static func consentListView(
-        _ state: ConsentListState
+        _ state: ConsentListState.UIState
     ) -> some View {
         
         ConsentListView(

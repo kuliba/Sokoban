@@ -39,7 +39,7 @@ struct ConsentListPrototypeView: View {
         ScrollView {
             
             ConsentListView(
-                state: viewModel.state,
+                state: viewModel.state.uiState,
                 event: viewModel.event(_:)
             )
         }
@@ -59,8 +59,8 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
             
             VStack(spacing: 16) {
                 
-                consentListPrototypeView(.collapsed(.empty))
-                consentListPrototypeView(.collapsed(.preview))
+                consentListPrototypeView(.collapsedEmpty)
+                consentListPrototypeView(.collapsedPreview)
             }
             
             consentListPrototypeView(.expanded(.preview))

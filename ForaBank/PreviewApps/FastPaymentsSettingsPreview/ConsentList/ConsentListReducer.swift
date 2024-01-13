@@ -48,13 +48,11 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case .collapsed:
-            fatalError()
-            
-        case let .expanded(expanded):
-            completion(.collapsed(.init(
-                bankNames: expanded.banks.filter(\.isSelected).map(\.name)
-            )))
+        case let .consentList(consentList):
+#warning("selection changes should be discarded when collapsing (without tapping `Apply`)")
+            var consentList = consentList
+            consentList.mode.toggle()
+            completion(.consentList(consentList))
             
         case .collapsedError:
             completion(.expandedError)
@@ -78,23 +76,24 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case .collapsed:
-            completion(state)
-            
-        case let .expanded(expanded):
-#warning("extract to helper or subscript")
-            guard let index = expanded.banks.firstIndex(where: { $0.id == bankID })
-            else {
+        case let .consentList(consentList):
+            switch consentList.mode {
+            case .collapsed:
                 completion(state)
-                return
+                
+            case .expanded:
+#warning("extract to helper or subscript")
+                guard let index = consentList.banks.firstIndex(where: { $0.id == bankID })
+                else {
+                    completion(state)
+                    return
+                }
+                
+                var consentList = consentList
+                consentList.banks[index].isSelected.toggle()
+                
+                completion(.consentList(consentList))
             }
-            
-            var expanded = expanded
-            expanded.banks[index].isSelected.toggle()
-#warning("this is super-simplified logic for showing `Apply`button")
-            expanded.canApply = true
-            
-            completion(.expanded(expanded))
             
         case .collapsedError:
             completion(state)
@@ -109,34 +108,39 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case .collapsed:
-            completion(state)
-            
-        case let .expanded(expanded):
-            #warning("FINISH THIS")
-            // 1. set isInflight = true (spinner)
-            // 2. send async request
-            // 3. parse response
-            // 4. update state
-            // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
-            let selected = expanded.banks.filter(\.isSelected)
-            let payload = selected.map(\.bank.id)
-
-            changeConsentList(payload) { result in
+        case let .consentList(consentList):
+            switch consentList.mode {
+            case .collapsed:
+                completion(state)
                 
-                switch result {
-                case .success:
-                    completion(.collapsed(.init(
-                        bankNames: selected.map(\.name)
-                    )))
+            case .expanded:
+#warning("FINISH THIS")
+                // 1. set isInflight = true (spinner)
+                // 2. send async request
+                // 3. parse response
+                // 4. update state
+                // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
+                let payload = consentList.selectedBanks.map(\.id)
+                
+                changeConsentList(payload) { result in
                     
-                case let .serverError(message):
-                    // state is the same except error - add field if decoration is not possible
-                    completion(state)
-                    
-                case .connectivityError:
-                    // state is the same except error - add field if decoration is not possible
-                    completion(state)
+                    switch result {
+                    case .success:
+                        completion(.consentList(.init(
+                            banks: consentList.banks,
+                            consent: .init(payload),
+                            mode: .collapsed,
+                            searchText: ""
+                        )))
+                        
+                    case let .serverError(message):
+                        // state is the same except error - add field if decoration is not possible
+                        completion(state)
+                        
+                    case .connectivityError:
+                        // state is the same except error - add field if decoration is not possible
+                        completion(state)
+                    }
                 }
             }
             

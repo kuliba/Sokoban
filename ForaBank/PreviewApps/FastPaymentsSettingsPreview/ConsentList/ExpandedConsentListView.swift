@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExpandedConsentListView: View {
     
-    let expanded: ConsentListState.Expanded
+    let expanded: ConsentListState.UIState.Expanded
     let event: (ConsentListEvent) -> Void
     
     var body: some View {
@@ -38,7 +38,7 @@ struct ExpandedConsentListView: View {
     }
     
     private func bankView(
-        _ bank: ConsentListState.Expanded.SelectableBank
+        _ bank: ConsentListState.ConsentList.SelectableBank
     ) -> some View {
         
         Button(bank.name) { event(.tapBank(bank.id)) }
@@ -67,7 +67,7 @@ struct ExpandedConsentListView_Previews: PreviewProvider {
     }
     
     private static func expandedConsentListView(
-        _ expanded: ConsentListState.Expanded
+        _ expanded: ConsentListState.UIState.Expanded
     ) -> some View {
         
         ScrollView {
