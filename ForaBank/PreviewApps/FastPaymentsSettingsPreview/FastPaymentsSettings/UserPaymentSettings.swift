@@ -18,7 +18,7 @@ extension UserPaymentSettings {
         
         var paymentContract: PaymentContract
         let consentResult: ConsentResult
-        let bankDefault: BankDefault
+        var bankDefault: BankDefault
     }
     
     struct PaymentContract: Equatable {

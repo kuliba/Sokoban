@@ -57,9 +57,11 @@ extension FastPaymentsSettingsViewModel {
         case appear
         case activateContract
         case deactivateContract
+        #warning("rename case to reflect meaning")
         case resetError
         case setBankDefault
         case prepareSetBankDefault
+        case confirmSetBankDefault
     }
 }
 

@@ -59,6 +59,57 @@ extension UserAccountViewModel {
     }
 }
 
+// MARK: - Confirm with OTP
+
+extension UserAccountViewModel {
+    
+    func handleOTPResult(
+        _ result: ConfirmWithOTPResult
+    ) {
+        resetFPSDestination()
+        fpsViewModel?.event(.resetError)
+        
+        switch result {
+        case .success:
+            #warning("replace with method that would reset informer in 2 sec; rethink informer API and usage")
+            informer = .init(text: "Банк по умолчанию установлен")
+            fpsViewModel?.event(.confirmSetBankDefault)
+
+        case .incorrectCode:
+            informer = .init(text: "Банк по умолчанию не установлен")
+
+        case let .serverError(message):
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            
+                self?.route.modal = .fpsAlert(.ok(
+                    title: "Ошибка",
+                    message: message,
+                    primaryAction: { [weak self] in self?.resetModal() }
+                ))
+            }
+
+        case .connectivityError:
+            informer = .init(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+        }
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        switch route.destination {
+        case let .fastPaymentsSettings(fpsViewModel):
+            return fpsViewModel
+            
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: - Fast Payments Settings
+
 extension UserAccountViewModel {
     
     func openFastPaymentsSettings() {
@@ -258,6 +309,7 @@ private extension FastPaymentsSettingsViewModel.State {
         
         switch alert {
         case .confirmSetBankDefault:
+            #warning("need `phoneNumberMask` from contract!")
             return ()
 
         default:
@@ -267,7 +319,7 @@ private extension FastPaymentsSettingsViewModel.State {
 }
 
 extension UserAccountViewModel {
-    
+    #warning("rename `reset` to `dismiss`")
     func resetRoute() {
         
         DispatchQueue.main.async { [weak self] in

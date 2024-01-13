@@ -127,7 +127,7 @@ struct UserAccountView: View {
         
         switch fpsDestination {
         case .confirmSetBankDefault:
-            Text("TBD: OTP Confirmation")
+            ConfirmOTPStubView(onCommit: viewModel.handleOTPResult)
         }
     }
 }
@@ -138,4 +138,35 @@ struct UserAccountView_Previews: PreviewProvider {
         
         UserAccountView(viewModel: .preview())
     }
+}
+
+struct ConfirmOTPStubView: View {
+    
+    let onCommit: (ConfirmWithOTPResult) -> Void
+    
+    var body: some View {
+        
+        VStack(spacing: 32) {
+            
+            Text("OTP Confirmation Stub")
+                .font(.title3.bold())
+            
+            VStack(spacing: 32) {
+                
+                Button("Confirm OK") { onCommit(.success) }
+                Button("Incorrect Code") { onCommit(.incorrectCode) }
+                Button("Server Error") { onCommit(.serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")) }
+                Button("Connectivity Error") { onCommit(.connectivityError) }
+            }
+            .frame(maxHeight: .infinity)
+        }
+    }
+}
+
+enum ConfirmWithOTPResult {
+    
+    case success
+    case incorrectCode
+    case serverError(String)
+    case connectivityError
 }

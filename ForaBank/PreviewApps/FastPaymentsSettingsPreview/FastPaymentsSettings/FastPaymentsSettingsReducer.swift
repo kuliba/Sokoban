@@ -48,13 +48,16 @@ extension FastPaymentsSettingsReducer {
             deactivateContract(state, completion)
             
         case .resetError:
-            completion(state?.noError())
+            completion(state?.resetError().setToNotInflight())
             
         case .setBankDefault:
             setBankDefault(state, completion)
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(state, completion)
+            
+        case .confirmSetBankDefault:
+            confirmSetBankDefault(state, completion)
         }
     }
     
@@ -89,12 +92,12 @@ extension FastPaymentsSettingsReducer {
                 completion(state)
                 
             case .inactive:
-                completion(state?.toIsInflight())
+                completion(state?.setToInflight())
                 activateContract(contractDetails, completion)
             }
             
         case let .missingContract(consent):
-            completion(state?.toIsInflight())
+            completion(state?.setToInflight())
             
             if let product = getProduct() {
                 createContract(product, consent, completion)
@@ -152,7 +155,7 @@ extension FastPaymentsSettingsReducer {
         case let .contracted(contractDetails):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
-                completion(state?.toIsInflight())
+                completion(state?.setToInflight())
                 deactivateContract(contractDetails, completion)
                 
             case .inactive:
@@ -248,7 +251,7 @@ extension FastPaymentsSettingsReducer {
         _ state: State,
         _ completion: @escaping Completion
     ) {
-        completion(state?.toIsInflight())
+        completion(state?.setToInflight())
         
         prepareSetBankDefault { result in
         
@@ -266,6 +269,22 @@ extension FastPaymentsSettingsReducer {
             }
             state?.isInflight = false
             
+            completion(state)
+        }
+    }
+    
+    private func confirmSetBankDefault(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state?.userPaymentSettings {
+        case let .contracted(contractDetails):
+            var contractDetails = contractDetails
+            contractDetails.bankDefault = .onDisabled
+            
+            completion(.init(userPaymentSettings: .contracted(contractDetails)))
+            
+        default:
             completion(state)
         }
     }
@@ -347,7 +366,7 @@ extension FastPaymentsSettingsReducer {
 
 extension FastPaymentsSettingsViewModel.State {
     
-    func toIsInflight() -> Self {
+    func setToInflight() -> Self {
         
         var state = self
         state.isInflight = true
@@ -355,7 +374,15 @@ extension FastPaymentsSettingsViewModel.State {
         return state
     }
     
-    func noError() -> Self {
+    func setToNotInflight() -> Self {
+        
+        var state = self
+        state.isInflight = false
+        
+        return state
+    }
+    
+    func resetError() -> Self {
         
         var state = self
         state.alert = nil

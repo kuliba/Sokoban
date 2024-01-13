@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var flow: Flow = .a1c2f3d1
+    @State private var flow: Flow = .a1c2f1d1
     
     var body: some View {
         
