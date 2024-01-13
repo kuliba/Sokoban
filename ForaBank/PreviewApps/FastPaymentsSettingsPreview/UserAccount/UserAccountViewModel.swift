@@ -26,10 +26,10 @@ final class UserAccountViewModel: ObservableObject {
         self.informer = informer
         self.factory = factory
         
-//        $route
-//            .map(\.isLoading)
-//            .sink { print($0) }
-//            .store(in: &cancellables)
+        //        $route
+        //            .map(\.isLoading)
+        //            .sink { print($0) }
+        //            .store(in: &cancellables)
     }
 }
 
@@ -51,12 +51,18 @@ extension UserAccountViewModel {
         
         route.modal = .alert(.init(
             title: "Test Alert",
+            message: "Long alert message here.",
             primaryButton: .init(
                 type: .default,
                 title: "OK",
                 action: resetModal
             )
         ))
+    }
+    
+    func showDemoInformer() {
+        
+        informer.set(text: "Demo Informer Text.")
     }
 }
 
@@ -74,20 +80,20 @@ extension UserAccountViewModel {
         case .success:
             informer.set(text: "Банк по умолчанию установлен")
             fpsViewModel?.event(.confirmSetBankDefault)
-
+            
         case .incorrectCode:
             informer.set(text: "Банк по умолчанию не установлен")
-
+            
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            
+                
                 self?.route.modal = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
                     primaryAction: { [weak self] in self?.resetModal() }
                 ))
             }
-
+            
         case .connectivityError:
             informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
         }
@@ -262,7 +268,7 @@ private extension FastPaymentsSettingsViewModel.State {
             
         case .failure(.connectivityError):
             return "Превышено время ожидания. Попробуйте позже"
-
+            
         default:
             return nil
         }
@@ -273,7 +279,7 @@ private extension FastPaymentsSettingsViewModel.State {
         switch alert {
         case .updateContractFailure:
             return ()
-
+            
         default:
             return nil
         }
@@ -284,7 +290,7 @@ private extension FastPaymentsSettingsViewModel.State {
         switch alert {
         case .missingProduct:
             return ()
-
+            
         default:
             return nil
         }
@@ -295,7 +301,7 @@ private extension FastPaymentsSettingsViewModel.State {
         switch alert {
         case .setBankDefault:
             return ()
-
+            
         default:
             return nil
         }
@@ -305,9 +311,9 @@ private extension FastPaymentsSettingsViewModel.State {
         
         switch alert {
         case .confirmSetBankDefault:
-            #warning("need `phoneNumberMask` from contract!")
+#warning("need `phoneNumberMask` from contract!")
             return ()
-
+            
         default:
             return nil
         }
@@ -315,11 +321,11 @@ private extension FastPaymentsSettingsViewModel.State {
 }
 
 extension UserAccountViewModel {
-    #warning("rename `reset` to `dismiss`")
+#warning("rename `reset` to `dismiss`")
     func resetRoute() {
         
         DispatchQueue.main.async { [weak self] in
-         
+            
             self?.route = .init()
         }
     }
@@ -327,23 +333,23 @@ extension UserAccountViewModel {
     func resetDestination() {
         
         DispatchQueue.main.async { [weak self] in
-         
+            
             self?.route.destination = nil
         }
     }
     
     func resetFPSDestination() {
         
-//        DispatchQueue.main.async { [weak self] in
-         
-            /*self?.*/route.fpsDestination = nil
-//        }
+        //        DispatchQueue.main.async { [weak self] in
+        
+        /*self?.*/route.fpsDestination = nil
+        //        }
     }
     
     func resetModal() {
         
         DispatchQueue.main.async { [weak self] in
-         
+            
             self?.route.modal = nil
         }
     }
@@ -389,7 +395,7 @@ extension UserAccountViewModel {
                     return nil
                 }
             }
-
+            
             var fpsAlert: AlertViewModel? {
                 
                 if case let .fpsAlert(fpsAlert) = self {

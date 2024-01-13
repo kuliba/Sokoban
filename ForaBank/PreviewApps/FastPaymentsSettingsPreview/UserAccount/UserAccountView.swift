@@ -19,8 +19,6 @@ struct UserAccountView: View {
                 
                 VStack(spacing: 32) {
                     
-                    showLoaderButton()
-                    showAlertButton()
                     openFastPaymentsSettingsButton()
                 }
                 .alert(
@@ -45,22 +43,13 @@ struct UserAccountView: View {
         }
     }
     
-    private func showLoaderButton() -> some View {
-        
-        Button("show loader", action: viewModel.showDemoLoader)
-    }
-    
-    private func showAlertButton() -> some View {
-        
-        Button("show alert", action: viewModel.showDemoAlert)
-    }
-    
     private func openFastPaymentsSettingsButton() -> some View {
         
         Button(
             "Fast Payments Settings",
             action: viewModel.openFastPaymentsSettings
         )
+        .buttonStyle(.borderedProminent)
     }
     
     @ViewBuilder
@@ -100,7 +89,7 @@ struct UserAccountView: View {
                 )
         }
     }
-
+    
     private func fpsDestinationView(
         fpsDestination: UserAccountViewModel.Route.FPSDestination
     ) -> some View {

@@ -56,20 +56,7 @@ struct ContentView: View {
         
         UserAccountView(viewModel: viewModel)
             .overlay(alignment: .topTrailing, content: picker)
-            .overlay(alignment: .bottom) {
-                
-                VStack {
-                    
-                    Text("destination: \(viewModel.route.destination == nil ? "nil" : "value")")
-                    Text("fpsDestination: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
-                    Text("modal: \(viewModel.route.modal == nil ? "nil" : "value")")
-                    Text("isLoading: \(viewModel.route.isLoading ? "true" : "false")")
-                    Text("informer: \(viewModel.informer.informer?.text == nil ? "nil" : "value")")
-                }
-                .foregroundStyle(.secondary)
-                .font(.footnote)
-            }
-        
+            .overlay(alignment: .bottom, content: overlay)
     }
     
     private func picker() -> some View {
@@ -83,6 +70,54 @@ struct ContentView: View {
             }
         }
         .pickerStyle(.menu)
+    }
+    
+    private func overlay() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            buttons()
+            values()
+        }
+    }
+    
+    private func buttons() -> some View {
+        
+        HStack(spacing: 16) {
+            
+            showLoaderButton()
+            showAlertButton()
+            showInformerButton()
+        }
+        .buttonStyle(.bordered)
+    }
+    
+    private func showLoaderButton() -> some View {
+        
+        Button("loader", action: viewModel.showDemoLoader)
+    }
+    
+    private func showAlertButton() -> some View {
+        
+        Button("alert", action: viewModel.showDemoAlert)
+    }
+    
+    private func showInformerButton() -> some View {
+        
+        Button("informer", action: viewModel.showDemoInformer)
+    }
+    
+    private func values() -> some View {
+        
+        VStack {
+            Text("destination: \(viewModel.route.destination == nil ? "nil" : "value")")
+            Text("fpsDestination: \(viewModel.route.fpsDestination == nil ? "nil" : "value")")
+            Text("modal: \(viewModel.route.modal == nil ? "nil" : "value")")
+            Text("isLoading: \(viewModel.route.isLoading ? "true" : "false")")
+            Text("informer: \(viewModel.informer.informer?.text == nil ? "nil" : "value")")
+        }
+        .foregroundStyle(.secondary)
+        .font(.footnote)
     }
 }
 
