@@ -83,12 +83,12 @@ extension FastPaymentsSettingsReducer {
                 completion(state)
                 
             case .inactive:
-                completion(state?.toInflight())
+                completion(state?.toIsInflight())
                 activateContract(contractDetails, completion)
             }
             
         case let .missingContract(consent):
-            completion(state?.toInflight())
+            completion(state?.toIsInflight())
             
             if let product = getProduct() {
                 createContract(product, consent, completion)
@@ -146,7 +146,7 @@ extension FastPaymentsSettingsReducer {
         case let .contracted(contractDetails):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
-                completion(state?.toInflight())
+                completion(state?.toIsInflight())
                 deactivateContract(contractDetails, completion)
                 
             case .inactive:
@@ -301,7 +301,7 @@ extension FastPaymentsSettingsReducer {
 
 extension FastPaymentsSettingsViewModel.State {
     
-    func toInflight() -> Self {
+    func toIsInflight() -> Self {
         
         var state = self
         state.isInflight = true
