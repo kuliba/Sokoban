@@ -14,7 +14,7 @@ struct FastPaymentsSettingsPreviewApp: App {
         
         WindowGroup {
             
-            ContentView()
+            FPSPrototypeView()
         }
     }
 }

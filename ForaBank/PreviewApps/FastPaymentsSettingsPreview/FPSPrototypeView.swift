@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  FPSPrototypeView.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 12.01.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct FPSPrototypeView: View {
     
     @ObservedObject private var viewModel: UserAccountViewModel
     @State private var flow: Flow = .a1c2f1d1
@@ -121,7 +121,7 @@ struct ContentView: View {
     }
 }
 
-private extension ContentView {
+private extension FPSPrototypeView {
     
     enum Flow: String, CaseIterable {
         
@@ -135,7 +135,7 @@ private extension ContentView {
     }
 }
 
-private extension ContentView.Flow {
+private extension FPSPrototypeView.Flow {
     
     var userPaymentSettings: UserPaymentSettings {
         
@@ -313,10 +313,10 @@ private extension ContentView.Flow {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct FPSPrototypeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView()
+        FPSPrototypeView()
     }
 }
