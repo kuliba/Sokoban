@@ -87,8 +87,8 @@ extension ConsentListReducer {
             
             var expanded = expanded
             expanded.banks[index].isSelected.toggle()
-            
-#warning("add button `Apply`")
+            #warning("this is super-simplified logic for showing `Apply`button")
+            expanded.canApply = true
             
             completion(.expanded(expanded))
             

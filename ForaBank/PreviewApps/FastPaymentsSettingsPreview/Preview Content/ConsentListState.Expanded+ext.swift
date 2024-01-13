@@ -11,4 +11,15 @@ extension ConsentListState.Expanded {
         searchText: "",
         banks: .preview
     )
+    
+    static let search: Self = .init(
+        searchText: "сбер",
+        banks: .preview
+    )
+    
+    static let apply: Self = .init(
+        searchText: "",
+        banks: .preview,
+        canApply: true
+    )
 }
