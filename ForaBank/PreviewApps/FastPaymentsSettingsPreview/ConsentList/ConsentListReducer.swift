@@ -64,7 +64,22 @@ extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        fatalError()
+        switch state {
+        case let .success(consentList):
+            switch consentList.mode {
+            case .collapsed:
+                completion(state)
+                
+            case .expanded:
+                var consentList = consentList
+                consentList.searchText = text
+                
+                completion(.success(consentList))
+            }
+            
+        case .failure:
+            completion(state)
+        }
     }
     
     private func tapBank(

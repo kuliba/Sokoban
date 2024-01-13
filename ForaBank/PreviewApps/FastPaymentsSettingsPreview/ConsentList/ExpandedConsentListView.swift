@@ -53,6 +53,11 @@ struct ExpandedConsentListView: View {
     }
 }
 
+private extension ConsentList.SelectableBank {
+    
+    var name: String { bank.name }
+}
+
 struct ExpandedConsentListView_Previews: PreviewProvider {
     
     static var previews: some View {
