@@ -36,6 +36,13 @@ struct ContentView: View {
                     
                     completion(flow.createContractResponse)
                 }
+            },
+            prepareSetBankDefault: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flow.prepareSetBankDefaultResponse)
+                }
             }
         ))
         .overlay(alignment: .topTrailing, content: picker)
@@ -176,6 +183,42 @@ private extension ContentView.Flow {
         case .a3ea3:
             return .connectivityError
             
+        case .a3nil:
+            fatalError("impossible")
+        case .a4:
+            fatalError("impossible")
+        case .a5:
+            fatalError("impossible")
+        }
+    }
+    
+    var prepareSetBankDefaultResponse: FastPaymentsSettingsReducer.PrepareSetBankDefaultResponse {
+        
+        switch self {
+        case .a1c1d1:
+            fatalError("impossible")
+        case .a1c1d2:
+            fatalError("impossible")
+        case .a1c1d3:
+            fatalError("impossible")
+        case .a1c2d1:
+            return .success
+        case .a1c2d2:
+            return .success
+        case .a1c2d3:
+            return .success
+        case .a2d1:
+            fatalError("impossible")
+        case .a2d2:
+            fatalError("impossible")
+        case .a2d3:
+            fatalError("impossible")
+        case .a3ea1:
+            fatalError("impossible")
+        case .a3ea2:
+            fatalError("impossible")
+        case .a3ea3:
+            fatalError("impossible")
         case .a3nil:
             fatalError("impossible")
         case .a4:

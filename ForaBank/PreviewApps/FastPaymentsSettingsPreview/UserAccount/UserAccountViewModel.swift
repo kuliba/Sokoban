@@ -67,6 +67,8 @@ extension UserAccountViewModel {
     
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
         
+#warning("combine multiple pipelines into one, extract composed sink into helpers")
+        
         viewModel.$state
             .compactMap(\.?.isInflight)
             .sink { [weak self] in self?.route.isLoading = $0 }
@@ -127,7 +129,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.confirmSetBankDefault)
+            .compactMap(\.?.setBankDefault)
             .sink { [weak self] in
                 
                 self?.route.modal = .fpsAlert(.init(
@@ -138,20 +140,29 @@ extension UserAccountViewModel {
                         title: "OK",
                         action: {
                             
-                            viewModel.event(.resetError)
                             self?.resetModal()
-                            self?.route.fpsDestination = .confirmSetBankDefault
+                            viewModel.event(.resetError)
+                            viewModel.event(.prepareSetBankDefault)
                         }),
                     secondaryButton: .init(
                         type: .cancel,
                         title: "Отмена",
                         action: {
-                        
+                            
                             viewModel.event(.resetError)
                             self?.resetModal()
                         }
                     )
                 ))
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$state
+            .compactMap(\.?.confirmSetBankDefault)
+            .sink { [weak self] in
+                
+                viewModel.event(.resetError)
+                self?.route.fpsDestination = .confirmSetBankDefault
             }
             .store(in: &cancellables)
     }
@@ -182,7 +193,6 @@ private extension FastPaymentsSettingsViewModel.State {
     var alertMessage: String? {
         
         switch alert {
-            
         case let .serverError(message):
             return message
             
@@ -197,7 +207,6 @@ private extension FastPaymentsSettingsViewModel.State {
     var finalAlertMessage: String? {
         
         switch userPaymentSettings {
-            
         case let .failure(.serverError(message)):
             return message
             
@@ -212,7 +221,6 @@ private extension FastPaymentsSettingsViewModel.State {
     var informer: Void? {
         
         switch alert {
-            
         case .updateContractFailure:
             return ()
 
@@ -224,8 +232,18 @@ private extension FastPaymentsSettingsViewModel.State {
     var missingProduct: Void? {
         
         switch alert {
-            
         case .missingProduct:
+            return ()
+
+        default:
+            return nil
+        }
+    }
+    
+    var setBankDefault: Void? {
+        
+        switch alert {
+        case .setBankDefault:
             return ()
 
         default:
@@ -236,7 +254,6 @@ private extension FastPaymentsSettingsViewModel.State {
     var confirmSetBankDefault: Void? {
         
         switch alert {
-            
         case .confirmSetBankDefault:
             return ()
 

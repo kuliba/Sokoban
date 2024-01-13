@@ -11,17 +11,20 @@ final class FastPaymentsSettingsReducer {
     private let updateContract: UpdateContract
     private let getProduct: GetProduct
     private let createContract: CreateContract
+    private let prepareSetBankDefault: PrepareSetBankDefault
     
     init(
         getUserPaymentSettings: @escaping GetUserPaymentSettings,
         updateContract: @escaping UpdateContract,
         getProduct: @escaping GetProduct,
-        createContract: @escaping CreateContract
+        createContract: @escaping CreateContract,
+        prepareSetBankDefault: @escaping PrepareSetBankDefault
     ) {
         self.getUserPaymentSettings = getUserPaymentSettings
         self.updateContract = updateContract
         self.getProduct = getProduct
         self.createContract = createContract
+        self.prepareSetBankDefault = prepareSetBankDefault
     }
 }
 
@@ -49,6 +52,9 @@ extension FastPaymentsSettingsReducer {
             
         case .setBankDefault:
             setBankDefault(state, completion)
+            
+        case .prepareSetBankDefault:
+            prepareSetBankDefault(state, completion)
         }
     }
     
@@ -234,8 +240,34 @@ extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         var state = state
-        state?.alert = .confirmSetBankDefault
+        state?.alert = .setBankDefault
         completion(state)
+    }
+    
+    private func prepareSetBankDefault(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        completion(state?.toIsInflight())
+        
+        prepareSetBankDefault { result in
+        
+            var state = state
+            
+            switch result {
+            case .success:
+                state?.alert = .confirmSetBankDefault
+
+            case let .serverError(message):
+                state?.alert = .serverError(message)
+
+            case .connectivityError:
+                state?.alert = .connectivityError
+            }
+            state?.isInflight = false
+            
+            completion(state)
+        }
     }
 }
 
@@ -260,6 +292,20 @@ extension FastPaymentsSettingsReducer {
     enum UpdateContractResponse {
         
         case success(UserPaymentSettings.PaymentContract)
+        case serverError(String)
+        case connectivityError
+    }
+}
+
+// micro-service `f`
+extension FastPaymentsSettingsReducer {
+    
+    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
+    typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
+    
+    enum PrepareSetBankDefaultResponse {
+        
+        case success
         case serverError(String)
         case connectivityError
     }

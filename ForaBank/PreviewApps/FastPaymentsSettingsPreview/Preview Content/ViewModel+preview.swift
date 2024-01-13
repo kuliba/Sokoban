@@ -14,7 +14,8 @@ extension UserAccountViewModel {
         getUserPaymentSettings: @escaping FastPaymentsSettingsReducer.GetUserPaymentSettings = { $0(.active()) },
         updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.active)) },
         getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: UUID().uuidString) },
-        createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.active)) }
+        createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.active)) },
+        prepareSetBankDefault: @escaping FastPaymentsSettingsReducer.PrepareSetBankDefault = { $0(.success) }
     ) -> UserAccountViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
@@ -22,7 +23,8 @@ extension UserAccountViewModel {
             getUserPaymentSettings: getUserPaymentSettings,
             updateContract: updateContract,
             getProduct: getProduct,
-            createContract: createContract
+            createContract: createContract,
+            prepareSetBankDefault: prepareSetBankDefault
         )
         
         return .init(

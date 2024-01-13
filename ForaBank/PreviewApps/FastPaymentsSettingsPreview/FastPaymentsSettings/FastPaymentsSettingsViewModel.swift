@@ -40,13 +40,15 @@ extension FastPaymentsSettingsViewModel {
         var userPaymentSettings: UserPaymentSettings?
         var alert: Alert?
         
+#warning("rename `alert` to `interaction` (? or better name)")
         enum Alert {
             
             case serverError(String)
             case connectivityError
             case missingProduct
             case updateContractFailure
-            case confirmSetBankDefault
+            case setBankDefault
+            case confirmSetBankDefault//(phoneNumberMask) from contract details
         }
     }
     
@@ -57,6 +59,7 @@ extension FastPaymentsSettingsViewModel {
         case deactivateContract
         case resetError
         case setBankDefault
+        case prepareSetBankDefault
     }
 }
 

@@ -12,6 +12,7 @@ extension FastPaymentsSettingsReducer {
         getUserPaymentSettings: { $0(.active()) },
         updateContract: { _, completion in completion(.success(.active)) },
         getProduct: { .init(id: "1234567890") },
-        createContract: { _, completion in completion(.success(.active)) }
+        createContract: { _, completion in completion(.success(.active)) },
+        prepareSetBankDefault: { $0(.success) }
     )
 }
