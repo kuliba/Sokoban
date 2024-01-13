@@ -15,11 +15,11 @@ struct ContentView: View {
         
         UserAccountView(viewModel: .preview(
             route: .init(),
-            getContractConsentAndDefault: { completion in
+            getUserPaymentSettings: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(flow.contractConsentAndDefault)
+                    completion(flow.userPaymentSettings)
                 }
             },
             updateContract: { _, completion in
@@ -69,7 +69,7 @@ private extension ContentView {
 
 private extension ContentView.Flow {
     
-    var contractConsentAndDefault: ContractConsentAndDefault {
+    var userPaymentSettings: UserPaymentSettings {
         
         switch self {
         case .a1c1d1, .a1c1d2, .a1c1d3:

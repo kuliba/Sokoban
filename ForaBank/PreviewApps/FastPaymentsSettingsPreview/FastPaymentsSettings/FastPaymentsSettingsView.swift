@@ -13,7 +13,7 @@ struct FastPaymentsSettingsView: View {
     
     var body: some View {
         
-        switch viewModel.state?.contractConsentAndDefault {
+        switch viewModel.state?.userPaymentSettings {
         case .none, .failure:
             Text("Empty View").opacity(0.1)
             
@@ -44,7 +44,7 @@ struct FastPaymentsSettingsView: View {
         case let .missingContract(consentResult):
             VStack(spacing: 32) {
                 
-                Text("Missing Contract.\n\n\(String(describing: consentResult))")
+                Text("Missing Payment Contract.\n\n\(String(describing: consentResult))")
                 
                 HStack(spacing: 16) {
                     

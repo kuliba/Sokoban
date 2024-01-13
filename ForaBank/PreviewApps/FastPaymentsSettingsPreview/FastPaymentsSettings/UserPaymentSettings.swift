@@ -1,27 +1,27 @@
 //
-//  ContractConsentAndDefault.swift
+//  UserPaymentSettings.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
-enum ContractConsentAndDefault: Equatable {
+enum UserPaymentSettings: Equatable {
     
     case contracted(ContractDetails, ContractStatus)
     case missingContract(ConsentResult)
     case failure(Failure)
 }
 
-extension ContractConsentAndDefault {
+extension UserPaymentSettings {
     
     struct ContractDetails: Equatable {
         
-        var contract: Contract
+        var paymentContract: PaymentContract
         let consentResult: ConsentResult
         let bankDefault: BankDefault
     }
     
-    struct Contract: Equatable {}
+    struct PaymentContract: Equatable {}
     
     typealias ConsentResult = Result<ConsentList, ConsentError>
     

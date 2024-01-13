@@ -1,15 +1,15 @@
 //
-//  ContractConsentAndDefault+ext.swift
+//  UserPaymentSettings+ext.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
-extension ContractConsentAndDefault {
+extension UserPaymentSettings {
     
     static func active(
-        _ consentResult: ContractConsentAndDefault.ConsentResult = .success,
-        bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
+        _ consentResult: UserPaymentSettings.ConsentResult = .success,
+        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .contracted(
@@ -22,8 +22,8 @@ extension ContractConsentAndDefault {
     }
     
     static func inactive(
-        _ consentResult: ContractConsentAndDefault.ConsentResult = .success,
-        _ bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
+        _ consentResult: UserPaymentSettings.ConsentResult = .success,
+        _ bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .contracted(
@@ -36,40 +36,40 @@ extension ContractConsentAndDefault {
     }
     
     static func missingContract(
-        consent: ContractConsentAndDefault.ConsentResult = .success
+        consent: UserPaymentSettings.ConsentResult = .success
     ) -> Self {
         
         .missingContract(consent)
     }
 }
 
-extension ContractConsentAndDefault.ContractDetails {
+extension UserPaymentSettings.ContractDetails {
     
     static func preview(
-        consentResult: ContractConsentAndDefault.ConsentResult = .success,
-        bankDefault: ContractConsentAndDefault.BankDefault = .offEnabled
+        consentResult: UserPaymentSettings.ConsentResult = .success,
+        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .init(
-            contract: .preview,
+            paymentContract: .preview,
             consentResult: consentResult,
             bankDefault: bankDefault
         )
     }
 }
 
-private extension ContractConsentAndDefault.Contract {
+private extension UserPaymentSettings.PaymentContract {
     
     static let preview: Self = .init()
 }
 
-private extension ContractConsentAndDefault.ConsentResult {
+private extension UserPaymentSettings.ConsentResult {
     
     static let success: Self = .success(.preview)
     static let failure: Self = .failure(.init())
 }
 
-private extension ContractConsentAndDefault.ConsentList {
+private extension UserPaymentSettings.ConsentList {
     
     static let preview: Self = .init()
 }

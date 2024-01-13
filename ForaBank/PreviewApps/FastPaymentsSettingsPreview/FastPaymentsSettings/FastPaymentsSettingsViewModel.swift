@@ -35,18 +35,17 @@ extension FastPaymentsSettingsViewModel {
     
     struct State {
         
-        var inflight = false
-        var contractConsentAndDefault: ContractConsentAndDefault?
-        var error: StateError?
+        #warning("combine inflight, informer, alert into one field?")
+        var isInflight = false
+        var userPaymentSettings: UserPaymentSettings?
+        var alert: Alert?
         
-        #warning("improve type by reusing parts of ContractConsentAndDefault?")
-        enum StateError {
+        enum Alert {
             
             case serverError(String)
             case connectivityError
             case missingProduct
             case updateContractFailure
-            #warning("that is alert, but not an error; it makes sense to extract to a different field and type")
             case confirmSetBankDefault
         }
     }

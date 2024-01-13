@@ -11,7 +11,7 @@ extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
-        getContractConsentAndDefault: @escaping FastPaymentsSettingsReducer.GetContractConsentAndDefault = { $0(.active()) },
+        getUserPaymentSettings: @escaping FastPaymentsSettingsReducer.GetUserPaymentSettings = { $0(.active()) },
         updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.init())) },
         getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: UUID().uuidString) },
         createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.init())) }
@@ -19,7 +19,7 @@ extension UserAccountViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
             
-            getContractConsentAndDefault: getContractConsentAndDefault,
+            getUserPaymentSettings: getUserPaymentSettings,
             updateContract: updateContract,
             getProduct: getProduct,
             createContract: createContract

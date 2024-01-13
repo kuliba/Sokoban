@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ActiveContractView: View {
     
-    let contractDetails: ContractConsentAndDefault.ContractDetails
+    let contractDetails: UserPaymentSettings.ContractDetails
     let actionOff: () -> Void
     let setBankDefault: () -> Void
     
@@ -32,7 +32,7 @@ struct ActiveContractView: View {
     
     @ViewBuilder
     private func bankDefaultView(
-        _ bankDefault: ContractConsentAndDefault.BankDefault
+        _ bankDefault: UserPaymentSettings.BankDefault
     ) -> some View {
         
         HStack {
@@ -44,7 +44,7 @@ struct ActiveContractView: View {
     
     @ViewBuilder
     private func bankDefaultIcon(
-        _ bankDefault: ContractConsentAndDefault.BankDefault
+        _ bankDefault: UserPaymentSettings.BankDefault
     ) -> some View {
         
         switch bankDefault {

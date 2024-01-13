@@ -68,7 +68,7 @@ extension UserAccountViewModel {
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
         
         viewModel.$state
-            .compactMap(\.?.inflight)
+            .compactMap(\.?.isInflight)
             .sink { [weak self] in self?.route.isLoading = $0 }
             .store(in: &cancellables)
         
@@ -106,10 +106,7 @@ extension UserAccountViewModel {
                 
                 DispatchQueue.main.asyncAfter(
                     deadline: .now() + 2
-                ) { [weak self] in
-                    
-                    self?.informer = nil
-                }
+                ) { [weak self] in self?.informer = nil }
             }
             .store(in: &cancellables)
         
@@ -184,7 +181,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var alertMessage: String? {
         
-        switch error {
+        switch alert {
             
         case let .serverError(message):
             return message
@@ -199,7 +196,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var finalAlertMessage: String? {
         
-        switch contractConsentAndDefault {
+        switch userPaymentSettings {
             
         case let .failure(.serverError(message)):
             return message
@@ -214,7 +211,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var informer: Void? {
         
-        switch error {
+        switch alert {
             
         case .updateContractFailure:
             return ()
@@ -226,7 +223,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var missingProduct: Void? {
         
-        switch error {
+        switch alert {
             
         case .missingProduct:
             return ()
@@ -238,7 +235,7 @@ private extension FastPaymentsSettingsViewModel.State {
     
     var confirmSetBankDefault: Void? {
         
-        switch error {
+        switch alert {
             
         case .confirmSetBankDefault:
             return ()

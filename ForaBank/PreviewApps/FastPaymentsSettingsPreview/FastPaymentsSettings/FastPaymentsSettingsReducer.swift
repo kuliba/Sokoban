@@ -7,18 +7,18 @@
 
 final class FastPaymentsSettingsReducer {
     
-    private let getContractConsentAndDefault: GetContractConsentAndDefault
+    private let getUserPaymentSettings: GetUserPaymentSettings
     private let updateContract: UpdateContract
     private let getProduct: GetProduct
     private let createContract: CreateContract
     
     init(
-        getContractConsentAndDefault: @escaping GetContractConsentAndDefault,
+        getUserPaymentSettings: @escaping GetUserPaymentSettings,
         updateContract: @escaping UpdateContract,
         getProduct: @escaping GetProduct,
         createContract: @escaping CreateContract
     ) {
-        self.getContractConsentAndDefault = getContractConsentAndDefault
+        self.getUserPaymentSettings = getUserPaymentSettings
         self.updateContract = updateContract
         self.getProduct = getProduct
         self.createContract = createContract
@@ -58,12 +58,12 @@ extension FastPaymentsSettingsReducer {
     ) {
         switch state {
         case .none:
-            completion(.init(inflight: true))
+            completion(.init(isInflight: true))
             
-            getContractConsentAndDefault {
+            getUserPaymentSettings {
                 
                 completion(.init(
-                    contractConsentAndDefault: $0
+                    userPaymentSettings: $0
                 ))
             }
             
@@ -76,7 +76,7 @@ extension FastPaymentsSettingsReducer {
         _ state: State,
         _ completion: @escaping Completion
     ) {
-        switch state?.contractConsentAndDefault {
+        switch state?.userPaymentSettings {
         case let .contracted(contractDetails, status):
             switch status {
             case .active:
@@ -94,7 +94,7 @@ extension FastPaymentsSettingsReducer {
                 createContract(product, consent, completion)
             } else {
                 var state = state
-                state?.error = .missingProduct
+                state?.alert = .missingProduct
                 completion(state)
             }
             
@@ -104,10 +104,10 @@ extension FastPaymentsSettingsReducer {
     }
     
     private func activateContract(
-        _ contractDetails: ContractConsentAndDefault.ContractDetails,
+        _ contractDetails: UserPaymentSettings.ContractDetails,
         _ completion: @escaping Completion
     ) {
-        let payload = (contractDetails.contract, UpdateContractToggle.activate)
+        let payload = (contractDetails.paymentContract, UpdateContractToggle.activate)
         
         updateContract(payload) { result in
             
@@ -116,21 +116,21 @@ extension FastPaymentsSettingsReducer {
             switch result {
             case let .success(contract):
                 var contractDetails = contractDetails
-                contractDetails.contract = contract
+                contractDetails.paymentContract = contract
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .active)
+                    userPaymentSettings: .contracted(contractDetails, .active)
                 )
                 
             case let .serverError(message):
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .inactive),
-                    error: .serverError(message)
+                    userPaymentSettings: .contracted(contractDetails, .inactive),
+                    alert: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .inactive),
-                    error: .updateContractFailure
+                    userPaymentSettings: .contracted(contractDetails, .inactive),
+                    alert: .updateContractFailure
                 )
             }
             
@@ -142,7 +142,7 @@ extension FastPaymentsSettingsReducer {
         _ state: State,
         _ completion: @escaping Completion
     ) {
-        switch state?.contractConsentAndDefault {
+        switch state?.userPaymentSettings {
         case let .contracted(contractDetails, status):
             switch status {
             case .active:
@@ -159,10 +159,10 @@ extension FastPaymentsSettingsReducer {
     }
     
     private func deactivateContract(
-        _ contractDetails: ContractConsentAndDefault.ContractDetails,
+        _ contractDetails: UserPaymentSettings.ContractDetails,
         _ completion: @escaping Completion
     ) {
-        let payload = (contractDetails.contract, UpdateContractToggle.deactivate)
+        let payload = (contractDetails.paymentContract, UpdateContractToggle.deactivate)
         
         updateContract(payload) { result in
             
@@ -171,21 +171,21 @@ extension FastPaymentsSettingsReducer {
             switch result {
             case let .success(contract):
                 var contractDetails = contractDetails
-                contractDetails.contract = contract
+                contractDetails.paymentContract = contract
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .inactive)
+                    userPaymentSettings: .contracted(contractDetails, .inactive)
                 )
                 
             case let .serverError(message):
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .active),
-                    error: .serverError(message)
+                    userPaymentSettings: .contracted(contractDetails, .active),
+                    alert: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    contractConsentAndDefault: .contracted(contractDetails, .active),
-                    error: .updateContractFailure
+                    userPaymentSettings: .contracted(contractDetails, .active),
+                    alert: .updateContractFailure
                 )
             }
 
@@ -195,7 +195,7 @@ extension FastPaymentsSettingsReducer {
     
     private func createContract(
         _ product: Product,
-        _ consent: ContractConsentAndDefault.ConsentResult,
+        _ consent: UserPaymentSettings.ConsentResult,
         _ completion: @escaping Completion
     ) {
         createContract(product.id) { result in
@@ -205,9 +205,9 @@ extension FastPaymentsSettingsReducer {
             switch result {
             case let .success(contract):
                 state = .init(
-                    contractConsentAndDefault: .contracted(
+                    userPaymentSettings: .contracted(
                         .init(
-                            contract: contract,
+                            paymentContract: contract,
                             consentResult: consent,
                             bankDefault: .offEnabled
                         ),
@@ -217,14 +217,14 @@ extension FastPaymentsSettingsReducer {
                 
             case let .serverError(message):
                 state = .init(
-                    contractConsentAndDefault: .missingContract(consent),
-                    error: .serverError(message)
+                    userPaymentSettings: .missingContract(consent),
+                    alert: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
-                    contractConsentAndDefault: .missingContract(consent),
-                    error: .updateContractFailure
+                    userPaymentSettings: .missingContract(consent),
+                    alert: .updateContractFailure
                 )
             }
             
@@ -237,7 +237,7 @@ extension FastPaymentsSettingsReducer {
        _ completion: @escaping Completion
     ) {
         var state = state
-        state?.error = .confirmSetBankDefault
+        state?.alert = .confirmSetBankDefault
         completion(state)
     }
 }
@@ -245,13 +245,13 @@ extension FastPaymentsSettingsReducer {
 // micro-service `abc`
 extension FastPaymentsSettingsReducer {
     
-    typealias GetContractConsentAndDefault = (@escaping (ContractConsentAndDefault) -> Void) -> Void
+    typealias GetUserPaymentSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
 
 // micro-service `da`
 extension FastPaymentsSettingsReducer {
     
-    typealias UpdateContractPayload = (ContractConsentAndDefault.Contract, UpdateContractToggle)
+    typealias UpdateContractPayload = (UserPaymentSettings.PaymentContract, UpdateContractToggle)
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
     typealias UpdateContract = (UpdateContractPayload, @escaping UpdateContractCompletion) -> Void
     
@@ -262,7 +262,7 @@ extension FastPaymentsSettingsReducer {
     
     enum UpdateContractResponse {
         
-        case success(ContractConsentAndDefault.Contract)
+        case success(UserPaymentSettings.PaymentContract)
         case serverError(String)
         case connectivityError
     }
@@ -290,7 +290,7 @@ extension FastPaymentsSettingsReducer {
     
     enum CreateContractResponse {
         
-        case success(ContractConsentAndDefault.Contract)
+        case success(UserPaymentSettings.PaymentContract)
         case serverError(String)
         case connectivityError
     }
@@ -307,7 +307,7 @@ extension FastPaymentsSettingsViewModel.State {
     func toInflight() -> Self {
         
         var state = self
-        state.inflight = true
+        state.isInflight = true
         
         return state
     }
@@ -315,7 +315,7 @@ extension FastPaymentsSettingsViewModel.State {
     func noError() -> Self {
         
         var state = self
-        state.error = nil
+        state.alert = nil
         
         return state
     }
