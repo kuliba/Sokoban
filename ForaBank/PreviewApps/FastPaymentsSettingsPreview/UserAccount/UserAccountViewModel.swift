@@ -12,17 +12,18 @@ final class UserAccountViewModel: ObservableObject {
     
     @Published private(set) var route: Route
     
-    #warning("move informer into Modal")
-    @Published private(set) var informer: Informer?
+    let informer: InformerViewModel
     
     private let factory: Factory
     private var cancellables = Set<AnyCancellable>()
     
     init(
         route: Route = .init(),
+        informer: InformerViewModel = .init(),
         factory: Factory
     ) {
         self.route = route
+        self.informer = informer
         self.factory = factory
         
 //        $route
@@ -71,12 +72,11 @@ extension UserAccountViewModel {
         
         switch result {
         case .success:
-            #warning("replace with method that would reset informer in 2 sec; rethink informer API and usage")
-            informer = .init(text: "Банк по умолчанию установлен")
+            informer.set(text: "Банк по умолчанию установлен")
             fpsViewModel?.event(.confirmSetBankDefault)
 
         case .incorrectCode:
-            informer = .init(text: "Банк по умолчанию не установлен")
+            informer.set(text: "Банк по умолчанию не установлен")
 
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
@@ -89,7 +89,7 @@ extension UserAccountViewModel {
             }
 
         case .connectivityError:
-            informer = .init(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
         }
     }
 }
@@ -158,11 +158,7 @@ extension UserAccountViewModel {
             .compactMap(\.?.informer)
             .sink { [weak self] informer in
                 
-                self?.informer = .init(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-                
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + 2
-                ) { [weak self] in self?.informer = nil }
+                self?.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
             }
             .store(in: &cancellables)
         
@@ -403,11 +399,6 @@ extension UserAccountViewModel {
                 }
             }
         }
-    }
-    
-    struct Informer {
-        
-        let text: String
     }
 }
 

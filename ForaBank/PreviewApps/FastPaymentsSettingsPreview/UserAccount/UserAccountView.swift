@@ -39,7 +39,7 @@ struct UserAccountView: View {
                 )
             }
             
-            viewModel.informer.map(informerView)
+            InformerView(viewModel: viewModel.informer)
             
             loader()
         }
@@ -74,13 +74,6 @@ struct UserAccountView: View {
             "Fast Payments Settings",
             action: viewModel.openFastPaymentsSettings
         )
-    }
-    
-    private func informerView(
-        informer: UserAccountViewModel.Informer
-    ) -> some View {
-        
-        InformerView(text: informer.text)
     }
     
     @ViewBuilder
