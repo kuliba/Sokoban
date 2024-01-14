@@ -117,140 +117,146 @@ final class ConsentListRxReducerTests: XCTestCase {
     
     func test_toggle_shouldDeliverExpandedErrorOnCollapsedError() {
         
-        let state: State = .failure(.collapsedError)
+        let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0,
+            sut.reduce(collapsed, .toggle).0,
             .failure(.expandedError)
         )
     }
     
     func test_toggle_shouldNotDeliverEffectOnCollapsedError() {
         
-        let state: State = .failure(.collapsedError)
+        let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(sut.reduce(state, .toggle).1)
+        XCTAssertNil(reduce(sut, collapsed, .toggle).effect)
     }
     
     func test_toggle_shouldDeliverCollapsedErrorOnExpandedError() {
         
-        let state: State = .failure(.expandedError)
+        let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0,
+            reduce(sut, expanded, .toggle).state,
             .failure(.collapsedError)
         )
     }
     
     func test_toggle_shouldNotDeliverEffectOnExpandedError() {
         
-        let state: State = .failure(.expandedError)
+        let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
-        XCTAssertNil(sut.reduce(state, .toggle).1)
+        XCTAssertNil(reduce(sut, expanded, .toggle).effect)
     }
     
     func test_toggle_shouldDeliverConsentListInExpandedModeOnCollapsedMode() {
         
-        let state: State = .success(collapsedConsentList())
+        let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        assertExpanded(sut.reduce(state, .toggle).0)
+        assertExpanded(sut.reduce(collapsed, .toggle))
     }
     
     func test_toggle_shouldResetSelectableBanksOnCollapsedMode() {
         
-        let state: State = .success(collapsedConsentList())
+        let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNotEqual(state.selectedBankIDs, state.consent)
+        XCTAssertNotEqual(
+            collapsed.selectedBankIDs,
+            collapsed.consent
+        )
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.selectedBankIDs,
-            state.consent
+            sut.reduce(collapsed, .toggle).0.selectedBankIDs,
+            collapsed.consent
         )
     }
     
     func test_toggle_shouldNotChangeConsentOnCollapsedMode() {
         
-        let state: State = .success(collapsedConsentList())
+        let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.consent,
-            state.consent
+            reduce(sut, collapsed, .toggle).state.consent,
+            collapsed.consent
         )
     }
     
     func test_toggle_shouldResetSearchTextOnCollapsedMode() {
         
-        let state: State = .success(collapsedConsentList())
+        let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.searchText,
+            sut.reduce(collapsed, .toggle).0.searchText,
             ""
         )
     }
     
     func test_toggle_shouldNotDeliverEffectOnConsentListInCollapsedMode() {
         
-        let state: State = .success(collapsedConsentList())
+        let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(sut.reduce(state, .toggle).1)
+        XCTAssertNil(reduce(sut, collapsed, .toggle).effect)
     }
     
     func test_toggle_shouldDeliverConsentListInCollapsedModeOnExpandedMode() {
         
-        let state: State = .success(expandedConsentList())
+        let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
-        assertCollapsed(sut.reduce(state, .toggle).0)
+        assertCollapsed(reduce(sut, expanded, .toggle))
     }
     
     func test_toggle_shouldNotDeliverEffectOnConsentListInExpandedMode() {
         
-        let state: State = .success(expandedConsentList())
+        let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(sut.reduce(state, .toggle).1)
+        XCTAssertNil(reduce(sut, expanded, .toggle).effect)
     }
     
     func test_toggle_shouldResetSelectableBanksOnExpandedMode() {
         
-        let state: State = .success(expandedConsentList())
+        let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNotEqual(state.selectedBankIDs, state.consent)
+        XCTAssertNotEqual(
+            expanded.selectedBankIDs,
+            expanded.consent
+        )
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.selectedBankIDs,
-            state.consent
+            sut.reduce(expanded, .toggle).0.selectedBankIDs,
+            expanded.consent
         )
     }
     
     func test_toggle_shouldNotChangeConsentOnExpandedMode() {
         
-        let state: State = .success(expandedConsentList())
+        let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.consent,
-            state.consent
+            reduce(sut, expanded, .toggle).state.consent,
+            expanded.consent
         )
     }
     
     func test_toggle_shouldResetSearchTextOnExpandedMode() {
         
-        let state: State = .success(expandedConsentList())
+        let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .toggle).0.searchText,
+            reduce(sut, expanded, .toggle).state.searchText,
             ""
         )
     }
@@ -259,21 +265,21 @@ final class ConsentListRxReducerTests: XCTestCase {
     
     func test_search_shouldNotChangeStateOnCollapsedError() {
         
-        let state: State = .failure(.collapsedError)
+        let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            sut.reduce(state, .search(UUID().uuidString)).0,
-            state
+            reduce(sut, collapsed, .search(UUID().uuidString)).state,
+            collapsed
         )
     }
     
     func test_search_shouldNotDeliverEffectOnCollapsedError() {
         
-        let state: State = .failure(.collapsedError)
+        let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(sut.reduce(state, .toggle).1)
+        XCTAssertNil(reduce(sut, collapsed, .toggle).effect)
     }
     
     // MARK: - Helpers
@@ -293,6 +299,15 @@ final class ConsentListRxReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func reduce(
+        _ sut: SUT,
+        _ state: State,
+        _ event: Event
+    ) -> (state: State, effect: Effect?) {
+        
+        sut.reduce(state, event)
     }
     
     private func collapsedConsentList(
@@ -324,11 +339,11 @@ final class ConsentListRxReducerTests: XCTestCase {
     }
     
     private func assertExpanded(
-        _ state: ConsentListState,
+        _ result: (state: State, Effect?),
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        switch state {
+        switch result.state {
         case .failure(.expandedError):
             break
             
@@ -336,16 +351,16 @@ final class ConsentListRxReducerTests: XCTestCase {
             XCTAssertNoDiff(consentList.mode, .expanded, file: file, line: line)
             
         default:
-            XCTFail("Expected expanded state, git \(state) instead.", file: file, line: line)
+            XCTFail("Expected expanded state, got \(result.state) instead.", file: file, line: line)
         }
     }
     
     private func assertCollapsed(
-        _ state: ConsentListState,
+        _ result: (state: State, Effect?),
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        switch state {
+        switch result.state {
         case .failure(.collapsedError):
             break
             
@@ -353,7 +368,7 @@ final class ConsentListRxReducerTests: XCTestCase {
             XCTAssertNoDiff(consentList.mode, .collapsed, file: file, line: line)
             
         default:
-            XCTFail("Expected collapsed state, git \(state) instead.", file: file, line: line)
+            XCTFail("Expected collapsed state, got \(result.state) instead.", file: file, line: line)
         }
     }
 }
