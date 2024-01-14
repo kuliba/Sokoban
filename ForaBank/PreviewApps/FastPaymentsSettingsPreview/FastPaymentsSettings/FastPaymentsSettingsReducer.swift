@@ -280,10 +280,8 @@ extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         switch state?.userPaymentSettings {
-        case let .contracted(contractDetails):
-            var contractDetails = contractDetails
-            contractDetails.bankDefault = .onDisabled
-            
+        case var .contracted(contractDetails):
+            contractDetails.bankDefault = .onDisabled            
             completion(.init(userPaymentSettings: .contracted(contractDetails)))
             
         default:

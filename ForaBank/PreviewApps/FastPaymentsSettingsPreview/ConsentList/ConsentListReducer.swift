@@ -48,9 +48,8 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .success(consentList):
+        case var .success(consentList):
 #warning("selection changes should be discarded when collapsing (without tapping `Apply`)")
-            var consentList = consentList
             consentList.mode.toggle()
             completion(.success(consentList))
             
@@ -65,15 +64,13 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .success(consentList):
+        case var .success(consentList):
             switch consentList.mode {
             case .collapsed:
                 completion(state)
                 
             case .expanded:
-                var consentList = consentList
                 consentList.searchText = text
-                
                 completion(.success(consentList))
             }
             
@@ -88,7 +85,7 @@ extension ConsentListReducer {
         _ completion: @escaping (State) -> Void
     ) {
         switch state {
-        case let .success(consentList):
+        case var .success(consentList):
             switch consentList.mode {
             case .collapsed:
                 completion(state)
@@ -101,9 +98,7 @@ extension ConsentListReducer {
                     return
                 }
                 
-                var consentList = consentList
                 consentList.banks[index].isSelected.toggle()
-                
                 completion(.success(consentList))
             }
             
@@ -161,9 +156,9 @@ extension ConsentListReducer {
 
 extension ConsentListReducer {
     
-    typealias ConsentList = [Bank.ID]
+    typealias ChangeConsentListPayload = [Bank.ID]
     // (h) changeClientConsentMe2MePull
-    typealias ChangeConsentList = (ConsentList, @escaping (ChangeConsentListResponse) -> Void) -> Void
+    typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
     
     enum ChangeConsentListResponse {
         
@@ -177,4 +172,18 @@ extension ConsentListReducer {
     
     typealias State = ConsentListState
     typealias Event = ConsentListEvent
+}
+
+private extension ConsentListFailure {
+    
+    func toggled() -> Self {
+        
+        switch self {
+        case .collapsedError:
+            return .expandedError
+            
+        case .expandedError:
+            return .collapsedError
+        }
+    }
 }
