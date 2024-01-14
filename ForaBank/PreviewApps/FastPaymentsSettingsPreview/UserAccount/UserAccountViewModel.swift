@@ -74,7 +74,7 @@ extension UserAccountViewModel {
         _ result: ConfirmWithOTPResult
     ) {
         dismissFPSDestination()
-        fpsViewModel?.event(.resetError)
+        fpsViewModel?.event(.resetStatus)
         
         switch result {
         case .success:
@@ -143,7 +143,7 @@ extension UserAccountViewModel {
                     primaryAction: {
                         
                         self?.dismissModal()
-                        viewModel.event(.resetError)
+                        viewModel.event(.resetStatus)
                     }
                 ))
             }
@@ -155,7 +155,12 @@ extension UserAccountViewModel {
                 
                 self?.route.modal = .fpsAlert(.ok(
                     message: $0,
-                    primaryAction: { self?.resetRoute() }
+                    primaryAction: {
+                        
+                        self?.resetRoute()
+#warning("resetStatus is needed?")
+                        // viewModel.event(.resetStatus)
+                    }
                 ))
             }
             .store(in: &cancellables)
@@ -165,6 +170,8 @@ extension UserAccountViewModel {
             .sink { [weak self] informer in
                 
                 self?.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+#warning("resetStatus is needed?")
+                // viewModel.event(.resetStatus)
             }
             .store(in: &cancellables)
         
@@ -178,7 +185,7 @@ extension UserAccountViewModel {
                     primaryAction: {
                         
                         self?.resetRoute()
-                        viewModel.event(.resetError)
+                        viewModel.event(.resetStatus)
                     }
                 ))
             }
@@ -197,7 +204,7 @@ extension UserAccountViewModel {
                         action: {
                             
                             self?.dismissModal()
-                            viewModel.event(.resetError)
+                            viewModel.event(.resetStatus)
                             viewModel.event(.prepareSetBankDefault)
                         }),
                     secondaryButton: .init(
@@ -205,8 +212,8 @@ extension UserAccountViewModel {
                         title: "Отмена",
                         action: {
                             
-                            viewModel.event(.resetError)
                             self?.dismissModal()
+                            viewModel.event(.resetStatus)
                         }
                     )
                 ))
@@ -217,7 +224,7 @@ extension UserAccountViewModel {
             .compactMap(\.?.confirmSetBankDefault)
             .sink { [weak self] in
                 
-                viewModel.event(.resetError)
+                viewModel.event(.resetStatus)
                 self?.route.fpsDestination = .confirmSetBankDefault
             }
             .store(in: &cancellables)

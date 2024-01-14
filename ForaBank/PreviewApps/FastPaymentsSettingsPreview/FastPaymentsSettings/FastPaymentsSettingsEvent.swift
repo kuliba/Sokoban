@@ -11,7 +11,7 @@ enum FastPaymentsSettingsEvent {
     case activateContract
     case deactivateContract
 #warning("rename case to reflect meaning")
-    case resetError
+    case resetStatus
     case setBankDefault
     case prepareSetBankDefault
     case confirmSetBankDefault

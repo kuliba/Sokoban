@@ -49,8 +49,8 @@ extension FastPaymentsSettingsReducer {
         case .deactivateContract:
             deactivateContract(state, completion)
             
-        case .resetError:
-            completion(state?.resetError().setToNotInflight())
+        case .resetStatus:
+            completion(state?.resetStatus())
             
         case .setBankDefault:
             setBankDefault(state, completion)
@@ -369,6 +369,11 @@ private extension FastPaymentsSettingsReducer {
 
 private extension FastPaymentsSettingsState {
     
+    init(isInflight: Bool) {
+        
+        self.init(status: .inflight)
+    }
+    
     func setToInflight() -> Self {
         
         var state = self
@@ -377,15 +382,7 @@ private extension FastPaymentsSettingsState {
         return state
     }
     
-    func setToNotInflight() -> Self {
-        
-        var state = self
-        state.isInflight = false
-        
-        return state
-    }
-    
-    func resetError() -> Self {
+    func resetStatus() -> Self {
         
         var state = self
         state.status = nil
