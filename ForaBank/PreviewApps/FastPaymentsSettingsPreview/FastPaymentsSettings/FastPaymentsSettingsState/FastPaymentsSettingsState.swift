@@ -10,10 +10,9 @@ struct FastPaymentsSettingsState {
 #warning("combine inflight, informer, alert into one field?")
     var isInflight = false
     var userPaymentSettings: UserPaymentSettings?
-    var alert: Alert?
+    var status: Status?
     
-#warning("rename `alert` to `interaction` (? or better name)")
-    enum Alert {
+    enum Status {
         
         case serverError(String)
         case connectivityError

@@ -248,7 +248,7 @@ private extension FastPaymentsSettingsState {
     
     var alertMessage: String? {
         
-        switch alert {
+        switch status {
         case let .serverError(message):
             return message
             
@@ -276,7 +276,7 @@ private extension FastPaymentsSettingsState {
     
     var informer: Void? {
         
-        switch alert {
+        switch status {
         case .updateContractFailure:
             return ()
             
@@ -287,7 +287,7 @@ private extension FastPaymentsSettingsState {
     
     var missingProduct: Void? {
         
-        switch alert {
+        switch status {
         case .missingProduct:
             return ()
             
@@ -298,7 +298,7 @@ private extension FastPaymentsSettingsState {
     
     var setBankDefault: Void? {
         
-        switch alert {
+        switch status {
         case .setBankDefault:
             return ()
             
@@ -309,7 +309,7 @@ private extension FastPaymentsSettingsState {
     
     var confirmSetBankDefault: Void? {
         
-        switch alert {
+        switch status {
         case .confirmSetBankDefault:
 #warning("need `phoneNumberMask` from contract!")
             return ()

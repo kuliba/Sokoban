@@ -182,7 +182,7 @@ private extension FastPaymentsSettingsReducer {
                 createContract(product, consent, completion)
             } else {
                 var state = state
-                state?.alert = .missingProduct
+                state?.status = .missingProduct
                 completion(state)
             }
             
@@ -212,13 +212,13 @@ private extension FastPaymentsSettingsReducer {
             case let .serverError(message):
                 state = .init(
                     userPaymentSettings: .contracted(contractDetails),
-                    alert: .serverError(message)
+                    status: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
                     userPaymentSettings: .contracted(contractDetails),
-                    alert: .updateContractFailure
+                    status: .updateContractFailure
                 )
             }
             
@@ -267,13 +267,13 @@ private extension FastPaymentsSettingsReducer {
             case let .serverError(message):
                 state = .init(
                     userPaymentSettings: .contracted(contractDetails),
-                    alert: .serverError(message)
+                    status: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
                     userPaymentSettings: .contracted(contractDetails),
-                    alert: .updateContractFailure
+                    status: .updateContractFailure
                 )
             }
             
@@ -303,13 +303,13 @@ private extension FastPaymentsSettingsReducer {
             case let .serverError(message):
                 state = .init(
                     userPaymentSettings: .missingContract(consent),
-                    alert: .serverError(message)
+                    status: .serverError(message)
                 )
                 
             case .connectivityError:
                 state = .init(
                     userPaymentSettings: .missingContract(consent),
-                    alert: .updateContractFailure
+                    status: .updateContractFailure
                 )
             }
             
@@ -322,7 +322,7 @@ private extension FastPaymentsSettingsReducer {
         _ completion: @escaping Completion
     ) {
         var state = state
-        state?.alert = .setBankDefault
+        state?.status = .setBankDefault
         completion(state)
     }
     
@@ -338,13 +338,13 @@ private extension FastPaymentsSettingsReducer {
             
             switch result {
             case .success:
-                state?.alert = .confirmSetBankDefault
+                state?.status = .confirmSetBankDefault
                 
             case let .serverError(message):
-                state?.alert = .serverError(message)
+                state?.status = .serverError(message)
                 
             case .connectivityError:
-                state?.alert = .updateContractFailure
+                state?.status = .updateContractFailure
             }
             state?.isInflight = false
             
@@ -388,7 +388,7 @@ private extension FastPaymentsSettingsState {
     func resetError() -> Self {
         
         var state = self
-        state.alert = nil
+        state.status = nil
         
         return state
     }
