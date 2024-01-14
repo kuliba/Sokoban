@@ -24,7 +24,7 @@ extension ConsentListRxReducer {
             state.toggle()
             
         case let .search(text):
-            fatalError()
+            break
             // search(text, state, completion)
             
         case let .tapBank(bankID):
@@ -253,6 +253,27 @@ final class ConsentListRxReducerTests: XCTestCase {
             sut.reduce(state, .toggle).0.searchText,
             ""
         )
+    }
+    
+    // MARK: - search
+    
+    func test_search_shouldNotChangeStateOnCollapsedError() {
+        
+        let state: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            sut.reduce(state, .search(UUID().uuidString)).0,
+            state
+        )
+    }
+    
+    func test_search_shouldNotDeliverEffectOnCollapsedError() {
+        
+        let state: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(sut.reduce(state, .toggle).1)
     }
     
     // MARK: - Helpers
