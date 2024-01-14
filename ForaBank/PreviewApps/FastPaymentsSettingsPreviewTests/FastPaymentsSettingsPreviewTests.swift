@@ -10,9 +10,20 @@ import XCTest
 
 final class FastPaymentsSettingsPreviewTests: XCTestCase {
     
-    func test_init() {
+    func test_init_shouldNotCallCollaborators() {
         
-        _ = makeSUT()
+        let spy = makeSUT().reducerSpy
+        
+        XCTAssertEqual(spy.callCount, 0)
+    }
+    
+    func test_openFastPaymentsSettings_should() throws {
+        
+        let (sut, spy) = makeSUT()
+        
+        sut.openFastPaymentsSettings()
+        
+        _ = try XCTUnwrap(sut.fpsViewModel)
     }
     
     // MARK: - Helpers
@@ -45,5 +56,21 @@ final class FastPaymentsSettingsPreviewTests: XCTestCase {
         trackForMemoryLeaks(reducerSpy, file: file, line: line)
         
         return (sut, reducerSpy)
+    }
+}
+
+// MARK: - DSL
+
+private extension UserAccountViewModel {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        switch route.destination {
+        case let .fastPaymentsSettings(fpsViewModel):
+            return fpsViewModel
+            
+        default:
+            return nil
+        }
     }
 }
