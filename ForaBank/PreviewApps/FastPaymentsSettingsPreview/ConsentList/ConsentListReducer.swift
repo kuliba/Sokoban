@@ -58,8 +58,7 @@ private extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        guard case var .success(consentList) = state,
-              consentList.mode == .expanded
+        guard var consentList = state.expandedConsentList
         else {
             completion(state)
             return
@@ -74,8 +73,7 @@ private extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        guard case var .success(consentList) = state,
-              consentList.mode == .expanded
+        guard var consentList = state.expandedConsentList
         else {
             completion(state)
             return
@@ -89,8 +87,7 @@ private extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        guard case var .success(consentList) = state,
-              consentList.mode == .expanded
+        guard let consentList = state.expandedConsentList
         else {
             completion(state)
             return
@@ -148,6 +145,15 @@ extension ConsentListReducer {
 }
 
 private extension ConsentListState {
+    
+    var expandedConsentList: ConsentList? {
+        
+        guard case let .success(consentList) = self,
+              consentList.mode == .expanded
+        else { return nil }
+        
+        return consentList
+    }
     
     func toggled() -> Self {
         
