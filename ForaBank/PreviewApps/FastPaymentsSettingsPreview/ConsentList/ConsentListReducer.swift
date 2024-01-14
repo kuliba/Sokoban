@@ -113,12 +113,12 @@ private extension ConsentListReducer {
                 )))
                 
             case let .serverError(message):
-                // state is the same except error - add field if decoration is not possible
-                completion(state)
+                // state should collapse!! plus error - add field if decoration is not possible
+                completion(state.toggled())
                 
             case .connectivityError:
-                // state is the same except error - add field if decoration is not possible
-                completion(state)
+                // state should collapse!! plus error - add field if decoration is not possible
+                completion(state.toggled())
             }
         }
     }

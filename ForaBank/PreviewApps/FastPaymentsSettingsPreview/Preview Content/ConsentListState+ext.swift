@@ -8,7 +8,7 @@
 extension ConsentListState {
     
     static let collapsedEmpty: Self = .success(.init(
-        banks: [],
+        banks: .preview,
         consent: [],
         mode: .collapsed,
         searchText: ""
@@ -20,7 +20,6 @@ extension ConsentListState {
         mode: .collapsed,
         searchText: ""
     ))
-    
     
     static func expanded(
         _ banks: [ConsentList.SelectableBank],

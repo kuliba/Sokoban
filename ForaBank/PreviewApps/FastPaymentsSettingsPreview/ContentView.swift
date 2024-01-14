@@ -21,16 +21,14 @@ struct ContentView: View {
                 
                 switch demo {
                 case .consent:
-                    ConsentListPrototypeView(
-                        initialState: .expanded(.preview)
-                    )
+                    ConsentListPrototypeView()
                     
                 case .fps:
                     FPSPrototypeView()
                 }
             }
         }
-        .overlay(alignment: .topLeading, content: picker)
+        .overlay(alignment: .bottomLeading, content: picker)
     }
     
     private func picker() -> some View {

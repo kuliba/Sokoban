@@ -524,6 +524,7 @@
 		2A58FAB82AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAB72AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift */; };
 		2A58FABF2AD7355700BD1967 /* SessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FABE2AD7355700BD1967 /* SessionID.swift */; };
 		2A58FAC12AD735DA00BD1967 /* makeSessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */; };
+		2A59F92E2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A59F92D2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift */; };
 		2A5A19E329A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */; };
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
@@ -682,7 +683,7 @@
 		2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA70FBC2B52B1940061F5DD /* Tagged */; };
 		2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FBE2B52B2450061F5DD /* InactiveContractView.swift */; };
 		2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC02B52BE1D0061F5DD /* ContentView.swift */; };
-		2AA70FC32B52BE9B0061F5DD /* ConsentListPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */; };
+		2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */; };
 		2AA70FC62B52C0A20061F5DD /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */; };
 		2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC72B52C1640061F5DD /* ConsentListState.swift */; };
 		2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */; };
@@ -2834,6 +2835,7 @@
 		2A58FAB72AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift"; sourceTree = "<group>"; };
 		2A58FABE2AD7355700BD1967 /* SessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionID.swift; sourceTree = "<group>"; };
 		2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = makeSessionID.swift; sourceTree = "<group>"; };
+		2A59F92D2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListPrototypeView.swift; sourceTree = "<group>"; };
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
 		2A5B1B482B1C438300C17A35 /* QRViewModelScanResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelScanResultTests.swift; sourceTree = "<group>"; };
 		2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SberQRProductTests.swift"; sourceTree = "<group>"; };
@@ -2994,7 +2996,7 @@
 		2AA70FBA2B529F560061F5DD /* Informer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Informer.swift; sourceTree = "<group>"; };
 		2AA70FBE2B52B2450061F5DD /* InactiveContractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InactiveContractView.swift; sourceTree = "<group>"; };
 		2AA70FC02B52BE1D0061F5DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListPrototypeView.swift; sourceTree = "<group>"; };
+		2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListWrapperView.swift; sourceTree = "<group>"; };
 		2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2AA70FC72B52C1640061F5DD /* ConsentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListState.swift; sourceTree = "<group>"; };
 		2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEvent.swift; sourceTree = "<group>"; };
@@ -6311,6 +6313,16 @@
 			path = TestHelpers;
 			sourceTree = "<group>";
 		};
+		2A59F92F2B53CFC100F5C6E7 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */,
+				2A59F92D2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift */,
+				2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
 		2A5A19E429A0FC1B00DFCDD3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -6400,11 +6412,10 @@
 			children = (
 				2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */,
 				2AA70FC02B52BE1D0061F5DD /* ContentView.swift */,
-				2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */,
-				2AA70FC22B52BE9B0061F5DD /* ConsentListPrototypeView.swift */,
-				2AA70FC42B52C0760061F5DD /* ConsentList */,
+				2A59F92F2B53CFC100F5C6E7 /* Demo */,
 				2A6EAAA82B51060F0093EE83 /* UserAccount */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
+				2AA70FC42B52C0760061F5DD /* ConsentList */,
 				2A6EAAA72B5076A10093EE83 /* Helpers */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
 				2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */,
@@ -12898,6 +12909,7 @@
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
 				2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */,
 				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
+				2A59F92E2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
@@ -12915,7 +12927,7 @@
 				2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */,
 				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
-				2AA70FC32B52BE9B0061F5DD /* ConsentListPrototypeView.swift in Sources */,
+				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */,
 				2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */,

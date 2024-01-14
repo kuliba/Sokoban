@@ -10,7 +10,7 @@ import SwiftUI
 struct FPSPrototypeView: View {
     
     @ObservedObject private var viewModel: UserAccountViewModel
-    @State private var flow: Flow = .a1c2f1d1
+    @State private var flow: Flow
     
     init() {
         
@@ -48,8 +48,8 @@ struct FPSPrototypeView: View {
             }
         )
         
-        self.flow = flow
         self.viewModel = viewModel
+        self.flow = flow
     }
     
     var body: some View {
