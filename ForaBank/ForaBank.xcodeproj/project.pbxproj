@@ -777,6 +777,11 @@
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
 		2AE87AE92B54175900B5B7CA /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2AE87AE82B54175900B5B7CA /* CustomDump */; };
 		2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */; };
+		2AE87AF12B54530200B5B7CA /* RxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF02B54530200B5B7CA /* RxViewModel.swift */; };
+		2AE87AF42B54534100B5B7CA /* RxViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */; };
+		2AE87AF72B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF62B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift */; };
+		2AE87AF92B54537E00B5B7CA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AE87AF82B54537E00B5B7CA /* CombineSchedulers */; };
+		2AE87AFD2B54543A00B5B7CA /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */; };
 		2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */; };
 		2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */; };
 		2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */; };
@@ -3106,6 +3111,10 @@
 		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
+		2AE87AF02B54530200B5B7CA /* RxViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModel.swift; sourceTree = "<group>"; };
+		2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModelTests.swift; sourceTree = "<group>"; };
+		2AE87AF62B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
+		2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeService.swift"; sourceTree = "<group>"; };
 		2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyService.swift"; sourceTree = "<group>"; };
 		2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyService.swift"; sourceTree = "<group>"; };
@@ -4615,6 +4624,7 @@
 			files = (
 				2ACE0AB82B540697007AA2ED /* XCTest.framework in Frameworks */,
 				2AE87AE92B54175900B5B7CA /* CustomDump in Frameworks */,
+				2AE87AF92B54537E00B5B7CA /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7107,7 +7117,10 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */,
+				2AE87AEF2B5452D800B5B7CA /* ConsentList */,
+				2AE87AF22B54531F00B5B7CA /* RxViewModel */,
 				2ACE0AB02B540281007AA2ED /* Helpers */,
+				2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */,
 			);
 			path = FastPaymentsSettingsPreviewTests;
 			sourceTree = "<group>";
@@ -7116,8 +7129,8 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */,
-				2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */,
 				2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */,
+				2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -7206,6 +7219,31 @@
 				2AE5973329F918C30083F138 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AE87AEF2B5452D800B5B7CA /* ConsentList */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ConsentList;
+			sourceTree = "<group>";
+		};
+		2AE87AF22B54531F00B5B7CA /* RxViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2AE87AF02B54530200B5B7CA /* RxViewModel.swift */,
+				2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */,
+			);
+			path = RxViewModel;
+			sourceTree = "<group>";
+		};
+		2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */ = {
+			isa = PBXGroup;
+			children = (
+				2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */,
+				2AE87AF62B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift */,
+			);
+			path = ThirdPartyDependencies;
 			sourceTree = "<group>";
 		};
 		2AE886302AFB9D9900D86E84 /* CVVPINServicesFactory */ = {
@@ -12182,6 +12220,7 @@
 			name = FastPaymentsSettingsPreviewTests;
 			packageProductDependencies = (
 				2AE87AE82B54175900B5B7CA /* CustomDump */,
+				2AE87AF82B54537E00B5B7CA /* CombineSchedulers */,
 			);
 			productName = FastPaymentsSettingsPreviewTests;
 			productReference = 2ACE0AA42B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.xctest */;
@@ -13090,8 +13129,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AE87AF42B54534100B5B7CA /* RxViewModelTests.swift in Sources */,
 				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
+				2AE87AF12B54530200B5B7CA /* RxViewModel.swift in Sources */,
+				2AE87AFD2B54543A00B5B7CA /* ValueSpy.swift in Sources */,
 				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
+				2AE87AF72B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift in Sources */,
 				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */,
 			);
@@ -17369,6 +17412,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
 			productName = CustomDump;
+		};
+		2AE87AF82B54537E00B5B7CA /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;
