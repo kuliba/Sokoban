@@ -30,12 +30,15 @@ extension ConsentListRxReducer {
             }
             
         case let .tapBank(bankID):
-            fatalError()
-            // tapBank(bankID, state, completion)
+            if var consentList = state.expandedConsentList {
+                consentList.banks[bankID]?.isSelected.toggle()
+                state = .success(consentList)
+            }
             
         case .apply:
-            fatalError()
-            // apply(state, completion)
+            if var consentList = state.expandedConsentList {
+                effect = .apply
+            }
         }
         
         return (state, effect)
@@ -357,6 +360,208 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, expanded, .search(UUID().uuidString)).effect)
     }
     
+    // MARK: - tapBank
+    
+    func test_tapBank_shouldNotChangeStateOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).state,
+            collapsed
+        )
+    }
+    
+    func test_tapBank_shouldNotDeliverEffectOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).effect)
+    }
+    
+    func test_tapBank_shouldNotChangeStateOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).state,
+            expanded
+        )
+    }
+    
+    func test_tapBank_shouldNotDeliverEffectOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).effect)
+    }
+    
+    func test_tapBank_shouldNotChangeStateOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).state,
+            collapsed
+        )
+    }
+    
+    func test_tapBank_shouldNotDeliverEffectOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).effect)
+    }
+    
+    func test_tapBank_shouldChangeBanksOnExpandedConsentList() throws {
+        
+        let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNotEqual(
+            reduce(sut, expanded, .tapBank(id)).state.banks,
+            consentList.banks
+        )
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(id)).state.selectedBankIDs,
+            ["сургутнефтегазбанк"]
+        )
+    }
+    
+    func test_tapBank_shouldNotChangeConsentOnExpandedConsentList() throws {
+        
+        let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(id)).state.consent,
+            consentList.consent
+        )
+    }
+    
+    func test_tapBank_shouldNotChangeModeOnExpandedConsentList() throws {
+        
+        let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(id)).state.mode,
+            consentList.mode
+        )
+    }
+    
+    func test_tapBank_shouldNotChangeSearchTextOnExpandedConsentList() throws {
+        
+        let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(id)).state.searchText,
+            consentList.searchText
+        )
+    }
+    
+    func test_tapBank_shouldNotDeliverEffectOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).effect)
+    }
+    
+    // MARK: - apply
+    
+    func test_apply_shouldNotChangeStateOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .apply).state,
+            collapsed
+        )
+    }
+    
+    func test_apply_shouldNotDeliverEffectOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .apply).effect)
+    }
+    
+    func test_apply_shouldNotChangeStateOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .apply).state,
+            expanded
+        )
+    }
+    
+    func test_apply_shouldNotDeliverEffectOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .apply).effect)
+    }
+    
+    func test_apply_shouldNotChangeStateOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .apply).state,
+            collapsed
+        )
+    }
+    
+    func test_apply_shouldNotDeliverEffectOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .apply).effect)
+    }
+    
+    func test_apply_shouldNotChangeStateOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .apply).state,
+            expanded
+        )
+    }
+    
+    func test_apply_shouldDeliverApplyEffectOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(reduce(sut, expanded, .apply).effect, .apply)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ConsentListRxReducer
@@ -494,6 +699,17 @@ private extension ConsentListState {
             
         case let .success(consentList):
             return consentList.consent
+        }
+    }
+    
+    var mode: ConsentList.Mode? {
+        
+        switch self {
+        case .failure:
+            return nil
+            
+        case let .success(consentList):
+            return consentList.mode
         }
     }
     

@@ -6,5 +6,6 @@
 //
 
 enum ConsentListEffect: Equatable {
-    
+
+    case apply
 }
