@@ -747,6 +747,7 @@
 		2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A952B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A9E2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift */; };
+		2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
@@ -2266,6 +2267,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2ACE0AA82B53F68B007AA2ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A6EAA782B50576D0093EE83;
+			remoteInfo = FastPaymentsSettingsPreview;
+		};
 		A51568312821B927000D4455 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
@@ -3062,6 +3070,9 @@
 		2ACE0A952B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsEvent.swift; sourceTree = "<group>"; };
 		2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2ACE0A9E2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsState+ext.swift"; sourceTree = "<group>"; };
+		2ACE0AA42B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FastPaymentsSettingsPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsPreviewTests.swift; sourceTree = "<group>"; };
+		2ACE0AAF2B53F719007AA2ED /* FastPaymentsSettingsPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FastPaymentsSettingsPreview.xctestplan; sourceTree = "<group>"; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
@@ -4586,6 +4597,13 @@
 			files = (
 				2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */,
 				2A95CBB12B2C80C80041F5EC /* SberQR in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ACE0AA12B53F68B007AA2ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7074,6 +7092,14 @@
 			path = Foundation;
 			sourceTree = "<group>";
 		};
+		2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */ = {
+			isa = PBXGroup;
+			children = (
+				2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */,
+			);
+			path = FastPaymentsSettingsPreviewTests;
+			sourceTree = "<group>";
+		};
 		2ACF584F29AA3D0700737902 /* ProductCarouselViewComponentTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -7130,6 +7156,7 @@
 			children = (
 				2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA7A2B50576D0093EE83 /* FastPaymentsSettingsPreview */,
+				2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
@@ -11166,6 +11193,7 @@
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2A09C2B42B3D53FE0076DC93 /* FastPaymentsSettings.xctestplan */,
+				2ACE0AAF2B53F719007AA2ED /* FastPaymentsSettingsPreview.xctestplan */,
 				2A67A4532B3717C700149C9E /* PaymentComponents.xctestplan */,
 				2AC67EE02B35BC8B00CC456D /* ProductSelectComponent.xctestplan */,
 				2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */,
@@ -11215,6 +11243,7 @@
 				2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */,
 				2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */,
 				2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */,
+				2ACE0AA42B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -12114,6 +12143,24 @@
 			productReference = 2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2ACE0AA32B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ACE0AAA2B53F68B007AA2ED /* Build configuration list for PBXNativeTarget "FastPaymentsSettingsPreviewTests" */;
+			buildPhases = (
+				2ACE0AA02B53F68B007AA2ED /* Sources */,
+				2ACE0AA12B53F68B007AA2ED /* Frameworks */,
+				2ACE0AA22B53F68B007AA2ED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2ACE0AA92B53F68B007AA2ED /* PBXTargetDependency */,
+			);
+			name = FastPaymentsSettingsPreviewTests;
+			productName = FastPaymentsSettingsPreviewTests;
+			productReference = 2ACE0AA42B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2AE5972929F918C20083F138 /* PhoneNumberTextViewPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2AE5973529F918C30083F138 /* Build configuration list for PBXNativeTarget "PhoneNumberTextViewPreview" */;
@@ -12364,7 +12411,7 @@
 		EDB14375265FDA410028EF5A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					2A14A8512A2750440018511E = {
@@ -12378,6 +12425,10 @@
 					};
 					2A95CB9F2B2C80560041F5EC = {
 						CreatedOnToolsVersion = 15.0.1;
+					};
+					2ACE0AA32B53F68B007AA2ED = {
+						CreatedOnToolsVersion = 15.1;
+						TestTargetID = 2A6EAA782B50576D0093EE83;
 					};
 					2AE5972929F918C20083F138 = {
 						CreatedOnToolsVersion = 14.3;
@@ -12460,6 +12511,7 @@
 				2A20F8CB2B05E1D000E3AE79 /* SberQRPreview */,
 				2A95CB9F2B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */,
+				2ACE0AA32B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 			);
 		};
 /* End PBXProject section */
@@ -12498,6 +12550,13 @@
 			files = (
 				2A95CBAA2B2C80580041F5EC /* Preview Assets.xcassets in Resources */,
 				2A95CBA72B2C80580041F5EC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ACE0AA22B53F68B007AA2ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12998,6 +13057,14 @@
 			files = (
 				2A95CBA52B2C80560041F5EC /* ContentView.swift in Sources */,
 				2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ACE0AA02B53F68B007AA2ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14905,6 +14972,11 @@
 			isa = PBXTargetDependency;
 			productRef = 2A46300A2AC4550500020B73 /* ServerAgent */;
 		};
+		2ACE0AA92B53F68B007AA2ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */;
+			targetProxy = 2ACE0AA82B53F68B007AA2ED /* PBXContainerItemProxy */;
+		};
 		A51568322821B927000D4455 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A515682B2821B927000D4455 /* ForaPushServiceExtension */;
@@ -15435,6 +15507,103 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				PRODUCT_NAME = TextFieldViewVithBindingPreview;
+			};
+			name = Preprod;
+		};
+		2ACE0AAB2B53F68B007AA2ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastPaymentsSettingsPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FastPaymentsSettingsPreview";
+			};
+			name = Debug;
+		};
+		2ACE0AAC2B53F68B007AA2ED /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastPaymentsSettingsPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FastPaymentsSettingsPreview";
+			};
+			name = Mock;
+		};
+		2ACE0AAD2B53F68B007AA2ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastPaymentsSettingsPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FastPaymentsSettingsPreview";
+			};
+			name = Release;
+		};
+		2ACE0AAE2B53F68B007AA2ED /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastPaymentsSettingsPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FastPaymentsSettingsPreview";
 			};
 			name = Preprod;
 		};
@@ -16711,6 +16880,17 @@
 				2A95CBAC2B2C80580041F5EC /* Mock */,
 				2A95CBAD2B2C80580041F5EC /* Release */,
 				2A95CBAE2B2C80580041F5EC /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2ACE0AAA2B53F68B007AA2ED /* Build configuration list for PBXNativeTarget "FastPaymentsSettingsPreviewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ACE0AAB2B53F68B007AA2ED /* Debug */,
+				2ACE0AAC2B53F68B007AA2ED /* Mock */,
+				2ACE0AAD2B53F68B007AA2ED /* Release */,
+				2ACE0AAE2B53F68B007AA2ED /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
