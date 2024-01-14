@@ -14,16 +14,16 @@ final class ViewModel<State, Event>: ObservableObject {
     private let reduce: Reduce
     
     init(
-        state: State,
+        initialState: State,
         reduce: @escaping Reduce
     ) {
-        self.state = state
+        self.state = initialState
         self.reduce = reduce
     }
 }
 
 extension ViewModel {
-
+    
     func event(_ event: Event) {
         
         reduce(state, event) { self.state = $0 }

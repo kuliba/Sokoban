@@ -14,7 +14,7 @@ struct ConsentListPrototypeView: View {
     var body: some View {
         
         ConsentListWrapperView(viewModel: .init(
-            state: flow.initialState,
+            initialState: flow.initialState,
             reduce: flow.reducer.reduce(_:_:_:)
         ))
         .padding(.top, 64)

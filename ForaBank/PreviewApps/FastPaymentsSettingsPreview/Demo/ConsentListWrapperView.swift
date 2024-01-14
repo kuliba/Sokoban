@@ -46,7 +46,7 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
     ) -> some View {
         
         ConsentListWrapperView(viewModel: .init(
-            state: state,
+            initialState: state,
             reduce: { _,_,_ in }
         ))
     }
