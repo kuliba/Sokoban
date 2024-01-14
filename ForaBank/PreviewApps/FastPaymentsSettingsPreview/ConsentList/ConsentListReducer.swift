@@ -42,15 +42,18 @@ extension ConsentListReducer {
             apply(state, completion)
         }
     }
+}
+
+private extension ConsentListReducer {
     
-    private func toggle(
+    func toggle(
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
         completion(state.toggled())
     }
     
-    private func search(
+    func search(
         _ text: String,
         _ state: State,
         _ completion: @escaping (State) -> Void
@@ -66,7 +69,7 @@ extension ConsentListReducer {
         completion(.success(consentList))
     }
     
-    private func tapBank(
+    func tapBank(
         _ bankID: Bank.ID,
         _ state: State,
         _ completion: @escaping (State) -> Void
@@ -82,49 +85,44 @@ extension ConsentListReducer {
         completion(.success(consentList))
     }
     
-    private func apply(
+    func apply(
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        switch state {
-        case let .success(consentList):
-            switch consentList.mode {
-            case .collapsed:
+        guard case var .success(consentList) = state,
+              consentList.mode == .expanded
+        else {
+            completion(state)
+            return
+        }
+        
+#warning("FINISH THIS")
+        // 1. set isInflight = true (spinner)
+        // 2. send async request
+        // 3. parse response
+        // 4. update state
+        // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
+        let payload = consentList.selectedBanks.map(\.id)
+        
+        changeConsentList(payload) { result in
+            
+            switch result {
+            case .success:
+                completion(.success(.init(
+                    banks: consentList.banks,
+                    consent: .init(payload),
+                    mode: .collapsed,
+                    searchText: ""
+                )))
+                
+            case let .serverError(message):
+                // state is the same except error - add field if decoration is not possible
                 completion(state)
                 
-            case .expanded:
-#warning("FINISH THIS")
-                // 1. set isInflight = true (spinner)
-                // 2. send async request
-                // 3. parse response
-                // 4. update state
-                // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
-                let payload = consentList.selectedBanks.map(\.id)
-                
-                changeConsentList(payload) { result in
-                    
-                    switch result {
-                    case .success:
-                        completion(.success(.init(
-                            banks: consentList.banks,
-                            consent: .init(payload),
-                            mode: .collapsed,
-                            searchText: ""
-                        )))
-                        
-                    case let .serverError(message):
-                        // state is the same except error - add field if decoration is not possible
-                        completion(state)
-                        
-                    case .connectivityError:
-                        // state is the same except error - add field if decoration is not possible
-                        completion(state)
-                    }
-                }
+            case .connectivityError:
+                // state is the same except error - add field if decoration is not possible
+                completion(state)
             }
-            
-        case .failure:
-            completion(state)
         }
     }
 }
