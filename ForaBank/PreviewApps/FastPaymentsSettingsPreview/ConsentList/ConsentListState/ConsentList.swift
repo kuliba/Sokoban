@@ -15,11 +15,6 @@ struct ConsentList: Equatable {
     enum Mode: Equatable {
         
         case collapsed, expanded
-        
-        mutating func toggle() {
-            
-            self = (self == .collapsed) ? .expanded : .collapsed
-        }
     }
     
     struct SelectableBank: Equatable, Identifiable {

@@ -47,15 +47,7 @@ extension ConsentListReducer {
         _ state: State,
         _ completion: @escaping (State) -> Void
     ) {
-        switch state {
-        case var .success(consentList):
-#warning("selection changes should be discarded when collapsing (without tapping `Apply`)")
-            consentList.mode.toggle()
-            completion(.success(consentList))
-            
-        case let .failure(failure):
-            completion(.failure(failure.toggled()))
-        }
+        completion(state.toggled())
     }
     
     private func search(
@@ -155,6 +147,53 @@ extension ConsentListReducer {
     
     typealias State = ConsentListState
     typealias Event = ConsentListEvent
+}
+
+private extension ConsentListState {
+    
+    func toggled() -> Self {
+        
+        switch self {
+        case let .failure(failure):
+            return .failure(failure.toggled())
+            
+        case let .success(success):
+            return .success(success.toggled())
+        }
+    }
+}
+
+private extension ConsentList {
+    
+    func toggled() -> Self {
+        
+        var consentList = self
+        consentList.banks.resetSelection(to: consent)
+        consentList.mode.toggle()
+        consentList.searchText = ""
+        
+        return consentList
+    }
+}
+
+private extension ConsentList.Mode {
+    
+    mutating func toggle() {
+        
+        self = (self == .collapsed) ? .expanded : .collapsed
+    }
+}
+
+private extension Array where Element == ConsentList.SelectableBank {
+    
+    mutating func resetSelection(to selected: Set<Bank.ID>) {
+        
+        for index in indices {
+            
+            let isSelected = selected.contains(self[index].id)
+            self[index].isSelected = isSelected
+        }
+    }
 }
 
 private extension ConsentListFailure {
