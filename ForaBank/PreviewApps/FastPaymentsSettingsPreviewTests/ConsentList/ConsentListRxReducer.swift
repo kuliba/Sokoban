@@ -24,8 +24,10 @@ extension ConsentListRxReducer {
             state.toggle()
             
         case let .search(text):
-            break
-            // search(text, state, completion)
+            if var consentList = state.expandedConsentList {
+                consentList.searchText = text
+                state = .success(consentList)
+            }
             
         case let .tapBank(bankID):
             fatalError()
@@ -48,6 +50,15 @@ extension ConsentListRxReducer {
 }
 
 private extension ConsentListState {
+    
+    var expandedConsentList: ConsentList? {
+        
+        guard case let .success(consentList) = self,
+              consentList.mode == .expanded
+        else { return nil }
+        
+        return consentList
+    }
     
     mutating func toggle() {
         
@@ -279,7 +290,71 @@ final class ConsentListRxReducerTests: XCTestCase {
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .toggle).effect)
+        XCTAssertNil(reduce(sut, collapsed, .search(UUID().uuidString)).effect)
+    }
+    
+    func test_search_shouldNotChangeStateOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .search(UUID().uuidString)).state,
+            expanded
+        )
+    }
+    
+    func test_search_shouldNotDeliverEffectOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .search(UUID().uuidString)).effect)
+    }
+    
+    func test_search_shouldNotChangeStateOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .search(UUID().uuidString)).state,
+            collapsed
+        )
+    }
+    
+    func test_search_shouldNotDeliverEffectOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .search(UUID().uuidString)).effect)
+    }
+    
+    func test_search_shouldChangeSearchTextOnExpandedConsentList() {
+        
+        let text = UUID().uuidString
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .search(text)).state,
+            .success(.init(
+                banks: consentList.banks,
+                consent: consentList.consent,
+                mode: consentList.mode,
+                searchText: text
+            ))
+        )
+    }
+    
+    func test_search_shouldNotDeliverEffectOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .search(UUID().uuidString)).effect)
     }
     
     // MARK: - Helpers
