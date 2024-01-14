@@ -28,6 +28,14 @@ struct AlertViewModel: Identifiable {
     }
 }
 
+extension AlertViewModel: Equatable {
+    
+    static func == (lhs: AlertViewModel, rhs: AlertViewModel) -> Bool {
+        
+        lhs.id == rhs.id
+    }
+}
+
 extension AlertViewModel {
     
     init(

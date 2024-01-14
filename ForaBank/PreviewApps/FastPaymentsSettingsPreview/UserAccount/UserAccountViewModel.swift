@@ -364,7 +364,7 @@ extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
-    struct Route {
+    struct Route: Equatable {
         
         var destination: Destination?
         var fpsDestination: FPSDestination?
@@ -379,17 +379,17 @@ extension UserAccountViewModel {
             self.modal = modal
         }
         
-        enum Destination {
+        enum Destination: Equatable {
             
             case fastPaymentsSettings(FastPaymentsSettingsViewModel)
         }
         
-        enum FPSDestination {
+        enum FPSDestination: Equatable {
             
             case confirmSetBankDefault//(phoneNumberMask: String)
         }
         
-        enum Modal {
+        enum Modal: Equatable {
             
             case alert(AlertViewModel)
             case fpsAlert(AlertViewModel)
