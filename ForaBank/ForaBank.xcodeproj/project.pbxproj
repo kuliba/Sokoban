@@ -529,6 +529,8 @@
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
+		2A5D340B2B54081500E9214F /* ReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */; };
+		2A5D340C2B54081500E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
@@ -748,8 +750,7 @@
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A9E2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift */; };
 		2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */; };
-		2ACE0AB22B540289007AA2ED /* ReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */; };
-		2ACE0AB42B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */; };
+		2ACE0AB82B540697007AA2ED /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ACE0AB72B540697007AA2ED /* XCTest.framework */; platformFilter = ios; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
@@ -2269,7 +2270,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2ACE0AA82B53F68B007AA2ED /* PBXContainerItemProxy */ = {
+		2ACE0AB52B540517007AA2ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
 			proxyType = 1;
@@ -3077,6 +3078,7 @@
 		2ACE0AAF2B53F719007AA2ED /* FastPaymentsSettingsPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FastPaymentsSettingsPreview.xctestplan; sourceTree = "<group>"; };
 		2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerSpy.swift; sourceTree = "<group>"; };
 		2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
+		2ACE0AB72B540697007AA2ED /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
@@ -4608,6 +4610,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ACE0AB82B540697007AA2ED /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7170,7 +7173,6 @@
 			children = (
 				2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA7A2B50576D0093EE83 /* FastPaymentsSettingsPreview */,
-				2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
@@ -10564,6 +10566,7 @@
 		ED147D4D26BC1237002F66C8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2ACE0AB72B540697007AA2ED /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -11235,6 +11238,7 @@
 				EDB14396265FDA430028EF5A /* ForaBankTests */,
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
+				2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
@@ -12168,7 +12172,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2ACE0AA92B53F68B007AA2ED /* PBXTargetDependency */,
+				2ACE0AB62B540517007AA2ED /* PBXTargetDependency */,
 			);
 			name = FastPaymentsSettingsPreviewTests;
 			productName = FastPaymentsSettingsPreviewTests;
@@ -13042,14 +13046,12 @@
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
 				2A9536412B53355900E874F5 /* ConsentListState+ext.swift in Sources */,
 				2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */,
-				2ACE0AB22B540289007AA2ED /* ReducerSpy.swift in Sources */,
 				2A9536392B52D55D00E874F5 /* [Bank]+ext.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A9536442B533A9E00E874F5 /* ConsentList.swift in Sources */,
 				2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
-				2ACE0AB42B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
 				2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */,
@@ -13080,6 +13082,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A5D340B2B54081500E9214F /* ReducerSpy.swift in Sources */,
+				2A5D340C2B54081500E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14988,10 +14992,10 @@
 			isa = PBXTargetDependency;
 			productRef = 2A46300A2AC4550500020B73 /* ServerAgent */;
 		};
-		2ACE0AA92B53F68B007AA2ED /* PBXTargetDependency */ = {
+		2ACE0AB62B540517007AA2ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */;
-			targetProxy = 2ACE0AA82B53F68B007AA2ED /* PBXContainerItemProxy */;
+			targetProxy = 2ACE0AB52B540517007AA2ED /* PBXContainerItemProxy */;
 		};
 		A51568322821B927000D4455 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -15534,7 +15538,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -15559,7 +15563,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -15583,7 +15587,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -15607,7 +15611,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
