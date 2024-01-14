@@ -529,8 +529,9 @@
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
-		2A5D340B2B54081500E9214F /* ReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */; };
-		2A5D340C2B54081500E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */; };
+		2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */; };
+		2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */; };
+		2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
@@ -749,7 +750,6 @@
 		2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A952B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A9E2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift */; };
-		2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */; };
 		2ACE0AB82B540697007AA2ED /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ACE0AB72B540697007AA2ED /* XCTest.framework */; platformFilter = ios; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
@@ -7173,6 +7173,7 @@
 			children = (
 				2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA7A2B50576D0093EE83 /* FastPaymentsSettingsPreview */,
+				2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
@@ -11238,7 +11239,6 @@
 				EDB14396265FDA430028EF5A /* ForaBankTests */,
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
-				2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
@@ -13082,9 +13082,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A5D340B2B54081500E9214F /* ReducerSpy.swift in Sources */,
-				2A5D340C2B54081500E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
-				2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */,
+				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
+				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
+				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
