@@ -786,6 +786,7 @@
 		2AE87B012B54551C00B5B7CA /* ConsentListEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */; };
 		2AE87B032B54553D00B5B7CA /* ConsentListRxReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B022B54553D00B5B7CA /* ConsentListRxReducer.swift */; };
 		2AE87B052B54556400B5B7CA /* ConsentListRxEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B042B54556400B5B7CA /* ConsentListRxEffectHandler.swift */; };
+		2AE87B072B54698C00B5B7CA /* unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B062B54698C00B5B7CA /* unimplemented.swift */; };
 		2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */; };
 		2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */; };
 		2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */; };
@@ -3123,6 +3124,7 @@
 		2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEffect.swift; sourceTree = "<group>"; };
 		2AE87B022B54553D00B5B7CA /* ConsentListRxReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxReducer.swift; sourceTree = "<group>"; };
 		2AE87B042B54556400B5B7CA /* ConsentListRxEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxEffectHandler.swift; sourceTree = "<group>"; };
+		2AE87B062B54698C00B5B7CA /* unimplemented.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = unimplemented.swift; path = "../../../../swift-forabank/Tests/FastPaymentsSettingsTests/BankPicker/unimplemented.swift"; sourceTree = "<group>"; };
 		2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeService.swift"; sourceTree = "<group>"; };
 		2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyService.swift"; sourceTree = "<group>"; };
 		2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyService.swift"; sourceTree = "<group>"; };
@@ -7137,6 +7139,7 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */,
+				2AE87B062B54698C00B5B7CA /* unimplemented.swift */,
 				2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */,
 				2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */,
 			);
@@ -13148,6 +13151,7 @@
 				2AE87B052B54556400B5B7CA /* ConsentListRxEffectHandler.swift in Sources */,
 				2AE87B032B54553D00B5B7CA /* ConsentListRxReducer.swift in Sources */,
 				2AE87AFD2B54543A00B5B7CA /* ValueSpy.swift in Sources */,
+				2AE87B072B54698C00B5B7CA /* unimplemented.swift in Sources */,
 				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
 				2AE87AF72B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift in Sources */,
 				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
