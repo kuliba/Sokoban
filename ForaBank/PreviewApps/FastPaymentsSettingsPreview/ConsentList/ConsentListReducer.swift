@@ -86,14 +86,7 @@ extension ConsentListReducer {
                 completion(state)
                 
             case .expanded:
-#warning("extract to helper or subscript")
-                guard let index = consentList.banks.firstIndex(where: { $0.id == bankID })
-                else {
-                    completion(state)
-                    return
-                }
-                
-                consentList.banks[index].isSelected.toggle()
+                consentList.banks[bankID]?.isSelected.toggle()
                 completion(.success(consentList))
             }
             

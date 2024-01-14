@@ -653,6 +653,7 @@
 		2A9536442B533A9E00E874F5 /* ConsentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536432B533A9E00E874F5 /* ConsentList.swift */; };
 		2A9536462B533ABB00E874F5 /* ConsentListFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536452B533ABB00E874F5 /* ConsentListFailure.swift */; };
 		2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536472B533AD400E874F5 /* ConsentList+ext.swift */; };
+		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
 		2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95CBA22B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift */; };
@@ -2966,6 +2967,7 @@
 		2A9536432B533A9E00E874F5 /* ConsentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentList.swift; sourceTree = "<group>"; };
 		2A9536452B533ABB00E874F5 /* ConsentListFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListFailure.swift; sourceTree = "<group>"; };
 		2A9536472B533AD400E874F5 /* ConsentList+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentList+ext.swift"; sourceTree = "<group>"; };
+		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
 		2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DecimalTextFieldPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6433,6 +6435,7 @@
 			children = (
 				2A6EAA8C2B505A800093EE83 /* View+NavigationDestination.swift */,
 				2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */,
+				2A9536492B53BBAC00E874F5 /* Array+ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -12882,6 +12885,7 @@
 				2AA70FCC2B52C2120061F5DD /* Bank.swift in Sources */,
 				2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */,
 				2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */,
+				2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */,
 				2A9536372B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift in Sources */,
 				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
 				2A95363D2B52DA3F00E874F5 /* [SelectableBank]+ext.swift in Sources */,
