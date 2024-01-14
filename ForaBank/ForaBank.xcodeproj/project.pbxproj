@@ -6317,6 +6317,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */,
+				2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */,
 				2A59F92D2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift */,
 				2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */,
 			);
@@ -6832,7 +6833,6 @@
 		2AA70FC42B52C0760061F5DD /* ConsentList */ = {
 			isa = PBXGroup;
 			children = (
-				2AA70FC52B52C0A20061F5DD /* ConsentListViewModel.swift */,
 				2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */,
 				2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */,
 				2A95363E2B53120700E874F5 /* ExpandedConsentListView.swift */,

@@ -35,11 +35,6 @@ struct ConsentListPrototypeView: View {
     }
 }
 
-extension ConsentListPrototypeView {
-    
-    typealias ViewModel = ConsentListViewModel<ConsentListState, ConsentListEvent>
-}
-
 private extension ConsentListPrototypeView {
     
     enum Flow: String, CaseIterable {

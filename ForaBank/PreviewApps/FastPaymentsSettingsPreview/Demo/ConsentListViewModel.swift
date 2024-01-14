@@ -1,5 +1,5 @@
 //
-//  ConsentListViewModel.swift
+//  ViewModel.swift
 //  FastPaymentsSettingsPreview
 //
 //  Created by Igor Malyarov on 13.01.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ConsentListViewModel<State, Event>: ObservableObject {
+final class ViewModel<State, Event>: ObservableObject {
     
     @Published private(set) var state: State
     
@@ -22,7 +22,7 @@ final class ConsentListViewModel<State, Event>: ObservableObject {
     }
 }
 
-extension ConsentListViewModel {
+extension ViewModel {
 
     func event(_ event: Event) {
         
@@ -30,7 +30,7 @@ extension ConsentListViewModel {
     }
 }
 
-extension ConsentListViewModel {
+extension ViewModel {
     
     typealias Reduce = (State, Event, @escaping (State) -> Void) -> Void
 }

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ConsentListWrapperView: View {
     
-    @ObservedObject var viewModel: ViewModel
-        
+    @ObservedObject var viewModel: ConsentListViewModel
+    
     var body: some View {
         
         ScrollView {
@@ -25,7 +25,7 @@ struct ConsentListWrapperView: View {
 
 extension ConsentListWrapperView {
     
-    typealias ViewModel = ConsentListViewModel<ConsentListState, ConsentListEvent>
+    typealias ConsentListViewModel = ViewModel<ConsentListState, ConsentListEvent>
 }
 
 struct ConsentListPrototypeView_Previews: PreviewProvider {
@@ -53,7 +53,6 @@ struct ConsentListPrototypeView_Previews: PreviewProvider {
         ConsentListWrapperView(viewModel: .init(
             state: state,
             reduce: { _,_,_ in }
-        )
-        )
+        ))
     }
 }
