@@ -775,6 +775,8 @@
 		2AE5973129F918C30083F138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973029F918C30083F138 /* Assets.xcassets */; };
 		2AE5973429F918C30083F138 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973329F918C30083F138 /* Preview Assets.xcassets */; };
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
+		2AE87AE92B54175900B5B7CA /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2AE87AE82B54175900B5B7CA /* CustomDump */; };
+		2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */; };
 		2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */; };
 		2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */; };
 		2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */; };
@@ -3103,6 +3105,7 @@
 		2AE5973329F918C30083F138 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
 		2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeService.swift"; sourceTree = "<group>"; };
 		2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyService.swift"; sourceTree = "<group>"; };
 		2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyService.swift"; sourceTree = "<group>"; };
@@ -4611,6 +4614,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ACE0AB82B540697007AA2ED /* XCTest.framework in Frameworks */,
+				2AE87AE92B54175900B5B7CA /* CustomDump in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7112,6 +7116,7 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */,
+				2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */,
 				2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
@@ -12175,6 +12180,9 @@
 				2ACE0AB62B540517007AA2ED /* PBXTargetDependency */,
 			);
 			name = FastPaymentsSettingsPreviewTests;
+			packageProductDependencies = (
+				2AE87AE82B54175900B5B7CA /* CustomDump */,
+			);
 			productName = FastPaymentsSettingsPreviewTests;
 			productReference = 2ACE0AA42B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -13085,6 +13093,7 @@
 				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
 				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
 				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17355,6 +17364,11 @@
 		2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ButtonWithSheet;
+		};
+		2AE87AE82B54175900B5B7CA /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;
