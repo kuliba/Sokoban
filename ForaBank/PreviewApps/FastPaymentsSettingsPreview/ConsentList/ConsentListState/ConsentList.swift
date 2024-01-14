@@ -8,14 +8,9 @@
 struct ConsentList: Equatable {
     
     var banks: [SelectableBank]
-    let consent: Set<Bank.ID>
+    let consent: Consent
     var mode: Mode
     var searchText: String
-    
-    enum Mode: Equatable {
-        
-        case collapsed, expanded
-    }
     
     struct SelectableBank: Equatable, Identifiable {
         
@@ -23,5 +18,12 @@ struct ConsentList: Equatable {
         var isSelected: Bool
         
         var id: Bank.ID { bank.id }
+    }
+    
+    typealias Consent = Set<Bank.ID>
+    
+    enum Mode: Equatable {
+        
+        case collapsed, expanded
     }
 }
