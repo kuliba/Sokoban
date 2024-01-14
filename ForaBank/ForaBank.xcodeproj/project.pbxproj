@@ -749,6 +749,7 @@
 		2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A9E2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift */; };
 		2ACE0AA72B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */; };
 		2ACE0AB22B540289007AA2ED /* ReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */; };
+		2ACE0AB42B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
@@ -3075,6 +3076,7 @@
 		2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsPreviewTests.swift; sourceTree = "<group>"; };
 		2ACE0AAF2B53F719007AA2ED /* FastPaymentsSettingsPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FastPaymentsSettingsPreview.xctestplan; sourceTree = "<group>"; };
 		2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerSpy.swift; sourceTree = "<group>"; };
+		2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
@@ -7107,6 +7109,7 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */,
+				2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -13046,6 +13049,7 @@
 				2A9536442B533A9E00E874F5 /* ConsentList.swift in Sources */,
 				2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
+				2ACE0AB42B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
 				2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */,
