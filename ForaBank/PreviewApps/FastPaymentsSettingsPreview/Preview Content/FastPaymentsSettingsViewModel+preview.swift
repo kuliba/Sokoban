@@ -11,8 +11,6 @@ extension FastPaymentsSettingsViewModel {
         
         let reducer = FastPaymentsSettingsReducer.preview
         
-        return .init(
-            reduce: reducer.reduce(_:_:_:)
-        )
+        return .init(state: nil, reduce: reducer.reduce(_:_:_:))
     }
 }

@@ -23,11 +23,6 @@ struct ConsentListWrapperView: View {
     }
 }
 
-extension ConsentListWrapperView {
-    
-    typealias ConsentListViewModel = ViewModel<ConsentListState, ConsentListEvent>
-}
-
 struct ConsentListPrototypeView_Previews: PreviewProvider {
     
     static var previews: some View {

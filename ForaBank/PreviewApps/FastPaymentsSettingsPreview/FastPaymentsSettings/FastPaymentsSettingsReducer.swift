@@ -41,7 +41,7 @@ extension FastPaymentsSettingsReducer {
     ) {
         switch event {
         case .appear:
-            handleAppear(state, completion)
+            appear(state, completion)
             
         case .activateContract:
             activateContract(state, completion)
@@ -60,232 +60,6 @@ extension FastPaymentsSettingsReducer {
             
         case .confirmSetBankDefault:
             confirmSetBankDefault(state, completion)
-        }
-    }
-    
-    private func handleAppear(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        switch state {
-        case .none:
-            completion(.init(isInflight: true))
-            
-            getUserPaymentSettings {
-                
-                completion(.init(
-                    userPaymentSettings: $0
-                ))
-            }
-            
-        default:
-            completion(state)
-        }
-    }
-    
-    private func activateContract(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        switch state?.userPaymentSettings {
-        case let .contracted(contractDetails):
-            switch contractDetails.paymentContract.contractStatus {
-            case .active:
-                completion(state)
-                
-            case .inactive:
-                completion(state?.setToInflight())
-                activateContract(contractDetails, completion)
-            }
-            
-        case let .missingContract(consent):
-            completion(state?.setToInflight())
-            
-            if let product = getProduct() {
-                createContract(product, consent, completion)
-            } else {
-                var state = state
-                state?.alert = .missingProduct
-                completion(state)
-            }
-            
-        default:
-            completion(state)
-        }
-    }
-    
-    private func activateContract(
-        _ contractDetails: UserPaymentSettings.ContractDetails,
-        _ completion: @escaping Completion
-    ) {
-        let payload = (contractDetails.paymentContract, UpdateContractToggle.activate)
-        
-        updateContract(payload) { result in
-            
-            let state: State
-            
-            switch result {
-            case let .success(contract):
-                var contractDetails = contractDetails
-                contractDetails.paymentContract = contract
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails)
-                )
-                
-            case let .serverError(message):
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails),
-                    alert: .serverError(message)
-                )
-                
-            case .connectivityError:
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails),
-                    alert: .updateContractFailure
-                )
-            }
-            
-            completion(state)
-        }
-    }
-    
-    private func deactivateContract(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        switch state?.userPaymentSettings {
-        case let .contracted(contractDetails):
-            switch contractDetails.paymentContract.contractStatus {
-            case .active:
-                completion(state?.setToInflight())
-                deactivateContract(contractDetails, completion)
-                
-            case .inactive:
-                completion(state)
-            }
-            
-        default:
-            completion(state)
-        }
-    }
-    
-    private func deactivateContract(
-        _ contractDetails: UserPaymentSettings.ContractDetails,
-        _ completion: @escaping Completion
-    ) {
-        let payload = (contractDetails.paymentContract, UpdateContractToggle.deactivate)
-        
-        updateContract(payload) { result in
-            
-            let state: State
-            
-            switch result {
-            case let .success(contract):
-                var contractDetails = contractDetails
-                contractDetails.paymentContract = contract
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails)
-                )
-                
-            case let .serverError(message):
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails),
-                    alert: .serverError(message)
-                )
-                
-            case .connectivityError:
-                state = .init(
-                    userPaymentSettings: .contracted(contractDetails),
-                    alert: .updateContractFailure
-                )
-            }
-            
-            completion(state)
-        }
-    }
-    
-    private func createContract(
-        _ product: Product,
-        _ consent: UserPaymentSettings.ConsentResult,
-        _ completion: @escaping Completion
-    ) {
-        createContract(product.id) { result in
-            
-            let state: State
-            
-            switch result {
-            case let .success(contract):
-                state = .init(
-                    userPaymentSettings: .contracted(.init(
-                        paymentContract: contract,
-                        consentResult: consent,
-                        bankDefault: .offEnabled
-                    ))
-                )
-                
-            case let .serverError(message):
-                state = .init(
-                    userPaymentSettings: .missingContract(consent),
-                    alert: .serverError(message)
-                )
-                
-            case .connectivityError:
-                state = .init(
-                    userPaymentSettings: .missingContract(consent),
-                    alert: .updateContractFailure
-                )
-            }
-            
-            completion(state)
-        }
-    }
-    
-    private func setBankDefault(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        var state = state
-        state?.alert = .setBankDefault
-        completion(state)
-    }
-    
-    private func prepareSetBankDefault(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        completion(state?.setToInflight())
-        
-        prepareSetBankDefault { result in
-        
-            var state = state
-            
-            switch result {
-            case .success:
-                state?.alert = .confirmSetBankDefault
-
-            case let .serverError(message):
-                state?.alert = .serverError(message)
-
-            case .connectivityError:
-                state?.alert = .updateContractFailure
-            }
-            state?.isInflight = false
-            
-            completion(state)
-        }
-    }
-    
-    private func confirmSetBankDefault(
-        _ state: State,
-        _ completion: @escaping Completion
-    ) {
-        switch state?.userPaymentSettings {
-        case var .contracted(contractDetails):
-            contractDetails.bankDefault = .onDisabled            
-            completion(.init(userPaymentSettings: .contracted(contractDetails)))
-            
-        default:
-            completion(state)
         }
     }
 }
@@ -360,11 +134,240 @@ extension FastPaymentsSettingsReducer {
 
 extension FastPaymentsSettingsReducer {
     
-    typealias State = FastPaymentsSettingsViewModel.State?
-    typealias Event = FastPaymentsSettingsViewModel.Event
+    typealias State = FastPaymentsSettingsState?
+    typealias Event = FastPaymentsSettingsEvent
 }
 
-extension FastPaymentsSettingsViewModel.State {
+private extension FastPaymentsSettingsReducer {
+    
+    func appear(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state {
+        case .none:
+            completion(.init(isInflight: true))
+            
+            getUserPaymentSettings {
+                
+                completion(.init(
+                    userPaymentSettings: $0
+                ))
+            }
+            
+        default:
+            completion(state)
+        }
+    }
+    
+    func activateContract(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state?.userPaymentSettings {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
+            case .active:
+                completion(state)
+                
+            case .inactive:
+                completion(state?.setToInflight())
+                activateContract(contractDetails, completion)
+            }
+            
+        case let .missingContract(consent):
+            completion(state?.setToInflight())
+            
+            if let product = getProduct() {
+                createContract(product, consent, completion)
+            } else {
+                var state = state
+                state?.alert = .missingProduct
+                completion(state)
+            }
+            
+        default:
+            completion(state)
+        }
+    }
+    
+    func activateContract(
+        _ contractDetails: UserPaymentSettings.ContractDetails,
+        _ completion: @escaping Completion
+    ) {
+        let payload = (contractDetails.paymentContract, UpdateContractToggle.activate)
+        
+        updateContract(payload) { result in
+            
+            let state: State
+            
+            switch result {
+            case let .success(contract):
+                var contractDetails = contractDetails
+                contractDetails.paymentContract = contract
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails)
+                )
+                
+            case let .serverError(message):
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails),
+                    alert: .serverError(message)
+                )
+                
+            case .connectivityError:
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails),
+                    alert: .updateContractFailure
+                )
+            }
+            
+            completion(state)
+        }
+    }
+    
+    func deactivateContract(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state?.userPaymentSettings {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
+            case .active:
+                completion(state?.setToInflight())
+                deactivateContract(contractDetails, completion)
+                
+            case .inactive:
+                completion(state)
+            }
+            
+        default:
+            completion(state)
+        }
+    }
+    
+    func deactivateContract(
+        _ contractDetails: UserPaymentSettings.ContractDetails,
+        _ completion: @escaping Completion
+    ) {
+        let payload = (contractDetails.paymentContract, UpdateContractToggle.deactivate)
+        
+        updateContract(payload) { result in
+            
+            let state: State
+            
+            switch result {
+            case let .success(contract):
+                var contractDetails = contractDetails
+                contractDetails.paymentContract = contract
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails)
+                )
+                
+            case let .serverError(message):
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails),
+                    alert: .serverError(message)
+                )
+                
+            case .connectivityError:
+                state = .init(
+                    userPaymentSettings: .contracted(contractDetails),
+                    alert: .updateContractFailure
+                )
+            }
+            
+            completion(state)
+        }
+    }
+    
+    func createContract(
+        _ product: Product,
+        _ consent: UserPaymentSettings.ConsentResult,
+        _ completion: @escaping Completion
+    ) {
+        createContract(product.id) { result in
+            
+            let state: State
+            
+            switch result {
+            case let .success(contract):
+                state = .init(
+                    userPaymentSettings: .contracted(.init(
+                        paymentContract: contract,
+                        consentResult: consent,
+                        bankDefault: .offEnabled
+                    ))
+                )
+                
+            case let .serverError(message):
+                state = .init(
+                    userPaymentSettings: .missingContract(consent),
+                    alert: .serverError(message)
+                )
+                
+            case .connectivityError:
+                state = .init(
+                    userPaymentSettings: .missingContract(consent),
+                    alert: .updateContractFailure
+                )
+            }
+            
+            completion(state)
+        }
+    }
+    
+    func setBankDefault(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        var state = state
+        state?.alert = .setBankDefault
+        completion(state)
+    }
+    
+    func prepareSetBankDefault(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        completion(state?.setToInflight())
+        
+        prepareSetBankDefault { result in
+            
+            var state = state
+            
+            switch result {
+            case .success:
+                state?.alert = .confirmSetBankDefault
+                
+            case let .serverError(message):
+                state?.alert = .serverError(message)
+                
+            case .connectivityError:
+                state?.alert = .updateContractFailure
+            }
+            state?.isInflight = false
+            
+            completion(state)
+        }
+    }
+    
+    func confirmSetBankDefault(
+        _ state: State,
+        _ completion: @escaping Completion
+    ) {
+        switch state?.userPaymentSettings {
+        case var .contracted(contractDetails):
+            contractDetails.bankDefault = .onDisabled
+            completion(.init(userPaymentSettings: .contracted(contractDetails)))
+            
+        default:
+            completion(state)
+        }
+    }
+}
+
+private extension FastPaymentsSettingsState {
     
     func setToInflight() -> Self {
         

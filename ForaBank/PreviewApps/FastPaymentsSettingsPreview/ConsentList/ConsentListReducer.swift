@@ -44,6 +44,26 @@ extension ConsentListReducer {
     }
 }
 
+extension ConsentListReducer {
+    
+    typealias ChangeConsentListPayload = [Bank.ID]
+    // (h) changeClientConsentMe2MePull
+    typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
+    
+    enum ChangeConsentListResponse {
+        
+        case success
+        case serverError(String)
+        case connectivityError
+    }
+}
+
+extension ConsentListReducer {
+    
+    typealias State = ConsentListState
+    typealias Event = ConsentListEvent
+}
+
 private extension ConsentListReducer {
     
     func toggle(
@@ -122,26 +142,6 @@ private extension ConsentListReducer {
             }
         }
     }
-}
-
-extension ConsentListReducer {
-    
-    typealias ChangeConsentListPayload = [Bank.ID]
-    // (h) changeClientConsentMe2MePull
-    typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
-    
-    enum ChangeConsentListResponse {
-        
-        case success
-        case serverError(String)
-        case connectivityError
-    }
-}
-
-extension ConsentListReducer {
-    
-    typealias State = ConsentListState
-    typealias Event = ConsentListEvent
 }
 
 private extension ConsentListState {

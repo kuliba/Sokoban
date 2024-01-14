@@ -43,6 +43,6 @@ private extension FastPaymentsSettingsViewModel {
     
     convenience init(reducer: FastPaymentsSettingsReducer) {
         
-        self.init(reduce: reducer.reduce(_:_:_:))
+        self.init(state: nil, reduce: reducer.reduce(_:_:_:))
     }
 }

@@ -244,7 +244,7 @@ private extension AlertViewModel {
     }
 }
 
-private extension FastPaymentsSettingsViewModel.State {
+private extension FastPaymentsSettingsState {
     
     var alertMessage: String? {
         
