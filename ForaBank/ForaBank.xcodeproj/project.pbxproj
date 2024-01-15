@@ -746,6 +746,7 @@
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
 		2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */; };
 		2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */; };
+		2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -4638,6 +4639,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */,
+				2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */,
 				2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12260,6 +12262,7 @@
 			packageProductDependencies = (
 				2AA70FBC2B52B1940061F5DD /* Tagged */,
 				2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */,
+				2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */,
 			);
 			productName = FastPaymentsSettingsPreview;
 			productReference = 2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */;
@@ -17501,6 +17504,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
 			productName = CombineSchedulers;
+		};
+		2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FastPaymentsSettings;
 		};
 		2AC3282F2ADEF41D00443A84 /* CVVPINServices */ = {
 			isa = XCSwiftPackageProductDependency;
