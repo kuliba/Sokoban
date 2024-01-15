@@ -731,6 +731,8 @@
 		2ABD78352AF924A6001B5860 /* ChangePINService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */; };
 		2ABD78372AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */; };
 		2ABD78392AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */; };
+		2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E32B5507A100D6A0BA /* Spy.swift */; };
+		2ABFB8E62B5507BF00D6A0BA /* SpyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -3064,6 +3066,8 @@
 		2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetProcessingSessionCodeService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+Fetcher.swift"; sourceTree = "<group>"; };
+		2ABFB8E32B5507A100D6A0BA /* Spy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spy.swift; sourceTree = "<group>"; };
+		2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpyOf.swift; sourceTree = "<group>"; };
 		2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryRegularFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2AC2ADB12B2217670049EE9B /* QRResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolver.swift; sourceTree = "<group>"; };
 		2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverTests.swift; sourceTree = "<group>"; };
@@ -7139,6 +7143,8 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0AB12B540289007AA2ED /* ReducerSpy.swift */,
+				2ABFB8E32B5507A100D6A0BA /* Spy.swift */,
+				2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */,
 				2AE87B062B54698C00B5B7CA /* unimplemented.swift */,
 				2ACE0AB32B5403A9007AA2ED /* XCTestCase+MemoryLeakTracking.swift */,
 				2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */,
@@ -13146,12 +13152,14 @@
 			files = (
 				2AE87AF42B54534100B5B7CA /* RxViewModelTests.swift in Sources */,
 				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
+				2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */,
 				2AE87AF12B54530200B5B7CA /* RxViewModel.swift in Sources */,
 				2AE87B012B54551C00B5B7CA /* ConsentListEffect.swift in Sources */,
 				2AE87B052B54556400B5B7CA /* ConsentListRxEffectHandler.swift in Sources */,
 				2AE87B032B54553D00B5B7CA /* ConsentListRxReducer.swift in Sources */,
 				2AE87AFD2B54543A00B5B7CA /* ValueSpy.swift in Sources */,
 				2AE87B072B54698C00B5B7CA /* unimplemented.swift in Sources */,
+				2ABFB8E62B5507BF00D6A0BA /* SpyOf.swift in Sources */,
 				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
 				2AE87AF72B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift in Sources */,
 				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
