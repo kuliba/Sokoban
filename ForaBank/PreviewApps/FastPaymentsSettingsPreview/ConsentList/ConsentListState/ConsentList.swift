@@ -29,6 +29,7 @@ struct ConsentList: Equatable {
     enum Status: Equatable {
         
         case failure(Failure)
+        case inflight
         
         enum Failure: Equatable {
             

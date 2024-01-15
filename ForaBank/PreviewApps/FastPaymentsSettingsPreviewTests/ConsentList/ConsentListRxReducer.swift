@@ -35,7 +35,8 @@ extension ConsentListRxReducer {
             
         case .applyConsent:
             if let consentList = state.expandedConsentList {
-                effect = .apply(.init(consentList.consent))
+                
+                (state, effect) = applyConsent(consentList)
             }
             
         case let .changeConsent(consent):
@@ -47,7 +48,7 @@ extension ConsentListRxReducer {
         case let .changeConsentFailure(failure):
             // state should collapse!! + non-inflight plus error - add field if decoration is not possible
             if let consentList = state.expandedConsentList {
-
+                
                 state = .success(changeConsentFailure(failure, consentList))
             }
         }
@@ -65,6 +66,19 @@ extension ConsentListRxReducer {
 
 private extension ConsentListRxReducer {
     
+    func applyConsent(
+        _ consentList: ConsentList
+    ) -> (State, Effect) {
+        
+        var consentList = consentList
+        consentList.mode = .collapsed
+        consentList.status = .inflight
+        let state: State = .success(consentList)
+        let effect: Effect = .apply(.init(consentList.consent))
+        
+        return (state, effect)
+    }
+        
     func changeConsentFailure(
         _ failure: ConsentListEvent.ConsentFailure,
         _ consentList: ConsentList
@@ -596,14 +610,21 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, collapsed, .applyConsent).effect)
     }
     
-    func test_applyConsent_shouldNotChangeStateOnExpandedConsentList() {
+    func test_applyConsent_shouldChangeStateToCollapsedModeAnsStatusInflightOnExpandedConsentList() {
         
-        let expanded: State = .success(expandedConsentList())
+        let expanded = expandedConsentList()
+        let state: State = .success(expanded)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .applyConsent).state,
-            expanded
+            reduce(sut, state, .applyConsent).state,
+            .success(.init(
+                banks: expanded.banks,
+                consent: expanded.consent,
+                mode: .collapsed,
+                searchText: expanded.searchText,
+                status: .inflight
+            ))
         )
     }
     
