@@ -37,6 +37,8 @@ final class TransformingReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias Reducer = TextFieldComponent.Reducer
+    
     private func makeNonLimitingReducer() -> Reducer {
         
         TransformingReducer(
@@ -53,7 +55,7 @@ final class TransformingReducerTests: XCTestCase {
         )
     }
     
-    func assertReduce(
+    private func assertReduce(
         _ reducer: Reducer,
         state: TextFieldState,
         with action: TextFieldAction,

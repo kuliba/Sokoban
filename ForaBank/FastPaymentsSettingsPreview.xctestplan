@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "D82A91B7-4181-422B-A1FC-58EB094A183B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "2A6EAA782B50576D0093EE83",
+      "name" : "FastPaymentsSettingsPreview"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "2ACE0AA32B53F68B007AA2ED",
+        "name" : "FastPaymentsSettingsPreviewTests"
+      }
+    }
+  ],
+  "version" : 1
+}

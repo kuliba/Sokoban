@@ -11,7 +11,7 @@ import Tagged
 struct FastPaymentsServices {
     
     let getFastPaymentContractFindList: GetFastPaymentContractFindList
-    let getDefaultAndConsent: GetDefaultAndConsent
+    let getConsentAndDefault: GetConsentAndDefault
 }
 
 extension FastPaymentsServices {
@@ -20,9 +20,9 @@ extension FastPaymentsServices {
     typealias GetFastPaymentContractFindList = () -> FPSCFLResponsePublisher
     
 #warning("change to typed Error")
-    typealias GetDefaultAndConsentResult = Result<DefaultForaBank, Error>
-    typealias GetDefaultAndConsentCompletion = (GetDefaultAndConsentResult) -> Void
-    typealias GetDefaultAndConsent = (Phone, @escaping GetDefaultAndConsentCompletion) -> Void
+    typealias GetConsentAndDefaultResult = Result<ConsentAndDefault, Error>
+    typealias GetConsentAndDefaultCompletion = (GetConsentAndDefaultResult) -> Void
+    typealias GetConsentAndDefault = (Phone, @escaping GetConsentAndDefaultCompletion) -> Void
     
     typealias Phone = Tagged<_Phone, String>
     enum _Phone {}
@@ -48,5 +48,14 @@ extension FastPaymentsServices {
                 case inactive
             }
         }
+    }
+    
+    struct ConsentAndDefault {
+        
+        let consentList: [BankID]
+        let defaultForaBank: DefaultForaBank
+        
+        typealias BankID = Tagged<_BankID, String>
+        enum _BankID {}
     }
 }

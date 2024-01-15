@@ -18,7 +18,8 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         model: Model,
         logger: LoggerAgentProtocol,
-        qrResolverFeatureFlag: QRResolverFeatureFlag
+        qrResolverFeatureFlag: QRResolverFeatureFlag,
+        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
     ) -> RootViewModel {
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -42,7 +43,8 @@ extension RootViewModelFactory {
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fastPaymentsFactory = makeFastPaymentsFactory(
-            model: model
+            model: model,
+            fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
         )
         
         let fastPaymentsServices = Services.makeFastPaymentsServices(

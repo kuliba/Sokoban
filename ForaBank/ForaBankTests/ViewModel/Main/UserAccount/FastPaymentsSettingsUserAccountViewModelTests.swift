@@ -64,64 +64,64 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         ])
     }
     
-    func test_init_shouldNotCallGetDefaultAndConsent() throws {
+    func test_init_shouldNotCallGetConsentAndDefault() throws {
         
-        let (_, _,_, getDefaultAndConsentSpy) = makeSUT()
+        let (_, _,_, getConsentAndDefaultSpy) = makeSUT()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
     }
     
-    func test_tapFastPaymentsSettings_shouldCallGetDefaultAndConsentOnActiveFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldCallGetConsentAndDefaultOnActiveFPSCFLResponse() throws {
         
         let phone = "abc123"
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         findListSpy.emitAndWait(.active(.init(phone)))
         
         try sut.tapFastPaymentsSettingsAndWait()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.map(\.payload), [.init(phone)])
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.map(\.payload), [.init(phone)])
     }
     
-    func test_tapFastPaymentsSettings_shouldCallGetDefaultAndConsentOnInactiveFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldCallGetConsentAndDefaultOnInactiveFPSCFLResponse() throws {
         
         let phone = "abc123"
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         findListSpy.emitAndWait(.inactive(.init(phone)))
         
         try sut.tapFastPaymentsSettingsAndWait()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.map(\.payload), [.init(phone)])
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.map(\.payload), [.init(phone)])
     }
     
-    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnMissingFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldNotCallGetConsentAndDefaultOnMissingFPSCFLResponse() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         findListSpy.emitAndWait(.noContract)
         
         try sut.tapFastPaymentsSettingsAndWait()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
     }
     
-    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnErrorFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldNotCallGetConsentAndDefaultOnErrorFPSCFLResponse() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         findListSpy.emitAndWait(.fixedError)
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
         
         try sut.tapFastPaymentsSettingsAndWait()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
     }
         
-    func test_tapFastPaymentsSettings_shouldNotCallGetDefaultAndConsentOnNilFPSCFLResponse() throws {
+    func test_tapFastPaymentsSettings_shouldNotCallGetConsentAndDefaultOnNilFPSCFLResponse() throws {
         
-        let (sut, _, _, getDefaultAndConsentSpy) = makeSUT()
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        let (sut, _, _, getConsentAndDefaultSpy) = makeSUT()
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
         
         try sut.tapFastPaymentsSettingsAndWait()
         
-        XCTAssertNoDiff(getDefaultAndConsentSpy.messages.count, 0)
+        XCTAssertNoDiff(getConsentAndDefaultSpy.messages.count, 0)
         XCTAssertNil(sut.fpsCFLResponse)
     }
         
@@ -133,14 +133,14 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(destinationSpy.values, [nil])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnActiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnActiveFPSCFLResponseGetConsentAndDefaultFailure() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.completeAndWait(with: .failure(anyError()))
+        getConsentAndDefaultSpy.completeAndWait(with: .failure(anyError()))
         
         try sut.tapPrimaryAlertButtonAndWait()
         
@@ -151,29 +151,29 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         ])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetDestinationOnActiveFPSCFLResponseGetDefaultAndConsentSuccess() throws {
+    func test_tapFastPaymentsSettings_shouldSetDestinationOnActiveFPSCFLResponseGetConsentAndDefaultSuccess() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         let destinationSpy = ValueSpy(sut.$link)
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.completeAndWait(with: .success(true))
+        getConsentAndDefaultSpy.completeAndWait(with: .success(.init(consentList: [], defaultForaBank: true)))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnInactiveFPSCFLResponseGetDefaultAndConsentFailure() throws {
+    func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnInactiveFPSCFLResponseGetConsentAndDefaultFailure() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.completeAndWait(with: .failure(anyError()))
+        getConsentAndDefaultSpy.completeAndWait(with: .failure(anyError()))
         
         try sut.tapPrimaryAlertButtonAndWait()
         
@@ -184,18 +184,18 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         ])
     }
     
-    func test_tapFastPaymentsSettings_shouldSetDestinationOnInactiveFPSCFLResponseGetDefaultAndConsentSuccess() throws {
+    func test_tapFastPaymentsSettings_shouldSetDestinationOnInactiveFPSCFLResponseGetConsentAndDefaultSuccess() throws {
         
-        let (sut, findListSpy, _, getDefaultAndConsentSpy) = makeSUT()
+        let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
         let destinationSpy = ValueSpy(sut.$link)
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
-        getDefaultAndConsentSpy.completeAndWait(with: .success(true))
+        getConsentAndDefaultSpy.completeAndWait(with: .success(.init(consentList: [], defaultForaBank: true)))
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -210,7 +210,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings
+            .fastPaymentSettings(.new)
         ])
     }
     
@@ -260,7 +260,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     private typealias FPSCFLResponse = FastPaymentsServices.FPSCFLResponse
     private typealias FindListSpy = GetSpy<FPSCFLResponse>
     private typealias ResponseSpy = ValueSpy<FPSCFLResponse?>
-    private typealias GetDefaultAndConsentSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.DefaultForaBank, Error>
+    private typealias GetConsentAndDefaultSpy = Spy<FastPaymentsServices.Phone, FastPaymentsServices.ConsentAndDefault, Error>
     
     private func makeSUT(
         clientInfo: ClientInfoData = .stub(),
@@ -270,7 +270,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         sut: SUT,
         findListSpy: FindListSpy,
         responseSpy: ResponseSpy,
-        getDefaultAndConsentSpy: GetDefaultAndConsentSpy
+        getConsentAndDefaultSpy: GetConsentAndDefaultSpy
     ) {
         let sessionAgent = ActiveSessionAgentStub()
         let model: Model = .mockWithEmptyExcept(
@@ -279,13 +279,13 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         model.clientInfo.value = clientInfo
         
         let findListSpy = FindListSpy()
-        let getDefaultAndConsentSpy = GetDefaultAndConsentSpy()
+        let getConsentAndDefaultSpy = GetConsentAndDefaultSpy()
         let sut = SUT(
             model: model,
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .new,
             fastPaymentsServices: .init(
                 getFastPaymentContractFindList: findListSpy.get,
-                getDefaultAndConsent: getDefaultAndConsentSpy.process(_:completion:)
+                getConsentAndDefault: getConsentAndDefaultSpy.process(_:completion:)
             ),
             clientInfo: .stub(),
             dismissAction: {}
@@ -295,11 +295,11 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(findListSpy, file: file, line: line)
         trackForMemoryLeaks(responseSpy, file: file, line: line)
-        trackForMemoryLeaks(getDefaultAndConsentSpy, file: file, line: line)
+        trackForMemoryLeaks(getConsentAndDefaultSpy, file: file, line: line)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
-        return (sut, findListSpy, responseSpy, getDefaultAndConsentSpy)
+        return (sut, findListSpy, responseSpy, getConsentAndDefaultSpy)
     }
     
     private final class GetSpy<Value> {
@@ -432,10 +432,10 @@ private extension UserAccountViewModel {
     
     var fastPaymentsSettings: MeToMeSettingView.ViewModel? {
         
-        guard case let .fastPaymentSettings(fastPaymentsSettings) = link
+        guard case let .fastPaymentSettings(.legacy(legacy)) = link
         else { return nil }
         
-        return fastPaymentsSettings
+        return legacy
     }
 }
 
