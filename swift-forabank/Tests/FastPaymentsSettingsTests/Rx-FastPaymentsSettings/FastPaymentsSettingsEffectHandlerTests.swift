@@ -25,6 +25,9 @@ extension FastPaymentsSettingsEffectHandler {
         switch effect {
         case .getUserPaymentSettings:
             getUserPaymentSettings(dispatch)
+            
+        case .activateContract:
+            activateContract(dispatch)
         }
     }
 }
@@ -53,6 +56,15 @@ private extension FastPaymentsSettingsEffectHandler {
             
             dispatch(.loadedUserPaymentSettings($0))
         }
+    }
+    
+    func activateContract(
+        _ dispatch: @escaping Dispatch
+    ) {
+//        activateContract {
+            
+            fatalError("unimplemented")
+//        }
     }
 }
 

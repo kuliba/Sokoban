@@ -14,6 +14,26 @@ func anyContractedSettings(
     .contracted(anyContractDetails())
 }
 
+func anyActiveContractSettings(
+) -> UserPaymentSettings {
+    
+    .contracted(anyContractDetails(
+        paymentContract: anyPaymentContract(
+            contractStatus: .active
+        )
+    ))
+}
+
+func anyInactiveContractSettings(
+) -> UserPaymentSettings {
+    
+    .contracted(anyContractDetails(
+        paymentContract: anyPaymentContract(
+            contractStatus: .inactive
+        )
+    ))
+}
+
 func anyMissingSuccessSettings(
 ) -> UserPaymentSettings {
     

@@ -27,7 +27,8 @@ extension FastPaymentsSettingsRxReducer {
             state = handleLoadedUserPaymentSettings(userPaymentSettings)
             
         case .activateContract:
-            fatalError("unimplemented")
+            (state, effect) = activateContract(state)
+            
         case .deactivateContract:
             fatalError("unimplemented")
         case .resetStatus:
@@ -61,6 +62,32 @@ private extension FastPaymentsSettingsRxReducer {
     ) -> State {
         
         .init(userPaymentSettings: userPaymentSettings)
+    }
+    
+    func activateContract(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        switch state.userPaymentSettings {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
+            case .active:
+                return (state, nil)
+                
+            case .inactive:
+                var state = state
+                state.status = .inflight
+                return (state, .activateContract)
+            }
+            
+        case let .missingContract(consentResult):
+            var state = state
+            state.status = .inflight
+            return (state, .activateContract)
+            
+        default:
+            return (state, nil)
+        }
     }
 }
 
@@ -179,6 +206,187 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         XCTAssertNoDiff(
             reduce(makeSUT(), state, .loadedUserPaymentSettings(loaded)).effect,
+            nil
+        )
+    }
+    
+    // MARK: - activateContract
+    
+    func test_activateContract_shouldNotChangeStateOnEmpty() {
+        
+        let activeContract = FastPaymentsSettingsState()
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), activeContract, .activateContract).state,
+            activeContract
+        )
+    }
+    
+    func test_activateContract_shouldNotDeliverEffectOnEmpty() {
+        
+        let activeContract = FastPaymentsSettingsState()
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), activeContract, .activateContract).effect,
+            nil
+        )
+    }
+    
+    func test_activateContract_shouldNotChangeStateOnActiveContract() {
+        
+        let activeContract = FastPaymentsSettingsState(
+            userPaymentSettings: anyActiveContractSettings()
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), activeContract, .activateContract).state,
+            activeContract
+        )
+    }
+    
+    func test_activateContract_shouldNotDeliverEffectOnActiveContract() {
+        
+        let activeContract = FastPaymentsSettingsState(
+            userPaymentSettings: anyActiveContractSettings()
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), activeContract, .activateContract).effect,
+            nil
+        )
+    }
+    
+    func test_activateContract_shouldChangeStatusToInflightOnInactiveContract() {
+        
+        let inactive = anyInactiveContractSettings()
+        let inactiveContract = FastPaymentsSettingsState(
+            userPaymentSettings: inactive
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), inactiveContract, .activateContract).state,
+            .init(
+                userPaymentSettings: inactive,
+                status: .inflight
+            )
+        )
+    }
+    
+    func test_activateContract_shouldDeliverEffectOnInactiveContract() {
+        
+        let inactive = anyInactiveContractSettings()
+        let inactiveContract = FastPaymentsSettingsState(
+            userPaymentSettings: inactive
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), inactiveContract, .activateContract).effect,
+            .activateContract
+        )
+    }
+    
+    func test_activateContract_shouldChangeStatusToInflightOnMissingFailureContract() {
+        
+        let missing = anyMissingFailureSettings()
+        let missingContract = FastPaymentsSettingsState(
+            userPaymentSettings: missing
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), missingContract, .activateContract).state,
+            .init(
+                userPaymentSettings: missing,
+                status: .inflight
+            )
+        )
+    }
+    
+    func test_activateContract_shouldDeliverEffectOnMissingFailureContract() {
+        
+        let missing = anyMissingFailureSettings()
+        let missingContract = FastPaymentsSettingsState(
+            userPaymentSettings: missing
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), missingContract, .activateContract).effect,
+            .activateContract
+        )
+    }
+    
+    func test_activateContract_shouldChangeStatusToInflightOnMissingSuccessContract() {
+        
+        let missing = anyMissingSuccessSettings()
+        let missingContract = FastPaymentsSettingsState(
+            userPaymentSettings: missing
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), missingContract, .activateContract).state,
+            .init(
+                userPaymentSettings: missing,
+                status: .inflight
+            )
+        )
+    }
+    
+    func test_activateContract_shouldDeliverEffectOnMissingSuccessContract() {
+        
+        let missing = anyMissingSuccessSettings()
+        let missingContract = FastPaymentsSettingsState(
+            userPaymentSettings: missing
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), missingContract, .activateContract).effect,
+            .activateContract
+        )
+    }
+    
+    func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
+        
+        let connectivityFailure = FastPaymentsSettingsState(
+            userPaymentSettings: .failure(.connectivityError)
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), connectivityFailure, .activateContract).state,
+            connectivityFailure
+        )
+    }
+    
+    func test_activateContract_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let connectivityFailure = FastPaymentsSettingsState(
+            userPaymentSettings: .failure(.connectivityError)
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), connectivityFailure, .activateContract).effect,
+            nil
+        )
+    }
+    
+    func test_activateContract_shouldNotChangeStateOnServerErrorFailure() {
+        
+        let serverErrorFailure = FastPaymentsSettingsState(
+            userPaymentSettings: .failure(.connectivityError)
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), serverErrorFailure, .activateContract).state,
+            serverErrorFailure
+        )
+    }
+    
+    func test_activateContract_shouldNotDeliverEffectOnServerErrorFailure() {
+        
+        let serverErrorFailure = FastPaymentsSettingsState(
+            userPaymentSettings: anyActiveContractSettings()
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), serverErrorFailure, .activateContract).effect,
             nil
         )
     }
