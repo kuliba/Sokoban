@@ -12,7 +12,7 @@ final class Model_StatementTests: XCTestCase {
     
     // MARK: ParserGetCardStatementForPeriod Tests
 
-   /* func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageEmpty_returnErrorEmptyDataWithEmptyMessage() {
+   func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageEmpty_returnErrorEmptyDataWithEmptyMessage() {
         
         let result = parser(
             result: .success(.init(
@@ -31,7 +31,39 @@ final class Model_StatementTests: XCTestCase {
                 data: .none)))
         
         XCTAssertNoDiff(result, .errorEmptyDataWithMessage)
-    }*/
+    }
+    
+    func test_parserGetCardStatementForPeriod_ok_withData_returnData() {
+        
+
+        let result = parser(
+            result: .success(.init(
+                statusCode: .ok,
+                errorMessage: "",
+                data: .productStatementData)))
+        
+        XCTAssertNoDiff(result, .success(.productStatementData))
+    }
+    
+    func test_parserGetCardStatementForPeriod_notOk_returnError() {
+        
+        let result = parser(
+            result: .success(.init(
+                statusCode: .serverError,
+                errorMessage: "error",
+                data: .none)))
+        
+        XCTAssertNoDiff(result, .failure(.statusError(status: .serverError, message: "error")))
+    }
+
+    func test_parserGetCardStatementForPeriod_failure_returnError() {
+        
+        let result = parser(
+            result: .failure(.notAuthorized))
+        
+        XCTAssertNoDiff(result, .failure(.serverCommandError(error: "Not Authorized")))
+    }
+
     
     // MARK: - Helpers
     
@@ -76,4 +108,11 @@ private extension Model.ResultParserGetCardStatementForPeriod {
     
     static let errorEmptyDataWithOutMessage: Self = .failure(.emptyData(message: ""))
     static let errorEmptyDataWithMessage: Self = .failure(.emptyData(message: "error"))
+}
+
+private extension Array where Element == ProductStatementData {
+    
+    static let productStatementData: Self = [
+        .init(id: "1", date: Date(timeIntervalSinceReferenceDate: -123456789.0), amount: 10, operationType: .credit, tranDate: nil)
+    ]
 }

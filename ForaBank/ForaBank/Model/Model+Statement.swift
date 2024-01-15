@@ -179,7 +179,7 @@ extension Model {
         }
     }
     
-    // TODO: убрать и переделать
+    // TODO: промежуточный вариант для переделки запроса getCardStatementForPeriod
     
     typealias ResultGetCardStatementForPeriod = Result<ServerCommands.CardController.GetCardStatementForPeriod.Response, ServerAgentError>
     
