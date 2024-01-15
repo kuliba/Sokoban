@@ -35,7 +35,7 @@ extension ConsentListRxReducer {
                 state = .success(consentList)
             }
             
-        case .apply:
+        case .applyConsent:
             if let consentList = state.expandedConsentList {
                 effect = .apply(.init(consentList.consent))
             }
@@ -490,77 +490,77 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).effect)
     }
     
-    // MARK: - apply
+    // MARK: - applyConsent
     
-    func test_apply_shouldNotChangeStateOnCollapsedError() {
+    func test_applyConsent_shouldNotChangeStateOnCollapsedError() {
         
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .apply).state,
+            reduce(sut, collapsed, .applyConsent).state,
             collapsed
         )
     }
     
-    func test_apply_shouldNotDeliverEffectOnCollapsedError() {
+    func test_applyConsent_shouldNotDeliverEffectOnCollapsedError() {
         
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .apply).effect)
+        XCTAssertNil(reduce(sut, collapsed, .applyConsent).effect)
     }
     
-    func test_apply_shouldNotChangeStateOnExpandedError() {
+    func test_applyConsent_shouldNotChangeStateOnExpandedError() {
         
         let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .apply).state,
+            reduce(sut, expanded, .applyConsent).state,
             expanded
         )
     }
     
-    func test_apply_shouldNotDeliverEffectOnExpandedError() {
+    func test_applyConsent_shouldNotDeliverEffectOnExpandedError() {
         
         let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, expanded, .apply).effect)
+        XCTAssertNil(reduce(sut, expanded, .applyConsent).effect)
     }
     
-    func test_apply_shouldNotChangeStateOnCollapsedConsentList() {
+    func test_applyConsent_shouldNotChangeStateOnCollapsedConsentList() {
         
         let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .apply).state,
+            reduce(sut, collapsed, .applyConsent).state,
             collapsed
         )
     }
     
-    func test_apply_shouldNotDeliverEffectOnCollapsedConsentList() {
+    func test_applyConsent_shouldNotDeliverEffectOnCollapsedConsentList() {
         
         let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .apply).effect)
+        XCTAssertNil(reduce(sut, collapsed, .applyConsent).effect)
     }
     
-    func test_apply_shouldNotChangeStateOnExpandedConsentList() {
+    func test_applyConsent_shouldNotChangeStateOnExpandedConsentList() {
         
         let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .apply).state,
+            reduce(sut, expanded, .applyConsent).state,
             expanded
         )
     }
     
-    func test_apply_shouldDeliverApplyEffectWithConsentOnExpandedConsentList() {
+    func test_applyConsent_shouldDeliverApplyEffectWithConsentOnExpandedConsentList() {
         
         let consent: Consent = ["открытие", "сургутнефтегазбанк"]
         let expanded: State = .success(expandedConsentList(
@@ -569,7 +569,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .apply).effect,
+            reduce(sut, expanded, .applyConsent).effect,
             .apply(.init(consent))
         )
     }

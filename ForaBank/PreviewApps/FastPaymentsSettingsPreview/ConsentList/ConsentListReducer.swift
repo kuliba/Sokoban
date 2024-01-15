@@ -38,7 +38,7 @@ extension ConsentListReducer {
         case let .tapBank(bankID):
             tapBank(bankID, state, completion)
             
-        case .apply:
+        case .applyConsent:
             apply(state, completion)
             
         case let .consent(consent):

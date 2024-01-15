@@ -48,7 +48,7 @@ struct ExpandedConsentListView: View {
     @ViewBuilder
     private func applyButton() -> some View {
         
-        Button("Apply") { event(.apply) }
+        Button("Apply") { event(.applyConsent) }
             .buttonStyle(.borderedProminent)
     }
 }

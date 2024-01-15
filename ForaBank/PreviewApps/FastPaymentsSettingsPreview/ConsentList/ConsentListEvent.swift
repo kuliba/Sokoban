@@ -10,7 +10,7 @@ enum ConsentListEvent: Equatable {
     case toggle
     case search(String)
     case tapBank(Bank.ID)
-    case apply
+    case applyConsent
     case consent(Consent)
     case consentFailure(ConsentFailure)
 }
