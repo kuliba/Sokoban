@@ -17,7 +17,8 @@ final class Model_StatementTests: XCTestCase {
         let result = parser(
             result: .success(.init(
                 statusCode: .ok,
-                errorMessage: "", data: .none)))
+                errorMessage: "", 
+                data: .none)))
         
         XCTAssertNoDiff(result, .errorEmptyDataWithOutMessage)
     }
@@ -63,7 +64,6 @@ final class Model_StatementTests: XCTestCase {
         
         XCTAssertNoDiff(result, .failure(.serverCommandError(error: "Not Authorized")))
     }
-
     
     // MARK: - Helpers
     
@@ -113,6 +113,10 @@ private extension Model.ResultParserGetCardStatementForPeriod {
 private extension Array where Element == ProductStatementData {
     
     static let productStatementData: Self = [
-        .init(id: "1", date: Date(timeIntervalSinceReferenceDate: -123456789.0), amount: 10, operationType: .credit, tranDate: nil)
+        .init(id: "1", 
+              date: Date(timeIntervalSinceReferenceDate: -123456789.0),
+              amount: 10,
+              operationType: .credit,
+              tranDate: nil)
     ]
 }
