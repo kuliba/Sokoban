@@ -2,23 +2,60 @@
 //  ContentView.swift
 //  FastPaymentsSettingsPreview
 //
-//  Created by Igor Malyarov on 11.01.2024.
+//  Created by Igor Malyarov on 13.01.2024.
 //
 
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var demo: Demo = .consent
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        ZStack {
+            
+            Color.clear
+            
+            Group {
+                
+                switch demo {
+                case .consent:
+                    ConsentListPrototypeView()
+                    
+                case .fps:
+                    FPSPrototypeView()
+                }
+            }
         }
-        .padding()
+        .overlay(alignment: .bottomLeading, content: picker)
+    }
+    
+    private func picker() -> some View {
+        
+        Picker("Select Demo", selection: $demo) {
+            
+            ForEach(Demo.allCases, id: \.self) {
+                
+                Text($0.rawValue).tag($0)
+            }
+        }
+        .pickerStyle(.menu)
     }
 }
 
-#Preview {
-    ContentView()
+private extension ContentView {
+    
+    enum Demo: String, CaseIterable {
+        
+        case consent, fps
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ContentView()
+    }
 }

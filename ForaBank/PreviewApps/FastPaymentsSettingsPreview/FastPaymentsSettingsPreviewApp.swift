@@ -9,8 +9,11 @@ import SwiftUI
 
 @main
 struct FastPaymentsSettingsPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
+            
             ContentView()
         }
     }
