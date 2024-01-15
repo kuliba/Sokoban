@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension Array where Element == ConsentList.SelectableBank {
     
     static let empty: Self = []

@@ -5,17 +5,17 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-final class ConsentListRxEffectHandler {
+public final class ConsentListRxEffectHandler {
     
     private let changeConsentList: ChangeConsentList
     
-    init(changeConsentList: @escaping ChangeConsentList) {
+    public init(changeConsentList: @escaping ChangeConsentList) {
         
         self.changeConsentList = changeConsentList
     }
 }
 
-extension ConsentListRxEffectHandler {
+public extension ConsentListRxEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -40,7 +40,7 @@ extension ConsentListRxEffectHandler {
     }
 }
 
-extension ConsentListRxEffectHandler {
+public extension ConsentListRxEffectHandler {
     
     typealias ChangeConsentListPayload = Set<Bank.ID>
     // (h) changeClientConsentMe2MePull
@@ -54,7 +54,7 @@ extension ConsentListRxEffectHandler {
     }
 }
 
-extension ConsentListRxEffectHandler {
+public extension ConsentListRxEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     

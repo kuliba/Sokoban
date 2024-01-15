@@ -7,12 +7,12 @@
 
 import Foundation
 
-final class ConsentListReducer {
+public final class ConsentListReducer {
     
     private let availableBanks: [Bank]
     private let changeConsentList: ChangeConsentList
     
-    init(
+    public init(
         availableBanks: [Bank],
         changeConsentList: @escaping ChangeConsentList
     ) {
@@ -21,7 +21,7 @@ final class ConsentListReducer {
     }
 }
 
-extension ConsentListReducer {
+public extension ConsentListReducer {
     
     func reduce(
         _ state: State,
@@ -53,7 +53,7 @@ extension ConsentListReducer {
     }
 }
 
-extension ConsentListReducer {
+public extension ConsentListReducer {
     
     typealias ChangeConsentListPayload = [Bank.ID]
     // (h) changeClientConsentMe2MePull
@@ -67,7 +67,7 @@ extension ConsentListReducer {
     }
 }
 
-extension ConsentListReducer {
+public extension ConsentListReducer {
     
     typealias State = ConsentListState
     typealias Event = ConsentListEvent

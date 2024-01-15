@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension ConsentListState.UIState.Expanded {
     
     static let preview: Self = .init(

@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-final class ConsentListRxReducer {}
+public final class ConsentListRxReducer {
+    
+    public init() {}
+}
 
-extension ConsentListRxReducer {
+public extension ConsentListRxReducer {
     
     func reduce(
         _ state: State,
@@ -44,7 +47,7 @@ extension ConsentListRxReducer {
     }
 }
 
-extension ConsentListRxReducer {
+public extension ConsentListRxReducer {
     
     typealias State = ConsentListState
     typealias Event = ConsentListEvent

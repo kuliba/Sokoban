@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension ConsentListState {
     
     static let collapsedEmpty: Self = .success(.init(

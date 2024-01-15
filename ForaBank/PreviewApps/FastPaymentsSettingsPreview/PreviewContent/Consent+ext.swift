@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension Consent {
     
     static let preview: Self = .init(
