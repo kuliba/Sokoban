@@ -20,8 +20,6 @@ struct ConsentList: Equatable {
         var id: Bank.ID { bank.id }
     }
     
-    typealias Consent = Set<Bank.ID>
-    
     enum Mode: Equatable {
         
         case collapsed, expanded

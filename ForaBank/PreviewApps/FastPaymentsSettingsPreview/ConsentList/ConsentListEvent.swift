@@ -17,8 +17,6 @@ enum ConsentListEvent: Equatable {
 
 extension ConsentListEvent {
     
-    typealias Consent = Set<Bank.ID>
-    
     enum ConsentFailure: Equatable {
         
         case connectivityError
