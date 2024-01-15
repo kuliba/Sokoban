@@ -45,7 +45,11 @@ extension ConsentListRxReducer {
             }
             
         case let .changeConsentFailure(failure):
-            fatalError("unimplemented")
+            // state should collapse!! + non-inflight plus error - add field if decoration is not possible
+            if let consentList = state.expandedConsentList {
+
+                state = .success(changeConsentFailure(failure, consentList))
+            }
         }
         
         return (state, effect)
@@ -57,6 +61,35 @@ extension ConsentListRxReducer {
     typealias State = ConsentListState
     typealias Event = ConsentListEvent
     typealias Effect = ConsentListEffect
+}
+
+private extension ConsentListRxReducer {
+    
+    func changeConsentFailure(
+        _ failure: ConsentListEvent.ConsentFailure,
+        _ consentList: ConsentList
+    ) -> ConsentList {
+        
+        switch failure {
+        case .connectivityError:
+            return .init(
+                banks: consentList.banks,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: .failure(.connectivityError)
+            )
+            
+        case let .serverError(message):
+            return .init(
+                banks: consentList.banks,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: .failure(.serverError(message))
+            )
+        }
+    }
 }
 
 private extension ConsentListState {
@@ -671,6 +704,181 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNil(reduce(sut, expanded, .changeConsent(anyConsent())).effect)
+    }
+    
+    // MARK: - changeConsentFailure
+    
+    func test_changeConsentFailure_shouldNotChangeStateOnCollapsedError_connectivity() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsentFailure(.connectivityError)).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnCollapsedError_connectivity() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsentFailure(.connectivityError)).effect)
+    }
+    
+    func test_changeConsentFailure_shouldNotChangeStateOnCollapsedError_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsentFailure(.serverError(message))).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnCollapsedError_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsentFailure(.serverError(message))).effect)
+    }
+    
+    func test_changeConsentFailure_shouldNotChangeStateOnExpandedError_connectivityError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
+            expanded
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnExpandedError_connectivityError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsentFailure(.connectivityError)).effect)
+    }
+    func test_changeConsentFailure_shouldNotChangeStateOnExpandedError() {
+        
+        let message = "Change Consent Server Error"
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
+            expanded
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnExpandedError() {
+        
+        let message = "Change Consent Server Error"
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsentFailure(.serverError(message))).effect)
+    }
+    
+    func test_changeConsentFailure_shouldNotChangeStateOnCollapsedConsentList_connectivityError() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsentFailure(.connectivityError)).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnCollapsedConsentList_connectivityError() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsentFailure(.connectivityError)).effect)
+    }
+    
+    func test_changeConsentFailure_shouldNotChangeStateOnCollapsedConsentList_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsentFailure(.serverError(message))).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnCollapsedConsentList_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsentFailure(.serverError(message))).effect)
+    }
+    
+    func test_changeConsentFailure_shouldChangeStateToCollapsedModeAndStatusFailureOnExpandedConsentList_connectivityError() {
+        
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
+            .success(.init(
+                banks: consentList.banks,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: .failure(.connectivityError)
+            ))
+        )
+    }
+    
+    func test_changeConsentFailure_shouldChangeStateToCollapsedModeAndStatusFailureOnExpandedConsentList_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
+            .success(.init(
+                banks: consentList.banks,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: .failure(.serverError(message))
+            ))
+        )
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnExpandedConsentList_connectivityError() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsentFailure(.connectivityError)).effect)
+    }
+    
+    func test_changeConsentFailure_shouldNotDeliverEffectOnExpandedConsentList_serverError() {
+        
+        let message = "Change Consent Server Error"
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsentFailure(.serverError(message))).effect)
     }
     
     // MARK: - Helpers

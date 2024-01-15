@@ -11,6 +11,7 @@ struct ConsentList: Equatable {
     var consent: Consent
     var mode: Mode
     var searchText: String
+    var status: Status?
     
     struct SelectableBank: Equatable, Identifiable {
         
@@ -23,5 +24,16 @@ struct ConsentList: Equatable {
     enum Mode: Equatable {
         
         case collapsed, expanded
+    }
+    
+    enum Status: Equatable {
+        
+        case failure(Failure)
+        
+        enum Failure: Equatable {
+            
+            case connectivityError
+            case serverError(String)
+        }
     }
 }
