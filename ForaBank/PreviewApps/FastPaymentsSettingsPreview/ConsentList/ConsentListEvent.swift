@@ -12,7 +12,7 @@ enum ConsentListEvent: Equatable {
     case tapBank(Bank.ID)
     case applyConsent
     case changeConsent(Consent)
-    case consentFailure(ConsentFailure)
+    case changeConsentFailure(ConsentFailure)
 }
 
 extension ConsentListEvent {

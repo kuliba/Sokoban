@@ -44,7 +44,7 @@ extension ConsentListRxReducer {
                 state = .success(consentList)
             }
             
-        case let .consentFailure(failure):
+        case let .changeConsentFailure(failure):
             fatalError("unimplemented")
         }
         

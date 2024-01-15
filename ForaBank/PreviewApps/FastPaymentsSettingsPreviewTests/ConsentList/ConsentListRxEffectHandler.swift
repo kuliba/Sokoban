@@ -30,10 +30,10 @@ extension ConsentListRxEffectHandler {
                     dispatch(.changeConsent(consent))
                     
                 case let .serverError(message):
-                    dispatch(.consentFailure(.serverError(message)))
+                    dispatch(.changeConsentFailure(.serverError(message)))
 
                 case .connectivityError:
-                    dispatch(.consentFailure(.connectivityError))
+                    dispatch(.changeConsentFailure(.connectivityError))
                 }
             }
         }
@@ -125,7 +125,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         let message = "Change Consent Server Error"
         let (sut, spy) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .consentFailure(.serverError(message)), on: {
+        expect(sut, with: effect, toDeliver: .changeConsentFailure(.serverError(message)), on: {
             
             spy.complete(with: .serverError(message))
         })
@@ -136,7 +136,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         let effect: Effect = .apply(anyConsent())
         let (sut, spy) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .consentFailure(.connectivityError), on: {
+        expect(sut, with: effect, toDeliver: .changeConsentFailure(.connectivityError), on: {
             
             spy.complete(with: .connectivityError)
         })
