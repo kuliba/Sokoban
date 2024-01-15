@@ -46,6 +46,9 @@ extension ConsentListReducer {
             
         case let .changeConsentFailure(failure):
             fatalError("unimplemented")
+            
+        case .resetStatus:
+            fatalError("unimplemented")
         }
     }
 }

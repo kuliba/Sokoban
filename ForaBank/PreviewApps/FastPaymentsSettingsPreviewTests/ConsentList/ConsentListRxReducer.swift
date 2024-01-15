@@ -35,6 +35,9 @@ extension ConsentListRxReducer {
             
         case let .changeConsentFailure(failure):
             state = handleConsentChangeFailure(failure, in: state)
+            
+        case .resetStatus:
+            state = handleResetState(state)
         }
         
         return (state, effect)
@@ -132,6 +135,18 @@ private extension ConsentListRxReducer {
             ))
         }
     }
+    
+    func handleResetState(
+        _ state: State
+    ) -> State {
+        
+        guard case var .success(consentList) = state
+        else { return state }
+        
+        consentList.status = nil
+        
+        return .success(consentList)
+    }
 }
 
 private extension ConsentListState {
@@ -148,10 +163,10 @@ private extension ConsentListState {
     mutating func toggle() {
         
         switch self {
-        case var .failure(failure):
+        case let .failure(failure):
             self = .failure(failure.toggled())
             
-        case var .success(success):
+        case let .success(success):
             self = .success(success.toggled())
         }
     }
@@ -950,6 +965,134 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, expanded, .changeConsentFailure(.serverError(message))).effect)
     }
     
+    // MARK: - resetStatus
+    
+    func test_resetStatus_shouldNotChangeStateOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .resetStatus).state,
+            collapsed
+        )
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .resetStatus).effect)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .resetStatus).state,
+            expanded
+        )
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .resetStatus).effect)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnCollapsedConsentList() {
+        
+        let collapsed = collapsedConsentList()
+        let state: State = .success(collapsed)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, state, .resetStatus).state,
+            .success(.init(
+                banks: collapsed.banks,
+                consent: collapsed.consent,
+                mode: collapsed.mode,
+                searchText: collapsed.searchText,
+                status: nil
+            ))
+        )
+    }
+    
+    func test_resetStatus_shouldResetStatusOnCollapsedConsentList_inflight() {
+        
+        let collapsed = collapsedConsentList(status: .inflight)
+        let state: State = .success(collapsed)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, state, .resetStatus).state,
+            .success(.init(
+                banks: collapsed.banks,
+                consent: collapsed.consent,
+                mode: collapsed.mode,
+                searchText: collapsed.searchText,
+                status: nil
+            ))
+        )
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .resetStatus).effect)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnExpandedConsentList() {
+        
+        let expanded = expandedConsentList()
+        let state: State = .success(expanded)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, state, .resetStatus).state,
+            .success(.init(
+                banks: expanded.banks,
+                consent: expanded.consent,
+                mode: expanded.mode,
+                searchText: expanded.searchText,
+                status: nil
+            ))
+        )
+    }
+    
+    func test_resetStatus_shouldResetStatusOnExpandedConsentList_inflight() {
+        
+        let expanded = expandedConsentList(status: .inflight)
+        let state: State = .success(expanded)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, state, .resetStatus).state,
+            .success(.init(
+                banks: expanded.banks,
+                consent: expanded.consent,
+                mode: expanded.mode,
+                searchText: expanded.searchText,
+                status: nil
+            ))
+        )
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .resetStatus).effect)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ConsentListRxReducer
@@ -981,14 +1124,16 @@ final class ConsentListRxReducerTests: XCTestCase {
     private func collapsedConsentList(
         banks: [ConsentList.SelectableBank] = .preview,
         consent: Consent = .preview,
-        searchText: String = ""
+        searchText: String = "",
+        status: ConsentList.Status? = nil
     ) -> ConsentList {
         
         .init(
             banks: banks,
             consent: consent,
             mode: .collapsed,
-            searchText: searchText
+            searchText: searchText,
+            status: status
         )
     }
     

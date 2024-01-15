@@ -13,6 +13,7 @@ enum ConsentListEvent: Equatable {
     case applyConsent
     case changeConsent(Consent)
     case changeConsentFailure(ConsentFailure)
+    case resetStatus
 }
 
 extension ConsentListEvent {
