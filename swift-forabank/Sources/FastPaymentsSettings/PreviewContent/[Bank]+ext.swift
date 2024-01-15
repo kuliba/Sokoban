@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-import FastPaymentsSettings
-
 public extension Array where Element == Bank {
     
     static let preview: Self = ["Сбербанк", "Альфа-банк", "ВТБ", "Тинькофф банк", "Открытие", "Сургутнефтегазбанк"].map {

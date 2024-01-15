@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-import FastPaymentsSettings
-
-extension ConsentListState.UIState.Collapsed {
+public extension ConsentListState.UIState.Collapsed {
     
     static let empty: Self = .init(bankNames: [])
     
