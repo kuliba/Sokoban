@@ -734,6 +734,8 @@
 		2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E32B5507A100D6A0BA /* Spy.swift */; };
 		2ABFB8E62B5507BF00D6A0BA /* SpyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */; };
 		2ABFB8E92B5522BB00D6A0BA /* Consent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E72B55228F00D6A0BA /* Consent.swift */; };
+		2ABFB8EC2B5524C900D6A0BA /* anyBankID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */; };
+		2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8ED2B55250600D6A0BA /* anyString.swift */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -3070,6 +3072,8 @@
 		2ABFB8E32B5507A100D6A0BA /* Spy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spy.swift; sourceTree = "<group>"; };
 		2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpyOf.swift; sourceTree = "<group>"; };
 		2ABFB8E72B55228F00D6A0BA /* Consent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consent.swift; sourceTree = "<group>"; };
+		2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyBankID.swift; sourceTree = "<group>"; };
+		2ABFB8ED2B55250600D6A0BA /* anyString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyString.swift; sourceTree = "<group>"; };
 		2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryRegularFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2AC2ADB12B2217670049EE9B /* QRResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolver.swift; sourceTree = "<group>"; };
 		2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverTests.swift; sourceTree = "<group>"; };
@@ -7026,6 +7030,15 @@
 			path = FetcherAdapters;
 			sourceTree = "<group>";
 		};
+		2ABFB8EA2B5524C200D6A0BA /* TestHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */,
+				2ABFB8ED2B55250600D6A0BA /* anyString.swift */,
+			);
+			path = TestHelpers;
+			sourceTree = "<group>";
+		};
 		2AC2ADB72B2240AC0049EE9B /* GetSberQRData */ = {
 			isa = PBXGroup;
 			children = (
@@ -7133,6 +7146,7 @@
 		2ACE0AA52B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests */ = {
 			isa = PBXGroup;
 			children = (
+				2ABFB8EA2B5524C200D6A0BA /* TestHelpers */,
 				2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */,
 				2AE87AEF2B5452D800B5B7CA /* ConsentList */,
 				2AE87AF22B54531F00B5B7CA /* RxViewModel */,
@@ -13165,9 +13179,11 @@
 				2AE87B072B54698C00B5B7CA /* unimplemented.swift in Sources */,
 				2ABFB8E62B5507BF00D6A0BA /* SpyOf.swift in Sources */,
 				2A5D340E2B5408A100E9214F /* FastPaymentsSettingsPreviewTests.swift in Sources */,
+				2ABFB8EC2B5524C900D6A0BA /* anyBankID.swift in Sources */,
 				2AE87AF72B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift in Sources */,
 				2A5D340F2B5408A100E9214F /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */,
+				2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */,
 				2AE87AFF2B54550200B5B7CA /* ConsentListRxViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

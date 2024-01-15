@@ -282,14 +282,14 @@ final class ConsentListRxReducerTests: XCTestCase {
     }
     
     // MARK: - search
-    
+    #warning("ass tests for empty string")
     func test_search_shouldNotChangeStateOnCollapsedError() {
         
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .search(UUID().uuidString)).state,
+            reduce(sut, collapsed, .search(anyString())).state,
             collapsed
         )
     }
@@ -299,7 +299,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .search(UUID().uuidString)).effect)
+        XCTAssertNil(reduce(sut, collapsed, .search(anyString())).effect)
     }
     
     func test_search_shouldNotChangeStateOnExpandedError() {
@@ -308,7 +308,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .search(UUID().uuidString)).state,
+            reduce(sut, expanded, .search(anyString())).state,
             expanded
         )
     }
@@ -318,7 +318,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, expanded, .search(UUID().uuidString)).effect)
+        XCTAssertNil(reduce(sut, expanded, .search(anyString())).effect)
     }
     
     func test_search_shouldNotChangeStateOnCollapsedConsentList() {
@@ -327,7 +327,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .search(UUID().uuidString)).state,
+            reduce(sut, collapsed, .search(anyString())).state,
             collapsed
         )
     }
@@ -337,7 +337,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .search(UUID().uuidString)).effect)
+        XCTAssertNil(reduce(sut, collapsed, .search(anyString())).effect)
     }
     
     func test_search_shouldChangeSearchTextOnExpandedConsentList() {
@@ -363,7 +363,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, expanded, .search(UUID().uuidString)).effect)
+        XCTAssertNil(reduce(sut, expanded, .search(anyString())).effect)
     }
     
     // MARK: - tapBank
@@ -374,7 +374,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).state,
+            reduce(sut, collapsed, .tapBank(anyBankID())).state,
             collapsed
         )
     }
@@ -384,7 +384,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let collapsed: State = .failure(.collapsedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).effect)
+        XCTAssertNil(reduce(sut, collapsed, .tapBank(anyBankID())).effect)
     }
     
     func test_tapBank_shouldNotChangeStateOnExpandedError() {
@@ -393,7 +393,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).state,
+            reduce(sut, expanded, .tapBank(anyBankID())).state,
             expanded
         )
     }
@@ -403,7 +403,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let expanded: State = .failure(.expandedError)
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).effect)
+        XCTAssertNil(reduce(sut, expanded, .tapBank(anyBankID())).effect)
     }
     
     func test_tapBank_shouldNotChangeStateOnCollapsedConsentList() {
@@ -412,7 +412,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).state,
+            reduce(sut, collapsed, .tapBank(anyBankID())).state,
             collapsed
         )
     }
@@ -422,7 +422,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let collapsed: State = .success(collapsedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, collapsed, .tapBank(.init(UUID().uuidString))).effect)
+        XCTAssertNil(reduce(sut, collapsed, .tapBank(anyBankID())).effect)
     }
     
     func test_tapBank_shouldChangeBanksOnExpandedConsentList() throws {
@@ -468,7 +468,7 @@ final class ConsentListRxReducerTests: XCTestCase {
             consentList.mode
         )
     }
-    
+
     func test_tapBank_shouldNotChangeSearchTextOnExpandedConsentList() throws {
         
         let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
@@ -487,7 +487,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let expanded: State = .success(expandedConsentList())
         let sut = makeSUT()
         
-        XCTAssertNil(reduce(sut, expanded, .tapBank(.init(UUID().uuidString))).effect)
+        XCTAssertNil(reduce(sut, expanded, .tapBank(anyBankID())).effect)
     }
     
     // MARK: - applyConsent
