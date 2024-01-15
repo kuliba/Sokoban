@@ -738,13 +738,11 @@
 		2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8ED2B55250600D6A0BA /* anyString.swift */; };
 		2ABFB8F02B552B4C00D6A0BA /* anyConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */; };
 		2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */; };
-		2ABFB8F22B55543B00D6A0BA /* RxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF02B54530200B5B7CA /* RxViewModel.swift */; };
 		2ABFB8F42B55545700D6A0BA /* ConsentListEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */; };
 		2ABFB8F92B5554EA00D6A0BA /* ConsentListRxEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8F72B55549A00D6A0BA /* ConsentListRxEffectHandler.swift */; };
 		2ABFB8FA2B5554F200D6A0BA /* ConsentListRxReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8F52B55546900D6A0BA /* ConsentListRxReducer.swift */; };
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
-		2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */; };
 		2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */; };
 		2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
@@ -3139,8 +3137,6 @@
 		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
-		2AE87AF02B54530200B5B7CA /* RxViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModel.swift; sourceTree = "<group>"; };
-		2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModelTests.swift; sourceTree = "<group>"; };
 		2AE87AF62B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
 		2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxViewModel.swift; sourceTree = "<group>"; };
@@ -6500,7 +6496,6 @@
 				2AA70FB72B529F040061F5DD /* Informer */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2AA70FC42B52C0760061F5DD /* ConsentList */,
-				2AE87AF22B54531F00B5B7CA /* RxViewModel */,
 				2A6EAAA72B5076A10093EE83 /* Helpers */,
 				2ABFB8FB2B55551400D6A0BA /* ThirdPartyDependencies */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
@@ -7060,14 +7055,6 @@
 			path = ThirdPartyDependencies;
 			sourceTree = "<group>";
 		};
-		2ABFB9012B5555C200D6A0BA /* RxViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */,
-			);
-			path = RxViewModel;
-			sourceTree = "<group>";
-		};
 		2ABFB9062B5565BE00D6A0BA /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
@@ -7195,7 +7182,6 @@
 			children = (
 				2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */,
 				2AE87AEF2B5452D800B5B7CA /* ConsentList */,
-				2ABFB9012B5555C200D6A0BA /* RxViewModel */,
 				2ABFB8EA2B5524C200D6A0BA /* TestHelpers */,
 				2ACE0AB02B540281007AA2ED /* Helpers */,
 				2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */,
@@ -7309,14 +7295,6 @@
 				2AE87B042B54556400B5B7CA /* ConsentListRxEffectHandlerTests.swift */,
 			);
 			path = ConsentList;
-			sourceTree = "<group>";
-		};
-		2AE87AF22B54531F00B5B7CA /* RxViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2AE87AF02B54530200B5B7CA /* RxViewModel.swift */,
-			);
-			path = RxViewModel;
 			sourceTree = "<group>";
 		};
 		2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */ = {
@@ -13191,7 +13169,6 @@
 				2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
 				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
-				2ABFB8F22B55543B00D6A0BA /* RxViewModel.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
 				2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */,
 				2A9536462B533ABB00E874F5 /* ConsentListFailure.swift in Sources */,
@@ -13222,7 +13199,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */,
 				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
 				2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */,
 				2AE87B052B54556400B5B7CA /* ConsentListRxEffectHandlerTests.swift in Sources */,
