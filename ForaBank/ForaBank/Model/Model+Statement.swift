@@ -179,6 +179,8 @@ extension Model {
         }
     }
     
+    // TODO: убрать и переделать
+    
     typealias ResultGetCardStatementForPeriod = Result<ServerCommands.CardController.GetCardStatementForPeriod.Response, ServerAgentError>
     
     typealias ResultParserGetCardStatementForPeriod = Result<[ProductStatementData], ModelProductsError>

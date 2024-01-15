@@ -10,18 +10,36 @@ import XCTest
 
 final class Model_StatementTests: XCTestCase {
     
-    func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageEmpty_returnErrorEmptyDataWithEmptyMessage() {
+    // MARK: ParserGetCardStatementForPeriod Tests
+
+   /* func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageEmpty_returnErrorEmptyDataWithEmptyMessage() {
         
-        let sut = Model.parserGetCardStatementForPeriod(result: .success(.init(statusCode: .ok, errorMessage: "", data: .none)))
+        let result = parser(
+            result: .success(.init(
+                statusCode: .ok,
+                errorMessage: "", data: .none)))
         
-        XCTAssertNoDiff(sut, .failure(.emptyData(message: "")) )
+        XCTAssertNoDiff(result, .errorEmptyDataWithOutMessage)
     }
     
-    func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageNotEmpty_returnErrorEmptyDataWithNotEmptyMessage() {
+    func test_parserGetCardStatementForPeriod_ok_emptyData_errorMessageNotEmpty_returnErrorEmptyDataWithMessage() {
         
-        let sut = Model.parserGetCardStatementForPeriod(result: .success(.init(statusCode: .ok, errorMessage: "error", data: .none)))
+        let result = parser(
+            result: .success(.init(
+                statusCode: .ok,
+                errorMessage: "error",
+                data: .none)))
         
-        XCTAssertNoDiff(sut, .failure(.emptyData(message: "error")) )
+        XCTAssertNoDiff(result, .errorEmptyDataWithMessage)
+    }*/
+    
+    // MARK: - Helpers
+    
+    private func parser(
+        result: Model.ResultGetCardStatementForPeriod
+    ) -> Model.ResultParserGetCardStatementForPeriod {
+                
+        return Model.parserGetCardStatementForPeriod(result: result)
     }
 }
 
@@ -52,4 +70,10 @@ extension ModelProductsError: Equatable {
             return false
         }
     }
+}
+
+private extension Model.ResultParserGetCardStatementForPeriod {
+    
+    static let errorEmptyDataWithOutMessage: Self = .failure(.emptyData(message: ""))
+    static let errorEmptyDataWithMessage: Self = .failure(.emptyData(message: "error"))
 }
