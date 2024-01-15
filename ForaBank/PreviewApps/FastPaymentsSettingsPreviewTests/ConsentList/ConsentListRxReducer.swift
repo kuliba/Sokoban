@@ -22,35 +22,19 @@ extension ConsentListRxReducer {
             state.toggle()
             
         case let .search(text):
-            if var consentList = state.expandedConsentList {
-                consentList.searchText = text
-                state = .success(consentList)
-            }
+            state = updateStateForSearch(with: text, in: state)
             
         case let .tapBank(bankID):
-            if var consentList = state.expandedConsentList {
-                consentList.banks[bankID]?.isSelected.toggle()
-                state = .success(consentList)
-            }
+            state = updateStateForTapBank(with: bankID, in: state)
             
         case .applyConsent:
-            if let consentList = state.expandedConsentList {
-                
-                (state, effect) = applyConsent(consentList)
-            }
+            (state, effect) = applyConsent(to: state)
             
         case let .changeConsent(consent):
-            if var consentList = state.expandedConsentList {
-                consentList.consent = consent
-                state = .success(consentList)
-            }
+            state = handleConsentChange(consent, in: state)
             
         case let .changeConsentFailure(failure):
-            // state should collapse!! + non-inflight plus error - add field if decoration is not possible
-            if let consentList = state.expandedConsentList {
-                
-                state = .success(changeConsentFailure(failure, consentList))
-            }
+            state = handleConsentChangeFailure(failure, in: state)
         }
         
         return (state, effect)
@@ -66,42 +50,86 @@ extension ConsentListRxReducer {
 
 private extension ConsentListRxReducer {
     
-    func applyConsent(
-        _ consentList: ConsentList
-    ) -> (State, Effect) {
+    func updateStateForSearch(
+        with text: String,
+        in state: State
+    ) -> State {
         
-        var consentList = consentList
+        guard var consentList = state.expandedConsentList
+        else { return state }
+        
+        consentList.searchText = text
+        
+        return .success(consentList)
+    }
+    
+    func updateStateForTapBank(
+        with bankID: Bank.ID,
+        in state: State
+    ) -> State {
+        
+        guard var consentList = state.expandedConsentList
+        else { return state }
+        
+        consentList.banks[bankID]?.isSelected.toggle()
+        
+        return .success(consentList)
+    }
+    
+    func applyConsent(
+        to state: State
+    ) -> (State, Effect?) {
+        
+        guard var consentList = state.expandedConsentList
+        else { return (state, nil) }
+        
         consentList.mode = .collapsed
         consentList.status = .inflight
-        let state: State = .success(consentList)
-        let effect: Effect = .apply(.init(consentList.consent))
         
-        return (state, effect)
+        return (.success(consentList), .apply(.init(consentList.consent)))
     }
+    
+    func handleConsentChange(
+        _ consent: Consent,
+        in state: State
+    ) -> State {
         
-    func changeConsentFailure(
+        guard var consentList = state.expandedConsentList
+        else { return state }
+        
+        consentList.consent = consent
+        consentList.mode = .collapsed
+        consentList.status = nil
+        
+        return .success(consentList)
+    }
+    
+    func handleConsentChangeFailure(
         _ failure: ConsentListEvent.ConsentFailure,
-        _ consentList: ConsentList
-    ) -> ConsentList {
+        in state: State
+    ) -> State {
+        
+        guard let consentList = state.expandedConsentList
+        else { return state }
         
         switch failure {
         case .connectivityError:
-            return .init(
+            return .success(.init(
                 banks: consentList.banks,
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: consentList.searchText,
                 status: .failure(.connectivityError)
-            )
+            ))
             
         case let .serverError(message):
-            return .init(
+            return .success(.init(
                 banks: consentList.banks,
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: consentList.searchText,
                 status: .failure(.serverError(message))
-            )
+            ))
         }
     }
 }
@@ -701,7 +729,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, collapsed, .changeConsent(anyConsent())).effect)
     }
     
-    func test_changeConsent_shouldChangeConsentOnExpandedConsentList() {
+    func test_changeConsent_shouldChangeConsentAndModeOnExpandedConsentList() {
         
         let consent = anyConsent()
         let consentList = expandedConsentList()
@@ -713,8 +741,28 @@ final class ConsentListRxReducerTests: XCTestCase {
             .success(.init(
                 banks: consentList.banks,
                 consent: consent,
-                mode: consentList.mode,
-                searchText: consentList.searchText
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: nil
+            ))
+        )
+    }
+    
+    func test_changeConsent_shouldChangeConsentAndModeOnExpandedConsentListInFlight() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList(status: .inflight)
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state,
+            .success(.init(
+                banks: consentList.banks,
+                consent: consent,
+                mode: .collapsed,
+                searchText: consentList.searchText,
+                status: nil
             ))
         )
     }
@@ -872,7 +920,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         let consentList = expandedConsentList()
         let expanded: State = .success(consentList)
         let sut = makeSUT()
-
+        
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
             .success(.init(
@@ -947,14 +995,16 @@ final class ConsentListRxReducerTests: XCTestCase {
     private func expandedConsentList(
         banks: [ConsentList.SelectableBank] = .preview,
         consent: Consent = .preview,
-        searchText: String = ""
+        searchText: String = "",
+        status: ConsentList.Status? = nil
     ) -> ConsentList {
         
         .init(
             banks: banks,
             consent: consent,
             mode: .expanded,
-            searchText: searchText
+            searchText: searchText,
+            status: status
         )
     }
     
