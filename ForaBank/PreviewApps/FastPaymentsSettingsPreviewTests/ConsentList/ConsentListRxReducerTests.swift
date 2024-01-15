@@ -439,7 +439,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, collapsed, .applyConsent).effect)
     }
     
-    func test_applyConsent_shouldChangeStateToCollapsedModeAnsStatusInflightOnExpandedConsentList() {
+    func test_applyConsent_shouldChangeStatusToInflightOnExpandedConsentList() {
         
         let expanded = expandedConsentList()
         let state: State = .success(expanded)
@@ -450,7 +450,7 @@ final class ConsentListRxReducerTests: XCTestCase {
             .success(.init(
                 banks: expanded.banks,
                 consent: expanded.consent,
-                mode: .collapsed,
+                mode: expanded.mode,
                 searchText: expanded.searchText,
                 status: .inflight
             ))
@@ -697,38 +697,83 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, collapsed, .changeConsentFailure(.serverError(message))).effect)
     }
     
-    func test_changeConsentFailure_shouldChangeStateToCollapsedModeAndStatusFailureOnExpandedConsentList_connectivityError() {
+    func test_changeConsentFailure_shouldChangeStateOnExpandedConsentList_connectivityError_emptySearchText() {
         
-        let consentList = expandedConsentList()
+        let consentList = expandedConsentList(
+            searchText: ""
+        )
         let expanded: State = .success(consentList)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
             .success(.init(
-                banks: consentList.banks,
+                banks: .consented,
                 consent: consentList.consent,
                 mode: .collapsed,
-                searchText: consentList.searchText,
+                searchText: "",
                 status: .failure(.connectivityError)
             ))
         )
     }
     
-    func test_changeConsentFailure_shouldChangeStateToCollapsedModeAndStatusFailureOnExpandedConsentList_serverError() {
+    func test_changeConsentFailure_shouldChangeStateOnExpandedConsentList_serverError_emptySearchText() {
         
         let message = "Change Consent Server Error"
-        let consentList = expandedConsentList()
+        let consentList = expandedConsentList(
+            searchText: ""
+        )
         let expanded: State = .success(consentList)
         let sut = makeSUT()
         
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
             .success(.init(
-                banks: consentList.banks,
+                banks: .consented,
                 consent: consentList.consent,
                 mode: .collapsed,
-                searchText: consentList.searchText,
+                searchText: "",
+                status: .failure(.serverError(message))
+            ))
+        )
+    }
+    
+    func test_changeConsentFailure_shouldChangeStateOnExpandedConsentList_connectivityError_nonEmptySearchText() {
+        
+        let consentList = expandedConsentList(
+            searchText: UUID().uuidString
+        )
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
+            .success(.init(
+                banks: .consented,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: "",
+                status: .failure(.connectivityError)
+            ))
+        )
+    }
+    
+    func test_changeConsentFailure_shouldChangeStateOnExpandedConsentList_serverError_nonEmptySearchText() {
+        
+        let message = "Change Consent Server Error"
+        let consentList = expandedConsentList(
+            searchText: UUID().uuidString
+        )
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
+            .success(.init(
+                banks: .consented,
+                consent: consentList.consent,
+                mode: .collapsed,
+                searchText: "",
                 status: .failure(.serverError(message))
             ))
         )
@@ -972,13 +1017,6 @@ final class ConsentListRxReducerTests: XCTestCase {
             XCTFail("Expected collapsed state, got \(result.state) instead.", file: file, line: line)
         }
     }
-}
-
-extension Set where Element == Bank.ID {
-    
-    static let preview: Self = .init(
-        [ConsentList.SelectableBank].preview.prefix(2).map(\.id)
-    )
 }
 
 // MARK: DSL

@@ -14,12 +14,20 @@ extension ConsentListState {
         searchText: ""
     ))
     
-    static let collapsedPreview: Self = .success(.init(
-        banks: .preview,
-        consent: [],
-        mode: .collapsed,
-        searchText: ""
-    ))
+    static var collapsedPreview: Self {
+        
+        let banks: [ConsentList.SelectableBank] = [Bank].preview.map {
+            
+            .init(bank: $0, isSelected: Consent.preview.contains($0.id))
+        }
+        
+       return .success(.init(
+            banks: banks,
+            consent: .preview,
+            mode: .collapsed,
+            searchText: ""
+        ))
+    }
     
     static func expanded(
         _ banks: [ConsentList.SelectableBank],
