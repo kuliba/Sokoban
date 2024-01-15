@@ -41,7 +41,7 @@ extension ConsentListReducer {
         case .applyConsent:
             apply(state, completion)
             
-        case let .consent(consent):
+        case let .changeConsent(consent):
             fatalError("unimplemented")
             
         case let .consentFailure(failure):

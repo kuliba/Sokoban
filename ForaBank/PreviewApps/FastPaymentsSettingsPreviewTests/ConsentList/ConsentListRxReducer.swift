@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
-final class ConsentListRxReducer {
-    
-}
+final class ConsentListRxReducer {}
 
 extension ConsentListRxReducer {
     
@@ -40,8 +38,11 @@ extension ConsentListRxReducer {
                 effect = .apply(.init(consentList.consent))
             }
             
-        case let .consent(consent):
-            fatalError("unimplemented")
+        case let .changeConsent(consent):
+            if var consentList = state.expandedConsentList {
+                consentList.consent = consent
+                state = .success(consentList)
+            }
             
         case let .consentFailure(failure):
             fatalError("unimplemented")
@@ -282,7 +283,7 @@ final class ConsentListRxReducerTests: XCTestCase {
     }
     
     // MARK: - search
-
+    
     func test_search_shouldNotChangeStateOnCollapsedError() {
         
         let collapsed: State = .failure(.collapsedError)
@@ -481,7 +482,7 @@ final class ConsentListRxReducerTests: XCTestCase {
             consentList.mode
         )
     }
-
+    
     func test_tapBank_shouldNotChangeSearchTextOnExpandedConsentList() throws {
         
         let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
@@ -585,6 +586,91 @@ final class ConsentListRxReducerTests: XCTestCase {
             reduce(sut, expanded, .applyConsent).effect,
             .apply(.init(consent))
         )
+    }
+    
+    // MARK: - changeConsent
+    
+    func test_changeConsent_shouldNotChangeStateOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsent(anyConsent())).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsent_shouldNotDeliverEffectOnCollapsedError() {
+        
+        let collapsed: State = .failure(.collapsedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsent(anyConsent())).effect)
+    }
+    
+    func test_changeConsent_shouldNotChangeStateOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(anyConsent())).state,
+            expanded
+        )
+    }
+    
+    func test_changeConsent_shouldNotDeliverEffectOnExpandedError() {
+        
+        let expanded: State = .failure(.expandedError)
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsent(anyConsent())).effect)
+    }
+    
+    func test_changeConsent_shouldNotChangeStateOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, collapsed, .changeConsent(anyConsent())).state,
+            collapsed
+        )
+    }
+    
+    func test_changeConsent_shouldNotDeliverEffectOnCollapsedConsentList() {
+        
+        let collapsed: State = .success(collapsedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, collapsed, .changeConsent(anyConsent())).effect)
+    }
+    
+    func test_changeConsent_shouldChangeConsentOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state,
+            .success(.init(
+                banks: consentList.banks,
+                consent: consent,
+                mode: consentList.mode,
+                searchText: consentList.searchText
+            ))
+        )
+    }
+    
+    func test_changeConsent_shouldNotDeliverEffectOnExpandedConsentList() {
+        
+        let expanded: State = .success(expandedConsentList())
+        let sut = makeSUT()
+        
+        XCTAssertNil(reduce(sut, expanded, .changeConsent(anyConsent())).effect)
     }
     
     // MARK: - Helpers

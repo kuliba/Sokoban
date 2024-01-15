@@ -8,7 +8,7 @@
 struct ConsentList: Equatable {
     
     var banks: [SelectableBank]
-    let consent: Consent
+    var consent: Consent
     var mode: Mode
     var searchText: String
     
