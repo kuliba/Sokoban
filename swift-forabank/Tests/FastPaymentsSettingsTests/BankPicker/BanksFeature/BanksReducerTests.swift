@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.12.2023.
 //
 
+import FastPaymentsSettings
 import XCTest
 
 final class BanksReducerTests: XCTestCase {

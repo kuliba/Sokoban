@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 31.12.2023.
 //
 
+import FastPaymentsSettings
+
 final class BanksReducer {
     
     private let applySelection: ApplySelection

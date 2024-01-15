@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.12.2023.
 //
 
+import FastPaymentsSettings
 import Tagged
 
 public struct Banks: Equatable {
@@ -17,15 +18,6 @@ public struct Banks: Equatable {
         self.allBanks = allBanks
         self.selected = selected
     }
-}
-
-public struct Bank: Equatable, Identifiable {
-    
-    public let id: ID
-    public let name: String
-    
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
 }
 
 public struct SelectableBank: Equatable {

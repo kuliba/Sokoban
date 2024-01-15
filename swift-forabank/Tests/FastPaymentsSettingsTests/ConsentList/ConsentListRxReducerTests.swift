@@ -6,7 +6,6 @@
 //
 
 import FastPaymentsSettings
-@testable import FastPaymentsSettingsPreview
 import XCTest
 
 final class ConsentListRxReducerTests: XCTestCase {
