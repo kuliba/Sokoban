@@ -6,5 +6,6 @@
 //
 
 enum FastPaymentsSettingsEffect: Equatable {
-    
+ 
+    case getUserPaymentSettings
 }
