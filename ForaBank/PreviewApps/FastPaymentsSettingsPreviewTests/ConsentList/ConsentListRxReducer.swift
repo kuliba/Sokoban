@@ -36,9 +36,15 @@ extension ConsentListRxReducer {
             }
             
         case .apply:
-            if var consentList = state.expandedConsentList {
-                effect = .apply
+            if let consentList = state.expandedConsentList {
+                effect = .apply(.init(consentList.consent))
             }
+            
+        case let .consent(consent):
+            fatalError("unimplemented")
+            
+        case let .consentFailure(failure):
+            fatalError("unimplemented")
         }
         
         return (state, effect)
@@ -554,12 +560,18 @@ final class ConsentListRxReducerTests: XCTestCase {
         )
     }
     
-    func test_apply_shouldDeliverApplyEffectOnExpandedConsentList() {
+    func test_apply_shouldDeliverApplyEffectWithConsentOnExpandedConsentList() {
         
-        let expanded: State = .success(expandedConsentList())
+        let consent: ConsentList.Consent = ["открытие", "сургутнефтегазбанк"]
+        let expanded: State = .success(expandedConsentList(
+            consent: consent
+        ))
         let sut = makeSUT()
         
-        XCTAssertNoDiff(reduce(sut, expanded, .apply).effect, .apply)
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .apply).effect,
+            .apply(.init(consent))
+        )
     }
     
     // MARK: - Helpers
@@ -592,7 +604,7 @@ final class ConsentListRxReducerTests: XCTestCase {
     
     private func collapsedConsentList(
         banks: [ConsentList.SelectableBank] = .preview,
-        consent: Set<Bank.ID> = .preview,
+        consent: ConsentList.Consent = .preview,
         searchText: String = ""
     ) -> ConsentList {
         
@@ -606,7 +618,7 @@ final class ConsentListRxReducerTests: XCTestCase {
     
     private func expandedConsentList(
         banks: [ConsentList.SelectableBank] = .preview,
-        consent: Set<Bank.ID> = .preview,
+        consent: ConsentList.Consent = .preview,
         searchText: String = ""
     ) -> ConsentList {
         

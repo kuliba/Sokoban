@@ -11,4 +11,17 @@ enum ConsentListEvent: Equatable {
     case search(String)
     case tapBank(Bank.ID)
     case apply
+    case consent(Consent)
+    case consentFailure(ConsentFailure)
+}
+
+extension ConsentListEvent {
+    
+    typealias Consent = Set<Bank.ID>
+    
+    enum ConsentFailure: Equatable {
+        
+        case connectivityError
+        case serverError(String)
+    }
 }

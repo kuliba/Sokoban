@@ -13,11 +13,14 @@ extension ConsentListRxViewModel {
     
     static func `default`(
         initialState: State,
+        changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ConsentListRxViewModel {
         
         let reducer = ConsentListRxReducer()
-        let effectHandler = ConsentListRxEffectHandler()
+        let effectHandler = ConsentListRxEffectHandler(
+            changeConsentList: changeConsentList
+        )
         
         return .init(
             initialState: initialState,
