@@ -8,10 +8,10 @@
 import CombineSchedulers
 import Foundation
 
-public typealias AnySchedulerOfDispatchQueue = AnySchedulerOf<DispatchQueue>
+typealias AnySchedulerOfDispatchQueue = AnySchedulerOf<DispatchQueue>
 typealias TestSchedulerOfDispatchQueue = TestSchedulerOf<DispatchQueue>
 
-public extension AnySchedulerOfDispatchQueue {
+extension AnySchedulerOfDispatchQueue {
     
     static func makeMain() -> AnySchedulerOfDispatchQueue { .main }
 }
