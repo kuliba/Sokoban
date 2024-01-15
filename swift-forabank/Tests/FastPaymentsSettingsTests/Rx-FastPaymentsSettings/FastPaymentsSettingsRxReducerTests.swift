@@ -15,7 +15,7 @@ extension FastPaymentsSettingsRxReducer {
         _ state: State,
         _ event: Event
     ) -> (State, Effect?) {
-
+        
         var state = state
         var effect: Effect?
         
@@ -24,7 +24,8 @@ extension FastPaymentsSettingsRxReducer {
             (state, effect) = handleAppear(state)
             
         case let .loadedUserPaymentSettings(userPaymentSettings):
-            fatalError("unimplemented")
+            state = handleLoadedUserPaymentSettings(userPaymentSettings)
+            
         case .activateContract:
             fatalError("unimplemented")
         case .deactivateContract:
@@ -54,6 +55,13 @@ private extension FastPaymentsSettingsRxReducer {
         
         return (state, .getUserPaymentSettings)
     }
+    
+    func handleLoadedUserPaymentSettings(
+        _ userPaymentSettings: UserPaymentSettings
+    ) -> State {
+        
+        .init(userPaymentSettings: userPaymentSettings)
+    }
 }
 
 extension FastPaymentsSettingsRxReducer {
@@ -73,10 +81,9 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_appear_shouldSetStatusToInflight_emptyState() {
         
         let emptyState: State = .init()
-        let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, emptyState, .appear).state,
+            reduce(makeSUT(), emptyState, .appear).state,
             .init(status: .inflight)
         )
     }
@@ -84,10 +91,9 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_appear_shouldDeliverGetUserPaymentSettingsEffect_emptyState() {
         
         let EmptyState: State = .init()
-        let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, EmptyState, .appear).effect,
+            reduce(makeSUT(), EmptyState, .appear).effect,
             .getUserPaymentSettings
         )
     }
@@ -96,10 +102,9 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let userPaymentSettings = anyContractedSettings()
         let state: State = .init(userPaymentSettings: userPaymentSettings)
-        let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, state, .appear).state,
+            reduce(makeSUT(), state, .appear).state,
             .init(
                 userPaymentSettings: userPaymentSettings,
                 status: .inflight
@@ -111,11 +116,70 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let userPaymentSettings = anyContractedSettings()
         let state: State = .init(userPaymentSettings: userPaymentSettings)
-        let sut = makeSUT()
         
         XCTAssertNoDiff(
-            reduce(sut, state, .appear).effect,
+            reduce(makeSUT(), state, .appear).effect,
             .getUserPaymentSettings
+        )
+    }
+    
+    // MARK: - loadedUserPaymentSettings
+    
+    func test_loadedUserPaymentSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
+        
+        let state: State = .init(status: .inflight)
+        let loaded = anyContractedSettings()
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), state, .loadedUserPaymentSettings(loaded)).state,
+            .init(
+                userPaymentSettings: loaded,
+                status: nil
+            )
+        )
+    }
+    
+    func test_loadedUserPaymentSettings_shouldNotDeliverEffect_emptyState() {
+        
+        let state: State = .init(status: .inflight)
+        let loaded = anyContractedSettings()
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), state, .loadedUserPaymentSettings(loaded)).effect,
+            nil
+        )
+    }
+    
+    func test_loadedUserPaymentSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
+        
+        let contracted = anyContractedSettings()
+        let loaded = anyContractedSettings()
+        let state: State = .init(
+            userPaymentSettings: contracted,
+            status: .inflight
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), state, .loadedUserPaymentSettings(loaded)).state,
+            .init(
+                userPaymentSettings: loaded,
+                status: nil
+            )
+        )
+    }
+    
+    func test_loadedUserPaymentSettings_shouldNotDeliverEffect_nonEmptyState() {
+        
+        let contracted = anyContractedSettings()
+        let loaded = anyContractedSettings()
+        let state: State = .init(
+            userPaymentSettings: contracted,
+            status: .inflight
+        )
+        
+        XCTAssertNoDiff(
+            reduce(makeSUT(), state, .loadedUserPaymentSettings(loaded)).effect,
+            nil
         )
     }
     
