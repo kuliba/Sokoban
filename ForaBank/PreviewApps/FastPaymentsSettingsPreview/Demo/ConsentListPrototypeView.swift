@@ -15,7 +15,8 @@ struct ConsentListPrototypeView: View {
         
         ConsentListWrapperView(viewModel: .init(
             initialState: flow.initialState,
-            reduce: flow.reducer.reduce(_:_:_:)
+            reduce: flow.rxReducer.reduce(_:_:),
+            handleEffect: flow.effectHandler.handleEffect(_:_:)
         ))
         .padding(.top, 64)
         .overlay(alignment: .topTrailing, content: picker)
@@ -98,7 +99,49 @@ private extension ConsentListPrototypeView.Flow {
         )
     }
     
+    var rxReducer: ConsentListRxReducer {
+        
+        .init()
+    }
+    
+    var effectHandler: ConsentListRxEffectHandler {
+        
+        .init(changeConsentList: { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(rxChangeConsentListResponse)
+            }
+        })
+    }
+    
     var changeConsentListResponse: ConsentListReducer.ChangeConsentListResponse {
+        
+        switch self {
+        case .collapsedEmptyConsent_success,
+                .collapsedNonEmptyConsent_success,
+                .expanded_success:
+            return .success
+            
+        case .collapsedEmptyConsent_serverError,
+                .collapsedNonEmptyConsent_serverError,
+                .expanded_serverError:
+            return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
+            
+        case .collapsedEmptyConsent_connectivityError,
+                .collapsedNonEmptyConsent_connectivityError,
+                .expanded_connectivityError:
+            return .connectivityError
+            
+        case .collapsedError:
+            fatalError("impossible")
+            
+        case .expandedError:
+            fatalError("impossible")
+        }
+    }
+    
+    var rxChangeConsentListResponse: ConsentListRxEffectHandler.ChangeConsentListResponse {
         
         switch self {
         case .collapsedEmptyConsent_success,
