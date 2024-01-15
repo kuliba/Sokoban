@@ -6503,6 +6503,7 @@
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
 				2ACE0A9D2B53E278007AA2ED /* Foundation */,
 				2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */,
+				2ABFB9062B5565BE00D6A0BA /* PreviewContent */,
 				2A6EAA812B50576F0093EE83 /* Preview Content */,
 			);
 			path = FastPaymentsSettingsPreview;
@@ -6512,16 +6513,6 @@
 			isa = PBXGroup;
 			children = (
 				2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */,
-				2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */,
-				2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */,
-				2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */,
-				2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */,
-				2A9536402B53355900E874F5 /* ConsentListState+ext.swift */,
-				2A9536362B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift */,
-				2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */,
-				2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */,
-				2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */,
-				2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -7072,6 +7063,23 @@
 				2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */,
 			);
 			path = RxViewModel;
+			sourceTree = "<group>";
+		};
+		2ABFB9062B5565BE00D6A0BA /* PreviewContent */ = {
+			isa = PBXGroup;
+			children = (
+				2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */,
+				2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */,
+				2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */,
+				2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */,
+				2A9536402B53355900E874F5 /* ConsentListState+ext.swift */,
+				2A9536362B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift */,
+				2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */,
+				2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */,
+				2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */,
+				2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */,
+			);
+			path = PreviewContent;
 			sourceTree = "<group>";
 		};
 		2AC2ADB72B2240AC0049EE9B /* GetSberQRData */ = {
@@ -15379,9 +15387,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15397,8 +15405,8 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreview;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -15415,9 +15423,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15433,8 +15441,8 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreview;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15450,9 +15458,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15468,8 +15476,8 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreview;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15485,9 +15493,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15503,8 +15511,8 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.FastPaymentsSettingsPreview;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16593,7 +16601,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -16629,7 +16637,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -16665,7 +16673,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -16701,7 +16709,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
