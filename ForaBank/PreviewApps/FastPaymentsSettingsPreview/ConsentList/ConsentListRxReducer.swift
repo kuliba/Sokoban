@@ -86,7 +86,6 @@ private extension ConsentListRxReducer {
         guard var consentList = state.expandedConsentList
         else { return (state, nil) }
         
-        consentList.mode = .collapsed
         consentList.status = .inflight
         
         return (.success(consentList), .apply(.init(consentList.consent)))
@@ -114,9 +113,12 @@ private extension ConsentListRxReducer {
         
         guard var consentList = state.expandedConsentList
         else { return state }
-        
+
+        #warning("looks similar to toggle")
+        consentList.banks.resetSelection(to: consentList.consent)
         consentList.mode = .collapsed
-        
+        consentList.searchText = ""
+
         switch failure {
         case .connectivityError:
             consentList.status = .failure(.connectivityError)
