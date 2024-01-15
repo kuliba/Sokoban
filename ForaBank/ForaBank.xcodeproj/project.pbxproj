@@ -736,6 +736,7 @@
 		2ABFB8E92B5522BB00D6A0BA /* Consent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E72B55228F00D6A0BA /* Consent.swift */; };
 		2ABFB8EC2B5524C900D6A0BA /* anyBankID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */; };
 		2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8ED2B55250600D6A0BA /* anyString.swift */; };
+		2ABFB8F02B552B4C00D6A0BA /* anyConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -3074,6 +3075,7 @@
 		2ABFB8E72B55228F00D6A0BA /* Consent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consent.swift; sourceTree = "<group>"; };
 		2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyBankID.swift; sourceTree = "<group>"; };
 		2ABFB8ED2B55250600D6A0BA /* anyString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyString.swift; sourceTree = "<group>"; };
+		2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyConsent.swift; sourceTree = "<group>"; };
 		2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryRegularFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2AC2ADB12B2217670049EE9B /* QRResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolver.swift; sourceTree = "<group>"; };
 		2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverTests.swift; sourceTree = "<group>"; };
@@ -7035,6 +7037,7 @@
 			children = (
 				2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */,
 				2ABFB8ED2B55250600D6A0BA /* anyString.swift */,
+				2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -13185,6 +13188,7 @@
 				2AE87AEB2B54177600B5B7CA /* XCTAssertNoDiff.swift in Sources */,
 				2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */,
 				2AE87AFF2B54550200B5B7CA /* ConsentListRxViewModel.swift in Sources */,
+				2ABFB8F02B552B4C00D6A0BA /* anyConsent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

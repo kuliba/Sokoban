@@ -190,13 +190,3 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         wait(for: [exp], timeout: timeout)
     }
 }
-
-private func anyConsent(count: Int = 10) -> ConsentListEffect.Consent {
-    
-    let array = (0...Int.random(in: 0...count)).map { _ in
-        
-        Bank.ID(UUID().uuidString)
-    }
-    
-    return .init(array)
-}
