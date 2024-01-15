@@ -184,7 +184,7 @@ extension Model {
                             return
                         }
                         
-                        continuation.resume(returning: data)
+                        continuation.resume(with: .success(data))
 
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
