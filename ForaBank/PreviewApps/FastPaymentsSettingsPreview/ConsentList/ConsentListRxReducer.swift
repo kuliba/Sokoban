@@ -112,27 +112,19 @@ private extension ConsentListRxReducer {
         in state: State
     ) -> State {
         
-        guard let consentList = state.expandedConsentList
+        guard var consentList = state.expandedConsentList
         else { return state }
+        
+        consentList.mode = .collapsed
         
         switch failure {
         case .connectivityError:
-            return .success(.init(
-                banks: consentList.banks,
-                consent: consentList.consent,
-                mode: .collapsed,
-                searchText: consentList.searchText,
-                status: .failure(.connectivityError)
-            ))
+            consentList.status = .failure(.connectivityError)
+            return .success(consentList)
             
         case let .serverError(message):
-            return .success(.init(
-                banks: consentList.banks,
-                consent: consentList.consent,
-                mode: .collapsed,
-                searchText: consentList.searchText,
-                status: .failure(.serverError(message))
-            ))
+            consentList.status = .failure(.serverError(message))
+            return .success(consentList)
         }
     }
     
