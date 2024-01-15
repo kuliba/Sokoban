@@ -282,7 +282,7 @@ final class ConsentListRxReducerTests: XCTestCase {
     }
     
     // MARK: - search
-    #warning("ass tests for empty string")
+
     func test_search_shouldNotChangeStateOnCollapsedError() {
         
         let collapsed: State = .failure(.collapsedError)
@@ -425,21 +425,34 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNil(reduce(sut, collapsed, .tapBank(anyBankID())).effect)
     }
     
-    func test_tapBank_shouldChangeBanksOnExpandedConsentList() throws {
+    func test_tapBank_shouldChangeBanksOnExpandedConsentListWithExistingBankID() throws {
         
-        let id: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
+        let existingBankID: Bank.ID = try XCTUnwrap([Bank].preview.last?.id)
         let consentList = expandedConsentList()
         let expanded: State = .success(consentList)
         let sut = makeSUT()
         
         XCTAssertNotEqual(
-            reduce(sut, expanded, .tapBank(id)).state.banks,
+            reduce(sut, expanded, .tapBank(existingBankID)).state.banks,
             consentList.banks
         )
         
         XCTAssertNoDiff(
-            reduce(sut, expanded, .tapBank(id)).state.selectedBankIDs,
+            reduce(sut, expanded, .tapBank(existingBankID)).state.selectedBankIDs,
             ["сургутнефтегазбанк"]
+        )
+    }
+    
+    func test_tapBank_shouldNotChangeBanksOnExpandedConsentListWithMissingBankID() throws {
+        
+        let id = anyBankID()
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .tapBank(id)).state.banks,
+            consentList.banks
         )
     }
     
