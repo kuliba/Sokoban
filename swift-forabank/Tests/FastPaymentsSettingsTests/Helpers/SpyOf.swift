@@ -1,11 +1,11 @@
 //
-//  Spy.swift
+//  SpyOf.swift
 //  
 //
 //  Created by Igor Malyarov on 12.11.2023.
 //
 
-final class Spy<Payload, Success, Failure: Error> {
+final class SpyOf<Payload, Success, Failure: Error> {
 
     typealias Result = Swift.Result<Success, Failure>
     typealias Completion = (Result) -> Void
@@ -31,7 +31,7 @@ final class Spy<Payload, Success, Failure: Error> {
     }
 }
 
-extension Spy where Payload == Void {
+extension SpyOf where Payload == Void {
     
     func process(completion: @escaping Completion) {
         

@@ -247,8 +247,8 @@ final class FPSReducerTests: XCTestCase {
     private typealias SUT = FPSReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
-    private typealias GetClientConsentMe2MePullSpy = Spy<Void, Void, Error>
-    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, Void, Error>
+    private typealias GetClientConsentMe2MePullSpy = SpyOf<Void, Void, Error>
+    private typealias GetBankDefaultSpy = SpyOf<SUT.PhoneNumber, Void, Error>
     
     private func makeSUT(
         file: StaticString = #file,

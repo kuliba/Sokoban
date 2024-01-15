@@ -79,7 +79,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
     private typealias SUT = RemoteServiceDecorator<Input, Response, ProcessError>
     private typealias Input = UUID
     private typealias Result = Swift.Result<SUT.Output, SUT.ProcessError>
-    private typealias DecoratorSpy = Spy<Input, Response, ProcessError>
+    private typealias DecoratorSpy = SpyOf<Input, Response, ProcessError>
     private typealias DecorationSpy = _DecorationSpy<Swift.Result<Response, ProcessError>>
     
     private func makeSUT(
@@ -169,7 +169,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
     }
 }
 
-extension Spy: RemoteServiceInterface {}
+extension SpyOf: RemoteServiceInterface {}
 
 private func makeInput(
     _ value: UUID = .init()

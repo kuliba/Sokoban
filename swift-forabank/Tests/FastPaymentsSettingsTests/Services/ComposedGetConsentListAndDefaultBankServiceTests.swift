@@ -419,8 +419,8 @@ final class ComposedGetConsentListAndDefaultBankServiceTests: XCTestCase {
     private typealias SUT = ComposedGetConsentListAndDefaultBankService
     private typealias GetConsentListError = GetConsentListAndDefaultBankResults.GetConsentListError
     private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
-    private typealias GetConsentListSpy = Spy<Void, Consents, GetConsentListError>
-    private typealias GetDefaultBankSpy = Spy<PhoneNumber, DefaultBank, GetDefaultBankError>
+    private typealias GetConsentListSpy = SpyOf<Void, Consents, GetConsentListError>
+    private typealias GetDefaultBankSpy = SpyOf<PhoneNumber, DefaultBank, GetDefaultBankError>
     
     private func makeSUT(
         file: StaticString = #file,
