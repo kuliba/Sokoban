@@ -16,4 +16,15 @@ extension Array where Element == ConsentList.SelectableBank {
             isSelected: false
         )
     }
+    
+    static var consented: Self {
+        
+        Self.preview.map {
+            
+            .init(
+                bank: $0.bank,
+                isSelected: Consent.preview.contains($0.bank.id)
+            )
+        }
+    }
 }

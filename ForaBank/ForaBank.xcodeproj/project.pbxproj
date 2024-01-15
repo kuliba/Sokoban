@@ -745,6 +745,7 @@
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
 		2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */; };
+		2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -3083,6 +3084,7 @@
 		2ABFB8F52B55546900D6A0BA /* ConsentListRxReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxReducer.swift; sourceTree = "<group>"; };
 		2ABFB8F72B55549A00D6A0BA /* ConsentListRxEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxEffectHandler.swift; sourceTree = "<group>"; };
 		2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
+		2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Consent+ext.swift"; sourceTree = "<group>"; };
 		2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryRegularFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2AC2ADB12B2217670049EE9B /* QRResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolver.swift; sourceTree = "<group>"; };
 		2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverTests.swift; sourceTree = "<group>"; };
@@ -6519,6 +6521,7 @@
 				2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */,
 				2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */,
 				2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */,
+				2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -13152,6 +13155,7 @@
 				2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */,
 				2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */,
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
+				2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */,
 				2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */,
 				2A95363B2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
