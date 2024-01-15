@@ -92,7 +92,7 @@ final class HandleSuccessRemoteServiceDecoratorTests: XCTestCase {
         let decoratorSpy = DecoratorSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = SUT(
-            decoratee: decoratorSpy,
+            decoratee: SpyAdapter(spy: decoratorSpy),
             handleSuccess: handleSuccessSpy.process
         )
         

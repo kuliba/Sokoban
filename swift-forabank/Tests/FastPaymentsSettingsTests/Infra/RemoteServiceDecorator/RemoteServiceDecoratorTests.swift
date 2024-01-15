@@ -93,7 +93,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         let decoratorSpy = DecoratorSpy()
         let decorationSpy = DecorationSpy()
         let sut = SUT(
-            decoratee: decoratorSpy,
+            decoratee: SpyAdapter(spy: decoratorSpy),
             decoration: decorationSpy.process
         )
         
@@ -168,8 +168,6 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         typealias Message = (value: Value, completion: () -> Void)
     }
 }
-
-extension SpyOf: RemoteServiceInterface {}
 
 private func makeInput(
     _ value: UUID = .init()

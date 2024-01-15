@@ -67,7 +67,7 @@ final class RemoteServiceAdapterTests: XCTestCase {
     ) {
         let serviceSpy = ServiceSpy()
         let sut = SUT(
-            service: serviceSpy,
+            service: SpyAdapter(spy: serviceSpy),
             adapt: { _ in output }
         )
         
