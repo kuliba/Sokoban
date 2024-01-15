@@ -6,11 +6,30 @@
 //
 
 import FastPaymentsSettings
+import Foundation
 
 func anyContractedSettings(
 ) -> UserPaymentSettings {
     
     .contracted(anyContractDetails())
+}
+
+func anyMissingSuccessSettings(
+) -> UserPaymentSettings {
+    
+    .missingContract(.success(anyConsentList()))
+}
+
+func anyMissingFailureSettings(
+) -> UserPaymentSettings {
+    
+    .missingContract(.failure(.init()))
+}
+
+func anyServerErrorSettings(
+) -> UserPaymentSettings {
+    
+    .failure(.serverError(UUID().uuidString))
 }
 
 func anyContractDetails(

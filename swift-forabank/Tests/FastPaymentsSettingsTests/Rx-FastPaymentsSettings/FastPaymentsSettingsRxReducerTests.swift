@@ -23,6 +23,8 @@ extension FastPaymentsSettingsRxReducer {
         case .appear:
             (state, effect) = handleAppear(state)
             
+        case let .loadedUserPaymentSettings(userPaymentSettings):
+            fatalError("unimplemented")
         case .activateContract:
             fatalError("unimplemented")
         case .deactivateContract:
