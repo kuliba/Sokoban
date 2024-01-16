@@ -10,7 +10,7 @@ import Tagged
 public struct Product: Identifiable {
     
     public let id: ProductID
-    
+
     public typealias ProductID = Tagged<_ProductID, String>
     public enum _ProductID {}
     

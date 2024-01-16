@@ -14,17 +14,20 @@ final class FastPaymentsSettingsEffectHandler {
     private let getSettings: GetSettings
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let updateContract: UpdateContract
+    private let updateProduct: UpdateProduct
     
     init(
         createContract: @escaping CreateContract,
         getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
-        updateContract: @escaping UpdateContract
+        updateContract: @escaping UpdateContract,
+        updateProduct: @escaping UpdateProduct
     ) {
         self.createContract = createContract
         self.getSettings = getSettings
         self.prepareSetBankDefault = prepareSetBankDefault
         self.updateContract = updateContract
+        self.updateProduct = updateProduct
     }
 }
 
@@ -84,6 +87,27 @@ extension FastPaymentsSettingsEffectHandler {
     enum UpdateContractToggle: Equatable {
         
         case activate, deactivate
+    }
+}
+
+// micro-service `d`
+extension FastPaymentsSettingsEffectHandler {
+    
+    typealias UpdateProductResponse = Result<Void, ServiceFailure>
+    typealias UpdateProductCompletion = (UpdateProductResponse) -> Void
+    typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
+    
+    struct UpdateProductPayload {
+ 
+        #warning("replace with ContractID")
+        let contract: UserPaymentSettings.PaymentContract
+        let productID: Product.ID
+        let productType: ProductType
+        
+        enum ProductType {
+            
+            case account, card
+        }
     }
 }
 

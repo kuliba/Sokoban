@@ -32,7 +32,7 @@ public extension UserPaymentSettings {
     }
     
     struct PaymentContract: Equatable {
-        
+        #warning("add ID: Int")
         public let contractStatus: ContractStatus
         
         public init(contractStatus: ContractStatus) {
