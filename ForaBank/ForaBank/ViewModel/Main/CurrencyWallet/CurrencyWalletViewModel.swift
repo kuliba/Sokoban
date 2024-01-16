@@ -663,7 +663,12 @@ class CurrencyWalletViewModel: ObservableObject {
             let documentStatus = stateSuccessView(response.documentStatus ?? .unknown)
 
             
-            makeSuccessViewModel(response.paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: documentStatus)
+            makeSuccessViewModel(
+                response.paymentOperationDetailId,
+                amount: confirmationViewModel.debitAmount,
+                currency: confirmationViewModel.currencyPayer,
+                state: documentStatus
+            )
             
             scrollToItem = lastItem.id
             
@@ -764,7 +769,12 @@ class CurrencyWalletViewModel: ObservableObject {
             })
     }
     
-    private func makeSuccessViewModel(_ paymentOperationDetailId: Int = 0, amount: Double, currency: Currency, state: CurrencyExchangeSuccessView.ViewModel.State) {
+    private func makeSuccessViewModel(
+        _ paymentOperationDetailId: Int = 0,
+        amount: Double,
+        currency: Currency,
+        state: CurrencyExchangeSuccessView.ViewModel.State
+    ) {
         
         successViewModel = .init(
             state: state,
@@ -969,11 +979,17 @@ extension CurrencyWalletViewModel {
         switch value {
         case .complete:
             return .success
+        
         case .rejected:
             return .error
+        
         case .unknown:
             return .error
-        case .inProgress, .suspend:
+        
+        case  .suspend:
+            return .suspend
+            
+        case .inProgress:
             return .wait
         }
     }
