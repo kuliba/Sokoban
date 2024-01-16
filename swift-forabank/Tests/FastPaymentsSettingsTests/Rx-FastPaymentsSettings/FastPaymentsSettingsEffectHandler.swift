@@ -82,41 +82,19 @@ extension FastPaymentsSettingsEffectHandler {
 // micro-service `da`
 extension FastPaymentsSettingsEffectHandler {
     
-    typealias UpdateContractPayload = (UserPaymentSettings.PaymentContract, UpdateContractToggle)
+    typealias UpdateContractPayload = Effect.TargetContract
     typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
     typealias UpdateContract = (UpdateContractPayload, @escaping UpdateContractCompletion) -> Void
-    
-    enum UpdateContractToggle: Equatable {
-        
-        case activate, deactivate
-    }
 }
 
 // micro-service `d`
 extension FastPaymentsSettingsEffectHandler {
     
+    typealias UpdateProductPayload = Effect.ContractCore
     typealias UpdateProductResponse = Result<Void, ServiceFailure>
     typealias UpdateProductCompletion = (UpdateProductResponse) -> Void
     typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
-    
-    struct UpdateProductPayload: Equatable {
-        
-        let contractID: ContractID
-        let productID: ProductID
-        let productType: ProductType
-        
-        typealias ContractID = Tagged<_ContractID, Int>
-        enum _ContractID {}
-        
-        typealias ProductID = Tagged<_ProductID, Int>
-        enum _ProductID {}
-        
-        enum ProductType {
-            
-            case account, card
-        }
-    }
 }
 
 extension FastPaymentsSettingsEffectHandler {
@@ -137,10 +115,10 @@ extension FastPaymentsSettingsEffectHandler {
 private extension FastPaymentsSettingsEffectHandler {
     
     func activateContract(
-        _ contract: UserPaymentSettings.PaymentContract,
+        _ payload: UpdateContractPayload,
         _ dispatch: @escaping Dispatch
     ) {
-        updateContract((contract, .activate)) { result in
+        updateContract(payload) { result in
             
             switch result {
             case let .success(contract):

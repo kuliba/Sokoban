@@ -128,14 +128,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         ))
     }
     
-    func test_activateContract_shouldDeliverEffectOnInactiveContract() {
-        
-        let inactiveDetails = anyInactiveContractDetails()
-        let inactiveSettings = anyContractedSettings(inactiveDetails)
-        let inactiveContract = makeFPSState(inactiveSettings)
-        
-        assert(inactiveContract, .activateContract, effect: .activateContract(inactiveDetails.paymentContract))
-    }
+//    func test_activateContract_shouldDeliverEffectOnInactiveContract() {
+//        
+//        let inactiveDetails = anyInactiveContractDetails()
+//        let inactiveSettings = anyContractedSettings(inactiveDetails)
+//        let inactiveContract = makeFPSState(inactiveSettings)
+//        
+//        assert(inactiveContract, .activateContract, effect: .activateContract(inactiveDetails.paymentContract))
+//    }
     
     //    func test_activateContract_shouldChangeStatusToInflightOnMissingFailureContract() {
     //

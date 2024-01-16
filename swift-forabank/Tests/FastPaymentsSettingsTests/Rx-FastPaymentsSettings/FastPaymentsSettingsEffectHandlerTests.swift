@@ -82,22 +82,21 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_activateContract_shouldPassPayload() {
         
-        let currentContract = anyPaymentContract()
+        let payload = anyFastPaymentsSettingsEffectTargetContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        sut.handleEffect(.activateContract(currentContract)) { _ in }
+        sut.handleEffect(.activateContract(payload)) { _ in }
         
-        XCTAssertNoDiff(updateContractSpy.payloads.map(\.0), [currentContract])
-        XCTAssertNoDiff(updateContractSpy.payloads.map(\.1), [.activate])
+        XCTAssertNoDiff(updateContractSpy.payloads, [payload])
     }
     
     func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
         
-        let currentContract = anyPaymentContract()
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
         let activatedContract = anyActivePaymentContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
             
             updateContractSpy.complete(with: .success(activatedContract))
         })
@@ -105,10 +104,10 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_activateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
         
-        let currentContract = anyPaymentContract()
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
             
             updateContractSpy.complete(with: .failure(.connectivityError))
         })
@@ -116,11 +115,11 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_activateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
         
-        let currentContract = anyPaymentContract()
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
         let message = UUID().uuidString
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
             
             updateContractSpy.complete(with: .failure(.serverError(message)))
         })

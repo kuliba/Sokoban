@@ -21,25 +21,28 @@ public extension UserPaymentSettings {
         public var paymentContract: PaymentContract
         public let consentResult: ConsentResult
         public var bankDefault: BankDefault
+        public var product: Product
         
         public init(
             paymentContract: PaymentContract,
             consentResult: ConsentResult,
-            bankDefault: BankDefault
+            bankDefault: BankDefault,
+            product: Product
         ) {
             self.paymentContract = paymentContract
             self.consentResult = consentResult
             self.bankDefault = bankDefault
+            self.product = product
         }
     }
     
     struct PaymentContract: Equatable, Identifiable {
-
+        
         public let id: ContractID
         public let contractStatus: ContractStatus
         
         public init(
-            id: ContractID, 
+            id: ContractID,
             contractStatus: ContractStatus
         ) {
             self.id = id
@@ -54,6 +57,29 @@ public extension UserPaymentSettings {
             case active, inactive
         }
     }
+    
+    struct Product: Equatable, Identifiable {
+        
+        public let id: ProductID
+        public let type: ProductType
+        
+        public init(id: ProductID, type: ProductType) {
+         
+            self.id = id
+            self.type = type
+        }
+        
+        public typealias ProductID = Tagged<_ProductID, Int>
+        public enum _ProductID {}
+        
+        public enum ProductType: Equatable {
+            
+            case account, card
+        }
+    }
+}
+
+public extension UserPaymentSettings {
     
     typealias ConsentResult = Result<ConsentList, ConsentError>
     
@@ -73,6 +99,9 @@ public extension UserPaymentSettings {
         case offEnabled
         case offDisabled
     }
+}
+
+public extension UserPaymentSettings {
     
     enum Failure: Equatable {
         

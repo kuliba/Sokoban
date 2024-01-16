@@ -82,20 +82,26 @@ private extension FastPaymentsSettingsRxReducer {
             
             var state = state
             state.status = .inflight
-            return (state, .activateContract(details.paymentContract))
             
-//        case let .missingContract(consent):
-//            var state = state
-//            state.status = .inflight
-//            guard let product = getProduct()
-//            else {
-//                state?.status = .missingProduct
-//                return (state, nil)
-//            }
-//            
-//            createContract(product, consent)
-//            
-//            return (state, .activateContract(contractDetails.paymentContract))
+            let updateContract = FastPaymentsSettingsEffect.TargetContract(
+                core: details.core,
+                targetStatus: .active
+            )
+            
+            return (state, .activateContract(updateContract))
+            
+            //        case let .missingContract(consent):
+            //            var state = state
+            //            state.status = .inflight
+            //            guard let product = getProduct()
+            //            else {
+            //                state?.status = .missingProduct
+            //                return (state, nil)
+            //            }
+            //
+            //            createContract(product, consent)
+            //
+            //            return (state, .activateContract(contractDetails.paymentContract))
             
         default:
             return (state, nil)
@@ -115,5 +121,30 @@ private extension UserPaymentSettings.ContractDetails {
     var isInactive: Bool {
         
         paymentContract.contractStatus == .inactive
+    }
+}
+
+// MAKR: - Adapters
+
+private extension UserPaymentSettings.ContractDetails {
+    
+    var core: FastPaymentsSettingsEffect.ContractCore {
+        
+        .init(
+            contractID: .init(paymentContract.id.rawValue),
+            productID: .init(product.id.rawValue),
+            productType: product.type.coreType
+        )
+    }
+}
+
+private extension UserPaymentSettings.Product.ProductType {
+    
+    var coreType: FastPaymentsSettingsEffect.ContractCore.ProductType {
+        
+        switch self {
+        case .account: return .account
+        case .card:    return .card
+        }
     }
 }
