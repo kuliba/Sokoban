@@ -23,7 +23,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let emptyState = makeFPSState()
         
-        assert(emptyState, .appear, effect: .getUserPaymentSettings)
+        assert(emptyState, .appear, effect: .getSettings)
     }
     
     func test_appear_shouldSetStatusToInflight_nonEmptyState() {
@@ -42,7 +42,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let userPaymentSettings = anyContractedSettings()
         let state = makeFPSState(userPaymentSettings)
         
-        assert(state, .appear, effect: .getUserPaymentSettings)
+        assert(state, .appear, effect: .getSettings)
     }
     
     // MARK: - loadedUserPaymentSettings

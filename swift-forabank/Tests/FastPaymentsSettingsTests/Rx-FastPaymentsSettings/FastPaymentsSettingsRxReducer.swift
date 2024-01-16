@@ -62,7 +62,7 @@ private extension FastPaymentsSettingsRxReducer {
         var state = state
         state.status = .inflight
         
-        return (state, .getUserPaymentSettings)
+        return (state, .getSettings)
     }
     
     func handleLoadedUserPaymentSettings(

@@ -44,8 +44,8 @@ extension FastPaymentsSettingsEffectHandler {
         case let .createContract(productID):
             createContract(productID, dispatch)
             
-        case .getUserPaymentSettings:
-            getUserPaymentSettings(dispatch)
+        case .getSettings:
+            getSettings(dispatch)
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(dispatch)
@@ -174,13 +174,10 @@ private extension FastPaymentsSettingsEffectHandler {
         }
     }
     
-    func getUserPaymentSettings(
+    func getSettings(
         _ dispatch: @escaping Dispatch
     ) {
-        getSettings {
-            
-            dispatch(.loadedUserPaymentSettings($0))
-        }
+        getSettings { dispatch(.loadedUserPaymentSettings($0)) }
     }
     
     func prepareSetBankDefault(

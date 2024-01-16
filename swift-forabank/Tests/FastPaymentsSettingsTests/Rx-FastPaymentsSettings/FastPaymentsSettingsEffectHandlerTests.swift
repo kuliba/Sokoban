@@ -21,58 +21,58 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(updateProductSpy.callCount, 0)
     }
     
-    // MARK: - getUserPaymentSettings
+    // MARK: - getSettings
     
-    func test_getUserPaymentSettings_shouldDeliverLoadedContractedOnContracted() {
+    func test_getSettings_shouldDeliverLoadedContractedOnContracted() {
         
         let contracted = anyContractedSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
             
             getSettingsSpy.complete(with: contracted)
         })
     }
     
-    func test_getUserPaymentSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
+    func test_getSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
         
         let missingSuccess = anyMissingSuccessSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
             
             getSettingsSpy.complete(with: missingSuccess)
         })
     }
     
-    func test_getUserPaymentSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
+    func test_getSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
         
         let missingFailure = anyMissingFailureSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
             
             getSettingsSpy.complete(with: missingFailure)
         })
     }
     
-    func test_getUserPaymentSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
+    func test_getSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
         
         let failure: UserPaymentSettings = .failure(.connectivityError)
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })
     }
     
-    func test_getUserPaymentSettings_shouldDeliverLoadedServerErrorOnServerErrorFailure() {
+    func test_getSettings_shouldDeliverLoadedServerErrorOnServerErrorFailure() {
         
         let failure = anyServerErrorSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })
