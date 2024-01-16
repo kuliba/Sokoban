@@ -733,10 +733,19 @@ extension Model {
         with response: TransferAnywayResponseData
     ) async throws -> Payments.Operation.Step {
 
-        let nextParameters = try await uniqueNextParameters(
+        var nextParameters = try await uniqueNextParameters(
             for: operation,
             with: response
         )
+        
+        if response.scenario == .suspect {
+            
+            nextParameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
         
         return try step(
             for: operation,
@@ -1555,12 +1564,10 @@ extension Model {
                     name = newName
                 }
                 
-            case  .fms, .fns, .fssp, .gibdd, .transport, .utility:
-                if let newName = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.header.rawValue
-                ) {
-                    name = newName
+            case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor:
+                
+                if let newName = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue }) as? Payments.ParameterHeader {
+                    name = newName.title
                 }
         
             case .mobileConnection:
