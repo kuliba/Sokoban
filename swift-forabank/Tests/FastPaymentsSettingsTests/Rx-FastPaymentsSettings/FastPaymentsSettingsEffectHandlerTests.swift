@@ -21,6 +21,100 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(updateProductSpy.callCount, 0)
     }
     
+    // MARK: - activateContract
+    
+    func test_activateContract_shouldPassPayload() {
+        
+        let payload = anyFastPaymentsSettingsEffectTargetContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.handleEffect(.activateContract(payload)) { _ in }
+        
+        XCTAssertNoDiff(updateContractSpy.payloads, [payload])
+    }
+    
+    func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let activatedContract = anyActivePaymentContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+            
+            updateContractSpy.complete(with: .success(activatedContract))
+        })
+    }
+    
+    func test_activateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+            
+            updateContractSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_activateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let message = UUID().uuidString
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+            
+            updateContractSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
+    // MARK: - createContract
+    
+    func test_createContract_shouldPassPayload() {
+        
+        let productID = anyEffectProductID()
+        let (sut, _,_,_, createContractSpy, _) = makeSUT()
+        
+        sut.handleEffect(.createContract(productID)) { _ in }
+        
+        XCTAssertNoDiff(createContractSpy.payloads, [productID])
+    }
+    
+    func test_createContract_shouldDeliverContractOnSuccess() {
+        
+        let productID = anyEffectProductID()
+        let activatedContract = anyActivePaymentContract()
+        let (sut, _,_,_, createContractSpy, _) = makeSUT()
+        
+        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+            
+            createContractSpy.complete(with: .success(activatedContract))
+        })
+    }
+    
+    func test_createContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
+        
+        let productID = anyEffectProductID()
+        let (sut, _,_,_, createContractSpy, _) = makeSUT()
+        
+        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+            
+            createContractSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_createContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
+        
+        let productID = anyEffectProductID()
+        let message = UUID().uuidString
+        let (sut, _,_,_, createContractSpy, _) = makeSUT()
+        
+        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+            
+            createContractSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
     // MARK: - getSettings
     
     func test_getSettings_shouldDeliverLoadedContractedOnContracted() {
@@ -78,53 +172,6 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         })
     }
     
-    // MARK: - activateContract
-    
-    func test_activateContract_shouldPassPayload() {
-        
-        let payload = anyFastPaymentsSettingsEffectTargetContract()
-        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
-        
-        sut.handleEffect(.activateContract(payload)) { _ in }
-        
-        XCTAssertNoDiff(updateContractSpy.payloads, [payload])
-    }
-    
-    func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
-        
-        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
-        let activatedContract = anyActivePaymentContract()
-        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
-        
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
-            
-            updateContractSpy.complete(with: .success(activatedContract))
-        })
-    }
-    
-    func test_activateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
-        
-        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
-        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
-        
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
-            
-            updateContractSpy.complete(with: .failure(.connectivityError))
-        })
-    }
-    
-    func test_activateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
-        
-        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
-        let message = UUID().uuidString
-        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
-        
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
-            
-            updateContractSpy.complete(with: .failure(.serverError(message)))
-        })
-    }
-    
     // MARK: - prepareSetBankDefault
     
     func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareNilFailureOnSuccess() {
@@ -155,53 +202,6 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(.serverError(message)), on: {
             
             prepareSetBankDefaultSpy.complete(with: .failure(.serverError(message)))
-        })
-    }
-    
-    // MARK: - createContract
-    
-    func test_createContract_shouldPassPayload() {
-        
-        let productID = anyEffectProductID()
-        let (sut, _,_,_, createContractSpy, _) = makeSUT()
-        
-        sut.handleEffect(.createContract(productID)) { _ in }
-        
-        XCTAssertNoDiff(createContractSpy.payloads, [productID])
-    }
-    
-    func test_createContract_shouldDeliverContractOnSuccess() {
-        
-        let productID = anyEffectProductID()
-        let activatedContract = anyActivePaymentContract()
-        let (sut, _,_,_, createContractSpy, _) = makeSUT()
-        
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.success(activatedContract)), on: {
-            
-            createContractSpy.complete(with: .success(activatedContract))
-        })
-    }
-    
-    func test_createContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
-        
-        let productID = anyEffectProductID()
-        let (sut, _,_,_, createContractSpy, _) = makeSUT()
-        
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
-            
-            createContractSpy.complete(with: .failure(.connectivityError))
-        })
-    }
-    
-    func test_createContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
-        
-        let productID = anyEffectProductID()
-        let message = UUID().uuidString
-        let (sut, _,_,_, createContractSpy, _) = makeSUT()
-        
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
-            
-            createContractSpy.complete(with: .failure(.serverError(message)))
         })
     }
     
