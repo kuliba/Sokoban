@@ -1708,7 +1708,7 @@ fileprivate extension NavigationBarView.ViewModel {
         rightButtons: [ButtonItemViewModel] = []
     ) {
         self.init(
-            title: ProductView.ViewModel.name(product: product, style: .profile),
+            title: ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .card),
             subtitle: Self.subtitle(with: product),
             leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             rightItems: rightButtons,
@@ -1751,7 +1751,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(product: product, style: .profile)
+        self.title = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .navigation)
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)

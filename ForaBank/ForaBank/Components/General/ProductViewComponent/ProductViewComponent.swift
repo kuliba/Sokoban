@@ -80,7 +80,7 @@ extension ProductView {
                 replacements: .replacements)
             
             let period = Self.period(product: productData, style: style)
-            let name = Self.name(product: productData, style: style)
+            let name = Self.name(product: productData, style: style, creditProductName: .navigation)
             let owner = Self.owner(from: productData)
             let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
             let cardInfo: CardInfo = .init(
@@ -186,7 +186,7 @@ extension ProductView {
         
         func update(with productData: ProductData, model: Model) {
             
-            cardInfo.name = Self.name(product: productData, style: appearance.style)
+            cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .card)
             cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
@@ -265,7 +265,7 @@ extension ProductView {
             }
         }
         
-        static func name(product: ProductData, style: Appearance.Style) -> String {
+        static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String { //
             
             switch product {
             case let cardProduct as ProductCardData:
@@ -274,7 +274,14 @@ extension ProductView {
                     return !cardProduct.displayName.isEmpty ? cardProduct.displayName : "Кредитная карта"
                     
                 case .profile:
-                    return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
+                    switch creditProductName {
+                        
+                    case .card:
+                        return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
+                        
+                    case .navigation:
+                        return cardProduct.isCreditCard ? "\(cardProduct.displayName)" : cardProduct.displayName
+                    }
                 }
                 
             case let loanProduct as ProductLoanData:
@@ -577,6 +584,12 @@ extension ProductView.ViewModel {
             
             case main
             case profile
+        }
+        
+        enum NameOfCreditProduct {
+            
+            case navigation
+            case card
         }
     }
     
