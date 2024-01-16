@@ -130,7 +130,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_getSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
         
-        let missingSuccess = anyMissingSuccessSettings()
+        let missingSuccess = anyMissingConsentSuccessSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
         expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingSuccess), on: {
@@ -141,7 +141,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_getSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
         
-        let missingFailure = anyMissingFailureSettings()
+        let missingFailure = anyMissingConsentFailureSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
         expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingFailure), on: {

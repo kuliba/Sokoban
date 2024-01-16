@@ -128,47 +128,62 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         ))
     }
     
-//    func test_activateContract_shouldDeliverEffectOnInactiveContract() {
-//        
-//        let inactiveDetails = anyInactiveContractDetails()
-//        let inactiveSettings = anyContractedSettings(inactiveDetails)
-//        let inactiveContract = makeFPSState(inactiveSettings)
-//        
-//        assert(inactiveContract, .activateContract, effect: .activateContract(inactiveDetails.paymentContract))
-//    }
+    func test_activateContract_shouldDeliverEffectOnInactiveContract() {
+        
+        let inactiveDetails = anyInactiveContractDetails()
+        let inactiveSettings = anyContractedSettings(inactiveDetails)
+        let inactiveContract = makeFPSState(inactiveSettings)
+        let target = target(inactiveDetails, .active)
+        
+        assert(inactiveContract, .activateContract, effect: .activateContract(target))
+    }
     
-    //    func test_activateContract_shouldChangeStatusToInflightOnMissingFailureContract() {
-    //
-    //        let missing = anyMissingFailureSettings()
-    //        let missingContract = FastPaymentsSettingsState(
-    //            userPaymentSettings: missing
-    //        )
-    //
-    //        XCTAssertNoDiff(
-    //            reduce(makeSUT(), missingContract, .activateContract).state,
-    //            .init(
-    //                userPaymentSettings: missing,
-    //                status: .inflight
-    //            )
-    //        )
-    //    }
+    func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentFailure() {
+        
+        let missing = anyMissingConsentFailureSettings()
+        let missingContract = makeFPSState(missing)
+        let sut = makeSUT(product: nil)
+        #warning("add `assert` overload that takes UserPaymentSettings and calls `assert`")
+        assert(sut: sut, missingContract, .activateContract, reducedTo: .init(
+            userPaymentSettings: missing,
+            status: .missingProduct
+        ))
+    }
     
-    //    func test_activateContract_shouldDeliverEffectOnMissingFailureContract() {
-    //
-    //        let missing = anyMissingFailureSettings()
-    //        let missingContract = FastPaymentsSettingsState(
-    //            userPaymentSettings: missing
-    //        )
-    //
-    //        XCTAssertNoDiff(
-    //            reduce(makeSUT(), missingContract, .activateContract).effect,
-    //            .activateContract
-    //        )
-    //    }
+    func test_activateContract_shouldNotDeliverEffectOnMissingProductAtMissingSettingsWithConsentFailure() {
+        
+        let missing = anyMissingConsentFailureSettings()
+        let missingContract = makeFPSState(missing)
+        let sut = makeSUT(product: nil)
+        
+        assert(sut: sut, missingContract, .activateContract, effect: nil)
+    }
+    
+    func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentFailure() {
+        
+        let missing = anyMissingConsentFailureSettings()
+        let missingContract = makeFPSState(missing)
+        let sut = makeSUT(product: anyProduct())
+        
+        assert(sut: sut, missingContract, .activateContract, reducedTo: .init(
+            userPaymentSettings: missing,
+            status: .inflight
+        ))
+    }
+    
+    func test_activateContract_shouldDeliverEffectOnAvailableProductAtMissingSettingsWithConsentFailure() {
+        
+        let missing = anyMissingConsentFailureSettings()
+        let missingContract = makeFPSState(missing)
+        let product = anyProduct()
+        let sut = makeSUT(product: product)
+        
+        assert(sut: sut, missingContract, .activateContract, effect: .createContract(.init(product.id.rawValue)))
+    }
     
     //    func test_activateContract_shouldChangeStatusToInflightOnMissingSuccessContract() {
     //
-    //        let missing = anyMissingSuccessSettings()
+    //        let missing = anyMissingConsentSuccessSettings()
     //        let missingContract = FastPaymentsSettingsState(
     //            userPaymentSettings: missing
     //        )
@@ -184,7 +199,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     //    func test_activateContract_shouldDeliverEffectOnMissingSuccessContract() {
     //
-    //        let missing = anyMissingSuccessSettings()
+    //        let missing = anyMissingConsentSuccessSettings()
     //        let missingContract = FastPaymentsSettingsState(
     //            userPaymentSettings: missing
     //        )
@@ -231,11 +246,12 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        product: Product? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(getProduct: { product })
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -243,13 +259,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     }
     
     private func assert(
+        sut: SUT? = nil,
         _ state: State,
         _ event: Event,
         reducedTo expectedState: State,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let receivedState = reduce(makeSUT(), state, event).state
+        let receivedState = reduce(sut ?? makeSUT(), state, event).state
         
         XCTAssertNoDiff(
             receivedState,
@@ -260,13 +277,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     }
     
     private func assert(
+        sut: SUT? = nil,
         _ state: State,
         _ event: Event,
         effect expectedEffect: Effect?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let receivedEffect = reduce(makeSUT(), state, event).effect
+        let receivedEffect = reduce(sut ?? makeSUT(), state, event).effect
         
         XCTAssertNoDiff(
             receivedEffect,
@@ -283,5 +301,37 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     ) -> (state: State, effect: Effect?) {
         
         sut.reduce(state, event)
+    }
+    
+    private func target(
+        _ contractDetails: UserPaymentSettings.ContractDetails,
+        _ targetStatus: FastPaymentsSettingsEffect.TargetContract.TargetStatus
+    ) -> FastPaymentsSettingsEffect.TargetContract {
+        
+        .init(
+            core: core(contractDetails),
+            targetStatus: targetStatus
+        )
+    }
+    
+    private func core(
+        _ contractDetails: UserPaymentSettings.ContractDetails
+    ) -> FastPaymentsSettingsEffect.ContractCore {
+        
+        .init(
+            contractID: .init(contractDetails.paymentContract.id.rawValue),
+            productID: .init(contractDetails.product.id.rawValue),
+            productType: productType(of: contractDetails.product)
+        )
+    }
+    
+    private func productType(
+        of product: UserPaymentSettings.Product
+    ) -> FastPaymentsSettingsEffect.ContractCore.ProductType {
+        
+        switch product.type {
+        case .account: return .account
+        case .card:    return .card
+        }
     }
 }

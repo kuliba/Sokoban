@@ -8,6 +8,13 @@
 import FastPaymentsSettings
 import Foundation
 
+func anyProduct(
+    _ rawValue: Int = generateRandom11DigitNumber()
+) -> Product {
+    
+    .init(id: .init(rawValue))
+}
+
 func anyProductID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> Product.ID {
@@ -60,16 +67,16 @@ func anyInactiveContractSettings(
     ))
 }
 
-func anyMissingSuccessSettings(
-) -> UserPaymentSettings {
-    
-    .missingContract(.success(anyConsentList()))
-}
-
-func anyMissingFailureSettings(
+func anyMissingConsentFailureSettings(
 ) -> UserPaymentSettings {
     
     .missingContract(.failure(.init()))
+}
+
+func anyMissingConsentSuccessSettings(
+) -> UserPaymentSettings {
+    
+    .missingContract(.success(anyConsentList()))
 }
 
 func anyServerErrorSettings(

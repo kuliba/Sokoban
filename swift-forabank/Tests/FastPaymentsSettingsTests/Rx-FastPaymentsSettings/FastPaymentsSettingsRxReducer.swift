@@ -9,6 +9,12 @@ import FastPaymentsSettings
 
 final class FastPaymentsSettingsRxReducer {
     
+    private let getProduct: GetProduct
+    
+    init(getProduct: @escaping GetProduct) {
+     
+        self.getProduct = getProduct
+    }
 }
 
 extension FastPaymentsSettingsRxReducer {
@@ -53,6 +59,15 @@ extension FastPaymentsSettingsRxReducer {
     }
 }
 
+extension FastPaymentsSettingsRxReducer {
+    
+    typealias GetProduct = () -> Product?
+    
+    typealias State = FastPaymentsSettingsState
+    typealias Event = FastPaymentsSettingsEvent
+    typealias Effect = FastPaymentsSettingsEffect
+}
+
 private extension FastPaymentsSettingsRxReducer {
     
     func handleAppear(
@@ -90,30 +105,22 @@ private extension FastPaymentsSettingsRxReducer {
             
             return (state, .activateContract(updateContract))
             
-            //        case let .missingContract(consent):
-            //            var state = state
-            //            state.status = .inflight
-            //            guard let product = getProduct()
-            //            else {
-            //                state?.status = .missingProduct
-            //                return (state, nil)
-            //            }
-            //
-            //            createContract(product, consent)
-            //
-            //            return (state, .activateContract(contractDetails.paymentContract))
+        case let .missingContract(consent):
+            var state = state
+            guard let product = getProduct()
+            else {
+                state.status = .missingProduct
+                return (state, nil)
+            }
+            
+            state.status = .inflight
+            
+            return (state, .createContract(.init(product.id.rawValue)))
             
         default:
             return (state, nil)
         }
     }
-}
-
-extension FastPaymentsSettingsRxReducer {
-    
-    typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent
-    typealias Effect = FastPaymentsSettingsEffect
 }
 
 private extension UserPaymentSettings.ContractDetails {
