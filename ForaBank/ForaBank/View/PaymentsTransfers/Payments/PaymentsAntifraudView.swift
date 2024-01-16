@@ -54,6 +54,7 @@ struct PaymentsAntifraudView: View {
                         .foregroundColor(.textPlaceholder)
                         .font(.textBodySR12160())
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
                 }
             }
         }

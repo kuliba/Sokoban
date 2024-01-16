@@ -133,17 +133,22 @@ class ConfirmViewControllerModel {
     var summTransction: String = ""
     var taxTransction: String = ""
     var currancyTransction: String = ""
-    var status: StatusOperation = .error
+    var status: StatusOperation
     var summInCurrency = ""
     var name: String? = ""
     var surname: String? = ""
     var secondName: String? = ""
     
-    init(type: PaymentType) {
+    init(
+        type: PaymentType,
+        status: StatusOperation
+    ) {
         self.type = type
+        self.status = status
     }
     
     enum StatusOperation {
+        case antifraudCanceled
         case inProgress
         case succses
         case error

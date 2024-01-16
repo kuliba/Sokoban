@@ -469,7 +469,32 @@
                     
                     if model.statusCode == 0 {
                         
-                        let confurmVCModel = ConfirmViewControllerModel(type: .openDeposit)
+                        var status = ConfirmViewControllerModel.StatusOperation.succses
+                        
+                        switch model.data?.documentStatus{
+                        case .some("COMPLETE"):
+                            status = .succses
+                            
+                        case .some("IN_PROGRESS"):
+                            status = .inProgress
+                            
+                        case .some("REJECTED"):
+                            status = .error
+                            
+                        case .some("SCOR_SUSPECT_FRAUD"):
+                            status = .antifraudCanceled
+                            
+                        case .some(_):
+                            status = .error
+                            
+                        case .none:
+                            status = .error
+                        }
+                        
+                        let confurmVCModel = ConfirmViewControllerModel(
+                            type: .openDeposit,
+                            status: status
+                        )
                         confurmVCModel.cardFromRealm = self.cardFromField.model
                         confurmVCModel.fullName = self.product?.name
                         confurmVCModel.summTransction = self.bottomView.amountTextField.text ?? ""
