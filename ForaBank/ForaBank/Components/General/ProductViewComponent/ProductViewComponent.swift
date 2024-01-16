@@ -271,7 +271,7 @@ extension ProductView {
             case let cardProduct as ProductCardData:
                 switch style {
                 case .main:
-                    return cardProduct.isCreditCard ? "Кредитная карта" : cardProduct.displayName
+                    return !cardProduct.displayName.isEmpty ? cardProduct.displayName : "Кредитная карта"
                     
                 case .profile:
                     return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
