@@ -1508,24 +1508,21 @@ extension Model {
                 return nil
             }
             
-            guard antifraudParameter.value != "G" else { return nil }
+            guard antifraudParameter.value == "SUSPECT" else { return nil }
             
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             
             guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId })?.value,
-            let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
-            let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
+                  let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
+                  let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
                 return nil
             }
-
-            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
-            return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
-        
+            
+            return .init(payeeName: recipientValue, phone: phoneValue, amount: "- \(amountValue)")
+            
         case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility:
-            print("DEBUG: ### REQOISITES ANTIFRATUD")
-            print("DEBUG: ### \(operation)")
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
             guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
                 return nil
@@ -1533,21 +1530,70 @@ extension Model {
             
             guard antifraudParameter.value == "SUSPECT" else { return nil }
             
-            let name = paymentsParameterValue(
-                operation.parameters,
-                id: Payments.Parameter.Identifier.requisitsName.rawValue
-            ) ?? ""
+            var name: String?
+            var phone: String?
+            
+            switch operation.service {
+            case .requisites:
+                if let newName = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.requisitsName.rawValue
+                ) {
+                    name = newName
+                } else if let newName = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+                ) {
+                    name = newName
+                }
+                
+            case .abroad:
+                if let newName = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.countryPayee.rawValue
+                ) {
+                    name = newName
+                }
+                
+            case  .fms, .fns, .fssp, .gibdd, .transport, .utility:
+                if let newName = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.header.rawValue
+                ) {
+                    name = newName
+                }
+        
+            case .mobileConnection:
+                if let newPhone = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
+                ) {
+                    phone = newPhone
+                }
+            case .toAnotherCard:
+                if let newName = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.productTemplate.rawValue
+                ) {
+                    name = newName
+                }
+            default:
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+                )
+                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+            }
             
             let amount = paymentsParameterValue(
                 operation.parameters,
                 id: Payments.Parameter.Identifier.requisitsAmount.rawValue
             )
             
-            return .init(payeeName: name, phone: "", amount: "- \(amount ?? "")")
+            
+            return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
         
         default:
-            print("DEBUG: ### REQOISITES ANTIFRATUD")
-            print("DEBUG: ### \(operation)")
             return nil
         }
     }
