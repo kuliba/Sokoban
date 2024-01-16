@@ -12,7 +12,7 @@ final class FastPaymentsSettingsRxReducer {
     private let getProduct: GetProduct
     
     init(getProduct: @escaping GetProduct) {
-     
+        
         self.getProduct = getProduct
     }
 }
@@ -37,8 +37,9 @@ extension FastPaymentsSettingsRxReducer {
         case .activateContract:
             (state, effect) = activateContract(state)
             
-        case let .contractUpdate(contractUpdate):
-            fatalError("unimplemented")
+        case let .contractUpdate(result):
+            state = contractUpdate(state, with: result)
+            
         case let .productUpdate(productUpdate):
             fatalError("unimplemented")
         case let .setBankDefaultPrepare(failure):
@@ -69,23 +70,6 @@ extension FastPaymentsSettingsRxReducer {
 }
 
 private extension FastPaymentsSettingsRxReducer {
-    
-    func handleAppear(
-        _ state: State
-    ) -> (State, Effect) {
-        
-        var state = state
-        state.status = .inflight
-        
-        return (state, .getSettings)
-    }
-    
-    func handleLoadedSettings(
-        _ userPaymentSettings: UserPaymentSettings
-    ) -> State {
-        
-        .init(userPaymentSettings: userPaymentSettings)
-    }
     
     func activateContract(
         _ state: State
@@ -121,6 +105,76 @@ private extension FastPaymentsSettingsRxReducer {
             return (state, nil)
         }
     }
+    
+    func contractUpdate(
+        _ state: State,
+        with result: FastPaymentsSettingsEvent.ContractUpdateResult
+    ) -> State {
+        
+        switch state.userPaymentSettings {
+        case var .contracted(details):
+            switch result {
+            case let .success(contract):
+                details.paymentContract = contract
+                return .init(userPaymentSettings: .contracted(details))
+                
+            case .failure(.connectivityError):
+                var state = state
+                state.status = .connectivityError
+                return state
+                
+            case let .failure(.serverError(message)):
+                var state = state
+                state.status = .serverError(message)
+                return state
+            }
+            
+        case let .missingContract(consent):
+            switch result {
+            case let .success(contract):
+                guard let product = getProduct() else { return state }
+                
+                return .init(userPaymentSettings: .contracted(
+                    .init(
+                        paymentContract: contract,
+                        consentResult: consent,
+                        bankDefault: .offEnabled,
+                        product: product.settingsProduct
+                    )
+                ))
+                
+            case .failure(.connectivityError):
+                var state = state
+                state.status = .connectivityError
+                return state
+                
+            case let .failure(.serverError(message)):
+                var state = state
+                state.status = .serverError(message)
+                return state
+            }
+            
+        default:
+            return state
+        }
+    }
+    
+    func handleAppear(
+        _ state: State
+    ) -> (State, Effect) {
+        
+        var state = state
+        state.status = .inflight
+        
+        return (state, .getSettings)
+    }
+    
+    func handleLoadedSettings(
+        _ userPaymentSettings: UserPaymentSettings
+    ) -> State {
+        
+        .init(userPaymentSettings: userPaymentSettings)
+    }
 }
 
 private extension UserPaymentSettings.ContractDetails {
@@ -150,6 +204,22 @@ private extension UserPaymentSettings.Product.ProductType {
     var coreType: FastPaymentsSettingsEffect.ContractCore.ProductType {
         
         switch self {
+        case .account: return .account
+        case .card:    return .card
+        }
+    }
+}
+
+private extension Product {
+    
+    var settingsProduct: UserPaymentSettings.Product {
+        
+        .init(id: .init(id.rawValue), type: settingsProductType)
+    }
+    
+    var settingsProductType: UserPaymentSettings.Product.ProductType {
+        
+        switch productType {
         case .account: return .account
         case .card:    return .card
         }

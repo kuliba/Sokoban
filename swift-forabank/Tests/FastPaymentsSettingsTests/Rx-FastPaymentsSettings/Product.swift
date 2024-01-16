@@ -10,12 +10,22 @@ import Tagged
 public struct Product: Identifiable {
     
     public let id: ProductID
-
-    public typealias ProductID = Tagged<_ProductID, Int>
-    public enum _ProductID {}
+    public let productType: ProductType
     
-    public init(id: ProductID) {
+    public init(id: ProductID, productType: ProductType) {
         
         self.id = id
+        self.productType = productType
+    }
+}
+
+public extension Product {
+    
+    typealias ProductID = Tagged<_ProductID, Int>
+    enum _ProductID {}
+    
+    enum ProductType {
+        
+        case account, card
     }
 }

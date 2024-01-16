@@ -9,10 +9,11 @@ import FastPaymentsSettings
 import Foundation
 
 func anyProduct(
-    _ rawValue: Int = generateRandom11DigitNumber()
+    _ rawValue: Int = generateRandom11DigitNumber(),
+    productType: Product.ProductType = .account
 ) -> Product {
     
-    .init(id: .init(rawValue))
+    .init(id: .init(rawValue), productType: productType)
 }
 
 func anyProductID(

@@ -105,7 +105,7 @@ public extension UserPaymentSettings {
     
     enum Failure: Equatable {
         
-        case serverError(String)
         case connectivityError
+        case serverError(String)
     }
 }
