@@ -59,7 +59,7 @@ extension FastPaymentsSettingsEffectHandler {
 // micro-service `ea`
 extension FastPaymentsSettingsEffectHandler {
     
-    typealias CreateContractPayload = Product.ID
+    typealias CreateContractPayload = Effect.ProductID
     typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
     typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
@@ -134,7 +134,7 @@ private extension FastPaymentsSettingsEffectHandler {
     }
     
     func createContract(
-        _ productID: Product.ID,
+        _ productID: CreateContractPayload,
         _ dispatch: @escaping Dispatch
     ) {
         createContract(productID) { result in

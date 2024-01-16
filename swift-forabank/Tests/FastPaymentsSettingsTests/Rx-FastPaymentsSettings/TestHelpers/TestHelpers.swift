@@ -15,6 +15,13 @@ func anyProductID(
     .init(rawValue)
 }
 
+func anyEffectProductID(
+    _ rawValue: Int = generateRandom11DigitNumber()
+) -> FastPaymentsSettingsEffect.ProductID {
+    
+    .init(rawValue)
+}
+
 func makeFPSState(
     _ userPaymentSettings: UserPaymentSettings? = nil,
     status: FastPaymentsSettingsState.Status? = nil

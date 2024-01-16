@@ -18,14 +18,14 @@ enum FastPaymentsSettingsEffect: Equatable {
 
 extension FastPaymentsSettingsEffect {
     
-#warning("decouple from other types, use own types")
-    typealias ProductID = Product.ID
+    typealias ProductID = Tagged<_ProductID, Int>
+    enum _ProductID {}
     
     struct TargetContract: Equatable {
         
         let core: ContractCore
         let targetStatus: TargetStatus
-
+        
         enum TargetStatus: Equatable {
             
             case active, inactive
