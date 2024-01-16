@@ -206,12 +206,12 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            fastPaymentsFactory: .default,
+            fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                fastPaymentsFactory: .default,
+                fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
@@ -220,7 +220,7 @@ final class RootViewModelTests: XCTestCase {
             paymentsViewModel: .init(
                 model: model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                fastPaymentsFactory: .default,
+                fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview()
