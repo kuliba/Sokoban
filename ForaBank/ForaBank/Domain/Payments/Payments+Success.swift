@@ -70,7 +70,6 @@ extension Payments.Success {
         title: String? = nil
     ) throws {
         
-        print("DEBUG ###: WITH IS INIT ACTIVE")
         guard let status = response.documentStatus else {
             throw Payments.Error.missingParameter(Payments.Parameter.Identifier.successStatus.rawValue)
         }
@@ -341,7 +340,7 @@ extension Payments.Success {
         amount: String?
     ) {
         
-        let params: [PaymentsParameterRepresentable?] = [
+        var params: [PaymentsParameterRepresentable?] = [
             Payments.ParameterSuccessMode(mode: mode),
             Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
             Payments.ParameterSuccessStatus(with: documentStatus),
@@ -356,6 +355,11 @@ extension Payments.Success {
             Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
             Payments.ParameterButton.actionButtonMain()
         ]
+        
+        if documentStatus == .suspend {
+            
+            params.insert(Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."), at: 3)
+        }
         
         self.init(
             operation: nil,
@@ -890,7 +894,7 @@ extension Payments.ParameterSuccessStatus {
             
         case .error:
             return .rejected
-            
+        
         case .transfer:
             return .unknown
         }
