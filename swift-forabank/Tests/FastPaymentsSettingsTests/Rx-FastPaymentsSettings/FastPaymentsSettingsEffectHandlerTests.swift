@@ -115,6 +115,53 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         })
     }
     
+    // MARK: - deactivateContract
+    
+    func test_deactivateContract_shouldPassPayload() {
+        
+        let payload = anyFastPaymentsSettingsEffectTargetContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.handleEffect(.deactivateContract(payload)) { _ in }
+        
+        XCTAssertNoDiff(updateContractSpy.payloads, [payload])
+    }
+    
+    func test_deactivateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let activatedContract = anyActivePaymentContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+            
+            updateContractSpy.complete(with: .success(activatedContract))
+        })
+    }
+    
+    func test_deactivateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+            
+            updateContractSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_deactivateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
+        
+        let targetContract = anyFastPaymentsSettingsEffectTargetContract()
+        let message = UUID().uuidString
+        let (sut, _, updateContractSpy, _,_,_) = makeSUT()
+        
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+            
+            updateContractSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
     // MARK: - getSettings
     
     func test_getSettings_shouldDeliverLoadedContractedOnContracted() {

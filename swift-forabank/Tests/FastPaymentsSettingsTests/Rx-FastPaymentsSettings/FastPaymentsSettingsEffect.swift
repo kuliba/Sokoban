@@ -11,6 +11,7 @@ enum FastPaymentsSettingsEffect: Equatable {
     
     case activateContract(TargetContract)
     case createContract(ProductID)
+    case deactivateContract(TargetContract)
     case getSettings
     case prepareSetBankDefault
     case updateProduct(ContractCore)

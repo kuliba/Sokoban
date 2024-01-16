@@ -44,6 +44,9 @@ extension FastPaymentsSettingsEffectHandler {
         case let .createContract(productID):
             createContract(productID, dispatch)
             
+        case let .deactivateContract(contract):
+            deactivateContract(contract, dispatch)
+            
         case .getSettings:
             getSettings(dispatch)
             
@@ -118,19 +121,7 @@ private extension FastPaymentsSettingsEffectHandler {
         _ payload: UpdateContractPayload,
         _ dispatch: @escaping Dispatch
     ) {
-        updateContract(payload) { result in
-            
-            switch result {
-            case let .success(contract):
-                dispatch(.contractUpdate(.success(contract)))
-                
-            case .failure(.connectivityError):
-                dispatch(.contractUpdate(.failure(.connectivityError)))
-                
-            case let .failure(.serverError(message)):
-                dispatch(.contractUpdate(.failure(.serverError(message))))
-            }
-        }
+        updateContract(payload, dispatch)
     }
     
     func createContract(
@@ -150,6 +141,13 @@ private extension FastPaymentsSettingsEffectHandler {
                 dispatch(.contractUpdate(.failure(.serverError(message))))
             }
         }
+    }
+    
+    func deactivateContract(
+        _ payload: UpdateContractPayload,
+        _ dispatch: @escaping Dispatch
+    ) {
+        updateContract(payload, dispatch)
     }
     
     func getSettings(
@@ -172,6 +170,25 @@ private extension FastPaymentsSettingsEffectHandler {
                 
             case let .failure(.serverError(message)):
                 dispatch(.setBankDefaultPrepare(.serverError(message)))
+            }
+        }
+    }
+    
+    func updateContract(
+        _ payload: UpdateContractPayload,
+        _ dispatch: @escaping Dispatch
+    ) {
+        updateContract(payload) { result in
+            
+            switch result {
+            case let .success(contract):
+                dispatch(.contractUpdate(.success(contract)))
+                
+            case .failure(.connectivityError):
+                dispatch(.contractUpdate(.failure(.connectivityError)))
+                
+            case let .failure(.serverError(message)):
+                dispatch(.contractUpdate(.failure(.serverError(message))))
             }
         }
     }
