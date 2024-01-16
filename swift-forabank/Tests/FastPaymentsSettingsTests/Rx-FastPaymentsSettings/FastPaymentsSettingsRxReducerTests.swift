@@ -173,34 +173,44 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
     }
     
-    //    func test_activateContract_shouldChangeStatusToInflightOnMissingSuccessContract() {
-    //
-    //        let missing = anyMissingConsentSuccessSettings()
-    //        let missingContract = FastPaymentsSettingsState(
-    //            userPaymentSettings: missing
-    //        )
-    //
-    //        XCTAssertNoDiff(
-    //            reduce(makeSUT(), missingContract, .activateContract).state,
-    //            .init(
-    //                userPaymentSettings: missing,
-    //                status: .inflight
-    //            )
-    //        )
-    //    }
+    func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentSuccess() {
+        
+        let missing = anyMissingConsentSuccessSettings()
+        let sut = makeSUT(product: nil)
+        
+        assert(sut: sut, missing, .activateContract, reducedTo: .init(
+            userPaymentSettings: missing,
+            status: .missingProduct
+        ))
+    }
     
-    //    func test_activateContract_shouldDeliverEffectOnMissingSuccessContract() {
-    //
-    //        let missing = anyMissingConsentSuccessSettings()
-    //        let missingContract = FastPaymentsSettingsState(
-    //            userPaymentSettings: missing
-    //        )
-    //
-    //        XCTAssertNoDiff(
-    //            reduce(makeSUT(), missingContract, .activateContract).effect,
-    //            .activateContract
-    //        )
-    //    }
+    func test_activateContract_shouldNotDeliverEffectOnMissingProductAtMissingSettingsWithConsentSuccess() {
+        
+        let missing = anyMissingConsentSuccessSettings()
+        let sut = makeSUT(product: nil)
+        
+        assert(sut: sut, missing, .activateContract, effect: nil)
+    }
+    
+    func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentSuccess() {
+        
+        let missing = anyMissingConsentSuccessSettings()
+        let sut = makeSUT(product: anyProduct())
+        
+        assert(sut: sut, missing, .activateContract, reducedTo: .init(
+            userPaymentSettings: missing,
+            status: .inflight
+        ))
+    }
+    
+    func test_activateContract_shouldDeliverEffectOnAvailableProductAtMissingSettingsWithConsentSuccess() {
+        
+        let missing = anyMissingConsentSuccessSettings()
+        let product = anyProduct()
+        let sut = makeSUT(product: product)
+        
+        assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
+    }
     
     func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
         
