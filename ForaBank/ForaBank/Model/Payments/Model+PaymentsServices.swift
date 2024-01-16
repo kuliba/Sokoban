@@ -278,9 +278,10 @@ extension Model {
         return nil
     }
     
-    func paymentsProcessRemoteStepServices(operation: Payments.Operation,
-                                           response: TransferResponseData)
-    async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepServices(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
         
         var parameters = [PaymentsParameterRepresentable]()
         let group = Payments.Parameter.Group(id: UUID().uuidString, type: .info)
@@ -320,6 +321,7 @@ extension Model {
             )
             parameters.append(parameterOperatorLogo)
             parameters.append(Payments.ParameterCode.regular)
+            
             if response.scenario == .suspect {
                 
                 parameters.append(Payments.ParameterInfo(
@@ -336,7 +338,12 @@ extension Model {
         }
     }
     
-    func paymentsServicesStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsServicesStepVisible(
+        _ operation: Payments.Operation,
+        nextStepParameters: [PaymentsParameterRepresentable],
+        operationParameters: [PaymentsParameterRepresentable],
+        response: TransferAnywayResponseData
+    ) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -362,7 +369,9 @@ extension Model {
         response: TransferAnywayResponseData
     ) throws -> [Payments.Parameter.ID] {
         
-        response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        var params = response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        params.append(Payments.Parameter.Identifier.sfpAntifraud.rawValue)
+        return params
     }
     
     func paymentsServicesStepStage(_ operation: Payments.Operation,
