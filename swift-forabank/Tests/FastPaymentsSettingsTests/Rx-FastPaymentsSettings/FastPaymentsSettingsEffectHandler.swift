@@ -10,21 +10,21 @@ import Tagged
 
 final class FastPaymentsSettingsEffectHandler {
     
-    private let getUserPaymentSettings: GetUserPaymentSettings
-    private let updateContract: UpdateContract
-    private let prepareSetBankDefault: PrepareSetBankDefault
     private let createContract: CreateContract
+    private let getSettings: GetSettings
+    private let prepareSetBankDefault: PrepareSetBankDefault
+    private let updateContract: UpdateContract
     
     init(
-        getUserPaymentSettings: @escaping GetUserPaymentSettings,
-        updateContract: @escaping UpdateContract,
+        createContract: @escaping CreateContract,
+        getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
-        createContract: @escaping CreateContract
+        updateContract: @escaping UpdateContract
     ) {
-        self.getUserPaymentSettings = getUserPaymentSettings
-        self.updateContract = updateContract
-        self.prepareSetBankDefault = prepareSetBankDefault
         self.createContract = createContract
+        self.getSettings = getSettings
+        self.prepareSetBankDefault = prepareSetBankDefault
+        self.updateContract = updateContract
     }
 }
 
@@ -35,25 +35,42 @@ extension FastPaymentsSettingsEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .getUserPaymentSettings:
-            getUserPaymentSettings(dispatch)
-            
         case let .activateContract(contract):
             activateContract(contract, dispatch)
             
-        case .prepareSetBankDefault:
-            prepareSetBankDefault(dispatch)
-            
         case let .createContract(productID):
             createContract(productID, dispatch)
+            
+        case .getUserPaymentSettings:
+            getUserPaymentSettings(dispatch)
+            
+        case .prepareSetBankDefault:
+            prepareSetBankDefault(dispatch)
         }
     }
+}
+
+// micro-service `ea`
+extension FastPaymentsSettingsEffectHandler {
+    
+    typealias CreateContractPayload = Product.ID
+    typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
+    typealias CreateContractCompletion = (CreateContractResponse) -> Void
+    typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
 }
 
 // micro-service `abc`
 extension FastPaymentsSettingsEffectHandler {
     
-    typealias GetUserPaymentSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
+    typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
+}
+
+// micro-service `f`
+extension FastPaymentsSettingsEffectHandler {
+    
+    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
+    typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
+    typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
 }
 
 // micro-service `da`
@@ -68,23 +85,6 @@ extension FastPaymentsSettingsEffectHandler {
         
         case activate, deactivate
     }
-}
-
-// micro-service `f`
-extension FastPaymentsSettingsEffectHandler {
-    
-    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
-    typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
-    typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
-}
-
-// micro-service `ea`
-extension FastPaymentsSettingsEffectHandler {
-    
-    typealias CreateContractPayload = Product.ID
-    typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
-    typealias CreateContractCompletion = (CreateContractResponse) -> Void
-    typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
 }
 
 extension FastPaymentsSettingsEffectHandler {
@@ -107,7 +107,7 @@ private extension FastPaymentsSettingsEffectHandler {
     func getUserPaymentSettings(
         _ dispatch: @escaping Dispatch
     ) {
-        getUserPaymentSettings {
+        getSettings {
             
             dispatch(.loadedUserPaymentSettings($0))
         }

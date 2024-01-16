@@ -12,9 +12,9 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, getUserPaymentSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy) = makeSUT()
+        let (_, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy) = makeSUT()
         
-        XCTAssertNoDiff(getUserPaymentSettingsSpy.callCount, 0)
+        XCTAssertNoDiff(getSettingsSpy.callCount, 0)
         XCTAssertNoDiff(updateContractSpy.callCount, 0)
         XCTAssertNoDiff(prepareSetBankDefaultSpy.callCount, 0)
         XCTAssertNoDiff(createContractSpy.callCount, 0)
@@ -25,55 +25,55 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedContractedOnContracted() {
         
         let contracted = anyContractedSettings()
-        let (sut, getUserPaymentSettingsSpy, _,_,_) = makeSUT()
+        let (sut, getSettingsSpy, _,_,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
             
-            getUserPaymentSettingsSpy.complete(with: contracted)
+            getSettingsSpy.complete(with: contracted)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
         
         let missingSuccess = anyMissingSuccessSettings()
-        let (sut, getUserPaymentSettingsSpy, _,_,_) = makeSUT()
+        let (sut, getSettingsSpy, _,_,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
             
-            getUserPaymentSettingsSpy.complete(with: missingSuccess)
+            getSettingsSpy.complete(with: missingSuccess)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
         
         let missingFailure = anyMissingFailureSettings()
-        let (sut, getUserPaymentSettingsSpy, _,_,_) = makeSUT()
+        let (sut, getSettingsSpy, _,_,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
             
-            getUserPaymentSettingsSpy.complete(with: missingFailure)
+            getSettingsSpy.complete(with: missingFailure)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
         
         let failure: UserPaymentSettings = .failure(.connectivityError)
-        let (sut, getUserPaymentSettingsSpy, _,_,_) = makeSUT()
+        let (sut, getSettingsSpy, _,_,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
-            getUserPaymentSettingsSpy.complete(with: failure)
+            getSettingsSpy.complete(with: failure)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedServerErrorOnServerErrorFailure() {
         
         let failure = anyServerErrorSettings()
-        let (sut, getUserPaymentSettingsSpy, _,_,_) = makeSUT()
+        let (sut, getSettingsSpy, _,_,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
-            getUserPaymentSettingsSpy.complete(with: failure)
+            getSettingsSpy.complete(with: failure)
         })
     }
     
@@ -212,7 +212,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias GetUserPaymentSettingsSpy = Spy<Void, UserPaymentSettings>
+    private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
     private typealias UpdateContractSpy = Spy<SUT.UpdateContractPayload, SUT.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, SUT.PrepareSetBankDefaultResponse>
     private typealias CreateContractSpy = Spy<SUT.CreateContractPayload, SUT.CreateContractResponse>
@@ -222,29 +222,29 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        getUserPaymentSettingsSpy: GetUserPaymentSettingsSpy,
+        getSettingsSpy: GetSettingsSpy,
         updateContractSpy: UpdateContractSpy,
         prepareSetBankDefaultSpy: PrepareSetBankDefaultSpy,
         createContractSpy: CreateContractSpy
     ) {
-        let getUserPaymentSettingsSpy = GetUserPaymentSettingsSpy()
+        let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
         let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
         let createContractSpy = CreateContractSpy()
         let sut = SUT(
-            getUserPaymentSettings: getUserPaymentSettingsSpy.process(completion:),
-            updateContract: updateContractSpy.process(_:completion:),
+            createContract: createContractSpy.process(_:completion:),
+            getSettings: getSettingsSpy.process(completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
-            createContract: createContractSpy.process(_:completion:)
+            updateContract: updateContractSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(getUserPaymentSettingsSpy, file: file, line: line)
+        trackForMemoryLeaks(getSettingsSpy, file: file, line: line)
         trackForMemoryLeaks(updateContractSpy, file: file, line: line)
         trackForMemoryLeaks(prepareSetBankDefaultSpy, file: file, line: line)
         trackForMemoryLeaks(createContractSpy, file: file, line: line)
         
-        return (sut, getUserPaymentSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy)
+        return (sut, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy)
     }
     
     private func expect(
