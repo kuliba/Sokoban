@@ -8,5 +8,5 @@
 enum FastPaymentsSettingsEffect: Equatable {
  
     case getUserPaymentSettings
-    case activateContract
+    case activateContract(UserPaymentSettings.PaymentContract)
 }

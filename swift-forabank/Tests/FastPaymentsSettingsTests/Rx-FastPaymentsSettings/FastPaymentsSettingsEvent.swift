@@ -9,6 +9,8 @@ public enum FastPaymentsSettingsEvent: Equatable {
     
     case appear
     case loadedUserPaymentSettings(UserPaymentSettings)
+    case updatedSuccess(UserPaymentSettings.PaymentContract)
+    
     case activateContract
     case deactivateContract
 #warning("rename case to reflect meaning")

@@ -5,69 +5,6 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-final class FastPaymentsSettingsEffectHandler {
-    
-    private let getUserPaymentSettings: GetUserPaymentSettings
-
-    init(
-        getUserPaymentSettings: @escaping GetUserPaymentSettings
-    ) {
-        self.getUserPaymentSettings = getUserPaymentSettings
-    }
-}
-
-extension FastPaymentsSettingsEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case .getUserPaymentSettings:
-            getUserPaymentSettings(dispatch)
-            
-        case .activateContract:
-            activateContract(dispatch)
-        }
-    }
-}
-
-// micro-service `abc`
-extension FastPaymentsSettingsEffectHandler {
-    
-    typealias GetUserPaymentSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
-}
-
-extension FastPaymentsSettingsEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent
-    typealias Effect = FastPaymentsSettingsEffect
-}
-
-private extension FastPaymentsSettingsEffectHandler {
-    
-    func getUserPaymentSettings(
-        _ dispatch: @escaping Dispatch
-    ) {
-        getUserPaymentSettings {
-            
-            dispatch(.loadedUserPaymentSettings($0))
-        }
-    }
-    
-    func activateContract(
-        _ dispatch: @escaping Dispatch
-    ) {
-//        activateContract {
-            
-            fatalError("unimplemented")
-//        }
-    }
-}
-
 import FastPaymentsSettings
 import XCTest
 
@@ -75,9 +12,9 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, getUserPaymentSettings) = makeSUT()
+        let (_, getUserPaymentSettingsSpy, _) = makeSUT()
         
-        XCTAssertNoDiff(getUserPaymentSettings.callCount, 0)
+        XCTAssertNoDiff(getUserPaymentSettingsSpy.callCount, 0)
     }
     
     // MARK: - getUserPaymentSettings
@@ -85,57 +22,82 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedContractedOnContracted() {
         
         let contracted = anyContractedSettings()
-        let (sut, getUserPaymentSettings) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
             
-            getUserPaymentSettings.complete(with: contracted)
+            getUserPaymentSettingsSpy.complete(with: contracted)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
         
         let missingSuccess = anyMissingSuccessSettings()
-        let (sut, getUserPaymentSettings) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
             
-            getUserPaymentSettings.complete(with: missingSuccess)
+            getUserPaymentSettingsSpy.complete(with: missingSuccess)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
         
         let missingFailure = anyMissingFailureSettings()
-        let (sut, getUserPaymentSettings) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
             
-            getUserPaymentSettings.complete(with: missingFailure)
+            getUserPaymentSettingsSpy.complete(with: missingFailure)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
         
         let failure: UserPaymentSettings = .failure(.connectivityError)
-        let (sut, getUserPaymentSettings) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
-            getUserPaymentSettings.complete(with: failure)
+            getUserPaymentSettingsSpy.complete(with: failure)
         })
     }
     
     func test_getUserPaymentSettings_shouldDeliverLoadedServerErrorOnServerErrorFailure() {
         
         let failure = anyServerErrorSettings()
-        let (sut, getUserPaymentSettings) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
-            getUserPaymentSettings.complete(with: failure)
+            getUserPaymentSettingsSpy.complete(with: failure)
         })
     }
+    
+    // MARK: - activateContract
+    
+//    func test_activateContract_shouldPassPayload() {
+//        
+//        let contract = anyPaymentContract()
+//        let (sut, _, updateContractSpy) = makeSUT()
+//        
+//        sut.handleEffect(.activateContract(contract)) { _ in }
+//        
+//        XCTAssertNoDiff(updateContractSpy.payloads.map(\.0), [])
+//        XCTAssertNoDiff(updateContractSpy.payloads.map(\.1), [])
+//    }
+    
+//    func test_activateContract_shouldDeliverUpdatedSuccessOnSuccessActive() {
+//        
+//        let contract = anyPaymentContract(contractStatus: .active)
+//        let activeContract = anyPaymentContract(contractStatus: .active)
+//        let (sut, _, updateContractSpy) = makeSUT()
+//        
+//        expect(sut, with: .activateContract(contract), toDeliver: .updatedSuccess(activeContract), on: {
+//            
+//            updateContractSpy.complete(with: .success(activeContract))
+//        })
+//    }
     
     // MARK: - Helpers
     
@@ -145,23 +107,28 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias GetUserPaymentSettingsSpy = Spy<Void, UserPaymentSettings>
+    private typealias UpdateContractSpy = Spy<SUT.UpdateContractPayload, SUT.UpdateContractResponse>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        getUserPaymentSettings: GetUserPaymentSettingsSpy
+        getUserPaymentSettingsSpy: GetUserPaymentSettingsSpy,
+        updateContractSpy: UpdateContractSpy
     ) {
-        let getUserPaymentSettings = GetUserPaymentSettingsSpy()
+        let getUserPaymentSettingsSpy = GetUserPaymentSettingsSpy()
+        let updateContractSpy = UpdateContractSpy()
         let sut = SUT(
-            getUserPaymentSettings: getUserPaymentSettings.process(completion:)
+            getUserPaymentSettings: getUserPaymentSettingsSpy.process(completion:),
+            updateContract: updateContractSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(getUserPaymentSettings, file: file, line: line)
+        trackForMemoryLeaks(getUserPaymentSettingsSpy, file: file, line: line)
+        trackForMemoryLeaks(updateContractSpy, file: file, line: line)
         
-        return (sut, getUserPaymentSettings)
+        return (sut, getUserPaymentSettingsSpy, updateContractSpy)
     }
     
     private func expect(

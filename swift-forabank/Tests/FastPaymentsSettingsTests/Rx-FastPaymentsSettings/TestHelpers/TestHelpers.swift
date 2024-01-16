@@ -9,9 +9,10 @@ import FastPaymentsSettings
 import Foundation
 
 func anyContractedSettings(
+    _ details: UserPaymentSettings.ContractDetails = anyContractDetails()
 ) -> UserPaymentSettings {
     
-    .contracted(anyContractDetails())
+    .contracted(details)
 }
 
 func anyActiveContractSettings(
@@ -60,6 +61,20 @@ func anyContractDetails(
     
     .init(
         paymentContract: paymentContract,
+        consentResult: consentResult,
+        bankDefault: bankDefault
+    )
+}
+
+func anyInactiveContractDetails(
+    consentResult: UserPaymentSettings.ConsentResult = .success(anyConsentList()),
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+) -> UserPaymentSettings.ContractDetails {
+    
+    .init(
+        paymentContract: anyPaymentContract(
+            contractStatus: .inactive
+        ),
         consentResult: consentResult,
         bankDefault: bankDefault
     )
