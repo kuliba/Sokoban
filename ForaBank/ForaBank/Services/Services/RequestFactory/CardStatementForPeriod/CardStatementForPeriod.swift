@@ -15,7 +15,7 @@ extension CardStatementForPeriodDomain {
     
     struct Payload: Equatable {
         
-        let productID: ProductID
+        let id: ProductID
         let name: Name?
         let period: Period
         let statementFormat: StatementFormat?
@@ -38,31 +38,37 @@ extension CardStatementForPeriodDomain.Payload {
         
         get throws {
             
-            var parameters: [[String: Any]] = [[
-                "id": "\(productID)"
-            ],[
-                "startDate": period.start,
-                "endDate": period.end
-            ]]
+            var parameters: [String: String] = [
+                "id": "\(id.rawValue)",
+                "startDate": "\(period.start)",
+                "endDate": "\(period.end)"
+            ]
             
-            let name: [[String: String]]? = name.map { [[
+            let name: [String: String]? = name.map { [
                 "name": $0.rawValue
-            ]] }
-            if let name { parameters.append(contentsOf: name) }
+            ] }
+            if let name { parameters = parameters.mergeOnto(target: name) }
             
-            let statementFormat: [[String: String]]? = statementFormat.map { [[
+            let statementFormat: [String: String]? = statementFormat.map { [
                 "statementFormat": $0.rawValue
-            ]] }
-            if let statementFormat { parameters.append(contentsOf: statementFormat) }
+            ] }
+            if let statementFormat { parameters = parameters.mergeOnto(target: statementFormat) }
 
-            let cardNumber: [[String: String]]? = cardNumber.map { [[
+            let cardNumber: [String: String]? = cardNumber.map { [
                 "cardNumber": $0.rawValue
-            ]] }
-            if let cardNumber { parameters.append(contentsOf: cardNumber) }
+            ] }
+            if let cardNumber { parameters = parameters.mergeOnto(target: cardNumber) }
 
             return try JSONSerialization.data(withJSONObject: [
                 "parameters": parameters
-            ] as [String: [[String: Any]]])
+            ] as [String: [String: String]])
         }
+    }
+}
+
+extension Dictionary where Value: Any {
+    public func mergeOnto(target: [Key: Value]?) -> [Key: Value] {
+        guard let target = target else { return self }
+        return self.merging(target) { current, _ in current }
     }
 }
