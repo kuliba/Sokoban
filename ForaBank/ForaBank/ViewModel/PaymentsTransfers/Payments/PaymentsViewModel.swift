@@ -334,6 +334,7 @@ class PaymentsViewModel: ObservableObject {
                         parameters: [
                             Payments.ParameterSuccessStatus(status: .accepted),
                             Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                            Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
                             //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
                             //TODO: amount
                             Payments.ParameterButton.actionButtonMain()
