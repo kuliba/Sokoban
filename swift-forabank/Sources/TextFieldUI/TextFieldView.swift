@@ -67,28 +67,27 @@ public struct TextFieldView: UIViewRepresentable {
             
             switch state {
             case let .editing(textState):
-                textView.text = textState.text
+                
+                if textView.text != textState.text {
+                    textView.text = textState.text
+                }
                 textView.setCursorPosition(to: textState.cursorPosition)
                 textView.textColor = .init(textFieldConfig.textColor)
-                textView.becomeFirstResponder()
+                
+                if textView.window != nil, !textView.isFirstResponder, !context.coordinator.didBecomeFirstResponder {
+                    textView.becomeFirstResponder()
+                    context.coordinator.didBecomeFirstResponder = true
+                }
                 
             case let .noFocus(text):
+               
                 textView.text = text
                 textView.textColor = .init(textFieldConfig.textColor)
-                if textView.isFirstResponder {
-                    DispatchQueue.main.async { [weak textView] in
-                        textView?.resignFirstResponder()
-                    }
-                }
-                
+            
             case let .placeholder(placeholderText):
+              
                 textView.text = placeholderText
                 textView.textColor = .init(textFieldConfig.placeholderColor)
-                if textView.isFirstResponder {
-                    DispatchQueue.main.async { [weak textView] in
-                        textView?.resignFirstResponder()
-                    }
-                }
             }
         }
     }
@@ -121,6 +120,7 @@ extension TextFieldView {
     public class Coordinator: NSObject {
         
         let send: (TextFieldAction) -> Void
+        var didBecomeFirstResponder: Bool = false
         
         init(send: @escaping (TextFieldAction) -> Void) {
             
@@ -197,7 +197,7 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
             self?.send(.startEditing)
         }
     }
-        
+    
     public func textViewDidEndEditing(_ textView: UITextView) {
         
         DispatchQueue.main.async { [weak self] in
@@ -212,10 +212,18 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
         replacementText text: String
     ) -> Bool {
         
-        DispatchQueue.main.async { [weak self] in
+        if range.location == 0 && range.length == 1 {
+            DispatchQueue.main.async { [weak self] in
+                self?.send(.setTextTo(""))
+            }
+            return true
             
-            self?.send(.changeText(text, in: range))
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.send(.changeText(text, in: range))
+            }
         }
+        
         return false
     }
 }
