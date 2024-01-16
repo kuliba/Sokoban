@@ -56,6 +56,7 @@ extension Services {
             
             case v1
             case v2
+            case v4
         }
         
         enum ServiceName: String {
@@ -66,6 +67,7 @@ extension Services {
             case createStickerPayment
             case createSberQRPayment
             case formSessionKey
+            case getCardStatementForPeriod
             case getJsonAbroad
             case getSberQRData
             case getOperationDetailByPaymentId
@@ -177,6 +179,12 @@ extension Services.Endpoint {
         serviceName: .formSessionKey
     )
     
+    static let getCardStatementForPeriod: Self = .init(
+        pathPrefix: .rest,
+        version: .v4,
+        serviceName: .getCardStatementForPeriod
+    )
+
     static let getImageList: Self = .init(
         pathPrefix: .dict,
         version: nil,
