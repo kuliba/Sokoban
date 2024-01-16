@@ -6,21 +6,25 @@
 //
 
 import FastPaymentsSettings
+import Tagged
 
 final class FastPaymentsSettingsEffectHandler {
     
     private let getUserPaymentSettings: GetUserPaymentSettings
     private let updateContract: UpdateContract
     private let prepareSetBankDefault: PrepareSetBankDefault
+    private let createContract: CreateContract
     
     init(
         getUserPaymentSettings: @escaping GetUserPaymentSettings,
         updateContract: @escaping UpdateContract,
-        prepareSetBankDefault: @escaping PrepareSetBankDefault
+        prepareSetBankDefault: @escaping PrepareSetBankDefault,
+        createContract: @escaping CreateContract
     ) {
         self.getUserPaymentSettings = getUserPaymentSettings
         self.updateContract = updateContract
         self.prepareSetBankDefault = prepareSetBankDefault
+        self.createContract = createContract
     }
 }
 
@@ -69,6 +73,15 @@ extension FastPaymentsSettingsEffectHandler {
     typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
     typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
+}
+
+// micro-service `ea`
+extension FastPaymentsSettingsEffectHandler {
+    
+    typealias CreateContractPayload = Product.ID
+    typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
+    typealias CreateContractCompletion = (CreateContractResponse) -> Void
+    typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
 }
 
 extension FastPaymentsSettingsEffectHandler {
