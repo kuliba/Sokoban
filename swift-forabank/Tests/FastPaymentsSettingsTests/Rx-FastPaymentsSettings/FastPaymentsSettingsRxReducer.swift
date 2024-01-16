@@ -33,6 +33,8 @@ extension FastPaymentsSettingsRxReducer {
             
         case let .contractUpdate(contractUpdate):
             fatalError("unimplemented")
+        case let .setBankDefaultPrepare(failure):
+            fatalError("unimplemented")
         case .deactivateContract:
             fatalError("unimplemented")
         case .resetStatus:

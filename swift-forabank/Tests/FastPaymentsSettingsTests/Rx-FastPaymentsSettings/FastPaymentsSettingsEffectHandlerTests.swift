@@ -89,7 +89,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(updateContractSpy.payloads.map(\.1), [.activate])
     }
     
-    func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccessActivation() {
+    func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
         
         let currentContract = anyPaymentContract()
         let activatedContract = anyActivePaymentContract()
@@ -104,7 +104,6 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_activateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
         
         let currentContract = anyPaymentContract()
-        let activatedContract = anyActivePaymentContract()
         let (sut, _, updateContractSpy, _) = makeSUT()
         
         expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
@@ -116,13 +115,45 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_activateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
         
         let currentContract = anyPaymentContract()
-        let activatedContract = anyActivePaymentContract()
         let message = UUID().uuidString
         let (sut, _, updateContractSpy, _) = makeSUT()
         
         expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
             
             updateContractSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
+    // MARK: - prepareSetBankDefault
+    
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareNilFailureOnSuccess() {
+        
+        let (sut, _,_, prepareSetBankDefaultSpy) = makeSUT()
+        
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(nil), on: {
+            
+            prepareSetBankDefaultSpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareConnectivityFailureOnConnectivityError() {
+        
+        let (sut, _,_, prepareSetBankDefaultSpy) = makeSUT()
+        
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(.connectivityError), on: {
+            
+            prepareSetBankDefaultSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareServerErrorFailureOnServerError() {
+        
+        let message = UUID().uuidString
+        let (sut, _,_, prepareSetBankDefaultSpy) = makeSUT()
+        
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(.serverError(message)), on: {
+            
+            prepareSetBankDefaultSpy.complete(with: .failure(.serverError(message)))
         })
     }
     
@@ -151,7 +182,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
         let sut = SUT(
             getUserPaymentSettings: getUserPaymentSettingsSpy.process(completion:),
-            updateContract: updateContractSpy.process(_:completion:), 
+            updateContract: updateContractSpy.process(_:completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:)
         )
         

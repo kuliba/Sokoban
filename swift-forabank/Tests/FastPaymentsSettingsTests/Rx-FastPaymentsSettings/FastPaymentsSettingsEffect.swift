@@ -8,5 +8,11 @@
 enum FastPaymentsSettingsEffect: Equatable {
  
     case getUserPaymentSettings
-    case activateContract(UserPaymentSettings.PaymentContract)
+    case activateContract(Contract)
+    case prepareSetBankDefault
+}
+
+extension FastPaymentsSettingsEffect {
+    
+    typealias Contract = UserPaymentSettings.PaymentContract
 }
