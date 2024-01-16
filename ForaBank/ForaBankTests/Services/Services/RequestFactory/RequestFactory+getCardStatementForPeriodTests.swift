@@ -8,8 +8,6 @@
 import XCTest
 @testable import ForaBank
 
-// TODO: дописать тесты
-
 final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
 
     // MARK: - getCardStatementForPeriod
@@ -30,7 +28,29 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
         
         XCTAssertEqual(request.httpMethod, "POST")
     }
+    
+    func test_makeGetScenarioQRRequest_shouldSetRequestBody() throws {
         
+        let (payload, request) = try makeGetCardStatementForPeriod(
+            productID: 1,
+            name: "cardName",
+            period: .initialPeriod,
+            statementFormat: .csv,
+            cardNumber: "1111"
+        )
+
+        let httpBody = try XCTUnwrap(request.httpBody)
+        
+        let decodedRequest = try JSONDecoder().decode(DecodableRequest.self, from: httpBody)
+
+        XCTAssertNoDiff(decodedRequest.id, "\(payload.id.rawValue)")
+        XCTAssertNoDiff(decodedRequest.name, payload.name?.rawValue)
+        XCTAssertNoDiff(decodedRequest.cardNumber, payload.cardNumber?.rawValue)
+        XCTAssertNoDiff(decodedRequest.statementFormat, payload.statementFormat?.rawValue)
+        XCTAssertNoDiff(decodedRequest.startDate, "\(payload.period.start)")
+        XCTAssertNoDiff(decodedRequest.endDate, "\(payload.period.end)")
+    }
+    
     // MARK: - Helpers
     
     private func makeGetCardStatementForPeriod(
@@ -69,6 +89,16 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
             period: period,
             statementFormat: statementFormat,
             cardNumber: cardNumber)
+    }
+    
+    private struct DecodableRequest: Decodable {
+        
+        let id: String
+        let name: String
+        let statementFormat: String
+        let cardNumber: String
+        let startDate: String
+        let endDate: String
     }
 }
 
