@@ -12,9 +12,11 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (_, getUserPaymentSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy) = makeSUT()
         
         XCTAssertNoDiff(getUserPaymentSettingsSpy.callCount, 0)
+        XCTAssertNoDiff(updateContractSpy.callCount, 0)
+        XCTAssertNoDiff(prepareSetBankDefaultSpy.callCount, 0)
     }
     
     // MARK: - getUserPaymentSettings
@@ -22,7 +24,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedContractedOnContracted() {
         
         let contracted = anyContractedSettings()
-        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
             
@@ -33,7 +35,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingSuccessOnMissingSuccess() {
         
         let missingSuccess = anyMissingSuccessSettings()
-        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
             
@@ -44,7 +46,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedMissingFailureOnMissingFailure() {
         
         let missingFailure = anyMissingFailureSettings()
-        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
             
@@ -55,7 +57,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
         
         let failure: UserPaymentSettings = .failure(.connectivityError)
-        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
@@ -66,7 +68,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_getUserPaymentSettings_shouldDeliverLoadedServerErrorOnServerErrorFailure() {
         
         let failure = anyServerErrorSettings()
-        let (sut, getUserPaymentSettingsSpy, _) = makeSUT()
+        let (sut, getUserPaymentSettingsSpy, _,_) = makeSUT()
         
         expect(sut, with: .getUserPaymentSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
             
@@ -79,7 +81,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_activateContract_shouldPassPayload() {
         
         let currentContract = anyPaymentContract()
-        let (sut, _, updateContractSpy) = makeSUT()
+        let (sut, _, updateContractSpy, _) = makeSUT()
         
         sut.handleEffect(.activateContract(currentContract)) { _ in }
         
@@ -91,7 +93,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         
         let currentContract = anyPaymentContract()
         let activatedContract = anyActivePaymentContract()
-        let (sut, _, updateContractSpy) = makeSUT()
+        let (sut, _, updateContractSpy, _) = makeSUT()
         
         expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
             
@@ -103,7 +105,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         
         let currentContract = anyPaymentContract()
         let activatedContract = anyActivePaymentContract()
-        let (sut, _, updateContractSpy) = makeSUT()
+        let (sut, _, updateContractSpy, _) = makeSUT()
         
         expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
             
@@ -116,7 +118,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let currentContract = anyPaymentContract()
         let activatedContract = anyActivePaymentContract()
         let message = UUID().uuidString
-        let (sut, _, updateContractSpy) = makeSUT()
+        let (sut, _, updateContractSpy, _) = makeSUT()
         
         expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
             
@@ -133,6 +135,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     private typealias GetUserPaymentSettingsSpy = Spy<Void, UserPaymentSettings>
     private typealias UpdateContractSpy = Spy<SUT.UpdateContractPayload, SUT.UpdateContractResponse>
+    private typealias PrepareSetBankDefaultSpy = Spy<Void, SUT.PrepareSetBankDefaultResponse>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -140,20 +143,24 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     ) -> (
         sut: SUT,
         getUserPaymentSettingsSpy: GetUserPaymentSettingsSpy,
-        updateContractSpy: UpdateContractSpy
+        updateContractSpy: UpdateContractSpy,
+        prepareSetBankDefaultSpy: PrepareSetBankDefaultSpy
     ) {
         let getUserPaymentSettingsSpy = GetUserPaymentSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
+        let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
         let sut = SUT(
             getUserPaymentSettings: getUserPaymentSettingsSpy.process(completion:),
-            updateContract: updateContractSpy.process(_:completion:)
+            updateContract: updateContractSpy.process(_:completion:), 
+            prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(getUserPaymentSettingsSpy, file: file, line: line)
         trackForMemoryLeaks(updateContractSpy, file: file, line: line)
+        trackForMemoryLeaks(prepareSetBankDefaultSpy, file: file, line: line)
         
-        return (sut, getUserPaymentSettingsSpy, updateContractSpy)
+        return (sut, getUserPaymentSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy)
     }
     
     private func expect(

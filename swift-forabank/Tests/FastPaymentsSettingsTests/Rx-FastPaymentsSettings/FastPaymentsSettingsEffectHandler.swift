@@ -11,13 +11,16 @@ final class FastPaymentsSettingsEffectHandler {
     
     private let getUserPaymentSettings: GetUserPaymentSettings
     private let updateContract: UpdateContract
+    private let prepareSetBankDefault: PrepareSetBankDefault
     
     init(
         getUserPaymentSettings: @escaping GetUserPaymentSettings,
-        updateContract: @escaping UpdateContract
+        updateContract: @escaping UpdateContract,
+        prepareSetBankDefault: @escaping PrepareSetBankDefault
     ) {
         self.getUserPaymentSettings = getUserPaymentSettings
         self.updateContract = updateContract
+        self.prepareSetBankDefault = prepareSetBankDefault
     }
 }
 
@@ -55,6 +58,14 @@ extension FastPaymentsSettingsEffectHandler {
         
         case activate, deactivate
     }
+}
+
+// micro-service `f`
+extension FastPaymentsSettingsEffectHandler {
+    
+    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
+    typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
+    typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
 }
 
 extension FastPaymentsSettingsEffectHandler {
