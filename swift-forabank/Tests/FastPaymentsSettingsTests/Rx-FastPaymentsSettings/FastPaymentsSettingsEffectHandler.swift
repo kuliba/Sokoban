@@ -43,6 +43,9 @@ extension FastPaymentsSettingsEffectHandler {
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(dispatch)
+            
+        case let .createContract(productID):
+            createContract(productID, dispatch)
         }
     }
 }
@@ -143,6 +146,25 @@ private extension FastPaymentsSettingsEffectHandler {
                 
             case let .failure(.serverError(message)):
                 dispatch(.setBankDefaultPrepare(.serverError(message)))
+            }
+        }
+    }
+    
+    func createContract(
+        _ productID: Product.ID,
+        _ dispatch: @escaping Dispatch
+    ) {
+        createContract(productID) { result in
+            
+            switch result {
+            case let .success(contract):
+                dispatch(.contractUpdate(.success(contract)))
+                
+            case .failure(.connectivityError):
+                dispatch(.contractUpdate(.failure(.connectivityError)))
+                
+            case let .failure(.serverError(message)):
+                dispatch(.contractUpdate(.failure(.serverError(message))))
             }
         }
     }

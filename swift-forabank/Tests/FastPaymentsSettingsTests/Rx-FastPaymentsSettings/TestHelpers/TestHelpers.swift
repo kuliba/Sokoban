@@ -8,6 +8,13 @@
 import FastPaymentsSettings
 import Foundation
 
+func anyProductID(
+    _ rawValue: String = UUID().uuidString
+) -> Product.ID {
+    
+    .init(rawValue)
+}
+
 func makeFPSState(
     _ userPaymentSettings: UserPaymentSettings? = nil,
     status: FastPaymentsSettingsState.Status? = nil
