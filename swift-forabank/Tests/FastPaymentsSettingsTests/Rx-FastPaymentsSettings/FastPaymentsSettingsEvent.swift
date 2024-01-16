@@ -8,7 +8,7 @@
 public enum FastPaymentsSettingsEvent: Equatable {
     
     case appear
-    case loadedUserPaymentSettings(UserPaymentSettings)
+    case loadedSettings(UserPaymentSettings)
     case contractUpdate(ContractUpdateResult)
     
     case productUpdate(Failure?)

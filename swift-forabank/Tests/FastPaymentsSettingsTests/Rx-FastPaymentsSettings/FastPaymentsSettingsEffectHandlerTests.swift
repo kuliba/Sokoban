@@ -122,7 +122,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let contracted = anyContractedSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(contracted), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedSettings(contracted), on: {
             
             getSettingsSpy.complete(with: contracted)
         })
@@ -133,7 +133,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let missingSuccess = anyMissingSuccessSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(missingSuccess), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingSuccess), on: {
             
             getSettingsSpy.complete(with: missingSuccess)
         })
@@ -144,7 +144,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let missingFailure = anyMissingFailureSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(missingFailure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingFailure), on: {
             
             getSettingsSpy.complete(with: missingFailure)
         })
@@ -155,7 +155,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let failure: UserPaymentSettings = .failure(.connectivityError)
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })
@@ -166,7 +166,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let failure = anyServerErrorSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedUserPaymentSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadedSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })

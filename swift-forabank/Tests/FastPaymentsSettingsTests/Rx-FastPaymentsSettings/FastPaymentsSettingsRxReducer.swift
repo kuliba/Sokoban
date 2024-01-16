@@ -25,8 +25,8 @@ extension FastPaymentsSettingsRxReducer {
         case .appear:
             (state, effect) = handleAppear(state)
             
-        case let .loadedUserPaymentSettings(userPaymentSettings):
-            state = handleLoadedUserPaymentSettings(userPaymentSettings)
+        case let .loadedSettings(settings):
+            state = handleLoadedSettings(settings)
             
         case .activateContract:
             (state, effect) = activateContract(state)
@@ -65,7 +65,7 @@ private extension FastPaymentsSettingsRxReducer {
         return (state, .getSettings)
     }
     
-    func handleLoadedUserPaymentSettings(
+    func handleLoadedSettings(
         _ userPaymentSettings: UserPaymentSettings
     ) -> State {
         

@@ -155,7 +155,7 @@ private extension FastPaymentsSettingsEffectHandler {
     func getSettings(
         _ dispatch: @escaping Dispatch
     ) {
-        getSettings { dispatch(.loadedUserPaymentSettings($0)) }
+        getSettings { dispatch(.loadedSettings($0)) }
     }
     
     func prepareSetBankDefault(

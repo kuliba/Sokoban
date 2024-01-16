@@ -45,46 +45,46 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(state, .appear, effect: .getSettings)
     }
     
-    // MARK: - loadedUserPaymentSettings
+    // MARK: - loadedSettings
     
-    func test_loadedUserPaymentSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
+    func test_loadedSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
         
         let state = makeFPSState(status: .inflight)
         let loaded = anyContractedSettings()
         
-        assert(state, .loadedUserPaymentSettings(loaded), reducedTo: .init(
+        assert(state, .loadedSettings(loaded), reducedTo: .init(
             userPaymentSettings: loaded,
             status: nil
         ))
     }
     
-    func test_loadedUserPaymentSettings_shouldNotDeliverEffect_emptyState() {
+    func test_loadedSettings_shouldNotDeliverEffect_emptyState() {
         
         let state = makeFPSState(status: .inflight)
         let loaded = anyContractedSettings()
         
-        assert(state, .loadedUserPaymentSettings(loaded), effect: nil)
+        assert(state, .loadedSettings(loaded), effect: nil)
     }
     
-    func test_loadedUserPaymentSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
+    func test_loadedSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
         
         let contracted = anyContractedSettings()
         let loaded = anyContractedSettings()
         let state = makeFPSState(contracted, status: .inflight)
         
-        assert(state, .loadedUserPaymentSettings(loaded), reducedTo: .init(
+        assert(state, .loadedSettings(loaded), reducedTo: .init(
             userPaymentSettings: loaded,
             status: nil
         ))
     }
     
-    func test_loadedUserPaymentSettings_shouldNotDeliverEffect_nonEmptyState() {
+    func test_loadedSettings_shouldNotDeliverEffect_nonEmptyState() {
         
         let contracted = anyContractedSettings()
         let loaded = anyContractedSettings()
         let state = makeFPSState(contracted, status: .inflight)
         
-        assert(state, .loadedUserPaymentSettings(loaded), effect: nil)
+        assert(state, .loadedSettings(loaded), effect: nil)
     }
     
     // MARK: - activateContract
