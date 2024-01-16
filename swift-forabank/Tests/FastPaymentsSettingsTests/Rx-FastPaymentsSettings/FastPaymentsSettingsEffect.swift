@@ -36,18 +36,9 @@ extension FastPaymentsSettingsEffect {
     struct ContractCore: Equatable {
         
         let contractID: ContractID
-        let productID: ProductID
-        let productType: ProductType
+        let product: Product
         
         typealias ContractID = Tagged<_ContractID, Int>
         enum _ContractID {}
-        
-        typealias ProductID = Tagged<_ProductID, Int>
-        enum _ProductID {}
-        
-        enum ProductType {
-            
-            case account, card
-        }
     }
 }

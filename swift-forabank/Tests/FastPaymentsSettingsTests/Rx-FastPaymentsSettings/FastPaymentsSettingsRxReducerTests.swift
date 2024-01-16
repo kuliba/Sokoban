@@ -411,7 +411,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
                     paymentContract: newContract,
                     consentResult: consentResult,
                     bankDefault: .offEnabled,
-                    product: product.settingsProduct
+                    product: product
                 ))
             )
         )
@@ -646,11 +646,32 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     // MARK: - productUpdate
     
+    func test_productUpdate_shouldSetProductOnSuccess_active() {
+        
+        let newProduct = anyProduct()
+        let active = anyPaymentContract(contractStatus: .active)
+        let details = anyContractDetails(paymentContract: active)
+        let activeContract = makeFPSState(.contracted(details))
+        
+        assert(
+            activeContract,
+            .productUpdate(.success(newProduct)),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: details.paymentContract,
+                    consentResult: details.consentResult,
+                    bankDefault: details.bankDefault,
+                    product: newProduct
+                ))
+            )
+        )
+    }
+    
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_active() {
         
         let active = anyActiveContractSettings()
         
-        assert(active, .productUpdate(nil), effect: nil)
+        assert(active, .productUpdate(.success(anyProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldSetStatusOnConnectivityErrorFailure_active() {
@@ -659,7 +680,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         assert(
             active,
-            .productUpdate(.connectivityError),
+            .productUpdate(.failure(.connectivityError)),
             reducedTo: .init(
                 userPaymentSettings: active,
                 status: .connectivityError
@@ -672,7 +693,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let active = anyActiveContractSettings()
         
-        assert(active, .productUpdate(.connectivityError), effect: nil)
+        assert(active, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldSetStatusOnServerErrorFailure_active() {
@@ -682,7 +703,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         assert(
             active,
-            .productUpdate(.serverError(message)),
+            .productUpdate(.failure(.serverError(message))),
             reducedTo: .init(
                 userPaymentSettings: active,
                 status: .serverError(message)
@@ -695,175 +716,175 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let active = anyActiveContractSettings()
         
-        assert(active, .productUpdate(.serverError(UUID().uuidString)), effect: nil)
+        assert(active, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnSuccess_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(nil), reducedTo: inactive)
+        assert(inactive, .productUpdate(.success(anyProduct())), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(nil), effect: nil)
+        assert(inactive, .productUpdate(.success(anyProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(.connectivityError), reducedTo: inactive)
+        assert(inactive, .productUpdate(.failure(.connectivityError)), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(.connectivityError), effect: nil)
+        assert(inactive, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(.serverError(UUID().uuidString)), reducedTo: inactive)
+        assert(inactive, .productUpdate(.failure(.serverError(UUID().uuidString))), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
         
         let inactive = makeFPSState(anyInactiveContractSettings())
         
-        assert(inactive, .productUpdate(.serverError(UUID().uuidString)), effect: nil)
+        assert(inactive, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnSuccess_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(nil), reducedTo: missing)
+        assert(missing, .productUpdate(.success(anyProduct())), reducedTo: missing)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(nil), effect: nil)
+        assert(missing, .productUpdate(.success(anyProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(.connectivityError), reducedTo: missing)
+        assert(missing, .productUpdate(.failure(.connectivityError)), reducedTo: missing)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(.connectivityError), effect: nil)
+        assert(missing, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(.serverError(UUID().uuidString)), reducedTo: missing)
+        assert(missing, .productUpdate(.failure(.serverError(UUID().uuidString))), reducedTo: missing)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_missing() {
         
         let missing = makeFPSState(anyMissingConsentSuccessSettings())
         
-        assert(missing, .productUpdate(.serverError(UUID().uuidString)), effect: nil)
+        assert(missing, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnSuccess_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(nil), reducedTo: connectivityError)
+        assert(connectivityError, .productUpdate(.success(anyProduct())), reducedTo: connectivityError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(nil), effect: nil)
+        assert(connectivityError, .productUpdate(.success(anyProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(.connectivityError), reducedTo: connectivityError)
+        assert(connectivityError, .productUpdate(.failure(.connectivityError)), reducedTo: connectivityError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(.connectivityError), effect: nil)
+        assert(connectivityError, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(.serverError(UUID().uuidString)), reducedTo: connectivityError)
+        assert(connectivityError, .productUpdate(.failure(.serverError(UUID().uuidString))), reducedTo: connectivityError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
         
         let connectivityError = makeFPSState(.failure(.connectivityError))
         
-        assert(connectivityError, .productUpdate(.serverError(UUID().uuidString)), effect: nil)
+        assert(connectivityError, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnSuccess_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(nil), reducedTo: serverError)
+        assert(serverError, .productUpdate(.success(anyProduct())), reducedTo: serverError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(nil), effect: nil)
+        assert(serverError, .productUpdate(.success(anyProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(.connectivityError), reducedTo: serverError)
+        assert(serverError, .productUpdate(.failure(.connectivityError)), reducedTo: serverError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(.connectivityError), effect: nil)
+        assert(serverError, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(.serverError(UUID().uuidString)), reducedTo: serverError)
+        assert(serverError, .productUpdate(.failure(.serverError(UUID().uuidString))), reducedTo: serverError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
         
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
-        assert(serverError, .productUpdate(.serverError(UUID().uuidString)), effect: nil)
+        assert(serverError, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     // MARK: - Helpers
@@ -970,34 +991,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         .init(
             contractID: .init(contractDetails.paymentContract.id.rawValue),
-            productID: .init(contractDetails.product.id.rawValue),
-            productType: productType(of: contractDetails.product)
+            product: contractDetails.product
         )
-    }
-    
-    private func productType(
-        of product: UserPaymentSettings.Product
-    ) -> FastPaymentsSettingsEffect.ContractCore.ProductType {
-        
-        switch product.type {
-        case .account: return .account
-        case .card:    return .card
-        }
-    }
-}
-
-private extension Product {
-    
-    var settingsProduct: UserPaymentSettings.Product {
-        
-        .init(id: .init(id.rawValue), type: settingsProductType)
-    }
-    
-    var settingsProductType: UserPaymentSettings.Product.ProductType {
-        
-        switch productType {
-        case .account: return .account
-        case .card:    return .card
-        }
     }
 }

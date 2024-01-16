@@ -90,7 +90,7 @@ func anyContractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = anyPaymentContract(),
     consentResult: UserPaymentSettings.ConsentResult = .success(anyConsentList()),
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    product: UserPaymentSettings.Product = anyUserPaymentSettingsProduct()
+    product: Product = anyUserPaymentSettingsProduct()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
@@ -102,16 +102,16 @@ func anyContractDetails(
 }
 
 func anyUserPaymentSettingsProduct(
-    id: UserPaymentSettings.Product.ProductID = anyUserPaymentSettingsProductProductID(),
-    type: UserPaymentSettings.Product.ProductType = .account
-) -> UserPaymentSettings.Product {
+    id: Product.ProductID = anyUserPaymentSettingsProductProductID(),
+    type productType: Product.ProductType = .account
+) -> Product {
     
-    .init(id: id, type: type)
+    .init(id: id, productType: productType)
 }
 
 func anyUserPaymentSettingsProductProductID(
     _ idRawValue: Int = generateRandom11DigitNumber()
-) -> UserPaymentSettings.Product.ProductID {
+) -> Product.ProductID {
     
     .init(idRawValue)
 }
@@ -119,7 +119,7 @@ func anyUserPaymentSettingsProductProductID(
 func anyInactiveContractDetails(
     consentResult: UserPaymentSettings.ConsentResult = .success(anyConsentList()),
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    product: UserPaymentSettings.Product = anyUserPaymentSettingsProduct()
+    product: Product = anyUserPaymentSettingsProduct()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
@@ -158,29 +158,25 @@ func anyConsentList(
 
 func anyFastPaymentsSettingsEffectTargetContract(
     contractID: FastPaymentsSettingsEffect.ContractCore.ContractID = .init(generateRandom11DigitNumber()),
-    productIDR: FastPaymentsSettingsEffect.ContractCore.ProductID = .init(generateRandom11DigitNumber()),
-    productType: FastPaymentsSettingsEffect.ContractCore.ProductType = .account,
+    product: Product = anyProduct(),
     targetStatus: FastPaymentsSettingsEffectHandler.UpdateContractPayload.TargetStatus = .active
 ) -> FastPaymentsSettingsEffect.TargetContract {
     
     .init(
         core: .init(
             contractID: contractID,
-            productID: productIDR,
-            productType: productType
+            product: product
         ),
         targetStatus: targetStatus)
 }
 
 func anyUpdateProductPayload(
     _ contractIDRawValue: Int = generateRandom11DigitNumber(),
-    _ productIDRawValue: Int = generateRandom11DigitNumber(),
-    _ productType: FastPaymentsSettingsEffectHandler.UpdateProductPayload.ProductType = .account
+    product: Product = anyProduct()
 ) -> FastPaymentsSettingsEffectHandler.UpdateProductPayload {
     
     .init(
         contractID: .init(contractIDRawValue),
-        productID: .init(productIDRawValue),
-        productType: productType
+        product: product
     )
 }

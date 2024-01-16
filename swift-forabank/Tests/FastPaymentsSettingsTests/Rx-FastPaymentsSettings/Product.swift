@@ -7,7 +7,7 @@
 
 import Tagged
 
-public struct Product: Identifiable {
+public struct Product: Equatable, Identifiable {
     
     public let id: ProductID
     public let productType: ProductType

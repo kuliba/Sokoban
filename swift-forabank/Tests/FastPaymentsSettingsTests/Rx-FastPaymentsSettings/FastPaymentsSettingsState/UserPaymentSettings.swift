@@ -57,26 +57,6 @@ public extension UserPaymentSettings {
             case active, inactive
         }
     }
-    
-    struct Product: Equatable, Identifiable {
-        
-        public let id: ProductID
-        public let type: ProductType
-        
-        public init(id: ProductID, type: ProductType) {
-         
-            self.id = id
-            self.type = type
-        }
-        
-        public typealias ProductID = Tagged<_ProductID, Int>
-        public enum _ProductID {}
-        
-        public enum ProductType: Equatable {
-            
-            case account, card
-        }
-    }
 }
 
 public extension UserPaymentSettings {

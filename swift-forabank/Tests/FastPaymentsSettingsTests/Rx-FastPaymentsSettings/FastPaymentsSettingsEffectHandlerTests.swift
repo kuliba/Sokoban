@@ -264,12 +264,13 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(updateProductSpy.payloads, [payload])
     }
     
-    func test_updateProduct_shouldDeliverUpdateProductNilFailureOnSuccess() {
+    func test_updateProduct_shouldDeliverUpdateProductOnSuccess() {
         
-        let payload = anyUpdateProductPayload()
+        let product = anyProduct()
+        let payload = anyUpdateProductPayload(product: product)
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(nil), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.success(product)), on: {
             
             updateProductSpy.complete(with: .success(()))
         })
@@ -280,7 +281,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let payload = anyUpdateProductPayload()
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.connectivityError), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.failure(.connectivityError)), on: {
             
             updateProductSpy.complete(with: .failure(.connectivityError))
         })
@@ -292,7 +293,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.serverError(message)), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.failure(.serverError(message))), on: {
             
             updateProductSpy.complete(with: .failure(.serverError(message)))
         })

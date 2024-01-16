@@ -43,8 +43,8 @@ extension FastPaymentsSettingsRxReducer {
         case let .loadedSettings(settings):
             state = handleLoadedSettings(settings)
             
-        case let .productUpdate(productUpdate):
-            state = update(state, with: productUpdate)
+        case let .productUpdate(result):
+            state = update(state, with: result)
             
         case let .setBankDefaultPrepare(failure):
             fatalError("unimplemented")
@@ -141,7 +141,7 @@ private extension FastPaymentsSettingsRxReducer {
                         paymentContract: contract,
                         consentResult: consent,
                         bankDefault: .offEnabled,
-                        product: product.settingsProduct
+                        product: product
                     )
                 ))
                 
@@ -199,7 +199,7 @@ private extension FastPaymentsSettingsRxReducer {
     
     func update(
         _ state: State,
-        with productUpdate: FastPaymentsSettingsEvent.Failure?
+        with productUpdate: FastPaymentsSettingsEvent.ProductUpdateResult
     ) -> State {
         
         guard case let .contracted(details) = state.userPaymentSettings,
@@ -207,15 +207,17 @@ private extension FastPaymentsSettingsRxReducer {
         else { return state }
         
         switch productUpdate {
-        case .none:
-            return state
+        case let .success(product):
+            var details = details
+            details.product = product
+            return .init(userPaymentSettings: .contracted(details))
             
-        case .connectivityError:
+        case .failure(.connectivityError):
             var state = state
             state.status = .connectivityError
             return state
             
-        case let .serverError(message):
+        case let .failure(.serverError(message)):
             var state = state
             state.status = .serverError(message)
             return state
@@ -239,35 +241,7 @@ private extension UserPaymentSettings.ContractDetails {
         
         .init(
             contractID: .init(paymentContract.id.rawValue),
-            productID: .init(product.id.rawValue),
-            productType: product.type.coreType
+            product: product
         )
-    }
-}
-
-private extension UserPaymentSettings.Product.ProductType {
-    
-    var coreType: FastPaymentsSettingsEffect.ContractCore.ProductType {
-        
-        switch self {
-        case .account: return .account
-        case .card:    return .card
-        }
-    }
-}
-
-private extension Product {
-    
-    var settingsProduct: UserPaymentSettings.Product {
-        
-        .init(id: .init(id.rawValue), type: settingsProductType)
-    }
-    
-    var settingsProductType: UserPaymentSettings.Product.ProductType {
-        
-        switch productType {
-        case .account: return .account
-        case .card:    return .card
-        }
     }
 }
