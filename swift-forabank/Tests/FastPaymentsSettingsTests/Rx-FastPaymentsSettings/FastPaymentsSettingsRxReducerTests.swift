@@ -14,14 +14,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_appear_shouldSetStatusToInflight_emptyState() {
         
-        let emptyState: State = .init()
+        let emptyState = makeFPSState()
         
         assert(emptyState, .appear, reducedTo: .init(status: .inflight))
     }
     
     func test_appear_shouldDeliverGetUserPaymentSettingsEffect_emptyState() {
         
-        let emptyState: State = .init()
+        let emptyState = makeFPSState()
         
         assert(emptyState, .appear, effect: .getUserPaymentSettings)
     }
@@ -29,7 +29,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_appear_shouldSetStatusToInflight_nonEmptyState() {
         
         let userPaymentSettings = anyContractedSettings()
-        let state: State = .init(userPaymentSettings: userPaymentSettings)
+        let state = makeFPSState(userPaymentSettings)
         
         assert(state, .appear, reducedTo: .init(
             userPaymentSettings: userPaymentSettings,
@@ -40,7 +40,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_appear_shouldDeliverGetUserPaymentSettingsEffect_nonEmptyState() {
         
         let userPaymentSettings = anyContractedSettings()
-        let state: State = .init(userPaymentSettings: userPaymentSettings)
+        let state = makeFPSState(userPaymentSettings)
         
         assert(state, .appear, effect: .getUserPaymentSettings)
     }
@@ -49,7 +49,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_loadedUserPaymentSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
         
-        let state: State = .init(status: .inflight)
+        let state = makeFPSState(status: .inflight)
         let loaded = anyContractedSettings()
         
         assert(state, .loadedUserPaymentSettings(loaded), reducedTo: .init(
@@ -60,7 +60,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_loadedUserPaymentSettings_shouldNotDeliverEffect_emptyState() {
         
-        let state: State = .init(status: .inflight)
+        let state = makeFPSState(status: .inflight)
         let loaded = anyContractedSettings()
         
         assert(state, .loadedUserPaymentSettings(loaded), effect: nil)
@@ -70,10 +70,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let contracted = anyContractedSettings()
         let loaded = anyContractedSettings()
-        let state: State = .init(
-            userPaymentSettings: contracted,
-            status: .inflight
-        )
+        let state = makeFPSState(contracted, status: .inflight)
         
         assert(state, .loadedUserPaymentSettings(loaded), reducedTo: .init(
             userPaymentSettings: loaded,
@@ -85,10 +82,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let contracted = anyContractedSettings()
         let loaded = anyContractedSettings()
-        let state: State = .init(
-            userPaymentSettings: contracted,
-            status: .inflight
-        )
+        let state = makeFPSState(contracted, status: .inflight)
         
         assert(state, .loadedUserPaymentSettings(loaded), effect: nil)
     }
@@ -97,32 +91,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldNotChangeStateOnEmpty() {
         
-        let activeContract = FastPaymentsSettingsState()
+        let empty = makeFPSState()
         
-        assert(activeContract, .activateContract, reducedTo: activeContract)
+        assert(empty, .activateContract, reducedTo: empty)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnEmpty() {
         
-        let activeContract = FastPaymentsSettingsState()
+        let empty = makeFPSState()
         
-        assert(activeContract, .activateContract, effect: nil)
+        assert(empty, .activateContract, effect: nil)
     }
     
     func test_activateContract_shouldNotChangeStateOnActiveContract() {
         
-        let activeContract = FastPaymentsSettingsState(
-            userPaymentSettings: anyActiveContractSettings()
-        )
+        let activeContract = makeFPSState(anyActiveContractSettings())
         
         assert(activeContract, .activateContract, reducedTo: activeContract)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnActiveContract() {
         
-        let activeContract = FastPaymentsSettingsState(
-            userPaymentSettings: anyActiveContractSettings()
-        )
+        let activeContract = makeFPSState(anyActiveContractSettings())
         
         assert(activeContract, .activateContract, effect: nil)
     }
@@ -130,9 +120,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_activateContract_shouldChangeStatusToInflightOnInactiveContract() {
         
         let inactive = anyInactiveContractSettings()
-        let inactiveContract = FastPaymentsSettingsState(
-            userPaymentSettings: inactive
-        )
+        let inactiveContract = makeFPSState(inactive)
         
         assert(inactiveContract, .activateContract, reducedTo: .init(
             userPaymentSettings: inactive,
@@ -144,9 +132,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let inactiveDetails = anyInactiveContractDetails()
         let inactiveSettings = anyContractedSettings(inactiveDetails)
-        let inactiveContract = FastPaymentsSettingsState(
-            userPaymentSettings: inactiveSettings
-        )
+        let inactiveContract = makeFPSState(inactiveSettings)
         
         assert(inactiveContract, .activateContract, effect: .activateContract(inactiveDetails.paymentContract))
     }
@@ -211,36 +197,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
         
-        let connectivityFailure = FastPaymentsSettingsState(
-            userPaymentSettings: .failure(.connectivityError)
-        )
+        let connectivityFailure = makeFPSState(.failure(.connectivityError))
         
         assert(connectivityFailure, .activateContract, reducedTo: connectivityFailure)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
-        let connectivityFailure = FastPaymentsSettingsState(
-            userPaymentSettings: .failure(.connectivityError)
-        )
+        let connectivityFailure = makeFPSState(.failure(.connectivityError))
         
         assert(connectivityFailure, .activateContract, effect: nil)
     }
     
     func test_activateContract_shouldNotChangeStateOnServerErrorFailure() {
         
-        let serverErrorFailure = FastPaymentsSettingsState(
-            userPaymentSettings: .failure(.connectivityError)
-        )
+        let serverErrorFailure = makeFPSState(.failure(.connectivityError))
         
         assert(serverErrorFailure, .activateContract, reducedTo: serverErrorFailure)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnServerErrorFailure() {
         
-        let serverErrorFailure = FastPaymentsSettingsState(
-            userPaymentSettings: anyActiveContractSettings()
-        )
+        let serverErrorFailure = makeFPSState(anyActiveContractSettings())
         
         assert(serverErrorFailure, .activateContract, effect: nil)
     }

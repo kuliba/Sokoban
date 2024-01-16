@@ -8,6 +8,17 @@
 import FastPaymentsSettings
 import Foundation
 
+func makeFPSState(
+    _ userPaymentSettings: UserPaymentSettings? = nil,
+    status: FastPaymentsSettingsState.Status? = nil
+) -> FastPaymentsSettingsState {
+    
+    .init(
+        userPaymentSettings: userPaymentSettings,
+        status: status
+    )
+}
+
 func anyContractedSettings(
     _ details: UserPaymentSettings.ContractDetails = anyContractDetails()
 ) -> UserPaymentSettings {
