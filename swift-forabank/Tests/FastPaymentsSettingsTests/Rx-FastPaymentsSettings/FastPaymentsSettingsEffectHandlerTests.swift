@@ -76,28 +76,53 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     // MARK: - activateContract
     
-//    func test_activateContract_shouldPassPayload() {
-//        
-//        let contract = anyPaymentContract()
-//        let (sut, _, updateContractSpy) = makeSUT()
-//        
-//        sut.handleEffect(.activateContract(contract)) { _ in }
-//        
-//        XCTAssertNoDiff(updateContractSpy.payloads.map(\.0), [])
-//        XCTAssertNoDiff(updateContractSpy.payloads.map(\.1), [])
-//    }
+    func test_activateContract_shouldPassPayload() {
+        
+        let currentContract = anyPaymentContract()
+        let (sut, _, updateContractSpy) = makeSUT()
+        
+        sut.handleEffect(.activateContract(currentContract)) { _ in }
+        
+        XCTAssertNoDiff(updateContractSpy.payloads.map(\.0), [currentContract])
+        XCTAssertNoDiff(updateContractSpy.payloads.map(\.1), [.activate])
+    }
     
-//    func test_activateContract_shouldDeliverUpdatedSuccessOnSuccessActive() {
-//        
-//        let contract = anyPaymentContract(contractStatus: .active)
-//        let activeContract = anyPaymentContract(contractStatus: .active)
-//        let (sut, _, updateContractSpy) = makeSUT()
-//        
-//        expect(sut, with: .activateContract(contract), toDeliver: .updatedSuccess(activeContract), on: {
-//            
-//            updateContractSpy.complete(with: .success(activeContract))
-//        })
-//    }
+    func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccessActivation() {
+        
+        let currentContract = anyPaymentContract()
+        let activatedContract = anyActivePaymentContract()
+        let (sut, _, updateContractSpy) = makeSUT()
+        
+        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+            
+            updateContractSpy.complete(with: .success(activatedContract))
+        })
+    }
+    
+    func test_activateContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
+        
+        let currentContract = anyPaymentContract()
+        let activatedContract = anyActivePaymentContract()
+        let (sut, _, updateContractSpy) = makeSUT()
+        
+        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+            
+            updateContractSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_activateContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
+        
+        let currentContract = anyPaymentContract()
+        let activatedContract = anyActivePaymentContract()
+        let message = UUID().uuidString
+        let (sut, _, updateContractSpy) = makeSUT()
+        
+        expect(sut, with: .activateContract(currentContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+            
+            updateContractSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
     
     // MARK: - Helpers
     

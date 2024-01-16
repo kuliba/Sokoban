@@ -47,6 +47,7 @@ extension FastPaymentsSettingsEffectHandler {
 extension FastPaymentsSettingsEffectHandler {
     
     typealias UpdateContractPayload = (UserPaymentSettings.PaymentContract, UpdateContractToggle)
+    typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
     typealias UpdateContract = (UpdateContractPayload, @escaping UpdateContractCompletion) -> Void
     
@@ -54,18 +55,17 @@ extension FastPaymentsSettingsEffectHandler {
         
         case activate, deactivate
     }
-    
-    enum UpdateContractResponse {
-        
-        case success(UserPaymentSettings.PaymentContract)
-        case serverError(String)
-        case connectivityError
-    }
 }
 
 extension FastPaymentsSettingsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
+    
+    enum ServiceFailure: Error, Equatable  {
+        
+        case connectivityError
+        case serverError(String)
+    }
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
@@ -91,13 +91,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.updatedSuccess(contract))
+                dispatch(.contractUpdate(.success(contract)))
                 
-            case let .serverError(message):
-                fatalError("unimplemented")
-
-            case .connectivityError:
-                fatalError("unimplemented")
+            case .failure(.connectivityError):
+                dispatch(.contractUpdate(.failure(.connectivityError)))
+                
+            case let .failure(.serverError(message)):
+                dispatch(.contractUpdate(.failure(.serverError(message))))
             }
         }
     }

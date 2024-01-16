@@ -98,6 +98,12 @@ func anyPaymentContract(
     .init(contractStatus: contractStatus)
 }
 
+func anyActivePaymentContract(
+    ) -> UserPaymentSettings.PaymentContract {
+    
+        .init(contractStatus: .active)
+}
+
 func anyConsentList(
 ) -> UserPaymentSettings.ConsentList {
     

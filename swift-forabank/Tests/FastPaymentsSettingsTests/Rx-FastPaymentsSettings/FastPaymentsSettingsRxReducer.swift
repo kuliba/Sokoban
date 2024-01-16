@@ -31,7 +31,7 @@ extension FastPaymentsSettingsRxReducer {
         case .activateContract:
             (state, effect) = activateContract(state)
             
-        case let .updatedSuccess(status):
+        case let .contractUpdate(contractUpdate):
             fatalError("unimplemented")
         case .deactivateContract:
             fatalError("unimplemented")

@@ -9,7 +9,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     
     case appear
     case loadedUserPaymentSettings(UserPaymentSettings)
-    case updatedSuccess(UserPaymentSettings.PaymentContract)
+    case contractUpdate(ContractUpdateResult)
     
     case activateContract
     case deactivateContract
@@ -18,4 +18,15 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case setBankDefault
     case prepareSetBankDefault
     case confirmSetBankDefault
+}
+
+public extension FastPaymentsSettingsEvent {
+    
+    typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, Failure>
+    
+    enum Failure: Error, Equatable {
+        
+        case connectivityError
+        case serverError(String)
+    }
 }
