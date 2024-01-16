@@ -206,6 +206,52 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         })
     }
     
+    // MARK: - updateProduct
+    
+    func test_updateProduct_shouldPassPayload() {
+        
+        let payload = anyUpdateProductPayload()
+        let (sut, _,_,_,_, updateProductSpy) = makeSUT()
+        
+        sut.handleEffect(.updateProduct(payload)) { _ in }
+        
+        XCTAssertNoDiff(updateProductSpy.payloads, [payload])
+    }
+    
+    func test_updateProduct_shouldDeliverUpdateProductNilFailureOnSuccess() {
+        
+        let payload = anyUpdateProductPayload()
+        let (sut, _,_,_,_, updateProductSpy) = makeSUT()
+        
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(nil), on: {
+            
+            updateProductSpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_updateProduct_shouldDeliverUpdateProductConnectivityFailureOnConnectivityError() {
+        
+        let payload = anyUpdateProductPayload()
+        let (sut, _,_,_,_, updateProductSpy) = makeSUT()
+        
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.connectivityError), on: {
+            
+            updateProductSpy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_updateProduct_shouldDeliverUpdateProductServerErrorFailureOnServerError() {
+        
+        let payload = anyUpdateProductPayload()
+        let message = UUID().uuidString
+        let (sut, _,_,_,_, updateProductSpy) = makeSUT()
+        
+        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.serverError(message)), on: {
+            
+            updateProductSpy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FastPaymentsSettingsEffectHandler

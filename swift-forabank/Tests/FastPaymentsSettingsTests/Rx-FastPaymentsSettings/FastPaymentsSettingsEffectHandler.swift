@@ -49,6 +49,9 @@ extension FastPaymentsSettingsEffectHandler {
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(dispatch)
+            
+        case let .updateProduct(payload):
+            updateProduct(payload, dispatch)
         }
     }
 }
@@ -97,7 +100,7 @@ extension FastPaymentsSettingsEffectHandler {
     typealias UpdateProductCompletion = (UpdateProductResponse) -> Void
     typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
     
-    struct UpdateProductPayload {
+    struct UpdateProductPayload: Equatable {
         
         let contractID: ContractID
         let productID: ProductID
@@ -133,15 +136,6 @@ extension FastPaymentsSettingsEffectHandler {
 
 private extension FastPaymentsSettingsEffectHandler {
     
-    func getUserPaymentSettings(
-        _ dispatch: @escaping Dispatch
-    ) {
-        getSettings {
-            
-            dispatch(.loadedUserPaymentSettings($0))
-        }
-    }
-    
     func activateContract(
         _ contract: UserPaymentSettings.PaymentContract,
         _ dispatch: @escaping Dispatch
@@ -158,6 +152,34 @@ private extension FastPaymentsSettingsEffectHandler {
             case let .failure(.serverError(message)):
                 dispatch(.contractUpdate(.failure(.serverError(message))))
             }
+        }
+    }
+    
+    func createContract(
+        _ productID: Product.ID,
+        _ dispatch: @escaping Dispatch
+    ) {
+        createContract(productID) { result in
+            
+            switch result {
+            case let .success(contract):
+                dispatch(.contractUpdate(.success(contract)))
+                
+            case .failure(.connectivityError):
+                dispatch(.contractUpdate(.failure(.connectivityError)))
+                
+            case let .failure(.serverError(message)):
+                dispatch(.contractUpdate(.failure(.serverError(message))))
+            }
+        }
+    }
+    
+    func getUserPaymentSettings(
+        _ dispatch: @escaping Dispatch
+    ) {
+        getSettings {
+            
+            dispatch(.loadedUserPaymentSettings($0))
         }
     }
     
@@ -179,21 +201,21 @@ private extension FastPaymentsSettingsEffectHandler {
         }
     }
     
-    func createContract(
-        _ productID: Product.ID,
+    func updateProduct(
+        _ payload: UpdateProductPayload,
         _ dispatch: @escaping Dispatch
     ) {
-        createContract(productID) { result in
+        updateProduct(payload) { result in
             
             switch result {
-            case let .success(contract):
-                dispatch(.contractUpdate(.success(contract)))
+            case .success(()):
+                dispatch(.productUpdate(nil))
                 
             case .failure(.connectivityError):
-                dispatch(.contractUpdate(.failure(.connectivityError)))
+                dispatch(.productUpdate(.connectivityError))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contractUpdate(.failure(.serverError(message))))
+                dispatch(.productUpdate(.serverError(message)))
             }
         }
     }

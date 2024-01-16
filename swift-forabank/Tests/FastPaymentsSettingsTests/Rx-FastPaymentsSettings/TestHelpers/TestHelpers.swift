@@ -8,6 +8,19 @@
 import FastPaymentsSettings
 import Foundation
 
+func anyUpdateProductPayload(
+    _ contractIDRawValue: Int = generateRandom11DigitNumber(),
+    _ productIDRawValue: Int = generateRandom11DigitNumber(),
+    _ productType: FastPaymentsSettingsEffectHandler.UpdateProductPayload.ProductType = .account
+) -> FastPaymentsSettingsEffectHandler.UpdateProductPayload {
+    
+    .init(
+        contractID: .init(contractIDRawValue),
+        productID: .init(productIDRawValue),
+        productType: productType
+    )
+}
+
 func anyProductID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> Product.ID {

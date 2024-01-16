@@ -11,6 +11,8 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case loadedUserPaymentSettings(UserPaymentSettings)
     case contractUpdate(ContractUpdateResult)
     
+    case productUpdate(Failure?)
+    
     case setBankDefaultPrepare(Failure?)
     
     case activateContract

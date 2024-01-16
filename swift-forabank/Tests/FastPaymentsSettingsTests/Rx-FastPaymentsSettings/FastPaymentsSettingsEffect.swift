@@ -11,10 +11,12 @@ enum FastPaymentsSettingsEffect: Equatable {
     case createContract(ProductID)
     case getUserPaymentSettings
     case prepareSetBankDefault
+    case updateProduct(UpdateProductPayload)
 }
 
 extension FastPaymentsSettingsEffect {
     
     typealias Contract = UserPaymentSettings.PaymentContract
     typealias ProductID = Product.ID
+    typealias UpdateProductPayload = FastPaymentsSettingsEffectHandler.UpdateProductPayload
 }
