@@ -421,7 +421,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let newContract = anyPaymentContract()
         let missing = anyMissingConsentSuccessSettings()
-        let sut = makeSUT(product: anyProduct())
         
         assert(missing, .contractUpdate(.success(newContract)), effect: nil)
     }
@@ -446,7 +445,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_missing() {
         
         let missing = anyMissingConsentSuccessSettings()
-        let sut = makeSUT(product: anyProduct())
         
         assert(missing, .contractUpdate(.failure(.connectivityError)), effect: nil)
     }
@@ -472,7 +470,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_missing() {
         
         let missing = anyMissingConsentSuccessSettings()
-        let sut = makeSUT(product: anyProduct())
         
         assert(missing, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
         
@@ -566,6 +563,87 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(serverError, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
+    // MARK: - deactivateContract
+    
+    func test_deactivateContract_shouldChangeStatusToInflightOnActive() {
+        
+        let active = anyActiveContractSettings()
+        
+        assert(
+            active,
+            .deactivateContract,
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .inflight
+            )
+        )
+    }
+    
+    func test_deactivateContract_shouldDeliverEffectOnActive() {
+        
+        let inactiveDetails = anyContractDetails()
+        let inactive = anyContractedSettings(inactiveDetails)
+        let target = target(inactiveDetails, .inactive)
+        
+        assert(inactive, .deactivateContract, effect: .deactivateContract(target))
+    }
+    
+    func test_deactivateContract_shouldNotChangeStateOnInactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .deactivateContract, reducedTo: inactive)
+    }
+    
+    func test_deactivateContract_shouldNotDeliverEffectOnInactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .deactivateContract, effect: nil)
+    }
+    
+    func test_deactivateContract_shouldNotChangeStateOnMissing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .deactivateContract, reducedTo: missing)
+    }
+    
+    func test_deactivateContract_shouldNotDeliverEffectOnMissing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .deactivateContract, effect: nil)
+    }
+    
+    func test_deactivateContract_shouldNotChangeStateOnConnectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .deactivateContract, reducedTo: connectivityError)
+    }
+    
+    func test_deactivateContract_shouldNotDeliverEffectOnConnectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .deactivateContract, effect: nil)
+    }
+    
+    func test_deactivateContract_shouldNotChangeStateOnServerError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .deactivateContract, reducedTo: serverError)
+    }
+    
+    func test_deactivateContract_shouldNotDeliverEffectOnServerError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .deactivateContract, effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FastPaymentsSettingsRxReducer
@@ -573,9 +651,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-#warning("replace with `product: Product  = anyProduct()`")
     private func makeSUT(
-        product: Product? = nil,
+        product: Product? = anyProduct(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {

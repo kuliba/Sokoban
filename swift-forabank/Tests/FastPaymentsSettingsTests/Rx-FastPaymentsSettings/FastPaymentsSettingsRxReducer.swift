@@ -28,23 +28,24 @@ extension FastPaymentsSettingsRxReducer {
         var effect: Effect?
         
         switch event {
-        case .appear:
-            (state, effect) = handleAppear(state)
-            
-        case let .loadedSettings(settings):
-            state = handleLoadedSettings(settings)
-            
         case .activateContract:
             (state, effect) = activateContract(state)
+            
+        case .appear:
+            (state, effect) = handleAppear(state)
             
         case let .contractUpdate(result):
             state = contractUpdate(state, with: result)
             
+        case .deactivateContract:
+            (state, effect) = deactivateContract(state)
+            
+        case let .loadedSettings(settings):
+            state = handleLoadedSettings(settings)
+            
         case let .productUpdate(productUpdate):
             fatalError("unimplemented")
         case let .setBankDefaultPrepare(failure):
-            fatalError("unimplemented")
-        case .deactivateContract:
             fatalError("unimplemented")
         case .resetStatus:
             fatalError("unimplemented")
@@ -157,6 +158,25 @@ private extension FastPaymentsSettingsRxReducer {
         default:
             return state
         }
+    }
+    
+    func deactivateContract(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        guard case let .contracted(details) = state.userPaymentSettings,
+              !details.isInactive
+        else { return (state, nil) }
+        
+        var state = state
+        state.status = .inflight
+        
+        let updateContract = FastPaymentsSettingsEffect.TargetContract(
+            core: details.core,
+            targetStatus: .inactive
+        )
+        
+        return (state, .deactivateContract(updateContract))
     }
     
     func handleAppear(
