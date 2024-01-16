@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Tagged
+
 public enum UserPaymentSettings: Equatable {
     
     case contracted(ContractDetails)
@@ -31,14 +33,21 @@ public extension UserPaymentSettings {
         }
     }
     
-    struct PaymentContract: Equatable {
-        #warning("add ID: Int")
+    struct PaymentContract: Equatable, Identifiable {
+
+        public let id: ContractID
         public let contractStatus: ContractStatus
         
-        public init(contractStatus: ContractStatus) {
-         
+        public init(
+            id: ContractID, 
+            contractStatus: ContractStatus
+        ) {
+            self.id = id
             self.contractStatus = contractStatus
         }
+        
+        public typealias ContractID = Tagged<_ContractID, Int>
+        public enum _ContractID {}
         
         public enum ContractStatus: Equatable {
             

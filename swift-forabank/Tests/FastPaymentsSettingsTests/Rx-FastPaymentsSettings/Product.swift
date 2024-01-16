@@ -11,7 +11,7 @@ public struct Product: Identifiable {
     
     public let id: ProductID
 
-    public typealias ProductID = Tagged<_ProductID, String>
+    public typealias ProductID = Tagged<_ProductID, Int>
     public enum _ProductID {}
     
     public init(id: ProductID) {

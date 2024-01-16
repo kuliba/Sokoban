@@ -9,7 +9,7 @@ import FastPaymentsSettings
 import Foundation
 
 func anyProductID(
-    _ rawValue: String = UUID().uuidString
+    _ rawValue: Int = generateRandom11DigitNumber()
 ) -> Product.ID {
     
     .init(rawValue)
@@ -99,16 +99,21 @@ func anyInactiveContractDetails(
 }
 
 func anyPaymentContract(
+    _ idRawValue: Int = generateRandom11DigitNumber(),
     contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active
 ) -> UserPaymentSettings.PaymentContract {
     
-    .init(contractStatus: contractStatus)
+    .init(
+        id: .init(idRawValue),
+        contractStatus: contractStatus
+    )
 }
 
 func anyActivePaymentContract(
-    ) -> UserPaymentSettings.PaymentContract {
+    _ idRawValue: Int = generateRandom11DigitNumber()
+) -> UserPaymentSettings.PaymentContract {
     
-        .init(contractStatus: .active)
+    .init(id: .init(idRawValue), contractStatus: .active)
 }
 
 func anyConsentList(

@@ -98,11 +98,16 @@ extension FastPaymentsSettingsEffectHandler {
     typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
     
     struct UpdateProductPayload {
- 
-        #warning("replace with ContractID")
-        let contract: UserPaymentSettings.PaymentContract
-        let productID: Product.ID
+        
+        let contractID: ContractID
+        let productID: ProductID
         let productType: ProductType
+        
+        typealias ContractID = Tagged<_ContractID, Int>
+        enum _ContractID {}
+        
+        typealias ProductID = Tagged<_ProductID, Int>
+        enum _ProductID {}
         
         enum ProductType {
             
