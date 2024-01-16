@@ -1765,6 +1765,7 @@
 		834E3F6C2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F6B2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift */; };
 		834E3F6F2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F6E2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift */; };
 		83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83518DDB2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift */; };
+		8353CD4B2B555B8C005F7D1A /* Model+StatementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD4A2B555B8C005F7D1A /* Model+StatementTests.swift */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
 		8362FAFF29DEDCB70094457E /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */; };
 		8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */; };
@@ -4101,6 +4102,7 @@
 		834E3F6B2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getScenarioQRData.swift"; sourceTree = "<group>"; };
 		834E3F6E2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getScenarioQRDataTests.swift"; sourceTree = "<group>"; };
 		83518DDB2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsProcessSourceReducerSFPTests.swift"; sourceTree = "<group>"; };
+		8353CD4A2B555B8C005F7D1A /* Model+StatementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+StatementTests.swift"; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		835D7A962A61890A0076D371 /* PinCodeUITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PinCodeUITests.xctestplan; sourceTree = "<group>"; };
 		8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
@@ -8884,6 +8886,7 @@
 				C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */,
 				C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */,
 				C130E3752A8FC184002F99BC /* C2BOperation.swift */,
+				8353CD4A2B555B8C005F7D1A /* Model+StatementTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -14740,6 +14743,7 @@
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				0CAB7B532A45DE99001B8C93 /* Model+PaymentTemplates.swift in Sources */,
+				8353CD4B2B555B8C005F7D1A /* Model+StatementTests.swift in Sources */,
 				2A09C2B32B3D439D0076DC93 /* FPSCFLResponse+ext.swift in Sources */,
 				2A9E05452B3B0F8B00463CE8 /* Model+getFastPaymentContractFindListTests.swift in Sources */,
 				77D0386E2988488600FBE5AB /* ServerCommandsC2BSubscriptionTests.swift in Sources */,
