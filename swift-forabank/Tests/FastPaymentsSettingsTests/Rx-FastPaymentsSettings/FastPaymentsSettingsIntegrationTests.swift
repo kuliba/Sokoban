@@ -23,7 +23,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc1d1_deactivateLoadedActiveContract() {
         
-        let (details, _) = contractedState(.active, bankDefault: .offEnabled)
+        let details = contractedState(.active).details
         let newContract = paymentContract(contractStatus: .inactive)
         let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
         
@@ -38,11 +38,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(status: .inflight),
             .init(userPaymentSettings: .contracted(details)),
             .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(.init(
-                paymentContract: newContract,
-                consentResult: details.consentResult,
-                bankDefault: details.bankDefault,
-                product: details.product
+            .init(userPaymentSettings: .contracted(details.updated(
+                paymentContract: newContract
             ))),
         ])
         
@@ -72,7 +69,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private typealias PrepareSetBankDefaultSpy = Spy<Void, EffectHandler.PrepareSetBankDefaultResponse>
     private typealias CreateContractSpy = Spy<EffectHandler.CreateContractPayload, EffectHandler.CreateContractResponse>
     private typealias UpdateProductSpy = Spy<EffectHandler.UpdateProductPayload, EffectHandler.UpdateProductResponse>
-
+    
     
     private func makeSUT(
         initialState: State = .init(),
@@ -96,7 +93,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
         let createContractSpy = CreateContractSpy()
         let updateProductSpy = UpdateProductSpy()
-
+        
         let effectHandler = EffectHandler(
             createContract: createContractSpy.process(_:completion:),
             getSettings: getSettingsSpy.process(completion:),
