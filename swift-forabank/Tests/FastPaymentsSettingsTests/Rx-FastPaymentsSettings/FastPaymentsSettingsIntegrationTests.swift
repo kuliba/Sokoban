@@ -199,12 +199,12 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d1_activationSuccessOfLoadedMissingContract() {
         
-        let consentResult = consentResultSuccess()
-        let missing: UserPaymentSettings = .missingContract(consentResult)
-        let newContract = paymentContract(contractStatus: .active)
-        let product = makeProduct()
+        let consentResult = consentResultFailure()
+        let missing = missingContract(consentResult)
+        let (product1, product2) = (makeProduct(), makeProduct())
+        let newContract = paymentContract(productID: product2.id)
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
-            product: product
+            products: [product1, product2]
         )
         
         sut.event(.appear)
@@ -222,7 +222,10 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
                 paymentContract: newContract,
                 consentResult: consentResult,
                 bankDefault: .offEnabled,
-                product: product
+                productSelector: .init(
+                    selectedProduct: product2,
+                    products: [product1, product2]
+                )
             ))),
         ])
         
@@ -235,6 +238,39 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         ])
     }
     
+    func test_flow_abc3d1_activationSuccessOfLoadedMissingContractWithoutProduct() {
+        
+        let consentResult = consentResultFailure()
+        let missing = missingContract(consentResult)
+        let (product1, product2) = (makeProduct(), makeProduct())
+        let newContract = paymentContract(productID: product2.id)
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+            products: [product1]
+        )
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: missing)
+        
+        sut.event(.activateContract)
+        createContractSpy.complete(with: .success(newContract))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: missing),
+            .init(userPaymentSettings: missing, status: .inflight),
+            .init(userPaymentSettings: .contracted(.init(
+                paymentContract: newContract,
+                consentResult: consentResult,
+                bankDefault: .offEnabled,
+                productSelector: .init(
+                    selectedProduct: nil,
+                    products: [product1]
+                )
+            ))),
+        ])
+    }
+    
     func test_flow_abc3d2_activationFailureOfLoadedMissingContract() {
         
         let consentResult = consentResultSuccess()
@@ -242,7 +278,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let message = anyMessage()
         let product = makeProduct()
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
-            product: product
+            products: [product]
         )
         
         sut.event(.appear)
@@ -274,7 +310,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let missing: UserPaymentSettings = .missingContract(consentResult)
         let product = makeProduct()
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
-            product: product
+            products: [product]
         )
         
         sut.event(.appear)
@@ -321,7 +357,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     private func makeSUT(
         initialState: State = .init(),
-        product: Product? = makeProduct(),
+        products: [Product] = [makeProduct()],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -334,7 +370,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         updateProductSpy: UpdateProductSpy
     ) {
         
-        let reducer = Reducer(getProduct: { product })
+        let reducer = Reducer(getProducts: { products })
         
         let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()

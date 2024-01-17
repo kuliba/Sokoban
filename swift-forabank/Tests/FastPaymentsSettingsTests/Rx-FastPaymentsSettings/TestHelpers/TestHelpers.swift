@@ -19,10 +19,11 @@ func activeContractSettings(
 }
 
 func activePaymentContract(
-    _ idRawValue: Int = generateRandom11DigitNumber()
+    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
+    _ productID: Product.ID = .init(generateRandom11DigitNumber())
 ) -> UserPaymentSettings.PaymentContract {
     
-    .init(id: .init(idRawValue), contractStatus: .active)
+    .init(id: contractID, productID: productID, contractStatus: .active)
 }
 
 func anyEffectProductID(
@@ -93,14 +94,14 @@ func contractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
     consentResult: UserPaymentSettings.ConsentResult = .success(consentList()),
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    product: Product = makeProduct()
+    productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
         paymentContract: paymentContract,
         consentResult: consentResult,
         bankDefault: bankDefault,
-        product: product
+        productSelector: productSelector
     )
 }
 
@@ -115,14 +116,14 @@ func contractedSettings(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled
 ) -> UserPaymentSettings {
-  
+    
     let details = contractDetails(
         paymentContract: paymentContract(
             contractStatus: contractStatus
         ),
         bankDefault: bankDefault
     )
-
+    
     return .contracted(details)
 }
 
@@ -211,6 +212,21 @@ func makeProduct(
     .init(id: .init(rawValue), productType: productType)
 }
 
+func makeProductSelector(
+    selected: Product = makeProduct(),
+    products: [Product]? = nil
+) -> UserPaymentSettings.ProductSelector {
+    
+    .init(selectedProduct: selected, products: products ?? [selected])
+}
+
+func missingContract(
+    _ result: UserPaymentSettings.ConsentResult
+) -> UserPaymentSettings {
+    
+    .missingContract(result)
+}
+
 func missingConsentFailureSettings(
 ) -> UserPaymentSettings {
     
@@ -235,12 +251,14 @@ func missingConsentSuccessFPSState(
 }
 
 func paymentContract(
-    _ idRawValue: Int = generateRandom11DigitNumber(),
+    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
+    productID: Product.ID = .init(generateRandom11DigitNumber()),
     contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active
 ) -> UserPaymentSettings.PaymentContract {
     
     .init(
-        id: .init(idRawValue),
+        id: contractID,
+        productID: productID,
         contractStatus: contractStatus
     )
 }

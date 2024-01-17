@@ -21,31 +21,34 @@ public extension UserPaymentSettings {
         public var paymentContract: PaymentContract
         public let consentResult: ConsentResult
         public var bankDefault: BankDefault
-        public var product: Product
+        public var productSelector: ProductSelector
         
         public init(
             paymentContract: PaymentContract,
             consentResult: ConsentResult,
             bankDefault: BankDefault,
-            product: Product
+            productSelector: ProductSelector
         ) {
             self.paymentContract = paymentContract
             self.consentResult = consentResult
             self.bankDefault = bankDefault
-            self.product = product
+            self.productSelector = productSelector
         }
     }
     
     struct PaymentContract: Equatable, Identifiable {
         
         public let id: ContractID
+        public let productID: Product.ID
         public let contractStatus: ContractStatus
         
         public init(
             id: ContractID,
+            productID: Product.ID,
             contractStatus: ContractStatus
         ) {
             self.id = id
+            self.productID = productID
             self.contractStatus = contractStatus
         }
         
@@ -55,6 +58,23 @@ public extension UserPaymentSettings {
         public enum ContractStatus: Equatable {
             
             case active, inactive
+        }
+    }
+    
+    struct ProductSelector: Equatable {
+        
+        public let selectedProduct: Product?
+        public let products: [Product]
+        public let isExpanded: Bool
+        
+        public init(
+            selectedProduct: Product?,
+            products: [Product],
+            isExpanded: Bool = false
+        ) {
+            self.selectedProduct = selectedProduct
+            self.products = products
+            self.isExpanded = isExpanded
         }
     }
 }

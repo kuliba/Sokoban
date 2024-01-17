@@ -9,11 +9,11 @@ import FastPaymentsSettings
 #warning("rename: remove `Rx`")
 final class FastPaymentsSettingsRxReducer {
     
-    private let getProduct: GetProduct
+    private let getProducts: GetProducts
     
-    init(getProduct: @escaping GetProduct) {
+    init(getProducts: @escaping GetProducts) {
         
-        self.getProduct = getProduct
+        self.getProducts = getProducts
     }
 }
 
@@ -65,7 +65,7 @@ extension FastPaymentsSettingsRxReducer {
 
 extension FastPaymentsSettingsRxReducer {
     
-    typealias GetProduct = () -> Product?
+    typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
@@ -80,13 +80,16 @@ private extension FastPaymentsSettingsRxReducer {
         
         switch state.userPaymentSettings {
         case let .contracted(details):
-            guard details.isInactive else { return (state, nil) }
+#warning("add tests for branches")
+            guard details.isInactive,
+                  let core = details.core
+            else { return (state, nil) }
             
             var state = state
             state.status = .inflight
             
             let updateContract = FastPaymentsSettingsEffect.TargetContract(
-                core: details.core,
+                core: core,
                 targetStatus: .active
             )
             
@@ -94,7 +97,10 @@ private extension FastPaymentsSettingsRxReducer {
             
         case let .missingContract(consent):
             var state = state
-            guard let product = getProduct()
+            let products = getProducts()
+            
+#warning("add tests for branches")
+            guard let product = products.first
             else {
                 state.status = .missingProduct
                 return (state, nil)
@@ -113,14 +119,16 @@ private extension FastPaymentsSettingsRxReducer {
         _ state: State
     ) -> (State, Effect?) {
         
-        guard let details = state.activeDetails
+#warning("add tests for branches")
+        guard let details = state.activeDetails,
+              let core = details.core
         else { return (state, nil) }
         
         var state = state
         state.status = .inflight
         
         let updateContract = FastPaymentsSettingsEffect.TargetContract(
-            core: details.core,
+            core: core,
             targetStatus: .inactive
         )
         
@@ -155,7 +163,7 @@ private extension FastPaymentsSettingsRxReducer {
         
         var state = state
         state.status = nil
-                
+        
         return (state, .prepareSetBankDefault)
     }
     
@@ -194,7 +202,7 @@ private extension FastPaymentsSettingsRxReducer {
         switch productUpdate {
         case let .success(product):
             var details = details
-            details.product = product
+            details.productSelector = details.productSelector.selected(product: product)
             return .init(userPaymentSettings: .contracted(details))
             
         case .failure(.connectivityError):
@@ -264,14 +272,18 @@ private extension FastPaymentsSettingsRxReducer {
         case let .missingContract(consent):
             switch result {
             case let .success(contract):
-                guard let product = getProduct() else { return state }
+                let products = getProducts()
+                let product = products.first { $0.id == contract.productID }
                 
                 return .init(userPaymentSettings: .contracted(
                     .init(
                         paymentContract: contract,
                         consentResult: consent,
                         bankDefault: .offEnabled,
-                        product: product
+                        productSelector: .init(
+                            selectedProduct: product,
+                            products: products
+                        )
                     )
                 ))
                 
@@ -324,9 +336,12 @@ private extension UserPaymentSettings.ContractDetails {
 
 private extension UserPaymentSettings.ContractDetails {
     
-    var core: FastPaymentsSettingsEffect.ContractCore {
+    var core: FastPaymentsSettingsEffect.ContractCore? {
         
-        .init(
+        guard let product = productSelector.selectedProduct
+        else { return nil }
+        
+        return .init(
             contractID: .init(paymentContract.id.rawValue),
             product: product
         )

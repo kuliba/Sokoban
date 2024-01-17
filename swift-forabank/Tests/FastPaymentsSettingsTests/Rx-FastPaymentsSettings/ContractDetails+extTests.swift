@@ -13,14 +13,14 @@ extension UserPaymentSettings.ContractDetails {
         paymentContract: UserPaymentSettings.PaymentContract? = nil,
         consentResult: UserPaymentSettings.ConsentResult? = nil,
         bankDefault: UserPaymentSettings.BankDefault? = nil,
-        product: Product? = nil
+        productSelector: UserPaymentSettings.ProductSelector? = nil
     ) -> Self {
         
         .init(
             paymentContract: paymentContract ?? self.paymentContract,
             consentResult: consentResult ?? self.consentResult,
             bankDefault: bankDefault ?? self.bankDefault,
-            product: product ?? self.product
+            productSelector: productSelector ?? self.productSelector
         )
     }
 }
@@ -40,7 +40,7 @@ final class ContractDetails_extTests: XCTestCase {
             paymentContract: newContract,
             consentResult: initial.consentResult,
             bankDefault: initial.bankDefault,
-            product: initial.product
+            productSelector: initial.productSelector
         ))
     }
     
@@ -55,7 +55,7 @@ final class ContractDetails_extTests: XCTestCase {
             paymentContract: initial.paymentContract,
             consentResult: newConsentResult,
             bankDefault: initial.bankDefault,
-            product: initial.product
+            productSelector: initial.productSelector
         ))
     }
     
@@ -70,22 +70,22 @@ final class ContractDetails_extTests: XCTestCase {
             paymentContract: initial.paymentContract,
             consentResult: initial.consentResult,
             bankDefault: newBankDefault,
-            product: initial.product
+            productSelector: initial.productSelector
         ))
     }
     
-    func test_updated_product() {
+    func test_updated_productSelector() {
         
         let initial = contractDetails()
-        let newProduct = makeProduct()
+        let newProductSelector = makeProductSelector()
         
-        let new = initial.updated(product: newProduct)
+        let new = initial.updated(productSelector: newProductSelector)
         
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
             consentResult: initial.consentResult,
             bankDefault: initial.bankDefault,
-            product: newProduct
+            productSelector: newProductSelector
         ))
     }
 }
