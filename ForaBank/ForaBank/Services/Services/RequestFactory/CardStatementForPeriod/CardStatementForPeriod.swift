@@ -36,10 +36,15 @@ extension CardStatementForPeriodDomain.Payload {
     
     var json: Data? {
         
-        var parameters: [String: String] = [
-            "id": "\(id.rawValue)",
-            "startDate": "\(period.start)",
-            "endDate": "\(period.end)"
+        let formatter = DateFormatterISO8601()
+
+        let startDateFormattedString = formatter.string(from: period.start)
+        let endDateFormattedString = formatter.string(from: period.end)
+
+        var parameters: [String: Any] = [
+            "id": id.rawValue,
+            "startDate": startDateFormattedString,
+            "endDate": endDateFormattedString
         ]
         
         let name: [String: String]? = name.map { ["name": $0.rawValue] }
@@ -50,10 +55,9 @@ extension CardStatementForPeriodDomain.Payload {
         
         let cardNumber: [String: String]? = cardNumber.map { ["cardNumber": $0.rawValue] }
         if let cardNumber { parameters = parameters.mergeOnto(target: cardNumber) }
-        
+
         return try? JSONSerialization.data(withJSONObject: parameters
-                                           as [String: String])
-        
+                                           as [String: Any])
     }
 }
 

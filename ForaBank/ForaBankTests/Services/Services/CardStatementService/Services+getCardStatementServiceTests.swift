@@ -174,8 +174,8 @@ private extension String {
     {
         "type": "INSIDE",
         "accountID": 100,
-        "date": 0,
-        "tranDate": 0,
+        "date": "2001-01-01T00:00:00.000Z",
+        "tranDate": "2001-01-01T00:00:00.000Z",
         "operationType": "DEBIT",
         "paymentDetailType": "SFP",
         "amount": 20,

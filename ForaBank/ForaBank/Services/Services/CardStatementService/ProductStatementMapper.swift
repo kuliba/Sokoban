@@ -30,7 +30,11 @@ struct ProductStatementMapper {
     private static func handle200(with data: Data) -> Result {
         
         do {
-            let decodableData = try JSONDecoder().decode(DecodeProductStatmentData.self, from: data)
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(.iso8601)
+
+            let decodableData = try decoder.decode(DecodeProductStatmentData.self, from: data)
             switch decodableData.statusCode {
                 
             default:
