@@ -338,16 +338,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc1d1_productChangeSuccessOfLoadedActiveContract() {
         
-        let (selected, different) = (makeProduct(), makeProduct())
-        let productSelector = makeProductSelector(
-            selected: selected,
-            products: [selected, different]
-        )
-        let (details, _) = contractedState(
-            .active,
-            productSelector: productSelector
-        )
-        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: [selected, different])
+        let (different, products, details) = makeActive()
+        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -380,6 +372,85 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
                         status: .collapsed
                     ))),
                 status: nil
+            ),
+        ])
+    }
+    
+    func test_flow_abc1d2_productChangeServerErrorFailureOfLoadedActiveContract() {
+        
+        let message = anyMessage()
+        let (different, products, details) = makeActive()
+        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.expandProducts)
+        sut.event(.selectProduct(different))
+        updateProductSpy.complete(with: .failure(.serverError(message)))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    )
+                ))),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    ))),
+                status: .inflight
+            ),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .collapsed
+                    ))),
+                status: .serverError(message)
+            ),
+        ])
+    }
+    
+    func test_flow_abc1d3_productChangeConnectivityFailureOfLoadedActiveContract() {
+        
+        let (different, products, details) = makeActive()
+        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.expandProducts)
+        sut.event(.selectProduct(different))
+        updateProductSpy.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    )
+                ))),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    ))),
+                status: .inflight
+            ),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .collapsed
+                    ))),
+                status: .connectivityError
             ),
         ])
     }
@@ -448,6 +519,24 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
         return (sut, stateSpy, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy)
+    }
+    
+    private func makeActive() -> (
+        different: Product,
+        products: [Product],
+        details: UserPaymentSettings.ContractDetails
+    ) {
+        let (selected, different) = (makeProduct(), makeProduct())
+        let productSelector = makeProductSelector(
+            selected: selected,
+            products: [selected, different]
+        )
+        let (details, _) = contractedState(
+            .active,
+            productSelector: productSelector
+        )
+        
+        return (different, [selected, different], details)
     }
 }
 
