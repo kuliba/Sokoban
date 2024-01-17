@@ -63,10 +63,30 @@ func connectivityErrorFPSState(
     )
 }
 
+func consentError(
+) -> UserPaymentSettings.ConsentError {
+    
+    .init()
+}
+
 func consentList(
 ) -> UserPaymentSettings.ConsentList {
     
     .init()
+}
+
+func consentResultFailure(
+    _ error: UserPaymentSettings.ConsentError = consentError()
+) -> UserPaymentSettings.ConsentResult {
+    
+    .failure(error)
+}
+
+func consentResultSuccess(
+    _ consentList: UserPaymentSettings.ConsentList = consentList()
+) -> UserPaymentSettings.ConsentResult {
+    
+    .success(consentList)
 }
 
 func contractDetails(
