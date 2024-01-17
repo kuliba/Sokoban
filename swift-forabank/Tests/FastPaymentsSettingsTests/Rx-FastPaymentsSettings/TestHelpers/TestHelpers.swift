@@ -84,8 +84,16 @@ func contractDetails(
     )
 }
 
-func contractedFastPaymentsSettingsState(
+func contractedSettings(
+    _ details: UserPaymentSettings.ContractDetails = contractDetails()
+) -> UserPaymentSettings {
+    
+    .contracted(details)
+}
+
+func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
     details: UserPaymentSettings.ContractDetails,
@@ -94,22 +102,16 @@ func contractedFastPaymentsSettingsState(
     let details = contractDetails(
         paymentContract: paymentContract(
             contractStatus: contractStatus
-        )
+        ),
+        bankDefault: bankDefault
     )
     
     let state = fastPaymentsSettingsState(
-        .contracted(details), 
+        .contracted(details),
         status: status
     )
     
     return (details, state)
-}
-
-func contractedSettings(
-    _ details: UserPaymentSettings.ContractDetails = contractDetails()
-) -> UserPaymentSettings {
-    
-    .contracted(details)
 }
 
 func contractUpdateConnectivityError() -> FastPaymentsSettingsEvent {
