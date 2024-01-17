@@ -53,7 +53,8 @@ extension FastPaymentsSettingsRxReducer {
             state = resetStatus(state)
             
         case .setBankDefault:
-            fatalError("unimplemented")
+            state = setBankDefault(state)
+            
         case .prepareSetBankDefault:
             fatalError("unimplemented")
         case .confirmSetBankDefault:
@@ -151,6 +152,20 @@ private extension FastPaymentsSettingsRxReducer {
         
         var state = state
         state.status = nil
+        
+        return state
+    }
+    
+    func setBankDefault(
+        _ state: State
+    ) -> State {
+        
+        guard let details = state.activeDetails,
+              details.bankDefault == .offEnabled
+        else { return state }
+        
+        var state = state
+        state.status = .setBankDefault
         
         return state
     }
