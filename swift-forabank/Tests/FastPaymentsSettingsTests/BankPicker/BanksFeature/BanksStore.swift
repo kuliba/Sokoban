@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FastPaymentsSettings
 
 final class BanksStore: ObservableObject {
     

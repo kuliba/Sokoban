@@ -7,7 +7,7 @@
 
 import Tagged
 
-final class FastPaymentsSettingsReducer {
+public final class FastPaymentsSettingsReducer {
     
     private let getUserPaymentSettings: GetUserPaymentSettings
     private let updateContract: UpdateContract
@@ -15,7 +15,7 @@ final class FastPaymentsSettingsReducer {
     private let createContract: CreateContract
     private let prepareSetBankDefault: PrepareSetBankDefault
     
-    init(
+    public init(
         getUserPaymentSettings: @escaping GetUserPaymentSettings,
         updateContract: @escaping UpdateContract,
         getProduct: @escaping GetProduct,
@@ -30,7 +30,7 @@ final class FastPaymentsSettingsReducer {
     }
 }
 
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias Completion = (State) -> Void
     
@@ -65,13 +65,13 @@ extension FastPaymentsSettingsReducer {
 }
 
 // micro-service `abc`
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias GetUserPaymentSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
 
 // micro-service `da`
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias UpdateContractPayload = (UserPaymentSettings.PaymentContract, UpdateContractToggle)
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
@@ -91,7 +91,7 @@ extension FastPaymentsSettingsReducer {
 }
 
 // micro-service `f`
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
@@ -104,21 +104,26 @@ extension FastPaymentsSettingsReducer {
     }
 }
 
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias GetProduct = () -> Product?
     
     struct Product: Identifiable {
         
-        let id: ProductID
+        public let id: ProductID
         
-        typealias ProductID = Tagged<_ProductID, String>
-        enum _ProductID {}
+        public typealias ProductID = Tagged<_ProductID, String>
+        public enum _ProductID {}
+        
+        public init(id: ProductID) {
+            
+            self.id = id
+        }
     }
 }
 
 // micro-service `ea`
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias CreateContractPayload = Product.ID
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
@@ -132,7 +137,7 @@ extension FastPaymentsSettingsReducer {
     }
 }
 
-extension FastPaymentsSettingsReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias State = FastPaymentsSettingsState?
     typealias Event = FastPaymentsSettingsEvent

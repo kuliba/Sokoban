@@ -55,7 +55,7 @@ final class RemoteServiceAdapterTests: XCTestCase {
     private typealias OldOutput = UUID
     private typealias Output = String
     private typealias SUT = RemoteServiceAdapter<Input, OldOutput, Output, ProcessError>
-    private typealias ServiceSpy = Spy<Input, OldOutput, ProcessError>
+    private typealias ServiceSpy = SpyOf<Input, OldOutput, ProcessError>
     
     private func makeSUT(
         output: Output = UUID().uuidString,
@@ -67,7 +67,7 @@ final class RemoteServiceAdapterTests: XCTestCase {
     ) {
         let serviceSpy = ServiceSpy()
         let sut = SUT(
-            service: serviceSpy,
+            service: SpyAdapter(spy: serviceSpy),
             adapt: { _ in output }
         )
         
