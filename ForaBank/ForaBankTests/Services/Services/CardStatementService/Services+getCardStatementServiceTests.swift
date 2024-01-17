@@ -15,7 +15,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.success(.success(.init([.sample])))]) {
+        expect(sut, toDeliver: [.success([.sample])]) {
             spy.complete(with: .success(makeSuccessResponse(with: .sampleCardStatement)))
         }
     }
@@ -24,7 +24,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.success(.failure(.mapError(.defaultError)))]) {
+        expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -33,7 +33,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.success(.failure(.mapError(.defaultError)))]) {
+        expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -42,21 +42,11 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.success(.failure(.mapError("server error")))]) {
+        expect(sut, toDeliver: [.failure(.mapError("server error"))]) {
             spy.complete(with: .success(makeSuccessResponse(
                 with: .emptyData,
                 statusCode: 1
             )))
-        }
-    }
-
-    func test_getScenarioQRData_shouldDeliverErrorOnPerformRequestFailure() throws {
-        
-        let performRequestError = anyError()
-        let (sut, spy) = makeSUT()
-        
-        expect(sut, toDeliver: [.failure(.performRequest(performRequestError))]) {
-            spy.complete(with: .failure(performRequestError))
         }
     }
     
@@ -105,7 +95,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
     
-    typealias Result = Swift.Result<Services.GetCardStatementResult, RemoteServiceError<Error, Error, Error>>
+    typealias Result = Services.GetCardStatementResult
     
     private func expect(
         _ sut: Services.GetCardStatementService,
@@ -123,8 +113,9 @@ final class Services_getCardStatementServiceTests: XCTestCase {
             period: .initialPeriod,
             statementFormat: .csv,
             cardNumber: "1111"))) { result in
-                
-                results.append(result)
+                if let a = try? result.get() {
+                    results.append(a)
+                }
                 exp.fulfill()
             }
         
@@ -140,19 +131,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
                 
                 switch element {
                 case let (.failure(received), .failure(expected)):
-                    switch (received, expected) {
-                    case let (.createRequest(received as NSError), .createRequest(expected as NSError)):
-                        XCTAssertNoDiff(received, expected, file: file, line: line)
-                        
-                    case let (.performRequest(received as NSError), .performRequest(expected as NSError)):
-                        XCTAssertNoDiff(received, expected, file: file, line: line)
-                        
-                    case let (.mapResponse(received as NSError), .mapResponse(expected as NSError)):
-                        XCTAssertNoDiff(received, expected, file: file, line: line)
-                        
-                    default:
-                        XCTFail("Expected \(expected), got \(received) instead.", file: file, line: line)
-                    }
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
                     
                 case let (.success(received), .success(expected)):
                     XCTAssertNoDiff(received, expected, file: file, line: line)

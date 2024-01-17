@@ -12,7 +12,7 @@ extension Services {
     
     typealias GetCardStatement = (CardStatementForPeriodDomain.Payload)
     typealias GetCardStatementResult = Swift.Result<[ProductStatementData], ProductStatementMapper.MapperError>
-    typealias GetCardStatementService = RemoteService<GetCardStatement, GetCardStatementResult, Error, Error, Error>
+    typealias GetCardStatementService = RemoteServiceOf<GetCardStatement, GetCardStatementResult>
     
     static func getCardStatementForPeriod(
         httpClient: HTTPClient
