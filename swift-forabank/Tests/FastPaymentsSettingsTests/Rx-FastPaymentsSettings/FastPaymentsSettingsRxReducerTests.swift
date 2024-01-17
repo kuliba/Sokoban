@@ -1727,69 +1727,149 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     // MARK: - updateProduct
     
-    func test_updateProduct_shouldSetProductOnSuccess_active() {
+    func test_updateProduct_shouldSetProductOnSuccess_active_collapsed() {
         
         let newProduct = makeProduct()
-        let (details, active) = contractedState(.active)
+        let (details, active) = contractedState(.active, selector: .collapsed)
         
         assert(
             active,
             .updateProduct(.success(newProduct)),
             reducedTo: .init(
                 userPaymentSettings: .contracted(details.updated(
-                    productSelector: details.productSelector.selected(product: newProduct)
+                    productSelector: details.productSelector.updated(
+                        selectedProduct: newProduct,
+                        status: .collapsed
+                    )
                 ))
             )
         )
     }
     
-    func test_updateProduct_shouldNotDeliverEffectOnSuccess_active() {
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_active_collapsed() {
         
-        let active = contractedState(.active).state
+        let active = contractedState(.active, selector: .collapsed).state
         
         assert(active, updateProductSuccess(), effect: nil)
     }
     
-    func test_updateProduct_shouldSetStatusOnConnectivityErrorFailure_active() {
+    func test_updateProduct_shouldCollapseAndSetProductOnSuccess_active_expanded() {
         
-        let active = activeContractSettings()
+        let newProduct = makeProduct()
+        let (details, active) = contractedState(.active, selector: .expanded)
         
+        assert(
+            active,
+            .updateProduct(.success(newProduct)),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        selectedProduct: newProduct,
+                        status: .collapsed
+                    )
+                ))
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_active_expanded() {
+        
+        let active = contractedState(.active, selector: .expanded).state
+        
+        assert(active, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldSetStatusOnConnectivityErrorFailure_active_collapsed() {
+        
+        let (details, active) = contractedState(.active, selector: .collapsed)
+
         assert(
             active,
             updateProductConnectivityError(),
             reducedTo: .init(
-                userPaymentSettings: active,
+                userPaymentSettings: .contracted(details),
                 status: .connectivityError
             )
         )
     }
     
-    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_active_collapsed() {
         
-        let active = contractedState(.active).state
+        let active = contractedState(.active, selector: .collapsed).state
         
         assert(active, updateProductConnectivityError(), effect: nil)
     }
     
-    func test_updateProduct_shouldSetStatusOnServerErrorFailure_active() {
+    func test_updateProduct_shouldCollapseAndSetStatusOnConnectivityErrorFailure_active_expanded() {
+        
+        let (details, active) = contractedState(.active, selector: .expanded)
+
+        assert(
+            active,
+            updateProductConnectivityError(),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .collapsed
+                    )
+                )),
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_active_expanded() {
+        
+        let active = contractedState(.active, selector: .expanded).state
+        
+        assert(active, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldSetStatusOnServerErrorFailure_active_collapsed() {
         
         let message = anyMessage()
-        let active = activeContractSettings()
-        
+        let (details, active) = contractedState(.active, selector: .collapsed)
+
         assert(
             active,
             .updateProduct(.failure(.serverError(message))),
             reducedTo: .init(
-                userPaymentSettings: active,
+                userPaymentSettings: .contracted(details),
                 status: .serverError(message)
             )
         )
     }
     
-    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_active() {
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_active_collapsed() {
         
-        let active = contractedState(.active).state
+        let active = contractedState(.active, selector: .collapsed).state
+
+        assert(active, updateProductServerError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldCollapseAndSetStatusOnServerErrorFailure_active_expanded() {
         
+        let message = anyMessage()
+        let (details, active) = contractedState(.active, selector: .expanded)
+
+        assert(
+            active,
+            .updateProduct(.failure(.serverError(message))),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .collapsed
+                    )
+                )),
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_active_expanded() {
+        
+        let active = contractedState(.active, selector: .expanded).state
+
         assert(active, updateProductServerError(), effect: nil)
     }
     

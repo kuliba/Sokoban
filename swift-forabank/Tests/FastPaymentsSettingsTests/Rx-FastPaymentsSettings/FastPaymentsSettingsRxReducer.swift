@@ -274,14 +274,26 @@ private extension FastPaymentsSettingsRxReducer {
             return .init(userPaymentSettings: .contracted(details))
             
         case .failure(.connectivityError):
-            var state = state
-            state.status = .connectivityError
-            return state
+            var details = details
+            details.productSelector = details.productSelector.updated(
+                status: .collapsed
+            )
+            
+            return .init(
+                userPaymentSettings: .contracted(details),
+                status: .connectivityError
+            )
             
         case let .failure(.serverError(message)):
-            var state = state
-            state.status = .serverError(message)
-            return state
+            var details = details
+            details.productSelector = details.productSelector.updated(
+                status: .collapsed
+            )
+
+            return .init(
+                userPaymentSettings: .contracted(details),
+                status: .serverError(message)
+            )
         }
     }
     
