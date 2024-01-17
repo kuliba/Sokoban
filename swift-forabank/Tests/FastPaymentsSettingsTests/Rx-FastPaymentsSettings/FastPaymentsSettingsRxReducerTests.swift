@@ -472,7 +472,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = anyMissingConsentSuccessSettings()
         
         assert(missing, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
-        
     }
     
     func test_contractUpdate_shouldNotChangeStateOnSuccess_connectivityError() {
@@ -686,7 +685,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
                 status: .connectivityError
             )
         )
-        
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
@@ -709,7 +707,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
                 status: .serverError(message)
             )
         )
-        
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_active() {
@@ -885,6 +882,247 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
         
         assert(serverError, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
+    }
+    
+    // MARK: - setBankDefaultPrepare
+    
+    func test_setBankDefaultPrepare_shouldSetBankDefaultAndInformerOnSuccess_active() {
+        
+        let active = anyPaymentContract(contractStatus: .active)
+        let details = anyContractDetails(paymentContract: active)
+        let activeContract = makeFPSState(.contracted(details))
+        
+        assert(
+            activeContract,
+            .setBankDefaultPrepare(nil),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: details.paymentContract,
+                    consentResult: details.consentResult,
+                    bankDefault: .onDisabled,
+                    product: details.product
+                )),
+                status: .setBankDefaultSuccess
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_active() {
+        
+        let active = anyActiveContractSettings()
+        
+        assert(active, .setBankDefaultPrepare(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldSetStatusOnConnectivityErrorFailure_active() {
+        
+        let active = anyActiveContractSettings()
+        
+        assert(
+            active,
+            .setBankDefaultPrepare(.connectivityError),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
+        
+        let active = anyActiveContractSettings()
+        
+        assert(active, .setBankDefaultPrepare(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldSetStatusOnServerErrorFailure_active() {
+        
+        let message = UUID().uuidString
+        let active = anyActiveContractSettings()
+        
+        assert(
+            active,
+            .setBankDefaultPrepare(.serverError(message)),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_active() {
+        
+        let active = anyActiveContractSettings()
+        
+        assert(active, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(nil), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(.connectivityError), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
+        
+        let inactive = makeFPSState(anyInactiveContractSettings())
+        
+        assert(inactive, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(nil), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(.connectivityError), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_missing() {
+        
+        let missing = makeFPSState(anyMissingConsentSuccessSettings())
+        
+        assert(missing, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(nil), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(.connectivityError), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = makeFPSState(.failure(.connectivityError))
+        
+        assert(connectivityError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(nil), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(.connectivityError), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
+        
+        let serverError = makeFPSState(.failure(.serverError(UUID().uuidString)))
+        
+        assert(serverError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
     }
     
     // MARK: - Helpers

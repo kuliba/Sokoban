@@ -47,7 +47,8 @@ extension FastPaymentsSettingsRxReducer {
             state = update(state, with: result)
             
         case let .setBankDefaultPrepare(failure):
-            fatalError("unimplemented")
+            state = update(state, with: failure)
+            
         case .resetStatus:
             fatalError("unimplemented")
         case .setBankDefault:
@@ -218,6 +219,36 @@ private extension FastPaymentsSettingsRxReducer {
             return state
             
         case let .failure(.serverError(message)):
+            var state = state
+            state.status = .serverError(message)
+            return state
+        }
+    }
+    
+    func update(
+        _ state: State,
+        with failure: FastPaymentsSettingsEvent.Failure?
+    ) -> State {
+#warning("extract as helper")
+        guard case let .contracted(details) = state.userPaymentSettings,
+              details.isActive
+        else { return state }
+        
+        switch failure {
+        case .none:
+            var details = details
+            details.bankDefault = .onDisabled
+            return .init(
+                userPaymentSettings: .contracted(details),
+                status: .setBankDefaultSuccess
+            )
+            
+        case .connectivityError:
+            var state = state
+            state.status = .connectivityError
+            return state
+            
+        case let .serverError(message):
             var state = state
             state.status = .serverError(message)
             return state
