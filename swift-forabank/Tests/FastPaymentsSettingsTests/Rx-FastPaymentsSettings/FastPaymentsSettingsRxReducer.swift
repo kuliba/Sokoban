@@ -166,7 +166,7 @@ private extension FastPaymentsSettingsRxReducer {
     ) -> (State, Effect?) {
         
         guard case let .contracted(details) = state.userPaymentSettings,
-              !details.isInactive
+              details.isActive
         else { return (state, nil) }
         
         var state = state
@@ -203,7 +203,7 @@ private extension FastPaymentsSettingsRxReducer {
     ) -> State {
         
         guard case let .contracted(details) = state.userPaymentSettings,
-              !details.isInactive
+              details.isActive
         else { return state }
         
         switch productUpdate {
@@ -226,6 +226,11 @@ private extension FastPaymentsSettingsRxReducer {
 }
 
 private extension UserPaymentSettings.ContractDetails {
+    
+    var isActive: Bool {
+        
+        paymentContract.contractStatus == .active
+    }
     
     var isInactive: Bool {
         
