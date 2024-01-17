@@ -14,21 +14,21 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_appear_shouldSetStatusToInflight_emptyState() {
         
-        let empty = makeFPSState()
+        let empty = fastPaymentsSettingsState()
         
         assert(empty, .appear, reducedTo: .init(status: .inflight))
     }
     
     func test_appear_shouldDeliverGetUserPaymentSettingsEffect_emptyState() {
         
-        let empty = makeFPSState()
+        let empty = fastPaymentsSettingsState()
         
         assert(empty, .appear, effect: .getSettings)
     }
     
     func test_appear_shouldSetStatusToInflight_nonEmptyState() {
         
-        let nonEmpty = anyContractedSettings()
+        let nonEmpty = contractedSettings()
         
         assert(nonEmpty, .appear, reducedTo: .init(
             userPaymentSettings: nonEmpty,
@@ -38,7 +38,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_appear_shouldDeliverGetUserPaymentSettingsEffect_nonEmptyState() {
         
-        let nonEmpty = anyContractedSettings()
+        let nonEmpty = contractedSettings()
         
         assert(nonEmpty, .appear, effect: .getSettings)
     }
@@ -47,8 +47,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_loadedSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
         
-        let state = makeFPSState(status: .inflight)
-        let loaded = anyContractedSettings()
+        let state = fastPaymentsSettingsState(status: .inflight)
+        let loaded = contractedSettings()
         
         assert(state, .loadedSettings(loaded), reducedTo: .init(
             userPaymentSettings: loaded,
@@ -58,17 +58,17 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_loadedSettings_shouldNotDeliverEffect_emptyState() {
         
-        let state = makeFPSState(status: .inflight)
-        let loaded = anyContractedSettings()
+        let state = fastPaymentsSettingsState(status: .inflight)
+        let loaded = contractedSettings()
         
         assert(state, .loadedSettings(loaded), effect: nil)
     }
     
     func test_loadedSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
         
-        let contracted = anyContractedSettings()
-        let loaded = anyContractedSettings()
-        let state = makeFPSState(contracted, status: .inflight)
+        let contracted = contractedSettings()
+        let loaded = contractedSettings()
+        let state = fastPaymentsSettingsState(contracted, status: .inflight)
         
         assert(state, .loadedSettings(loaded), reducedTo: .init(
             userPaymentSettings: loaded,
@@ -78,9 +78,9 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_loadedSettings_shouldNotDeliverEffect_nonEmptyState() {
         
-        let contracted = anyContractedSettings()
-        let loaded = anyContractedSettings()
-        let state = makeFPSState(contracted, status: .inflight)
+        let contracted = contractedSettings()
+        let loaded = contractedSettings()
+        let state = fastPaymentsSettingsState(contracted, status: .inflight)
         
         assert(state, .loadedSettings(loaded), effect: nil)
     }
@@ -89,35 +89,35 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldNotChangeStateOnEmpty() {
         
-        let empty = makeFPSState()
+        let empty = fastPaymentsSettingsState()
         
         assert(empty, .activateContract, reducedTo: empty)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnEmpty() {
         
-        let empty = makeFPSState()
+        let empty = fastPaymentsSettingsState()
         
         assert(empty, .activateContract, effect: nil)
     }
     
     func test_activateContract_shouldNotChangeStateOnActiveContract() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .activateContract, reducedTo: active)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnActiveContract() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .activateContract, effect: nil)
     }
     
     func test_activateContract_shouldChangeStatusToInflightOnInactiveContract() {
         
-        let inactive = anyInactiveContractSettings()
+        let inactive = inactiveContractSettings()
         
         assert(inactive, .activateContract, reducedTo: .init(
             userPaymentSettings: inactive,
@@ -127,7 +127,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldDeliverEffectOnInactiveContract() {
         
-        let (details, inactive) = makeFPSState(.inactive)
+        let (details, inactive) = fastPaymentsSettingsState(.inactive)
         let target = target(details, .active)
         
         assert(inactive, .activateContract, effect: .activateContract(target))
@@ -135,7 +135,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentFailure() {
         
-        let missing = anyMissingConsentFailureSettings()
+        let missing = missingConsentFailureSettings()
         let sut = makeSUT(product: nil)
         
         assert(sut: sut, missing, .activateContract, reducedTo: .init(
@@ -146,7 +146,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldNotDeliverEffectOnMissingProductAtMissingSettingsWithConsentFailure() {
         
-        let missing = anyMissingConsentFailureSettings()
+        let missing = missingConsentFailureSettings()
         let sut = makeSUT(product: nil)
         
         assert(sut: sut, missing, .activateContract, effect: nil)
@@ -154,8 +154,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentFailure() {
         
-        let missing = anyMissingConsentFailureSettings()
-        let sut = makeSUT(product: anyProduct())
+        let missing = missingConsentFailureSettings()
+        let sut = makeSUT(product: makeProduct())
         
         assert(sut: sut, missing, .activateContract, reducedTo: .init(
             userPaymentSettings: missing,
@@ -165,8 +165,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldDeliverEffectOnAvailableProductAtMissingSettingsWithConsentFailure() {
         
-        let missing = anyMissingConsentFailureSettings()
-        let product = anyProduct()
+        let missing = missingConsentFailureSettings()
+        let product = makeProduct()
         let sut = makeSUT(product: product)
         
         assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
@@ -174,7 +174,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentSuccess() {
         
-        let missing = anyMissingConsentSuccessSettings()
+        let missing = missingConsentSuccessSettings()
         let sut = makeSUT(product: nil)
         
         assert(sut: sut, missing, .activateContract, reducedTo: .init(
@@ -185,7 +185,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldNotDeliverEffectOnMissingProductAtMissingSettingsWithConsentSuccess() {
         
-        let missing = anyMissingConsentSuccessSettings()
+        let missing = missingConsentSuccessSettings()
         let sut = makeSUT(product: nil)
         
         assert(sut: sut, missing, .activateContract, effect: nil)
@@ -193,8 +193,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentSuccess() {
         
-        let missing = anyMissingConsentSuccessSettings()
-        let sut = makeSUT(product: anyProduct())
+        let missing = missingConsentSuccessSettings()
+        let sut = makeSUT(product: makeProduct())
         
         assert(sut: sut, missing, .activateContract, reducedTo: .init(
             userPaymentSettings: missing,
@@ -204,8 +204,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_activateContract_shouldDeliverEffectOnAvailableProductAtMissingSettingsWithConsentSuccess() {
         
-        let missing = anyMissingConsentSuccessSettings()
-        let product = anyProduct()
+        let missing = missingConsentSuccessSettings()
+        let product = makeProduct()
         let sut = makeSUT(product: product)
         
         assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
@@ -243,8 +243,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldSetContractOnSuccess_active() {
         
-        let (details, activeContract) = makeFPSState(.active)
-        let newContract = anyPaymentContract()
+        let (details, activeContract) = fastPaymentsSettingsState(.active)
+        let newContract = paymentContract()
         
         assert(
             activeContract,
@@ -262,15 +262,15 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnSuccess_active() {
         
-        let active = makeFPSState(.active).state
-        let newContract = anyPaymentContract()
+        let active = fastPaymentsSettingsState(.active).state
+        let newContract = paymentContract()
         
         assert(active, .contractUpdate(.success(newContract)), effect: nil)
     }
     
     func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_active() {
         
-        let (details, active) = makeFPSState(.active)
+        let (details, active) = fastPaymentsSettingsState(.active)
         
         assert(
             active,
@@ -284,7 +284,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .contractUpdate(.failure(.connectivityError)), effect: nil)
     }
@@ -292,7 +292,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_active() {
         
         let message = UUID().uuidString
-        let (details, active) = makeFPSState(.active)
+        let (details, active) = fastPaymentsSettingsState(.active)
         
         assert(
             active,
@@ -306,15 +306,15 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_contractUpdate_shouldSetContractOnSuccess_inactive() {
         
-        let (details, inactive) = makeFPSState(.inactive)
-        let newContract = anyPaymentContract()
+        let (details, inactive) = fastPaymentsSettingsState(.inactive)
+        let newContract = paymentContract()
         
         assert(
             inactive,
@@ -332,15 +332,15 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnSuccess_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
-        let newContract = anyPaymentContract()
+        let inactive = fastPaymentsSettingsState(.inactive).state
+        let newContract = paymentContract()
         
         assert(inactive, .contractUpdate(.success(newContract)), effect: nil)
     }
     
     func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_inactive() {
         
-        let (details, inactive) = makeFPSState(.inactive)
+        let (details, inactive) = fastPaymentsSettingsState(.inactive)
         
         assert(
             inactive,
@@ -354,7 +354,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
 
         assert(inactive, .contractUpdate(.failure(.connectivityError)), effect: nil)
     }
@@ -362,7 +362,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_inactive() {
         
         let message = UUID().uuidString
-        let (details, inactive) = makeFPSState(.inactive)
+        let (details, inactive) = fastPaymentsSettingsState(.inactive)
         
         assert(
             inactive,
@@ -376,17 +376,17 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_contractUpdate_shouldSetContractOnSuccess_missing() {
         
-        let newContract = anyPaymentContract()
+        let newContract = paymentContract()
         let consentResult: UserPaymentSettings.ConsentResult = .failure(.init())
         let missing: UserPaymentSettings = .missingContract(consentResult)
-        let product = anyProduct()
+        let product = makeProduct()
         let sut = makeSUT(product: product)
         
         assert(
@@ -406,16 +406,16 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnSuccess_missing() {
         
-        let newContract = anyPaymentContract()
-        let missing = anyMissingConsentSuccessSettings()
+        let newContract = paymentContract()
+        let missing = missingConsentSuccessSettings()
         
         assert(missing, .contractUpdate(.success(newContract)), effect: nil)
     }
     
     func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_missing() {
         
-        let missing = anyMissingConsentFailureSettings()
-        let product = anyProduct()
+        let missing = missingConsentFailureSettings()
+        let product = makeProduct()
         let sut = makeSUT(product: product)
         
         assert(
@@ -431,7 +431,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_missing() {
         
-        let missing = anyMissingConsentSuccessSettings()
+        let missing = missingConsentSuccessSettings()
         
         assert(missing, .contractUpdate(.failure(.connectivityError)), effect: nil)
     }
@@ -439,8 +439,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_missing() {
         
         let message = UUID().uuidString
-        let missing = anyMissingConsentFailureSettings()
-        let product = anyProduct()
+        let missing = missingConsentFailureSettings()
+        let product = makeProduct()
         let sut = makeSUT(product: product)
         
         assert(
@@ -456,14 +456,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_missing() {
         
-        let missing = anyMissingConsentSuccessSettings()
+        let missing = missingConsentSuccessSettings()
         
         assert(missing, .contractUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_contractUpdate_shouldNotChangeStateOnSuccess_connectivityError() {
         
-        let newContract = anyPaymentContract()
+        let newContract = paymentContract()
         let connectivityError = connectivityErrorFPSState()
         
         assert(connectivityError, .contractUpdate(.success(newContract)), reducedTo: connectivityError)
@@ -471,7 +471,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnSuccess_connectivityError() {
         
-        let newContract = anyPaymentContract()
+        let newContract = paymentContract()
         let connectivityError = connectivityErrorFPSState()
         
         assert(connectivityError, .contractUpdate(.success(newContract)), effect: nil)
@@ -507,7 +507,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotChangeStateOnSuccess_serverError() {
         
-        let newContract = anyPaymentContract()
+        let newContract = paymentContract()
         let serverError = serverErrorFPSState()
         
         assert(serverError, .contractUpdate(.success(newContract)), reducedTo: serverError)
@@ -515,7 +515,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_contractUpdate_shouldNotDeliverEffectOnSuccess_serverError() {
         
-        let newContract = anyPaymentContract()
+        let newContract = paymentContract()
         let serverError = serverErrorFPSState()
         
         assert(serverError, .contractUpdate(.success(newContract)), effect: nil)
@@ -553,7 +553,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_deactivateContract_shouldChangeStatusToInflightOnActive() {
         
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(
             active,
@@ -567,7 +567,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_deactivateContract_shouldDeliverEffectOnActive() {
         
-        let (details, active) = makeFPSState(.active)
+        let (details, active) = fastPaymentsSettingsState(.active)
         let target = target(details, .inactive)
         
         assert(active, .deactivateContract, effect: .deactivateContract(target))
@@ -575,14 +575,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_deactivateContract_shouldNotChangeStateOnInactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .deactivateContract, reducedTo: inactive)
     }
     
     func test_deactivateContract_shouldNotDeliverEffectOnInactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .deactivateContract, effect: nil)
     }
@@ -633,8 +633,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_productUpdate_shouldSetProductOnSuccess_active() {
         
-        let newProduct = anyProduct()
-        let (details, active) = makeFPSState(.active)
+        let newProduct = makeProduct()
+        let (details, active) = fastPaymentsSettingsState(.active)
         
         assert(
             active,
@@ -652,14 +652,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
-        assert(active, .productUpdate(.success(anyProduct())), effect: nil)
+        assert(active, .productUpdate(.success(makeProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldSetStatusOnConnectivityErrorFailure_active() {
         
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(
             active,
@@ -673,7 +673,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
@@ -681,7 +681,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_productUpdate_shouldSetStatusOnServerErrorFailure_active() {
         
         let message = UUID().uuidString
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(
             active,
@@ -695,49 +695,49 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnSuccess_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
-        assert(inactive, .productUpdate(.success(anyProduct())), reducedTo: inactive)
+        assert(inactive, .productUpdate(.success(makeProduct())), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
-        assert(inactive, .productUpdate(.success(anyProduct())), effect: nil)
+        assert(inactive, .productUpdate(.success(makeProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .productUpdate(.failure(.connectivityError)), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .productUpdate(.failure(.connectivityError)), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .productUpdate(.failure(.serverError(UUID().uuidString))), reducedTo: inactive)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .productUpdate(.failure(.serverError(UUID().uuidString))), effect: nil)
     }
@@ -746,14 +746,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(missing, .productUpdate(.success(anyProduct())), reducedTo: missing)
+        assert(missing, .productUpdate(.success(makeProduct())), reducedTo: missing)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(missing, .productUpdate(.success(anyProduct())), effect: nil)
+        assert(missing, .productUpdate(.success(makeProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
@@ -788,14 +788,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(connectivityError, .productUpdate(.success(anyProduct())), reducedTo: connectivityError)
+        assert(connectivityError, .productUpdate(.success(makeProduct())), reducedTo: connectivityError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(connectivityError, .productUpdate(.success(anyProduct())), effect: nil)
+        assert(connectivityError, .productUpdate(.success(makeProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
@@ -830,14 +830,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let serverError = serverErrorFPSState()
         
-        assert(serverError, .productUpdate(.success(anyProduct())), reducedTo: serverError)
+        assert(serverError, .productUpdate(.success(makeProduct())), reducedTo: serverError)
     }
     
     func test_productUpdate_shouldNotDeliverEffectOnSuccess_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(serverError, .productUpdate(.success(anyProduct())), effect: nil)
+        assert(serverError, .productUpdate(.success(makeProduct())), effect: nil)
     }
     
     func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
@@ -872,7 +872,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_setBankDefaultPrepare_shouldSetBankDefaultAndInformerOnSuccess_active() {
         
-        let (details, active) = makeFPSState(.active)
+        let (details, active) = fastPaymentsSettingsState(.active)
         
         assert(
             active,
@@ -891,14 +891,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_active() {
         
-        let active = makeFPSState(.active).state
+        let active = fastPaymentsSettingsState(.active).state
         
         assert(active, .setBankDefaultPrepare(nil), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldSetStatusOnConnectivityErrorFailure_active() {
         
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(
             active,
@@ -912,7 +912,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
         
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(active, .setBankDefaultPrepare(.connectivityError), effect: nil)
     }
@@ -920,7 +920,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_setBankDefaultPrepare_shouldSetStatusOnServerErrorFailure_active() {
         
         let message = UUID().uuidString
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(
             active,
@@ -934,49 +934,49 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_active() {
         
-        let active = anyActiveContractSettings()
+        let active = activeContractSettings()
         
         assert(active, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(nil), reducedTo: inactive)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(nil), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(.connectivityError), reducedTo: inactive)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(.connectivityError), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: inactive)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
         
-        let inactive = makeFPSState(.inactive).state
+        let inactive = fastPaymentsSettingsState(.inactive).state
         
         assert(inactive, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
     }
@@ -1067,42 +1067,42 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
 
         assert(serverError, .setBankDefaultPrepare(nil), reducedTo: serverError)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
 
         assert(serverError, .setBankDefaultPrepare(nil), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
 
         assert(serverError, .setBankDefaultPrepare(.connectivityError), reducedTo: serverError)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
 
         assert(serverError, .setBankDefaultPrepare(.connectivityError), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
 
         assert(serverError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), reducedTo: serverError)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
         
-        let serverError = makeFPSState(anyServerErrorSettings())
+        let serverError = fastPaymentsSettingsState(serverErrorSettings())
         
         assert(serverError, .setBankDefaultPrepare(.serverError(UUID().uuidString)), effect: nil)
     }
@@ -1115,7 +1115,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
-        product: Product? = anyProduct(),
+        product: Product? = makeProduct(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
