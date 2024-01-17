@@ -20,7 +20,7 @@ public struct FastPaymentsSettingsState: Equatable {
 }
 
 public extension FastPaymentsSettingsState {
-    
+    #warning("split to informer/error?")
     enum Status: Equatable {
         
         case inflight
@@ -29,6 +29,7 @@ public extension FastPaymentsSettingsState {
         case missingProduct
         case updateContractFailure
         case setBankDefault
+        case setBankDefaultSuccess
         case confirmSetBankDefault//(phoneNumberMask) from contract details
     }
 }

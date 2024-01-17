@@ -5,14 +5,30 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
-public enum FastPaymentsSettingsEvent {
+import Tagged
+
+public enum FastPaymentsSettingsEvent: Equatable {
     
-    case appear
     case activateContract
+    case appear
+    case contractUpdate(ContractUpdateResult)
     case deactivateContract
-#warning("rename case to reflect meaning")
-    case resetStatus
-    case setBankDefault
+    case loadedSettings(UserPaymentSettings)
     case prepareSetBankDefault
-    case confirmSetBankDefault
+    case productUpdate(ProductUpdateResult)
+    case resetStatus
+    case setBankDefaultPrepare(Failure?)
+    case setBankDefault
+}
+
+public extension FastPaymentsSettingsEvent {
+    
+    typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, Failure>
+    typealias ProductUpdateResult = Result<Product, Failure>
+    
+    enum Failure: Error, Equatable {
+        
+        case connectivityError
+        case serverError(String)
+    }
 }

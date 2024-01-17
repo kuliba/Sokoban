@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import Tagged
+
 public enum UserPaymentSettings: Equatable {
     
     case contracted(ContractDetails)
@@ -19,32 +21,45 @@ public extension UserPaymentSettings {
         public var paymentContract: PaymentContract
         public let consentResult: ConsentResult
         public var bankDefault: BankDefault
+        public var product: Product
         
         public init(
             paymentContract: PaymentContract,
             consentResult: ConsentResult,
-            bankDefault: BankDefault
+            bankDefault: BankDefault,
+            product: Product
         ) {
             self.paymentContract = paymentContract
             self.consentResult = consentResult
             self.bankDefault = bankDefault
+            self.product = product
         }
     }
     
-    struct PaymentContract: Equatable {
+    struct PaymentContract: Equatable, Identifiable {
         
+        public let id: ContractID
         public let contractStatus: ContractStatus
         
-        public init(contractStatus: ContractStatus) {
-         
+        public init(
+            id: ContractID,
+            contractStatus: ContractStatus
+        ) {
+            self.id = id
             self.contractStatus = contractStatus
         }
+        
+        public typealias ContractID = Tagged<_ContractID, Int>
+        public enum _ContractID {}
         
         public enum ContractStatus: Equatable {
             
             case active, inactive
         }
     }
+}
+
+public extension UserPaymentSettings {
     
     typealias ConsentResult = Result<ConsentList, ConsentError>
     
@@ -64,10 +79,13 @@ public extension UserPaymentSettings {
         case offEnabled
         case offDisabled
     }
+}
+
+public extension UserPaymentSettings {
     
     enum Failure: Equatable {
         
-        case serverError(String)
         case connectivityError
+        case serverError(String)
     }
 }
