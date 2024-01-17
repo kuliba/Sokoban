@@ -21,6 +21,40 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertEqual(updateProductSpy.callCount, 0)
     }
     
+    func test_flow_abc1d1_deactivateLoadedActiveContract() {
+        
+        let (details, _) = contractedState(.active, bankDefault: .offEnabled)
+        let newContract = paymentContract(contractStatus: .inactive)
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.deactivateContract)
+        updateContractSpy.complete(with: .success(newContract))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(.init(
+                paymentContract: newContract,
+                consentResult: details.consentResult,
+                bankDefault: details.bankDefault,
+                product: details.product
+            ))),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .active,
+            .active,
+            .inactive,
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias State = FastPaymentsSettingsState
@@ -85,5 +119,21 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
         return (sut, stateSpy, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy)
+    }
+}
+
+// MARK: - DSL
+
+private extension FastPaymentsSettingsState {
+    
+    var contractStatus: UserPaymentSettings.PaymentContract.ContractStatus? {
+        
+        switch userPaymentSettings {
+        case let .contracted(details):
+            return details.paymentContract.contractStatus
+            
+        default:
+            return nil
+        }
     }
 }

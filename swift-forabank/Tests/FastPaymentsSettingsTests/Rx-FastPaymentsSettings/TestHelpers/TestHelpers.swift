@@ -91,6 +91,21 @@ func contractedSettings(
     .contracted(details)
 }
 
+func contractedSettings(
+    _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+) -> UserPaymentSettings {
+  
+    let details = contractDetails(
+        paymentContract: paymentContract(
+            contractStatus: contractStatus
+        ),
+        bankDefault: bankDefault
+    )
+
+    return .contracted(details)
+}
+
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
