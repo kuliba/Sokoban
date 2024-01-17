@@ -130,7 +130,7 @@ func contractedSettings(
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
+    selector selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
     details: UserPaymentSettings.ContractDetails,
