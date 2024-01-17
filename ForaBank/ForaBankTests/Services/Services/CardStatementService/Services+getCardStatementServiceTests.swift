@@ -66,7 +66,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: Services.GetCardStatementData,
+        sut: Services.GetCardStatementService,
         spy: HTTPClientSpy
     ) {
         let spy = HTTPClientSpy()
@@ -108,7 +108,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
     typealias Result = Swift.Result<Services.GetCardStatementResult, RemoteServiceError<Error, Error, Error>>
     
     private func expect(
-        _ sut: Services.GetCardStatementData,
+        _ sut: Services.GetCardStatementService,
         toDeliver expectedResults: [Result],
         on action: () -> Void,
         file: StaticString = #file,

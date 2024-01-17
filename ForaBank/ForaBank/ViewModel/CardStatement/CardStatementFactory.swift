@@ -27,7 +27,7 @@ extension Model {
     }
     
     private func getCardStatementForPeriod(
-    ) -> Services.GetCardStatementData {
+    ) -> Services.GetCardStatementService {
         
         Services.getCardStatementForPeriod(
             httpClient: authenticatedHTTPClient()

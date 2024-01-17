@@ -41,14 +41,17 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
 
         let httpBody = try XCTUnwrap(request.httpBody)
         
-        let decodedRequest = try JSONDecoder().decode(DecodableRequest.self, from: httpBody)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(.iso8601)
 
-        XCTAssertNoDiff(decodedRequest.id, "\(payload.id.rawValue)")
+        let decodedRequest = try decoder.decode(DecodableRequest.self, from: httpBody)
+
+        XCTAssertNoDiff(decodedRequest.id, payload.id.rawValue)
         XCTAssertNoDiff(decodedRequest.name, payload.name?.rawValue)
         XCTAssertNoDiff(decodedRequest.cardNumber, payload.cardNumber?.rawValue)
         XCTAssertNoDiff(decodedRequest.statementFormat, payload.statementFormat?.rawValue)
-        XCTAssertNoDiff(decodedRequest.startDate, "\(payload.period.start)")
-        XCTAssertNoDiff(decodedRequest.endDate, "\(payload.period.end)")
+        XCTAssertNoDiff(decodedRequest.startDate, payload.period.start)
+        XCTAssertNoDiff(decodedRequest.endDate, payload.period.end)
     }
     
     // MARK: - Helpers
@@ -70,7 +73,7 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
             statementFormat: statementFormat,
             cardNumber: cardNumber
         )
-        let request = try RequestFactory.getCardStatementForPeriod(payload: payload)
+        let request = RequestFactory.getCardStatementForPeriod(payload: payload)
         
         return (payload, request)
     }
@@ -93,12 +96,12 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
     
     private struct DecodableRequest: Decodable {
         
-        let id: String
+        let id: Int
         let name: String
         let statementFormat: String
         let cardNumber: String
-        let startDate: String
-        let endDate: String
+        let startDate: Date
+        let endDate: Date
     }
 }
 
