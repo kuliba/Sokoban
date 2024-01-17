@@ -34,6 +34,50 @@ func makeFPSState(
     )
 }
 
+func makeFPSState(
+    _ status: UserPaymentSettings.PaymentContract.ContractStatus
+) -> (
+    details: UserPaymentSettings.ContractDetails,
+    state: FastPaymentsSettingsState
+) {
+    let details = anyContractDetails(
+        paymentContract: anyPaymentContract(
+            contractStatus: status
+        )
+    )
+
+    let state = makeFPSState(.contracted(details))
+    
+    return (details, state)
+}
+
+func missingConsentSuccessFPSState(
+    _ consentList: UserPaymentSettings.ConsentList = anyConsentList()
+) -> FastPaymentsSettingsState {
+    
+    makeFPSState(.missingContract(.success(consentList)))
+}
+
+func connectivityErrorFPSState(
+    status: FastPaymentsSettingsState.Status? = nil
+) -> FastPaymentsSettingsState {
+    
+    .init(
+        userPaymentSettings: .failure(.connectivityError),
+        status: status
+    )
+}
+
+func serverErrorFPSState(
+    status: FastPaymentsSettingsState.Status? = nil
+) -> FastPaymentsSettingsState {
+    
+    .init(
+        userPaymentSettings: .failure(.serverError(UUID().uuidString)),
+        status: status
+    )
+}
+
 func anyContractedSettings(
     _ details: UserPaymentSettings.ContractDetails = anyContractDetails()
 ) -> UserPaymentSettings {
@@ -107,22 +151,6 @@ func anyUserPaymentSettingsProductProductID(
 ) -> Product.ProductID {
     
     .init(idRawValue)
-}
-
-func anyInactiveContractDetails(
-    consentResult: UserPaymentSettings.ConsentResult = .success(anyConsentList()),
-    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    product: Product = anyUserPaymentSettingsProduct()
-) -> UserPaymentSettings.ContractDetails {
-    
-    .init(
-        paymentContract: anyPaymentContract(
-            contractStatus: .inactive
-        ),
-        consentResult: consentResult,
-        bankDefault: bankDefault,
-        product: product
-    )
 }
 
 func anyPaymentContract(
