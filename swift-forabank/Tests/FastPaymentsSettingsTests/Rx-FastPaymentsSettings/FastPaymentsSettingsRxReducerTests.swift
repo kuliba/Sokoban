@@ -354,7 +354,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_inactive() {
         
         let inactive = contractedFastPaymentsSettingsState(.inactive).state
-
+        
         assert(inactive, contractUpdateConnectivityError(), effect: nil)
     }
     
@@ -1060,35 +1060,35 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_serverError() {
         
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
-
+        
         assert(serverError, .setBankDefaultPrepare(nil), reducedTo: serverError)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_serverError() {
         
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
-
+        
         assert(serverError, .setBankDefaultPrepare(nil), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
         
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
-
+        
         assert(serverError, .setBankDefaultPrepare(.connectivityError), reducedTo: serverError)
     }
     
     func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
         
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
-
+        
         assert(serverError, .setBankDefaultPrepare(.connectivityError), effect: nil)
     }
     
     func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_serverError() {
         
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
-
+        
         assert(serverError, setBankDefaultPrepareServerError(), reducedTo: serverError)
     }
     
@@ -1097,6 +1097,224 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let serverError = fastPaymentsSettingsState(serverErrorSettings())
         
         assert(serverError, setBankDefaultPrepareServerError(), effect: nil)
+    }
+    
+    // MARK: - resetStatus
+    
+    func test_resetStatus_shouldNotChangeEmptyState() {
+        
+        let empty = fastPaymentsSettingsState()
+        
+        assert(empty, .resetStatus, reducedTo: empty)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnEmptyState() {
+        
+        let empty = fastPaymentsSettingsState()
+        
+        assert(empty, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldSetStateToEmptyOnNonNilStatusWithNilSettings() {
+        
+        let withStatus = fastPaymentsSettingsState(
+            status: .confirmSetBankDefault
+        )
+        let empty = fastPaymentsSettingsState()
+        
+        assert(withStatus, .resetStatus, reducedTo: empty)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnOnNonNilStatusWithNilSettings() {
+        
+        let withStatus = fastPaymentsSettingsState(
+            status: .confirmSetBankDefault
+        )
+        
+        assert(withStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnActiveWithoutStatus() {
+        
+        let (_, activeWithoutStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: nil
+        )
+        
+        assert(activeWithoutStatus, .resetStatus, reducedTo: activeWithoutStatus)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnActiveWithoutStatus() {
+        
+        let (_, activeWithoutStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: nil
+        )
+        
+        assert(activeWithoutStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnActiveWithStatus() {
+        
+        let (details, activeWithStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: .confirmSetBankDefault
+        )
+        
+        assert(activeWithStatus, .resetStatus, reducedTo: .init(
+            userPaymentSettings: .contracted(details),
+            status: nil
+        ))
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnActiveWithStatus() {
+        
+        let (_, activeWithStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: .confirmSetBankDefault
+        )
+        
+        assert(activeWithStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnInactiveWithoutStatus() {
+        
+        let (_, inactiveWithoutStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: nil
+        )
+        
+        assert(inactiveWithoutStatus, .resetStatus, reducedTo: inactiveWithoutStatus)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnInactiveWithoutStatus() {
+        
+        let (_, inactiveWithoutStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: nil
+        )
+        
+        assert(inactiveWithoutStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnInactiveWithStatus() {
+        
+        let (details, inactiveWithStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: .confirmSetBankDefault
+        )
+        
+        assert(inactiveWithStatus, .resetStatus, reducedTo: .init(
+            userPaymentSettings: .contracted(details),
+            status: nil
+        ))
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnInactiveWithStatus() {
+        
+        let (_, inactiveWithStatus) = contractedFastPaymentsSettingsState(
+            .active,
+            status: .confirmSetBankDefault
+        )
+        
+        assert(inactiveWithStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnMissingWithoutStatus() {
+        
+        let missingWithoutStatus = missingConsentSuccessFPSState(status: nil)
+        
+        assert(missingWithoutStatus, .resetStatus, reducedTo: missingWithoutStatus)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnMissingWithoutStatus() {
+        
+        let missingWithoutStatus = missingConsentSuccessFPSState(status: nil)
+        
+        assert(missingWithoutStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnMissingWithStatus() {
+        
+        let settings = missingConsentSuccessSettings()
+        let missingWithStatus = fastPaymentsSettingsState(
+            settings,
+            status: .confirmSetBankDefault
+        )
+        
+        assert(missingWithStatus, .resetStatus, reducedTo: .init(
+            userPaymentSettings: settings,
+            status: nil
+        ))
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnMissingWithStatus() {
+        
+        let missingWithStatus = missingConsentSuccessFPSState(status: .confirmSetBankDefault)
+        
+        assert(missingWithStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnConnectivityErrorWithoutStatus() {
+        
+        let (_, withoutStatus) = connectivityError(status: nil)
+        
+        assert(withoutStatus, .resetStatus, reducedTo: withoutStatus)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnConnectivityErrorWithoutStatus() {
+        
+        let (_, withoutStatus) = connectivityError(status: nil)
+        
+        assert(withoutStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnConnectivityErrorWithStatus() {
+        
+        let (settings, withStatus) = connectivityError(status: .confirmSetBankDefault)
+        
+        assert(withStatus, .resetStatus, reducedTo: .init(
+            userPaymentSettings: settings,
+            status: nil
+        ))
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnConnectivityErrorWithStatus() {
+        
+        let (_, withStatus) = connectivityError(status: .confirmSetBankDefault)
+        
+        assert(withStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldNotChangeStateOnServerErrorWithoutStatus() {
+        
+        let (_, withoutStatus) = serverError(status: nil)
+        
+        assert(withoutStatus, .resetStatus, reducedTo: withoutStatus)
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnServerErrorWithoutStatus() {
+        
+        let (_, withoutStatus) = serverError(status: nil)
+        
+        assert(withoutStatus, .resetStatus, effect: nil)
+    }
+    
+    func test_resetStatus_shouldResetStatusOnServerErrorWithStatus() {
+        
+        let (settings, withStatus) = serverError(status: .confirmSetBankDefault)
+        
+        assert(withStatus, .resetStatus, reducedTo: .init(
+            userPaymentSettings: settings,
+            status: nil
+        ))
+    }
+    
+    func test_resetStatus_shouldNotDeliverEffectOnServerErrorWithStatus() {
+        
+        let (_, withStatus) = serverError(status: .confirmSetBankDefault)
+        
+        assert(withStatus, .resetStatus, effect: nil)
     }
     
     // MARK: - Helpers

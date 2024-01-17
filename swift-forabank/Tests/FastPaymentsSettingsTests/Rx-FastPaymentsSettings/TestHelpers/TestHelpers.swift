@@ -37,6 +37,22 @@ func anyMessage() -> String {
     UUID().uuidString
 }
 
+func connectivityError(
+    status: FastPaymentsSettingsState.Status? = nil
+) -> (
+    settings: UserPaymentSettings,
+    state: FastPaymentsSettingsState
+) {
+    let settings: UserPaymentSettings = .failure(.connectivityError)
+    
+    let state = FastPaymentsSettingsState(
+        userPaymentSettings: settings,
+        status: status
+    )
+    
+    return (settings, state)
+}
+
 func connectivityErrorFPSState(
     status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
@@ -69,18 +85,22 @@ func contractDetails(
 }
 
 func contractedFastPaymentsSettingsState(
-    _ status: UserPaymentSettings.PaymentContract.ContractStatus
+    _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    status: FastPaymentsSettingsState.Status? = nil
 ) -> (
     details: UserPaymentSettings.ContractDetails,
     state: FastPaymentsSettingsState
 ) {
     let details = contractDetails(
         paymentContract: paymentContract(
-            contractStatus: status
+            contractStatus: contractStatus
         )
     )
     
-    let state = fastPaymentsSettingsState(.contracted(details))
+    let state = fastPaymentsSettingsState(
+        .contracted(details), 
+        status: status
+    )
     
     return (details, state)
 }
@@ -167,10 +187,14 @@ func missingConsentSuccessSettings(
 }
 
 func missingConsentSuccessFPSState(
-    _ consentList: UserPaymentSettings.ConsentList = consentList()
+    _ consentList: UserPaymentSettings.ConsentList = consentList(),
+    status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
     
-    fastPaymentsSettingsState(.missingContract(.success(consentList)))
+    fastPaymentsSettingsState(
+        .missingContract(.success(consentList)),
+        status: status
+    )
 }
 
 func paymentContract(
@@ -202,6 +226,22 @@ func productUpdateSuccess() -> FastPaymentsSettingsEvent {
 func setBankDefaultPrepareServerError() -> FastPaymentsSettingsEvent {
     
     .setBankDefaultPrepare(.serverError(UUID().uuidString))
+}
+
+func serverError(
+    status: FastPaymentsSettingsState.Status? = nil
+) -> (
+    settings: UserPaymentSettings,
+    state: FastPaymentsSettingsState
+) {
+    let settings: UserPaymentSettings = .failure(.serverError(UUID().uuidString))
+    
+    let state = FastPaymentsSettingsState(
+        userPaymentSettings: settings,
+        status: status
+    )
+    
+    return (settings, state)
 }
 
 func serverErrorFPSState(

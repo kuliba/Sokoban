@@ -50,7 +50,8 @@ extension FastPaymentsSettingsRxReducer {
             state = update(state, with: failure)
             
         case .resetStatus:
-            fatalError("unimplemented")
+            state = resetStatus(state)
+            
         case .setBankDefault:
             fatalError("unimplemented")
         case .prepareSetBankDefault:
@@ -109,59 +110,6 @@ private extension FastPaymentsSettingsRxReducer {
         }
     }
     
-    func updateContract(
-        _ state: State,
-        with result: FastPaymentsSettingsEvent.ContractUpdateResult
-    ) -> State {
-        
-        switch state.userPaymentSettings {
-        case var .contracted(details):
-            switch result {
-            case let .success(contract):
-                details.paymentContract = contract
-                return .init(userPaymentSettings: .contracted(details))
-                
-            case .failure(.connectivityError):
-                var state = state
-                state.status = .connectivityError
-                return state
-                
-            case let .failure(.serverError(message)):
-                var state = state
-                state.status = .serverError(message)
-                return state
-            }
-            
-        case let .missingContract(consent):
-            switch result {
-            case let .success(contract):
-                guard let product = getProduct() else { return state }
-                
-                return .init(userPaymentSettings: .contracted(
-                    .init(
-                        paymentContract: contract,
-                        consentResult: consent,
-                        bankDefault: .offEnabled,
-                        product: product
-                    )
-                ))
-                
-            case .failure(.connectivityError):
-                var state = state
-                state.status = .connectivityError
-                return state
-                
-            case let .failure(.serverError(message)):
-                var state = state
-                state.status = .serverError(message)
-                return state
-            }
-            
-        default:
-            return state
-        }
-    }
-    
     func deactivateContract(
         _ state: State
     ) -> (State, Effect?) {
@@ -195,6 +143,16 @@ private extension FastPaymentsSettingsRxReducer {
     ) -> State {
         
         .init(userPaymentSettings: userPaymentSettings)
+    }
+    
+    func resetStatus(
+        _ state: State
+    ) -> State {
+        
+        var state = state
+        state.status = nil
+        
+        return state
     }
     
     func update(
@@ -251,6 +209,60 @@ private extension FastPaymentsSettingsRxReducer {
             return state
         }
     }
+    
+    func updateContract(
+        _ state: State,
+        with result: FastPaymentsSettingsEvent.ContractUpdateResult
+    ) -> State {
+        
+        switch state.userPaymentSettings {
+        case var .contracted(details):
+            switch result {
+            case let .success(contract):
+                details.paymentContract = contract
+                return .init(userPaymentSettings: .contracted(details))
+                
+            case .failure(.connectivityError):
+                var state = state
+                state.status = .connectivityError
+                return state
+                
+            case let .failure(.serverError(message)):
+                var state = state
+                state.status = .serverError(message)
+                return state
+            }
+            
+        case let .missingContract(consent):
+            switch result {
+            case let .success(contract):
+                guard let product = getProduct() else { return state }
+                
+                return .init(userPaymentSettings: .contracted(
+                    .init(
+                        paymentContract: contract,
+                        consentResult: consent,
+                        bankDefault: .offEnabled,
+                        product: product
+                    )
+                ))
+                
+            case .failure(.connectivityError):
+                var state = state
+                state.status = .connectivityError
+                return state
+                
+            case let .failure(.serverError(message)):
+                var state = state
+                state.status = .serverError(message)
+                return state
+            }
+            
+        default:
+            return state
+        }
+    }
+    
 }
 
 // MARK: - Helpers
