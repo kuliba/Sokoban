@@ -43,48 +43,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(nonEmpty, .appear, effect: .getSettings)
     }
     
-    // MARK: - loadedSettings
-    
-    func test_loadedSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
-        
-        let state = fastPaymentsSettingsState(status: .inflight)
-        let loaded = contractedSettings()
-        
-        assert(state, .loadedSettings(loaded), reducedTo: .init(
-            userPaymentSettings: loaded,
-            status: nil
-        ))
-    }
-    
-    func test_loadedSettings_shouldNotDeliverEffect_emptyState() {
-        
-        let state = fastPaymentsSettingsState(status: .inflight)
-        let loaded = contractedSettings()
-        
-        assert(state, .loadedSettings(loaded), effect: nil)
-    }
-    
-    func test_loadedSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
-        
-        let contracted = contractedSettings()
-        let loaded = contractedSettings()
-        let state = fastPaymentsSettingsState(contracted, status: .inflight)
-        
-        assert(state, .loadedSettings(loaded), reducedTo: .init(
-            userPaymentSettings: loaded,
-            status: nil
-        ))
-    }
-    
-    func test_loadedSettings_shouldNotDeliverEffect_nonEmptyState() {
-        
-        let contracted = contractedSettings()
-        let loaded = contractedSettings()
-        let state = fastPaymentsSettingsState(contracted, status: .inflight)
-        
-        assert(state, .loadedSettings(loaded), effect: nil)
-    }
-    
     // MARK: - activateContract
     
     func test_activateContract_shouldNotChangeStateOnEmpty() {
@@ -325,337 +283,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(serverError, .collapseProducts, effect: nil)
     }
     
-    // MARK: - contractUpdate
-    
-    func test_contractUpdate_shouldSetContractOnSuccess_active() {
-        
-        let (details, activeContract) = contractedState(.active)
-        let newContract = paymentContract()
-        
-        assert(
-            activeContract,
-            contractUpdateSuccess(newContract),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: newContract,
-                    consentResult: details.consentResult,
-                    bankDefault: details.bankDefault,
-                    productSelector: details.productSelector
-                ))
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnSuccess_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, contractUpdateSuccess(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_active() {
-        
-        let (details, active) = contractedState(.active)
-        let event = contractUpdateConnectivityError()
-        
-        assert(
-            active,
-            event,
-            reducedTo: .init(
-                userPaymentSettings: .contracted(details),
-                status: .connectivityError
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, contractUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_active() {
-        
-        let message = anyMessage()
-        let (details, active) = contractedState(.active)
-        
-        assert(
-            active,
-            contractUpdateServerError(message),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(details),
-                status: .serverError(message)
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, contractUpdateServerError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetContractOnSuccess_inactive() {
-        
-        let (details, inactive) = contractedState(.inactive)
-        let newContract = paymentContract()
-        
-        assert(
-            inactive,
-            contractUpdateSuccess(newContract),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: newContract,
-                    consentResult: details.consentResult,
-                    bankDefault: details.bankDefault,
-                    productSelector: details.productSelector
-                ))
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnSuccess_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, contractUpdateSuccess(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_inactive() {
-        
-        let (details, inactive) = contractedState(.inactive)
-        
-        assert(
-            inactive,
-            contractUpdateConnectivityError(),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(details),
-                status: .connectivityError
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, contractUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_inactive() {
-        
-        let message = anyMessage()
-        let (details, inactive) = contractedState(.inactive)
-        
-        assert(
-            inactive,
-            contractUpdateServerError(message),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(details),
-                status: .serverError(message)
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, contractUpdateServerError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetContractOnSuccess_missing() {
-        
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
-        let (product1, product2) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: product2.id)
-        let sut = makeSUT(products: [product1, product2])
-        
-        assert(
-            sut: sut,
-            missing,
-            contractUpdateSuccess(newContract),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: newContract,
-                    consentResult: consentResult,
-                    bankDefault: .offEnabled,
-                    productSelector: .init(
-                        selectedProduct: product2,
-                        products: [product1, product2]
-                    )
-                ))
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldSetContractAndSelectorWithoutSelectedProductOnSuccessAndMissingProduct_missing() {
-        
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
-        let (product1, product2) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: product2.id)
-        let sut = makeSUT(products: [product1])
-        
-        assert(
-            sut: sut,
-            missing,
-            contractUpdateSuccess(newContract),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: newContract,
-                    consentResult: consentResult,
-                    bankDefault: .offEnabled,
-                    productSelector: .init(
-                        selectedProduct: nil,
-                        products: [product1]
-                    )
-                ))
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnSuccess_missing() {
-        
-        let missing = missingConsentSuccessSettings()
-        
-        assert(missing, contractUpdateSuccess(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToConnectivityErrorOnConnectivityFailure_missing() {
-        
-        let missing = missingConsentFailureSettings()
-        let product = makeProduct()
-        let sut = makeSUT(products: [product])
-        let event = contractUpdateConnectivityError()
-        
-        assert(
-            sut: sut, missing, event,
-            reducedTo: .init(
-                userPaymentSettings: missing,
-                status: .connectivityError
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_missing() {
-        
-        let missing = missingConsentSuccessSettings()
-        
-        assert(missing, contractUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldSetStatusToServerErrorOnServerErrorFailure_missing() {
-        
-        let message = anyMessage()
-        let missing = missingConsentFailureSettings()
-        let product = makeProduct()
-        let sut = makeSUT(products: [product])
-        let event = contractUpdateServerError(message)
-        
-        assert(
-            sut: sut, missing, event,
-            reducedTo: .init(
-                userPaymentSettings: missing,
-                status: .serverError(message)
-            )
-        )
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessSettings()
-        
-        assert(missing, contractUpdateServerError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateSuccess(), reducedTo: connectivityError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateSuccess(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnConnectivityFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateConnectivityError(), reducedTo: connectivityError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateServerError(), reducedTo: connectivityError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, contractUpdateServerError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateSuccess(), reducedTo: serverError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateSuccess(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnConnectivityFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateConnectivityError(), reducedTo: serverError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnConnectivityFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_contractUpdate_shouldNotChangeStateOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateServerError(), reducedTo: serverError)
-    }
-    
-    func test_contractUpdate_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, contractUpdateServerError(), effect: nil)
-    }
-    
     // MARK: - deactivateContract
     
     func test_deactivateContract_shouldChangeStatusToInflightOnActive() {
@@ -820,6 +447,48 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let serverError = serverErrorFPSState()
         
         assert(serverError, .expandProducts, effect: nil)
+    }
+    
+    // MARK: - loadSettings
+    
+    func test_loadSettings_shouldSetStateToSettingsWithoutStatus_emptyState() {
+        
+        let state = fastPaymentsSettingsState(status: .inflight)
+        let loaded = contractedSettings()
+        
+        assert(state, .loadSettings(loaded), reducedTo: .init(
+            userPaymentSettings: loaded,
+            status: nil
+        ))
+    }
+    
+    func test_loadSettings_shouldNotDeliverEffect_emptyState() {
+        
+        let state = fastPaymentsSettingsState(status: .inflight)
+        let loaded = contractedSettings()
+        
+        assert(state, .loadSettings(loaded), effect: nil)
+    }
+    
+    func test_loadSettings_shouldSetStateToLoadedSettingsWithoutStatus_nonEmptyState() {
+        
+        let contracted = contractedSettings()
+        let loaded = contractedSettings()
+        let state = fastPaymentsSettingsState(contracted, status: .inflight)
+        
+        assert(state, .loadSettings(loaded), reducedTo: .init(
+            userPaymentSettings: loaded,
+            status: nil
+        ))
+    }
+    
+    func test_loadSettings_shouldNotDeliverEffect_nonEmptyState() {
+        
+        let contracted = contractedSettings()
+        let loaded = contractedSettings()
+        let state = fastPaymentsSettingsState(contracted, status: .inflight)
+        
+        assert(state, .loadSettings(loaded), effect: nil)
     }
     
     // MARK: - prepareSetBankDefault
@@ -1019,587 +688,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let serverError = serverErrorFPSState()
         
         assert(serverError, .prepareSetBankDefault, effect: nil)
-    }
-    
-    // MARK: - productUpdate
-    
-    func test_productUpdate_shouldSetProductOnSuccess_active() {
-        
-        let newProduct = makeProduct()
-        let (details, active) = contractedState(.active)
-        
-        assert(
-            active,
-            .productUpdate(.success(newProduct)),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: details.paymentContract,
-                    consentResult: details.consentResult,
-                    bankDefault: details.bankDefault,
-                    productSelector: details.productSelector.selected(product: newProduct)
-                ))
-            )
-        )
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnSuccess_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, productUpdateSuccess(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldSetStatusOnConnectivityErrorFailure_active() {
-        
-        let active = activeContractSettings()
-        
-        assert(
-            active,
-            productUpdateConnectivityError(),
-            reducedTo: .init(
-                userPaymentSettings: active,
-                status: .connectivityError
-            )
-        )
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, productUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldSetStatusOnServerErrorFailure_active() {
-        
-        let message = anyMessage()
-        let active = activeContractSettings()
-        
-        assert(
-            active,
-            .productUpdate(.failure(.serverError(message))),
-            reducedTo: .init(
-                userPaymentSettings: active,
-                status: .serverError(message)
-            )
-        )
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, productUpdateServerError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnSuccess_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateSuccess(), reducedTo: inactive)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnSuccess_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateSuccess(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateConnectivityError(), reducedTo: inactive)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateServerError(), reducedTo: inactive)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, productUpdateServerError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnSuccess_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateSuccess(), reducedTo: missing)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnSuccess_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateSuccess(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateConnectivityError(), reducedTo: missing)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateServerError(), reducedTo: missing)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, productUpdateServerError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateSuccess(), reducedTo: connectivityError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateSuccess(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateConnectivityError(), reducedTo: connectivityError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateServerError(), reducedTo: connectivityError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, productUpdateServerError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateSuccess(), reducedTo: serverError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateSuccess(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateConnectivityError(), reducedTo: serverError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateConnectivityError(), effect: nil)
-    }
-    
-    func test_productUpdate_shouldNotChangeStateOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateServerError(), reducedTo: serverError)
-    }
-    
-    func test_productUpdate_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, productUpdateServerError(), effect: nil)
-    }
-    
-    // MARK: - setBankDefault
-    
-    func test_setBankDefault_shouldSetStatusOnActive_offEnabled() {
-        
-        let (details, active) = contractedState(.active, bankDefault: .offEnabled)
-        
-        assert(active, .setBankDefault, reducedTo: .init(
-            userPaymentSettings: .contracted(details),
-            status: .setBankDefault
-        ))
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnActive_offEnabled() {
-        
-        let (_, active) = contractedState(.active, bankDefault: .offEnabled)
-        
-        assert(active, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnActive_offDisabled() {
-        
-        let (_, active) = contractedState(.active, bankDefault: .offDisabled)
-        
-        assert(active, .setBankDefault, reducedTo: active)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnActive_offDisabled() {
-        
-        let (_, active) = contractedState(.active, bankDefault: .offDisabled)
-        
-        assert(active, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnActive_onDisabled() {
-        
-        let (_, active) = contractedState(.active, bankDefault: .onDisabled)
-        
-        assert(active, .setBankDefault, reducedTo: active)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnActive_onDisabled() {
-        
-        let (_, active) = contractedState(.active, bankDefault: .onDisabled)
-        
-        assert(active, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnInactive() {
-        
-        let (_, inactive) = contractedState(.inactive)
-        
-        assert(inactive, .setBankDefault, reducedTo: inactive)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnInactive() {
-        
-        let (_, inactive) = contractedState(.inactive)
-        
-        assert(inactive, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefault, reducedTo: missing)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnConnectivityError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefault, reducedTo: serverError)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnConnectivityError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefault, effect: nil)
-    }
-    
-    func test_setBankDefault_shouldNotChangeStateOnServerError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefault, reducedTo: serverError)
-    }
-    
-    func test_setBankDefault_shouldNotDeliverEffectOnServerError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefault, effect: nil)
-    }
-    
-    // MARK: - setBankDefaultPrepare
-    
-    func test_setBankDefaultPrepare_shouldSetBankDefaultAndInformerOnSuccess_active() {
-        
-        let (details, active) = contractedState(.active)
-        
-        assert(
-            active,
-            .setBankDefaultPrepare(nil),
-            reducedTo: .init(
-                userPaymentSettings: .contracted(.init(
-                    paymentContract: details.paymentContract,
-                    consentResult: details.consentResult,
-                    bankDefault: .onDisabled,
-                    productSelector: details.productSelector
-                )),
-                status: .setBankDefaultSuccess
-            )
-        )
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_active() {
-        
-        let active = contractedState(.active).state
-        
-        assert(active, .setBankDefaultPrepare(nil), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldSetStatusOnConnectivityErrorFailure_active() {
-        
-        let active = activeContractSettings()
-        
-        assert(
-            active,
-            .setBankDefaultPrepare(.connectivityError),
-            reducedTo: .init(
-                userPaymentSettings: active,
-                status: .connectivityError
-            )
-        )
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
-        
-        let active = activeContractSettings()
-        
-        assert(active, .setBankDefaultPrepare(.connectivityError), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldSetStatusOnServerErrorFailure_active() {
-        
-        let message = anyMessage()
-        let active = activeContractSettings()
-        
-        assert(
-            active,
-            .setBankDefaultPrepare(.serverError(message)),
-            reducedTo: .init(
-                userPaymentSettings: active,
-                status: .serverError(message)
-            )
-        )
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_active() {
-        
-        let active = activeContractSettings()
-        
-        assert(active, setBankDefaultPrepareServerError(), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, .setBankDefaultPrepare(nil), reducedTo: inactive)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, .setBankDefaultPrepare(nil), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, .setBankDefaultPrepare(.connectivityError), reducedTo: inactive)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, .setBankDefaultPrepare(.connectivityError), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, setBankDefaultPrepareServerError(), reducedTo: inactive)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(inactive, setBankDefaultPrepareServerError(), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefaultPrepare(nil), reducedTo: missing)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefaultPrepare(nil), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefaultPrepare(.connectivityError), reducedTo: missing)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, .setBankDefaultPrepare(.connectivityError), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, setBankDefaultPrepareServerError(), reducedTo: missing)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_missing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(missing, setBankDefaultPrepareServerError(), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, .setBankDefaultPrepare(nil), reducedTo: connectivityError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, .setBankDefaultPrepare(nil), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, .setBankDefaultPrepare(.connectivityError), reducedTo: connectivityError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, .setBankDefaultPrepare(.connectivityError), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, setBankDefaultPrepareServerError(), reducedTo: connectivityError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(connectivityError, setBankDefaultPrepareServerError(), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefaultPrepare(nil), reducedTo: serverError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnSuccess_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefaultPrepare(nil), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefaultPrepare(.connectivityError), reducedTo: serverError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, .setBankDefaultPrepare(.connectivityError), effect: nil)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotChangeStateOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, setBankDefaultPrepareServerError(), reducedTo: serverError)
-    }
-    
-    func test_setBankDefaultPrepare_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(serverError, setBankDefaultPrepareServerError(), effect: nil)
     }
     
     // MARK: - resetStatus
@@ -1818,6 +906,918 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (_, withStatus) = serverError(status: .confirmSetBankDefault)
         
         assert(withStatus, .resetStatus, effect: nil)
+    }
+    
+    // MARK: - setBankDefault
+    
+    func test_setBankDefault_shouldSetStatusOnActive_offEnabled() {
+        
+        let (details, active) = contractedState(.active, bankDefault: .offEnabled)
+        
+        assert(active, .setBankDefault, reducedTo: .init(
+            userPaymentSettings: .contracted(details),
+            status: .setBankDefault
+        ))
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnActive_offEnabled() {
+        
+        let (_, active) = contractedState(.active, bankDefault: .offEnabled)
+        
+        assert(active, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnActive_offDisabled() {
+        
+        let (_, active) = contractedState(.active, bankDefault: .offDisabled)
+        
+        assert(active, .setBankDefault, reducedTo: active)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnActive_offDisabled() {
+        
+        let (_, active) = contractedState(.active, bankDefault: .offDisabled)
+        
+        assert(active, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnActive_onDisabled() {
+        
+        let (_, active) = contractedState(.active, bankDefault: .onDisabled)
+        
+        assert(active, .setBankDefault, reducedTo: active)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnActive_onDisabled() {
+        
+        let (_, active) = contractedState(.active, bankDefault: .onDisabled)
+        
+        assert(active, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnInactive() {
+        
+        let (_, inactive) = contractedState(.inactive)
+        
+        assert(inactive, .setBankDefault, reducedTo: inactive)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnInactive() {
+        
+        let (_, inactive) = contractedState(.inactive)
+        
+        assert(inactive, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefault, reducedTo: missing)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnConnectivityError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefault, reducedTo: serverError)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnConnectivityError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefault, effect: nil)
+    }
+    
+    func test_setBankDefault_shouldNotChangeStateOnServerError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefault, reducedTo: serverError)
+    }
+    
+    func test_setBankDefault_shouldNotDeliverEffectOnServerError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefault, effect: nil)
+    }
+    
+    // MARK: - setBankDefaultPrepared
+    
+    func test_setBankDefaultPrepared_shouldSetBankDefaultAndInformerOnSuccess_active() {
+        
+        let (details, active) = contractedState(.active)
+        
+        assert(
+            active,
+            .setBankDefaultPrepared(nil),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: details.paymentContract,
+                    consentResult: details.consentResult,
+                    bankDefault: .onDisabled,
+                    productSelector: details.productSelector
+                )),
+                status: .setBankDefaultSuccess
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, .setBankDefaultPrepared(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldSetStatusOnConnectivityErrorFailure_active() {
+        
+        let active = activeContractSettings()
+        
+        assert(
+            active,
+            .setBankDefaultPrepared(.connectivityError),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
+        
+        let active = activeContractSettings()
+        
+        assert(active, .setBankDefaultPrepared(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldSetStatusOnServerErrorFailure_active() {
+        
+        let message = anyMessage()
+        let active = activeContractSettings()
+        
+        assert(
+            active,
+            .setBankDefaultPrepared(.serverError(message)),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_active() {
+        
+        let active = activeContractSettings()
+        
+        assert(active, setBankDefaultPreparedServerError(), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .setBankDefaultPrepared(nil), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .setBankDefaultPrepared(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .setBankDefaultPrepared(.connectivityError), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .setBankDefaultPrepared(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, setBankDefaultPreparedServerError(), reducedTo: inactive)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, setBankDefaultPreparedServerError(), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefaultPrepared(nil), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefaultPrepared(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefaultPrepared(.connectivityError), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .setBankDefaultPrepared(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, setBankDefaultPreparedServerError(), reducedTo: missing)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, setBankDefaultPreparedServerError(), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .setBankDefaultPrepared(nil), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .setBankDefaultPrepared(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .setBankDefaultPrepared(.connectivityError), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .setBankDefaultPrepared(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, setBankDefaultPreparedServerError(), reducedTo: connectivityError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, setBankDefaultPreparedServerError(), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefaultPrepared(nil), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefaultPrepared(nil), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefaultPrepared(.connectivityError), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .setBankDefaultPrepared(.connectivityError), effect: nil)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, setBankDefaultPreparedServerError(), reducedTo: serverError)
+    }
+    
+    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, setBankDefaultPreparedServerError(), effect: nil)
+    }
+    
+    // MARK: - updateContract
+    
+    func test_updateContract_shouldSetContractOnSuccess_active() {
+        
+        let (details, activeContract) = contractedState(.active)
+        let newContract = paymentContract()
+        
+        assert(
+            activeContract,
+            updateContractSuccess(newContract),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: newContract,
+                    consentResult: details.consentResult,
+                    bankDefault: details.bankDefault,
+                    productSelector: details.productSelector
+                ))
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnSuccess_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateContractSuccess(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToConnectivityErrorOnConnectivityFailure_active() {
+        
+        let (details, active) = contractedState(.active)
+        let event = updateContractConnectivityError()
+        
+        assert(
+            active,
+            event,
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details),
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnConnectivityFailure_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateContractConnectivityError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToServerErrorOnServerErrorFailure_active() {
+        
+        let message = anyMessage()
+        let (details, active) = contractedState(.active)
+        
+        assert(
+            active,
+            updateContractServerError(message),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details),
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnServerErrorFailure_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateContractServerError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetContractOnSuccess_inactive() {
+        
+        let (details, inactive) = contractedState(.inactive)
+        let newContract = paymentContract()
+        
+        assert(
+            inactive,
+            updateContractSuccess(newContract),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: newContract,
+                    consentResult: details.consentResult,
+                    bankDefault: details.bankDefault,
+                    productSelector: details.productSelector
+                ))
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnSuccess_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateContractSuccess(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToConnectivityErrorOnConnectivityFailure_inactive() {
+        
+        let (details, inactive) = contractedState(.inactive)
+        
+        assert(
+            inactive,
+            updateContractConnectivityError(),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details),
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnConnectivityFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateContractConnectivityError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToServerErrorOnServerErrorFailure_inactive() {
+        
+        let message = anyMessage()
+        let (details, inactive) = contractedState(.inactive)
+        
+        assert(
+            inactive,
+            updateContractServerError(message),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(details),
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateContractServerError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetContractOnSuccess_missing() {
+        
+        let consentResult = consentResultFailure()
+        let missing = missingContract(consentResult)
+        let (product1, product2) = (makeProduct(), makeProduct())
+        let newContract = paymentContract(productID: product2.id)
+        let sut = makeSUT(products: [product1, product2])
+        
+        assert(
+            sut: sut,
+            missing,
+            updateContractSuccess(newContract),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: newContract,
+                    consentResult: consentResult,
+                    bankDefault: .offEnabled,
+                    productSelector: .init(
+                        selectedProduct: product2,
+                        products: [product1, product2]
+                    )
+                ))
+            )
+        )
+    }
+    
+    func test_updateContract_shouldSetContractAndSelectorWithoutSelectedProductOnSuccessAndMissingProduct_missing() {
+        
+        let consentResult = consentResultFailure()
+        let missing = missingContract(consentResult)
+        let (product1, product2) = (makeProduct(), makeProduct())
+        let newContract = paymentContract(productID: product2.id)
+        let sut = makeSUT(products: [product1])
+        
+        assert(
+            sut: sut,
+            missing,
+            updateContractSuccess(newContract),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: newContract,
+                    consentResult: consentResult,
+                    bankDefault: .offEnabled,
+                    productSelector: .init(
+                        selectedProduct: nil,
+                        products: [product1]
+                    )
+                ))
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnSuccess_missing() {
+        
+        let missing = missingConsentSuccessSettings()
+        
+        assert(missing, updateContractSuccess(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToConnectivityErrorOnConnectivityFailure_missing() {
+        
+        let missing = missingConsentFailureSettings()
+        let product = makeProduct()
+        let sut = makeSUT(products: [product])
+        let event = updateContractConnectivityError()
+        
+        assert(
+            sut: sut, missing, event,
+            reducedTo: .init(
+                userPaymentSettings: missing,
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnConnectivityFailure_missing() {
+        
+        let missing = missingConsentSuccessSettings()
+        
+        assert(missing, updateContractConnectivityError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldSetStatusToServerErrorOnServerErrorFailure_missing() {
+        
+        let message = anyMessage()
+        let missing = missingConsentFailureSettings()
+        let product = makeProduct()
+        let sut = makeSUT(products: [product])
+        let event = updateContractServerError(message)
+        
+        assert(
+            sut: sut, missing, event,
+            reducedTo: .init(
+                userPaymentSettings: missing,
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnServerErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessSettings()
+        
+        assert(missing, updateContractServerError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractSuccess(), reducedTo: connectivityError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractSuccess(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnConnectivityFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractConnectivityError(), reducedTo: connectivityError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnConnectivityFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractConnectivityError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractServerError(), reducedTo: connectivityError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateContractServerError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractSuccess(), reducedTo: serverError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractSuccess(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnConnectivityFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractConnectivityError(), reducedTo: serverError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnConnectivityFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractConnectivityError(), effect: nil)
+    }
+    
+    func test_updateContract_shouldNotChangeStateOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractServerError(), reducedTo: serverError)
+    }
+    
+    func test_updateContract_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateContractServerError(), effect: nil)
+    }
+    
+    // MARK: - updateProduct
+    
+    func test_updateProduct_shouldSetProductOnSuccess_active() {
+        
+        let newProduct = makeProduct()
+        let (details, active) = contractedState(.active)
+        
+        assert(
+            active,
+            .updateProduct(.success(newProduct)),
+            reducedTo: .init(
+                userPaymentSettings: .contracted(.init(
+                    paymentContract: details.paymentContract,
+                    consentResult: details.consentResult,
+                    bankDefault: details.bankDefault,
+                    productSelector: details.productSelector.selected(product: newProduct)
+                ))
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldSetStatusOnConnectivityErrorFailure_active() {
+        
+        let active = activeContractSettings()
+        
+        assert(
+            active,
+            updateProductConnectivityError(),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .connectivityError
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldSetStatusOnServerErrorFailure_active() {
+        
+        let message = anyMessage()
+        let active = activeContractSettings()
+        
+        assert(
+            active,
+            .updateProduct(.failure(.serverError(message))),
+            reducedTo: .init(
+                userPaymentSettings: active,
+                status: .serverError(message)
+            )
+        )
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_active() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, updateProductServerError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnSuccess_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductSuccess(), reducedTo: inactive)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductConnectivityError(), reducedTo: inactive)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnServerErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductServerError(), reducedTo: inactive)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, updateProductServerError(), effect: nil)
+    }
+    
+    func test_productUpdate_shouldNotChangeStateOnSuccess_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductSuccess(), reducedTo: missing)
+    }
+    
+    func test_productUpdate_shouldNotDeliverEffectOnSuccess_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_productUpdate_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductConnectivityError(), reducedTo: missing)
+    }
+    
+    func test_productUpdate_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnServerErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductServerError(), reducedTo: missing)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_missing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, updateProductServerError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductSuccess(), reducedTo: connectivityError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductConnectivityError(), reducedTo: connectivityError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductServerError(), reducedTo: connectivityError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, updateProductServerError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductSuccess(), reducedTo: serverError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnSuccess_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductSuccess(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductConnectivityError(), reducedTo: serverError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductConnectivityError(), effect: nil)
+    }
+    
+    func test_updateProduct_shouldNotChangeStateOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductServerError(), reducedTo: serverError)
+    }
+    
+    func test_updateProduct_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, updateProductServerError(), effect: nil)
     }
     
     // MARK: - Helpers

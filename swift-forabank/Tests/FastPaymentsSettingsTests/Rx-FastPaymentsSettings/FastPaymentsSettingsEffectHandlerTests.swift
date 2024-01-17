@@ -39,7 +39,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let activatedContract = activePaymentContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .updateContract(.success(activatedContract)), on: {
             
             updateContractSpy.complete(with: .success(activatedContract))
         })
@@ -50,7 +50,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let targetContract = fastPaymentsSettingsEffectTargetContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .updateContract(.failure(.connectivityError)), on: {
             
             updateContractSpy.complete(with: .failure(.connectivityError))
         })
@@ -62,7 +62,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .activateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+        expect(sut, with: .activateContract(targetContract), toDeliver: .updateContract(.failure(.serverError(message))), on: {
             
             updateContractSpy.complete(with: .failure(.serverError(message)))
         })
@@ -86,7 +86,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let activatedContract = activePaymentContract()
         let (sut, _,_,_, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+        expect(sut, with: .createContract(productID), toDeliver: .updateContract(.success(activatedContract)), on: {
             
             createContractSpy.complete(with: .success(activatedContract))
         })
@@ -97,7 +97,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let productID = anyEffectProductID()
         let (sut, _,_,_, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+        expect(sut, with: .createContract(productID), toDeliver: .updateContract(.failure(.connectivityError)), on: {
             
             createContractSpy.complete(with: .failure(.connectivityError))
         })
@@ -109,7 +109,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _,_,_, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: .createContract(productID), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+        expect(sut, with: .createContract(productID), toDeliver: .updateContract(.failure(.serverError(message))), on: {
             
             createContractSpy.complete(with: .failure(.serverError(message)))
         })
@@ -133,7 +133,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let activatedContract = activePaymentContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.success(activatedContract)), on: {
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .updateContract(.success(activatedContract)), on: {
             
             updateContractSpy.complete(with: .success(activatedContract))
         })
@@ -144,7 +144,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let targetContract = fastPaymentsSettingsEffectTargetContract()
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.failure(.connectivityError)), on: {
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .updateContract(.failure(.connectivityError)), on: {
             
             updateContractSpy.complete(with: .failure(.connectivityError))
         })
@@ -156,7 +156,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _, updateContractSpy, _,_,_) = makeSUT()
         
-        expect(sut, with: .deactivateContract(targetContract), toDeliver: .contractUpdate(.failure(.serverError(message))), on: {
+        expect(sut, with: .deactivateContract(targetContract), toDeliver: .updateContract(.failure(.serverError(message))), on: {
             
             updateContractSpy.complete(with: .failure(.serverError(message)))
         })
@@ -169,7 +169,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let contracted = contractedSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedSettings(contracted), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadSettings(contracted), on: {
             
             getSettingsSpy.complete(with: contracted)
         })
@@ -180,7 +180,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let missingSuccess = missingConsentSuccessSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingSuccess), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadSettings(missingSuccess), on: {
             
             getSettingsSpy.complete(with: missingSuccess)
         })
@@ -191,7 +191,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let missingFailure = missingConsentFailureSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedSettings(missingFailure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadSettings(missingFailure), on: {
             
             getSettingsSpy.complete(with: missingFailure)
         })
@@ -202,7 +202,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let failure: UserPaymentSettings = .failure(.connectivityError)
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })
@@ -213,7 +213,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let failure = serverErrorSettings()
         let (sut, getSettingsSpy, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .getSettings, toDeliver: .loadedSettings(failure), on: {
+        expect(sut, with: .getSettings, toDeliver: .loadSettings(failure), on: {
             
             getSettingsSpy.complete(with: failure)
         })
@@ -225,7 +225,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         
         let (sut, _,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(nil), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepared(nil), on: {
             
             prepareSetBankDefaultSpy.complete(with: .success(()))
         })
@@ -235,7 +235,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         
         let (sut, _,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(.connectivityError), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepared(.connectivityError), on: {
             
             prepareSetBankDefaultSpy.complete(with: .failure(.connectivityError))
         })
@@ -246,7 +246,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepare(.serverError(message)), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: .setBankDefaultPrepared(.serverError(message)), on: {
             
             prepareSetBankDefaultSpy.complete(with: .failure(.serverError(message)))
         })
@@ -270,7 +270,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let payload = updateProductPayload(product: product)
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.success(product)), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.success(product)), on: {
             
             updateProductSpy.complete(with: .success(()))
         })
@@ -281,7 +281,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let payload = updateProductPayload()
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.failure(.connectivityError)), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.failure(.connectivityError)), on: {
             
             updateProductSpy.complete(with: .failure(.connectivityError))
         })
@@ -293,7 +293,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .productUpdate(.failure(.serverError(message))), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.failure(.serverError(message))), on: {
             
             updateProductSpy.complete(with: .failure(.serverError(message)))
         })

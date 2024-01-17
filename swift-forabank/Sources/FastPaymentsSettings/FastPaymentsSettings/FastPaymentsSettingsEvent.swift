@@ -9,18 +9,25 @@ import Tagged
 
 public enum FastPaymentsSettingsEvent: Equatable {
     
-    case activateContract
+    // General Settings
     case appear
-    case collapseProducts
-    case contractUpdate(ContractUpdateResult)
-    case deactivateContract
-    case expandProducts
-    case loadedSettings(UserPaymentSettings)
-    case prepareSetBankDefault
-    case productUpdate(ProductUpdateResult)
+    case loadSettings(UserPaymentSettings)
     case resetStatus
-    case setBankDefaultPrepare(Failure?)
+    
+    // BankDefault - need better naming in this section
+    case prepareSetBankDefault
     case setBankDefault
+    case setBankDefaultPrepared(Failure?) // ???
+    
+    // Contract
+    case activateContract
+    case deactivateContract
+    case updateContract(ContractUpdateResult)
+    
+    // Products
+    case collapseProducts
+    case expandProducts
+    case updateProduct(ProductUpdateResult)
 }
 
 public extension FastPaymentsSettingsEvent {

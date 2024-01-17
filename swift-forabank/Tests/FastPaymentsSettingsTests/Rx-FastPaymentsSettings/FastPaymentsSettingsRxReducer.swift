@@ -37,7 +37,7 @@ extension FastPaymentsSettingsRxReducer {
         case .collapseProducts:
             state = collapseProducts(state)
             
-        case let .contractUpdate(result):
+        case let .updateContract(result):
             state = updateContract(state, with: result)
             
         case .deactivateContract:
@@ -46,13 +46,10 @@ extension FastPaymentsSettingsRxReducer {
         case .expandProducts:
             state = expandProducts(state)
             
-        case let .loadedSettings(settings):
-            state = handleLoadedSettings(settings)
-            
         case .prepareSetBankDefault:
             (state, effect) = prepareSetBankDefault(state)
             
-        case let .productUpdate(result):
+        case let .updateProduct(result):
             state = update(state, with: result)
             
         case .resetStatus:
@@ -61,8 +58,11 @@ extension FastPaymentsSettingsRxReducer {
         case .setBankDefault:
             state = setBankDefault(state)
             
-        case let .setBankDefaultPrepare(failure):
+        case let .setBankDefaultPrepared(failure):
             state = update(state, with: failure)
+            
+        case let .loadSettings(settings):
+            state = handleLoadedSettings(settings)
         }
         
         return (state, effect)

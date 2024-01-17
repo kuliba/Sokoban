@@ -154,25 +154,6 @@ func contractedState(
     return (details, state)
 }
 
-func contractUpdateConnectivityError() -> FastPaymentsSettingsEvent {
-    
-    .contractUpdate(.failure(.connectivityError))
-}
-
-func contractUpdateServerError(
-    _ message: String = anyMessage()
-) -> FastPaymentsSettingsEvent {
-    
-    .contractUpdate(.failure(.serverError(message)))
-}
-
-func contractUpdateSuccess(
-    _ contract: UserPaymentSettings.PaymentContract = paymentContract()
-) -> FastPaymentsSettingsEvent {
-    
-    .contractUpdate(.success(contract))
-}
-
 func fastPaymentsSettingsEffectTargetContract(
     contractID: FastPaymentsSettingsEffect.ContractCore.ContractID = .init(generateRandom11DigitNumber()),
     product: Product = makeProduct(),
@@ -223,7 +204,7 @@ func makeProductSelector(
 ) -> UserPaymentSettings.ProductSelector {
     
     .init(
-        selectedProduct: selected, 
+        selectedProduct: selected,
         products: products ?? [selected],
         isExpanded: isExpanded
     )
@@ -272,24 +253,9 @@ func paymentContract(
     )
 }
 
-func productUpdateConnectivityError() -> FastPaymentsSettingsEvent {
+func setBankDefaultPreparedServerError() -> FastPaymentsSettingsEvent {
     
-    .productUpdate(.failure(.connectivityError))
-}
-
-func productUpdateServerError() -> FastPaymentsSettingsEvent {
-    
-    .productUpdate(.failure(.serverError(UUID().uuidString)))
-}
-
-func productUpdateSuccess() -> FastPaymentsSettingsEvent {
-    
-    .productUpdate(.success(makeProduct()))
-}
-
-func setBankDefaultPrepareServerError() -> FastPaymentsSettingsEvent {
-    
-    .setBankDefaultPrepare(.serverError(UUID().uuidString))
+    .setBankDefaultPrepared(.serverError(UUID().uuidString))
 }
 
 func serverError(
@@ -333,4 +299,38 @@ func updateProductPayload(
         contractID: .init(contractIDRawValue),
         product: product
     )
+}
+
+func updateContractConnectivityError() -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.failure(.connectivityError))
+}
+
+func updateContractServerError(
+    _ message: String = anyMessage()
+) -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.failure(.serverError(message)))
+}
+
+func updateContractSuccess(
+    _ contract: UserPaymentSettings.PaymentContract = paymentContract()
+) -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.success(contract))
+}
+
+func updateProductConnectivityError() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.failure(.connectivityError))
+}
+
+func updateProductServerError() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.failure(.serverError(UUID().uuidString)))
+}
+
+func updateProductSuccess() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.success(makeProduct()))
 }
