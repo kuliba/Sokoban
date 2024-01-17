@@ -203,7 +203,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let missing = missingContract(consentResult)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
             products: [product1, product2]
         )
         
@@ -244,7 +244,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let missing = missingContract(consentResult)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
             products: [product1]
         )
         
@@ -333,6 +333,54 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .missingContract,
             .missingContract,
             .missingContract,
+        ])
+    }
+    
+    func test_flow_abc1d1_productChangeSuccessOfLoadedActiveContract() {
+        
+        let (selected, different) = (makeProduct(), makeProduct())
+        let productSelector = makeProductSelector(
+            selected: selected,
+            products: [selected, different]
+        )
+        let (details, _) = contractedState(
+            .active,
+            productSelector: productSelector
+        )
+        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: [selected, different])
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.expandProducts)
+        sut.event(.selectProduct(different))
+        updateProductSpy.complete(with: .success(()))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    )
+                ))),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .expanded
+                    ))),
+                status: .inflight
+            ),
+            .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        selectedProduct: different,
+                        status: .collapsed
+                    ))),
+                status: nil
+            ),
         ])
     }
     
