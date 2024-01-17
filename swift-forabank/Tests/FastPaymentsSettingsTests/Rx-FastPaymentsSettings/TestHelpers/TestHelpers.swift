@@ -16,13 +16,6 @@ func anyProduct(
     .init(id: .init(rawValue), productType: productType)
 }
 
-func anyProductID(
-    _ rawValue: Int = generateRandom11DigitNumber()
-) -> Product.ID {
-    
-    .init(rawValue)
-}
-
 func anyEffectProductID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> FastPaymentsSettingsEffect.ProductID {

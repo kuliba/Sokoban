@@ -166,8 +166,7 @@ private extension FastPaymentsSettingsRxReducer {
         _ state: State
     ) -> (State, Effect?) {
         
-        guard case let .contracted(details) = state.userPaymentSettings,
-              details.isActive
+        guard let details = state.activeDetails
         else { return (state, nil) }
         
         var state = state
@@ -203,8 +202,7 @@ private extension FastPaymentsSettingsRxReducer {
         with productUpdate: FastPaymentsSettingsEvent.ProductUpdateResult
     ) -> State {
         
-        guard case let .contracted(details) = state.userPaymentSettings,
-              details.isActive
+        guard let details = state.activeDetails
         else { return state }
         
         switch productUpdate {
@@ -229,9 +227,8 @@ private extension FastPaymentsSettingsRxReducer {
         _ state: State,
         with failure: FastPaymentsSettingsEvent.Failure?
     ) -> State {
-#warning("extract as helper")
-        guard case let .contracted(details) = state.userPaymentSettings,
-              details.isActive
+        
+        guard let details = state.activeDetails
         else { return state }
         
         switch failure {
@@ -253,6 +250,20 @@ private extension FastPaymentsSettingsRxReducer {
             state.status = .serverError(message)
             return state
         }
+    }
+}
+
+// MARK: - Helpers
+
+private extension FastPaymentsSettingsState {
+    
+    var activeDetails: UserPaymentSettings.ContractDetails? {
+        
+        guard case let .contracted(details) = userPaymentSettings,
+              details.isActive
+        else { return nil }
+        
+        return details
     }
 }
 
