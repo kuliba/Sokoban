@@ -202,12 +202,12 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_collapseProducts_shouldCollapseExpandedStateOnActive_expanded() {
         
-        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let (details, active) = contractedState(.active, selectorStatus: .expanded)
         
         assert(active, .collapseProducts, reducedTo: .init(
             userPaymentSettings: .contracted(details.updated(
                 productSelector: details.productSelector.updated(
-                    isExpanded: false
+                    status: .collapsed
                 )
             ))
         ))
@@ -215,7 +215,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_collapseProducts_shouldNotChangeStateOnActive_collapsed() {
         
-        let active = contractedState(.active, isSelectorExpanded: false).state
+        let active = contractedState(.active, selectorStatus: .collapsed).state
         
         assert(active, .collapseProducts, reducedTo: active)
     }
@@ -368,12 +368,12 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_expandProducts_shouldExpandCollapsedStateOnActive_collapsed() {
         
-        let (details, active) = contractedState(.active, isSelectorExpanded: false)
+        let (details, active) = contractedState(.active, selectorStatus: .collapsed)
         
         assert(active, .expandProducts, reducedTo: .init(
             userPaymentSettings: .contracted(details.updated(
                 productSelector: details.productSelector.updated(
-                    isExpanded: true
+                    status: .expanded
                 )
             ))
         ))
@@ -381,7 +381,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_expandProducts_shouldNotChangeStateOnActive_expanded() {
         
-        let active = contractedState(.active, isSelectorExpanded: true).state
+        let active = contractedState(.active, selectorStatus: .expanded).state
         
         assert(active, .expandProducts, reducedTo: active)
     }
@@ -913,7 +913,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldSetStatusOnDifferentProductSelectionInActive_expanded() {
         
         let (selected, different) = (makeProduct(), makeProduct())
-        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let (details, active) = contractedState(.active, selectorStatus: .expanded)
         let sut = makeSUT(products: [selected, different])
 
         assert(sut: sut, active, .selectProduct(different), reducedTo: .init(
@@ -925,7 +925,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldDeliverEffectOnDifferentProductSelectionInActive_expanded() {
         
         let (selected, different) = (makeProduct(), makeProduct())
-        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let (details, active) = contractedState(.active, selectorStatus: .expanded)
         let core = makeCore(details, different)
         let sut = makeSUT(products: [selected, different])
 
@@ -948,7 +948,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(sut: sut, active, .selectProduct(selected), reducedTo: .init(
             userPaymentSettings: .contracted(details.updated(
                 productSelector: details.productSelector.updated(
-                    isExpanded: false
+                    status: .collapsed
                 )
             ))))
     }
@@ -972,13 +972,13 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldCollapseOnActive_expanded_emptyProducts() {
         
         let product = makeProduct()
-        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let (details, active) = contractedState(.active, selectorStatus: .expanded)
         let sut = makeSUT(products: [])
         
         assert(sut: sut, active, .selectProduct(product), reducedTo: .init(
             userPaymentSettings: .contracted(details.updated(
                 productSelector: details.productSelector.updated(
-                    isExpanded: false
+                    status: .collapsed
                 )
             )))
         )
@@ -987,7 +987,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldNotDeliverEffectOnActive_expanded_emptyProducts() {
         
         let product = makeProduct()
-        let active = contractedState(.active, isSelectorExpanded: true).state
+        let active = contractedState(.active, selectorStatus: .expanded).state
         let sut = makeSUT(products: [])
 
         assert(sut: sut, active, .selectProduct(product), effect: nil)
@@ -996,7 +996,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldNotChangeStateOnActive_collapsed() {
         
         let product = makeProduct()
-        let active = contractedState(.active, isSelectorExpanded: false).state
+        let active = contractedState(.active, selectorStatus: .collapsed).state
         
         assert(active, .selectProduct(product), reducedTo: active)
     }
@@ -1004,7 +1004,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     func test_selectProduct_shouldNotDeliverEffectOnActive_collapsed() {
         
         let product = makeProduct()
-        let active = contractedState(.active, isSelectorExpanded: false).state
+        let active = contractedState(.active, selectorStatus: .collapsed).state
         
         assert(active, .selectProduct(product), effect: nil)
     }
@@ -2112,13 +2112,13 @@ extension UserPaymentSettings.ProductSelector {
     func updated(
         selectedProduct: Product?? = nil,
         products: [Product]? = nil,
-        isExpanded: Bool? = nil
+        status: Status? = nil
     ) -> Self {
         
         .init(
             selectedProduct: selectedProduct ?? self.selectedProduct,
             products: products ?? self.products,
-            isExpanded: isExpanded ?? self.isExpanded
+            status: status ?? self.status
         )
     }
 }

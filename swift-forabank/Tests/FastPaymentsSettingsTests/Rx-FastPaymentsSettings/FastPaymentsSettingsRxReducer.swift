@@ -132,7 +132,7 @@ private extension FastPaymentsSettingsRxReducer {
               details.productSelector.isExpanded
         else { return state }
         
-        details.productSelector = details.productSelector.updated(isExpanded: false)
+        details.productSelector = details.productSelector.updated(status: .collapsed)
         
         return .init(userPaymentSettings: .contracted(details))
     }
@@ -165,7 +165,7 @@ private extension FastPaymentsSettingsRxReducer {
               !details.productSelector.isExpanded
         else { return state }
         
-        details.productSelector = details.productSelector.updated(isExpanded: true)
+        details.productSelector = details.productSelector.updated(status: .expanded)
         
         return .init(userPaymentSettings: .contracted(details))
     }
@@ -231,7 +231,7 @@ private extension FastPaymentsSettingsRxReducer {
             state = .init(
                 userPaymentSettings: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
-                        isExpanded: false
+                        status: .collapsed
                     )
                 ))
             )
@@ -374,6 +374,11 @@ private extension FastPaymentsSettingsRxReducer {
 }
 
 // MARK: - Helpers
+
+private extension UserPaymentSettings.ProductSelector {
+    
+    var isExpanded: Bool { status == .expanded }
+}
 
 private extension FastPaymentsSettingsEffect {
     

@@ -130,7 +130,7 @@ func contractedSettings(
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    isSelectorExpanded: Bool = false,
+    selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
     details: UserPaymentSettings.ContractDetails,
@@ -142,7 +142,7 @@ func contractedState(
         ),
         bankDefault: bankDefault,
         productSelector: makeProductSelector(
-            isExpanded: isSelectorExpanded
+            status: selectorStatus
         )
     )
     
@@ -236,13 +236,13 @@ func makeProduct(
 func makeProductSelector(
     selected: Product = makeProduct(),
     products: [Product]? = nil,
-    isExpanded: Bool = false
+    status: UserPaymentSettings.ProductSelector.Status = .collapsed
 ) -> UserPaymentSettings.ProductSelector {
     
     .init(
         selectedProduct: selected,
         products: products ?? [selected],
-        isExpanded: isExpanded
+        status: status
     )
 }
 

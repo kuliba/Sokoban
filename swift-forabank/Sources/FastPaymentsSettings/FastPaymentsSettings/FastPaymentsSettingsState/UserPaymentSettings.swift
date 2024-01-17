@@ -65,17 +65,21 @@ public extension UserPaymentSettings {
         
         public let selectedProduct: Product?
         public let products: [Product]
-        #warning("refactor as enum collapsed/expanded")
-        public let isExpanded: Bool
+        public let status: Status
         
         public init(
             selectedProduct: Product?,
             products: [Product],
-            isExpanded: Bool = false
+            status: Status = .collapsed
         ) {
             self.selectedProduct = selectedProduct
             self.products = products
-            self.isExpanded = isExpanded
+            self.status = status
+        }
+        
+        public enum Status: Equatable {
+            
+            case collapsed, expanded
         }
     }
 }
