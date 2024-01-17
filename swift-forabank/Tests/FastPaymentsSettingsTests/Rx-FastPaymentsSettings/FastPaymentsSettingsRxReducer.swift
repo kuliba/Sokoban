@@ -6,7 +6,7 @@
 //
 
 import FastPaymentsSettings
-
+#warning("rename: remove `Rx`")
 final class FastPaymentsSettingsRxReducer {
     
     private let getProduct: GetProduct
