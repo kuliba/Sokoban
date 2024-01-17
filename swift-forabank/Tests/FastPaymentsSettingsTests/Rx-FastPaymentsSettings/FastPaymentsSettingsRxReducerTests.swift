@@ -652,6 +652,91 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(serverError, .deactivateContract, effect: nil)
     }
     
+    // MARK: - expandProducts
+    
+    func test_expandProducts_shouldExpandCollapsedStateOnActive_collapsed() {
+        
+        let (details, active) = contractedState(.active, isSelectorExpanded: false)
+        
+        assert(active, .expandProducts, reducedTo: .init(
+            userPaymentSettings: .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    isExpanded: true
+                )
+            ))
+        ))
+    }
+    
+    func test_expandProducts_shouldNotChangeStateOnActive_expanded() {
+        
+        let active = contractedState(.active, isSelectorExpanded: true).state
+        
+        assert(active, .expandProducts, reducedTo: active)
+    }
+    
+    func test_expandProducts_shouldNotDeliverEffectOnActive() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, .expandProducts, effect: nil)
+    }
+    
+    func test_expandProducts_shouldNotChangeStateOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .expandProducts, reducedTo: inactive)
+    }
+    
+    func test_expandProducts_shouldNotDeliverEffectOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .expandProducts, effect: nil)
+    }
+    
+    func test_expandProducts_shouldNotChangeStateOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .expandProducts, reducedTo: missing)
+    }
+    
+    func test_expandProducts_shouldNotDeliverEffectOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .expandProducts, effect: nil)
+    }
+    
+    func test_expandProducts_shouldNotChangeStateOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .expandProducts, reducedTo: connectivityError)
+    }
+    
+    func test_expandProducts_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .expandProducts, effect: nil)
+    }
+    
+    func test_expandProducts_shouldNotChangeStateOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .expandProducts, reducedTo: serverError)
+    }
+    
+    func test_expandProducts_shouldNotDeliverEffectOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .expandProducts, effect: nil)
+    }
+    
     // MARK: - prepareSetBankDefault
     
     func test_prepareSetBankDefault_shouldResetStatusOnActive_offEnabled_setBankDefaultStatus() {
@@ -1772,5 +1857,18 @@ extension UserPaymentSettings.ProductSelector {
     func selected(product: Product) -> Self {
         
         .init(selectedProduct: product, products: self.products)
+    }
+    
+    func updated(
+        selectedProduct: Product?? = nil,
+        products: [Product]? = nil,
+        isExpanded: Bool? = nil
+    ) -> Self {
+        
+        .init(
+            selectedProduct: selectedProduct ?? self.selectedProduct,
+            products: products ?? self.products, 
+            isExpanded: isExpanded ?? self.isExpanded
+        )
     }
 }
