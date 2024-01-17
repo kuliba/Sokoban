@@ -650,7 +650,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_offDisabled_setBankDefaultStatus() {
         
-        let (details, active) = contractedState(
+        let (_, active) = contractedState(
             .active, 
             bankDefault: .offDisabled,
             status: .setBankDefault
@@ -672,7 +672,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_onDisabled_setBankDefaultStatus() {
         
-        let (details, active) = contractedState(
+        let (_, active) = contractedState(
             .active, 
             bankDefault: .onDisabled,
             status: .setBankDefault

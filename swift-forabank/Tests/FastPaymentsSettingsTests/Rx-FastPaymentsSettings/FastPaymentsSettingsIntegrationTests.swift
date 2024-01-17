@@ -43,7 +43,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             ))),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .active,
@@ -72,7 +72,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .active,
@@ -100,7 +100,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: .contracted(details), status: .connectivityError),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .active,
@@ -131,7 +131,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             ))),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .inactive,
@@ -160,7 +160,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .inactive,
@@ -188,12 +188,115 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: .contracted(details), status: .connectivityError),
         ])
         
-        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
             nil,
             nil,
             .inactive,
             .inactive,
             .inactive,
+        ])
+    }
+    
+    func test_flow_abc3d1_activationSuccessOfLoadedMissingContract() {
+        
+        let consentResult = consentResultSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let newContract = paymentContract(contractStatus: .active)
+        let product = makeProduct()
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+            product: product
+        )
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: missing)
+        
+        sut.event(.activateContract)
+        createContractSpy.complete(with: .success(newContract))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: missing),
+            .init(userPaymentSettings: missing, status: .inflight),
+            .init(userPaymentSettings: .contracted(.init(
+                paymentContract: newContract,
+                consentResult: consentResult,
+                bankDefault: .offEnabled,
+                product: product
+            ))),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
+            nil,
+            nil,
+            .missingContract,
+            .missingContract,
+            .active,
+        ])
+    }
+    
+    func test_flow_abc3d2_activationFailureOfLoadedMissingContract() {
+        
+        let consentResult = consentResultSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let message = anyMessage()
+        let product = makeProduct()
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+            product: product
+        )
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: missing)
+        
+        sut.event(.activateContract)
+        createContractSpy.complete(with: .failure(.serverError(message)))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: missing),
+            .init(userPaymentSettings: missing, status: .inflight),
+            .init(userPaymentSettings: missing, status: .serverError(message)),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
+            nil,
+            nil,
+            .missingContract,
+            .missingContract,
+            .missingContract,
+        ])
+    }
+    
+    func test_flow_abc3d3_activationFailureOfLoadedMissingContract() {
+        
+        let consentResult = consentResultSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let product = makeProduct()
+        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+            product: product
+        )
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: missing)
+        
+        sut.event(.activateContract)
+        createContractSpy.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: missing),
+            .init(userPaymentSettings: missing, status: .inflight),
+            .init(userPaymentSettings: missing, status: .connectivityError),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
+            nil,
+            nil,
+            .missingContract,
+            .missingContract,
+            .missingContract,
         ])
     }
     
@@ -268,14 +371,28 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
 
 private extension FastPaymentsSettingsState {
     
-    var contractStatus: UserPaymentSettings.PaymentContract.ContractStatus? {
+    var settingsStatus: SettingsStatus? {
         
         switch userPaymentSettings {
-        case let .contracted(details):
-            return details.paymentContract.contractStatus
-            
-        default:
+        case .none:
             return nil
+            
+        case let .contracted(details):
+            switch details.paymentContract.contractStatus {
+            case .active:   return .active
+            case .inactive: return .inactive
+            }
+            
+        case .missingContract:
+            return .missingContract
+            
+        case .failure:
+            return .failure
         }
+    }
+    
+    enum SettingsStatus: Equatable {
+        
+        case active, inactive, missingContract, failure
     }
 }

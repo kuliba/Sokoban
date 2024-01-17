@@ -63,6 +63,7 @@ extension FastPaymentsSettingsEffectHandler {
 extension FastPaymentsSettingsEffectHandler {
     
     typealias CreateContractPayload = Effect.ProductID
+#warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
     typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
     typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
