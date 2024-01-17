@@ -52,6 +52,151 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         ])
     }
     
+    func test_flow_abc1d2_deactivationFailureOfLoadedActiveContract() {
+        
+        let details = contractedState(.active).details
+        let message = anyMessage()
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.deactivateContract)
+        updateContractSpy.complete(with: .failure(.serverError(message)))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .active,
+            .active,
+            .active,
+        ])
+    }
+    
+    func test_flow_abc1d3_deactivationFailureOfLoadedActiveContract() {
+        
+        let details = contractedState(.active).details
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.deactivateContract)
+        updateContractSpy.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(details), status: .connectivityError),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .active,
+            .active,
+            .active,
+        ])
+    }
+    
+    func test_flow_abc2d1_activationSuccessOfLoadedInactiveContract() {
+        
+        let details = contractedState(.inactive).details
+        let newContract = paymentContract(contractStatus: .active)
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.activateContract)
+        updateContractSpy.complete(with: .success(newContract))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(details.updated(
+                paymentContract: newContract
+            ))),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .inactive,
+            .inactive,
+            .active,
+        ])
+    }
+    
+    func test_flow_abc2d2_activationFailureOfLoadedInactiveContract() {
+        
+        let details = contractedState(.inactive).details
+        let message = anyMessage()
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.activateContract)
+        updateContractSpy.complete(with: .failure(.serverError(message)))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .inactive,
+            .inactive,
+            .inactive,
+        ])
+    }
+    
+    func test_flow_abc2d3_activationFailureOfLoadedInactiveContract() {
+        
+        let details = contractedState(.inactive).details
+        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        
+        sut.event(.appear)
+        getSettingsSpy.complete(with: .contracted(details))
+        
+        sut.event(.activateContract)
+        updateContractSpy.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            .init(),
+            .init(status: .inflight),
+            .init(userPaymentSettings: .contracted(details)),
+            .init(userPaymentSettings: .contracted(details), status: .inflight),
+            .init(userPaymentSettings: .contracted(details), status: .connectivityError),
+        ])
+        
+        XCTAssertNoDiff(stateSpy.values.map(\.contractStatus), [
+            nil,
+            nil,
+            .inactive,
+            .inactive,
+            .inactive,
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias State = FastPaymentsSettingsState
