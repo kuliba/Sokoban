@@ -908,6 +908,171 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(withStatus, .resetStatus, effect: nil)
     }
     
+    // MARK: - selectProduct
+    
+    func test_selectProduct_shouldSetStatusOnDifferentProductSelectionInActive_expanded() {
+        
+        let (selected, different) = (makeProduct(), makeProduct())
+        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let sut = makeSUT(products: [selected, different])
+
+        assert(sut: sut, active, .selectProduct(different), reducedTo: .init(
+            userPaymentSettings: .contracted(details),
+            status: .inflight
+        ))
+    }
+    
+    func test_selectProduct_shouldDeliverEffectOnDifferentProductSelectionInActive_expanded() {
+        
+        let (selected, different) = (makeProduct(), makeProduct())
+        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let core = makeCore(details, different)
+        let sut = makeSUT(products: [selected, different])
+
+        assert(sut: sut, active, .selectProduct(different), effect: .updateProduct(core))
+    }
+    
+    func test_selectProduct_shouldCollapseOnSameProductSelectionActive_expanded() {
+     
+        let (selected, product2) = (makeProduct(), makeProduct())
+        let productSelector = makeProductSelector(
+            selected: selected,
+            products: [selected, product2]
+        )
+        let (details, active) = contractedState(
+            .active,
+            productSelector: productSelector
+        )
+        let sut = makeSUT(products: [selected, product2])
+
+        assert(sut: sut, active, .selectProduct(selected), reducedTo: .init(
+            userPaymentSettings: .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    isExpanded: false
+                )
+            ))))
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnSameProductSelectionActive_expanded() {
+
+        let (selected, product2) = (makeProduct(), makeProduct())
+        let productSelector = makeProductSelector(
+            selected: selected,
+            products: [selected, product2]
+        )
+        let (_, active) = contractedState(
+            .active,
+            productSelector: productSelector
+        )
+        let sut = makeSUT(products: [selected, product2])
+
+        assert(sut: sut, active, .selectProduct(selected), effect: nil)
+    }
+    
+    func test_selectProduct_shouldCollapseOnActive_expanded_emptyProducts() {
+        
+        let product = makeProduct()
+        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        let sut = makeSUT(products: [])
+        
+        assert(sut: sut, active, .selectProduct(product), reducedTo: .init(
+            userPaymentSettings: .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    isExpanded: false
+                )
+            )))
+        )
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnActive_expanded_emptyProducts() {
+        
+        let product = makeProduct()
+        let active = contractedState(.active, isSelectorExpanded: true).state
+        let sut = makeSUT(products: [])
+
+        assert(sut: sut, active, .selectProduct(product), effect: nil)
+    }
+    
+    func test_selectProduct_shouldNotChangeStateOnActive_collapsed() {
+        
+        let product = makeProduct()
+        let active = contractedState(.active, isSelectorExpanded: false).state
+        
+        assert(active, .selectProduct(product), reducedTo: active)
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnActive_collapsed() {
+        
+        let product = makeProduct()
+        let active = contractedState(.active, isSelectorExpanded: false).state
+        
+        assert(active, .selectProduct(product), effect: nil)
+    }
+    
+    func test_selectProduct_shouldNotChangeStateOnInactive() {
+        
+        let product = makeProduct()
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .selectProduct(product), reducedTo: inactive)
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnInactive() {
+        
+        let product = makeProduct()
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .selectProduct(product), effect: nil)
+    }
+    
+    func test_selectProduct_shouldNotChangeStateOnMissing() {
+        
+        let product = makeProduct()
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .selectProduct(product), reducedTo: missing)
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnMissing() {
+        
+        let product = makeProduct()
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .selectProduct(product), effect: nil)
+    }
+    
+    func test_selectProduct_shouldNotChangeStateOnConnectivityErrorFailure() {
+        
+        let product = makeProduct()
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .selectProduct(product), reducedTo: connectivityError)
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let product = makeProduct()
+        let connectivityError = connectivityErrorFPSState()
+                
+        assert(connectivityError, .selectProduct(product), effect: nil)
+    }
+    
+    func test_selectProduct_shouldNotChangeStateOnServerErrorFailure() {
+        
+        let product = makeProduct()
+        let serverError = serverErrorFPSState()
+                
+        assert(serverError, .selectProduct(product), reducedTo: serverError)
+    }
+    
+    func test_selectProduct_shouldNotDeliverEffectOnServerErrorFailure() {
+        
+        let product = makeProduct()
+        let serverError = serverErrorFPSState()
+                
+        assert(serverError, .selectProduct(product), effect: nil)
+    }
+    
     // MARK: - setBankDefault
     
     func test_setBankDefault_shouldSetStatusOnActive_offEnabled() {

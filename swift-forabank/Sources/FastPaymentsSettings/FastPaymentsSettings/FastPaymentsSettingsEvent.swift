@@ -28,6 +28,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case collapseProducts
     case expandProducts
     case updateProduct(ProductUpdateResult)
+    case selectProduct(Product)
 }
 
 public extension FastPaymentsSettingsEvent {

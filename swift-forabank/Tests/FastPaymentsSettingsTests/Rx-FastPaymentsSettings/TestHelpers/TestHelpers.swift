@@ -154,6 +154,31 @@ func contractedState(
     return (details, state)
 }
 
+func contractedState(
+    _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    productSelector: UserPaymentSettings.ProductSelector,
+    status: FastPaymentsSettingsState.Status? = nil
+) -> (
+    details: UserPaymentSettings.ContractDetails,
+    state: FastPaymentsSettingsState
+) {
+    let details = contractDetails(
+        paymentContract: paymentContract(
+            contractStatus: contractStatus
+        ),
+        bankDefault: bankDefault,
+        productSelector: productSelector
+    )
+    
+    let state = fastPaymentsSettingsState(
+        .contracted(details),
+        status: status
+    )
+    
+    return (details, state)
+}
+
 func fastPaymentsSettingsEffectTargetContract(
     contractID: FastPaymentsSettingsEffect.ContractCore.ContractID = .init(generateRandom11DigitNumber()),
     product: Product = makeProduct(),
@@ -187,6 +212,17 @@ func inactiveContractSettings(
             contractStatus: .inactive
         )
     ))
+}
+
+func makeCore(
+    _ details: UserPaymentSettings.ContractDetails,
+    _ product: Product
+) -> FastPaymentsSettingsEffect.ContractCore {
+    
+    .init(
+        contractID: .init(details.paymentContract.id.rawValue),
+        product: product
+    )
 }
 
 func makeProduct(
