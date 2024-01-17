@@ -57,9 +57,6 @@ extension FastPaymentsSettingsRxReducer {
             
         case let .setBankDefaultPrepare(failure):
             state = update(state, with: failure)
-            
-        case .confirmSetBankDefault:
-            fatalError("unimplemented")
         }
         
         return (state, effect)
