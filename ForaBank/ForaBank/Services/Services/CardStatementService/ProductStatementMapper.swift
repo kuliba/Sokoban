@@ -31,7 +31,6 @@ struct ProductStatementMapper {
         
         do {
             let decodableData = try JSONDecoder().decode(DecodeProductStatmentData.self, from: data)
-            
             switch decodableData.statusCode {
                 
             default:
@@ -47,10 +46,7 @@ struct ProductStatementMapper {
     enum MapperError: Error, Equatable {
         
         case mapError(String)
-        case status3122
     }
 }
 
 private let statusCode200 = 200
-
-// TODO: уточнить ошибки!!!
