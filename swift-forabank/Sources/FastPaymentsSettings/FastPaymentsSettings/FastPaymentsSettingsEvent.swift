@@ -11,6 +11,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     
     case activateContract
     case appear
+    case collapseProducts
     case contractUpdate(ContractUpdateResult)
     case deactivateContract
     case expandProducts

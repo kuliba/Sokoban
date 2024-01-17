@@ -34,6 +34,9 @@ extension FastPaymentsSettingsRxReducer {
         case .appear:
             (state, effect) = handleAppear(state)
             
+        case .collapseProducts:
+            state = collapseProducts(state)
+            
         case let .contractUpdate(result):
             state = updateContract(state, with: result)
             
@@ -116,6 +119,19 @@ private extension FastPaymentsSettingsRxReducer {
         default:
             return (state, nil)
         }
+    }
+    
+    func collapseProducts(
+        _ state: State
+    ) -> State {
+        
+        guard var details = state.activeDetails,
+              details.productSelector.isExpanded
+        else { return state }
+        
+        details.productSelector = details.productSelector.updated(isExpanded: false)
+        
+        return .init(userPaymentSettings: .contracted(details))
     }
     
     func deactivateContract(

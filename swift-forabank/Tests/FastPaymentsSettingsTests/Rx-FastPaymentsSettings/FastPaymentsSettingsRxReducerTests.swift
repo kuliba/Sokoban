@@ -240,6 +240,91 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(serverError, .activateContract, effect: nil)
     }
     
+    // MARK: - collapseProducts
+    
+    func test_collapseProducts_shouldCollapseExpandedStateOnActive_expanded() {
+        
+        let (details, active) = contractedState(.active, isSelectorExpanded: true)
+        
+        assert(active, .collapseProducts, reducedTo: .init(
+            userPaymentSettings: .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    isExpanded: false
+                )
+            ))
+        ))
+    }
+    
+    func test_collapseProducts_shouldNotChangeStateOnActive_collapsed() {
+        
+        let active = contractedState(.active, isSelectorExpanded: false).state
+        
+        assert(active, .collapseProducts, reducedTo: active)
+    }
+    
+    func test_collapseProducts_shouldNotDeliverEffectOnActive() {
+        
+        let active = contractedState(.active).state
+        
+        assert(active, .collapseProducts, effect: nil)
+    }
+    
+    func test_collapseProducts_shouldNotChangeStateOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .collapseProducts, reducedTo: inactive)
+    }
+    
+    func test_collapseProducts_shouldNotDeliverEffectOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(inactive, .collapseProducts, effect: nil)
+    }
+    
+    func test_collapseProducts_shouldNotChangeStateOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .collapseProducts, reducedTo: missing)
+    }
+    
+    func test_collapseProducts_shouldNotDeliverEffectOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(missing, .collapseProducts, effect: nil)
+    }
+    
+    func test_collapseProducts_shouldNotChangeStateOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .collapseProducts, reducedTo: connectivityError)
+    }
+    
+    func test_collapseProducts_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(connectivityError, .collapseProducts, effect: nil)
+    }
+    
+    func test_collapseProducts_shouldNotChangeStateOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .collapseProducts, reducedTo: serverError)
+    }
+    
+    func test_collapseProducts_shouldNotDeliverEffectOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(serverError, .collapseProducts, effect: nil)
+    }
+    
     // MARK: - contractUpdate
     
     func test_contractUpdate_shouldSetContractOnSuccess_active() {
@@ -1867,7 +1952,7 @@ extension UserPaymentSettings.ProductSelector {
         
         .init(
             selectedProduct: selectedProduct ?? self.selectedProduct,
-            products: products ?? self.products, 
+            products: products ?? self.products,
             isExpanded: isExpanded ?? self.isExpanded
         )
     }
