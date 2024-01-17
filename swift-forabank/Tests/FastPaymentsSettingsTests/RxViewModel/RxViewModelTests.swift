@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
-@testable import FastPaymentsSettingsPreview
+import FastPaymentsSettings
 import XCTest
 
 final class RxViewModelTests: XCTestCase {
@@ -193,34 +193,34 @@ final class RxViewModelTests: XCTestCase {
         typealias Dispatch = (Event) -> Void
         typealias Message = (effect: Effect, dispatch: Dispatch)
     }
-}
-
-private struct State: Equatable {
     
-    let value: String
-}
-
-private enum Event: Equatable {
+    fileprivate struct State: Equatable {
+        
+        let value: String
+    }
     
-    case changeValueTo(String)
-    case resetValue
-}
-
-private enum Effect: Equatable {
+    private enum Event: Equatable {
+        
+        case changeValueTo(String)
+        case resetValue
+    }
     
-    case load
+    private enum Effect: Equatable {
+        
+        case load
+    }
+    
+    private func makeStub(
+        _ effect: Effect? = nil
+    ) -> (State, Effect?) {
+        
+        (makeState(), effect)
+    }
 }
 
 private func makeState(
     value: String = UUID().uuidString
-) -> State {
+) -> RxViewModelTests.State {
     
     .init(value: value)
-}
-
-private func makeStub(
-    _ effect: Effect? = nil
-) -> (State, Effect?) {
-    
-    (makeState(), effect)
 }

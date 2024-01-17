@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-extension ConsentListState.UIState.Expanded {
+public extension ConsentListState.UIState.Expanded {
     
     static let preview: Self = .init(
         searchText: "",

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-extension Consent {
+public extension Consent {
     
     static let preview: Self = .init(
         [ConsentList.SelectableBank].preview.prefix(2).map(\.id)

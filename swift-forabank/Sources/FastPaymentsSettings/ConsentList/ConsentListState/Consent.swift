@@ -5,4 +5,6 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-typealias Consent = Set<Bank.ID>
+import Tagged
+
+public typealias Consent = Set<Bank.ID>

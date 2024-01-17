@@ -5,12 +5,14 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
-enum ConsentListEffect: Equatable {
+import Tagged
+
+public enum ConsentListEffect: Equatable {
 
     case apply(Consent)
 }
 
-extension ConsentListEffect {
+public extension ConsentListEffect {
     
     typealias Consent = Set<Bank.ID>
 }

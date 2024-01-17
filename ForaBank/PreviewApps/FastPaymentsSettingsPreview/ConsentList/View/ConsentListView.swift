@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
+import FastPaymentsSettings
 import SwiftUI
 
 struct ConsentListView: View {
@@ -100,78 +101,6 @@ struct ConsentListView: View {
             Text("Что-то пошло не так.\nПопробуйте позже.")
         }
         .foregroundColor(.secondary)
-    }
-}
-
-extension ConsentListState {
-    
-    var uiState: UIState {
-        
-        switch self {
-        case let .success(consentList):
-            switch consentList.mode {
-            case .collapsed:
-                return .collapsed(.init(
-                    bankNames: consentList.selectedBankNames
-                ))
-                
-            case .expanded:
-                return .expanded(.init(
-                    searchText: consentList.searchText,
-                    banks: consentList.filteredBanks,
-                    canApply: consentList.canApply
-                ))
-            }
-            
-        case let .failure(failure):
-            switch failure {
-            case .collapsedError:
-                return .collapsedError
-                
-            case .expandedError:
-                return .expandedError
-            }
-        }
-    }
-    
-    enum UIState: Equatable {
-        
-        case collapsed(Collapsed)
-        case expanded(Expanded)
-        case collapsedError
-        case expandedError
-        
-        struct Collapsed: Equatable {
-            
-            let bankNames: [String]
-        }
-        
-        struct Expanded: Equatable {
-            
-            var searchText: String
-            var banks: [ConsentList.SelectableBank]
-            var canApply: Bool
-        }
-    }
-}
-
-private extension ConsentList {
-    
-    var canApply: Bool {
-        
-        Set(banks.filter(\.isSelected).map(\.id)) != consent
-    }
-    
-    var filteredBanks: [SelectableBank] {
-        
-        if searchText.isEmpty {
-            return banks
-        } else {
-            return banks.filter {
-                
-                $0.bank.name.lowercased().contains(searchText.lowercased())
-            }
-        }
     }
 }
 

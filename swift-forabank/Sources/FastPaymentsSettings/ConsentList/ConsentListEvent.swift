@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-enum ConsentListEvent: Equatable {
+public enum ConsentListEvent: Equatable {
     
     case toggle
     case search(String)
@@ -16,7 +16,7 @@ enum ConsentListEvent: Equatable {
     case resetStatus
 }
 
-extension ConsentListEvent {
+public extension ConsentListEvent {
     
     enum ConsentFailure: Equatable {
         

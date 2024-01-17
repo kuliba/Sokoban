@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-extension Array where Element == ConsentList.SelectableBank {
+public extension Array where Element == ConsentList.SelectableBank {
     
     static let empty: Self = []
     

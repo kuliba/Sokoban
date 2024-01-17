@@ -7,11 +7,11 @@
 
 public struct GetConsentListAndDefaultBank: Equatable {
     
-    public let consentList: ConsentList
+    public let consentList: Consents
     public let defaultBank: DefaultBank
     
     public init(
-        consentList: ConsentList, 
+        consentList: Consents, 
         defaultBank: DefaultBank
     ) {
         self.consentList = consentList

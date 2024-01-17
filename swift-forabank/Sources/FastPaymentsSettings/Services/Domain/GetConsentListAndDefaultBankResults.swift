@@ -7,7 +7,7 @@
 
 public struct GetConsentListAndDefaultBankResults {
     
-    public typealias ConsentListResult = Result<ConsentList, GetConsentListError>
+    public typealias ConsentListResult = Result<Consents, GetConsentListError>
     public typealias DefaultBankResult = Result<DefaultBank, GetDefaultBankError>
     
     public let consentListResult: ConsentListResult

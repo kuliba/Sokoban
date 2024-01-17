@@ -574,7 +574,7 @@
 		2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */; };
 		2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */; };
 		2A6EAA942B5060870093EE83 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA932B5060870093EE83 /* Factory.swift */; };
-		2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */; };
+		2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */; };
 		2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */; };
 		2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */; };
 		2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9D2B506E220093EE83 /* FastPaymentsSettingsReducer.swift */; };
@@ -647,16 +647,7 @@
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
-		2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */; };
-		2A9536372B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536362B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift */; };
-		2A9536392B52D55D00E874F5 /* [Bank]+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */; };
-		2A95363B2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */; };
-		2A95363D2B52DA3F00E874F5 /* [SelectableBank]+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */; };
 		2A95363F2B53120700E874F5 /* ExpandedConsentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95363E2B53120700E874F5 /* ExpandedConsentListView.swift */; };
-		2A9536412B53355900E874F5 /* ConsentListState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536402B53355900E874F5 /* ConsentListState+ext.swift */; };
-		2A9536442B533A9E00E874F5 /* ConsentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536432B533A9E00E874F5 /* ConsentList.swift */; };
-		2A9536462B533ABB00E874F5 /* ConsentListFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536452B533ABB00E874F5 /* ConsentListFailure.swift */; };
-		2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536472B533AD400E874F5 /* ConsentList+ext.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -688,9 +679,6 @@
 		2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC02B52BE1D0061F5DD /* ContentView.swift */; };
 		2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */; };
 		2AA70FC62B52C0A20061F5DD /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC52B52C0A20061F5DD /* ViewModel.swift */; };
-		2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC72B52C1640061F5DD /* ConsentListState.swift */; };
-		2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */; };
-		2AA70FCC2B52C2120061F5DD /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCB2B52C2120061F5DD /* Bank.swift */; };
 		2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */; };
 		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
@@ -733,19 +721,13 @@
 		2ABD78392AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */; };
 		2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E32B5507A100D6A0BA /* Spy.swift */; };
 		2ABFB8E62B5507BF00D6A0BA /* SpyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */; };
-		2ABFB8E92B5522BB00D6A0BA /* Consent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8E72B55228F00D6A0BA /* Consent.swift */; };
 		2ABFB8EC2B5524C900D6A0BA /* anyBankID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */; };
 		2ABFB8EE2B55250600D6A0BA /* anyString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8ED2B55250600D6A0BA /* anyString.swift */; };
 		2ABFB8F02B552B4C00D6A0BA /* anyConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */; };
 		2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */; };
-		2ABFB8F22B55543B00D6A0BA /* RxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF02B54530200B5B7CA /* RxViewModel.swift */; };
-		2ABFB8F42B55545700D6A0BA /* ConsentListEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */; };
-		2ABFB8F92B5554EA00D6A0BA /* ConsentListRxEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8F72B55549A00D6A0BA /* ConsentListRxEffectHandler.swift */; };
-		2ABFB8FA2B5554F200D6A0BA /* ConsentListRxReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8F52B55546900D6A0BA /* ConsentListRxReducer.swift */; };
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
-		2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */; };
-		2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */; };
+		2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */; };
 		2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */; };
 		2AC2ADB22B2217670049EE9B /* QRResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB12B2217670049EE9B /* QRResolver.swift */; };
 		2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */; };
@@ -2928,7 +2910,7 @@
 		2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsView.swift; sourceTree = "<group>"; };
 		2A6EAA932B5060870093EE83 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
-		2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+preview.swift"; sourceTree = "<group>"; };
+		2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountViewModel+preview.swift"; sourceTree = "<group>"; };
 		2A6EAA992B506BBF0093EE83 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA9B2B506C340093EE83 /* Alert+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert+ext.swift"; sourceTree = "<group>"; };
 		2A6EAA9D2B506E220093EE83 /* FastPaymentsSettingsReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsReducer.swift; sourceTree = "<group>"; };
@@ -3001,16 +2983,7 @@
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
-		2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListReducer.swift; sourceTree = "<group>"; };
-		2A9536362B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentListState.UIState.Collapsed+ext.swift"; sourceTree = "<group>"; };
-		2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "[Bank]+ext.swift"; sourceTree = "<group>"; };
-		2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentListState.UIState.Expanded+ext.swift"; sourceTree = "<group>"; };
-		2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "[SelectableBank]+ext.swift"; sourceTree = "<group>"; };
 		2A95363E2B53120700E874F5 /* ExpandedConsentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedConsentListView.swift; sourceTree = "<group>"; };
-		2A9536402B53355900E874F5 /* ConsentListState+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentListState+ext.swift"; sourceTree = "<group>"; };
-		2A9536432B533A9E00E874F5 /* ConsentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentList.swift; sourceTree = "<group>"; };
-		2A9536452B533ABB00E874F5 /* ConsentListFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListFailure.swift; sourceTree = "<group>"; };
-		2A9536472B533AD400E874F5 /* ConsentList+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsentList+ext.swift"; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -3040,9 +3013,6 @@
 		2AA70FC02B52BE1D0061F5DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListWrapperView.swift; sourceTree = "<group>"; };
 		2AA70FC52B52C0A20061F5DD /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
-		2AA70FC72B52C1640061F5DD /* ConsentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListState.swift; sourceTree = "<group>"; };
-		2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEvent.swift; sourceTree = "<group>"; };
-		2AA70FCB2B52C2120061F5DD /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 		2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListView.swift; sourceTree = "<group>"; };
 		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
@@ -3081,14 +3051,11 @@
 		2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABFB8E32B5507A100D6A0BA /* Spy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spy.swift; sourceTree = "<group>"; };
 		2ABFB8E52B5507BF00D6A0BA /* SpyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpyOf.swift; sourceTree = "<group>"; };
-		2ABFB8E72B55228F00D6A0BA /* Consent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consent.swift; sourceTree = "<group>"; };
 		2ABFB8EB2B5524C900D6A0BA /* anyBankID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyBankID.swift; sourceTree = "<group>"; };
 		2ABFB8ED2B55250600D6A0BA /* anyString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyString.swift; sourceTree = "<group>"; };
 		2ABFB8EF2B552B4C00D6A0BA /* anyConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = anyConsent.swift; sourceTree = "<group>"; };
-		2ABFB8F52B55546900D6A0BA /* ConsentListRxReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxReducer.swift; sourceTree = "<group>"; };
-		2ABFB8F72B55549A00D6A0BA /* ConsentListRxEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxEffectHandler.swift; sourceTree = "<group>"; };
 		2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
-		2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Consent+ext.swift"; sourceTree = "<group>"; };
+		2ABFB9072B556F4F00D6A0BA /* FastPaymentsSettingsPreview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "FastPaymentsSettingsPreview-Info.plist"; sourceTree = "<group>"; };
 		2AC21DBB2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryRegularFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2AC2ADB12B2217670049EE9B /* QRResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolver.swift; sourceTree = "<group>"; };
 		2AC2ADB52B221D4F0049EE9B /* QRResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverTests.swift; sourceTree = "<group>"; };
@@ -3141,12 +3108,9 @@
 		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		2AE87AEA2B54177600B5B7CA /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
-		2AE87AF02B54530200B5B7CA /* RxViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModel.swift; sourceTree = "<group>"; };
-		2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxViewModelTests.swift; sourceTree = "<group>"; };
 		2AE87AF62B54537000B5B7CA /* TestSchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
 		2AE87AFC2B54543A00B5B7CA /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxViewModel.swift; sourceTree = "<group>"; };
-		2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListEffect.swift; sourceTree = "<group>"; };
 		2AE87B022B54553D00B5B7CA /* ConsentListRxReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxReducerTests.swift; sourceTree = "<group>"; };
 		2AE87B042B54556400B5B7CA /* ConsentListRxEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListRxEffectHandlerTests.swift; sourceTree = "<group>"; };
 		2AE87B062B54698C00B5B7CA /* unimplemented.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = unimplemented.swift; path = "../../../../swift-forabank/Tests/FastPaymentsSettingsTests/BankPicker/unimplemented.swift"; sourceTree = "<group>"; };
@@ -4645,6 +4609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */,
+				2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */,
 				2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6507,7 +6472,6 @@
 				2AA70FB72B529F040061F5DD /* Informer */,
 				2A6EAA8E2B505D9F0093EE83 /* FastPaymentsSettings */,
 				2AA70FC42B52C0760061F5DD /* ConsentList */,
-				2AE87AF22B54531F00B5B7CA /* RxViewModel */,
 				2A6EAAA72B5076A10093EE83 /* Helpers */,
 				2ABFB8FB2B55551400D6A0BA /* ThirdPartyDependencies */,
 				2A6EAA8B2B505A720093EE83 /* Extensions */,
@@ -6828,19 +6792,6 @@
 			path = ReducerTextFieldViewModel;
 			sourceTree = "<group>";
 		};
-		2A9536422B533A9300E874F5 /* ConsentListState */ = {
-			isa = PBXGroup;
-			children = (
-				2AA70FC72B52C1640061F5DD /* ConsentListState.swift */,
-				2ABFB8E72B55228F00D6A0BA /* Consent.swift */,
-				2A9536432B533A9E00E874F5 /* ConsentList.swift */,
-				2A9536472B533AD400E874F5 /* ConsentList+ext.swift */,
-				2AA70FCB2B52C2120061F5DD /* Bank.swift */,
-				2A9536452B533ABB00E874F5 /* ConsentListFailure.swift */,
-			);
-			path = ConsentListState;
-			sourceTree = "<group>";
-		};
 		2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -6916,12 +6867,6 @@
 		2AA70FC42B52C0760061F5DD /* ConsentList */ = {
 			isa = PBXGroup;
 			children = (
-				2A9536422B533A9300E874F5 /* ConsentListState */,
-				2AA70FC92B52C1B40061F5DD /* ConsentListEvent.swift */,
-				2AE87B002B54551C00B5B7CA /* ConsentListEffect.swift */,
-				2ABFB8F52B55546900D6A0BA /* ConsentListRxReducer.swift */,
-				2ABFB8F72B55549A00D6A0BA /* ConsentListRxEffectHandler.swift */,
-				2A9536342B52C50B00E874F5 /* ConsentListReducer.swift */,
 				2ACE0A972B53E12B007AA2ED /* View */,
 			);
 			path = ConsentList;
@@ -7067,27 +7012,13 @@
 			path = ThirdPartyDependencies;
 			sourceTree = "<group>";
 		};
-		2ABFB9012B5555C200D6A0BA /* RxViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2AE87AF32B54534000B5B7CA /* RxViewModelTests.swift */,
-			);
-			path = RxViewModel;
-			sourceTree = "<group>";
-		};
 		2ABFB9062B5565BE00D6A0BA /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
-				2A6EAA952B5060E20093EE83 /* ViewModel+preview.swift */,
+				2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */,
 				2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */,
 				2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */,
 				2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */,
-				2A9536402B53355900E874F5 /* ConsentListState+ext.swift */,
-				2A9536362B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift */,
-				2A95363A2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift */,
-				2A9536382B52D55D00E874F5 /* [Bank]+ext.swift */,
-				2A95363C2B52DA3F00E874F5 /* [SelectableBank]+ext.swift */,
-				2ABFB9032B555EA900D6A0BA /* Consent+ext.swift */,
 			);
 			path = PreviewContent;
 			sourceTree = "<group>";
@@ -7202,7 +7133,6 @@
 			children = (
 				2ACE0AA62B53F68B007AA2ED /* FastPaymentsSettingsPreviewTests.swift */,
 				2AE87AEF2B5452D800B5B7CA /* ConsentList */,
-				2ABFB9012B5555C200D6A0BA /* RxViewModel */,
 				2ABFB8EA2B5524C200D6A0BA /* TestHelpers */,
 				2ACE0AB02B540281007AA2ED /* Helpers */,
 				2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */,
@@ -7316,14 +7246,6 @@
 				2AE87B042B54556400B5B7CA /* ConsentListRxEffectHandlerTests.swift */,
 			);
 			path = ConsentList;
-			sourceTree = "<group>";
-		};
-		2AE87AF22B54531F00B5B7CA /* RxViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2AE87AF02B54530200B5B7CA /* RxViewModel.swift */,
-			);
-			path = RxViewModel;
 			sourceTree = "<group>";
 		};
 		2AE87AF52B54534F00B5B7CA /* ThirdPartyDependencies */ = {
@@ -11349,6 +11271,7 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
+				2ABFB9072B556F4F00D6A0BA /* FastPaymentsSettingsPreview-Info.plist */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
@@ -12278,6 +12201,7 @@
 			packageProductDependencies = (
 				2AA70FBC2B52B1940061F5DD /* Tagged */,
 				2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */,
+				2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */,
 			);
 			productName = FastPaymentsSettingsPreview;
 			productReference = 2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */;
@@ -13169,56 +13093,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AA70FCC2B52C2120061F5DD /* Bank.swift in Sources */,
 				2ACE0A942B53E0BA007AA2ED /* FastPaymentsSettingsState.swift in Sources */,
 				2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */,
 				2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */,
 				2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */,
 				2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */,
-				2A9536372B52CA7900E874F5 /* ConsentListState.UIState.Collapsed+ext.swift in Sources */,
 				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
-				2A95363D2B52DA3F00E874F5 /* [SelectableBank]+ext.swift in Sources */,
 				2A95363F2B53120700E874F5 /* ExpandedConsentListView.swift in Sources */,
 				2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */,
 				2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */,
 				2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */,
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
-				2ABFB9052B555EBE00D6A0BA /* Consent+ext.swift in Sources */,
-				2AA70FCA2B52C1B40061F5DD /* ConsentListEvent.swift in Sources */,
-				2A95363B2B52D8CB00E874F5 /* ConsentListState.UIState.Expanded+ext.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
-				2ABFB8FA2B5554F200D6A0BA /* ConsentListRxReducer.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
 				2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */,
 				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
-				2ABFB8E92B5522BB00D6A0BA /* Consent.swift in Sources */,
 				2A59F92E2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
-				2A6EAA962B5060E20093EE83 /* ViewModel+preview.swift in Sources */,
+				2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
-				2A9536412B53355900E874F5 /* ConsentListState+ext.swift in Sources */,
 				2ACE0A9F2B53E629007AA2ED /* FastPaymentsSettingsState+ext.swift in Sources */,
-				2A9536392B52D55D00E874F5 /* [Bank]+ext.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
-				2ABFB8F42B55545700D6A0BA /* ConsentListEffect.swift in Sources */,
-				2A9536442B533A9E00E874F5 /* ConsentList.swift in Sources */,
 				2ACE0A962B53E0CB007AA2ED /* FastPaymentsSettingsEvent.swift in Sources */,
 				2A6EAA9E2B506E220093EE83 /* FastPaymentsSettingsReducer.swift in Sources */,
 				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
-				2ABFB8F22B55543B00D6A0BA /* RxViewModel.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
-				2A9536482B533AD400E874F5 /* ConsentList+ext.swift in Sources */,
-				2A9536462B533ABB00E874F5 /* ConsentListFailure.swift in Sources */,
-				2ABFB8F92B5554EA00D6A0BA /* ConsentListRxEffectHandler.swift in Sources */,
 				2A6EAAA62B50764A0093EE83 /* UserPaymentSettings.swift in Sources */,
 				2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */,
 				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
-				2AA70FC82B52C1640061F5DD /* ConsentListState.swift in Sources */,
-				2A9536352B52C50B00E874F5 /* ConsentListReducer.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,
 				2AA70FC62B52C0A20061F5DD /* ViewModel.swift in Sources */,
 			);
@@ -13237,7 +13143,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ABFB9022B5555D500D6A0BA /* RxViewModelTests.swift in Sources */,
 				2A5D34102B5408A100E9214F /* ReducerSpy.swift in Sources */,
 				2ABFB8E42B5507A100D6A0BA /* Spy.swift in Sources */,
 				2AE87B052B54556400B5B7CA /* ConsentListRxEffectHandlerTests.swift in Sources */,
@@ -15411,13 +15316,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FastPaymentsSettingsPreview-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -15447,13 +15353,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FastPaymentsSettingsPreview-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -15482,13 +15389,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FastPaymentsSettingsPreview-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -15517,13 +15425,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/FastPaymentsSettingsPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FastPaymentsSettingsPreview-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -17519,6 +17428,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
 			productName = CombineSchedulers;
+		};
+		2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FastPaymentsSettings;
 		};
 		2AC3282F2ADEF41D00443A84 /* CVVPINServices */ = {
 			isa = XCSwiftPackageProductDependency;
