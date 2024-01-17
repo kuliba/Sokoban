@@ -12,7 +12,7 @@ extension RequestFactory {
     
     static func getCardStatementForPeriod(
         payload: CardStatementForPeriodDomain.Payload
-    ) throws -> URLRequest {
+    ) -> URLRequest {
         
         let endpoint = Services.Endpoint.getCardStatementForPeriod
         let url = try! endpoint.url(
@@ -21,7 +21,7 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.httpBody = try payload.json
+        request.httpBody = payload.json
         return request
     }
 }

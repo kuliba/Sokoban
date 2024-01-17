@@ -34,28 +34,26 @@ extension CardStatementForPeriodDomain {
 
 extension CardStatementForPeriodDomain.Payload {
     
-    var json: Data {
+    var json: Data? {
         
-        get throws {
-            
-            var parameters: [String: String] = [
-                "id": "\(id.rawValue)",
-                "startDate": "\(period.start)",
-                "endDate": "\(period.end)"
-            ]
-            
-            let name: [String: String]? = name.map { ["name": $0.rawValue] }
-            if let name { parameters = parameters.mergeOnto(target: name) }
-            
-            let statementFormat: [String: String]? = statementFormat.map { ["statementFormat": $0.rawValue] }
-            if let statementFormat { parameters = parameters.mergeOnto(target: statementFormat) }
-
-            let cardNumber: [String: String]? = cardNumber.map { ["cardNumber": $0.rawValue] }
-            if let cardNumber { parameters = parameters.mergeOnto(target: cardNumber) }
-            
-            return try JSONSerialization.data(withJSONObject: parameters
-             as [String: String])
-        }
+        var parameters: [String: String] = [
+            "id": "\(id.rawValue)",
+            "startDate": "\(period.start)",
+            "endDate": "\(period.end)"
+        ]
+        
+        let name: [String: String]? = name.map { ["name": $0.rawValue] }
+        if let name { parameters = parameters.mergeOnto(target: name) }
+        
+        let statementFormat: [String: String]? = statementFormat.map { ["statementFormat": $0.rawValue] }
+        if let statementFormat { parameters = parameters.mergeOnto(target: statementFormat) }
+        
+        let cardNumber: [String: String]? = cardNumber.map { ["cardNumber": $0.rawValue] }
+        if let cardNumber { parameters = parameters.mergeOnto(target: cardNumber) }
+        
+        return try? JSONSerialization.data(withJSONObject: parameters
+                                           as [String: String])
+        
     }
 }
 
