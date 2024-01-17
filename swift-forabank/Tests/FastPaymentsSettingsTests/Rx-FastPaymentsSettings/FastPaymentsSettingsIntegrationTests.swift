@@ -21,7 +21,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertEqual(updateProductSpy.callCount, 0)
     }
     
-    func test_flow_abc1d1_deactivateLoadedActiveContract() {
+    func test_flow_abc1d1_deactivationSuccessOfLoadedActiveContract() {
         
         let details = contractedState(.active).details
         let newContract = paymentContract(contractStatus: .inactive)
