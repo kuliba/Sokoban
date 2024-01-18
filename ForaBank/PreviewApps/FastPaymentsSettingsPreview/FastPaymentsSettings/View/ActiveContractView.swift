@@ -16,15 +16,19 @@ struct ActiveContractView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 64) {
             
-            HStack(spacing: 16) {
-                
-                Color.green
-                    .clipShape(.circle)
-                    .frame(width: 64, height: 64)
+            VStack(spacing: 16) {
                 
                 Button("Выключить переводы СБП", action: actionOff)
+                
+                HStack(spacing: 16) {
+                    
+                    Text("Переводы включены")
+                        .font(.subheadline)
+                    
+                    ToggleMockView(status: .active)
+                }
             }
             
             bankDefaultView(contractDetails.bankDefault)

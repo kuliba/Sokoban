@@ -19,17 +19,10 @@ struct InactiveContractView: View {
             
             HStack(spacing: 16) {
                 
-                Capsule(style: .continuous)
-                    .strokeBorder(.gray)
-                    .frame(width: 48, height: 24)
-                    .overlay(alignment: .leading) {
-                        Color.black
-                            .clipShape(.circle)
-                            .frame(width: 24, height: 24)
-                    }
-                
                 Text("Переводы выключены")
                     .font(.subheadline)
+                
+                ToggleMockView(status: .inactive)
             }
         }
     }
