@@ -46,28 +46,33 @@ struct FlowStubSettingsView: View {
             pickerSection("Update Product", selection: $updateProduct)
         }
         .listStyle(.plain)
-        .overlay(alignment: .bottom, content: applyButton)
+        .overlay(alignment: .bottom, content: buttons)
         .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     private var flowStub: FlowStub? {
         
-        guard let getProducts = getProducts?.products,
-              let createContract = createContract?.response,
-              let getSettings = getSettings?.settings,
-              let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
-              let updateContract = updateContract?.updateContractResponse,
-              let updateProduct = updateProduct?.updateProductResponse
-        else { return nil }
+        get {
+            
+            guard let getProducts = getProducts?.products,
+                  let createContract = createContract?.response,
+                  let getSettings = getSettings?.settings,
+                  let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
+                  let updateContract = updateContract?.updateContractResponse,
+                  let updateProduct = updateProduct?.updateProductResponse
+            else { return nil }
+            
+            return .init(
+                getProducts: getProducts,
+                createContract: createContract,
+                getSettings: getSettings,
+                prepareSetBankDefault: prepareSetBankDefault,
+                updateContract: updateContract,
+                updateProduct: updateProduct)
+        }
         
-        return .init(
-            getProducts: getProducts,
-            createContract: createContract,
-            getSettings: getSettings,
-            prepareSetBankDefault: prepareSetBankDefault,
-            updateContract: updateContract,
-            updateProduct: updateProduct)
+        
     }
     
     private func pickerSection<T: Pickerable>(
@@ -89,19 +94,32 @@ struct FlowStubSettingsView: View {
         }
     }
     
-    private func applyButton() -> some View {
+    private func buttons() -> some View {
         
-        Button {
-            flowStub.map(commit)
-        } label: {
-            Text("Apply")
-                .font(.headline)
-                .padding(.vertical, 9)
-                .frame(maxWidth: .infinity)
+        VStack(spacing: 16) {
+            
+            Button("Happy path") {
+                
+                getProducts = .init(flowStub: .preview)
+                createContract = .init(flowStub: .preview)
+                getSettings = .init(flowStub: .preview)
+                prepareSetBankDefault = .init(flowStub: .preview)
+                updateContract = .init(flowStub: .preview)
+                updateProduct = .init(flowStub: .preview)
+            }
+            
+            Button {
+                flowStub.map(commit)
+            } label: {
+                Text("Apply")
+                    .font(.headline)
+                    .padding(.vertical, 9)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(flowStub == nil)
         }
         .padding(.horizontal)
-        .buttonStyle(.borderedProminent)
-        .disabled(flowStub == nil)
     }
 }
 
