@@ -15,6 +15,7 @@ struct FlowStubSettingsView: View {
     @State private var getSettings: GetSettings?
     @State private var prepareSetBankDefault: PrepareSetBankDefault?
     @State private var updateContract: UpdateContract?
+    @State private var updateProduct: UpdateProduct?
     
     private let commit: (FlowStub) -> Void
     
@@ -28,6 +29,7 @@ struct FlowStubSettingsView: View {
         self.getSettings = flowStub.map { .init(flowStub: $0) }
         self.prepareSetBankDefault = flowStub.map { .init(flowStub: $0) }
         self.updateContract = flowStub.map { .init(flowStub: $0) }
+        self.updateProduct = flowStub.map { .init(flowStub: $0) }
     }
     
     private var flowStub: FlowStub? {
@@ -44,6 +46,7 @@ struct FlowStubSettingsView: View {
             getSettingsPicker()
             prepareSetBankDefaultPicker()
             updateContractPicker()
+            updateProductPicker()
         }
         .overlay(alignment: .bottom, content: applyButton)
         .navigationTitle("Select  Flow Options")
@@ -140,6 +143,24 @@ struct FlowStubSettingsView: View {
         }
     }
     
+    private func updateProductPicker() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            Text("Update Product Result").font(.footnote)
+            
+            Picker("Update Product Result", selection: $updateProduct) {
+                
+                ForEach(UpdateProduct.allCases) {
+                    
+                    Text($0.rawValue)
+                        .tag(Optional($0))
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+    
     private func applyButton() -> some View {
         
         Button {
@@ -199,6 +220,13 @@ private extension FlowStubSettingsView {
     enum UpdateContract: String, CaseIterable, Identifiable {
         
         case active, inactive, error_C, error_S
+        
+        var id: Self { self }
+    }
+    
+    enum UpdateProduct: String, CaseIterable, Identifiable {
+        
+        case success, error_C, error_S
         
         var id: Self { self }
     }
@@ -302,6 +330,26 @@ private extension FlowStubSettingsView.UpdateContract {
             case .inactive:
                 self = .inactive
             }
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
+private extension FlowStubSettingsView.UpdateProduct {
+    
+    init(flowStub: FlowStub) {
+        
+        switch flowStub.updateProduct {
+        case .success(()):
+            self = .success
             
         case let .failure(failure):
             switch failure {
