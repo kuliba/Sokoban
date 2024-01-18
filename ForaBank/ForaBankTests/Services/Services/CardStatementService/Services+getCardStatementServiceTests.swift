@@ -24,7 +24,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
+        try expect(sut, toDeliver: [.failure(.mappingFailure(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -33,7 +33,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
+        try expect(sut, toDeliver: [.failure(.mappingFailure(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -42,7 +42,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mapError("server error"))]) {
+        try expect(sut, toDeliver: [.failure(.mappingFailure("server error"))]) {
             spy.complete(with: .success(makeSuccessResponse(
                 with: .emptyData,
                 statusCode: 1

@@ -1,5 +1,5 @@
 //
-//  ProductStatementMapper.swift
+//  ResponseMapper+mapGetCardStatementService.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 17.01.2024.
@@ -7,14 +7,12 @@
 
 import Foundation
 
-struct ProductStatementMapper {
-    
-    typealias Result = Swift.Result<[ProductStatementData], MapperError>
-    
-    static func map(
+extension ResponseMapper {
+        
+    static func mapGetCardStatementService(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Result {
+    ) -> Swift.Result<[ProductStatementData], MapperError> {
         
         let statusCode = response.statusCode
         
@@ -27,7 +25,7 @@ struct ProductStatementMapper {
         }
     }
     
-    private static func handle200(with data: Data) -> Result {
+    private static func handle200(with data: Data) -> Swift.Result<[ProductStatementData], MapperError> {
         
         do {
             
@@ -39,24 +37,24 @@ struct ProductStatementMapper {
                 
             default:
                 guard let data = response.data
-                else { return .failure(.mapError(response.errorMessage ?? .defaultError))}
+                else { return .failure(.mappingFailure(response.errorMessage ?? .defaultError))}
                 return .success(data)
             }
         } catch {
-            return .failure(.mapError(.defaultError))
+            return .failure(.mappingFailure(.defaultError))
         }
     }
     
     private static func errorByCode(
         _ code: Int
-    ) -> Result {
+    ) -> Swift.Result<[ProductStatementData], MapperError> {
         
-        .failure(.mapError(HTTPURLResponse.localizedString(forStatusCode: code)))
+        .failure(.mappingFailure(HTTPURLResponse.localizedString(forStatusCode: code)))
     }
     
     enum MapperError: Error, Equatable {
         
-        case mapError(String)
+        case mappingFailure(String)
         case not200Status(String)
     }
 }

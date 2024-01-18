@@ -1742,7 +1742,7 @@
 		8353CD502B56A7B0005F7D1A /* CardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD4F2B56A7B0005F7D1A /* CardStatementForPeriod.swift */; };
 		8353CD522B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD512B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift */; };
 		8353CD552B57AF72005F7D1A /* Services+getCardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */; };
-		8353CD592B57B21D005F7D1A /* ProductStatementMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */; };
+		8353CD592B57B21D005F7D1A /* ResponseMapper+mapGetCardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD582B57B21D005F7D1A /* ResponseMapper+mapGetCardStatementService.swift */; };
 		8353CD5E2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */; };
 		8353CD612B57F699005F7D1A /* CardStatementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD602B57F699005F7D1A /* CardStatementFactory.swift */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
@@ -4059,7 +4059,7 @@
 		8353CD4F2B56A7B0005F7D1A /* CardStatementForPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementForPeriod.swift; sourceTree = "<group>"; };
 		8353CD512B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriodTests.swift"; sourceTree = "<group>"; };
 		8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementService.swift"; sourceTree = "<group>"; };
-		8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementMapper.swift; sourceTree = "<group>"; };
+		8353CD582B57B21D005F7D1A /* ResponseMapper+mapGetCardStatementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetCardStatementService.swift"; sourceTree = "<group>"; };
 		8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementServiceTests.swift"; sourceTree = "<group>"; };
 		8353CD602B57F699005F7D1A /* CardStatementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementFactory.swift; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
@@ -9983,7 +9983,7 @@
 			isa = PBXGroup;
 			children = (
 				8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */,
-				8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */,
+				8353CD582B57B21D005F7D1A /* ResponseMapper+mapGetCardStatementService.swift */,
 			);
 			path = CardStatementService;
 			sourceTree = "<group>";
@@ -13221,7 +13221,7 @@
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
-				8353CD592B57B21D005F7D1A /* ProductStatementMapper.swift in Sources */,
+				8353CD592B57B21D005F7D1A /* ResponseMapper+mapGetCardStatementService.swift in Sources */,
 				2A1F083C2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				5066506D2857C1950039A745 /* OpenAccountProductData.swift in Sources */,
 				774706B0277DD59700B524F1 /* AntifraudViewModel.swift in Sources */,
