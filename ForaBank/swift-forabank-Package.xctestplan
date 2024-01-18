@@ -246,8 +246,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CardStatementServicesTests",
-        "name" : "CardStatementServicesTests"
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
       }
     }
   ],

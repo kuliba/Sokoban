@@ -25,7 +25,7 @@ let package = Package(
         .fetcher,
         .keyChainStore,
         // Services
-        .cardStatementServices,
+        .cardStatementAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -93,8 +93,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Services
-        .cardStatementServices,
-        .cardStatementServicesTests,
+        .cardStatementAPI,
+        .cardStatementAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -336,10 +336,10 @@ private extension Product {
     
     // MARK: - Services
     
-    static let cardStatementServices = library(
-        name: .cardStatementServices,
+    static let cardStatementAPI = library(
+        name: .cardStatementAPI,
         targets: [
-            .cardStatementServices,
+            .cardStatementAPI,
         ]
     )
 
@@ -681,19 +681,19 @@ private extension Target {
     
     // MARK: - Services
     
-    static let cardStatementServices = target(
-        name: .cardStatementServices,
-        path: "Sources/Services/\(String.cardStatementServices)"
+    static let cardStatementAPI = target(
+        name: .cardStatementAPI,
+        path: "Sources/\(String.cardStatementAPI)"
     )
-    static let cardStatementServicesTests = testTarget(
-        name: .cardStatementServicesTests,
+    static let cardStatementAPITests = testTarget(
+        name: .cardStatementAPITests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .cardStatementServices,
+            .cardStatementAPI,
         ],
-        path: "Tests/Services/\(String.cardStatementServicesTests)"
+        path: "Tests/\(String.cardStatementAPITests)"
     )
 
     static let cryptoSwaddler = target(
@@ -1213,8 +1213,8 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
-    static let cardStatementServices = byName(
-        name: .cardStatementServices
+    static let cardStatementAPI = byName(
+        name: .cardStatementAPI
     )
 
     static let cryptoSwaddler = byName(
@@ -1358,8 +1358,8 @@ private extension String {
     
     // MARK: - Services
     
-    static let cardStatementServices = "CardStatementServices"
-    static let cardStatementServicesTests = "CardStatementServicesTests"
+    static let cardStatementAPI = "CardStatementAPI"
+    static let cardStatementAPITests = "CardStatementAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
