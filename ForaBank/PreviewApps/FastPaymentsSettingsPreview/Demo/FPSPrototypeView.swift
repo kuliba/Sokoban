@@ -16,7 +16,10 @@ struct FPSPrototypeView: View {
     var body: some View {
         
         switcher()
-            .fullScreenCover(isPresented: $isShowingFlowStubOptions, content: fullScreenCover)
+            .fullScreenCover(
+                isPresented: $isShowingFlowStubOptions, 
+                content: fullScreenCover
+            )
     }
     
     @ViewBuilder

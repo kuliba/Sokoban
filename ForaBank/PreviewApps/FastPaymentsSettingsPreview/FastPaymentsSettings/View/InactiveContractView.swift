@@ -8,18 +8,29 @@
 import SwiftUI
 
 struct InactiveContractView: View {
-
+    
     let action: () -> Void
-
+    
     var body: some View {
-
-        HStack(spacing: 16) {
-            
-            Color.black
-                .clipShape(.circle)
-                .frame(width: 64, height: 64)
+        
+        VStack(spacing: 16) {
             
             Button("Включить переводы СБП", action: action)
+            
+            HStack(spacing: 16) {
+                
+                Capsule(style: .continuous)
+                    .strokeBorder(.gray)
+                    .frame(width: 48, height: 24)
+                    .overlay(alignment: .leading) {
+                        Color.black
+                            .clipShape(.circle)
+                            .frame(width: 24, height: 24)
+                    }
+                
+                Text("Переводы выключены")
+                    .font(.subheadline)
+            }
         }
     }
 }
