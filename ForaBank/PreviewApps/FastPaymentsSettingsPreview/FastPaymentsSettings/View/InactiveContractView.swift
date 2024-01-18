@@ -13,7 +13,7 @@ struct InactiveContractView: View {
     
     var body: some View {
         
-        VStack(spacing: 16) {
+        List {
             
             Button("Включить переводы СБП", action: action)
             

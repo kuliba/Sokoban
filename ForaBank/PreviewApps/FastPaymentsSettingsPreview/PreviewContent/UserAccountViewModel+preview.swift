@@ -20,11 +20,41 @@ extension UserAccountViewModel {
         )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
-            createContract: { _, completion in completion(flowStub.createContract) },
-            getSettings: { completion in completion(flowStub.getSettings) },
-            prepareSetBankDefault: { completion in completion(flowStub.prepareSetBankDefault) },
-            updateContract: { _, completion in completion(flowStub.updateContract) },
-            updateProduct: { _, completion in completion(flowStub.updateProduct) }
+            createContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.createContract)
+                }
+            },
+            getSettings: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.getSettings)
+                }
+            },
+            prepareSetBankDefault: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.prepareSetBankDefault)
+                }
+            },
+            updateContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.updateContract)
+                }
+            },
+            updateProduct: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.updateProduct)
+                }
+            }
         )
         
         return .init(
