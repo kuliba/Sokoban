@@ -158,7 +158,7 @@ class DepositCalculatorViewModel {
                  calculateAmount.interestRateValue = itemViewModel.rate
 
                  let yourIncome = calculateYourIncome(initialAmount: calculateAmount.value,
-                                                      interestRate: selectedItem.rate,
+                                                      interestRate: calculateAmount.interestRateValue,
                                                       termDay: selectedItem.term)
                  totalAmount.yourIncome = yourIncome
 
