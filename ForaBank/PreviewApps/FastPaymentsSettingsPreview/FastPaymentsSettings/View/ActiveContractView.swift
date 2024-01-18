@@ -18,21 +18,13 @@ struct ActiveContractView: View {
         
         VStack(spacing: 64) {
             
-            VStack(spacing: 16) {
-                
-                Button("Выключить переводы СБП", action: actionOff)
-                
-                HStack(spacing: 16) {
-                    
-                    Text("Переводы включены")
-                        .font(.subheadline)
-                    
-                    ToggleMockView(status: .active)
-                }
-            }
+            PaymentContractView(
+                paymentContract: contractDetails.paymentContract, 
+                actionOff: actionOff
+            )
             
             BankDefaultView(
-                bankDefault: contractDetails.bankDefault, 
+                bankDefault: contractDetails.bankDefault,
                 action: setBankDefault
             )
         }
@@ -43,8 +35,22 @@ struct ActiveContractView_Previews: PreviewProvider {
     
     static var previews: some View {
         
+        VStack(spacing: 32) {
+            
+            activeContractView(.preview(paymentContract: .active))
+            
+            Divider()
+            
+            activeContractView(.preview(paymentContract: .inactive))
+        }
+    }
+    
+    private static func activeContractView(
+        _ contractDetails: UserPaymentSettings.ContractDetails
+    ) -> some View {
+        
         ActiveContractView(
-            contractDetails: .preview(),
+            contractDetails: contractDetails,
             actionOff:  {},
             setBankDefault: {}
         )
