@@ -5,104 +5,6 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-import Combine
-
-protocol TimerProtocol {
-    
-    func start(
-        every interval: TimeInterval,
-        onRun: @escaping () -> Void
-    )
-    func stop()
-}
-
-class RealTimer: TimerProtocol {
-    
-    private var timer: AnyCancellable?
-    
-    func start(
-        every interval: TimeInterval,
-        onRun: @escaping () -> Void
-    ) {
-        
-        timer = Timer
-            .publish(every: interval, on: .main, in: .common)
-            .autoconnect()
-            .sink(receiveValue: { _ in onRun() })
-    }
-    
-    func stop() {
-        
-        timer?.cancel()
-        timer = nil
-    }
-}
-
-final class TickViewModel: ObservableObject {
-    
-    @Published private(set) var state: State
-    
-    private let stateSubject = PassthroughSubject<State, Never>()
-    
-    private let timer: TimerProtocol
-    private let reduce: Reduce
-    private let handleEffect: HandleEffect
-    
-    init(
-        initialState: State,
-        timer: TimerProtocol,
-        reduce: @escaping Reduce,
-        handleEffect: @escaping HandleEffect,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) {
-        self.state = initialState
-        self.timer = timer
-        self.reduce = reduce
-        self.handleEffect = handleEffect
-        
-        stateSubject
-            .removeDuplicates()
-            .receive(on: scheduler)
-            .assign(to: &$state)
-    }
-}
-
-extension TickViewModel {
-    
-    func event(_ event: Event) {
-        
-        let (state, effect) = reduce(state, event)
-        stateSubject.send(state)
-        
-        switch state {
-        case .running:
-            timer.start(every: 1) { [weak self] in self?.event(.tick) }
-            
-        case .idle:
-            timer.stop()
-        }
-        
-        if let effect {
-            
-            handleEffect(effect) { [weak self] event in
-                
-                self?.event(event)
-            }
-        }
-    }
-}
-
-extension TickViewModel {
-    
-    typealias Reduce = (State, Event) -> (State, Effect?)
-    typealias HandleEffect = (Effect, @escaping (Event) -> Void) -> Void
-    
-    typealias State = TickState
-    typealias Event = TickEvent
-    typealias Effect = TickEffect
-}
-
-
 import XCTest
 
 final class TickViewModelTests: XCTestCase {
@@ -124,6 +26,94 @@ final class TickViewModelTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [initialState])
     }
     
+    func test_event_shouldCallReducerWithGivenStateAndEvent() {
+        
+        let initialState: State = .running(remaining: 123)
+        let event: Event = .failure(.connectivityError)
+        let (sut, _, reducer, _,_) = makeSUT(
+            initialState: initialState,
+            stub: (.idle(.connectivityError), nil)
+        )
+        
+        sut.event(event)
+        
+        XCTAssertNoDiff(reducer.messages.map(\.state), [initialState])
+        XCTAssertNoDiff(reducer.messages.map(\.event), [event])
+    }
+    
+    func test_event_shouldStopTimerOnIdle() {
+        
+        let (sut, timer, _,_,_) = makeSUT(
+            stub: (.idle(nil), nil)
+        )
+        
+        sut.event(.appear)
+        
+        XCTAssertNoDiff(timer.messages, [.stop])
+    }
+    
+    func test_event_shouldCallTimerOnRunning() {
+        
+        let (sut, timer, _,_,_) = makeSUT(
+            stub: (.running(remaining: 123), nil)
+        )
+        
+        sut.event(.appear)
+        
+        XCTAssertNoDiff(timer.messages, [.start])
+    }
+    
+    func test_event_shouldTimerShouldEmitTickOnRunning() {
+        
+        let (sut, timer, reducer, _,_) = makeSUT(
+            stub: (.running(remaining: 123), nil),
+            (.running(remaining: 12), nil)
+        )
+        
+        sut.event(.appear)
+        timer.complete()
+        
+        XCTAssertNoDiff(reducer.messages.map(\.event), [.appear, .tick])
+        XCTAssertNoDiff(reducer.messages.map(\.state), [idle(), running(123)])
+    }
+    
+    func test_event_shouldNotCallEffectHandlerOnNilEffect() {
+        
+        let effect: Effect? = nil
+        let (sut, _, _, effectHandler,_) = makeSUT(
+            stub: (.idle(.connectivityError), effect)
+        )
+        
+        sut.event(.appear)
+        
+        XCTAssertNoDiff(effectHandler.callCount, 0)
+    }
+    
+    func test_event_shouldCallEffectHandlerOnNonNilEffect() {
+        
+        let effect: Effect = .initiate
+        let (sut, _, _, effectHandler,_) = makeSUT(
+            stub: (.idle(.connectivityError), effect)
+        )
+        
+        sut.event(.appear)
+        
+        XCTAssertNoDiff(effectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_event_shouldDeliverEventCompletedByEffectHandler() {
+        
+        let (sut, _, reducer, effectHandler,_) = makeSUT(
+            stub: (idleConnectivity(), .initiate),
+            (running(123), nil)
+        )
+        
+        sut.event(.appear)
+        effectHandler.complete(with: .start)
+        
+        XCTAssertNoDiff(reducer.messages.map(\.event), [.appear, .start])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TickViewModel
@@ -132,7 +122,7 @@ final class TickViewModelTests: XCTestCase {
     typealias Effect = TickEffect
     
     typealias StateSpy = ValueSpy<State>
-
+    
     private func makeSUT(
         initialState: TickViewModel.State = .idle(nil),
         stub: (State, Effect?)...,
@@ -153,10 +143,11 @@ final class TickViewModelTests: XCTestCase {
             initialState: initialState,
             timer: timerSpy,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)
-
+        
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, timerSpy, reducer, effectHandler, stateSpy)
@@ -165,17 +156,22 @@ final class TickViewModelTests: XCTestCase {
     private final class TimerSpy: TimerProtocol {
         
         private var completions = [Completion]()
+        private(set) var messages = [Message]()
         
-        var callCount: Int { completions.count }
+        var callCount: Int { messages.count }
         
         func start(
             every interval: TimeInterval,
             onRun completion: @escaping Completion
         ) {
             completions.append(completion)
+            messages.append(.start)
         }
         
-        func stop() {}
+        func stop() {
+            
+            messages.append(.stop)
+        }
         
         func complete(
             at index: Int = 0
@@ -184,6 +180,10 @@ final class TickViewModelTests: XCTestCase {
         }
         
         typealias Completion = () -> Void
+        enum Message: Equatable {
+            
+            case start, stop
+        }
     }
     
     private final class ReduceSpy {
