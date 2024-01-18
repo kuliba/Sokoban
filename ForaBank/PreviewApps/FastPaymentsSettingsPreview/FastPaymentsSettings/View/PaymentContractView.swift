@@ -15,17 +15,20 @@ struct PaymentContractView: View {
     
     var body: some View {
         
-        VStack {
+        Section("Переводы СПБ") {
             
-            HStack(spacing: 16) {
+            VStack(alignment: .leading) {
+
+                HStack(spacing: 16) {
+                    
+                    Text(title)
+                        .font(.subheadline)
+                    
+                    ToggleMockView(status: status)
+                }
                 
-                Text(title)
-                    .font(.subheadline)
-                
-                ToggleMockView(status: status)
+                Button(buttonTitle, action: actionOff)
             }
-            
-            Button(buttonTitle, action: actionOff)
         }
     }
     
@@ -63,7 +66,7 @@ struct PaymentContractView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        VStack(spacing: 16) {
+        List {
             
             paymentContractView(.active)
             

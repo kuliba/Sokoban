@@ -11,18 +11,24 @@ struct ToggleMockView: View {
     
     let status: Status
     var hight: CGFloat = 24
+    var title = "ForaBank"
     
     var body: some View {
         
-        Capsule(style: .continuous)
-            .strokeBorder(color)
-            .frame(width: hight * 2, height: hight)
-            .overlay(alignment: alignment) {
-                
-                color
-                    .clipShape(.circle)
-                    .frame(width: hight, height: hight)
-            }
+        HStack {
+            
+            Capsule(style: .continuous)
+                .strokeBorder(color)
+                .frame(width: hight * 2, height: hight)
+                .overlay(alignment: alignment) {
+                    
+                    color
+                        .clipShape(.circle)
+                        .frame(width: hight, height: hight)
+                }
+            
+            Text(title)
+        }
     }
     
     var color: Color {

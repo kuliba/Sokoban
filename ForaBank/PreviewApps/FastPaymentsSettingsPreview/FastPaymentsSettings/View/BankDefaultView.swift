@@ -15,17 +15,9 @@ struct BankDefaultView: View {
     
     var body: some View {
         
-        VStack {
+        Section("Банк по умолчанию") {
             
-            Text("Банк по умолчанию")
-                .font(.subheadline)
-            
-            HStack {
-                
-                bankDefaultIcon(bankDefault)
-                
-                Text("ForaBank")
-            }
+            bankDefaultIcon(bankDefault)
         }
     }
     
@@ -40,13 +32,14 @@ struct BankDefaultView: View {
                 .opacity(0.4)
             
         case .offEnabled:
-            Button(action: action) {
+            VStack(alignment: .leading) {
                 
                 ToggleMockView(status: .inactive)
+                Button("Установить Фора-банк", action: action)
             }
             
         case .offDisabled:
-            ToggleMockView(status: .active)
+            ToggleMockView(status: .inactive)
                 .opacity(0.4)
         }
     }
@@ -56,7 +49,7 @@ struct BankDefaultView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        VStack(spacing: 64) {
+        List {
             
             bankDefaultView(.onDisabled)
             bankDefaultView(.offEnabled)

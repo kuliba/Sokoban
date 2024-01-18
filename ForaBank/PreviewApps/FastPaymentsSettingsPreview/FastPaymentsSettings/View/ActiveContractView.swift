@@ -16,7 +16,7 @@ struct ActiveContractView: View {
     
     var body: some View {
         
-        VStack(spacing: 64) {
+        List {
             
             PaymentContractView(
                 paymentContract: contractDetails.paymentContract, 
