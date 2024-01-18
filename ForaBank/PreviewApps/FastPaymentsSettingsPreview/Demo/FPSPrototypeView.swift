@@ -10,27 +10,37 @@ import SwiftUI
 
 struct FPSPrototypeView: View {
     
-    @State private var flowStub: FlowStub
+    @State private var flowStub: FlowStub?
     @State private var isShowingFlowStubOptions = false
-    
-    init() {
-        let flowStub: FlowStub = .preview
-        self.flowStub = flowStub
-    }
     
     var body: some View {
         
-        UserAccountView(viewModel: .preview(
-            route: .init(),
-            flowStub: flowStub
-        ))
-        .overlay(alignment: .topTrailing, content: flowStubButton)
-        .fullScreenCover(isPresented: $isShowingFlowStubOptions, content: fullScreenCover)
+        switcher()
+            .fullScreenCover(isPresented: $isShowingFlowStubOptions, content: fullScreenCover)
     }
     
-    private func flowStubButton() -> some View {
+    @ViewBuilder
+    private func switcher() -> some View {
         
-        Button("Flow") {
+        switch flowStub {
+        case .none:
+            flowStubButton("Select Flow")
+                .font(.headline)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+        case let .some(flowStub):
+            
+            UserAccountView(viewModel: .preview(
+                route: .init(),
+                flowStub: flowStub
+            ))
+            .overlay(alignment: .topTrailing) { flowStubButton("Flow") }
+        }
+    }
+    
+    private func flowStubButton(_ title: String) -> some View {
+        
+        Button(title) {
             
             isShowingFlowStubOptions = true
         }
