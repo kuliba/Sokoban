@@ -18,11 +18,26 @@ struct FPSPrototypeView: View {
         let flow: Flow = .a1c2f1d1
         let viewModel = UserAccountViewModel.preview(
             route: .init(),
-            getUserPaymentSettings: { completion in
+            getProducts: { flow.products },
+            createContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flow.createContractResponse)
+                }
+            },
+            getSettings: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
                     completion(flow.userPaymentSettings)
+                }
+            },
+            prepareSetBankDefault: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flow.prepareSetBankDefaultResponse)
                 }
             },
             updateContract: { _, completion in
@@ -32,19 +47,11 @@ struct FPSPrototypeView: View {
                     completion(flow.updateContractResponse)
                 }
             },
-            getProduct: { flow.product },
-            createContract: { _, completion in
+            updateProduct: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(flow.createContractResponse)
-                }
-            },
-            prepareSetBankDefault: { completion in
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(flow.prepareSetBankDefaultResponse)
+                    completion(flow.updateProductResponse)
                 }
             }
         )
@@ -167,7 +174,7 @@ private extension FPSPrototypeView.Flow {
         }
     }
     
-    var updateContractResponse: FastPaymentsSettingsReducer.UpdateContractResponse {
+    var updateContractResponse: FastPaymentsSettingsEffectHandler.UpdateContractResponse {
         
         switch self {
         case .a1c1d1, .a1c2f1d1:
@@ -179,19 +186,19 @@ private extension FPSPrototypeView.Flow {
             fatalError("impossible")
             
         case .a1c1d2, .a1c2f1d2:
-            return .serverError("Server Error #7654")
+            return .failure(.serverError("Server Error #7654"))
             
         case .a1c1d3, .a1c2f1d3:
-            return .connectivityError
+            return .failure(.connectivityError)
             
         case .a2d1:
             return .success(.inactive)
             
         case .a2d2:
-            return .serverError("Server Error #7654")
+            return .failure(.serverError("Server Error #7654"))
             
         case .a2d3:
-            return .connectivityError
+            return .failure(.connectivityError)
             
         case .a3ea1, .a3ea2, .a3ea3, .a3nil:
             fatalError("impossible")
@@ -202,7 +209,7 @@ private extension FPSPrototypeView.Flow {
         }
     }
     
-    var product: FastPaymentsSettingsReducer.Product? {
+    var products: [Product] {
         
         switch self {
         case .a1c1d1, .a1c2f1d1:
@@ -223,10 +230,10 @@ private extension FPSPrototypeView.Flow {
             fatalError("impossible")
             
         case .a3ea1, .a3ea2, .a3ea3:
-            return .init(id: .init(UUID().uuidString))
+            return .preview
             
         case .a3nil:
-            return nil
+            return []
             
         case .a4:
             fatalError("impossible")
@@ -235,7 +242,7 @@ private extension FPSPrototypeView.Flow {
         }
     }
     
-    var createContractResponse: FastPaymentsSettingsReducer.CreateContractResponse {
+    var createContractResponse: FastPaymentsSettingsEffectHandler.CreateContractResponse {
         
         switch self {
         case .a1c1d1, .a1c2f1d1:
@@ -259,10 +266,10 @@ private extension FPSPrototypeView.Flow {
             return .success(.active)
             
         case .a3ea2:
-            return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
+            return .failure(.serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения"))
             
         case .a3ea3:
-            return .connectivityError
+            return .failure(.connectivityError)
             
         case .a3nil:
             fatalError("impossible")
@@ -273,7 +280,7 @@ private extension FPSPrototypeView.Flow {
         }
     }
     
-    var prepareSetBankDefaultResponse: FastPaymentsSettingsReducer.PrepareSetBankDefaultResponse {
+    var prepareSetBankDefaultResponse: FastPaymentsSettingsEffectHandler.PrepareSetBankDefaultResponse {
         
         switch self {
         case .a1c1d1:
@@ -284,13 +291,13 @@ private extension FPSPrototypeView.Flow {
             fatalError("impossible")
             
         case .a1c2f1d1, .a1c2f1d2, .a1c2f1d3:
-            return .success
+            return .success(())
             
         case .a1c2f2d1, .a1c2f2d2, .a1c2f2d3:
-            return .serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")
+            return .failure(.serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения"))
             
         case .a1c2f3d1, .a1c2f3d2, .a1c2f3d3:
-            return .connectivityError
+            return .failure(.connectivityError)
             
         case .a2d1:
             fatalError("impossible")
@@ -311,6 +318,11 @@ private extension FPSPrototypeView.Flow {
         case .a5:
             fatalError("impossible")
         }
+    }
+    
+    var updateProductResponse: FastPaymentsSettingsEffectHandler.UpdateProductResponse {
+        
+        .success(())
     }
 }
 

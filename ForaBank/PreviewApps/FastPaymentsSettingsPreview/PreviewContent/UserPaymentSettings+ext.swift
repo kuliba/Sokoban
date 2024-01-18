@@ -50,21 +50,35 @@ extension UserPaymentSettings.ContractDetails {
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
         consentResult: UserPaymentSettings.ConsentResult = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+        productSelector: UserPaymentSettings.ProductSelector = .init(
+            selectedProduct: .card,
+            products: .preview
+        )
     ) -> Self {
         
         .init(
             paymentContract: paymentContract,
             consentResult: consentResult,
-            bankDefault: bankDefault
+            bankDefault: bankDefault,
+            productSelector: productSelector
         )
     }
 }
 
 extension UserPaymentSettings.PaymentContract {
     
-    static let active: Self = .init(contractStatus: .active)
-    static let inactive: Self = .init(contractStatus: .inactive)
+    static let active: Self = .init(
+        id: .init(generateRandom11DigitNumber()),
+        productID: Product.card.id,
+        contractStatus: .active
+    )
+    
+    static let inactive: Self = .init(
+        id: .init(generateRandom11DigitNumber()),
+        productID: Product.account.id,
+        contractStatus: .inactive
+    )
 }
 
 private extension UserPaymentSettings.ConsentResult {

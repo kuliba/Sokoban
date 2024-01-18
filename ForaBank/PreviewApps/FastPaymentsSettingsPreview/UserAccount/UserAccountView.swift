@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import FastPaymentsSettings
 import SwiftUI
 
 struct UserAccountView: View {
@@ -105,7 +106,35 @@ struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        UserAccountView(viewModel: .preview())
+        UserAccountView(viewModel: .preview(
+            route: .init(),
+            getProducts: { .preview },
+            createContract: { _, completion in
+                
+                completion(.success(.active))
+            },
+            getSettings: { completion in
+                
+                completion(.active(bankDefault: .offEnabled))
+            },
+            prepareSetBankDefault: { completion in
+                
+                completion(.success(()))
+            },
+            updateContract: { _, completion in
+                
+                completion(.success(
+                    .init(
+                        id: .init(generateRandom11DigitNumber()),
+                        productID: Product.account.id,
+                        contractStatus: .active)
+                ))
+            },
+            updateProduct: { _, completion in
+                
+                completion(.success(()))
+            }
+        ))
     }
 }
 

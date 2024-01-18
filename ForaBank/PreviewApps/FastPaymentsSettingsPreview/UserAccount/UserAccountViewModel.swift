@@ -80,7 +80,7 @@ extension UserAccountViewModel {
         switch result {
         case .success:
             informer.set(text: "Банк по умолчанию установлен")
-            fpsViewModel?.event(.confirmSetBankDefault)
+            fpsViewModel?.event(.setBankDefaultPrepared(nil))
             
         case .incorrectCode:
             informer.set(text: "Банк по умолчанию не установлен")
@@ -131,12 +131,12 @@ extension UserAccountViewModel {
 #warning("combine multiple pipelines into one, extract composed sink into helpers")
         
         viewModel.$state
-            .compactMap(\.?.isInflight)
+            .map(\.isInflight)
             .sink { [weak self] in self?.route.isLoading = $0 }
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.alertMessage)
+            .compactMap(\.alertMessage)
             .sink { [weak self] in
                 
                 self?.route.modal = .fpsAlert(.ok(
@@ -151,7 +151,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.finalAlertMessage)
+            .compactMap(\.finalAlertMessage)
             .sink { [weak self] in
                 
                 self?.route.modal = .fpsAlert(.ok(
@@ -167,7 +167,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.informer)
+            .compactMap(\.informer)
             .sink { [weak self] informer in
                 
                 self?.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
@@ -177,7 +177,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.missingProduct)
+            .compactMap(\.missingProduct)
             .sink { [weak self] in
                 
                 self?.route.modal = .fpsAlert(.ok(
@@ -193,7 +193,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.setBankDefault)
+            .compactMap(\.setBankDefault)
             .sink { [weak self] in
                 
                 self?.route.modal = .fpsAlert(.init(
@@ -222,7 +222,7 @@ extension UserAccountViewModel {
             .store(in: &cancellables)
         
         viewModel.$state
-            .compactMap(\.?.confirmSetBankDefault)
+            .compactMap(\.confirmSetBankDefault)
             .sink { [weak self] in
                 
                 viewModel.event(.resetStatus)
@@ -292,6 +292,8 @@ private extension FastPaymentsSettingsState {
             return nil
         }
     }
+    
+    var isInflight: Bool { status == .inflight }
     
     var missingProduct: Void? {
         

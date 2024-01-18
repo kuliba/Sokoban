@@ -14,7 +14,7 @@ struct FastPaymentsSettingsView: View {
     
     var body: some View {
         
-        switch viewModel.state?.userPaymentSettings {
+        switch viewModel.state.userPaymentSettings {
         case .none, .failure:
             Text("Empty View").opacity(0.1)
             
