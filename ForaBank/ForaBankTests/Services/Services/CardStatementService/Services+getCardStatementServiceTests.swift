@@ -15,7 +15,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.success([.sample])]) {
+        try expect(sut, toDeliver: .success([.sample])) {
             spy.complete(with: .success(makeSuccessResponse(with: .sampleCardStatement)))
         }
     }
@@ -24,7 +24,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mappingFailure(.defaultError))]) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -33,7 +33,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mappingFailure(.defaultError))]) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -42,7 +42,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: [.failure(.mappingFailure("server error"))]) {
+        try expect(sut, toDeliver: .failure(.mappingFailure("server error"))) {
             spy.complete(with: .success(makeSuccessResponse(
                 with: .emptyData,
                 statusCode: 1
@@ -88,17 +88,16 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         string.data(using: .utf8)!
     }
     
-    private typealias Result = Services.GetCardStatementResult
     private typealias Payload = CardStatementForPeriodDomain.Payload
     
     private func expect(
         _ sut: Services.GetCardStatementService,
-        toDeliver expectedResults: [Result],
+        toDeliver expectedResult: Services.GetCardStatementResult,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
-        var results = [Result]()
+
         let exp = expectation(description: "wait for completion")
         let testPeriod = try testPeriod()
         let payload = Payload.init(
@@ -108,20 +107,53 @@ final class Services_getCardStatementServiceTests: XCTestCase {
             statementFormat: .csv,
             cardNumber: "1111")
         
-        sut.process(payload) { result in
-            if let a = try? result.get() {
-                results.append(a)
+        sut.process(payload) { receivedResult in
+            
+            switch (receivedResult, expectedResult) {
+            case let (
+                .failure(receivedError as NSError),
+                .failure(expectedError as NSError)
+            ):
+                XCTAssertNoDiff(
+                    receivedError,
+                    expectedError,
+                    "Expected \(expectedError), got \(receivedError) instead.",
+                    file: file, line: line
+                )
+                
+            case let (
+                .success(.failure(receivedError as NSError)),
+                .failure(expectedError as NSError)
+            ):
+                XCTAssertNoDiff(
+                    receivedError,
+                    expectedError,
+                    "Expected \(expectedError), got \(receivedError) instead.",
+                    file: file, line: line
+                )
+
+
+            case let (
+                .success(.success(receivedData)),
+                .success(expectedData)
+            ):
+                XCTAssertNoDiff(
+                    receivedData,
+                    expectedData,
+                    "Expected \(expectedData), got \(receivedData) instead.",
+                    file: file, line: line
+                )
+             
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
             }
+            
             exp.fulfill()
         }
         
         action()
         
         wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(results.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(results.count) instead.", file: file, line: line)
-        
-        assert(results, equals: expectedResults)
     }
     
     private func testPeriod() throws -> Period {

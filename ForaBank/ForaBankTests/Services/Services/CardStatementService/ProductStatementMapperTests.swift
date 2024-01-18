@@ -9,49 +9,44 @@ import XCTest
 @testable import ForaBank
 
 final class ProductStatementMapperTests: XCTestCase {
-
-    func test_map_statusCode200_dataNotNil() throws {
-        
-        let result = try XCTUnwrap(map(statusCode: 200))
-        
-        XCTAssertNotNil(result)
-    }
     
-    func test_map_statusCodeNot200_FailureNotOk() throws {
-        
-        let result = try XCTUnwrap(map(statusCode: 400))
-        
+    func test_map_statusCodeNot200_FailureNotOk() {
+                
         let errorMessage = errorMessageByCode(400)
-        
-        XCTAssertNoDiff(result, .failure(.mappingFailure(errorMessage)))
+                
+        XCTAssertNoDiff(
+            map(statusCode: 400),
+            .failure(.mappingFailure(errorMessage))
+        )
     }
     
-    func test_map_statusCode200_dataNotValid_FailureMapError() throws {
+    func test_map_statusCode200_dataNotValid_FailureMapError() {
         
-        let result = try XCTUnwrap(map(statusCode: 200, data: Data("test".utf8)))
-        
-        XCTAssertNoDiff(result, .failure(.mappingFailure(.defaultError)))
+        XCTAssertNoDiff(
+            map(statusCode: 200, data: Data("test".utf8)),
+            .failure(.mappingFailure(.defaultError))
+        )
     }
     
-    func test_map_statusCode200_errorNotNil_dataEmpty_FailureMapError() throws {
-        
-        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.error404.utf8)))
-        
-        XCTAssertNoDiff(result, .failure(.mappingFailure("404: Не найден запрос к серверу")))
+    func test_map_statusCode200_errorNotNil_dataEmpty_FailureMapError() {
+                
+        XCTAssertNoDiff(
+            map(statusCode: 200, data: Data(String.error404.utf8)),
+            .failure(.mappingFailure("404: Не найден запрос к серверу")))
     }
     
-    func test_map_statusCode200_dataEmpty_FailureMapError() throws {
-        
-        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.emptyData.utf8)))
-        
-        XCTAssertNoDiff(result, .failure(.mappingFailure(.defaultError)))
+    func test_map_statusCode200_dataEmpty_FailureMapError() {
+                
+        XCTAssertNoDiff(
+            map(statusCode: 200, data: Data(String.emptyData.utf8)),
+            .failure(.mappingFailure(.defaultError)))
     }
     
-    func test_map_statusCode200_anyDataCodeWithOutMessage_FailureMapErrorDefaultMessage() throws {
+    func test_map_statusCode200_anyDataCodeWithOutMessage_FailureMapErrorDefaultMessage() {
         
-        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.errorWithOutMessage.utf8)))
-        
-        XCTAssertNoDiff(result, .failure(.mappingFailure(.defaultError)))
+        XCTAssertNoDiff(
+            map(statusCode: 200, data: Data(String.errorWithOutMessage.utf8)),
+            .failure(.mappingFailure(.defaultError)))
     }
     
     func test_map_statusCode200_Success() throws {
