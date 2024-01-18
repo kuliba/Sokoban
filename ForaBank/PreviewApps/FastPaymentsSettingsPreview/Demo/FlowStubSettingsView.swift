@@ -8,6 +8,8 @@
 import FastPaymentsSettings
 import SwiftUI
 
+typealias Pickerable = RawRepresentable & CaseIterable & Identifiable & Hashable
+
 struct FlowStubSettingsView: View {
     
     @State private var getProducts: GetProducts?
@@ -41,113 +43,17 @@ struct FlowStubSettingsView: View {
         
         List {
             
-            getProductsPicker()
-            createContractPicker()
-            getSettingsPicker()
-            prepareSetBankDefaultPicker()
-            updateContractPicker()
-            updateProductPicker()
+            pickerSection("Select products", selection: $getProducts)
+            pickerSection("Create Contract Result", selection: $createContract)
+            pickerSection("Get Settings Result", selection: $getSettings)
+            pickerSection("Prepare Set Bank Default Result", selection: $prepareSetBankDefault)
+            pickerSection("Update Contract Result", selection: $updateContract)
+            pickerSection("Update Product Result", selection: $updateProduct)
         }
         .listStyle(.plain)
         .overlay(alignment: .bottom, content: applyButton)
         .navigationTitle("Select  Flow Options")
         .navigationBarTitleDisplayMode(.inline)
-    }
-    
-    private func getProductsPicker() -> some View {
-        
-        Section("Select products") {
-            
-            Picker("Select products", selection: $getProducts) {
-                
-                ForEach(GetProducts.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-    
-    private func createContractPicker() -> some View {
-        
-        Section("Create Contract Result") {
-            
-            Picker("Create Contract Result", selection: $createContract) {
-                
-                ForEach(CreateContractResponse.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-    
-    private func getSettingsPicker() -> some View {
-        
-        Section("Get Settings Result") {
-            
-            Picker("Get Settings Result", selection: $getSettings) {
-                
-                ForEach(GetSettings.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-    
-    private func prepareSetBankDefaultPicker() -> some View {
-        
-        Section("Prepare Set Bank Default Result") {
-            
-            Picker("Prepare Set Bank Default Result", selection: $prepareSetBankDefault) {
-                
-                ForEach(PrepareSetBankDefault.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-    
-    private func updateContractPicker() -> some View {
-        
-        Section("Update Contract Result") {
-            
-            Picker("Update Contract Result", selection: $updateContract) {
-                
-                ForEach(UpdateContract.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-    
-    private func updateProductPicker() -> some View {
-        
-        Section("Update Product Result") {
-            
-            Picker("Update Product Result", selection: $updateProduct) {
-                
-                ForEach(UpdateProduct.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
     }
     
     private func applyButton() -> some View {
@@ -163,6 +69,25 @@ struct FlowStubSettingsView: View {
         .padding(.horizontal)
         .buttonStyle(.borderedProminent)
         .disabled(flowStub == nil)
+    }
+    
+    private func pickerSection<T: Pickerable>(
+        _ title: String,
+        selection: Binding<T?>
+    ) -> some View where T.RawValue == String, T.AllCases: RandomAccessCollection {
+        
+        Section(title) {
+            
+            Picker(title, selection: selection) {
+                
+                ForEach(T.allCases) {
+                    
+                    Text($0.rawValue)
+                        .tag(Optional($0))
+                }
+            }
+            .pickerStyle(.segmented)
+        }
     }
 }
 
