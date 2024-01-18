@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var demo: Demo = .consent
+    @State private var demo: Demo = .fastPaymentsSettings
     
     var body: some View {
         
@@ -23,7 +23,7 @@ struct ContentView: View {
                 case .consent:
                     ConsentListPrototypeView()
                     
-                case .fps:
+                case .fastPaymentsSettings:
                     FPSPrototypeView()
                 }
             }
@@ -48,7 +48,7 @@ private extension ContentView {
     
     enum Demo: String, CaseIterable {
         
-        case consent, fps
+        case consent, fastPaymentsSettings
     }
 }
 
