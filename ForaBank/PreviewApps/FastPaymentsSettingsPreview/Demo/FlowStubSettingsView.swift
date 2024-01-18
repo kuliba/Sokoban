@@ -39,7 +39,7 @@ struct FlowStubSettingsView: View {
     
     var body: some View {
         
-        Form {
+        List {
             
             getProductsPicker()
             createContractPicker()
@@ -48,6 +48,7 @@ struct FlowStubSettingsView: View {
             updateContractPicker()
             updateProductPicker()
         }
+        .listStyle(.plain)
         .overlay(alignment: .bottom, content: applyButton)
         .navigationTitle("Select  Flow Options")
         .navigationBarTitleDisplayMode(.inline)
@@ -55,9 +56,7 @@ struct FlowStubSettingsView: View {
     
     private func getProductsPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Select products").font(.footnote)
+        Section("Select products") {
             
             Picker("Select products", selection: $getProducts) {
                 
@@ -73,9 +72,7 @@ struct FlowStubSettingsView: View {
     
     private func createContractPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Create Contract Result").font(.footnote)
+        Section("Create Contract Result") {
             
             Picker("Create Contract Result", selection: $createContract) {
                 
@@ -91,9 +88,7 @@ struct FlowStubSettingsView: View {
     
     private func getSettingsPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Get Settings Result").font(.footnote)
+        Section("Get Settings Result") {
             
             Picker("Get Settings Result", selection: $getSettings) {
                 
@@ -109,9 +104,7 @@ struct FlowStubSettingsView: View {
     
     private func prepareSetBankDefaultPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Prepare Set Bank Default Result").font(.footnote)
+        Section("Prepare Set Bank Default Result") {
             
             Picker("Prepare Set Bank Default Result", selection: $prepareSetBankDefault) {
                 
@@ -127,9 +120,7 @@ struct FlowStubSettingsView: View {
     
     private func updateContractPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Update Contract Result").font(.footnote)
+        Section("Update Contract Result") {
             
             Picker("Update Contract Result", selection: $updateContract) {
                 
@@ -145,9 +136,7 @@ struct FlowStubSettingsView: View {
     
     private func updateProductPicker() -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text("Update Product Result").font(.footnote)
+        Section("Update Product Result") {
             
             Picker("Update Product Result", selection: $updateProduct) {
                 
