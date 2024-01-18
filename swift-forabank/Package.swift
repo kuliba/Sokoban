@@ -459,6 +459,8 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .tagged,
+            // internal modules
+            .rxViewModel,
         ]
     )
     static let fastPaymentsSettingsTests = testTarget(
@@ -470,6 +472,7 @@ private extension Target {
             .tagged,
             // internal modules
             .fastPaymentsSettings,
+            .rxViewModel,
         ]
     )
     
