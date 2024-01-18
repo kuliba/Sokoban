@@ -1,23 +1,21 @@
 //
-//  FastPaymentsSettingsRxReducer.swift
+//  FastPaymentsSettingsReducer.swift
 //
 //
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-import FastPaymentsSettings
-#warning("rename: remove `Rx`")
-final class FastPaymentsSettingsRxReducer {
+public final class FastPaymentsSettingsReducer {
     
     private let getProducts: GetProducts
     
-    init(getProducts: @escaping GetProducts) {
+    public init(getProducts: @escaping GetProducts) {
         
         self.getProducts = getProducts
     }
 }
 
-extension FastPaymentsSettingsRxReducer {
+public extension FastPaymentsSettingsReducer {
     
     func reduce(
         _ state: State,
@@ -72,7 +70,7 @@ extension FastPaymentsSettingsRxReducer {
     }
 }
 
-extension FastPaymentsSettingsRxReducer {
+public extension FastPaymentsSettingsReducer {
     
     typealias GetProducts = () -> [Product]
     
@@ -81,7 +79,7 @@ extension FastPaymentsSettingsRxReducer {
     typealias Effect = FastPaymentsSettingsEffect
 }
 
-private extension FastPaymentsSettingsRxReducer {
+private extension FastPaymentsSettingsReducer {
     
     func activateContract(
         _ state: State

@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-import FastPaymentsSettings
 import Tagged
 
-final class FastPaymentsSettingsEffectHandler {
+public final class FastPaymentsSettingsEffectHandler {
     
     private let createContract: CreateContract
     private let getSettings: GetSettings
@@ -16,7 +15,7 @@ final class FastPaymentsSettingsEffectHandler {
     private let updateContract: UpdateContract
     private let updateProduct: UpdateProduct
     
-    init(
+    public init(
         createContract: @escaping CreateContract,
         getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
@@ -31,7 +30,7 @@ final class FastPaymentsSettingsEffectHandler {
     }
 }
 
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -60,7 +59,7 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `ea`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias CreateContractPayload = Effect.ProductID
 #warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
@@ -70,13 +69,13 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `abc`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
 
 // micro-service `f`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
@@ -84,7 +83,7 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `da`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias UpdateContractPayload = Effect.TargetContract
     #warning("`UpdateContractResponse` success case could only be `inactive` contract - need to find a way to enforce this")
@@ -94,7 +93,7 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `d`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias UpdateProductPayload = Effect.ContractCore
     typealias UpdateProductResponse = Result<Void, ServiceFailure>
@@ -102,7 +101,7 @@ extension FastPaymentsSettingsEffectHandler {
     typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
 }
 
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     

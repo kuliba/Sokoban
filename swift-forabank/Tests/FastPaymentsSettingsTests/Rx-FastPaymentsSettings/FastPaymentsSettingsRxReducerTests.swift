@@ -2043,7 +2043,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FastPaymentsSettingsRxReducer
+    private typealias SUT = FastPaymentsSettingsReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -2152,29 +2152,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         return .init(
             contractID: .init(contractDetails.paymentContract.id.rawValue),
             product: product
-        )
-    }
-}
-
-// MARK: - Helpers
-
-extension UserPaymentSettings.ProductSelector {
-    
-    func selected(product: Product) -> Self {
-        
-        .init(selectedProduct: product, products: self.products)
-    }
-    
-    func updated(
-        selectedProduct: Product?? = nil,
-        products: [Product]? = nil,
-        status: Status? = nil
-    ) -> Self {
-        
-        .init(
-            selectedProduct: selectedProduct ?? self.selectedProduct,
-            products: products ?? self.products,
-            status: status ?? self.status
         )
     }
 }

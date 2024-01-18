@@ -462,7 +462,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private typealias Effect = FastPaymentsSettingsEffect
     
     private typealias SUT = RxViewModel<State, Event, Effect>
-    private typealias Reducer = FastPaymentsSettingsRxReducer
+    private typealias Reducer = FastPaymentsSettingsReducer
     private typealias EffectHandler = FastPaymentsSettingsEffectHandler
     
     private typealias StateSpy = ValueSpy<State>

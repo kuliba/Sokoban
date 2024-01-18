@@ -6,25 +6,6 @@
 //
 
 import FastPaymentsSettings
-
-extension UserPaymentSettings.ContractDetails {
-    
-    func updated(
-        paymentContract: UserPaymentSettings.PaymentContract? = nil,
-        consentResult: UserPaymentSettings.ConsentResult? = nil,
-        bankDefault: UserPaymentSettings.BankDefault? = nil,
-        productSelector: UserPaymentSettings.ProductSelector? = nil
-    ) -> Self {
-        
-        .init(
-            paymentContract: paymentContract ?? self.paymentContract,
-            consentResult: consentResult ?? self.consentResult,
-            bankDefault: bankDefault ?? self.bankDefault,
-            productSelector: productSelector ?? self.productSelector
-        )
-    }
-}
-
 import XCTest
 
 final class ContractDetails_extTests: XCTestCase {
