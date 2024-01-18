@@ -8,6 +8,8 @@
 enum TickEvent: Equatable {
     
     case appear
-    case start
     case failure(TickFailure)
+    case resetStatus
+    case start
+    case tick
 }
