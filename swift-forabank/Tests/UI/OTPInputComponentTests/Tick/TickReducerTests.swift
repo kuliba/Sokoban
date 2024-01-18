@@ -7,6 +7,12 @@
 
 final class TickReducer {
     
+    private let interval: Int
+    
+    init(interval: Int = 60) {
+     
+        self.interval = interval
+    }
 }
 
 extension TickReducer {
@@ -21,7 +27,8 @@ extension TickReducer {
             return (.init(.idle), .initiate)
             
         case (.idle, .start):
-            return (.init(.running), nil)
+            let state = State(.running(remaining: interval))
+            return (state, nil)
             
         case let (.idle, .failure(tickFailure)):
             return (.init(.idle, status: .failure(tickFailure)), nil)
@@ -55,7 +62,11 @@ final class TickReducerTests: XCTestCase {
     
     func test_start_shouldSetStateToRunning_idle() {
         
-        assert(.init(.idle), .start, reducedTo: .init(.running))
+        let sut = makeSUT(interval: 77)
+        
+        assert(sut: sut, .init(.idle), .start, reducedTo: .init(
+            .running(remaining: 77)
+        ))
     }
     
     func test_start_shouldNotDeliverEffect_idle() {
@@ -101,11 +112,12 @@ final class TickReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        interval: Int = 60,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(interval: interval)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

@@ -21,7 +21,8 @@ extension TickState {
     
     enum Core: Equatable {
         
-        case idle, running
+        case idle
+        case running(remaining: Int)
     }
     
     enum Status: Equatable {
