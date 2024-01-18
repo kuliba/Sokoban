@@ -26,12 +26,12 @@ struct FlowStubSettingsView: View {
         commit: @escaping (FlowStub) -> Void
     ) {
         self.commit = commit
-        self._getProducts = .init(initialValue: flowStub.map { .init(flowStub: $0) })
-        self._createContract = .init(initialValue: flowStub.map { .init(flowStub: $0) })
-        self._getSettings = .init(initialValue: flowStub.map { .init(flowStub: $0) })
-        self._prepareSetBankDefault = .init(initialValue: flowStub.map { .init(flowStub: $0) })
-        self._updateContract = .init(initialValue: flowStub.map { .init(flowStub: $0) })
-        self._updateProduct = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._getProducts = .init(initialValue: .init(flowStub: flowStub))
+        self._createContract = .init(initialValue: .init(flowStub: flowStub))
+        self._getSettings = .init(initialValue: .init(flowStub: flowStub))
+        self._prepareSetBankDefault = .init(initialValue: .init(flowStub: flowStub))
+        self._updateContract = .init(initialValue: .init(flowStub: flowStub))
+        self._updateProduct = .init(initialValue: .init(flowStub: flowStub))
     }
     
     var body: some View {
@@ -53,26 +53,21 @@ struct FlowStubSettingsView: View {
     
     private var flowStub: FlowStub? {
         
-        get {
-            
-            guard let getProducts = getProducts?.products,
-                  let createContract = createContract?.response,
-                  let getSettings = getSettings?.settings,
-                  let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
-                  let updateContract = updateContract?.updateContractResponse,
-                  let updateProduct = updateProduct?.updateProductResponse
-            else { return nil }
-            
-            return .init(
-                getProducts: getProducts,
-                createContract: createContract,
-                getSettings: getSettings,
-                prepareSetBankDefault: prepareSetBankDefault,
-                updateContract: updateContract,
-                updateProduct: updateProduct)
-        }
+        guard let getProducts = getProducts?.products,
+              let createContract = createContract?.response,
+              let getSettings = getSettings?.settings,
+              let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
+              let updateContract = updateContract?.updateContractResponse,
+              let updateProduct = updateProduct?.updateProductResponse
+        else { return nil }
         
-        
+        return .init(
+            getProducts: getProducts,
+            createContract: createContract,
+            getSettings: getSettings,
+            prepareSetBankDefault: prepareSetBankDefault,
+            updateContract: updateContract,
+            updateProduct: updateProduct)
     }
     
     private func pickerSection<T: Pickerable>(
@@ -235,9 +230,12 @@ private extension FlowStubSettingsView {
 
 private extension FlowStubSettingsView.GetProducts {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        if flowStub.getProducts.isEmpty {
+        guard let products = flowStub?.getProducts
+        else { return nil }
+        
+        if products.isEmpty {
             self = .empty
         } else {
             self = .preview
@@ -247,9 +245,12 @@ private extension FlowStubSettingsView.GetProducts {
 
 private extension FlowStubSettingsView.CreateContractResponse {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        switch flowStub.createContract {
+        switch flowStub?.createContract {
+        case .none:
+            return nil
+            
         case let .success(contract):
             switch contract.contractStatus {
             case .active:
@@ -272,9 +273,12 @@ private extension FlowStubSettingsView.CreateContractResponse {
 
 private extension FlowStubSettingsView.GetSettings {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        switch flowStub.getSettings {
+        switch flowStub?.getSettings {
+        case .none:
+            return nil
+            
         case let .contracted(contractDetails):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
@@ -301,9 +305,12 @@ private extension FlowStubSettingsView.GetSettings {
 
 private extension FlowStubSettingsView.PrepareSetBankDefault {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        switch flowStub.prepareSetBankDefault {
+        switch flowStub?.prepareSetBankDefault {
+        case .none:
+            return nil
+            
         case .success(()):
             self = .success
             
@@ -321,9 +328,12 @@ private extension FlowStubSettingsView.PrepareSetBankDefault {
 
 private extension FlowStubSettingsView.UpdateContract {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        switch flowStub.updateContract {
+        switch flowStub?.updateContract {
+        case .none:
+            return nil
+            
         case let .success(contract):
             switch contract.contractStatus {
             case .active:
@@ -346,9 +356,12 @@ private extension FlowStubSettingsView.UpdateContract {
 
 private extension FlowStubSettingsView.UpdateProduct {
     
-    init(flowStub: FlowStub) {
+    init?(flowStub: FlowStub?) {
         
-        switch flowStub.updateProduct {
+        switch flowStub?.updateProduct {
+        case .none:
+            return nil
+            
         case .success(()):
             self = .success
             
@@ -390,7 +403,7 @@ extension FlowStub {
         createContract:  .success(.active),
         getSettings: .contracted(.preview()),
         prepareSetBankDefault: .success(()),
-        updateContract: .success(.active),
+        updateContract: .success(.inactive),
         updateProduct: .success(())
     )
 }
