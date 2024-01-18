@@ -6154,6 +6154,15 @@
 			path = RootViewModel;
 			sourceTree = "<group>";
 		};
+		2A40AF302B592E4F003B7D8A /* FlowStub */ = {
+			isa = PBXGroup;
+			children = (
+				2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */,
+				2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */,
+			);
+			path = FlowStub;
+			sourceTree = "<group>";
+		};
 		2A4111EF2B07F5850060449F /* TextFieldFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -6362,8 +6371,7 @@
 				2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */,
 				2A59F92D2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift */,
 				2AA70FC22B52BE9B0061F5DD /* ConsentListWrapperView.swift */,
-				2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */,
-				2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */,
+				2A40AF302B592E4F003B7D8A /* FlowStub */,
 			);
 			path = Demo;
 			sourceTree = "<group>";

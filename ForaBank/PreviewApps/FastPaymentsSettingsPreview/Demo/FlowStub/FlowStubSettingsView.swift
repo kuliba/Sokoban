@@ -26,49 +26,48 @@ struct FlowStubSettingsView: View {
         commit: @escaping (FlowStub) -> Void
     ) {
         self.commit = commit
-        self.getProducts = flowStub.map { .init(flowStub: $0) }
-        self.createContract = flowStub.map { .init(flowStub: $0) }
-        self.getSettings = flowStub.map { .init(flowStub: $0) }
-        self.prepareSetBankDefault = flowStub.map { .init(flowStub: $0) }
-        self.updateContract = flowStub.map { .init(flowStub: $0) }
-        self.updateProduct = flowStub.map { .init(flowStub: $0) }
-    }
-    
-    private var flowStub: FlowStub? {
-        
-        nil
+        self._getProducts = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._createContract = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._getSettings = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._prepareSetBankDefault = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._updateContract = .init(initialValue: flowStub.map { .init(flowStub: $0) })
+        self._updateProduct = .init(initialValue: flowStub.map { .init(flowStub: $0) })
     }
     
     var body: some View {
         
         List {
             
-            pickerSection("Select products", selection: $getProducts)
-            pickerSection("Create Contract Result", selection: $createContract)
-            pickerSection("Get Settings Result", selection: $getSettings)
-            pickerSection("Prepare Set Bank Default Result", selection: $prepareSetBankDefault)
-            pickerSection("Update Contract Result", selection: $updateContract)
-            pickerSection("Update Product Result", selection: $updateProduct)
+            pickerSection("Products", selection: $getProducts)
+            pickerSection("Create Contract", selection: $createContract)
+            pickerSection("Get Settings", selection: $getSettings)
+            pickerSection("Prepare Set Bank Default", selection: $prepareSetBankDefault)
+            pickerSection("Update Contract", selection: $updateContract)
+            pickerSection("Update Product", selection: $updateProduct)
         }
         .listStyle(.plain)
         .overlay(alignment: .bottom, content: applyButton)
-        .navigationTitle("Select  Flow Options")
+        .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
     }
     
-    private func applyButton() -> some View {
+    private var flowStub: FlowStub? {
         
-        Button {
-            
-        } label: {
-            Text("Apply")
-                .font(.headline)
-                .padding(.vertical, 9)
-                .frame(maxWidth: .infinity)
-        }
-        .padding(.horizontal)
-        .buttonStyle(.borderedProminent)
-        .disabled(flowStub == nil)
+        guard let getProducts = getProducts?.products,
+              let createContract = createContract?.response,
+              let getSettings = getSettings?.settings,
+              let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
+              let updateContract = updateContract?.updateContractResponse,
+              let updateProduct = updateProduct?.updateProductResponse
+        else { return nil }
+        
+        return .init(
+            getProducts: getProducts,
+            createContract: createContract,
+            getSettings: getSettings,
+            prepareSetBankDefault: prepareSetBankDefault,
+            updateContract: updateContract,
+            updateProduct: updateProduct)
     }
     
     private func pickerSection<T: Pickerable>(
@@ -89,6 +88,21 @@ struct FlowStubSettingsView: View {
             .pickerStyle(.segmented)
         }
     }
+    
+    private func applyButton() -> some View {
+        
+        Button {
+            flowStub.map(commit)
+        } label: {
+            Text("Apply")
+                .font(.headline)
+                .padding(.vertical, 9)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(.horizontal)
+        .buttonStyle(.borderedProminent)
+        .disabled(flowStub == nil)
+    }
 }
 
 private extension FlowStubSettingsView {
@@ -98,6 +112,14 @@ private extension FlowStubSettingsView {
         case empty, preview
         
         var id: Self { self }
+        
+        var products: [Product] {
+            
+            switch self {
+            case .empty:   return []
+            case .preview: return .preview
+            }
+        }
     }
     
     enum CreateContractResponse: String, CaseIterable, Identifiable {
@@ -109,10 +131,10 @@ private extension FlowStubSettingsView {
         var response: FastPaymentsSettingsEffectHandler.CreateContractResponse {
             
             switch self {
-            case .active:       return .success(.active)
-            case .inactive:     return .success(.inactive)
-            case .error_C: return .failure(.connectivityError)
-            case .error_S:       return .failure(.serverError(UUID().uuidString))
+            case .active:   return .success(.active)
+            case .inactive: return .success(.inactive)
+            case .error_C:  return .failure(.connectivityError)
+            case .error_S:  return .failure(.serverError(UUID().uuidString))
             }
         }
     }
@@ -122,6 +144,25 @@ private extension FlowStubSettingsView {
         case active, inactive, missing, error_C, error_S
         
         var id: Self { self }
+        
+        var settings: UserPaymentSettings {
+            
+            switch self {
+            case .active:
+                return .contracted(.preview(paymentContract: .active))
+                
+            case .inactive:
+                return .contracted(.preview(paymentContract: .inactive))
+            case .missing:
+                return .missingContract()
+                
+            case .error_C:
+                return .failure(.connectivityError)
+                
+            case .error_S:
+                return .failure(.serverError(UUID().uuidString))
+            }
+        }
     }
     
     enum PrepareSetBankDefault: String, CaseIterable, Identifiable {
@@ -129,6 +170,15 @@ private extension FlowStubSettingsView {
         case success, error_C, error_S
         
         var id: Self { self }
+        
+        var prepareSetBankDefaultResponse: FastPaymentsSettingsEffectHandler.PrepareSetBankDefaultResponse {
+            
+            switch self {
+            case .success: return .success(())
+            case .error_C: return .failure(.connectivityError)
+            case .error_S: return .failure(.serverError(UUID().uuidString))
+            }
+        }
     }
     
     enum UpdateContract: String, CaseIterable, Identifiable {
@@ -136,6 +186,16 @@ private extension FlowStubSettingsView {
         case active, inactive, error_C, error_S
         
         var id: Self { self }
+        
+        var updateContractResponse: FastPaymentsSettingsEffectHandler.UpdateContractResponse {
+            
+            switch self {
+            case .active:   return .success(.active)
+            case .inactive: return .success(.inactive)
+            case .error_C:  return .failure(.connectivityError)
+            case .error_S:  return .failure(.serverError(UUID().uuidString))
+            }
+        }
     }
     
     enum UpdateProduct: String, CaseIterable, Identifiable {
@@ -143,6 +203,15 @@ private extension FlowStubSettingsView {
         case success, error_C, error_S
         
         var id: Self { self }
+        
+        var updateProductResponse: FastPaymentsSettingsEffectHandler.UpdateProductResponse {
+            
+            switch self {
+            case .success: return .success(())
+            case .error_C: return .failure(.connectivityError)
+            case .error_S: return .failure(.serverError(UUID().uuidString))
+            }
+        }
     }
 }
 
