@@ -1,15 +1,15 @@
 //
-//  OTPInputEffectHandlerTests.swift
+//  OTPInputReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-final class OTPInputEffectHandler {
+final class OTPInputReducer {
     
 }
 
-extension OTPInputEffectHandler {
+extension OTPInputReducer {
     
     func reduce(
         _ state: State,
@@ -19,8 +19,8 @@ extension OTPInputEffectHandler {
     }
 }
 
-extension OTPInputEffectHandler {
-
+extension OTPInputReducer {
+    
     typealias State = OTPInputState
     typealias Event = OTPInputEvent
     typealias Effect = OTPInputEffect
@@ -28,11 +28,11 @@ extension OTPInputEffectHandler {
 
 import XCTest
 
-final class OTPInputEffectHandlerTests: XCTestCase {
+final class OTPInputReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = OTPInputEffectHandler
+    private typealias SUT = OTPInputReducer
     
     private func makeSUT(
         file: StaticString = #file,
