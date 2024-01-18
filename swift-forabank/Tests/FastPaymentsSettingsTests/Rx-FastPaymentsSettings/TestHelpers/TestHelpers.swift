@@ -19,10 +19,11 @@ func activeContractSettings(
 }
 
 func activePaymentContract(
-    _ idRawValue: Int = generateRandom11DigitNumber()
+    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
+    _ productID: Product.ID = .init(generateRandom11DigitNumber())
 ) -> UserPaymentSettings.PaymentContract {
     
-    .init(id: .init(idRawValue), contractStatus: .active)
+    .init(id: contractID, productID: productID, contractStatus: .active)
 }
 
 func anyEffectProductID(
@@ -63,24 +64,44 @@ func connectivityErrorFPSState(
     )
 }
 
+func consentError(
+) -> UserPaymentSettings.ConsentError {
+    
+    .init()
+}
+
 func consentList(
 ) -> UserPaymentSettings.ConsentList {
     
     .init()
 }
 
+func consentResultFailure(
+    _ error: UserPaymentSettings.ConsentError = consentError()
+) -> UserPaymentSettings.ConsentResult {
+    
+    .failure(error)
+}
+
+func consentResultSuccess(
+    _ consentList: UserPaymentSettings.ConsentList = consentList()
+) -> UserPaymentSettings.ConsentResult {
+    
+    .success(consentList)
+}
+
 func contractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
     consentResult: UserPaymentSettings.ConsentResult = .success(consentList()),
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
-    product: Product = makeProduct()
+    productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
         paymentContract: paymentContract,
         consentResult: consentResult,
         bankDefault: bankDefault,
-        product: product
+        productSelector: productSelector
     )
 }
 
@@ -91,9 +112,25 @@ func contractedSettings(
     .contracted(details)
 }
 
+func contractedSettings(
+    _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+) -> UserPaymentSettings {
+    
+    let details = contractDetails(
+        paymentContract: paymentContract(
+            contractStatus: contractStatus
+        ),
+        bankDefault: bankDefault
+    )
+    
+    return .contracted(details)
+}
+
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    selector selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
     details: UserPaymentSettings.ContractDetails,
@@ -103,7 +140,10 @@ func contractedState(
         paymentContract: paymentContract(
             contractStatus: contractStatus
         ),
-        bankDefault: bankDefault
+        bankDefault: bankDefault,
+        productSelector: makeProductSelector(
+            status: selectorStatus
+        )
     )
     
     let state = fastPaymentsSettingsState(
@@ -114,23 +154,29 @@ func contractedState(
     return (details, state)
 }
 
-func contractUpdateConnectivityError() -> FastPaymentsSettingsEvent {
+func contractedState(
+    _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
+    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    productSelector: UserPaymentSettings.ProductSelector,
+    status: FastPaymentsSettingsState.Status? = nil
+) -> (
+    details: UserPaymentSettings.ContractDetails,
+    state: FastPaymentsSettingsState
+) {
+    let details = contractDetails(
+        paymentContract: paymentContract(
+            contractStatus: contractStatus
+        ),
+        bankDefault: bankDefault,
+        productSelector: productSelector
+    )
     
-    .contractUpdate(.failure(.connectivityError))
-}
-
-func contractUpdateServerError(
-    _ message: String = anyMessage()
-) -> FastPaymentsSettingsEvent {
+    let state = fastPaymentsSettingsState(
+        .contracted(details),
+        status: status
+    )
     
-    .contractUpdate(.failure(.serverError(message)))
-}
-
-func contractUpdateSuccess(
-    _ contract: UserPaymentSettings.PaymentContract = paymentContract()
-) -> FastPaymentsSettingsEvent {
-    
-    .contractUpdate(.success(contract))
+    return (details, state)
 }
 
 func fastPaymentsSettingsEffectTargetContract(
@@ -168,12 +214,43 @@ func inactiveContractSettings(
     ))
 }
 
+func makeCore(
+    _ details: UserPaymentSettings.ContractDetails,
+    _ product: Product
+) -> FastPaymentsSettingsEffect.ContractCore {
+    
+    .init(
+        contractID: .init(details.paymentContract.id.rawValue),
+        product: product
+    )
+}
+
 func makeProduct(
     _ rawValue: Int = generateRandom11DigitNumber(),
     productType: Product.ProductType = .account
 ) -> Product {
     
     .init(id: .init(rawValue), productType: productType)
+}
+
+func makeProductSelector(
+    selected: Product = makeProduct(),
+    products: [Product]? = nil,
+    status: UserPaymentSettings.ProductSelector.Status = .collapsed
+) -> UserPaymentSettings.ProductSelector {
+    
+    .init(
+        selectedProduct: selected,
+        products: products ?? [selected],
+        status: status
+    )
+}
+
+func missingContract(
+    _ result: UserPaymentSettings.ConsentResult
+) -> UserPaymentSettings {
+    
+    .missingContract(result)
 }
 
 func missingConsentFailureSettings(
@@ -200,34 +277,21 @@ func missingConsentSuccessFPSState(
 }
 
 func paymentContract(
-    _ idRawValue: Int = generateRandom11DigitNumber(),
+    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
+    productID: Product.ID = .init(generateRandom11DigitNumber()),
     contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active
 ) -> UserPaymentSettings.PaymentContract {
     
     .init(
-        id: .init(idRawValue),
+        id: contractID,
+        productID: productID,
         contractStatus: contractStatus
     )
 }
 
-func productUpdateConnectivityError() -> FastPaymentsSettingsEvent {
+func setBankDefaultPreparedServerError() -> FastPaymentsSettingsEvent {
     
-    .productUpdate(.failure(.connectivityError))
-}
-
-func productUpdateServerError() -> FastPaymentsSettingsEvent {
-    
-    .productUpdate(.failure(.serverError(UUID().uuidString)))
-}
-
-func productUpdateSuccess() -> FastPaymentsSettingsEvent {
-    
-    .productUpdate(.success(makeProduct()))
-}
-
-func setBankDefaultPrepareServerError() -> FastPaymentsSettingsEvent {
-    
-    .setBankDefaultPrepare(.serverError(UUID().uuidString))
+    .setBankDefaultPrepared(.serverError(UUID().uuidString))
 }
 
 func serverError(
@@ -271,4 +335,38 @@ func updateProductPayload(
         contractID: .init(contractIDRawValue),
         product: product
     )
+}
+
+func updateContractConnectivityError() -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.failure(.connectivityError))
+}
+
+func updateContractServerError(
+    _ message: String = anyMessage()
+) -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.failure(.serverError(message)))
+}
+
+func updateContractSuccess(
+    _ contract: UserPaymentSettings.PaymentContract = paymentContract()
+) -> FastPaymentsSettingsEvent {
+    
+    .updateContract(.success(contract))
+}
+
+func updateProductConnectivityError() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.failure(.connectivityError))
+}
+
+func updateProductServerError() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.failure(.serverError(UUID().uuidString)))
+}
+
+func updateProductSuccess() -> FastPaymentsSettingsEvent {
+    
+    .updateProduct(.success(makeProduct()))
 }

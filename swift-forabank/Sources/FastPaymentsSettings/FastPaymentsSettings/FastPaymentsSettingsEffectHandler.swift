@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-import FastPaymentsSettings
 import Tagged
 
-final class FastPaymentsSettingsEffectHandler {
+public final class FastPaymentsSettingsEffectHandler {
     
     private let createContract: CreateContract
     private let getSettings: GetSettings
@@ -16,7 +15,7 @@ final class FastPaymentsSettingsEffectHandler {
     private let updateContract: UpdateContract
     private let updateProduct: UpdateProduct
     
-    init(
+    public init(
         createContract: @escaping CreateContract,
         getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
@@ -31,7 +30,7 @@ final class FastPaymentsSettingsEffectHandler {
     }
 }
 
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -60,22 +59,23 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `ea`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias CreateContractPayload = Effect.ProductID
+#warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
     typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
     typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
 }
 
 // micro-service `abc`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
 
 // micro-service `f`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
@@ -83,16 +83,17 @@ extension FastPaymentsSettingsEffectHandler {
 }
 
 // micro-service `da`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias UpdateContractPayload = Effect.TargetContract
+    #warning("`UpdateContractResponse` success case could only be `inactive` contract - need to find a way to enforce this")
     typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
     typealias UpdateContract = (UpdateContractPayload, @escaping UpdateContractCompletion) -> Void
 }
 
 // micro-service `d`
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias UpdateProductPayload = Effect.ContractCore
     typealias UpdateProductResponse = Result<Void, ServiceFailure>
@@ -100,7 +101,7 @@ extension FastPaymentsSettingsEffectHandler {
     typealias UpdateProduct = (UpdateProductPayload, @escaping UpdateProductCompletion) -> Void
 }
 
-extension FastPaymentsSettingsEffectHandler {
+public extension FastPaymentsSettingsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
@@ -132,13 +133,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contractUpdate(.success(contract)))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contractUpdate(.failure(.connectivityError)))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contractUpdate(.failure(.serverError(message))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }
@@ -153,7 +154,7 @@ private extension FastPaymentsSettingsEffectHandler {
     func getSettings(
         _ dispatch: @escaping Dispatch
     ) {
-        getSettings { dispatch(.loadedSettings($0)) }
+        getSettings { dispatch(.loadSettings($0)) }
     }
     
     func prepareSetBankDefault(
@@ -163,13 +164,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.setBankDefaultPrepare(nil))
+                dispatch(.setBankDefaultPrepared(nil))
                 
             case .failure(.connectivityError):
-                dispatch(.setBankDefaultPrepare(.connectivityError))
+                dispatch(.setBankDefaultPrepared(.connectivityError))
                 
             case let .failure(.serverError(message)):
-                dispatch(.setBankDefaultPrepare(.serverError(message)))
+                dispatch(.setBankDefaultPrepared(.serverError(message)))
             }
         }
     }
@@ -182,13 +183,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contractUpdate(.success(contract)))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contractUpdate(.failure(.connectivityError)))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contractUpdate(.failure(.serverError(message))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }
@@ -201,13 +202,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.productUpdate(.success(payload.product)))
+                dispatch(.updateProduct(.success(payload.product)))
                 
             case .failure(.connectivityError):
-                dispatch(.productUpdate(.failure(.connectivityError)))
+                dispatch(.updateProduct(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.productUpdate(.failure(.serverError(message))))
+                dispatch(.updateProduct(.failure(.serverError(message))))
             }
         }
     }

@@ -1,23 +1,21 @@
 //
-//  FastPaymentsSettingsRxReducer.swift
+//  FastPaymentsSettingsReducer.swift
 //
 //
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-import FastPaymentsSettings
-
-final class FastPaymentsSettingsRxReducer {
+public final class FastPaymentsSettingsReducer {
     
-    private let getProduct: GetProduct
+    private let getProducts: GetProducts
     
-    init(getProduct: @escaping GetProduct) {
+    public init(getProducts: @escaping GetProducts) {
         
-        self.getProduct = getProduct
+        self.getProducts = getProducts
     }
 }
 
-extension FastPaymentsSettingsRxReducer {
+public extension FastPaymentsSettingsReducer {
     
     func reduce(
         _ state: State,
@@ -34,45 +32,54 @@ extension FastPaymentsSettingsRxReducer {
         case .appear:
             (state, effect) = handleAppear(state)
             
-        case let .contractUpdate(result):
-            state = updateContract(state, with: result)
+        case .collapseProducts:
+            state = collapseProducts(state)
             
         case .deactivateContract:
             (state, effect) = deactivateContract(state)
             
-        case let .loadedSettings(settings):
+        case .expandProducts:
+            state = expandProducts(state)
+            
+        case let .loadSettings(settings):
             state = handleLoadedSettings(settings)
             
         case .prepareSetBankDefault:
             (state, effect) = prepareSetBankDefault(state)
             
-        case let .productUpdate(result):
-            state = update(state, with: result)
-            
         case .resetStatus:
             state = resetStatus(state)
+            
+        case let .selectProduct(product):
+            (state, effect) = selectProduct(state, product)
             
         case .setBankDefault:
             state = setBankDefault(state)
             
-        case let .setBankDefaultPrepare(failure):
+        case let .setBankDefaultPrepared(failure):
             state = update(state, with: failure)
+            
+        case let .updateContract(result):
+            state = updateContract(state, with: result)
+            
+        case let .updateProduct(result):
+            state = update(state, with: result)
         }
         
         return (state, effect)
     }
 }
 
-extension FastPaymentsSettingsRxReducer {
+public extension FastPaymentsSettingsReducer {
     
-    typealias GetProduct = () -> Product?
+    typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
     typealias Effect = FastPaymentsSettingsEffect
 }
 
-private extension FastPaymentsSettingsRxReducer {
+private extension FastPaymentsSettingsReducer {
     
     func activateContract(
         _ state: State
@@ -80,13 +87,16 @@ private extension FastPaymentsSettingsRxReducer {
         
         switch state.userPaymentSettings {
         case let .contracted(details):
-            guard details.isInactive else { return (state, nil) }
+#warning("add tests for branches")
+            guard details.isInactive,
+                  let core = details.core
+            else { return (state, nil) }
             
             var state = state
             state.status = .inflight
             
             let updateContract = FastPaymentsSettingsEffect.TargetContract(
-                core: details.core,
+                core: core,
                 targetStatus: .active
             )
             
@@ -94,7 +104,10 @@ private extension FastPaymentsSettingsRxReducer {
             
         case let .missingContract(consent):
             var state = state
-            guard let product = getProduct()
+            let products = getProducts()
+            
+#warning("add tests for branches")
+            guard let product = products.first
             else {
                 state.status = .missingProduct
                 return (state, nil)
@@ -109,22 +122,50 @@ private extension FastPaymentsSettingsRxReducer {
         }
     }
     
+    func collapseProducts(
+        _ state: State
+    ) -> State {
+        
+        guard var details = state.activeDetails,
+              details.productSelector.isExpanded
+        else { return state }
+        
+        details.productSelector = details.productSelector.updated(status: .collapsed)
+        
+        return .init(userPaymentSettings: .contracted(details))
+    }
+    
     func deactivateContract(
         _ state: State
     ) -> (State, Effect?) {
         
-        guard let details = state.activeDetails
+#warning("add tests for branches")
+        guard let details = state.activeDetails,
+              let core = details.core
         else { return (state, nil) }
         
         var state = state
         state.status = .inflight
         
         let updateContract = FastPaymentsSettingsEffect.TargetContract(
-            core: details.core,
+            core: core,
             targetStatus: .inactive
         )
         
         return (state, .deactivateContract(updateContract))
+    }
+    
+    func expandProducts(
+        _ state: State
+    ) -> State {
+        
+        guard var details = state.activeDetails,
+              !details.productSelector.isExpanded
+        else { return state }
+        
+        details.productSelector = details.productSelector.updated(status: .expanded)
+        
+        return .init(userPaymentSettings: .contracted(details))
     }
     
     func handleAppear(
@@ -155,7 +196,7 @@ private extension FastPaymentsSettingsRxReducer {
         
         var state = state
         state.status = nil
-                
+        
         return (state, .prepareSetBankDefault)
     }
     
@@ -169,6 +210,39 @@ private extension FastPaymentsSettingsRxReducer {
         return state
     }
     
+    func selectProduct(
+        _ state: State,
+        _ product: Product
+    ) -> (State, Effect?) {
+        
+        guard let details = state.activeDetails,
+              details.productSelector.isExpanded
+        else { return (state, nil) }
+        
+        let productIDs = getProducts().map(\.id)
+        
+        guard details.productSelector.selectedProduct?.id != product.id,
+              productIDs.contains(product.id)
+        else {
+            
+            var state = state
+            state = .init(
+                userPaymentSettings: .contracted(details.updated(
+                    productSelector: details.productSelector.updated(
+                        status: .collapsed
+                    )
+                ))
+            )
+            
+            return (state, nil)
+        }
+
+        var state = state
+        state.status = .inflight
+        
+        return (state, .updateProduct(details, product))
+    }
+        
     func setBankDefault(
         _ state: State
     ) -> State {
@@ -194,18 +268,30 @@ private extension FastPaymentsSettingsRxReducer {
         switch productUpdate {
         case let .success(product):
             var details = details
-            details.product = product
+            details.productSelector = details.productSelector.selected(product: product)
             return .init(userPaymentSettings: .contracted(details))
             
         case .failure(.connectivityError):
-            var state = state
-            state.status = .connectivityError
-            return state
+            var details = details
+            details.productSelector = details.productSelector.updated(
+                status: .collapsed
+            )
+            
+            return .init(
+                userPaymentSettings: .contracted(details),
+                status: .connectivityError
+            )
             
         case let .failure(.serverError(message)):
-            var state = state
-            state.status = .serverError(message)
-            return state
+            var details = details
+            details.productSelector = details.productSelector.updated(
+                status: .collapsed
+            )
+
+            return .init(
+                userPaymentSettings: .contracted(details),
+                status: .serverError(message)
+            )
         }
     }
     
@@ -264,14 +350,18 @@ private extension FastPaymentsSettingsRxReducer {
         case let .missingContract(consent):
             switch result {
             case let .success(contract):
-                guard let product = getProduct() else { return state }
+                let products = getProducts()
+                let product = products.first { $0.id == contract.productID }
                 
                 return .init(userPaymentSettings: .contracted(
                     .init(
                         paymentContract: contract,
                         consentResult: consent,
                         bankDefault: .offEnabled,
-                        product: product
+                        productSelector: .init(
+                            selectedProduct: product,
+                            products: products
+                        )
                     )
                 ))
                 
@@ -294,6 +384,25 @@ private extension FastPaymentsSettingsRxReducer {
 }
 
 // MARK: - Helpers
+
+private extension UserPaymentSettings.ProductSelector {
+    
+    var isExpanded: Bool { status == .expanded }
+}
+
+private extension FastPaymentsSettingsEffect {
+    
+    static func updateProduct(
+        _ details: UserPaymentSettings.ContractDetails,
+        _ product: Product
+    ) -> Self {
+        
+        .updateProduct(.init(
+            contractID: .init(details.paymentContract.id.rawValue),
+            product: product
+        ))
+    }
+}
 
 private extension FastPaymentsSettingsState {
     
@@ -324,9 +433,12 @@ private extension UserPaymentSettings.ContractDetails {
 
 private extension UserPaymentSettings.ContractDetails {
     
-    var core: FastPaymentsSettingsEffect.ContractCore {
+    var core: FastPaymentsSettingsEffect.ContractCore? {
         
-        .init(
+        guard let product = productSelector.selectedProduct
+        else { return nil }
+        
+        return .init(
             contractID: .init(paymentContract.id.rawValue),
             product: product
         )
