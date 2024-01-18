@@ -25,6 +25,7 @@ let package = Package(
         .fetcher,
         .keyChainStore,
         // Services
+        .cardStatementServices,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -92,6 +93,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Services
+        .cardStatementServices,
+        .cardStatementServicesTests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -333,6 +336,13 @@ private extension Product {
     
     // MARK: - Services
     
+    static let cardStatementServices = library(
+        name: .cardStatementServices,
+        targets: [
+            .cardStatementServices,
+        ]
+    )
+
     static let cryptoSwaddler = library(
         name: .cryptoSwaddler,
         targets: [
@@ -671,6 +681,21 @@ private extension Target {
     
     // MARK: - Services
     
+    static let cardStatementServices = target(
+        name: .cardStatementServices,
+        path: "Sources/Services/\(String.cardStatementServices)"
+    )
+    static let cardStatementServicesTests = testTarget(
+        name: .cardStatementServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardStatementServices,
+        ],
+        path: "Tests/Services/\(String.cardStatementServicesTests)"
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -1188,6 +1213,10 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
+    static let cardStatementServices = byName(
+        name: .cardStatementServices
+    )
+
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -1329,6 +1358,9 @@ private extension String {
     
     // MARK: - Services
     
+    static let cardStatementServices = "CardStatementServices"
+    static let cardStatementServicesTests = "CardStatementServicesTests"
+
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     
