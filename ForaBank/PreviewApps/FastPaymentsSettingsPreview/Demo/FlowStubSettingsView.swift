@@ -13,6 +13,7 @@ struct FlowStubSettingsView: View {
     @State private var getProducts: GetProducts?
     @State private var createContract: CreateContractResponse?
     @State private var getSettings: GetSettings?
+    @State private var prepareSetBankDefault: PrepareSetBankDefault?
     
     private let commit: (FlowStub) -> Void
     
@@ -24,6 +25,7 @@ struct FlowStubSettingsView: View {
         self.getProducts = flowStub.map { .init(flowStub: $0) }
         self.createContract = flowStub.map { .init(flowStub: $0) }
         self.getSettings = flowStub.map { .init(flowStub: $0) }
+        self.prepareSetBankDefault = flowStub.map { .init(flowStub: $0) }
     }
     
     private var flowStub: FlowStub? {
@@ -38,6 +40,7 @@ struct FlowStubSettingsView: View {
             getProductsPicker()
             createContractPicker()
             getSettingsPicker()
+            prepareSetBankDefaultPicker()
         }
         .overlay(alignment: .bottom, content: applyButton)
         .navigationTitle("Select  Flow Options")
@@ -98,6 +101,24 @@ struct FlowStubSettingsView: View {
         }
     }
     
+    private func prepareSetBankDefaultPicker() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            Text("Prepare Set Bank Default Result").font(.footnote)
+            
+            Picker("Prepare Set Bank Default Result", selection: $prepareSetBankDefault) {
+                
+                ForEach(PrepareSetBankDefault.allCases) {
+                    
+                    Text($0.rawValue)
+                        .tag(Optional($0))
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+    
     private func applyButton() -> some View {
         
         Button {
@@ -143,6 +164,13 @@ private extension FlowStubSettingsView {
     enum GetSettings: String, CaseIterable, Identifiable {
         
         case active, inactive, missing, error_C, error_S
+        
+        var id: Self { self }
+    }
+    
+    enum PrepareSetBankDefault: String, CaseIterable, Identifiable {
+        
+        case success, error_C, error_S
         
         var id: Self { self }
     }
@@ -201,6 +229,26 @@ private extension FlowStubSettingsView.GetSettings {
             
         case .missingContract:
             self = .missing
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
+private extension FlowStubSettingsView.PrepareSetBankDefault {
+    
+    init(flowStub: FlowStub) {
+        
+        switch flowStub.prepareSetBankDefault {
+        case .success(()):
+            self = .success
             
         case let .failure(failure):
             switch failure {
