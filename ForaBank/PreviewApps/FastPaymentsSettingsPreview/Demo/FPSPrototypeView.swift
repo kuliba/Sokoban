@@ -12,6 +12,8 @@ struct FPSPrototypeView: View {
     
     @ObservedObject private var viewModel: UserAccountViewModel
     @State private var flow: Flow
+    @State private var flowStub: FlowStub?
+    @State private var isShowingFlowStubOptions = false
     
     init() {
         
@@ -63,8 +65,10 @@ struct FPSPrototypeView: View {
     var body: some View {
         
         UserAccountView(viewModel: viewModel)
-            .overlay(alignment: .topTrailing, content: picker)
+            .overlay(alignment: .topLeading, content: picker)
+            .overlay(alignment: .topTrailing, content: flowStubButton)
             .overlay(alignment: .bottom, content: overlay)
+            .fullScreenCover(isPresented: $isShowingFlowStubOptions, content: fullScreenCover)
     }
     
     private func picker() -> some View {
@@ -78,6 +82,12 @@ struct FPSPrototypeView: View {
             }
         }
         .pickerStyle(.menu)
+    }
+    
+    private func flowStubButton() -> some View {
+        
+        Button("Flow Stub") { isShowingFlowStubOptions = true }
+            .padding()
     }
     
     private func overlay() -> some View {
@@ -126,6 +136,18 @@ struct FPSPrototypeView: View {
         }
         .foregroundStyle(.secondary)
         .font(.footnote)
+    }
+    
+    private func fullScreenCover() -> some View {
+        
+        FlowStubSettingsView(
+            flowStub: flowStub, 
+            commit: {
+            
+                flowStub = $0
+                isShowingFlowStubOptions = false
+            }
+        )
     }
 }
 
