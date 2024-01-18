@@ -29,7 +29,7 @@ extension TickReducer {
         case (.idle(nil), .appear):
             effect = .initiate
             
-        case (.idle, .start):
+        case (.idle(nil), .start):
             state = .running(remaining: interval)
             
         case let (.idle(nil), .failure(tickFailure)):
@@ -190,6 +190,26 @@ final class TickReducerTests: XCTestCase {
     func test_start_shouldNotDeliverEffect_idle() {
         
         assert(idle(), .start, effect: nil)
+    }
+    
+    func test_start_shouldNotChangeState_idle_failure() {
+        
+        assert(idleConnectivity(), .start, reducedTo: idleConnectivity())
+    }
+    
+    func test_start_shouldNotDeliverEffect_idle_failure() {
+        
+        assert(idleConnectivity(), .start, effect: nil)
+    }
+    
+    func test_start_shouldNotChangeState_running() {
+        
+        assert(running(45), .start, reducedTo: running(45))
+    }
+    
+    func test_start_shouldNotDeliverEffect_running() {
+        
+        assert(running(45), .start, effect: nil)
     }
     
     // MARK: - Helpers
