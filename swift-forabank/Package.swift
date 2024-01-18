@@ -923,6 +923,8 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .tagged,
+            // internal modules
+            .rxViewModel,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )
