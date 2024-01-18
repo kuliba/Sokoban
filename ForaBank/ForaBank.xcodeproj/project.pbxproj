@@ -2971,6 +2971,7 @@
 		2A8A283F2A4089B2000D3807 /* OperatorGroupData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorGroupData+test.swift"; sourceTree = "<group>"; };
 		2A8A28412A4089D3000D3807 /* OperatorData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorData+test.swift"; sourceTree = "<group>"; };
 		2A8A28432A4089FF000D3807 /* LocalAgentStub+convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAgentStub+convenience.swift"; sourceTree = "<group>"; };
+		2A8AFCE52B5975DD00B9FADD /* OTPInputComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OTPInputComponent.xctestplan; sourceTree = "<group>"; };
 		2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		2A8B173A2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesEndpointServiceNameBaseURLTests.swift; sourceTree = "<group>"; };
 		2A8B173E2A7C3BB1002EBC2E /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
@@ -11246,10 +11247,10 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
-				2ABFB9072B556F4F00D6A0BA /* FastPaymentsSettingsPreview-Info.plist */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				2A8AFCE52B5975DD00B9FADD /* OTPInputComponent.xctestplan */,
 				2A09C2B42B3D53FE0076DC93 /* FastPaymentsSettings.xctestplan */,
 				2ACE0AAF2B53F719007AA2ED /* FastPaymentsSettingsPreview.xctestplan */,
 				2A67A4532B3717C700149C9E /* PaymentComponents.xctestplan */,
@@ -11273,6 +11274,7 @@
 				2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */,
 				779511A52A6A7F9400A570F8 /* SymmetricEncryption.xctestplan */,
 				83A59F972A9C987E002F8AD4 /* LandingUIComponent.xctestplan */,
+				2ABFB9072B556F4F00D6A0BA /* FastPaymentsSettingsPreview-Info.plist */,
 				2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */,
 				2A77671829E93E060096013A /* swift-forabank */,
 				EDB1437F265FDA410028EF5A /* ForaBank */,

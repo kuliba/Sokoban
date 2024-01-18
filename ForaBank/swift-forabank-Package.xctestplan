@@ -238,9 +238,23 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "ProductSelectComponentTests",
         "name" : "ProductSelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
       }
     }
   ],

@@ -25,6 +25,7 @@ let package = Package(
         .fetcher,
         .keyChainStore,
         // Services
+        .cardStatementAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -40,6 +41,7 @@ let package = Package(
         .buttonWithSheet,
         .linkableText,
         .manageSubscriptionsUI,
+        .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
@@ -92,6 +94,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Services
+        .cardStatementAPI,
+        .cardStatementAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -119,6 +123,8 @@ let package = Package(
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
+        .otpInputComponent,
+        .otpInputComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -259,6 +265,13 @@ private extension Product {
         ]
     )
     
+    static let otpInputComponent = library(
+        name: .otpInputComponent,
+        targets: [
+            .otpInputComponent,
+        ]
+    )
+    
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
@@ -333,6 +346,13 @@ private extension Product {
     
     // MARK: - Services
     
+    static let cardStatementAPI = library(
+        name: .cardStatementAPI,
+        targets: [
+            .cardStatementAPI,
+        ]
+    )
+
     static let cryptoSwaddler = library(
         name: .cryptoSwaddler,
         targets: [
@@ -671,6 +691,21 @@ private extension Target {
     
     // MARK: - Services
     
+    static let cardStatementAPI = target(
+        name: .cardStatementAPI,
+        path: "Sources/\(String.cardStatementAPI)"
+    )
+    static let cardStatementAPITests = testTarget(
+        name: .cardStatementAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardStatementAPI,
+        ],
+        path: "Tests/\(String.cardStatementAPITests)"
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -867,6 +902,19 @@ private extension Target {
     
     static let manageSubscriptionsUI = target(
         name: .manageSubscriptionsUI
+    )
+    
+    static let otpInputComponent = target(
+        name: .otpInputComponent,
+        path: "Sources/UI/\(String.otpInputComponent)"
+    )
+    
+    static let otpInputComponentTests = testTarget(
+        name: .otpInputComponentTests,
+        dependencies: [
+            .otpInputComponent,
+        ],
+        path: "Tests/UI/\(String.otpInputComponentTests)"
     )
     
     static let pickerWithPreviewComponent = target(
@@ -1134,6 +1182,10 @@ private extension Target.Dependency {
         name: .linkableText
     )
     
+    static let otpInputComponent = byName(
+        name: .otpInputComponent
+    )
+    
     static let pickerWithPreviewComponent = byName(
         name: .pickerWithPreviewComponent
     )
@@ -1188,6 +1240,10 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
+    static let cardStatementAPI = byName(
+        name: .cardStatementAPI
+    )
+
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -1289,6 +1345,9 @@ private extension String {
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     
+    static let otpInputComponent = "OTPInputComponent"
+    static let otpInputComponentTests = "OTPInputComponentTests"
+    
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
@@ -1329,6 +1388,9 @@ private extension String {
     
     // MARK: - Services
     
+    static let cardStatementAPI = "CardStatementAPI"
+    static let cardStatementAPITests = "CardStatementAPITests"
+
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     
