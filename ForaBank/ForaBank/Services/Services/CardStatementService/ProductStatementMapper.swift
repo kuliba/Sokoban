@@ -11,7 +11,7 @@ struct ProductStatementMapper {
     
     typealias Result = Swift.Result<[ProductStatementData], MapperError>
     
-    public static func map(
+    static func map(
         _ data: Data,
         _ response: HTTPURLResponse
     ) -> Result {
@@ -23,7 +23,7 @@ struct ProductStatementMapper {
             return handle200(with: data)
             
         default:
-            return .failure(.mapError(HTTPURLResponse.localizedString(forStatusCode: statusCode)))
+            return errorByCode(statusCode)
         }
     }
     
@@ -47,9 +47,17 @@ struct ProductStatementMapper {
         }
     }
     
+    private static func errorByCode(
+        _ code: Int
+    ) -> Result {
+        
+        .failure(.mapError(HTTPURLResponse.localizedString(forStatusCode: code)))
+    }
+    
     enum MapperError: Error, Equatable {
         
         case mapError(String)
+        case not200Status(String)
     }
 }
 
