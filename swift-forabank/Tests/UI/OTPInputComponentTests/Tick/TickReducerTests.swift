@@ -10,7 +10,7 @@ final class TickReducer {
     private let interval: Int
     
     init(interval: Int = 60) {
-     
+        
         self.interval = interval
     }
 }
@@ -22,38 +22,38 @@ extension TickReducer {
         _ event: Event
     ) -> (State, Effect?) {
         
-        switch (state.core, event) {
-        case (.idle, .appear):
-            return (.init(.idle), .initiate)
+        var state = state
+        var effect: Effect?
+        
+        switch (state, event) {
+        case (.idle(nil), .appear):
+            effect = .initiate
             
         case (.idle, .start):
-            let state = State(.running(remaining: interval))
-            return (state, nil)
+            state = .running(remaining: interval)
             
-        case let (.idle, .failure(tickFailure)):
-            return (.init(.idle, status: .failure(tickFailure)), nil)
+        case let (.idle(nil), .failure(tickFailure)):
+            state = .idle(tickFailure)
             
         case let (.running(remaining), .tick):
             if remaining > 0 {
-                let state = State(.running(remaining: remaining - 1))
-                return (state, nil)
+                state = .running(remaining: remaining - 1)
             } else {
-                return (.init(.idle), nil)
+                state = .idle(nil)
             }
             
-        case (_, .resetStatus):
-            switch state.core {
-            case .idle:
-                return (.init(.idle), nil)
-                
-            case let .running(remaining):
-                return (.init(.running(remaining: remaining)), nil)
-            }
+        case (.idle(.connectivityError), .resetFailure):
+            state = .idle(nil)
+            
+        case (.idle(.serverError), .resetFailure):
+            state = .idle(nil)
             
         default:
             // fatalError()
-            return (state, nil)
+            break
         }
+        
+        return (state, effect)
     }
 }
 
@@ -80,30 +80,11 @@ final class TickReducerTests: XCTestCase {
         assert(idle(), .appear, effect: .initiate)
     }
     
-    // MARK: - start
-    
-    func test_start_shouldSetStateToRunning_idle() {
-        
-        let sut = makeSUT(interval: 77)
-        
-        assert(sut: sut, idle(), .start, reducedTo: .init(
-            .running(remaining: 77)
-        ))
-    }
-    
-    func test_start_shouldNotDeliverEffect_idle() {
-        
-        assert(idle(), .start, effect: nil)
-    }
-    
     // MARK: - failure
     
     func test_failure_shouldSetStateToFailure_idle_connectivity() {
         
-        assert(idle(), connectivity(), reducedTo: .init(
-            .idle,
-            status: connectivity()
-        ))
+        assert(idle(), connectivity(), reducedTo: .idle(.connectivityError))
     }
     
     func test_failure_shouldNotDeliverEffect_idle_connectivity() {
@@ -115,10 +96,7 @@ final class TickReducerTests: XCTestCase {
         
         let message = anyMessage()
         
-        assert(idle(), serverError(message), reducedTo: .init(
-            .idle,
-            status: serverError(message)
-        ))
+        assert(idle(), serverError(message), reducedTo: .idle(.serverError(message)))
     }
     
     func test_failure_shouldNotDeliverEffect_idle_server() {
@@ -130,32 +108,32 @@ final class TickReducerTests: XCTestCase {
     
     func test_tick_shouldLowerRemaining_running() {
         
-        assert(.init(.running(remaining: 5)), .tick, reducedTo: .init(.running(remaining: 4)))
+        assert(running(5), .tick, reducedTo: running(4))
     }
     
     func test_tick_shouldNotDeliverEffect_running() {
         
-        assert(.init(.running(remaining: 5)), .tick, effect: nil)
+        assert(running(5), .tick, effect: nil)
     }
     
     func test_tick_shouldLowerRemaining_running_one() {
         
-        assert(.init(.running(remaining: 1)), .tick, reducedTo: .init(.running(remaining: 0)))
+        assert(running(1), .tick, reducedTo: running(0))
     }
     
     func test_tick_shouldNotDeliverEffect_running_one() {
         
-        assert(.init(.running(remaining: 1)), .tick, effect: nil)
+        assert(running(1), .tick, effect: nil)
     }
     
     func test_tick_shouldChangeStateToIdleOnRemainingZero_running() {
         
-        assert(.init(.running(remaining: 0)), .tick, reducedTo: idle())
+        assert(running(0), .tick, reducedTo: idle())
     }
     
     func test_tick_shouldNotDeliverEffectOnRemainingZero_running() {
         
-        assert(.init(.running(remaining: 0)), .tick, effect: nil)
+        assert(running(0), .tick, effect: nil)
     }
     
     func test_tick_shouldNotChangeState_idle() {
@@ -178,36 +156,40 @@ final class TickReducerTests: XCTestCase {
         assert(idleConnectivity(), .tick, effect: nil)
     }
     
-    // MARK: - resetStatus
+    // MARK: - resetFailure
     
-    func test_resetStatus_shouldNotChangeState_idle() {
+    func test_resetFailure_shouldNotChangeState_idle() {
         
-        assert(idle(), .resetStatus, reducedTo: idle())
+        assert(idle(), .resetFailure, reducedTo: idle())
     }
     
-    func test_resetStatus_shouldNotDeliverEffect_idle() {
+    func test_resetFailure_shouldNotDeliverEffect_idle() {
         
-        assert(idle(), .resetStatus, effect: nil)
+        assert(idle(), .resetFailure, effect: nil)
     }
     
-    func test_resetStatus_shouldResetStatus_idle_connectivity() {
+    func test_resetFailure_shouldResetStatus_idle_connectivity() {
         
-        assert(idleConnectivity(), .resetStatus, reducedTo: idle())
+        assert(idleConnectivity(), .resetFailure, reducedTo: idle())
     }
     
-    func test_resetStatus_shouldNotDeliverEffect_idle_connectivity() {
+    func test_resetFailure_shouldNotDeliverEffect_idle_connectivity() {
         
-        assert(idleConnectivity(), .resetStatus, effect: nil)
+        assert(idleConnectivity(), .resetFailure, effect: nil)
     }
     
-    func test_resetStatus_shouldResetStatus_running_connectivity() {
+    // MARK: - start
+    
+    func test_start_shouldSetStateToRunning_idle() {
         
-        assert(runningConnectivity(9), .resetStatus, reducedTo: running(9))
+        let sut = makeSUT(interval: 77)
+        
+        assert(sut: sut, idle(), .start, reducedTo: .running(remaining: 77))
     }
     
-    func test_resetStatus_shouldNotDeliverEffect_running_connectivity() {
+    func test_start_shouldNotDeliverEffect_idle() {
         
-        assert(runningConnectivity(9), .resetStatus, effect: nil)
+        assert(idle(), .start, effect: nil)
     }
     
     // MARK: - Helpers

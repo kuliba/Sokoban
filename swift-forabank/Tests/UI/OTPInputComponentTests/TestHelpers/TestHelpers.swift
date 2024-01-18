@@ -17,33 +17,26 @@ func connectivity() -> TickEvent {
     .failure(.connectivityError)
 }
 
-func connectivity() -> TickState.Status {
+func connectivity() -> TickState {
     
-    .failure(.connectivityError)
+    .idle(.connectivityError)
 }
 
 func idle() -> TickState {
     
-    .init(.idle)
+    .idle(nil)
 }
 
 func idleConnectivity() -> TickState {
     
-    .init(.idle, status: connectivity())
+    .idle(.connectivityError)
 }
 
 func running(
     _ remaining: Int
 ) -> TickState {
     
-    .init(.running(remaining: remaining))
-}
-
-func runningConnectivity(
-    _ remaining: Int
-) -> TickState {
-    
-    .init(.running(remaining: remaining), status: connectivity())
+    .running(remaining: remaining)
 }
 
 func serverError(
@@ -55,7 +48,7 @@ func serverError(
 
 func serverError(
     _ message: String = anyMessage()
-) -> TickState.Status {
+) -> TickState {
     
-    .failure(.serverError(message))
+    .idle(.serverError(message))
 }

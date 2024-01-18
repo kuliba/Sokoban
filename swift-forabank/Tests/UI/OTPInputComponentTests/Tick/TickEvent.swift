@@ -9,7 +9,7 @@ enum TickEvent: Equatable {
     
     case appear
     case failure(TickFailure)
-    case resetStatus
+    case resetFailure
     case start
     case tick
 }
