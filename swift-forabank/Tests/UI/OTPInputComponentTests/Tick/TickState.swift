@@ -7,5 +7,5 @@
 
 enum TickState: Equatable {
  
-    case idle
+    case idle, running
 }

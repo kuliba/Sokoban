@@ -20,6 +20,9 @@ extension TickReducer {
         case (.idle, .appear):
             return (.idle, .initiate)
             
+        case (.idle, .start):
+            return (.running, nil)
+            
         default:
             fatalError()
         }
@@ -45,6 +48,16 @@ final class TickReducerTests: XCTestCase {
     func test_appear_shouldDeliverEffect_idle() {
         
         assert(.idle, .appear, effect: .initiate)
+    }
+    
+    func test_start_shouldSetStateToRunning_idle() {
+        
+        assert(.idle, .start, reducedTo: .running)
+    }
+    
+    func test_start_shouldNotDeliverEffect_idle() {
+        
+        assert(.idle, .start, effect: nil)
     }
     
     // MARK: - Helpers
