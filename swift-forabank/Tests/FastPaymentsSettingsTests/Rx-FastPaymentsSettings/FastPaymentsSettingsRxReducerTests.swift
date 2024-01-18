@@ -716,7 +716,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(withStatus, .resetStatus, reducedTo: empty)
     }
     
-    func test_resetStatus_shouldNotDeliverEffectOnOnNonNilStatusWithNilSettings() {
+    func test_resetStatus_shouldNotDeliverEffectOnNonNilStatusWithNilSettings() {
         
         let withStatus = fastPaymentsSettingsState(
             status: .confirmSetBankDefault
