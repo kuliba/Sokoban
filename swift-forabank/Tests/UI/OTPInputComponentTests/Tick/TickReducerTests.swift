@@ -80,6 +80,36 @@ final class TickReducerTests: XCTestCase {
         assert(idle(), .appear, effect: .initiate)
     }
     
+    func test_appear_shouldNotChangeState_idle_failure() {
+        
+        assert(idleConnectivity(), .appear, reducedTo: idleConnectivity())
+    }
+    
+    func test_appear_shouldNotDeliverEffect_idle_failure() {
+        
+        assert(idleConnectivity(), .appear, effect: nil)
+    }
+    
+    func test_appear_shouldNotChangeState_running() {
+        
+        assert(running(45), .appear, reducedTo: running(45))
+    }
+    
+    func test_appear_shouldNotDeliverEffect_running() {
+        
+        assert(running(45), .appear, effect: nil)
+    }
+    
+    func test_appear_shouldNotChangeState_running_one() {
+        
+        assert(running(1), .appear, reducedTo: running(1))
+    }
+    
+    func test_appear_shouldNotDeliverEffect_running_one() {
+        
+        assert(running(1), .appear, effect: nil)
+    }
+    
     // MARK: - failure
     
     func test_failure_shouldSetStateToFailure_idle_connectivity() {
@@ -104,56 +134,6 @@ final class TickReducerTests: XCTestCase {
         let message = anyMessage()
         
         assert(idle(), serverError(message), effect: nil)
-    }
-    
-    func test_tick_shouldLowerRemaining_running() {
-        
-        assert(running(5), .tick, reducedTo: running(4))
-    }
-    
-    func test_tick_shouldNotDeliverEffect_running() {
-        
-        assert(running(5), .tick, effect: nil)
-    }
-    
-    func test_tick_shouldLowerRemaining_running_one() {
-        
-        assert(running(1), .tick, reducedTo: running(0))
-    }
-    
-    func test_tick_shouldNotDeliverEffect_running_one() {
-        
-        assert(running(1), .tick, effect: nil)
-    }
-    
-    func test_tick_shouldChangeStateToIdleOnRemainingZero_running() {
-        
-        assert(running(0), .tick, reducedTo: idle())
-    }
-    
-    func test_tick_shouldNotDeliverEffectOnRemainingZero_running() {
-        
-        assert(running(0), .tick, effect: nil)
-    }
-    
-    func test_tick_shouldNotChangeState_idle() {
-        
-        assert(idle(), .tick, reducedTo: idle())
-    }
-    
-    func test_tick_shouldNotDeliverEffect_idle() {
-        
-        assert(idle(), .tick, effect: nil)
-    }
-    
-    func test_tick_shouldNotChangeState_idle_failure() {
-        
-        assert(idleConnectivity(), .tick, reducedTo: idleConnectivity())
-    }
-    
-    func test_tick_shouldNotDeliverEffect_idle_failure() {
-        
-        assert(idleConnectivity(), .tick, effect: nil)
     }
     
     // MARK: - resetFailure
@@ -210,6 +190,68 @@ final class TickReducerTests: XCTestCase {
     func test_start_shouldNotDeliverEffect_running() {
         
         assert(running(45), .start, effect: nil)
+    }
+    
+    // MARK: - tick
+    
+    func test_tick_shouldLowerRemaining_running() {
+        
+        assert(running(5), .tick, reducedTo: running(4))
+    }
+    
+    func test_tick_shouldNotDeliverEffect_running() {
+        
+        assert(running(5), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldLowerRemaining_running_two() {
+        
+        assert(running(2), .tick, reducedTo: running(1))
+    }
+    
+    func test_tick_shouldNotDeliverEffect_running_two() {
+        
+        assert(running(2), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldLowerRemaining_running_one() {
+        
+        assert(running(1), .tick, reducedTo: running(0))
+    }
+    
+    func test_tick_shouldNotDeliverEffect_running_one() {
+        
+        assert(running(1), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldChangeStateToIdleOnRemainingZero_running() {
+        
+        assert(running(0), .tick, reducedTo: idle())
+    }
+    
+    func test_tick_shouldNotDeliverEffectOnRemainingZero_running() {
+        
+        assert(running(0), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldNotChangeState_idle() {
+        
+        assert(idle(), .tick, reducedTo: idle())
+    }
+    
+    func test_tick_shouldNotDeliverEffect_idle() {
+        
+        assert(idle(), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldNotChangeState_idle_failure() {
+        
+        assert(idleConnectivity(), .tick, reducedTo: idleConnectivity())
+    }
+    
+    func test_tick_shouldNotDeliverEffect_idle_failure() {
+        
+        assert(idleConnectivity(), .tick, effect: nil)
     }
     
     // MARK: - Helpers
