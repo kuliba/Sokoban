@@ -19,6 +19,9 @@ extension TickReducer {
         switch (state, event) {
         case (.idle, .appear):
             return (.idle, .initiate)
+            
+        default:
+            fatalError()
         }
     }
 }

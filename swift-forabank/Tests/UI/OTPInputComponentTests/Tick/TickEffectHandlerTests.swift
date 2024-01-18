@@ -23,7 +23,7 @@ extension TickEffectHandler {
     ) {
         switch effect {
         case .initiate:
-            initiate { _ in }
+            initiate(dispatch)
         }
     }
 }
@@ -50,6 +50,27 @@ extension TickEffectHandler {
     typealias Effect = TickEffect
 }
 
+private extension TickEffectHandler {
+
+    func initiate(
+        _ dispatch: @escaping Dispatch
+    ) {
+        initiate { result in
+        
+            switch result {
+            case .success(()):
+                dispatch(.start)
+            
+            case .failure(.connectivityError):
+                dispatch(.failure(.connectivityError))
+                
+            case let .failure(.serverError(message)):
+                dispatch(.failure(.serverError(message)))
+            }
+        }
+    }
+}
+
 import XCTest
 
 final class TickEffectHandlerTests: XCTestCase {
@@ -69,15 +90,47 @@ final class TickEffectHandlerTests: XCTestCase {
         
         XCTAssertEqual(spy.callCount, 1)
     }
+    
+    func test_initiate_shouldDeliverStartOnSuccess() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .start, on: {
+            
+            spy.complete(with: .success(()))
+        })
+    }
+    
+    func test_initiate_shouldDeliverConnectivityErrorOnConnectivityFailure() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .failure(.connectivityError), on: {
+            
+            spy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_initiate_shouldDeliverServerErrorOnServerFailure() {
+        
+        let message = anyMessage()
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .failure(.serverError(message)), on: {
+            
+            spy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TickEffectHandler
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-
+    
     private typealias InitiateSpy = Spy<Void, SUT.InitiateResult>
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -93,5 +146,32 @@ final class TickEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with effect: Effect,
+        toDeliver expectedEvent: Event,
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.handleEffect(effect) { receivedEvent in
+            
+            XCTAssertNoDiff(
+                receivedEvent,
+                expectedEvent,
+                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
+                file: file, line: line
+            )
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
