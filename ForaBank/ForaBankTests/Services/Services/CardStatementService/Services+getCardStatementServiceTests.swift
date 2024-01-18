@@ -15,7 +15,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.success([.sample])]) {
+        try expect(sut, toDeliver: [.success([.sample])]) {
             spy.complete(with: .success(makeSuccessResponse(with: .sampleCardStatement)))
         }
     }
@@ -24,7 +24,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
+        try expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -33,7 +33,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
+        try expect(sut, toDeliver: [.failure(.mapError(.defaultError))]) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -42,7 +42,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.mapError("server error"))]) {
+        try expect(sut, toDeliver: [.failure(.mapError("server error"))]) {
             spy.complete(with: .success(makeSuccessResponse(
                 with: .emptyData,
                 statusCode: 1
@@ -77,7 +77,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         return (
             makeSuccessResponseData(with: string),
-            makeHTTPURLResponse(statusCode: statusCode)
+            anyHTTPURLResponse(with: statusCode)
         )
     }
     
@@ -88,14 +88,8 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         string.data(using: .utf8)!
     }
     
-    private func makeHTTPURLResponse(
-        statusCode: Int
-    ) -> HTTPURLResponse {
-        
-        .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-    }
-    
-    typealias Result = Services.GetCardStatementResult
+    private typealias Result = Services.GetCardStatementResult
+    private typealias Payload = CardStatementForPeriodDomain.Payload
     
     private func expect(
         _ sut: Services.GetCardStatementService,
@@ -103,21 +97,23 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
-    ) {
+    ) throws {
         var results = [Result]()
         let exp = expectation(description: "wait for completion")
-        
-        sut.process((.init(
+        let testPeriod = try testPeriod()
+        let payload = Payload.init(
             id: 1,
             name: "cardName",
-            period: .initialPeriod,
+            period: testPeriod,
             statementFormat: .csv,
-            cardNumber: "1111"))) { result in
-                if let a = try? result.get() {
-                    results.append(a)
-                }
-                exp.fulfill()
+            cardNumber: "1111")
+        
+        sut.process(payload) { result in
+            if let a = try? result.get() {
+                results.append(a)
             }
+            exp.fulfill()
+        }
         
         action()
         
@@ -125,21 +121,17 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         XCTAssertNoDiff(results.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(results.count) instead.", file: file, line: line)
         
-        zip(results, expectedResults)
-            .enumerated()
-            .forEach { index, element in
-                
-                switch element {
-                case let (.failure(received), .failure(expected)):
-                    XCTAssertNoDiff(received, expected, file: file, line: line)
-                    
-                case let (.success(received), .success(expected)):
-                    XCTAssertNoDiff(received, expected, file: file, line: line)
-                    
-                default:
-                    XCTFail("Expected \(element.1), got \(element.0) instead.", file: file, line: line)
-                }
-            }
+        assert(results, equals: expectedResults)
+    }
+    
+    private func testPeriod() throws -> Period {
+        
+        let calendar = Calendar.current
+        
+        let startDate = try XCTUnwrap(Date.date(year: 2022, month: 4, day: 10, calendar: calendar))
+        let endDate = try XCTUnwrap(Date.date(year: 2022, month: 5, day: 10, calendar: calendar))
+        
+        return Period(start: startDate, end: endDate)
     }
 }
 
@@ -194,20 +186,6 @@ private extension String {
       "data": {}
     }
 """
-
-}
-
-private extension Period {
-    
-    static let initialPeriod: Self = {
-        
-        let calendar = Calendar.current
-        
-        let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
-        let endDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
-        
-        return Period(start: startDate, end: endDate)
-    }()
 }
 
 private extension ProductStatementData {

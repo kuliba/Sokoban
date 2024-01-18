@@ -21,7 +21,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getCardStatementForPeriod,
             performRequest: httpClient.performRequest,
-            mapResponse: { ProductStatementMapper.map($0, $1) }
+            mapResponse: ProductStatementMapper.map
         )
     }
 }

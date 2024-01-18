@@ -31,39 +31,3 @@ extension CardStatementForPeriodDomain {
         enum _CardNumber {}
     }
 }
-
-extension CardStatementForPeriodDomain.Payload {
-    
-    var json: Data? {
-        
-        let formatter = DateFormatterISO8601()
-
-        let startDateFormattedString = formatter.string(from: period.start)
-        let endDateFormattedString = formatter.string(from: period.end)
-
-        var parameters: [String: Any] = [
-            "id": id.rawValue,
-            "startDate": startDateFormattedString,
-            "endDate": endDateFormattedString
-        ]
-        
-        let name: [String: String]? = name.map { ["name": $0.rawValue] }
-        if let name { parameters = parameters.mergeOnto(target: name) }
-        
-        let statementFormat: [String: String]? = statementFormat.map { ["statementFormat": $0.rawValue] }
-        if let statementFormat { parameters = parameters.mergeOnto(target: statementFormat) }
-        
-        let cardNumber: [String: String]? = cardNumber.map { ["cardNumber": $0.rawValue] }
-        if let cardNumber { parameters = parameters.mergeOnto(target: cardNumber) }
-
-        return try? JSONSerialization.data(withJSONObject: parameters
-                                           as [String: Any])
-    }
-}
-
-extension Dictionary where Value: Any {
-    public func mergeOnto(target: [Key: Value]?) -> [Key: Value] {
-        guard let target = target else { return self }
-        return self.merging(target) { current, _ in current }
-    }
-}

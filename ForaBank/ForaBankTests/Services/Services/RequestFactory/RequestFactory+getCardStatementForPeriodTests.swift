@@ -73,7 +73,7 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
             statementFormat: statementFormat,
             cardNumber: cardNumber
         )
-        let request = RequestFactory.getCardStatementForPeriod(payload: payload)
+        let request = try RequestFactory.getCardStatementForPeriod(payload: payload)
         
         return (payload, request)
     }
