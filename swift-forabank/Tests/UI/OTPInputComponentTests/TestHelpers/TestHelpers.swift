@@ -11,3 +11,27 @@ func anyMessage() -> String {
     
     UUID().uuidString
 }
+
+func connectivity() -> TickEvent {
+    
+    .failure(.connectivityError)
+}
+
+func connectivity() -> TickState.Status {
+    
+    .failure(.connectivityError)
+}
+
+func serverError(
+    _ message: String = anyMessage()
+) -> TickEvent {
+    
+    .failure(.serverError(message))
+}
+
+func serverError(
+    _ message: String = anyMessage()
+) -> TickState.Status {
+    
+    .failure(.serverError(message))
+}

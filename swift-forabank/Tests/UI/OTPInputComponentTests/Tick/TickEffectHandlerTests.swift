@@ -30,15 +30,9 @@ extension TickEffectHandler {
 
 extension TickEffectHandler {
     
-    typealias InitiateResult = Result<Void, Failure>
+    typealias InitiateResult = Result<Void, TickFailure>
     typealias InitiateCompletion = (InitiateResult) -> Void
     typealias Initiate = (@escaping InitiateCompletion) -> Void
-    
-    enum Failure: Error, Equatable {
-        
-        case connectivityError
-        case serverError(String)
-    }
 }
 
 extension TickEffectHandler {

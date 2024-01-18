@@ -5,7 +5,27 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-enum TickState: Equatable {
- 
-    case idle, running
+struct TickState: Equatable {
+    
+    let core: Core
+    let status: Status?
+    
+    init(_ core: Core, status: Status? = nil) {
+        
+        self.core = core
+        self.status = status
+    }
+}
+
+extension TickState {
+    
+    enum Core: Equatable {
+        
+        case idle, running
+    }
+    
+    enum Status: Equatable {
+        
+        case failure(TickFailure)
+    }
 }

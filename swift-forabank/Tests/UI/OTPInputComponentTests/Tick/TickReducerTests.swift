@@ -16,12 +16,15 @@ extension TickReducer {
         _ event: Event
     ) -> (State, Effect?) {
         
-        switch (state, event) {
+        switch (state.core, event) {
         case (.idle, .appear):
-            return (.idle, .initiate)
+            return (.init(.idle), .initiate)
             
         case (.idle, .start):
-            return (.running, nil)
+            return (.init(.running), nil)
+            
+        case let (.idle, .failure(tickFailure)):
+            return (.init(.idle, status: .failure(tickFailure)), nil)
             
         default:
             fatalError()
@@ -42,22 +45,52 @@ final class TickReducerTests: XCTestCase {
     
     func test_appear_shouldNotChangeState_idle() {
         
-        assert(.idle, .appear, reducedTo: .idle)
+        assert(.init(.idle), .appear, reducedTo: .init(.idle))
     }
     
     func test_appear_shouldDeliverEffect_idle() {
         
-        assert(.idle, .appear, effect: .initiate)
+        assert(.init(.idle), .appear, effect: .initiate)
     }
     
     func test_start_shouldSetStateToRunning_idle() {
         
-        assert(.idle, .start, reducedTo: .running)
+        assert(.init(.idle), .start, reducedTo: .init(.running))
     }
     
     func test_start_shouldNotDeliverEffect_idle() {
         
-        assert(.idle, .start, effect: nil)
+        assert(.init(.idle), .start, effect: nil)
+    }
+    
+    func test_failure_shouldSetStateToFailure_idle_connectivity() {
+        
+        assert(.init(.idle), connectivity(), reducedTo: .init(
+            .idle,
+            status: connectivity()
+        ))
+    }
+    
+    func test_failure_shouldNotDeliverEffect_idle_connectivity() {
+        
+        assert(.init(.idle), connectivity(), effect: nil)
+    }
+    
+    func test_failure_shouldSetStateToFailure_idle_server() {
+        
+        let message = anyMessage()
+        
+        assert(.init(.idle), serverError(message), reducedTo: .init(
+            .idle,
+            status: serverError(message)
+        ))
+    }
+    
+    func test_failure_shouldNotDeliverEffect_idle_server() {
+        
+        let message = anyMessage()
+        
+        assert(.init(.idle), serverError(message), effect: nil)
     }
     
     // MARK: - Helpers
