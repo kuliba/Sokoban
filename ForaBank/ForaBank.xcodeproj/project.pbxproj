@@ -1771,7 +1771,6 @@
 		8353CD522B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD512B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift */; };
 		8353CD552B57AF72005F7D1A /* Services+getCardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */; };
 		8353CD592B57B21D005F7D1A /* ProductStatementMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */; };
-		8353CD5B2B57B38E005F7D1A /* DecodeProductStatmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD5A2B57B38E005F7D1A /* DecodeProductStatmentData.swift */; };
 		8353CD5E2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */; };
 		8353CD612B57F699005F7D1A /* CardStatementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD602B57F699005F7D1A /* CardStatementFactory.swift */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
@@ -4116,7 +4115,6 @@
 		8353CD512B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriodTests.swift"; sourceTree = "<group>"; };
 		8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementService.swift"; sourceTree = "<group>"; };
 		8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementMapper.swift; sourceTree = "<group>"; };
-		8353CD5A2B57B38E005F7D1A /* DecodeProductStatmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeProductStatmentData.swift; sourceTree = "<group>"; };
 		8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementServiceTests.swift"; sourceTree = "<group>"; };
 		8353CD602B57F699005F7D1A /* CardStatementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementFactory.swift; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
@@ -10115,7 +10113,6 @@
 			isa = PBXGroup;
 			children = (
 				8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */,
-				8353CD5A2B57B38E005F7D1A /* DecodeProductStatmentData.swift */,
 				8353CD582B57B21D005F7D1A /* ProductStatementMapper.swift */,
 			);
 			path = CardStatementService;
@@ -14257,7 +14254,6 @@
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */,
-				8353CD5B2B57B38E005F7D1A /* DecodeProductStatmentData.swift in Sources */,
 				50833F6428742585006E8530 /* CurrencyWalletView.swift in Sources */,
 				6819084728BCAD50003E81A3 /* SbpPayViewModel.swift in Sources */,
 				833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */,

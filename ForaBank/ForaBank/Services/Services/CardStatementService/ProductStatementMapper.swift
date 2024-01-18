@@ -34,12 +34,12 @@ struct ProductStatementMapper {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(.iso8601)
 
-            let decodableData = try decoder.decode(DecodeProductStatmentData.self, from: data)
-            switch decodableData.statusCode {
+            let response = try decoder.decode(Response.self, from: data)
+            switch response.statusCode {
                 
             default:
-                guard let data = decodableData.data
-                else { return .failure(.mapError(decodableData.errorMessage ?? .defaultError))}
+                guard let data = response.data
+                else { return .failure(.mapError(response.errorMessage ?? .defaultError))}
                 return .success(data)
             }
         } catch {
@@ -54,3 +54,10 @@ struct ProductStatementMapper {
 }
 
 private let statusCode200 = 200
+
+private struct Response: Decodable {
+    
+    let statusCode: Int
+    let errorMessage: String?
+    let data: [ProductStatementData]?
+}
