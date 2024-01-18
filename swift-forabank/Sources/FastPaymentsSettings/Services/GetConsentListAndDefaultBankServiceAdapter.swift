@@ -149,7 +149,7 @@ public extension GetConsentListAndDefaultBankServiceAdapter {
     private typealias GetDefaultBankError = GetConsentListAndDefaultBankResults.GetDefaultBankError
     
     private func handleGetDefaultBankError(
-        _ consentList: ConsentList,
+        _ consentList: Consents,
         _ defaultBankError: GetDefaultBankError,
         _ completion: @escaping Completion
     ) {

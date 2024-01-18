@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.01.2024.
 //
 
+import FastPaymentsSettings
 import SwiftUI
 
 struct ActiveContractView: View {

@@ -5,27 +5,31 @@
 //  Created by Igor Malyarov on 31.12.2023.
 //
 
+import FastPaymentsSettings
 import Tagged
 
-struct Banks: Equatable {
+public struct Banks: Equatable {
     
-    let allBanks: [Bank]
-    let selected: Set<Bank.ID>
+    public let allBanks: [Bank]
+    public let selected: Set<Bank.ID>
+    
+    public init(allBanks: [Bank], selected: Set<Bank.ID>) {
+        
+        self.allBanks = allBanks
+        self.selected = selected
+    }
 }
 
-struct Bank: Equatable, Identifiable {
+public struct SelectableBank: Equatable {
     
-    let id: ID
-    let name: String
+    public let bank: Bank
+    public let isSelected: Bool
     
-    typealias ID = Tagged<_ID, String>
-    enum _ID {}
-}
-
-struct SelectableBank: Equatable {
-    
-    let bank: Bank
-    let isSelected: Bool
+    public init(bank: Bank, isSelected: Bool) {
+     
+        self.bank = bank
+        self.isSelected = isSelected
+    }
 }
 
 extension Banks {

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FastPaymentsSettings
 import Foundation
 
 final class UserAccountViewModel: ObservableObject {
