@@ -247,6 +247,13 @@
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
     }
   ],
   "version" : 1
