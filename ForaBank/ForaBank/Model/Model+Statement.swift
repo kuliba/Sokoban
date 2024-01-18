@@ -151,7 +151,10 @@ extension Model {
         switch product.productType {
         case .card:
             
-            return try await self.getCardStatementForPeriod(productId: product.id, period: period)
+            return try await Services.makeCardStatementForPeriod(
+                httpClient: self.authenticatedHTTPClient(), 
+                productId: product.id,
+                period: period)
             
         case .account:
             let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: product.id, period: period)

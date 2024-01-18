@@ -7,30 +7,35 @@
 
 import Foundation
 
-extension Model {
+extension Services {
     
-    func getCardStatementForPeriod(
+    typealias Payload = CardStatementForPeriodDomain.Payload
+    
+    static func makeCardStatementForPeriod(
+        httpClient: HTTPClient,
         productId: ProductData.ID,
         period: Period,
-        name: CardStatementForPeriodDomain.Payload.Name? = nil,
+        name: Payload.Name? = nil,
         statementFormat: StatementFormat? = nil,
-        cardNumber: CardStatementForPeriodDomain.Payload.CardNumber? = nil
+        cardNumber: Payload.CardNumber? = nil
     ) async throws-> [ProductStatementData] {
         
-        let data = try await getCardStatementForPeriod().process(.init(
+        let payload = Payload.init(
             id: .init(productId),
             name: name,
             period: period,
             statementFormat: statementFormat,
-            cardNumber: cardNumber)).get()
+            cardNumber: cardNumber)
+        let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
         return data
     }
     
     private func getCardStatementForPeriod(
+        httpClient: HTTPClient
     ) -> Services.GetCardStatementService {
         
         Services.getCardStatementForPeriod(
-            httpClient: authenticatedHTTPClient()
+            httpClient: httpClient
         )
     }
 }
