@@ -906,12 +906,22 @@ private extension Target {
     
     static let otpInputComponent = target(
         name: .otpInputComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+        ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )
     
     static let otpInputComponentTests = testTarget(
         name: .otpInputComponentTests,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
             .otpInputComponent,
         ],
         path: "Tests/UI/\(String.otpInputComponentTests)"

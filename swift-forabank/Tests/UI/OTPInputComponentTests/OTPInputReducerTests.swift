@@ -24,6 +24,8 @@ final class OTPInputReducerTests: XCTestCase {
         
         let sut = SUT()
         
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
         return sut
     }
 }
