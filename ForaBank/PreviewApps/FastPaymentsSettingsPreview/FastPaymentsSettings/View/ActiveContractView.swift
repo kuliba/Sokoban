@@ -31,44 +31,10 @@ struct ActiveContractView: View {
                 }
             }
             
-            bankDefaultView(contractDetails.bankDefault)
-        }
-    }
-    
-    @ViewBuilder
-    private func bankDefaultView(
-        _ bankDefault: UserPaymentSettings.BankDefault
-    ) -> some View {
-        
-        HStack {
-            bankDefaultIcon(bankDefault)
-            
-            Text("ForaBank")
-        }
-    }
-    
-    @ViewBuilder
-    private func bankDefaultIcon(
-        _ bankDefault: UserPaymentSettings.BankDefault
-    ) -> some View {
-        
-        switch bankDefault {
-        case .onDisabled:
-            Color.green.opacity(0.3)
-                .clipShape(.circle)
-                .frame(width: 32, height: 32)
-            
-        case .offEnabled:
-            Button(action: setBankDefault) {
-                Color.black
-                    .clipShape(.circle)
-                    .frame(width: 32, height: 32)
-            }
-            
-        case .offDisabled:
-            Color.black.opacity(0.4)
-                .clipShape(.circle)
-                .frame(width: 32, height: 32)
+            BankDefaultView(
+                bankDefault: contractDetails.bankDefault, 
+                action: setBankDefault
+            )
         }
     }
 }
