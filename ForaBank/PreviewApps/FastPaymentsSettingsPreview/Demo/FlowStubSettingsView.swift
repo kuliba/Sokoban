@@ -12,6 +12,7 @@ struct FlowStubSettingsView: View {
     
     @State private var getProducts: GetProducts?
     @State private var createContract: CreateContractResponse?
+    @State private var getSettings: GetSettings?
     
     private let commit: (FlowStub) -> Void
     
@@ -22,6 +23,7 @@ struct FlowStubSettingsView: View {
         self.commit = commit
         self.getProducts = flowStub.map { .init(flowStub: $0) }
         self.createContract = flowStub.map { .init(flowStub: $0) }
+        self.getSettings = flowStub.map { .init(flowStub: $0) }
     }
     
     private var flowStub: FlowStub? {
@@ -35,6 +37,7 @@ struct FlowStubSettingsView: View {
             
             getProductsPicker()
             createContractPicker()
+            getSettingsPicker()
         }
         .overlay(alignment: .bottom, content: applyButton)
         .navigationTitle("Select  Flow Options")
@@ -77,6 +80,24 @@ struct FlowStubSettingsView: View {
         }
     }
     
+    private func getSettingsPicker() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            Text("Get Settings Result").font(.footnote)
+            
+            Picker("Get Settings Result", selection: $getSettings) {
+                
+                ForEach(GetSettings.allCases) {
+                    
+                    Text($0.rawValue)
+                        .tag(Optional($0))
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+    
     private func applyButton() -> some View {
         
         Button {
@@ -95,6 +116,13 @@ struct FlowStubSettingsView: View {
 
 private extension FlowStubSettingsView {
     
+    enum GetProducts: String, CaseIterable, Identifiable {
+        
+        case empty, preview
+        
+        var id: Self { self }
+    }
+    
     enum CreateContractResponse: String, CaseIterable, Identifiable {
         
         case active, inactive, error_C, error_S
@@ -112,9 +140,9 @@ private extension FlowStubSettingsView {
         }
     }
     
-    enum GetProducts: String, CaseIterable, Identifiable {
+    enum GetSettings: String, CaseIterable, Identifiable {
         
-        case empty, preview
+        case active, inactive, missing, error_C, error_S
         
         var id: Self { self }
     }
@@ -144,6 +172,35 @@ private extension FlowStubSettingsView.CreateContractResponse {
             case .inactive:
                 self = .inactive
             }
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
+private extension FlowStubSettingsView.GetSettings {
+    
+    init(flowStub: FlowStub) {
+        
+        switch flowStub.getSettings {
+        case let .contracted(contractDetails):
+            switch contractDetails.paymentContract.contractStatus {
+            case .active:
+                self = .active
+                
+            case .inactive:
+                self = .inactive
+            }
+            
+        case .missingContract:
+            self = .missing
             
         case let .failure(failure):
             switch failure {
