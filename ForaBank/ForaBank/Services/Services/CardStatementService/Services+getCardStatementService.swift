@@ -10,7 +10,7 @@ import GenericRemoteService
 
 extension Services {
     
-    typealias GetCardStatement = (CardStatementForPeriodDomain.Payload)
+    typealias GetCardStatement = CardStatementForPeriodDomain.Payload
     typealias GetCardStatementResult = Swift.Result<[ProductStatementData], ProductStatementMapper.MapperError>
     typealias GetCardStatementService = RemoteServiceOf<GetCardStatement, GetCardStatementResult>
     
