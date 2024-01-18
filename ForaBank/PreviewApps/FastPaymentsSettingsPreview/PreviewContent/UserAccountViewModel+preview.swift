@@ -12,6 +12,34 @@ extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
+        flowStub: FlowStub
+    ) -> UserAccountViewModel {
+        
+        let reducer = FastPaymentsSettingsReducer(
+            getProducts: { flowStub.getProducts }
+        )
+        
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            createContract: { _, completion in completion(flowStub.createContract) },
+            getSettings: { completion in completion(flowStub.getSettings) },
+            prepareSetBankDefault: { completion in completion(flowStub.prepareSetBankDefault) },
+            updateContract: { _, completion in completion(flowStub.updateContract) },
+            updateProduct: { _, completion in completion(flowStub.updateProduct) }
+        )
+        
+        return .init(
+            route: route,
+            factory: .init(
+                makeFastPaymentsSettingsViewModel: {
+                    
+                    .init(reducer: reducer, effectHandler: effectHandler)
+                }
+            )
+        )
+    }
+    
+    static func preview(
+        route: Route = .init(),
         getProducts: @escaping FastPaymentsSettingsReducer.GetProducts = { .preview },
         createContract: @escaping FastPaymentsSettingsEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
