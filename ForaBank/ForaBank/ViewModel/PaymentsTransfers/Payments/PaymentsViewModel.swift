@@ -326,21 +326,21 @@ class PaymentsViewModel: ObservableObject {
                     break
                     //TODO: setup open edit name sheet action
                     
-                case _ as PaymentsOperationViewModelAction.CancelOperation:
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
                     
                     //TODO: move to convenience init
-                    let succes = Payments.Success(
+                    let success = Payments.Success(
                         operation: operationViewModel.operation.value,
                         parameters: [
                             Payments.ParameterSuccessStatus(status: .accepted),
                             Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
                             Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                            Payments.ParameterSuccessText(value: payload.amount, style: .amount),
                             //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
-                            //TODO: amount
                             Payments.ParameterButton.actionButtonMain()
                         ])
                     
-                    self.successViewModel = .init(paymentSuccess: succes, model)
+                    self.successViewModel = .init(paymentSuccess: success, model)
                 
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     self.content = .operation(operationViewModel)
