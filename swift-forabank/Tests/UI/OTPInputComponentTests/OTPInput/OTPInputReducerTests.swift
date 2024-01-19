@@ -42,56 +42,90 @@ final class OTPInputReducerTests: XCTestCase {
         assert(state, .edit(nonDigit), effect: nil)
     }
     
+    func test_edit_shouldChangeEmptyStateOnDigitInput() {
+        
+        let digits = "8766"
+        let state = emptyState()
+        
+        assert(state, .edit(digits), reducedTo: makeState(digits))
+    }
+    
+    func test_edit_shouldNotDeliverEffectOnDigitInputInEmptyState() {
+        
+        let digits = "8766"
+        let state = emptyState()
+        
+        assert(state, .edit(digits), reducedTo: makeState(digits))
+    }
+    
     func test_edit_shouldChangeStateOnDigitInput() {
         
-        let nonDigit = "8766"
+        let digits = "8766"
         let state = makeState("123")
         
-        assert(state, .edit(nonDigit), reducedTo: makeState("8766"))
+        assert(state, .edit(digits), reducedTo: makeState(digits))
     }
     
     func test_edit_shouldNotDeliverEffectOnDigitInputLessThanLimit() {
         
-        let nonDigit = "8766"
+        let digits = "8766"
         let state = makeState("123")
         
-        assert(state, .edit(nonDigit), effect: nil)
+        assert(state, .edit(digits), effect: nil)
     }
     
     func test_edit_shouldLimitInput() {
         
-        let nonDigit = "987654321"
+        let digits = "987654321"
         let state = makeState("123")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(nonDigit), reducedTo: makeState("98765"))
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState("98765", isOTPComplete: true))
+    }
+    
+    func test_edit_shouldChangeToCompleteStateOnReachingLimit() {
+        
+        let digits = "12345"
+        let state = makeState("1234")
+        let sut = makeSUT(length: 5)
+        
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isOTPComplete: true))
     }
     
     func test_edit_shouldNotDeliverEffectOnReachingLimit() {
         
-        let nonDigit = "12345"
+        let digits = "12345"
         let state = makeState("1234")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(nonDigit), effect: nil)
+        assert(sut: sut, state, .edit(digits), effect: nil)
+    }
+    
+    func test_edit_shouldChangeStateOnLimit() {
+        
+        let digits = "98765"
+        let state = makeState("12345")
+        let sut = makeSUT(length: 5)
+        
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isOTPComplete: true))
     }
     
     func test_edit_shouldNotDeliverEffectOnLimit() {
         
-        let nonDigit = "98765"
+        let digits = "98765"
         let state = makeState("12345")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(nonDigit), effect: nil)
+        assert(sut: sut, state, .edit(digits), effect: nil)
     }
     
     func test_edit_shouldNotDeliverEffectAfterLimit() {
         
-        let nonDigit = "987654"
+        let digits = "987654"
         let state = makeState("12345")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(nonDigit), effect: nil)
+        assert(sut: sut, state, .edit(digits), effect: nil)
     }
     
     // MARK: - Helpers
@@ -116,12 +150,15 @@ final class OTPInputReducerTests: XCTestCase {
     
     private func emptyState() -> State {
         
-        makeState("")
+        makeState("", isOTPComplete: false)
     }
     
-    private func makeState(_ text: String) -> State {
+    private func makeState(
+        _ text: String,
+        isOTPComplete: Bool = false
+    ) -> State {
         
-        .init(text: text)
+        .init(text: text, isOTPComplete: isOTPComplete)
     }
     
     private func assert(

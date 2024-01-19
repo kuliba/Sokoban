@@ -55,6 +55,7 @@ private extension OTPInputReducer {
         let text = text.filter(\.isNumber).prefix(length)
         print(text, "filtered")
         state.text = .init(text)
+        state.isOTPComplete = text.count >= length
         print(state.text, "in state")
         
         return (state, effect)

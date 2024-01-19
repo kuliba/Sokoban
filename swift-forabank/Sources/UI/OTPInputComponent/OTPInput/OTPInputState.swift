@@ -8,9 +8,13 @@
 public struct OTPInputState: Equatable {
     
     public var text: String
+    public var isOTPComplete: Bool
     
-    public  init(text: String) {
-     
+    public init(
+        text: String,
+        isOTPComplete: Bool
+    ) {
         self.text = text
+        self.isOTPComplete = isOTPComplete
     }
 }

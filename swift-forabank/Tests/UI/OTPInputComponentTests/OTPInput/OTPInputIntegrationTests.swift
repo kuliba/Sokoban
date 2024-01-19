@@ -21,7 +21,7 @@ final class OTPInputIntegrationTests: XCTestCase {
     private typealias EffectHandler = OTPInputEffectHandler
     
     private func makeSUT(
-        initialState: OTPInputState = .init(text: "г"),
+        initialState: OTPInputState = .init(text: "", isOTPComplete: false),
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
