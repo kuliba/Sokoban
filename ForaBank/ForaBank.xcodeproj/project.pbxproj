@@ -6694,10 +6694,7 @@
 			children = (
 				2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */,
 				2A783A852B5A87CE0035CEAB /* ContentView.swift */,
-				2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */,
-				2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */,
-				2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */,
-				2A783A952B5A8D620035CEAB /* CountdownView.swift */,
+				2A783AB92B5AA7700035CEAB /* Countdown */,
 				2A783A872B5A87CF0035CEAB /* Assets.xcassets */,
 				2A783A892B5A87CF0035CEAB /* Preview Content */,
 			);
@@ -6711,6 +6708,17 @@
 				2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2A783AB92B5AA7700035CEAB /* Countdown */ = {
+			isa = PBXGroup;
+			children = (
+				2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */,
+				2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */,
+				2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */,
+				2A783A952B5A8D620035CEAB /* CountdownView.swift */,
+			);
+			path = Countdown;
 			sourceTree = "<group>";
 		};
 		2A7B5EE72AB06E46002F2D00 /* LoginView */ = {
