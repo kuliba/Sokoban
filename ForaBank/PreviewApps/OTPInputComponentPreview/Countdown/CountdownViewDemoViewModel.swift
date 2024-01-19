@@ -9,7 +9,7 @@ import Foundation
 
 final class CountdownViewDemoViewModel: ObservableObject {
     
-    @Published var otpSettings: OTPSettings = .success
+    @Published var otpSettings: OTPValidationSettings = .success
     @Published var settings: CountdownDemoSettings = .shortSuccess
     @Published var fullScreenCover: FullScreenCover?
 }
@@ -17,7 +17,7 @@ final class CountdownViewDemoViewModel: ObservableObject {
 extension CountdownViewDemoViewModel {
     
     func updateOTPSettings(
-        _ otpSettings: OTPSettings
+        _ otpSettings: OTPValidationSettings
     ) {
         self.otpSettings = otpSettings
         self.fullScreenCover = nil
