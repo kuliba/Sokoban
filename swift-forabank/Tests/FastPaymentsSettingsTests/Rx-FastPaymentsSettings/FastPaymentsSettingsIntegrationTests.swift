@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RxViewModel
 import XCTest
 
 final class FastPaymentsSettingsIntegrationTests: XCTestCase {

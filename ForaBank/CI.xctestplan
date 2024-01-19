@@ -261,6 +261,20 @@
         "identifier" : "OTPInputComponentTests",
         "name" : "OTPInputComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
+      }
     }
   ],
   "version" : 1
