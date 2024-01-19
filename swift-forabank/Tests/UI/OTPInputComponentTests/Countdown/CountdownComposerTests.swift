@@ -6,29 +6,8 @@
 //
 
 import Combine
+import OTPInputComponent
 import RxViewModel
-
-// MARK: - State, Event, Effect
-
-enum CountdownState: Equatable {
-    
-    case completed
-    case failure(CountdownFailure)
-    case running(remaining: Int)
-}
-
-enum CountdownEvent: Equatable {
-    
-    case failure(CountdownFailure)
-    case prepare
-    case start
-    case tick
-}
-
-enum CountdownEffect: Equatable {
-    
-    case initiate
-}
 
 // MARK: - CountdownEffectHandler
 
