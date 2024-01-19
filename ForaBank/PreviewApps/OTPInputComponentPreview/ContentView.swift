@@ -20,7 +20,7 @@ struct ContentView: View {
         
         VStack(spacing: 64) {
             
-            OTPInputView(viewModel: .preview(
+            OTPInputFieldView(viewModel: .preview(
                 viewModel.otpSettings.result
             ))
             

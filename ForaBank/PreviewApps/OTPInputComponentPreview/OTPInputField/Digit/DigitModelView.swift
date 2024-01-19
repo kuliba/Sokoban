@@ -16,7 +16,8 @@ struct DigitModelView: View {
         VStack {
             
             Text(model.value)
-                .font(.largeTitle)
+                .font(.largeTitle.bold())
+                .foregroundStyle(.secondary)
             
             Rectangle()
                 .frame(width: 32, height: 1)

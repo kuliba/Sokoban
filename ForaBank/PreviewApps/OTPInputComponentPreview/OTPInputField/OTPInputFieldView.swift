@@ -1,5 +1,5 @@
 //
-//  OTPInputView.swift
+//  OTPInputFieldView.swift
 //  OTPInputComponentPreview
 //
 //  Created by Igor Malyarov on 19.01.2024.
@@ -8,11 +8,11 @@
 import OTPInputComponent
 import SwiftUI
 
-struct OTPInputView: View {
+struct OTPInputFieldView: View {
     
-    @ObservedObject private var viewModel: OTPInputViewModel
+    @ObservedObject private var viewModel: OTPInputFieldViewModel
     
-    init(viewModel: OTPInputViewModel) {
+    init(viewModel: OTPInputFieldViewModel) {
         
         self.viewModel = viewModel
     }
@@ -89,7 +89,7 @@ private extension OTPInputState {
 }
 
 
-struct OTPInputView_Previews: PreviewProvider {
+struct OTPInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -102,15 +102,15 @@ struct OTPInputView_Previews: PreviewProvider {
         _ result: OTPInputEffectHandler.SubmitOTPResult
     ) -> some View {
         
-        OTPInputView(viewModel: .preview(result))
+        OTPInputFieldView(viewModel: .preview(result))
     }
 }
 
-extension OTPInputViewModel {
+extension OTPInputFieldViewModel {
     
     static func preview(
         _ result: OTPInputEffectHandler.SubmitOTPResult
-    ) -> OTPInputViewModel {
+    ) -> OTPInputFieldViewModel {
         
         .default(submitOTP: { _, completion in
             
@@ -122,12 +122,12 @@ extension OTPInputViewModel {
     }
 }
 
-extension OTPInputViewModel {
+extension OTPInputFieldViewModel {
     
     static func `default`(
         submitOTP: @escaping OTPInputEffectHandler.SubmitOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> OTPInputViewModel {
+    ) -> OTPInputFieldViewModel {
         
         let reducer = OTPInputReducer()
         let effectHandler = OTPInputEffectHandler(submitOTP: submitOTP)
