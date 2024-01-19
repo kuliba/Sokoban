@@ -121,3 +121,22 @@ extension OTPInputViewModel {
         })
     }
 }
+
+extension OTPInputViewModel {
+    
+    static func `default`(
+        submitOTP: @escaping OTPInputEffectHandler.SubmitOTP,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> OTPInputViewModel {
+        
+        let reducer = OTPInputReducer()
+        let effectHandler = OTPInputEffectHandler(submitOTP: submitOTP)
+        
+        return .init(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
+    }
+}

@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct OTPInputComponentPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            ContentView(viewModel: .init())
         }
     }
 }

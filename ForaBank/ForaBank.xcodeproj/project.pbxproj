@@ -565,7 +565,7 @@
 		2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */; };
 		2A6B8E602AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */; };
 		2A6BF2A62B5AF7AF003E3765 /* OTPValidationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A52B5AF7AF003E3765 /* OTPValidationSettings.swift */; };
-		2A6BF2A82B5AF841003E3765 /* CountdownViewDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */; };
+		2A6BF2A82B5AF841003E3765 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A72B5AF841003E3765 /* ContentViewModel.swift */; };
 		2A6BF2AA2B5AFB45003E3765 /* OTPValidationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */; };
 		2A6BF2AC2B5AFD89003E3765 /* PickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */; };
 		2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */; };
@@ -621,7 +621,6 @@
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
 		2A783A8B2B5A87CF0035CEAB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */; };
 		2A783A922B5A87EE0035CEAB /* OTPInputComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A783A912B5A87EE0035CEAB /* OTPInputComponent */; };
-		2A783A942B5A8D5C0035CEAB /* CountdownViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */; };
 		2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A952B5A8D620035CEAB /* CountdownView.swift */; };
 		2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */; };
 		2A783A9A2B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */; };
@@ -2922,7 +2921,7 @@
 		2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVServiceTests.swift"; sourceTree = "<group>"; };
 		2A6BF2A52B5AF7AF003E3765 /* OTPValidationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPValidationSettings.swift; sourceTree = "<group>"; };
-		2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewDemoViewModel.swift; sourceTree = "<group>"; };
+		2A6BF2A72B5AF841003E3765 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPValidationSettingsView.swift; sourceTree = "<group>"; };
 		2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSection.swift; sourceTree = "<group>"; };
 		2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerView.swift; sourceTree = "<group>"; };
@@ -2983,7 +2982,6 @@
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A783A872B5A87CF0035CEAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewDemo.swift; sourceTree = "<group>"; };
 		2A783A952B5A8D620035CEAB /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownDemoSettings.swift; sourceTree = "<group>"; };
 		2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownDemoSettingsView.swift; sourceTree = "<group>"; };
@@ -6509,6 +6507,32 @@
 			path = Mappers;
 			sourceTree = "<group>";
 		};
+		2A6BF2AF2B5B10F0003E3765 /* Digit */ = {
+			isa = PBXGroup;
+			children = (
+				2A783AD02B5AC7480035CEAB /* DigitModel.swift */,
+				2A783ACA2B5ABB190035CEAB /* DigitModelView.swift */,
+			);
+			path = Digit;
+			sourceTree = "<group>";
+		};
+		2A6BF2B02B5B10FB003E3765 /* AutofocusTextField */ = {
+			isa = PBXGroup;
+			children = (
+				2A783ABB2B5AA7F40035CEAB /* AutofocusTextField.swift */,
+			);
+			path = AutofocusTextField;
+			sourceTree = "<group>";
+		};
+		2A6BF2B12B5B1107003E3765 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				2A6BF2A52B5AF7AF003E3765 /* OTPValidationSettings.swift */,
+				2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		2A6DC72B2AF3CA0400688401 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -6712,6 +6736,7 @@
 			children = (
 				2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */,
 				2A783A852B5A87CE0035CEAB /* ContentView.swift */,
+				2A6BF2A72B5AF841003E3765 /* ContentViewModel.swift */,
 				2A783ABA2B5AA7E10035CEAB /* OTP */,
 				2A783AB92B5AA7700035CEAB /* Countdown */,
 				2A783A872B5A87CF0035CEAB /* Assets.xcassets */,
@@ -6733,8 +6758,6 @@
 		2A783AB92B5AA7700035CEAB /* Countdown */ = {
 			isa = PBXGroup;
 			children = (
-				2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */,
-				2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */,
 				2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */,
 				2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */,
 				2A783A952B5A8D620035CEAB /* CountdownView.swift */,
@@ -6746,12 +6769,10 @@
 			isa = PBXGroup;
 			children = (
 				2A783ABD2B5AA8280035CEAB /* OTPInputView.swift */,
-				2A783AD02B5AC7480035CEAB /* DigitModel.swift */,
-				2A783ACA2B5ABB190035CEAB /* DigitModelView.swift */,
 				2A783ABF2B5AA8C90035CEAB /* OTPInputViewModel.swift */,
-				2A783ABB2B5AA7F40035CEAB /* AutofocusTextField.swift */,
-				2A6BF2A52B5AF7AF003E3765 /* OTPValidationSettings.swift */,
-				2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */,
+				2A6BF2AF2B5B10F0003E3765 /* Digit */,
+				2A6BF2B02B5B10FB003E3765 /* AutofocusTextField */,
+				2A6BF2B12B5B1107003E3765 /* Settings */,
 			);
 			path = OTP;
 			sourceTree = "<group>";
@@ -13292,10 +13313,9 @@
 				2A783AC82B5AAB810035CEAB /* OTPInputView.swift in Sources */,
 				2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */,
 				2A783AD32B5AC7690035CEAB /* DigitModel.swift in Sources */,
-				2A6BF2A82B5AF841003E3765 /* CountdownViewDemoViewModel.swift in Sources */,
+				2A6BF2A82B5AF841003E3765 /* ContentViewModel.swift in Sources */,
 				2A6BF2AA2B5AFB45003E3765 /* OTPValidationSettingsView.swift in Sources */,
 				2A783A9A2B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift in Sources */,
-				2A783A942B5A8D5C0035CEAB /* CountdownViewDemo.swift in Sources */,
 				2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */,
 				2A783ACF2B5ABBC00035CEAB /* DigitModelView.swift in Sources */,
 				2A6BF2A62B5AF7AF003E3765 /* OTPValidationSettings.swift in Sources */,
