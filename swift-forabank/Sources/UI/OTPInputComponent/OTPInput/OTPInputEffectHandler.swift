@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
+import Tagged
+
 public final class OTPInputEffectHandler {
     
     private let submitOTP: SubmitOTP
@@ -23,7 +25,7 @@ public extension OTPInputEffectHandler {
     ) {
         switch effect {
         case let .submitOTP(otp):
-            submitOTP(otp) { [weak self] result in
+            submitOTP(.init(otp)) { [weak self] result in
                 
                 self?.submitOTP(result, dispatch)
             }
@@ -33,11 +35,13 @@ public extension OTPInputEffectHandler {
 
 public extension OTPInputEffectHandler {
     
-    #warning("replace with strong Tagged type")
-    typealias SubmitOTPPayload = String
+    typealias SubmitOTPPayload = OTP
     typealias SubmitOTPResult = Result<Void, OTPInputFailure>
     typealias SubmitOTPCompletion = (SubmitOTPResult) -> Void
     typealias SubmitOTP = (SubmitOTPPayload, @escaping SubmitOTPCompletion) -> Void
+    
+    typealias OTP = Tagged<_OTP, String>
+    enum _OTP {}
 }
 
 public extension OTPInputEffectHandler {

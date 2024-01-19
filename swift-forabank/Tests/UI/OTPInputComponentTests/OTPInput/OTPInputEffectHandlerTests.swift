@@ -26,7 +26,7 @@ final class OTPInputEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.submitOTP(otp)) { _ in }
         
-        XCTAssertNoDiff(spy.payloads, [otp])
+        XCTAssertNoDiff(spy.payloads, [.init(otp)])
     }
     
     func test_submitOTP_shouldDeliverSuccessOnSuccess() {
