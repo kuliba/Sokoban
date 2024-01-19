@@ -14,25 +14,31 @@ struct CountdownViewDemo: View {
     
     var body: some View {
         
-        CountdownView(settings: settings)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .topTrailing, content: optionsButton)
-            .fullScreenCover(isPresented: $isShowingSettingsOptions) {
+        VStack(spacing: 64) {
+            
+            OTPInputView(viewModel: .default())
+            
+            CountdownView(settings: settings)
+        }
+        .padding(.top, 64)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .overlay(alignment: .topTrailing, content: optionsButton)
+        .fullScreenCover(isPresented: $isShowingSettingsOptions) {
+            
+            NavigationView {
                 
-                NavigationView {
-                    
-                    CountdownDemoSettingsView(
-                        settings: settings,
-                        apply: {
-                            
-                            settings = $0
-                            isShowingSettingsOptions = false
-                        }
-                    )
-                    .navigationTitle("Countdown Options")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
+                CountdownDemoSettingsView(
+                    settings: settings,
+                    apply: {
+                        
+                        settings = $0
+                        isShowingSettingsOptions = false
+                    }
+                )
+                .navigationTitle("Countdown Options")
+                .navigationBarTitleDisplayMode(.inline)
             }
+        }
     }
     
     private func optionsButton() -> some View {
