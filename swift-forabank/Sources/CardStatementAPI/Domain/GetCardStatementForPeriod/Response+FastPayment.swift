@@ -1,15 +1,15 @@
 //
-//  FastPayment.swift
-//  
+//  Response+FastPayment.swift
+//
 //
 //  Created by Andryusina Nataly on 19.01.2024.
 //
 
 import Foundation
 
-public extension GetCardStatementForPeriodResponse {
+extension Response {
     
-    struct FastPayment: Codable, Equatable {
+    struct FastPayment: Decodable, Equatable {
         
         public let opkcid: String
         public let foreignName: String

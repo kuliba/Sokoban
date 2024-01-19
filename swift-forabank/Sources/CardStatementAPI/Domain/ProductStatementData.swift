@@ -1,21 +1,21 @@
 //
-//  GetCardStatementForPeriodResponse.swift
+//  ProductStatementData.swift
+//  
 //
-//
-//  Created by Andryusina Nataly on 18.01.2024.
+//  Created by Andryusina Nataly on 19.01.2024.
 //
 
 import Foundation
 
-public struct GetCardStatementForPeriodResponse: Codable, Equatable {
+public struct ProductStatementData: Equatable {
     
     public var id: Int { UUID().uuidString.hashValue }
     public let type: OperationEnvironment
     public let accountID: Int?
     public let operationType: OperationType
     public let paymentDetailType: Kind
-    public let amount: Decimal?
-    public let documentAmount: Decimal?
+    public let amount: Decimal
+    public let documentAmount: Decimal
     public let comment: String
     public let documentID: Int?
     public let accountNumber: String
@@ -43,8 +43,8 @@ public struct GetCardStatementForPeriodResponse: Codable, Equatable {
         accountID: Int?,
         operationType: OperationType,
         paymentDetailType: Kind,
-        amount: Decimal?,
-        documentAmount: Decimal?,
+        amount: Decimal,
+        documentAmount: Decimal,
         comment: String,
         documentID: Int?,
         accountNumber: String,

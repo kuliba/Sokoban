@@ -52,7 +52,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     func test_map_statusCode200_Success() throws {
         
         let results = try XCTUnwrap(map(data: Data(String.sampleCardStatement.utf8))).get()
-        var expectedResults: [GetCardStatementForPeriodResponse] = [.sample]
+        var expectedResults: [ProductStatementData] = [.sample]
         
         assert(results, equals: &expectedResults)
     }
@@ -62,7 +62,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     private func map(
         statusCode: Int = 200,
         data: Data = Data(String.sampleCardStatement.utf8)
-    ) -> Swift.Result<[GetCardStatementForPeriodResponse], ResponseMapper.MapperError> {
+    ) -> Swift.Result<[ProductStatementData], MappingError> {
         
         let result = ResponseMapper.mapGetCardStatementResponse(
             data,
@@ -150,7 +150,7 @@ private extension String {
 """
 }
 
-private extension GetCardStatementForPeriodResponse {
+private extension ProductStatementData {
     
     static let sample: Self = .init(
 

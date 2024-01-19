@@ -6,28 +6,31 @@
 //
 
 import Foundation
+import CardStatementAPI
+import Tagged
 
 extension Services {
     
-    typealias Payload = CardStatementForPeriodDomain.Payload
+    typealias CardStatementForPeriodPayload = CardStatementForPeriodDomain.Payload
     
     static func makeCardStatementForPeriod(
         httpClient: HTTPClient,
         productId: ProductData.ID,
         period: Period,
-        name: Payload.Name? = nil,
+        name: CardStatementForPeriodPayload.Name? = nil,
         statementFormat: StatementFormat? = nil,
-        cardNumber: Payload.CardNumber? = nil
+        cardNumber: CardStatementForPeriodPayload.CardNumber? = nil
     ) async throws-> [ProductStatementData] {
         
-        let payload = Payload.init(
+        let payload = CardStatementForPeriodPayload.init(
             id: .init(productId),
             name: name,
             period: period,
             statementFormat: statementFormat,
             cardNumber: cardNumber)
         let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
-        return data
+        
+        return data.map { .init(data: $0) }
     }
     
     private func getCardStatementForPeriod(
@@ -37,5 +40,15 @@ extension Services {
         Services.getCardStatementForPeriod(
             httpClient: httpClient
         )
+    }
+}
+
+// TODO: доделать!!!
+extension ProductStatementData {
+    
+    init(
+        data: CardStatementAPI.ProductStatementData
+    ) {
+        fatalError("unimplemented")
     }
 }

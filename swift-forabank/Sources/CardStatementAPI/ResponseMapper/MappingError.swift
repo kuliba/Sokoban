@@ -9,6 +9,6 @@ import Foundation
 
 public enum MappingError: Error, Equatable {
     
-    case invalid(statusCode: Int, data: Data)
-    case server(statusCode: Int, errorMessage: String)
+    case mappingFailure(String)
+    case not200Status(String)
 }
