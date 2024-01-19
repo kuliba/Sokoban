@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DigitModelView: View {
     
-    let model: OTPInputState.DigitModel
+    let model: DigitModel
     
     var body: some View {
         

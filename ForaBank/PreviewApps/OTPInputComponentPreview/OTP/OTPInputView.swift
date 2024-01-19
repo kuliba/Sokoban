@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
+import OTPInputComponent
 import SwiftUI
 
 struct OTPInputView: View {
@@ -12,18 +13,21 @@ struct OTPInputView: View {
     @ObservedObject private var viewModel: OTPInputViewModel
     
     init(viewModel: OTPInputViewModel) {
-     
+        
         self.viewModel = viewModel
     }
     
     var body: some View {
-        #warning("replace with ZStack")
+#warning("replace with ZStack")
         VStack {
             
             HStack {
                 
-                ForEach(viewModel.state.digitModels, content: DigitModelView.init)
-                    .monospacedDigit()
+                ForEach(
+                    viewModel.state.digitModels,
+                    content: DigitModelView.init
+                )
+                .monospacedDigit()
             }
             
             TextField("sdsds", text: .init(
@@ -36,8 +40,8 @@ struct OTPInputView: View {
             ))
             .keyboardType(.numberPad)
             
-           // autofocusTextField()
-                .fixedSize()
+            // autofocusTextField()
+            .fixedSize()
         }
     }
     
@@ -65,6 +69,25 @@ struct OTPInputView: View {
         // .disabled(viewModel.state.isInputDisabled)
     }
 }
+
+private extension OTPInputState {
+    
+    var digitModels: [DigitModel] {
+        
+#warning("move maxLength to init")
+        let length = 6
+        return text
+            .filter(\.isNumber)
+            .padding(toLength: length, withPad: " ", startingAt: 0)
+            .map { String($0) }
+            .enumerated()
+            .map {
+                
+                DigitModel(id: $0.offset, value: $0.element)
+            }
+    }
+}
+
 
 struct OTPInputView_Previews: PreviewProvider {
     
