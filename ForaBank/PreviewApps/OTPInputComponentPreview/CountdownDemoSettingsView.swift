@@ -99,9 +99,9 @@ struct CountdownDemoSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        countdownDemoSettingsView(.fiveSuccess)
-        countdownDemoSettingsView(.fiveConnectivity)
-        countdownDemoSettingsView(.fiveServer)
+        countdownDemoSettingsView(.shortSuccess)
+        countdownDemoSettingsView(.shortConnectivity)
+        countdownDemoSettingsView(.shortServer)
     }
     
     private static func countdownDemoSettingsView(

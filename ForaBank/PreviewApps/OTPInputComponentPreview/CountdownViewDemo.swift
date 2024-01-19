@@ -9,12 +9,12 @@ import SwiftUI
 
 struct CountdownViewDemo: View {
     
-    @State private var settings: CountdownDemoSettings = .fiveSuccess
-    @State private var isShowingSettingsOptions = true
+    @State private var settings: CountdownDemoSettings = .shortSuccess
+    @State private var isShowingSettingsOptions = false
     
     var body: some View {
         
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        CountdownView(settings: settings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .topTrailing, content: optionsButton)
             .fullScreenCover(isPresented: $isShowingSettingsOptions) {

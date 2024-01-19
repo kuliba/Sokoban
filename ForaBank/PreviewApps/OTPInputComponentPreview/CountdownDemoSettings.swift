@@ -14,7 +14,7 @@ struct CountdownDemoSettings {
     
     enum Duration: Int, CaseIterable, Identifiable {
         
-        case five = 5
+        case short = 10
         case sixty = 60
         
         var id: Self { self }

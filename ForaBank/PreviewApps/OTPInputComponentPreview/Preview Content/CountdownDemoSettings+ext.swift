@@ -7,18 +7,18 @@
 
 extension CountdownDemoSettings {
     
-    static let fiveSuccess: Self = .init(
-        duration: .five,
+    static let shortSuccess: Self = .init(
+        duration: .short,
         initiateResult: .success
     )
     
-    static let fiveConnectivity: Self = .init(
-        duration: .five,
+    static let shortConnectivity: Self = .init(
+        duration: .short,
         initiateResult: .connectivity
     )
     
-    static let fiveServer: Self = .init(
-        duration: .five,
+    static let shortServer: Self = .init(
+        duration: .short,
         initiateResult: .server
     )
 }
