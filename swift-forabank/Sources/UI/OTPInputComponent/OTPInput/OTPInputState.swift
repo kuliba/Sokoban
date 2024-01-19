@@ -28,6 +28,7 @@ public extension OTPInputState {
         
         case failure(OTPInputFailure)
         case inflight
+        case validOTP
     }
 }
 

@@ -40,7 +40,11 @@ public extension OTPInputReducer {
             }
             
         case .otpValidated:
-            fatalError()
+            if state.isInputComplete {
+                state = state.updated(
+                    status: .validOTP
+                )
+            }
         }
         
         return (state, effect)

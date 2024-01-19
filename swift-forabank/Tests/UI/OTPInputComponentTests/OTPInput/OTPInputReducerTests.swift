@@ -230,6 +230,38 @@ final class OTPInputReducerTests: XCTestCase {
         assert(state, serverError(message), effect: nil)
     }
     
+    // MARK: - otpValidated
+    
+    func test_otpValidated_shouldNotChangeIncompleteState() {
+        
+        let state = incomplete()
+        
+        assert(state, .otpValidated, reducedTo: state)
+    }
+    
+    func test_otpValidated_shouldNotDeliverEffectOnIncompleteState() {
+        
+        let state = incomplete()
+        
+        assert(state, .otpValidated, effect: nil)
+    }
+    
+    func test_otpValidated_shouldSetStatusToValidatedCompleteState() {
+        
+        let state = complete()
+        
+        assert(state, .otpValidated, reducedTo: state.updated(
+            status: .validOTP
+        ))
+    }
+    
+    func test_otpValidated_shouldNotDeliverEffectOnCompleteState() {
+        
+        let state = complete()
+        
+        assert(state, .otpValidated, effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = OTPInputReducer
