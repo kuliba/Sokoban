@@ -69,6 +69,26 @@ extension TickViewModel {
                 self?.event(event)
             }
         }
+#warning("LOOKS LIKE a bug with constant start on every tick")
+#warning("ADD TESTS")
+        let (newState, effect) = reduce(state, event)
+            
+            if case .running = newState, case .idle = state {
+                // Start timer only if transitioning from idle to running
+                timer.start(every: 1) { [weak self] in self?.event(.tick) }
+            } else if case .idle = newState, case .running = state {
+                // Stop timer only if transitioning from running to idle
+                timer.stop()
+            }
+            
+            stateSubject.send(newState)
+            state = newState  // Update state
+
+            if let effect = effect {
+                handleEffect(effect) { [weak self] event in
+                    self?.event(event)
+                }
+            }
     }
 }
 
