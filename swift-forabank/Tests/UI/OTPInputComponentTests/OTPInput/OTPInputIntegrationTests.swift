@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
+import OTPInputComponent
 typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
 
 import OTPInputComponent
@@ -20,7 +21,7 @@ final class OTPInputIntegrationTests: XCTestCase {
     private typealias EffectHandler = OTPInputEffectHandler
     
     private func makeSUT(
-        initialState: OTPInputState = .init(),
+        initialState: OTPInputState = .init(text: "г"),
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {

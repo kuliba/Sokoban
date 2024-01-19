@@ -5,27 +5,7 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-final class OTPInputReducer {
-    
-}
-
-extension OTPInputReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-    }
-}
-
-extension OTPInputReducer {
-    
-    typealias State = OTPInputState
-    typealias Event = OTPInputEvent
-    typealias Effect = OTPInputEffect
-}
-
+import OTPInputComponent
 import XCTest
 
 final class OTPInputReducerTests: XCTestCase {

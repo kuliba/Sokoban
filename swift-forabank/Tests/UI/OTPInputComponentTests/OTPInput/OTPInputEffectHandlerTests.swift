@@ -5,29 +5,7 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-final class OTPInputEffectHandler {
-    
-}
-
-extension OTPInputEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        
-    }
-}
-
-extension OTPInputEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias State = OTPInputState
-    typealias Event = OTPInputEvent
-    typealias Effect = OTPInputEffect
-}
-
+import OTPInputComponent
 import XCTest
 
 final class OTPInputEffectHandlerTests: XCTestCase {
