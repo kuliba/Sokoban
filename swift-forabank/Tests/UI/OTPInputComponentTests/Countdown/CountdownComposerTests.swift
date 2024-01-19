@@ -18,7 +18,9 @@ enum CountdownState: Equatable {
 
 enum CountdownEvent: Equatable {
     
+    case failure(CountdownFailure)
     case prepare
+    case start
     case tick
 }
 
@@ -45,7 +47,10 @@ extension CountdownEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        fatalError()
+        switch effect {
+        case .initiate:
+            initiate(dispatch)
+        }
     }
 }
 
@@ -65,10 +70,34 @@ extension CountdownEffectHandler {
     typealias Effect = CountdownEffect
 }
 
+private extension CountdownEffectHandler {
+    
+    func initiate(
+        _ dispatch: @escaping Dispatch
+    ) {
+        initiate { result in
+        
+            switch result {
+            case let .failure(countdownFailure):
+                dispatch(.failure(countdownFailure))
+                
+            case .success(()):
+                dispatch(.start)
+            }
+        }
+    }
+}
+
 // MARK: - CountdownReducer
 
 final class CountdownReducer {
     
+    private let duration: Int
+    
+    init(duration: Int) {
+     
+        self.duration = duration
+    }
 }
 
 extension CountdownReducer {
@@ -82,6 +111,27 @@ extension CountdownReducer {
         var effect: Effect?
         
         switch event {
+        case let .failure(countdownFailure):
+            break
+            
+        case .prepare:
+            switch state {
+            case .completed:
+                effect = .initiate
+                
+            case .running:
+                break
+            }
+
+        case .start:
+            switch state {
+            case .completed:
+                state = .running(remaining: duration)
+                
+            case .running:
+                break
+            }
+
         case .tick:
             switch state {
             case .completed:
@@ -93,15 +143,6 @@ extension CountdownReducer {
                 } else {
                     state = .completed
                 }
-            }
-            
-        case .prepare:
-            switch state {
-            case .completed:
-                effect = .initiate
-                
-            case .running:
-                break
             }
         }
         
@@ -145,7 +186,7 @@ extension CountdownComposer {
     
     func makeViewModel(duration: Int = 60) -> CountdownViewModel {
         
-        let reducer = CountdownReducer()
+        let reducer = CountdownReducer(duration: duration)
         let effectHandler = CountdownEffectHandler(initiate: activate)
         
         let viewModel = CountdownViewModel(
@@ -254,6 +295,71 @@ final class CountdownReducerTests: XCTestCase {
         assert(sut, state, .prepare, effect: nil)
     }
     
+    // MARK: - start
+    
+    func test_start_shouldChangeStateToRunningOnCompletedState() {
+        
+        let sut = makeSUT(duration: 77)
+        
+        assert(sut, completed(), .start, reducedTo: running(77))
+    }
+    
+    func test_start_shouldNotDeliverEffectOnCompletedState() {
+        
+        let state = completed()
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, effect: nil)
+    }
+    
+    func test_start_shouldNotChangeRunningState() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, reducedTo: state)
+    }
+    
+    func test_start_shouldNotDeliverEffectOnRunningState() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, effect: nil)
+    }
+    
+    func test_start_shouldNotChangeRunningState_one() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, reducedTo: state)
+    }
+    
+    func test_start_shouldNotDeliverEffectOnRunningState_one() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, effect: nil)
+    }
+    
+    func test_start_shouldNotChangeRunningState_zero() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, reducedTo: state)
+    }
+    
+    func test_start_shouldNotDeliverEffectOnRunningState_zero() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, .start, effect: nil)
+    }
+
     // MARK: - tick
     
     func test_tick_shouldNotChangeCompletedState() {
@@ -322,11 +428,12 @@ final class CountdownReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        duration: Int = 55,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(duration: duration)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -379,6 +486,129 @@ final class CountdownReducerTests: XCTestCase {
         )
     }
 }
+
+// MARK: - CountdownEffectHandlerTests
+
+final class CountdownEffectHandlerTests: XCTestCase {
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (_, spy) = makeSUT()
+        
+        XCTAssertEqual(spy.callCount, 0)
+    }
+    
+    func test_initiate_shouldDeliverStartEventOnSuccess() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .start, on: {
+            
+            spy.complete(with: .success(()))
+        })
+    }
+    
+    func test_initiate_shouldDeliverConnectivityErrorFailureEventOnConnectivityFailure() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: connectivity(), on: {
+            
+            spy.complete(with: connectivity())
+        })
+    }
+    
+    func test_initiate_shouldDeliverServerErrorFailureEventOnServerFailure() {
+        
+        let message = anyMessage()
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: serverError(message), on: {
+            
+            spy.complete(with: serverError(message))
+        })
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = CountdownEffectHandler
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    
+    private typealias InitiateSpy = Spy<Void, SUT.InitiateResult>
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        initiateSpy: InitiateSpy
+    ) {
+        let initiateSpy = InitiateSpy()
+        let sut = SUT(initiate: initiateSpy.process(completion:))
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(initiateSpy, file: file, line: line)
+        
+        return (sut, initiateSpy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with effect: Effect,
+        toDeliver expectedEvent: Event,
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.handleEffect(effect) { receivedEvent in
+            
+            XCTAssertNoDiff(
+                receivedEvent,
+                expectedEvent,
+                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
+                file: file, line: line
+            )
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
+    }
+}
+
+private func connectivity(
+) -> CountdownEvent {
+    
+    .failure(.connectivityError)
+}
+
+private func connectivity(
+) -> CountdownEffectHandler.InitiateResult {
+    
+    .failure(.connectivityError)
+}
+
+private func serverError(
+    _ message: String = anyMessage()
+) -> CountdownEvent {
+    
+    .failure(.serverError(message))
+}
+
+private func serverError(
+    _ message: String = anyMessage()
+) -> CountdownEffectHandler.InitiateResult {
+    
+    .failure(.serverError(message))
+}
+
+// MARK: - CountdownComposerTests
 
 //final class CountdownComposerTests: XCTestCase {
 //
