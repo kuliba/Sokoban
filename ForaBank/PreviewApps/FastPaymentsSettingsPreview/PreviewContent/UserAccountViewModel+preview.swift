@@ -12,20 +12,49 @@ extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
-        getUserPaymentSettings: @escaping FastPaymentsSettingsReducer.GetUserPaymentSettings = { $0(.active()) },
-        updateContract: @escaping FastPaymentsSettingsReducer.UpdateContract = { _, completion in completion(.success(.active)) },
-        getProduct: @escaping FastPaymentsSettingsReducer.GetProduct = { .init(id: .init(UUID().uuidString)) },
-        createContract: @escaping FastPaymentsSettingsReducer.CreateContract = { _, completion in completion(.success(.active)) },
-        prepareSetBankDefault: @escaping FastPaymentsSettingsReducer.PrepareSetBankDefault = { $0(.success) }
+        flowStub: FlowStub
     ) -> UserAccountViewModel {
         
         let reducer = FastPaymentsSettingsReducer(
-            
-            getUserPaymentSettings: getUserPaymentSettings,
-            updateContract: updateContract,
-            getProduct: getProduct,
-            createContract: createContract,
-            prepareSetBankDefault: prepareSetBankDefault
+            getProducts: { flowStub.getProducts }
+        )
+        
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            createContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.createContract)
+                }
+            },
+            getSettings: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.getSettings)
+                }
+            },
+            prepareSetBankDefault: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.prepareSetBankDefault)
+                }
+            },
+            updateContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.updateContract)
+                }
+            },
+            updateProduct: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.updateProduct)
+                }
+            }
         )
         
         return .init(
@@ -33,7 +62,40 @@ extension UserAccountViewModel {
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
-                    .init(reducer: reducer)
+                    .init(reducer: reducer, effectHandler: effectHandler)
+                }
+            )
+        )
+    }
+    
+    static func preview(
+        route: Route = .init(),
+        getProducts: @escaping FastPaymentsSettingsReducer.GetProducts = { .preview },
+        createContract: @escaping FastPaymentsSettingsEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
+        getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
+        prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
+        updateContract: @escaping FastPaymentsSettingsEffectHandler.UpdateContract,
+        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct
+    ) -> UserAccountViewModel {
+        
+        let reducer = FastPaymentsSettingsReducer(
+            getProducts: getProducts
+        )
+        
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            createContract: createContract,
+            getSettings: getSettings,
+            prepareSetBankDefault: prepareSetBankDefault,
+            updateContract: updateContract,
+            updateProduct: updateProduct
+        )
+        
+        return .init(
+            route: route,
+            factory: .init(
+                makeFastPaymentsSettingsViewModel: {
+                    
+                    .init(reducer: reducer, effectHandler: effectHandler)
                 }
             )
         )
@@ -42,11 +104,24 @@ extension UserAccountViewModel {
 
 private extension FastPaymentsSettingsViewModel {
     
-    convenience init(reducer: FastPaymentsSettingsReducer) {
-        
+    convenience init(
+        reducer: FastPaymentsSettingsReducer,
+        effectHandler: FastPaymentsSettingsEffectHandler
+    ) {
         self.init(
-            initialState: nil,
-            reduce: reducer.reduce(_:_:_:)
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
+}
+
+func generateRandom11DigitNumber() -> Int {
+    
+    let firstDigit = Int.random(in: 1...9)
+    let remainingDigits = (1..<11)
+        .map { _ in Int.random(in: 0...9) }
+        .reduce(0, { $0 * 10 + $1 })
+    
+    return firstDigit * Int(pow(10.0, 10.0)) + remainingDigits
 }

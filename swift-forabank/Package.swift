@@ -41,6 +41,7 @@ let package = Package(
         .buttonWithSheet,
         .linkableText,
         .manageSubscriptionsUI,
+        .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
@@ -122,6 +123,8 @@ let package = Package(
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
+        .otpInputComponent,
+        .otpInputComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -259,6 +262,13 @@ private extension Product {
         name: .manageSubscriptionsUI,
         targets: [
             .manageSubscriptionsUI,
+        ]
+    )
+    
+    static let otpInputComponent = library(
+        name: .otpInputComponent,
+        targets: [
+            .otpInputComponent,
         ]
     )
     
@@ -894,6 +904,19 @@ private extension Target {
         name: .manageSubscriptionsUI
     )
     
+    static let otpInputComponent = target(
+        name: .otpInputComponent,
+        path: "Sources/UI/\(String.otpInputComponent)"
+    )
+    
+    static let otpInputComponentTests = testTarget(
+        name: .otpInputComponentTests,
+        dependencies: [
+            .otpInputComponent,
+        ],
+        path: "Tests/UI/\(String.otpInputComponentTests)"
+    )
+    
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
@@ -1159,6 +1182,10 @@ private extension Target.Dependency {
         name: .linkableText
     )
     
+    static let otpInputComponent = byName(
+        name: .otpInputComponent
+    )
+    
     static let pickerWithPreviewComponent = byName(
         name: .pickerWithPreviewComponent
     )
@@ -1317,6 +1344,9 @@ private extension String {
     static let linkableTextTests = "LinkableTextTests"
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
+    
+    static let otpInputComponent = "OTPInputComponent"
+    static let otpInputComponentTests = "OTPInputComponentTests"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"

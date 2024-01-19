@@ -77,8 +77,8 @@ public extension FastPaymentsSettingsEffectHandler {
 // micro-service `f`
 public extension FastPaymentsSettingsEffectHandler {
     
-    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefaultResponse = Result<Void, ServiceFailure>
+    typealias PrepareSetBankDefaultCompletion = (PrepareSetBankDefaultResponse) -> Void
     typealias PrepareSetBankDefault = (@escaping PrepareSetBankDefaultCompletion) -> Void
 }
 

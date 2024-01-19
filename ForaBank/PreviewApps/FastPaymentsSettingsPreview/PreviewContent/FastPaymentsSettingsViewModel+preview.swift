@@ -12,10 +12,12 @@ extension FastPaymentsSettingsViewModel {
     static var preview: FastPaymentsSettingsViewModel {
         
         let reducer = FastPaymentsSettingsReducer.preview
+        let effectHandler = FastPaymentsSettingsEffectHandler.preview
         
         return .init(
-            initialState: nil,
-            reduce: reducer.reduce(_:_:_:)
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
 }
