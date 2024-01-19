@@ -30,18 +30,18 @@ struct OTPInputView: View {
                 .monospacedDigit()
             }
             
-            TextField("sdsds", text: .init(
-                get: {
-                    let text = viewModel.state.text
-                    print(text, "viewModel.state.text")
-                    return text
-                },
-                set: viewModel.edit
-            ))
-            .keyboardType(.numberPad)
+            // TextField("sdsds", text: .init(
+            //     get: {
+            //         let text = viewModel.state.text
+            //         print(text, "viewModel.state.text")
+            //         return text
+            //     },
+            //     set: viewModel.edit
+            // ))
+            // .keyboardType(.numberPad)
             
-            // autofocusTextField()
-            .fixedSize()
+            autofocusTextField()
+                .fixedSize()
         }
     }
     
@@ -107,7 +107,7 @@ struct OTPInputView_Previews: PreviewProvider {
 }
 
 extension OTPInputViewModel {
- 
+    
     static func preview(
         _ result: OTPInputEffectHandler.SubmitOTPResult
     ) -> OTPInputViewModel {
