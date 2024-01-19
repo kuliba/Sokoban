@@ -306,10 +306,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             model: model,
             makeProductProfileViewModel: ProductProfileViewModel.make(
                 with: model,
+                fastPaymentsFactory: .legacy,
+                fastPaymentsServices: .empty,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient
             ),
+            fastPaymentsFactory: .legacy,
+            fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory
         )

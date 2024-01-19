@@ -5,12 +5,14 @@
 //  Created by Igor Malyarov on 07.12.2023.
 //
 
+import PaymentComponents
+
 public final class SberQRConfirmPaymentStateFixedAmountReducer {
     
     public typealias State = SberQRConfirmPaymentState.FixedAmount
     public typealias Event = SberQRConfirmPaymentEvent.FixedAmount
 
-    public typealias ProductSelectReduce = (ProductSelect, SberQRConfirmPaymentEvent.ProductSelectEvent) -> ProductSelect
+    public typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect
     
     private let productSelectReduce: ProductSelectReduce
     

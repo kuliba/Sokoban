@@ -37,6 +37,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private var bindings = Set<AnyCancellable>()
@@ -44,6 +46,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         isTabBarHidden: Bool = false,
@@ -59,6 +63,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.route = route
@@ -74,6 +80,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
@@ -85,6 +93,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.model = model
         self.route = route
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.navButtonsRight = navButtonsRight
@@ -156,6 +166,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     // TODO: replace with factory
                     route.destination = .userAccount(.init(
                         model: model,
+                        fastPaymentsFactory: fastPaymentsFactory,
+                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             

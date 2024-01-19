@@ -1,0 +1,43 @@
+//
+//  PaymentComponents.swift
+//
+//
+//  Created by Igor Malyarov on 23.12.2023.
+//
+
+@_exported import AmountComponent
+@_exported import ButtonComponent
+@_exported import InfoComponent
+@_exported import ProductSelectComponent
+
+/// A namespace for Payment Components.
+///
+/// For discoverability, code auto-completion and consistency.
+///
+///     PaymentComponents.AmountView
+///
+public enum PaymentComponents {}
+
+public extension PaymentComponents {
+    
+    typealias Amount = AmountComponent.Amount
+    typealias AmountConfig = AmountComponent.AmountConfig
+    typealias AmountView = AmountComponent.AmountView
+    
+    typealias Button = ButtonComponent.Button
+    typealias ButtonConfig = ButtonComponent.ButtonConfig
+    typealias ButtonStateConfig = ButtonComponent.ButtonStateConfig
+    typealias ButtonView = ButtonComponent.ButtonView
+    
+    typealias Info = InfoComponent.Info
+    typealias InfoConfig = InfoComponent.InfoConfig
+    typealias InfoView = InfoComponent.InfoView
+    
+    typealias ProductSelect = ProductSelectComponent.ProductSelect
+    typealias ProductSelectConfig = ProductSelectComponent.ProductSelectConfig
+    typealias ProductSelectView = ProductSelectComponent.ProductSelectView
+
+    typealias ProductCard = ProductSelectComponent.ProductCard
+    typealias ProductCardConfig = ProductSelectComponent.ProductCardConfig
+    typealias ProductCardView = ProductSelectComponent.ProductCardView
+}

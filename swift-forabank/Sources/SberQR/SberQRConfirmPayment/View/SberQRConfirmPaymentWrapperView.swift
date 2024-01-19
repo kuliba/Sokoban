@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
 import SwiftUI
 
 public struct SberQRConfirmPaymentWrapperView: View {
@@ -81,7 +82,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 pay: { print("pay!", String(describing: $0.amount), $0.product.type, $0.product.id) }
             ), 
             map: Info.preview,
-            config: .default
+            config: .preview
         )
     }
 }
@@ -132,7 +133,7 @@ private extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
             brandName: map(fixedAmount.brandName),
             amount: map(fixedAmount.amount),
             recipientBank: map(fixedAmount.recipientBank),
-            bottom: fixedAmount.bottom
+            button: fixedAmount.button
         )
     }
 }

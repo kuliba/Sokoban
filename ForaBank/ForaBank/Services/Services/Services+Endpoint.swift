@@ -56,6 +56,7 @@ extension Services {
             
             case v1
             case v2
+            case v4
         }
         
         enum ServiceName: String {
@@ -66,6 +67,7 @@ extension Services {
             case createStickerPayment
             case createSberQRPayment
             case formSessionKey
+            case getCardStatementForPeriod
             case getJsonAbroad
             case getSberQRData
             case getOperationDetailByPaymentId
@@ -96,10 +98,7 @@ extension Services.Endpoint {
     ) throws -> URL {
         
         guard let baseURL = URL(string: base)
-        else {
-            
-            throw URLConstructionError()
-        }
+        else { throw URLConstructionError() }
         
         return try url(withBaseURL: baseURL, parameters: parameters)
     }
@@ -117,8 +116,6 @@ extension Services.Endpoint {
         
         if !parameters.isEmpty {
             
-            components.queryItems = [URLQueryItem]()
-            
             components.queryItems = parameters.map { name, value in
                 
                 let value = value.addingPercentEncoding(
@@ -130,9 +127,7 @@ extension Services.Endpoint {
         }
         
         guard let url = components.url(relativeTo: baseURL)
-        else {
-            throw URLConstructionError()
-        }
+        else { throw URLConstructionError() }
         
         return url
     }
@@ -184,6 +179,12 @@ extension Services.Endpoint {
         serviceName: .formSessionKey
     )
     
+    static let getCardStatementForPeriod: Self = .init(
+        pathPrefix: .rest,
+        version: .v4,
+        serviceName: .getCardStatementForPeriod
+    )
+
     static let getImageList: Self = .init(
         pathPrefix: .dict,
         version: nil,

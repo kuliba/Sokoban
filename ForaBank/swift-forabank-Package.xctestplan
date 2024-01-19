@@ -148,13 +148,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PaymentsComponentsTests",
-        "name" : "PaymentsComponentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "PaymentStickerTests",
         "name" : "PaymentStickerTests"
       }
@@ -234,6 +227,34 @@
         "containerPath" : "container:",
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
       }
     }
   ],

@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .fastPaymentsSettings,
         .loadableModel,
         .loadableResourceComponent,
         .paymentSticker,
@@ -20,12 +21,11 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
-        // PaymentsComponents
-        .paymentsComponents,
         // Infra
         .fetcher,
         .keyChainStore,
         // Services
+        .cardStatementAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -41,12 +41,15 @@ let package = Package(
         .buttonWithSheet,
         .linkableText,
         .manageSubscriptionsUI,
+        .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        // UI Components
+        .paymentComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -61,6 +64,8 @@ let package = Package(
         .svgKit,
     ],
     targets: [
+        .fastPaymentsSettings,
+        .fastPaymentsSettingsTests,
         .loadableModel,
         .loadableModelTests,
         .loadableResourceComponent,
@@ -83,15 +88,14 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
-        // PaymentsComponents
-        .paymentsComponents,
-        .paymentsComponentsTests,
         // Infra
         .fetcher,
         .fetcherTests,
         .keyChainStore,
         .keyChainStoreTests,
         // Services
+        .cardStatementAPI,
+        .cardStatementAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -119,6 +123,8 @@ let package = Package(
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
+        .otpInputComponent,
+        .otpInputComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -130,6 +136,14 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        // UI Components
+        .amountComponent,
+        .buttonComponent,
+        .infoComponent,
+        .paymentComponents,
+        .productSelectComponent,
+        .productSelectComponentTests,
+        .sharedConfigs,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -141,6 +155,13 @@ let package = Package(
 )
 
 private extension Product {
+    
+    static let fastPaymentsSettings = library(
+        name: .fastPaymentsSettings,
+        targets: [
+            .fastPaymentsSettings,
+        ]
+    )
     
     static let loadableModel = library(
         name: .loadableModel,
@@ -221,15 +242,6 @@ private extension Product {
         ]
     )
     
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = library(
-        name: .paymentsComponents,
-        targets: [
-            .paymentsComponents,
-        ]
-    )
-    
     // MARK: - UI
     
     static let buttonWithSheet = library(
@@ -250,6 +262,13 @@ private extension Product {
         name: .manageSubscriptionsUI,
         targets: [
             .manageSubscriptionsUI,
+        ]
+    )
+    
+    static let otpInputComponent = library(
+        name: .otpInputComponent,
+        targets: [
+            .otpInputComponent,
         ]
     )
     
@@ -295,6 +314,20 @@ private extension Product {
         ]
     )
     
+    // MARK: - UI Components
+    
+    static let paymentComponents = library(
+        name: .paymentComponents,
+        targets: [
+            .amountComponent,
+            .buttonComponent,
+            .infoComponent,
+            .paymentComponents,
+            .productSelectComponent,
+            .sharedConfigs,
+        ]
+    )
+    
     // MARK: - Infra
     
     static let fetcher = library(
@@ -313,6 +346,13 @@ private extension Product {
     
     // MARK: - Services
     
+    static let cardStatementAPI = library(
+        name: .cardStatementAPI,
+        targets: [
+            .cardStatementAPI,
+        ]
+    )
+
     static let cryptoSwaddler = library(
         name: .cryptoSwaddler,
         targets: [
@@ -403,6 +443,26 @@ private extension Product {
 
 private extension Target {
     
+    static let fastPaymentsSettings = target(
+        name: .fastPaymentsSettings,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+        ]
+    )
+    static let fastPaymentsSettingsTests = testTarget(
+        name: .fastPaymentsSettingsTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .fastPaymentsSettings,
+        ]
+    )
+    
     static let loadableModel = target(
         name: .loadableModel,
         dependencies: [
@@ -481,8 +541,13 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .amountComponent,
+            .buttonComponent,
             .foraTools,
-            .textFieldComponent
+            .infoComponent,
+            .paymentComponents,
+            .productSelectComponent,
+            .sharedConfigs,
         ]
     )
     static let sberQRTests = testTarget(
@@ -493,6 +558,8 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .amountComponent,
+            .buttonComponent,
             .sberQR,
         ],
         resources: [
@@ -564,7 +631,7 @@ private extension Target {
     static let landingMappingTests = testTarget(
         name: .landingMappingTests,
         dependencies: [
-            // external
+            // external packages
             .customDump,
             // internal modules
             .landingMapping,
@@ -588,25 +655,6 @@ private extension Target {
             .landingUIComponent,
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
-    )
-    
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = target(
-        name: .paymentsComponents,
-        dependencies: [
-            .textFieldComponent,
-        ],
-        path: "Sources/\(String.paymentsComponents)"
-    )
-    
-    static let paymentsComponentsTests = testTarget(
-        name: .paymentsComponentsTests,
-        dependencies: [
-            // internal modules
-            .paymentsComponents,
-        ],
-        path: "Tests/\(String.paymentsComponentsTests)"
     )
     
     // MARK: - Infra
@@ -643,6 +691,21 @@ private extension Target {
     
     // MARK: - Services
     
+    static let cardStatementAPI = target(
+        name: .cardStatementAPI,
+        path: "Sources/\(String.cardStatementAPI)"
+    )
+    static let cardStatementAPITests = testTarget(
+        name: .cardStatementAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardStatementAPI,
+        ],
+        path: "Tests/\(String.cardStatementAPITests)"
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -841,6 +904,19 @@ private extension Target {
         name: .manageSubscriptionsUI
     )
     
+    static let otpInputComponent = target(
+        name: .otpInputComponent,
+        path: "Sources/UI/\(String.otpInputComponent)"
+    )
+    
+    static let otpInputComponentTests = testTarget(
+        name: .otpInputComponentTests,
+        dependencies: [
+            .otpInputComponent,
+        ],
+        path: "Tests/UI/\(String.otpInputComponentTests)"
+    )
+    
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
@@ -915,6 +991,82 @@ private extension Target {
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
+    // MARK: - UI Components
+
+    static let amountComponent = target(
+        name: .amountComponent,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .buttonComponent,
+            .foraTools,
+            .textFieldComponent,
+            .sharedConfigs,
+        ],
+        path: "Sources/UI/Components/\(String.amountComponent)"
+    )
+    
+    static let buttonComponent = target(
+        name: .buttonComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.buttonComponent)"
+    )
+    
+    static let infoComponent = target(
+        name: .infoComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.infoComponent)"
+    )
+    
+    static let paymentComponents = target(
+        name: .paymentComponents,
+        dependencies: [
+            .amountComponent,
+            .buttonComponent,
+            .infoComponent,
+            .productSelectComponent,
+            .sharedConfigs,
+        ],
+        path: "Sources/UI/Components/\(String.paymentComponents)"
+    )
+    
+    static let productSelectComponent = target(
+        name: .productSelectComponent,
+        dependencies: [
+            .foraTools,
+            .sharedConfigs,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.productSelectComponent)"
+    )
+    
+    static let productSelectComponentTests = testTarget(
+        name: .productSelectComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .productSelectComponent
+        ],
+        path: "Tests/UI/Components/\(String.productSelectComponentTests)"
+    )
+
+    static let sharedConfigs = target(
+        name: .sharedConfigs,
+        dependencies: [
+            .foraTools,
+            .tagged,
+        ],
+        path: "Sources/UI/Components/\(String.sharedConfigs)"
+    )
+    
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -959,6 +1111,10 @@ private extension Target {
 }
 
 private extension Target.Dependency {
+    
+    static let fastPaymentsSettings = byName(
+        name: .fastPaymentsSettings
+    )
     
     static let loadableModel = byName(
         name: .loadableModel
@@ -1012,12 +1168,6 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
 
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = byName(
-        name: .paymentsComponents
-    )
-    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -1030,6 +1180,10 @@ private extension Target.Dependency {
     
     static let linkableText = byName(
         name: .linkableText
+    )
+    
+    static let otpInputComponent = byName(
+        name: .otpInputComponent
     )
     
     static let pickerWithPreviewComponent = byName(
@@ -1048,6 +1202,32 @@ private extension Target.Dependency {
         name: .uiKitHelpers
     )
     
+    // MARK: - UI Components
+
+    static let amountComponent = byName(
+        name: .amountComponent
+    )
+    
+    static let buttonComponent = byName(
+        name: .buttonComponent
+    )
+    
+    static let infoComponent = byName(
+        name: .infoComponent
+    )
+    
+    static let paymentComponents = byName(
+        name: .paymentComponents
+    )
+    
+    static let productSelectComponent = byName(
+        name: .productSelectComponent
+    )
+    
+    static let sharedConfigs = byName(
+        name: .sharedConfigs
+    )
+    
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1060,6 +1240,10 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
+    static let cardStatementAPI = byName(
+        name: .cardStatementAPI
+    )
+
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -1109,6 +1293,9 @@ private extension Target.Dependency {
 
 private extension String {
     
+    static let fastPaymentsSettings = "FastPaymentsSettings"
+    static let fastPaymentsSettingsTests = "FastPaymentsSettingsTests"
+    
     static let loadableModel = "LoadableModel"
     static let loadableModelTests = "LoadableModelTests"
     
@@ -1149,11 +1336,6 @@ private extension String {
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
     
-    // MARK: - PaymentsComponents
-    
-    static let paymentsComponents = "PaymentsComponents"
-    static let paymentsComponentsTests = "PaymentsComponentsTests"
-    
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
@@ -1162,6 +1344,9 @@ private extension String {
     static let linkableTextTests = "LinkableTextTests"
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
+    
+    static let otpInputComponent = "OTPInputComponent"
+    static let otpInputComponentTests = "OTPInputComponentTests"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
@@ -1178,6 +1363,21 @@ private extension String {
     
     static let uiKitHelpers = "UIKitHelpers"
     
+    // MARK: - UI Components
+
+    static let amountComponent = "AmountComponent"
+    
+    static let buttonComponent = "ButtonComponent"
+    
+    static let infoComponent = "InfoComponent"
+    
+    static let paymentComponents = "PaymentComponents"
+
+    static let productSelectComponent = "ProductSelectComponent"
+    static let productSelectComponentTests = "ProductSelectComponentTests"
+
+    static let sharedConfigs = "SharedConfigs"
+    
     // MARK: - Infra
     
     static let fetcher = "Fetcher"
@@ -1188,6 +1388,9 @@ private extension String {
     
     // MARK: - Services
     
+    static let cardStatementAPI = "CardStatementAPI"
+    static let cardStatementAPITests = "CardStatementAPITests"
+
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     

@@ -5,11 +5,12 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import PaymentComponents
 import SwiftUI
 
 struct EditableAmountSberQRConfirmPaymentView: View {
     
-    typealias State = SberQRConfirmPaymentStateOf<Info>.EditableAmount
+    typealias State = SberQRConfirmPaymentStateOf<PaymentComponents.Info>.EditableAmount
     typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
     let state: State
@@ -23,7 +24,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             feed: feed,
             backgroundColor: config.background.color
         ) {
-            AmountView(
+            PaymentComponents.AmountView(
                 amount: state.amount,
                 event: { event(.editAmount($0)) },
                 pay: pay,
@@ -37,20 +38,25 @@ struct EditableAmountSberQRConfirmPaymentView: View {
         
         Group {
             
-            ProductSelectView(
+            PaymentComponents.ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
                 config: config.productSelect
-            )
+            ) {
+                PaymentComponents.ProductCardView(
+                    productCard: .init(product: $0),
+                    config: config.productSelect.card.productCardConfig
+                )
+            }
 
             Group {
                 
-                InfoView(
+                PaymentComponents.InfoView(
                     info: state.brandName,
                     config: config.info
                 )
                 
-                InfoView(
+                PaymentComponents.InfoView(
                     info: state.recipientBank,
                     config: config.info
                 )
@@ -60,7 +66,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
     }
 }
 
-private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+private extension SberQRConfirmPaymentStateOf<PaymentComponents.Info>.EditableAmount {
     
     var currencySymbol: String {
         
@@ -86,7 +92,7 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
             state: state,
             event: { _ in },
             pay: {},
-            config: .default
+            config: .preview
         )
     }
 }
