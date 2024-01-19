@@ -171,6 +171,15 @@ extension Model {
 
         result.append(Payments.ParameterCode.regular)
         
+        if response.scenario == .suspect {
+            
+            result.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
+        
         return result
     }
     

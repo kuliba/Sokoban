@@ -97,7 +97,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspend,
+                        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,
@@ -130,7 +131,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspend,
+                       let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,
@@ -158,7 +160,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspend,
+                       let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,
