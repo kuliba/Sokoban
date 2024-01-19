@@ -7,9 +7,11 @@
 
 import OTPInputComponent
 
-enum OTPSettings {
+enum OTPSettings: String, CaseIterable, Identifiable {
     
     case success, connectivity, server
+    
+    var id: Self { self }
 }
 
 extension OTPSettings {

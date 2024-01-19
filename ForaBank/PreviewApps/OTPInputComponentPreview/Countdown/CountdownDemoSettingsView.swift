@@ -80,8 +80,7 @@ struct CountdownDemoSettingsView: View {
         .init(duration: duration, initiateResult: initiateResult)
     }
     
-    private func applyButton(
-    ) -> some View {
+    private func applyButton() -> some View {
         
         Button {
             apply(settings)

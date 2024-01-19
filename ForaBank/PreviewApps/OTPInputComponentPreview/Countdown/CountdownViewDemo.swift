@@ -84,9 +84,10 @@ struct CountdownViewDemo: View {
         case .otpSettings:
             NavigationView {
                 
-                Button("OTP Validation Options") {
-                    viewModel.updateOTPSettings(viewModel.otpSettings)
-                }
+                OTPValidationSettingsView(
+                    otpSettings: viewModel.otpSettings,
+                    apply: viewModel.updateOTPSettings
+                )
                 .navigationTitle("OTP Validation Options")
                 .navigationBarTitleDisplayMode(.inline)
             }
