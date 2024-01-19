@@ -10,6 +10,40 @@ import XCTest
 
 final class OTPInputReducerTests: XCTestCase {
     
+    // MARK: - confirmOTP
+    
+    func test_confirmOTP_shouldNotChangeStateOnIncompleteInput() {
+        
+        let state = incomplete()
+        
+        assert(state, .confirmOTP, reducedTo: state)
+    }
+    
+    func test_confirmOTP_shouldNotDeliverEffectOnIncompleteInput() {
+        
+        let state = incomplete()
+        
+        assert(state, .confirmOTP, effect: nil)
+    }
+    
+    func test_confirmOTP_shouldSetInflightStateOnCompleteInput() {
+        
+        let state = complete()
+        
+        assert(state, .confirmOTP, reducedTo: state.updated(
+            status: .inflight
+        ))
+    }
+    
+    func test_confirmOTP_shouldDeliverEffectOnCompleteInput() {
+        
+        let state = complete("876543")
+        
+        assert(state, .confirmOTP, effect: .submitOTP("876543"))
+    }
+    
+    // MARK: - edit
+    
     func test_edit_shouldNotChangeEmptyStateOnNonDigitInput() {
         
         let nonDigit = "asB$%^"
@@ -80,7 +114,7 @@ final class OTPInputReducerTests: XCTestCase {
         let state = makeState("123")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(digits), reducedTo: makeState("98765", isOTPComplete: true))
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState("98765", isInputComplete: true))
     }
     
     func test_edit_shouldChangeToCompleteStateOnReachingLimit() {
@@ -89,7 +123,7 @@ final class OTPInputReducerTests: XCTestCase {
         let state = makeState("1234")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isOTPComplete: true))
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isInputComplete: true))
     }
     
     func test_edit_shouldNotDeliverEffectOnReachingLimit() {
@@ -107,7 +141,7 @@ final class OTPInputReducerTests: XCTestCase {
         let state = makeState("12345")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isOTPComplete: true))
+        assert(sut: sut, state, .edit(digits), reducedTo: makeState(digits, isInputComplete: true))
     }
     
     func test_edit_shouldNotDeliverEffectOnLimit() {
@@ -150,15 +184,30 @@ final class OTPInputReducerTests: XCTestCase {
     
     private func emptyState() -> State {
         
-        makeState("", isOTPComplete: false)
+        makeState("", isInputComplete: false)
+    }
+    
+    private func complete(
+        _ text: String = "76543"
+    ) -> State {
+        
+        makeState(text, isInputComplete: true)
+    }
+    
+    private func incomplete(
+        _ text: String = "76543"
+    ) -> State {
+        
+        makeState(text, isInputComplete: false)
     }
     
     private func makeState(
         _ text: String,
-        isOTPComplete: Bool = false
+        isInputComplete: Bool = false,
+        status: OTPInputState.Status? = nil
     ) -> State {
         
-        .init(text: text, isOTPComplete: isOTPComplete)
+        .init(text: text, isInputComplete: isInputComplete, status: status)
     }
     
     private func assert(

@@ -9,12 +9,39 @@ public struct OTPInputState: Equatable {
     
     public var text: String
     public var isInputComplete: Bool
+    public var status: Status?
     
     public init(
         text: String,
-        isOTPComplete: Bool
+        isInputComplete: Bool,
+        status: Status? = nil
     ) {
         self.text = text
-        self.isInputComplete = isOTPComplete
+        self.isInputComplete = isInputComplete
+        self.status = status
+    }
+}
+
+public extension OTPInputState {
+    
+    enum Status: Equatable {
+        
+        case inflight
+    }
+}
+
+public extension OTPInputState {
+    
+    func updated(
+        text: String? = nil,
+        isInputComplete: Bool? = nil,
+        status: Status?? = nil
+    ) -> Self {
+        
+        .init(
+            text: text ?? self.text,
+            isInputComplete: isInputComplete ?? self.isInputComplete,
+            status: status ?? self.status
+        )
     }
 }

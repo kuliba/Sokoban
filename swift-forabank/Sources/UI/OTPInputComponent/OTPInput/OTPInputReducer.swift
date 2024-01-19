@@ -26,8 +26,11 @@ public extension OTPInputReducer {
         var effect: Effect?
         
         switch event {
+        case .confirmOTP:
+            (state, effect) = confirm(state)
+            
         case let .edit(text):
-            (state, effect) = edit(state, with: text)
+            state = edit(state, with: text)
         }
         
         return (state, effect)
@@ -43,21 +46,32 @@ public extension OTPInputReducer {
 
 private extension OTPInputReducer {
     
-    func edit(
-        _ state: State,
-        with text: String
+    func confirm(
+        _ state: State
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
-
-        print(text, "from `edit`")
-        let text = text.filter(\.isNumber).prefix(length)
-        print(text, "filtered")
-        state.text = .init(text)
-        state.isInputComplete = text.count >= length
-        print(state.text, "in state")
+        
+        if state.isInputComplete {
+            
+            state.status = .inflight
+            effect = .submitOTP(state.text)
+        }
         
         return (state, effect)
+    }
+
+    func edit(
+        _ state: State,
+        with text: String
+    ) -> State {
+        
+        let text = text.filter(\.isNumber).prefix(length)
+        
+        return state.updated(
+            text: .init(text),
+            isInputComplete: text.count >= length
+        )
     }
 }

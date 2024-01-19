@@ -7,5 +7,6 @@
 
 public enum OTPInputEvent: Equatable {
     
+    case confirmOTP
     case edit(String)
 }
