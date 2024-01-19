@@ -1556,6 +1556,13 @@ extension Model {
                     name = newName
                 }
                 
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+                )
+                
+                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+
             case .abroad:
                 if let newName = paymentsParameterValue(
                     operation.parameters,
@@ -1564,12 +1571,37 @@ extension Model {
                     name = newName
                 }
                 
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.amount.rawValue
+                )
+                
+                let numberCard = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.p1.rawValue
+                )
+                
+                return .init(payeeName: numberCard ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+
+                
             case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor:
                 
                 if let newName = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue }) as? Payments.ParameterHeader {
                     name = newName.title
                 }
         
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.amount.rawValue
+                )
+                
+                let paymentsServiceAmount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
+                )
+                
+                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? paymentsServiceAmount ?? "")")
+
             case .mobileConnection:
                 if let newPhone = paymentsParameterValue(
                     operation.parameters,
@@ -1577,6 +1609,15 @@ extension Model {
                 ) {
                     phone = newPhone
                 }
+                
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.mobileConnectionAmount.rawValue
+                )
+                
+                let formatPhone = PhoneNumberKitFormater().format(phone?.digits.addCodeRuIfNeeded() ?? "")
+                return .init(payeeName: name ?? "", phone: formatPhone, amount: "- \(amount ?? "")")
+
             case .toAnotherCard:
                 if let newName = paymentsParameterValue(
                     operation.parameters,
@@ -1584,6 +1625,19 @@ extension Model {
                 ) {
                     name = newName
                 }
+                
+                let productID = Int(name?.dropFirst(2) ?? "")
+                let product = self.allProducts.first(where: { $0.id == productID })
+                if let card = product as? ProductCardData {
+                    
+                    let amount = paymentsParameterValue(
+                        operation.parameters,
+                        id: Payments.Parameter.Identifier.amount.rawValue
+                    )
+                    
+                    return .init(payeeName: card.numberMasked ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+                }
+                
             default:
                 let amount = paymentsParameterValue(
                     operation.parameters,
@@ -1594,11 +1648,15 @@ extension Model {
             
             let amount = paymentsParameterValue(
                 operation.parameters,
-                id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+                id: Payments.Parameter.Identifier.amount.rawValue
             )
             
+            let serviceAmount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
+            )
             
-            return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+            return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? serviceAmount ?? "")")
         
         default:
             return nil
