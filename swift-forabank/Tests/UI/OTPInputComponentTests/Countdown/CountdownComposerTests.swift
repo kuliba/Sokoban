@@ -13,6 +13,7 @@ import RxViewModel
 enum CountdownState: Equatable {
     
     case completed
+    case failure(CountdownFailure)
     case running(remaining: Int)
 }
 
@@ -112,14 +113,23 @@ extension CountdownReducer {
         
         switch event {
         case let .failure(countdownFailure):
-            break
+            switch state {
+            case .completed:
+                state = .failure(countdownFailure)
+                
+            case .failure(_):
+                fatalError()
+                
+            case .running:
+                break
+            }
             
         case .prepare:
             switch state {
             case .completed:
                 effect = .initiate
                 
-            case .running:
+            case .failure, .running:
                 break
             }
 
@@ -128,6 +138,9 @@ extension CountdownReducer {
             case .completed:
                 state = .running(remaining: duration)
                 
+            case .failure:
+                fatalError()
+                
             case .running:
                 break
             }
@@ -135,6 +148,9 @@ extension CountdownReducer {
         case .tick:
             switch state {
             case .completed:
+                break
+                
+            case .failure:
                 break
                 
             case let .running(remaining: remaining):
@@ -199,7 +215,7 @@ extension CountdownComposer {
         viewModel.$state
             .sink { [weak self] state in
                 switch state {
-                case .completed:
+                case .failure, .completed:
                     self?.timer.stop()
                     
                 case .running(remaining: duration):
@@ -208,7 +224,7 @@ extension CountdownComposer {
                         onRun: { [weak viewModel] in viewModel?.event(.tick) }
                     )
                     
-                case .running(remaining: _):
+                case .running:
                     break
                 }
             }
@@ -229,6 +245,135 @@ import XCTest
 
 final class CountdownReducerTests: XCTestCase {
     
+    // MARK: - failure: connectivityError
+    
+    func test_failure_shouldChangeStateToFailureOnCompletedState_connectivity() {
+        
+        let sut = makeSUT()
+        
+        assert(sut, completed(), connectivity(), reducedTo: connectivity())
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnCompletedState_connectivity() {
+        
+        let sut = makeSUT()
+        
+        assert(sut, completed(), connectivity(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_connectivity() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_connectivity() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_one_connectivity() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_one_connectivity() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_zero_connectivity() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_zero_connectivity() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, connectivity(), effect: nil)
+    }
+
+    // MARK: - failure: serverError
+    
+    func test_failure_shouldChangeStateToFailureOnCompletedState_serverError() {
+        
+        let message = anyMessage()
+        let sut = makeSUT()
+        
+        assert(sut, completed(), serverError(message), reducedTo: serverError(message))
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnCompletedState_serverError() {
+        
+        let sut = makeSUT()
+        
+        assert(sut, completed(), serverError(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_serverError() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_serverError() {
+        
+        let state = running(5)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_one_serverError() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_one_serverError() {
+        
+        let state = running(1)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), effect: nil)
+    }
+    
+    func test_failure_shouldNotChangeRunningState_zero_serverError() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), reducedTo: state)
+    }
+    
+    func test_failure_shouldNotDeliverEffectOnRunningState_zero_serverError() {
+        
+        let state = running(0)
+        let sut = makeSUT()
+        
+        assert(sut, state, serverError(), effect: nil)
+    }
+
     // MARK: - prepare
     
     func test_prepare_shouldNotChangeCompletedState() {
@@ -440,14 +585,40 @@ final class CountdownReducerTests: XCTestCase {
         return sut
     }
     
+    private func connectivity() -> Event {
+        
+        .failure(.connectivityError)
+    }
+    
+    private func connectivity() -> State {
+        
+        .failure(.connectivityError)
+    }
+    
     private func completed() -> State {
         
         .completed
     }
     
-    private func running(_ remaining: Int) -> State {
+    private func running(
+        _ remaining: Int
+    ) -> State {
         
         .running(remaining: remaining)
+    }
+    
+    private func serverError(
+        _ message: String = anyMessage()
+    ) -> Event {
+        
+        .failure(.serverError(message))
+    }
+    
+    private func serverError(
+        _ message: String = anyMessage()
+    ) -> State {
+        
+        .failure(.serverError(message))
     }
     
     private func assert(
@@ -497,6 +668,8 @@ final class CountdownEffectHandlerTests: XCTestCase {
         
         XCTAssertEqual(spy.callCount, 0)
     }
+    
+    // MARK: - initiate
     
     func test_initiate_shouldDeliverStartEventOnSuccess() {
         
