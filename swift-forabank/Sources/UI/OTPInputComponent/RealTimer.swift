@@ -8,11 +8,11 @@
 import Combine
 import Foundation
 
-class RealTimer: TimerProtocol {
+public class RealTimer: TimerProtocol {
     
     private var timer: AnyCancellable?
     
-    func start(
+    public func start(
         every interval: TimeInterval,
         onRun: @escaping () -> Void
     ) {
@@ -22,7 +22,7 @@ class RealTimer: TimerProtocol {
             .sink(receiveValue: { _ in onRun() })
     }
     
-    func stop() {
+    public func stop() {
         
         timer?.cancel()
         timer = nil

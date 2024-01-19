@@ -5,18 +5,11 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-import Foundation
+import OTPInputComponent
+
 
 import Combine
-
-protocol TimerProtocol {
-    
-    func start(
-        every interval: TimeInterval,
-        onRun: @escaping () -> Void
-    )
-    func stop()
-}
+import Foundation
 
 final class TickViewModel: ObservableObject {
     
