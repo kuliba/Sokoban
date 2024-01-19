@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+extension OTPSettings: PickerDisplayable {}
+
 struct OTPValidationSettingsView: View {
     
     @State var otpSettings: OTPSettings
@@ -16,31 +18,12 @@ struct OTPValidationSettingsView: View {
         
         List {
             
-            pickerSection(
-                "OTP Validation Result",
+            PickerSection(
+                title: "OTP Validation Result",
                 selection: $otpSettings)
         }
         .listStyle(.plain)
         .overlay(alignment: .bottom, content: applyButton)
-    }
-    
-    private func pickerSection<T: Pickerable>(
-        _ title: String,
-        selection: Binding<T>
-    ) -> some View where T.RawValue == String, T.AllCases: RandomAccessCollection {
-        
-        Section(title) {
-            
-            Picker(title, selection: selection) {
-                
-                ForEach(T.allCases) {
-                    
-                    Text($0.rawValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
     }
     
     private func applyButton() -> some View {

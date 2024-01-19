@@ -7,23 +7,6 @@
 
 import SwiftUI
 
-typealias Pickerable = RawRepresentable & CaseIterable & Identifiable & Hashable
-
-protocol PickerDisplayable {
-    
-    var displayValue: String { get }
-}
-
-extension RawRepresentable where RawValue == String {
-    
-    var displayValue: String { self.rawValue }
-}
-
-extension RawRepresentable where RawValue == Int {
-    
-    var displayValue: String { self.rawValue.formatted() }
-}
-
 extension CountdownDemoSettings.Duration: PickerDisplayable {}
 extension CountdownDemoSettings.InitiateResult: PickerDisplayable {}
 
@@ -49,30 +32,17 @@ struct CountdownDemoSettingsView: View {
         
         List {
             
-            pickerSection("Duration (sec)", selection: $duration)
-            pickerSection("Initiate Result", selection: $initiateResult)
+            PickerSection(
+                title: "Duration (sec)",
+                selection: $duration
+            )
+            PickerSection(
+                title: "Initiate Result",
+                selection: $initiateResult
+            )
         }
         .listStyle(.plain)
         .overlay(alignment: .bottom, content: applyButton)
-    }
-    
-    private func pickerSection<T: Pickerable & PickerDisplayable>(
-        _ title: String,
-        selection: Binding<T>
-    ) -> some View where T.AllCases: RandomAccessCollection {
-        
-        Section(title) {
-            
-            Picker(title, selection: selection) {
-                
-                ForEach(T.allCases) {
-                    
-                    Text($0.displayValue)
-                        .tag(Optional($0))
-                }
-            }
-            .pickerStyle(.segmented)
-        }
     }
     
     var settings: CountdownDemoSettings {

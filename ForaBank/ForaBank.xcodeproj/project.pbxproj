@@ -567,6 +567,7 @@
 		2A6BF2A62B5AF7AF003E3765 /* OTPSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A52B5AF7AF003E3765 /* OTPSettings.swift */; };
 		2A6BF2A82B5AF841003E3765 /* CountdownViewDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */; };
 		2A6BF2AA2B5AFB45003E3765 /* OTPValidationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */; };
+		2A6BF2AC2B5AFD89003E3765 /* PickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */; };
 		2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */; };
 		2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */; };
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
@@ -2923,6 +2924,7 @@
 		2A6BF2A52B5AF7AF003E3765 /* OTPSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPSettings.swift; sourceTree = "<group>"; };
 		2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewDemoViewModel.swift; sourceTree = "<group>"; };
 		2A6BF2A92B5AFB45003E3765 /* OTPValidationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPValidationSettingsView.swift; sourceTree = "<group>"; };
+		2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSection.swift; sourceTree = "<group>"; };
 		2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerView.swift; sourceTree = "<group>"; };
 		2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithStoreTests.swift; sourceTree = "<group>"; };
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
@@ -6713,6 +6715,7 @@
 				2A783ABA2B5AA7E10035CEAB /* OTP */,
 				2A783AB92B5AA7700035CEAB /* Countdown */,
 				2A783A872B5A87CF0035CEAB /* Assets.xcassets */,
+				2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */,
 				2A783A892B5A87CF0035CEAB /* Preview Content */,
 			);
 			path = OTPInputComponentPreview;
@@ -13283,6 +13286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A783A9C2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift in Sources */,
+				2A6BF2AC2B5AFD89003E3765 /* PickerSection.swift in Sources */,
 				2A783AC72B5AAB810035CEAB /* OTPInputViewModel.swift in Sources */,
 				2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */,
 				2A783AC82B5AAB810035CEAB /* OTPInputView.swift in Sources */,
