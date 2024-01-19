@@ -565,6 +565,7 @@
 		2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */; };
 		2A6B8E602AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */; };
 		2A6BF2A62B5AF7AF003E3765 /* OTPSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A52B5AF7AF003E3765 /* OTPSettings.swift */; };
+		2A6BF2A82B5AF841003E3765 /* CountdownViewDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */; };
 		2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */; };
 		2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */; };
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
@@ -2919,6 +2920,7 @@
 		2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVServiceTests.swift"; sourceTree = "<group>"; };
 		2A6BF2A52B5AF7AF003E3765 /* OTPSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPSettings.swift; sourceTree = "<group>"; };
+		2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewDemoViewModel.swift; sourceTree = "<group>"; };
 		2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerView.swift; sourceTree = "<group>"; };
 		2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithStoreTests.swift; sourceTree = "<group>"; };
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
@@ -6727,6 +6729,7 @@
 			isa = PBXGroup;
 			children = (
 				2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */,
+				2A6BF2A72B5AF841003E3765 /* CountdownViewDemoViewModel.swift */,
 				2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */,
 				2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */,
 				2A783A952B5A8D620035CEAB /* CountdownView.swift */,
@@ -13282,6 +13285,7 @@
 				2A783AC82B5AAB810035CEAB /* OTPInputView.swift in Sources */,
 				2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */,
 				2A783AD32B5AC7690035CEAB /* DigitModel.swift in Sources */,
+				2A6BF2A82B5AF841003E3765 /* CountdownViewDemoViewModel.swift in Sources */,
 				2A783A9A2B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift in Sources */,
 				2A783A942B5A8D5C0035CEAB /* CountdownViewDemo.swift in Sources */,
 				2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */,

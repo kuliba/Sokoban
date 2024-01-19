@@ -10,25 +10,28 @@ import SwiftUI
 
 struct CountdownViewDemo: View {
     
-    @State private var otpSettings: OTPSettings = .success
-    @State private var settings: CountdownDemoSettings = .shortSuccess
-    @State private var isShowingSettingsOptions = false
+    @StateObject private var viewModel: CountdownViewDemoViewModel
+    
+    init(viewModel: CountdownViewDemoViewModel) {
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         
         VStack(spacing: 64) {
             
             OTPInputView(viewModel: .preview(
-                otpSettings.result
+                viewModel.otpSettings.result
             ))
             
-            CountdownView(settings: settings)
+            CountdownView(settings: viewModel.settings)
         }
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .overlay(alignment: .topTrailing, content: buttons)
         .fullScreenCover(
-            isPresented: $isShowingSettingsOptions,
+            item: $viewModel.fullScreenCover,
             content: fullScreenCover
         )
     }
@@ -37,7 +40,7 @@ struct CountdownViewDemo: View {
         
         HStack {
             
-            optionsButton()
+            countdownOptionsButton()
             otpOptionsButton()
         }
         .padding(.horizontal)
@@ -46,35 +49,47 @@ struct CountdownViewDemo: View {
     private func otpOptionsButton() -> some View {
         
         Button {
-            isShowingSettingsOptions = true
+            viewModel.fullScreenCover = .otpSettings
         } label: {
             Image(systemName: "checkmark.circle.badge.questionmark")
         }
     }
     
-    private func optionsButton() -> some View {
+    private func countdownOptionsButton() -> some View {
         
         Button {
-            isShowingSettingsOptions = true
+            viewModel.fullScreenCover = .countdownSettings
         } label: {
             Image(systemName: "timer")
         }
     }
     
-    private func fullScreenCover() -> some View {
+    @ViewBuilder
+    private func fullScreenCover(
+        _ fullScreenCover: CountdownViewDemoViewModel.FullScreenCover
+    ) -> some View {
         
-        NavigationView {
+        switch fullScreenCover {
+        case .countdownSettings:
+            NavigationView {
+                
+                CountdownDemoSettingsView(
+                    settings: viewModel.settings,
+                    apply: viewModel.updateCountdownDemoSettings
+                )
+                .navigationTitle("Countdown Options")
+                .navigationBarTitleDisplayMode(.inline)
+            }
             
-            CountdownDemoSettingsView(
-                settings: settings,
-                apply: {
-                    
-                    settings = $0
-                    isShowingSettingsOptions = false
+        case .otpSettings:
+            NavigationView {
+                
+                Button("OTP Validation Options") {
+                    viewModel.updateOTPSettings(viewModel.otpSettings)
                 }
-            )
-            .navigationTitle("Countdown Options")
-            .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("OTP Validation Options")
+                .navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
 }
@@ -102,6 +117,6 @@ struct CountdownViewDemo_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CountdownViewDemo()
+        CountdownViewDemo(viewModel: .init())
     }
 }
