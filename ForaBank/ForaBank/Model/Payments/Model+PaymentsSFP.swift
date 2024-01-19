@@ -170,7 +170,7 @@ extension Model {
         
         if isForaBank(bankId: bankParameterValue) == true, phoneParameterValue.digits == clientPhone.digits {
             
-            return .remote(.complete)
+            return .remote(.start)
             
         } else {
             
@@ -216,6 +216,15 @@ extension Model {
                 title: "Комиссия", placement: .feed)
             
             parameters.append(feeParameter)
+        }
+        
+        if response.scenario == .suspect {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
         }
         
         if response.needOTP == true {
