@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class CountdownComposer {
+public final class CountdownComposer {
     
     private let activate: Activate
     private let timer: TimerProtocol
@@ -16,7 +16,7 @@ final class CountdownComposer {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(
+    public init(
         activate: @escaping Activate,
         timer: TimerProtocol = RealTimer(),
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -27,7 +27,7 @@ final class CountdownComposer {
     }
 }
 
-extension CountdownComposer {
+public extension CountdownComposer {
     
     func makeViewModel(duration: Int = 60) -> CountdownViewModel {
         
@@ -63,7 +63,7 @@ extension CountdownComposer {
     }
 }
 
-extension CountdownComposer {
+public extension CountdownComposer {
     
     typealias ActivateResult = Result<Void, CountdownFailure>
     typealias ActivateCompletion = (ActivateResult) -> Void

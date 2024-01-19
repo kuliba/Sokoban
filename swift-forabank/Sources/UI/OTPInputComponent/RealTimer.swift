@@ -10,13 +10,15 @@ import Foundation
 
 public class RealTimer: TimerProtocol {
     
-    private var timer: AnyCancellable?
+    private var cancellable: AnyCancellable?
+    
+    public init() {}
     
     public func start(
         every interval: TimeInterval,
         onRun: @escaping () -> Void
     ) {
-        timer = Timer
+        cancellable = Timer
             .publish(every: interval, on: .main, in: .common)
             .autoconnect()
             .sink(receiveValue: { _ in onRun() })
@@ -24,7 +26,7 @@ public class RealTimer: TimerProtocol {
     
     public func stop() {
         
-        timer?.cancel()
-        timer = nil
+        cancellable?.cancel()
+        cancellable = nil
     }
 }
