@@ -19,7 +19,9 @@ final class OTPInputIntegrationTests: XCTestCase {
     private typealias SUT = OTPInputViewModel
     private typealias Reducer = OTPInputReducer
     private typealias EffectHandler = OTPInputEffectHandler
-    
+
+    private typealias SubmitOTPSpy = Spy<EffectHandler.SubmitOTPPayload, EffectHandler.SubmitOTPResult>
+
     private func makeSUT(
         initialState: OTPInputState = .init(
             text: "", 
@@ -31,7 +33,10 @@ final class OTPInputIntegrationTests: XCTestCase {
     ) -> SUT {
         
         let reducer = Reducer()
-        let effectHandler = EffectHandler()
+        let submitOTPSpy = SubmitOTPSpy()
+        let effectHandler = EffectHandler(
+            submitOTP: submitOTPSpy.process(_:completion:)
+        )
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),

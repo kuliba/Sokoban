@@ -9,4 +9,6 @@ public enum OTPInputEvent: Equatable {
     
     case confirmOTP
     case edit(String)
+    case failure(OTPInputFailure)
+    case otpValidated
 }

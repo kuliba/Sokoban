@@ -10,19 +10,133 @@ import XCTest
 
 final class OTPInputEffectHandlerTests: XCTestCase {
     
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (_, spy) = makeSUT()
+        
+        XCTAssertEqual(spy.callCount, 0)
+    }
+    
+    // MARK: - submitOTP
+    
+    func test_submitOTP_shouldPassPayload() {
+        
+        let otp = UUID().uuidString
+        let (sut, spy) = makeSUT()
+        
+        sut.handleEffect(.submitOTP(otp)) { _ in }
+        
+        XCTAssertNoDiff(spy.payloads, [otp])
+    }
+    
+    func test_submitOTP_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: submitOTP(), toDeliver: .otpValidated, on: {
+            
+            spy.complete(with: .success(()))
+        })
+    }
+    
+    func test_submitOTP_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: submitOTP(), toDeliver: connectivityError(), on: {
+            
+            spy.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_submitOTP_shouldDeliverServerErrorOnServerErrorFailure() {
+        
+        let message = anyMessage()
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, with: submitOTP(), toDeliver: serverError(message), on: {
+            
+            spy.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = OTPInputEffectHandler
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    
+    private typealias SubmitOTPSpy = Spy<SUT.SubmitOTPPayload, SUT.SubmitOTPResult>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT()
+    ) -> (
+        sut: SUT,
+        spy: SubmitOTPSpy
+    ) {
+        let spy = SubmitOTPSpy()
+        let sut = SUT(submitOTP: spy.process(_:completion:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return sut
+        return (sut, spy)
+    }
+    
+    private func anyOTP(
+        _ otp: String = UUID().uuidString
+    ) -> String {
+        
+        return otp
+    }
+    
+    private func submitOTP(
+        _ otp: String? = nil
+    ) -> Effect {
+        
+        .submitOTP(anyOTP())
+    }
+    
+    private func connectivityError(
+    ) -> Event {
+        
+        .failure(.connectivityError)
+    }
+    
+    private func serverError(
+        _ message: String = anyMessage()
+    ) -> Event {
+        
+        .failure(.serverError(message))
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with effect: Effect,
+        toDeliver expectedEvent: Event,
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.handleEffect(effect) { receivedEvent in
+            
+            XCTAssertNoDiff(
+                receivedEvent,
+                expectedEvent,
+                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
+                file: file, line: line
+            )
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
