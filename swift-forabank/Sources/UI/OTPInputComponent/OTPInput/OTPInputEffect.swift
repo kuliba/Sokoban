@@ -7,5 +7,4 @@
 
 public enum OTPInputEffect: Equatable {
     
-    case submitOTP
 }

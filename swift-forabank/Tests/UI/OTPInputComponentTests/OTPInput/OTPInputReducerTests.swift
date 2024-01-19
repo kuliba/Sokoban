@@ -67,13 +67,13 @@ final class OTPInputReducerTests: XCTestCase {
         assert(sut: sut, state, .edit(nonDigit), reducedTo: makeState("98765"))
     }
     
-    func test_edit_shouldDeliverEffectOnReachingLimit() {
+    func test_edit_shouldNotDeliverEffectOnReachingLimit() {
         
         let nonDigit = "12345"
         let state = makeState("1234")
         let sut = makeSUT(length: 5)
         
-        assert(sut: sut, state, .edit(nonDigit), effect: .submitOTP)
+        assert(sut: sut, state, .edit(nonDigit), effect: nil)
     }
     
     func test_edit_shouldNotDeliverEffectOnLimit() {

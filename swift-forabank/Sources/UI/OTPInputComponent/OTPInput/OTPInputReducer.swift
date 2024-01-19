@@ -51,12 +51,6 @@ private extension OTPInputReducer {
         var state = state
         var effect: Effect?
 
-        if state.text.count == length - 1,
-           text.count == length {
-            
-            effect = .submitOTP
-        }
-        
         print(text, "from `edit`")
         let text = text.filter(\.isNumber).prefix(length)
         print(text, "filtered")
