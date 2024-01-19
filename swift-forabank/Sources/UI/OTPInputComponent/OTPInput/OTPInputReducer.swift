@@ -32,11 +32,15 @@ public extension OTPInputReducer {
         case let .edit(text):
             state = edit(state, with: text)
             
+        case let .failure(otpInputFailure):
+            if state.isInputComplete {
+                state = state.updated(
+                    status: .failure(otpInputFailure)
+                )
+            }
+            
         case .otpValidated:
             fatalError()
-            
-        case .failure:
-            break
         }
         
         return (state, effect)

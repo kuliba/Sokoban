@@ -26,6 +26,7 @@ public extension OTPInputState {
     
     enum Status: Equatable {
         
+        case failure(OTPInputFailure)
         case inflight
     }
 }

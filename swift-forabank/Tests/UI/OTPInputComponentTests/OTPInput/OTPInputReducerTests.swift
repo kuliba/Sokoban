@@ -162,6 +162,74 @@ final class OTPInputReducerTests: XCTestCase {
         assert(sut: sut, state, .edit(digits), effect: nil)
     }
     
+    // MARK: - failure connectivityError
+    
+    func test_failure_connectivityError_shouldNotChangeIncompleteState() {
+        
+        let state = incomplete()
+        
+        assert(state, connectivity(), reducedTo: state)
+    }
+    
+    func test_failure_connectivityError_shouldNotDeliverEffectOnIncompleteState() {
+        
+        let state = incomplete()
+        
+        assert(state, connectivity(), effect: nil)
+    }
+    
+    func test_failure_connectivityError_shouldSetStatusToConnectivityErrorFailureOnCompleteState() {
+        
+        let state = complete()
+        
+        assert(state, connectivity(), reducedTo: state.updated(
+            status: .failure(.connectivityError)
+        ))
+    }
+    
+    func test_failure_connectivityError_shouldNotDeliverEffectOnConnectivityErrorFailureInCompleteState() {
+        
+        let state = complete()
+        
+        assert(state, connectivity(), effect: nil)
+    }
+    
+    // MARK: - failure serverError
+    
+    func test_failure_serverError_shouldNotChangeIncompleteState() {
+        
+        let message = anyMessage()
+        let state = incomplete()
+        
+        assert(state, serverError(message), reducedTo: state)
+    }
+    
+    func test_failure_serverError_shouldNotDeliverEffectOnIncompleteState() {
+        
+        let message = anyMessage()
+        let state = incomplete()
+        
+        assert(state, serverError(message), effect: nil)
+    }
+    
+    func test_failure_serverError_shouldSetStatusToServerErrorFailureOnCompleteState() {
+        
+        let message = anyMessage()
+        let state = complete()
+        
+        assert(state, serverError(message), reducedTo: state.updated(
+            status: .failure(.serverError(message))
+        ))
+    }
+    
+    func test_failure_serverError_shouldNotDeliverEffectOnServerErrorFailureInCompleteState() {
+        
+        let message = anyMessage()
+        let state = complete()
+        
+        assert(state, serverError(message), effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = OTPInputReducer
@@ -180,6 +248,18 @@ final class OTPInputReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func connectivity() -> Event {
+        
+        .failure(.connectivityError)
+    }
+    
+    private func serverError(
+        _ message: String = anyMessage()
+    ) -> Event {
+        
+        .failure(.serverError(message))
     }
     
     private func emptyState() -> State {
