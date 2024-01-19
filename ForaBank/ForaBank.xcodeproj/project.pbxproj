@@ -617,6 +617,11 @@
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
 		2A783A8B2B5A87CF0035CEAB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */; };
 		2A783A922B5A87EE0035CEAB /* OTPInputComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A783A912B5A87EE0035CEAB /* OTPInputComponent */; };
+		2A783A942B5A8D5C0035CEAB /* CountdownViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */; };
+		2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A952B5A8D620035CEAB /* CountdownView.swift */; };
+		2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */; };
+		2A783A9A2B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */; };
+		2A783A9C2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */; };
 		2A7915F42AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */; };
 		2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
@@ -2965,6 +2970,11 @@
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A783A872B5A87CF0035CEAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewDemo.swift; sourceTree = "<group>"; };
+		2A783A952B5A8D620035CEAB /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
+		2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownDemoSettings.swift; sourceTree = "<group>"; };
+		2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownDemoSettingsView.swift; sourceTree = "<group>"; };
+		2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CountdownDemoSettings+ext.swift"; sourceTree = "<group>"; };
 		2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift"; sourceTree = "<group>"; };
 		2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINSessionCache.swift; sourceTree = "<group>"; };
 		2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsGroupSettings.swift; sourceTree = "<group>"; };
@@ -6684,6 +6694,10 @@
 			children = (
 				2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */,
 				2A783A852B5A87CE0035CEAB /* ContentView.swift */,
+				2A783A932B5A8D5C0035CEAB /* CountdownViewDemo.swift */,
+				2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */,
+				2A783A992B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift */,
+				2A783A952B5A8D620035CEAB /* CountdownView.swift */,
 				2A783A872B5A87CF0035CEAB /* Assets.xcassets */,
 				2A783A892B5A87CF0035CEAB /* Preview Content */,
 			);
@@ -6694,6 +6708,7 @@
 			isa = PBXGroup;
 			children = (
 				2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */,
+				2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -13227,7 +13242,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A783A9C2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift in Sources */,
 				2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */,
+				2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */,
+				2A783A9A2B5A8EBF0035CEAB /* CountdownDemoSettingsView.swift in Sources */,
+				2A783A942B5A8D5C0035CEAB /* CountdownViewDemo.swift in Sources */,
+				2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */,
 				2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
