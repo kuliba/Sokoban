@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RxViewModel
 
 typealias ConsentListRxViewModel = RxViewModel<ConsentListState, ConsentListEvent, ConsentListEffect>
 
