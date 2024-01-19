@@ -136,16 +136,31 @@ struct CurrencyExchangeSuccessView: View {
             if viewModel.isPresent {
                 
                 Group {
-                    
-                    Text(viewModel.title)
-                        .font(.textH3Sb18240())
-                        .foregroundColor(.textSecondary)
+                 
+                    if viewModel.state == .suspend {
+                        
+                        Text(viewModel.title)
+                            .font(.textH3Sb18240())
+                            .foregroundColor(.systemColorError)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                        
+                    } else {
+                        
+                        Text(viewModel.title)
+                            .font(.textH3Sb18240())
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                    }
                 
                     if let subtitle = viewModel.subtitle {
                      
                         Text(subtitle)
                             .font(.textH3Sb18240())
                             .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
                     }
                 
                     Text(viewModel.amount)
