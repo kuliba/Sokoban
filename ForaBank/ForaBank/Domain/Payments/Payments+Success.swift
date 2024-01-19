@@ -340,31 +340,47 @@ extension Payments.Success {
         amount: String?
     ) {
         
-        var params: [PaymentsParameterRepresentable?] = [
-            Payments.ParameterSuccessMode(mode: mode),
-            Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
-            Payments.ParameterSuccessStatus(with: documentStatus),
-            Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
-            Payments.ParameterSuccessText.amount(amount: amount),
-            Payments.ParameterSuccessOptionButtons.buttons(
-                with: mode,
-                documentStatus: documentStatus,
-                operation: nil,
-                meToMePayment: .init(mode: mode)
-            ),
-            Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
-            Payments.ParameterButton.actionButtonMain()
-        ]
-        
         if documentStatus == .suspend {
             
-            params.insert(Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."), at: 3)
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterSuccessMode(mode: mode),
+                Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: documentStatus),
+                Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
+                Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."),
+                Payments.ParameterSuccessText.amount(amount: amount),
+                Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: nil,
+                parameters: params.compactMap { $0 }
+            )
+            
+        } else {
+                        
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterSuccessMode(mode: mode),
+                Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: documentStatus),
+                Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
+                Payments.ParameterSuccessText.amount(amount: amount),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: documentStatus,
+                    operation: nil,
+                    meToMePayment: .init(mode: mode)
+                ),
+                Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: nil,
+                parameters: params.compactMap { $0 }
+            )
         }
-        
-        self.init(
-            operation: nil,
-            parameters: params.compactMap { $0 }
-        )
     }
 }
 
@@ -891,6 +907,9 @@ extension Payments.ParameterSuccessStatus {
             
         case .accepted:
             return .inProgress
+            
+        case .suspend:
+            return .suspend
             
         case .error:
             return .rejected
