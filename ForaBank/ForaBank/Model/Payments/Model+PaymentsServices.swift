@@ -331,10 +331,20 @@ extension Model {
                 ))
             }
             
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
+            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id).filter({ $0 != antifraudParameterId }), isCompleted: false),
+                back: .init(stage: .remote(.confirm), required: [], processed: nil)
+            )
         } else {
-            
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id), isCompleted: false),
+                back: .init(stage: .remote(.next), required: [], processed: nil)
+            )
         }
     }
     
@@ -362,7 +372,9 @@ extension Model {
             
             result.append(Payments.Parameter.Identifier.product.rawValue)
         }
-        return result
+        
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        return result.filter({ $0 != antifraudParameterId })
     }
     
     func paymentsServicesStepExcludingParameters(
