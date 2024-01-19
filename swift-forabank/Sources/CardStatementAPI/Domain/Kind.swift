@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension GetCardStatementForPeriodResponse {
+public extension GetCardStatementForPeriodResponse {
     
     enum Kind: String, Codable {
         

@@ -700,6 +700,7 @@ private extension Target {
         dependencies: [
             // external packages
             .customDump,
+            .combineSchedulers,
             // internal modules
             .cardStatementAPI,
         ],

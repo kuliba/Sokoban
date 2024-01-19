@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9B7AA1D1-3080-4927-B4D1-6C8CFE4D5CBB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}
