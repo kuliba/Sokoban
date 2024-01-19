@@ -10,7 +10,7 @@ public final class CountdownReducer {
     private let duration: Int
     
     public init(duration: Int) {
-     
+        
         self.duration = duration
     }
 }
@@ -27,53 +27,16 @@ public extension CountdownReducer {
         
         switch event {
         case let .failure(countdownFailure):
-            switch state {
-            case .completed:
-                state = .failure(countdownFailure)
-                
-            case .failure(_):
-                fatalError()
-                
-            case .running:
-                break
-            }
+            state = update(state, with: countdownFailure)
             
         case .prepare:
-            switch state {
-            case .completed:
-                effect = .initiate
-                
-            case .failure, .running:
-                break
-            }
-
+            effect = prepare(state)
+            
         case .start:
-            switch state {
-            case .completed:
-                state = .running(remaining: duration)
-                
-            case .failure:
-                fatalError()
-                
-            case .running:
-                break
-            }
-
+            state = start(state)
+            
         case .tick:
-            switch state {
-            case .completed:
-                break
-                
-            case .failure:
-                break
-                
-            case let .running(remaining: remaining):
-                if remaining > 0 {
-                    state = .running(remaining: remaining - 1)
-                } else {
-                    state = .completed
-                }
-            }
+            state = tick(state)
         }
         
         return (state, effect)
@@ -85,4 +48,89 @@ public extension CountdownReducer {
     typealias State = CountdownState
     typealias Event = CountdownEvent
     typealias Effect = CountdownEffect
+}
+
+private extension CountdownReducer {
+    
+    func prepare(
+        _ state: State
+    ) -> Effect? {
+        
+        var effect: Effect?
+        
+        switch state {
+        case .completed:
+            effect = .initiate
+            
+        case .failure, .running:
+            break
+        }
+        
+        return effect
+    }
+    
+    func start(
+        _ state: State
+    ) -> State {
+        
+        var state = state
+        
+        switch state {
+        case .completed:
+            state = .running(remaining: duration)
+            
+        case .failure:
+            fatalError()
+            
+        case .running:
+            break
+        }
+        
+        return state
+    }
+    
+    func tick(
+        _ state: State
+    ) -> State {
+        
+        var state = state
+        
+        switch state {
+        case .completed:
+            break
+            
+        case .failure:
+            break
+            
+        case let .running(remaining: remaining):
+            if remaining > 0 {
+                state = .running(remaining: remaining - 1)
+            } else {
+                state = .completed
+            }
+        }
+        
+        return state
+    }
+    
+    func update(
+        _ state: State,
+        with countdownFailure: CountdownFailure
+    ) -> State {
+        
+        var state = state
+        
+        switch state {
+        case .completed:
+            state = .failure(countdownFailure)
+            
+        case .failure(_):
+            fatalError()
+            
+        case .running:
+            break
+        }
+        
+        return state
+    }
 }
