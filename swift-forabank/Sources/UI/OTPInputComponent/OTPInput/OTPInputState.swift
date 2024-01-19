@@ -12,8 +12,8 @@ public struct OTPInputState: Equatable {
     public var status: Status?
     
     public init(
-        text: String,
-        isInputComplete: Bool,
+        text: String = "",
+        isInputComplete: Bool = false,
         status: Status? = nil
     ) {
         self.text = text

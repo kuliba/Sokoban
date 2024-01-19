@@ -93,6 +93,31 @@ struct OTPInputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OTPInputView(viewModel: .default())
+        otpInputView(.success(()))
+        otpInputView(.failure(.connectivityError))
+        otpInputView(.failure(.serverError("Server Error Failure")))
+    }
+    
+    private static func otpInputView(
+        _ result: OTPInputEffectHandler.SubmitOTPResult
+    ) -> some View {
+        
+        OTPInputView(viewModel: .preview(result))
+    }
+}
+
+extension OTPInputViewModel {
+ 
+    static func preview(
+        _ result: OTPInputEffectHandler.SubmitOTPResult
+    ) -> OTPInputViewModel {
+        
+        .default(submitOTP: { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(result)
+            }
+        })
     }
 }
