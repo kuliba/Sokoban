@@ -132,9 +132,10 @@ class PaymentsDetailsView: UIView {
             }
         
         case .antifraudCanceled:
-            statusLabel.text = "Операция неуспешна!"
-            infoLabel.text = ""
-            statusImageView.image = UIImage(named: "errorIcon")
+            statusLabel.text = "Операция временно приостановлена в целях безопасности"
+            infoLabel.text = "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
+            statusImageView.image = UIImage(named: "waiting")
+            summLabel.text = model.summTransction
             
         case .error:
             statusLabel.text = "Операция неуспешна!"
