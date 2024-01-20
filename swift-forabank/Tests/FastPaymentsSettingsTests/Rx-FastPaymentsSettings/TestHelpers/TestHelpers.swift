@@ -289,9 +289,35 @@ func paymentContract(
     )
 }
 
-func setBankDefaultPreparedServerError() -> FastPaymentsSettingsEvent {
+func prepareSetBankDefault(
+) -> FastPaymentsSettingsEvent {
     
-    .bankDefault(.setBankDefaultPrepared(.serverError(UUID().uuidString)))
+    .bankDefault(.prepareSetBankDefault)
+}
+
+func setBankDefault(
+) -> FastPaymentsSettingsEvent {
+    
+    .bankDefault(.setBankDefault)
+}
+
+func setBankDefaultPreparedSuccess(
+) -> FastPaymentsSettingsEvent {
+    
+    .bankDefault(.setBankDefaultPrepared(nil))
+}
+
+func setBankDefaultPreparedConnectivityError(
+) -> FastPaymentsSettingsEvent {
+    
+    .bankDefault(.setBankDefaultPrepared(.connectivityError))
+}
+
+func setBankDefaultPreparedServerError(
+    _ message: String = anyMessage()
+) -> FastPaymentsSettingsEvent {
+    
+    .bankDefault(.setBankDefaultPrepared(.serverError(message)))
 }
 
 func serverError(

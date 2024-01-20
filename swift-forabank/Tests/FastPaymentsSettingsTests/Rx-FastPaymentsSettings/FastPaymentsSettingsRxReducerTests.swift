@@ -500,7 +500,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active) {
+        assert(prepareSetBankDefault(), on: active) {
             $0.userPaymentSettings = .contracted(details)
             $0.status = nil
         }
@@ -514,7 +514,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: .prepareSetBankDefault)
+        assert(prepareSetBankDefault(), on: active, effect: .prepareSetBankDefault)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_offDisabled_setBankDefaultStatus() {
@@ -525,7 +525,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_offDisabled_setBankDefaultStatus() {
@@ -536,7 +536,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_onDisabled_setBankDefaultStatus() {
@@ -547,7 +547,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_onDisabled_setBankDefaultStatus() {
@@ -558,7 +558,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .setBankDefault
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_offEnabled_nonSetBankDefaultStatus() {
@@ -569,7 +569,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .inflight
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_offEnabled_nonSetBankDefaultStatus() {
@@ -580,7 +580,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: .inflight
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_offEnabled_nilStatus() {
@@ -591,7 +591,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: nil
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_offEnabled_nilStatus() {
@@ -602,91 +602,91 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
             status: nil
         )
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_offDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .offDisabled)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_offDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .offDisabled)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnActive_onDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .onDisabled)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active)
+        assert(prepareSetBankDefault(), on: active)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnActive_onDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .onDisabled)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: active, effect: nil)
+        assert(prepareSetBankDefault(), on: active, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnInactive() {
         
         let (_, inactive) = contractedState(.inactive)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: inactive)
+        assert(prepareSetBankDefault(), on: inactive)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnInactive() {
         
         let (_, inactive) = contractedState(.inactive)
         
-        assert(.bankDefault(.prepareSetBankDefault), on: inactive, effect: nil)
+        assert(prepareSetBankDefault(), on: inactive, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: missing)
+        assert(prepareSetBankDefault(), on: missing)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: missing, effect: nil)
+        assert(prepareSetBankDefault(), on: missing, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnConnectivityError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: serverError)
+        assert(prepareSetBankDefault(), on: serverError)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnConnectivityError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: serverError, effect: nil)
+        assert(prepareSetBankDefault(), on: serverError, effect: nil)
     }
     
     func test_prepareSetBankDefault_shouldNotChangeStateOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: serverError)
+        assert(prepareSetBankDefault(), on: serverError)
     }
     
     func test_prepareSetBankDefault_shouldNotDeliverEffectOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.prepareSetBankDefault), on: serverError, effect: nil)
+        assert(prepareSetBankDefault(), on: serverError, effect: nil)
     }
     
     // MARK: - resetStatus
@@ -1069,7 +1069,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let (details, active) = contractedState(.active, bankDefault: .offEnabled)
         
-        assert(.bankDefault(.setBankDefault), on: active) {
+        assert(setBankDefault(), on: active) {
             $0.userPaymentSettings = .contracted(details)
             $0.status = .setBankDefault
         }
@@ -1079,91 +1079,91 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let (_, active) = contractedState(.active, bankDefault: .offEnabled)
         
-        assert(.bankDefault(.setBankDefault), on: active, effect: nil)
+        assert(setBankDefault(), on: active, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnActive_offDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .offDisabled)
         
-        assert(.bankDefault(.setBankDefault), on: active)
+        assert(setBankDefault(), on: active)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnActive_offDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .offDisabled)
         
-        assert(.bankDefault(.setBankDefault), on: active, effect: nil)
+        assert(setBankDefault(), on: active, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnActive_onDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .onDisabled)
         
-        assert(.bankDefault(.setBankDefault), on: active)
+        assert(setBankDefault(), on: active)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnActive_onDisabled() {
         
         let (_, active) = contractedState(.active, bankDefault: .onDisabled)
         
-        assert(.bankDefault(.setBankDefault), on: active, effect: nil)
+        assert(setBankDefault(), on: active, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnInactive() {
         
         let (_, inactive) = contractedState(.inactive)
         
-        assert(.bankDefault(.setBankDefault), on: inactive)
+        assert(setBankDefault(), on: inactive)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnInactive() {
         
         let (_, inactive) = contractedState(.inactive)
         
-        assert(.bankDefault(.setBankDefault), on: inactive, effect: nil)
+        assert(setBankDefault(), on: inactive, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: missing)
+        assert(setBankDefault(), on: missing)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: missing, effect: nil)
+        assert(setBankDefault(), on: missing, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnConnectivityError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: serverError)
+        assert(setBankDefault(), on: serverError)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnConnectivityError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: serverError, effect: nil)
+        assert(setBankDefault(), on: serverError, effect: nil)
     }
     
     func test_setBankDefault_shouldNotChangeStateOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: serverError)
+        assert(setBankDefault(), on: serverError)
     }
     
     func test_setBankDefault_shouldNotDeliverEffectOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefault), on: serverError, effect: nil)
+        assert(setBankDefault(), on: serverError, effect: nil)
     }
     
     // MARK: - setBankDefaultPrepared
@@ -1172,7 +1172,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let (details, active) = contractedState(.active)
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: active) {
+        assert(setBankDefaultPreparedSuccess(), on: active) {
             $0.userPaymentSettings = .contracted(details.updated(
                 bankDefault: .onDisabled
             ))
@@ -1184,14 +1184,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let active = contractedState(.active).state
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: active, effect: nil)
+        assert(setBankDefaultPreparedSuccess(), on: active, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldSetStatusOnConnectivityErrorFailure_active() {
         
         let active = activeContractSettings()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: active) {
+        assert(setBankDefaultPreparedConnectivityError(), on: active) {
             $0.userPaymentSettings = active
             $0.status = .connectivityError
         }
@@ -1201,7 +1201,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let active = activeContractSettings()
         
-        assert(active, .bankDefault(.setBankDefaultPrepared(.connectivityError)), effect: nil)
+        assert(active, setBankDefaultPreparedConnectivityError(), effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldSetStatusOnServerErrorFailure_active() {
@@ -1226,28 +1226,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: inactive)
+        assert(setBankDefaultPreparedSuccess(), on: inactive)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: inactive, effect: nil)
+        assert(setBankDefaultPreparedSuccess(), on: inactive, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: inactive)
+        assert(setBankDefaultPreparedConnectivityError(), on: inactive)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: inactive, effect: nil)
+        assert(setBankDefaultPreparedConnectivityError(), on: inactive, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_inactive() {
@@ -1268,28 +1268,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: missing)
+        assert(setBankDefaultPreparedSuccess(), on: missing)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: missing, effect: nil)
+        assert(setBankDefaultPreparedSuccess(), on: missing, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: missing)
+        assert(setBankDefaultPreparedConnectivityError(), on: missing)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: missing, effect: nil)
+        assert(setBankDefaultPreparedConnectivityError(), on: missing, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_missing() {
@@ -1310,28 +1310,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: connectivityError)
+        assert(setBankDefaultPreparedSuccess(), on: connectivityError)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: connectivityError, effect: nil)
+        assert(setBankDefaultPreparedSuccess(), on: connectivityError, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: connectivityError)
+        assert(setBankDefaultPreparedConnectivityError(), on: connectivityError)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: connectivityError, effect: nil)
+        assert(setBankDefaultPreparedConnectivityError(), on: connectivityError, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
@@ -1352,28 +1352,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: serverError)
+        assert(setBankDefaultPreparedSuccess(), on: serverError)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(nil)), on: serverError, effect: nil)
+        assert(setBankDefaultPreparedSuccess(), on: serverError, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: serverError)
+        assert(setBankDefaultPreparedConnectivityError(), on: serverError)
     }
     
     func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.connectivityError)), on: serverError, effect: nil)
+        assert(setBankDefaultPreparedConnectivityError(), on: serverError, effect: nil)
     }
     
     func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_serverError() {
