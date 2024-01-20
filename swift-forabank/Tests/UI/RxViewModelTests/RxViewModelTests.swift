@@ -116,6 +116,7 @@ final class RxViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias EffectHandleSpy = EffectHandlerSpy<Event, Effect>
     
     private func makeSUT(
         initialState: State = makeState(),
@@ -125,10 +126,10 @@ final class RxViewModelTests: XCTestCase {
     ) -> (
         sut: SUT,
         reducer: ReduceSpy,
-        effectHandler: EffectHandlerSpy
+        effectHandler: EffectHandleSpy
     ) {
         let reducer = ReduceSpy(stub: stub)
-        let effectHandler = EffectHandlerSpy()
+        let effectHandler = EffectHandleSpy()
         let sut = SUT(
             initialState: initialState,
             reducer: reducer,
@@ -167,30 +168,6 @@ final class RxViewModelTests: XCTestCase {
         }
         
         typealias Message = (state: State, event: Event)
-    }
-    
-    private final class EffectHandlerSpy: EffectHandler {
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func handleEffect(
-            _ effect: Effect,
-            _ dispatch: @escaping Dispatch
-        ) {
-            messages.append((effect, dispatch))
-        }
-        
-        func complete(
-            with event: Event,
-            at index: Int = 0
-        ) {
-            messages[index].dispatch(event)
-        }
-        
-        typealias Dispatch = (Event) -> Void
-        typealias Message = (effect: Effect, dispatch: Dispatch)
     }
     
     fileprivate struct State: Equatable {
