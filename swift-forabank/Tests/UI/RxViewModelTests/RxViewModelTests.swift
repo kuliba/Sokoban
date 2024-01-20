@@ -127,13 +127,12 @@ final class RxViewModelTests: XCTestCase {
         reducer: ReduceSpy,
         effectHandler: EffectHandlerSpy
     ) {
-        
         let reducer = ReduceSpy(stub: stub)
         let effectHandler = EffectHandlerSpy()
         let sut = SUT(
             initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+            reducer: reducer,
+            effectHandler: effectHandler,
             scheduler: .immediate
         )
         
@@ -144,7 +143,7 @@ final class RxViewModelTests: XCTestCase {
         return (sut, reducer, effectHandler)
     }
     
-    private final class ReduceSpy {
+    private final class ReduceSpy: Reducer {
         
         private var stub: [(State, Effect?)]
         private(set) var messages = [Message]()
@@ -170,7 +169,7 @@ final class RxViewModelTests: XCTestCase {
         typealias Message = (state: State, event: Event)
     }
     
-    private final class EffectHandlerSpy {
+    private final class EffectHandlerSpy: EffectHandler {
         
         private(set) var messages = [Message]()
         
