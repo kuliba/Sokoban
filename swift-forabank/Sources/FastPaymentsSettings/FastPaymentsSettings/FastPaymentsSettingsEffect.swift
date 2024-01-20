@@ -23,7 +23,10 @@ public extension FastPaymentsSettingsEffect {
         case createContract(ProductID)
         case deactivateContract(TargetContract)
     }
-    #warning("move types deeper")
+}
+
+public extension FastPaymentsSettingsEffect.Contract {
+    
     typealias ProductID = Tagged<_ProductID, Int>
     enum _ProductID {}
     
@@ -32,8 +35,10 @@ public extension FastPaymentsSettingsEffect {
         public let core: ContractCore
         public let targetStatus: TargetStatus
         
-        public init(core: ContractCore, targetStatus: TargetStatus) {
-         
+        public init(
+            core: ContractCore, 
+            targetStatus: TargetStatus
+        ) {
             self.core = core
             self.targetStatus = targetStatus
         }
@@ -44,13 +49,18 @@ public extension FastPaymentsSettingsEffect {
         }
     }
     
+    typealias ContractCore = FastPaymentsSettingsEffect.ContractCore
+}
+
+public extension FastPaymentsSettingsEffect {
+    
     struct ContractCore: Equatable {
         
         public let contractID: ContractID
         public let product: Product
         
         public init(contractID: ContractID, product: Product) {
-         
+            
             self.contractID = contractID
             self.product = product
         }

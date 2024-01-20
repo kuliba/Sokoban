@@ -51,6 +51,8 @@ public extension ContractReducer {
 
 private extension ContractReducer {
     
+    typealias Contract = FastPaymentsSettingsEffect.Contract
+    
     func activateContract(
         _ state: State
     ) -> (State, Effect?) {
@@ -65,7 +67,7 @@ private extension ContractReducer {
             var state = state
             state.status = .inflight
             
-            let updateContract = FastPaymentsSettingsEffect.TargetContract(
+            let updateContract = Contract.TargetContract(
                 core: core,
                 targetStatus: .active
             )
@@ -104,7 +106,7 @@ private extension ContractReducer {
         var state = state
         state.status = .inflight
         
-        let updateContract = FastPaymentsSettingsEffect.TargetContract(
+        let updateContract = Contract.TargetContract(
             core: core,
             targetStatus: .inactive
         )
