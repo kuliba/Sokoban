@@ -16,7 +16,7 @@ public final class FastPaymentsSettingsReducer {
 }
 
 public extension FastPaymentsSettingsReducer {
-    
+        
     func reduce(
         _ state: State,
         _ event: Event
@@ -29,20 +29,18 @@ public extension FastPaymentsSettingsReducer {
         case let .bankDefault(bankDefault):
             (state, effect) = update(state, with: bankDefault)
             
+        case let .products(products):
+            (state, effect) = update(state, with: products)
+            
         case .activateContract:
             (state, effect) = activateContract(state)
             
         case .appear:
             (state, effect) = handleAppear(state)
             
-        case .collapseProducts:
-            state = collapseProducts(state)
             
         case .deactivateContract:
             (state, effect) = deactivateContract(state)
-            
-        case .expandProducts:
-            state = expandProducts(state)
             
         case let .loadSettings(settings):
             state = handleLoadedSettings(settings)
@@ -50,14 +48,9 @@ public extension FastPaymentsSettingsReducer {
         case .resetStatus:
             state = resetStatus(state)
             
-        case let .selectProduct(product):
-            (state, effect) = selectProduct(state, product)
             
         case let .updateContract(result):
             state = updateContract(state, with: result)
-            
-        case let .updateProduct(result):
-            state = update(state, with: result)
         }
         
         return (state, effect)
@@ -253,7 +246,7 @@ private extension FastPaymentsSettingsReducer {
     
     func update(
         _ state: State,
-        with bankDefault: FastPaymentsSettingsEvent.BankDefault
+        with bankDefault: Event.BankDefault
     ) -> (State, Effect?) {
         var state = state
         var effect: Effect?
@@ -274,7 +267,32 @@ private extension FastPaymentsSettingsReducer {
     
     func update(
         _ state: State,
-        with productUpdate: FastPaymentsSettingsEvent.ProductUpdateResult
+        with products: Event.Products
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch products {
+        case .collapseProducts:
+            state = collapseProducts(state)
+            
+        case .expandProducts:
+            state = expandProducts(state)
+            
+        case let .selectProduct(product):
+            (state, effect) = selectProduct(state, product)
+            
+        case let .updateProduct(result):
+            state = update(state, with: result)
+        }
+        
+        return (state, effect)
+    }
+    
+    func update(
+        _ state: State,
+        with productUpdate: Event.ProductUpdateResult
     ) -> State {
         
         guard let details = state.activeDetails
@@ -312,7 +330,7 @@ private extension FastPaymentsSettingsReducer {
     
     func update(
         _ state: State,
-        with failure: FastPaymentsSettingsEvent.Failure?
+        with failure: Event.Failure?
     ) -> State {
         
         guard let details = state.activeDetails
@@ -341,7 +359,7 @@ private extension FastPaymentsSettingsReducer {
     
     func updateContract(
         _ state: State,
-        with result: FastPaymentsSettingsEvent.ContractUpdateResult
+        with result: Event.ContractUpdateResult
     ) -> State {
         
         switch state.userPaymentSettings {
@@ -395,7 +413,6 @@ private extension FastPaymentsSettingsReducer {
             return state
         }
     }
-    
 }
 
 // MARK: - Helpers

@@ -202,13 +202,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.updateProduct(.success(payload.product)))
+                dispatch(.products(.updateProduct(.success(payload.product))))
                 
             case .failure(.connectivityError):
-                dispatch(.updateProduct(.failure(.connectivityError)))
+                dispatch(.products(.updateProduct(.failure(.connectivityError))))
                 
             case let .failure(.serverError(message)):
-                dispatch(.updateProduct(.failure(.serverError(message))))
+                dispatch(.products(.updateProduct(.failure(.serverError(message)))))
             }
         }
     }

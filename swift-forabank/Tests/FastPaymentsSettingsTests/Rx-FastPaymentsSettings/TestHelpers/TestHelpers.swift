@@ -363,6 +363,25 @@ func updateProductPayload(
     )
 }
 
+func collapseProducts(
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.collapseProducts)
+}
+
+func expandProducts(
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.expandProducts)
+}
+
+func selectProduct(
+    _ product: Product = makeProduct()
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.selectProduct(product))
+}
+
 func updateContractConnectivityError() -> FastPaymentsSettingsEvent {
     
     .updateContract(.failure(.connectivityError))
@@ -382,17 +401,27 @@ func updateContractSuccess(
     .updateContract(.success(contract))
 }
 
-func updateProductConnectivityError() -> FastPaymentsSettingsEvent {
+func updateProductSuccess(
+    _ product: Product = makeProduct()
+) -> FastPaymentsSettingsEvent {
     
-    .updateProduct(.failure(.connectivityError))
+    .products(.updateProduct(.success(product)))
 }
 
-func updateProductServerError() -> FastPaymentsSettingsEvent {
+func updateProductConnectivityError(
+) -> FastPaymentsSettingsEvent {
     
-    .updateProduct(.failure(.serverError(UUID().uuidString)))
+    .products(.updateProduct(.failure(.connectivityError)))
+}
+
+func updateProductServerError(
+    _ message: String = anyMessage()
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.updateProduct(.failure(.serverError(message))))
 }
 
 func updateProductSuccess() -> FastPaymentsSettingsEvent {
     
-    .updateProduct(.success(makeProduct()))
+    .products(.updateProduct(.success(makeProduct())))
 }

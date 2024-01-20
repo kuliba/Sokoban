@@ -270,7 +270,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let payload = updateProductPayload(product: product)
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.success(product)), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: updateProductSuccess(product), on: {
             
             updateProductSpy.complete(with: .success(()))
         })
@@ -281,7 +281,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let payload = updateProductPayload()
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.failure(.connectivityError)), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: updateProductConnectivityError(), on: {
             
             updateProductSpy.complete(with: .failure(.connectivityError))
         })
@@ -293,7 +293,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, _,_,_,_, updateProductSpy) = makeSUT()
         
-        expect(sut, with: .updateProduct(payload), toDeliver: .updateProduct(.failure(.serverError(message))), on: {
+        expect(sut, with: .updateProduct(payload), toDeliver: updateProductServerError(message), on: {
             
             updateProductSpy.complete(with: .failure(.serverError(message)))
         })

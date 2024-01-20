@@ -345,8 +345,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .success(()))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -386,8 +386,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -425,8 +425,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
