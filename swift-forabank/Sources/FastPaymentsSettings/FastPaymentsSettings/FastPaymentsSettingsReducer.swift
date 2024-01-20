@@ -16,7 +16,7 @@ public final class FastPaymentsSettingsReducer {
 }
 
 public extension FastPaymentsSettingsReducer {
-        
+    
     func reduce(
         _ state: State,
         _ event: Event
@@ -29,28 +29,21 @@ public extension FastPaymentsSettingsReducer {
         case let .bankDefault(bankDefault):
             (state, effect) = update(state, with: bankDefault)
             
+        case let .contract(contract):
+            (state, effect) = update(state, with: contract)
+            
         case let .products(products):
             (state, effect) = update(state, with: products)
-            
-        case .activateContract:
-            (state, effect) = activateContract(state)
             
         case .appear:
             (state, effect) = handleAppear(state)
             
-            
-        case .deactivateContract:
-            (state, effect) = deactivateContract(state)
             
         case let .loadSettings(settings):
             state = handleLoadedSettings(settings)
             
         case .resetStatus:
             state = resetStatus(state)
-            
-            
-        case let .updateContract(result):
-            state = updateContract(state, with: result)
         }
         
         return (state, effect)
@@ -260,6 +253,28 @@ private extension FastPaymentsSettingsReducer {
             
         case let .setBankDefaultPrepared(failure):
             state = update(state, with: failure)
+        }
+        
+        return (state, effect)
+    }
+    
+    func update(
+        _ state: State,
+        with contract: Event.Contract
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch contract {
+        case .activateContract:
+            (state, effect) = activateContract(state)
+            
+        case .deactivateContract:
+            (state, effect) = deactivateContract(state)
+            
+        case let .updateContract(result):
+            state = updateContract(state, with: result)
         }
         
         return (state, effect)

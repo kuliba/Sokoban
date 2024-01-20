@@ -363,6 +363,18 @@ func updateProductPayload(
     )
 }
 
+func activateContract(
+) -> FastPaymentsSettingsEvent {
+    
+    .contract(.activateContract)
+}
+
+func deactivateContract(
+) -> FastPaymentsSettingsEvent {
+    
+    .contract(.deactivateContract)
+}
+
 func collapseProducts(
 ) -> FastPaymentsSettingsEvent {
     
@@ -384,21 +396,21 @@ func selectProduct(
 
 func updateContractConnectivityError() -> FastPaymentsSettingsEvent {
     
-    .updateContract(.failure(.connectivityError))
+    .contract(.updateContract(.failure(.connectivityError)))
 }
 
 func updateContractServerError(
     _ message: String = anyMessage()
 ) -> FastPaymentsSettingsEvent {
     
-    .updateContract(.failure(.serverError(message)))
+    .contract(.updateContract(.failure(.serverError(message))))
 }
 
 func updateContractSuccess(
     _ contract: UserPaymentSettings.PaymentContract = paymentContract()
 ) -> FastPaymentsSettingsEvent {
     
-    .updateContract(.success(contract))
+    .contract(.updateContract(.success(contract)))
 }
 
 func updateProductSuccess(

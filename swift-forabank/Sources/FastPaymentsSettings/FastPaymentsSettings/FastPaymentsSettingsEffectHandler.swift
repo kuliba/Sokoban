@@ -133,13 +133,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.updateContract(.success(contract)))
+                dispatch(.contract(.updateContract(.success(contract))))
                 
             case .failure(.connectivityError):
-                dispatch(.updateContract(.failure(.connectivityError)))
+                dispatch(.contract(.updateContract(.failure(.connectivityError))))
                 
             case let .failure(.serverError(message)):
-                dispatch(.updateContract(.failure(.serverError(message))))
+                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
             }
         }
     }
@@ -183,13 +183,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.updateContract(.success(contract)))
+                dispatch(.contract(.updateContract(.success(contract))))
                 
             case .failure(.connectivityError):
-                dispatch(.updateContract(.failure(.connectivityError)))
+                dispatch(.contract(.updateContract(.failure(.connectivityError))))
                 
             case let .failure(.serverError(message)):
-                dispatch(.updateContract(.failure(.serverError(message))))
+                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
             }
         }
     }

@@ -31,7 +31,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -62,7 +62,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -90,7 +90,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -119,7 +119,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -150,7 +150,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -178,7 +178,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -211,7 +211,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -252,7 +252,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -285,7 +285,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -317,7 +317,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [

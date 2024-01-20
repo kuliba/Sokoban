@@ -52,35 +52,35 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let empty = fastPaymentsSettingsState()
         
-        assert(.activateContract, on: empty)
+        assert(activateContract(), on: empty)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnEmpty() {
         
         let empty = fastPaymentsSettingsState()
         
-        assert(.activateContract, on: empty, effect: nil)
+        assert(activateContract(), on: empty, effect: nil)
     }
     
     func test_activateContract_shouldNotChangeStateOnActiveContract() {
         
         let active = contractedState(.active).state
         
-        assert(.activateContract, on: active)
+        assert(activateContract(), on: active)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnActiveContract() {
         
         let active = contractedState(.active).state
         
-        assert(.activateContract, on: active, effect: nil)
+        assert(activateContract(), on: active, effect: nil)
     }
     
     func test_activateContract_shouldChangeStatusToInflightOnInactiveContract() {
         
         let inactive = inactiveContractSettings()
         
-        assert(.activateContract, on: inactive) {
+        assert(activateContract(), on: inactive) {
             $0.userPaymentSettings = inactive
             $0.status = .inflight
         }
@@ -92,7 +92,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
 #warning("add tests for branches")
         let target = try XCTUnwrap(target(details, .active))
         
-        assert(.activateContract, on: inactive, effect: .activateContract(target))
+        assert(activateContract(), on: inactive, effect: .activateContract(target))
     }
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentFailure() {
@@ -100,7 +100,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentFailureSettings()
         let sut = makeSUT(products: [])
         
-        assert(sut: sut, .activateContract, on: missing) {
+        assert(sut: sut, activateContract(), on: missing) {
             $0.userPaymentSettings = missing
             $0.status = .missingProduct
         }
@@ -111,7 +111,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentFailureSettings()
         let sut = makeSUT(products: [])
         
-        assert(sut: sut, missing, .activateContract, effect: nil)
+        assert(sut: sut, missing, activateContract(), effect: nil)
     }
     
     func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentFailure() {
@@ -119,7 +119,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentFailureSettings()
         let sut = makeSUT(products: [makeProduct()])
         
-        assert(sut: sut, .activateContract, on: missing) {
+        assert(sut: sut, activateContract(), on: missing) {
             $0.userPaymentSettings = missing
             $0.status = .inflight
         }
@@ -131,7 +131,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: .createContract(.init(product.id.rawValue)))
     }
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentSuccess() {
@@ -139,7 +139,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentSuccessSettings()
         let sut = makeSUT(products: [])
         
-        assert(sut: sut, .activateContract, on: missing) {
+        assert(sut: sut, activateContract(), on: missing) {
             $0.userPaymentSettings = missing
             $0.status = .missingProduct
         }
@@ -150,7 +150,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentSuccessSettings()
         let sut = makeSUT(products: [])
         
-        assert(sut: sut, missing, .activateContract, effect: nil)
+        assert(sut: sut, missing, activateContract(), effect: nil)
     }
     
     func test_activateContract_shouldChangeStatusToInflightOnAvailableProductAtMissingSettingsWithConsentSuccess() {
@@ -158,7 +158,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let missing = missingConsentSuccessSettings()
         let sut = makeSUT(products: [makeProduct()])
         
-        assert(sut: sut, .activateContract, on: missing) {
+        assert(sut: sut, activateContract(), on: missing) {
             $0.userPaymentSettings = missing
             $0.status = .inflight
         }
@@ -170,35 +170,35 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, .activateContract, effect: .createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: .createContract(.init(product.id.rawValue)))
     }
     
     func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.activateContract, on: connectivityError)
+        assert(activateContract(), on: connectivityError)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.activateContract, on: connectivityError, effect: nil)
+        assert(activateContract(), on: connectivityError, effect: nil)
     }
     
     func test_activateContract_shouldNotChangeStateOnServerErrorFailure() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.activateContract, on: serverError)
+        assert(activateContract(), on: serverError)
     }
     
     func test_activateContract_shouldNotDeliverEffectOnServerErrorFailure() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.activateContract, on: serverError, effect: nil)
+        assert(activateContract(), on: serverError, effect: nil)
     }
     
     // MARK: - collapseProducts
@@ -292,7 +292,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         let active = activeContractSettings()
         
-        assert(.deactivateContract, on: active) {
+        assert(deactivateContract(), on: active) {
             $0.userPaymentSettings = active
             $0.status = .inflight
         }
@@ -304,63 +304,63 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
 #warning("add tests for branches")
         let target = try XCTUnwrap(target(details, .inactive))
         
-        assert(.deactivateContract, on: active, effect: .deactivateContract(target))
+        assert(deactivateContract(), on: active, effect: .deactivateContract(target))
     }
     
     func test_deactivateContract_shouldNotChangeStateOnInactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.deactivateContract, on: inactive)
+        assert(deactivateContract(), on: inactive)
     }
     
     func test_deactivateContract_shouldNotDeliverEffectOnInactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(.deactivateContract, on: inactive, effect: nil)
+        assert(deactivateContract(), on: inactive, effect: nil)
     }
     
     func test_deactivateContract_shouldNotChangeStateOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.deactivateContract, on: missing)
+        assert(deactivateContract(), on: missing)
     }
     
     func test_deactivateContract_shouldNotDeliverEffectOnMissing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(.deactivateContract, on: missing, effect: nil)
+        assert(deactivateContract(), on: missing, effect: nil)
     }
     
     func test_deactivateContract_shouldNotChangeStateOnConnectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.deactivateContract, on: connectivityError)
+        assert(deactivateContract(), on: connectivityError)
     }
     
     func test_deactivateContract_shouldNotDeliverEffectOnConnectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(.deactivateContract, on: connectivityError, effect: nil)
+        assert(deactivateContract(), on: connectivityError, effect: nil)
     }
     
     func test_deactivateContract_shouldNotChangeStateOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.deactivateContract, on: serverError)
+        assert(deactivateContract(), on: serverError)
     }
     
     func test_deactivateContract_shouldNotDeliverEffectOnServerError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(.deactivateContract, on: serverError, effect: nil)
+        assert(deactivateContract(), on: serverError, effect: nil)
     }
     
     // MARK: - expandProducts
