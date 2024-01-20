@@ -39,6 +39,7 @@ public extension FastPaymentsSettingsEvent {
         case updateContract(ContractUpdateResult)
     }
     
+#warning("extract as `FastPaymentsFailure`")
     enum Failure: Error, Equatable {
         
         case connectivityError

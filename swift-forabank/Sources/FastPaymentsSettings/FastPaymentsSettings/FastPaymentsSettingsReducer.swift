@@ -8,10 +8,14 @@
 public final class FastPaymentsSettingsReducer {
     
     private let getProducts: GetProducts
+    private let bankDefaultReduce: BankDefaultReduce
     
-    public init(getProducts: @escaping GetProducts) {
-        
+    public init(
+        getProducts: @escaping GetProducts,
+        bankDefaultReduce: @escaping BankDefaultReduce
+    ) {
         self.getProducts = getProducts
+        self.bankDefaultReduce = bankDefaultReduce
     }
 }
 
@@ -27,7 +31,7 @@ public extension FastPaymentsSettingsReducer {
         
         switch event {
         case let .bankDefault(bankDefault):
-            (state, effect) = update(state, with: bankDefault)
+            (state, effect) = bankDefaultReduce(state, bankDefault)
             
         case let .contract(contract):
             (state, effect) = update(state, with: contract)
@@ -37,7 +41,6 @@ public extension FastPaymentsSettingsReducer {
             
         case .appear:
             (state, effect) = handleAppear(state)
-            
             
         case let .loadSettings(settings):
             state = handleLoadedSettings(settings)
@@ -53,6 +56,7 @@ public extension FastPaymentsSettingsReducer {
 public extension FastPaymentsSettingsReducer {
     
     typealias GetProducts = () -> [Product]
+    typealias BankDefaultReduce = (State, Event.BankDefault) -> (State, Effect?)
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
@@ -165,21 +169,6 @@ private extension FastPaymentsSettingsReducer {
         .init(userPaymentSettings: userPaymentSettings)
     }
     
-    func prepareSetBankDefault(
-        _ state: State
-    ) -> (State, Effect?) {
-        
-        guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled,
-              state.status == .setBankDefault
-        else { return (state, nil) }
-        
-        var state = state
-        state.status = nil
-        
-        return (state, .prepareSetBankDefault)
-    }
-    
     func resetStatus(
         _ state: State
     ) -> State {
@@ -221,41 +210,6 @@ private extension FastPaymentsSettingsReducer {
         state.status = .inflight
         
         return (state, .updateProduct(details, product))
-    }
-    
-    func setBankDefault(
-        _ state: State
-    ) -> State {
-        
-        guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled
-        else { return state }
-        
-        var state = state
-        state.status = .setBankDefault
-        
-        return state
-    }
-    
-    func update(
-        _ state: State,
-        with bankDefault: Event.BankDefault
-    ) -> (State, Effect?) {
-        var state = state
-        var effect: Effect?
-        
-        switch bankDefault {
-        case .prepareSetBankDefault:
-            (state, effect) = prepareSetBankDefault(state)
-            
-        case .setBankDefault:
-            state = setBankDefault(state)
-            
-        case let .setBankDefaultPrepared(failure):
-            state = update(state, with: failure)
-        }
-        
-        return (state, effect)
     }
     
     func update(
@@ -340,35 +294,6 @@ private extension FastPaymentsSettingsReducer {
                 userPaymentSettings: .contracted(details),
                 status: .serverError(message)
             )
-        }
-    }
-    
-    func update(
-        _ state: State,
-        with failure: Event.Failure?
-    ) -> State {
-        
-        guard let details = state.activeDetails
-        else { return state }
-        
-        switch failure {
-        case .none:
-            var details = details
-            details.bankDefault = .onDisabled
-            return .init(
-                userPaymentSettings: .contracted(details),
-                status: .setBankDefaultSuccess
-            )
-            
-        case .connectivityError:
-            var state = state
-            state.status = .connectivityError
-            return state
-            
-        case let .serverError(message):
-            var state = state
-            state.status = .serverError(message)
-            return state
         }
     }
     

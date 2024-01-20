@@ -1980,9 +1980,14 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getProducts: { products })
-        
+        let bankDefaultReducer = BankDefaultReducer()
+        let sut = SUT(
+            getProducts: { products },
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:)
+        )
+
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(bankDefaultReducer, file: file, line: line)
         
         return sut
     }

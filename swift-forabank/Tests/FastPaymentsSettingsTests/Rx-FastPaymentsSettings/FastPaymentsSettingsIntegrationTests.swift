@@ -489,8 +489,11 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         createContractSpy: CreateContractSpy,
         updateProductSpy: UpdateProductSpy
     ) {
-        
-        let reducer = Reducer(getProducts: { products })
+        let bankDefaultReducer = BankDefaultReducer()
+        let reducer = Reducer(
+            getProducts: { products },
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:)
+        )
         
         let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
