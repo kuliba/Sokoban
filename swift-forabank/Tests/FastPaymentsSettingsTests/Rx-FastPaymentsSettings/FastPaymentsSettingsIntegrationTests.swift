@@ -469,9 +469,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     
     private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
-    private typealias UpdateContractSpy = Spy<EffectHandler.UpdateContractPayload, EffectHandler.UpdateContractResponse>
+    private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
+    private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, EffectHandler.PrepareSetBankDefaultResponse>
-    private typealias CreateContractSpy = Spy<EffectHandler.CreateContractPayload, EffectHandler.CreateContractResponse>
     private typealias UpdateProductSpy = Spy<EffectHandler.UpdateProductPayload, EffectHandler.UpdateProductResponse>
     
     
@@ -504,11 +504,14 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let createContractSpy = CreateContractSpy()
         let updateProductSpy = UpdateProductSpy()
         
-        let effectHandler = EffectHandler(
+        let contractEffectHandler = ContractEffectHandler(
             createContract: createContractSpy.process(_:completion:),
+            updateContract: updateContractSpy.process(_:completion:)
+        )
+        let effectHandler = EffectHandler(
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettingsSpy.process(completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
-            updateContract: updateContractSpy.process(_:completion:),
             updateProduct: updateProductSpy.process(_:completion:)
         )
         

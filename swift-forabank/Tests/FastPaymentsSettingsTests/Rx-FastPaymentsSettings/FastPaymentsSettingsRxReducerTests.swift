@@ -92,7 +92,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
 #warning("add tests for branches")
         let target = try XCTUnwrap(target(details, .active))
         
-        assert(activateContract(), on: inactive, effect: .activateContract(target))
+        assert(activateContract(), on: inactive, effect: activateContract(target))
     }
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentFailure() {
@@ -131,7 +131,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, activateContract(), effect: .createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: createContract(.init(product.id.rawValue)))
     }
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentSuccess() {
@@ -170,7 +170,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, activateContract(), effect: .createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: createContract(.init(product.id.rawValue)))
     }
     
     func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
@@ -304,7 +304,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
 #warning("add tests for branches")
         let target = try XCTUnwrap(target(details, .inactive))
         
-        assert(deactivateContract(), on: active, effect: .deactivateContract(target))
+        assert(deactivateContract(), on: active, effect: deactivateContract(target))
     }
     
     func test_deactivateContract_shouldNotChangeStateOnInactive() {

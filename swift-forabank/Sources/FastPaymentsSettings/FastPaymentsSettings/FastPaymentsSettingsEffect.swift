@@ -9,9 +9,7 @@ import Tagged
 
 public enum FastPaymentsSettingsEffect: Equatable {
     
-    case activateContract(TargetContract)
-    case createContract(ProductID)
-    case deactivateContract(TargetContract)
+    case contract(Contract)
     case getSettings
     case prepareSetBankDefault
     case updateProduct(ContractCore)
@@ -19,6 +17,13 @@ public enum FastPaymentsSettingsEffect: Equatable {
 
 public extension FastPaymentsSettingsEffect {
     
+    enum Contract: Equatable {
+        
+        case activateContract(TargetContract)
+        case createContract(ProductID)
+        case deactivateContract(TargetContract)
+    }
+    #warning("move types deeper")
     typealias ProductID = Tagged<_ProductID, Int>
     enum _ProductID {}
     

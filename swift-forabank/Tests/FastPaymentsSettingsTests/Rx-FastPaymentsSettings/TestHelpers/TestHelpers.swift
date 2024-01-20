@@ -8,6 +8,27 @@
 import FastPaymentsSettings
 import Foundation
 
+func activateContract(
+    _ contract: FastPaymentsSettingsEffect.TargetContract
+) -> FastPaymentsSettingsEffect {
+    
+    .contract(.activateContract(contract))
+}
+
+func deactivateContract(
+    _ contract: FastPaymentsSettingsEffect.TargetContract
+) -> FastPaymentsSettingsEffect {
+    
+    .contract(.deactivateContract(contract))
+}
+
+func createContract(
+    _ productID: FastPaymentsSettingsEffect.ProductID
+) -> FastPaymentsSettingsEffect {
+    
+    .contract(.createContract(productID))
+}
+
 func activeContractSettings(
 ) -> UserPaymentSettings {
     
@@ -182,7 +203,7 @@ func contractedState(
 func fastPaymentsSettingsEffectTargetContract(
     contractID: FastPaymentsSettingsEffect.ContractCore.ContractID = .init(generateRandom11DigitNumber()),
     product: Product = makeProduct(),
-    targetStatus: FastPaymentsSettingsEffectHandler.UpdateContractPayload.TargetStatus = .active
+    targetStatus: ContractEffectHandler.UpdateContractPayload.TargetStatus = .active
 ) -> FastPaymentsSettingsEffect.TargetContract {
     
     .init(
