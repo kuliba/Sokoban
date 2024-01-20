@@ -15,8 +15,13 @@ extension UserAccountViewModel {
         flowStub: FlowStub
     ) -> UserAccountViewModel {
         
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: { flowStub.getProducts })
+        let productsReducer = ProductsReducer(getProducts: { flowStub.getProducts })
         let reducer = FastPaymentsSettingsReducer(
-            getProducts: { flowStub.getProducts }
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
         )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
@@ -70,7 +75,7 @@ extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
-        getProducts: @escaping FastPaymentsSettingsReducer.GetProducts = { .preview },
+        getProducts: @escaping ContractReducer.GetProducts = { .preview },
         createContract: @escaping FastPaymentsSettingsEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
@@ -78,8 +83,13 @@ extension UserAccountViewModel {
         updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct
     ) -> UserAccountViewModel {
         
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: getProducts)
+        let productsReducer = ProductsReducer(getProducts: getProducts)
         let reducer = FastPaymentsSettingsReducer(
-            getProducts: getProducts
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
         )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
