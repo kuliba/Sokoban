@@ -46,8 +46,7 @@ public extension ContractReducer {
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent.Contract
-    #warning("replace with `FastPaymentsSettingsEffect.Contract`")
-    typealias Effect = FastPaymentsSettingsEffect
+    typealias Effect = FastPaymentsSettingsEffect.Contract
 }
 
 private extension ContractReducer {
@@ -71,7 +70,7 @@ private extension ContractReducer {
                 targetStatus: .active
             )
             
-            return (state, .contract(.activateContract(updateContract)))
+            return (state, .activateContract(updateContract))
             
         case let .missingContract(consent):
             var state = state
@@ -86,7 +85,7 @@ private extension ContractReducer {
             
             state.status = .inflight
             
-            return (state, .contract(.createContract(.init(product.id.rawValue))))
+            return (state, .createContract(.init(product.id.rawValue)))
             
         default:
             return (state, nil)
@@ -110,7 +109,7 @@ private extension ContractReducer {
             targetStatus: .inactive
         )
         
-        return (state, .contract(.deactivateContract(updateContract)))
+        return (state, .deactivateContract(updateContract))
     }
     
 #warning("'ContractUpdateResult' is not a member type of enum 'FastPaymentsSettings.FastPaymentsSettingsEvent.Contract'")

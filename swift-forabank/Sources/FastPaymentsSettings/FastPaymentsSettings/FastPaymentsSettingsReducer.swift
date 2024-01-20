@@ -37,7 +37,8 @@ public extension FastPaymentsSettingsReducer {
             (state, effect) = bankDefaultReduce(state, bankDefault)
             
         case let .contract(contract):
-            (state, effect) = contractReduce(state, contract)
+            let (newState, contractEffect) = contractReduce(state, contract)
+            (state, effect) = (newState, contractEffect.map(Effect.contract))
             
         case let .products(products):
             (state, effect) = productsReduce(state, products)
@@ -59,7 +60,7 @@ public extension FastPaymentsSettingsReducer {
 public extension FastPaymentsSettingsReducer {
     
     typealias BankDefaultReduce = (State, Event.BankDefault) -> (State, Effect?)
-    typealias ContractReduce = (State, Event.Contract) -> (State, Effect?)
+    typealias ContractReduce = (State, Event.Contract) -> (State, Effect.Contract?)
     typealias ProductsReduce = (State, Event.Products) -> (State, Effect?)
     
     typealias State = FastPaymentsSettingsState
