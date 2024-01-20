@@ -14,7 +14,8 @@ struct OTPInputComponentPreviewApp: App {
         
         WindowGroup {
             
-            ContentView(viewModel: .init())
+            // ContentView(viewModel: .init())
+            OTPInputView()
         }
     }
 }
