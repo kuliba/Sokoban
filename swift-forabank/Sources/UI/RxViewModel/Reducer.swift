@@ -13,3 +13,17 @@ public protocol Reducer<State, Event, Effect> {
     
     func reduce(_ state: State,_ event: Event) -> (State, Effect?)
 }
+
+public extension Reducer {
+    
+    func reduce(
+        _ state: inout State,
+        _ event: Event
+    ) -> Effect? {
+        
+        let (newState, effect) = reduce(state, event)
+        state = newState
+        
+        return effect
+    }
+}
