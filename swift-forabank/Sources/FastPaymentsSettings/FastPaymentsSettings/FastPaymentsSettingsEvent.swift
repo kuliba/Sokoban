@@ -15,9 +15,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case resetStatus
     
     // BankDefault - need better naming in this section
-    case prepareSetBankDefault
-    case setBankDefault
-    case setBankDefaultPrepared(Failure?) // ???
+    case bankDefault(BankDefault)
     
     // Contract
     case activateContract
@@ -35,6 +33,13 @@ public extension FastPaymentsSettingsEvent {
     
     typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, Failure>
     typealias ProductUpdateResult = Result<Product, Failure>
+    
+    enum BankDefault: Equatable {
+        
+        case prepareSetBankDefault
+        case setBankDefault
+        case setBankDefaultPrepared(Failure?) // ???
+    }
     
     enum Failure: Error, Equatable {
         

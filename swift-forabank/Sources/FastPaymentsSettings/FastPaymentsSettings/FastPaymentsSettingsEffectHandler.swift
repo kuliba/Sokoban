@@ -164,13 +164,13 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.setBankDefaultPrepared(nil))
+                dispatch(.bankDefault(.setBankDefaultPrepared(nil)))
                 
             case .failure(.connectivityError):
-                dispatch(.setBankDefaultPrepared(.connectivityError))
+                dispatch(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.setBankDefaultPrepared(.serverError(message)))
+                dispatch(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
             }
         }
     }

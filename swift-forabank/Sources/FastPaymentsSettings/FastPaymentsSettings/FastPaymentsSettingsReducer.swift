@@ -26,6 +26,9 @@ public extension FastPaymentsSettingsReducer {
         var effect: Effect?
         
         switch event {
+        case let .bankDefault(bankDefault):
+            (state, effect) = update(state, with: bankDefault)
+            
         case .activateContract:
             (state, effect) = activateContract(state)
             
@@ -44,20 +47,11 @@ public extension FastPaymentsSettingsReducer {
         case let .loadSettings(settings):
             state = handleLoadedSettings(settings)
             
-        case .prepareSetBankDefault:
-            (state, effect) = prepareSetBankDefault(state)
-            
         case .resetStatus:
             state = resetStatus(state)
             
         case let .selectProduct(product):
             (state, effect) = selectProduct(state, product)
-            
-        case .setBankDefault:
-            state = setBankDefault(state)
-            
-        case let .setBankDefaultPrepared(failure):
-            state = update(state, with: failure)
             
         case let .updateContract(result):
             state = updateContract(state, with: result)
@@ -236,13 +230,13 @@ private extension FastPaymentsSettingsReducer {
             
             return (state, nil)
         }
-
+        
         var state = state
         state.status = .inflight
         
         return (state, .updateProduct(details, product))
     }
-        
+    
     func setBankDefault(
         _ state: State
     ) -> State {
@@ -255,6 +249,27 @@ private extension FastPaymentsSettingsReducer {
         state.status = .setBankDefault
         
         return state
+    }
+    
+    func update(
+        _ state: State,
+        with bankDefault: FastPaymentsSettingsEvent.BankDefault
+    ) -> (State, Effect?) {
+        var state = state
+        var effect: Effect?
+        
+        switch bankDefault {
+        case .prepareSetBankDefault:
+            (state, effect) = prepareSetBankDefault(state)
+            
+        case .setBankDefault:
+            state = setBankDefault(state)
+            
+        case let .setBankDefaultPrepared(failure):
+            state = update(state, with: failure)
+        }
+        
+        return (state, effect)
     }
     
     func update(
@@ -287,7 +302,7 @@ private extension FastPaymentsSettingsReducer {
             details.productSelector = details.productSelector.updated(
                 status: .collapsed
             )
-
+            
             return .init(
                 userPaymentSettings: .contracted(details),
                 status: .serverError(message)

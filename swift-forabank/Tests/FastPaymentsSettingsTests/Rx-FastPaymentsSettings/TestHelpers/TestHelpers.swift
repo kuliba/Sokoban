@@ -291,7 +291,7 @@ func paymentContract(
 
 func setBankDefaultPreparedServerError() -> FastPaymentsSettingsEvent {
     
-    .setBankDefaultPrepared(.serverError(UUID().uuidString))
+    .bankDefault(.setBankDefaultPrepared(.serverError(UUID().uuidString)))
 }
 
 func serverError(
