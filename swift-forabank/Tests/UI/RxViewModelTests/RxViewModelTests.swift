@@ -116,6 +116,7 @@ final class RxViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias ReduceSpy = ReducerSpy<State, Event, Effect>
     private typealias EffectHandleSpy = EffectHandlerSpy<Event, Effect>
     
     private func makeSUT(
@@ -142,32 +143,6 @@ final class RxViewModelTests: XCTestCase {
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
         return (sut, reducer, effectHandler)
-    }
-    
-    private final class ReduceSpy: Reducer {
-        
-        private var stub: [(State, Effect?)]
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        init(stub: [(State, Effect?)]) {
-            
-            self.stub = stub
-        }
-        
-        func reduce(
-            _ state: State,
-            _ event: Event
-        ) -> (State, Effect?) {
-            
-            messages.append((state, event))
-            let first = stub.removeFirst()
-            
-            return first
-        }
-        
-        typealias Message = (state: State, event: Event)
     }
     
     fileprivate struct State: Equatable {
