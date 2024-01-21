@@ -14,14 +14,14 @@ final class OTPInputBinderTests: XCTestCase {
     
     func test_init_shouldCallTimerWithStopOnInitialStateNil() {
         
-        let (_, timerSpy, _,_) = makeSUT(initialState: nil)
+        let (_,_, timerSpy, _,_) = makeSUT(initialState: nil)
         
         XCTAssertNoDiff(timerSpy.messages, [.stop])
     }
     
     func test_init_shouldNotCallReducerOnInitialStateNil() {
         
-        let (_,_, reducerSpy, _) = makeSUT(initialState: nil)
+        let (_,_,_, reducerSpy, _) = makeSUT(initialState: nil)
         
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
@@ -29,7 +29,7 @@ final class OTPInputBinderTests: XCTestCase {
     func test_init_shouldCallTimerWithStopOnInitialStateComplete() {
         
         let initialState = makeState(countdown: .completed)
-        let (_, timerSpy, _,_) = makeSUT(initialState: initialState)
+        let (_,_, timerSpy, _,_) = makeSUT(initialState: initialState)
         
         XCTAssertNoDiff(timerSpy.messages, [.stop])
     }
@@ -37,7 +37,7 @@ final class OTPInputBinderTests: XCTestCase {
     func test_init_shouldNotCallReducerOnInitialStateComplete() {
         
         let initialState = makeState(countdown: .completed)
-        let (_,_, reducerSpy, _) = makeSUT(initialState: initialState)
+        let (_,_,_, reducerSpy, _) = makeSUT(initialState: initialState)
         
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
@@ -45,7 +45,7 @@ final class OTPInputBinderTests: XCTestCase {
     func test_init_shouldCallTimerWithStopOnInitialFailure() {
         
         let initialState = makeState(countdown: .failure(.connectivityError))
-        let (_, timerSpy, _,_) = makeSUT(initialState: initialState)
+        let (_,_, timerSpy, _,_) = makeSUT(initialState: initialState)
         
         XCTAssertNoDiff(timerSpy.messages, [.stop])
     }
@@ -53,7 +53,7 @@ final class OTPInputBinderTests: XCTestCase {
     func test_init_shouldNotCallReducerOnInitialStateFailure() {
         
         let initialState = makeState(countdown: .failure(.connectivityError))
-        let (_,_, reducerSpy, _) = makeSUT(initialState: initialState)
+        let (_,_,_, reducerSpy, _) = makeSUT(initialState: initialState)
         
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
@@ -64,7 +64,7 @@ final class OTPInputBinderTests: XCTestCase {
         let initialState = makeState(
             countdown: .running(remaining: duration)
         )
-        let (_, timerSpy, _,_) = makeSUT(
+        let (_,_, timerSpy, _,_) = makeSUT(
             duration: duration,
             initialState: initialState
         )
@@ -78,13 +78,13 @@ final class OTPInputBinderTests: XCTestCase {
         let initialState = makeState(
             countdown: .running(remaining: duration)
         )
-        let (_, timerSpy, reducerSpy, _) = makeSUT(
+        let (_,_, timerSpy, reducerSpy, _) = makeSUT(
             duration: duration,
             initialState: initialState,
             reducerStub: [(makeState(), nil)]
         )
         
-        timerSpy.complete()
+        timerSpy.tick()
         
         XCTAssertNoDiff(reducerSpy.messages.map(\.event), [.countdown(.tick)])
     }
@@ -95,11 +95,11 @@ final class OTPInputBinderTests: XCTestCase {
         let initialState = makeState(
             countdown: .running(remaining: duration - 1)
         )
-        let (_, timerSpy, _,_) = makeSUT(
+        let (_,_, timerSpy, _,_) = makeSUT(
             duration: duration,
             initialState: initialState
         )
-
+        
         XCTAssertNoDiff(timerSpy.messages, [])
     }
     
@@ -109,12 +109,47 @@ final class OTPInputBinderTests: XCTestCase {
         let initialState = makeState(
             countdown: .running(remaining: duration - 1)
         )
-        let (_,_, reducerSpy, _) = makeSUT(
+        let (_,_,_, reducerSpy, _) = makeSUT(
             duration: duration,
             initialState: initialState
         )
-
+        
         XCTAssertEqual(reducerSpy.callCount, 0)
+    }
+    
+    // MARK: - start & tick flow
+    
+    func test_start_tick_flow() {
+        
+        let duration = 4
+        let (sut, viewModel, timerSpy, reducerSpy, effectHandlerSpy) = makeSUT(
+            duration: duration,
+            reducerStub: [
+                (makeState(countdown: .running(remaining: 4)), nil),
+                (makeState(countdown: .running(remaining: 3)), nil),
+                (makeState(countdown: .running(remaining: 2)), nil),
+                (makeState(countdown: .running(remaining: 1)), nil),
+                (makeState(countdown: .running(remaining: 0)), nil),
+            ]
+        )
+        
+        viewModel.event(.countdown(.start))
+        timerSpy.tick()
+        timerSpy.tick()
+        timerSpy.tick()
+        timerSpy.tick()
+        
+        XCTAssertNoDiff(timerSpy.messages, [.stop, .start])
+        XCTAssertNoDiff(reducerSpy.messages.map(\.event), [
+            .countdown(.start),
+            .countdown(.tick),
+            .countdown(.tick),
+            .countdown(.tick),
+            .countdown(.tick),
+        ])
+        
+        XCTAssertEqual(effectHandlerSpy.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
@@ -137,12 +172,13 @@ final class OTPInputBinderTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
+        viewModel: OTPInputViewModel,
         timerSpy: TimerSpy,
         reducerSpy: OTPInputReducerSpy,
         effectHandlerSpy: OTPInputEffectHandlerSpy
     ) {
         
-        let timerSpy = TimerSpy()
+        let timerSpy = TimerSpy(duration: duration)
         let initialState = initialState ?? makeState()
         let reducerSpy = OTPInputReducerSpy(stub: reducerStub)
         let effectHandlerSpy = OTPInputEffectHandlerSpy()
@@ -158,12 +194,13 @@ final class OTPInputBinderTests: XCTestCase {
             viewModel: viewModel
         )
         
+        trackForMemoryLeaks(timerSpy, file: file, line: line)
         trackForMemoryLeaks(reducerSpy, file: file, line: line)
         trackForMemoryLeaks(effectHandlerSpy, file: file, line: line)
         trackForMemoryLeaks(viewModel, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, timerSpy, reducerSpy, effectHandlerSpy)
+        return (sut, viewModel, timerSpy, reducerSpy, effectHandlerSpy)
     }
     
     private func makeState(
@@ -176,8 +213,14 @@ final class OTPInputBinderTests: XCTestCase {
     
     private final class TimerSpy: TimerProtocol {
         
+        private let duration: Int
         private var completions = [Completion]()
         private(set) var messages = [Message]()
+        
+        init(duration: Int) {
+            
+            self.duration = duration
+        }
         
         var callCount: Int { messages.count }
         
@@ -185,7 +228,7 @@ final class OTPInputBinderTests: XCTestCase {
             every interval: TimeInterval,
             onRun completion: @escaping Completion
         ) {
-            completions.append(completion)
+            completions = .init(repeating: completion, count: duration/Int(interval))
             messages.append(.start)
         }
         
@@ -194,11 +237,8 @@ final class OTPInputBinderTests: XCTestCase {
             messages.append(.stop)
         }
         
-        func complete(
-            at index: Int = 0
-        ) {
-            let completion = completions.remove(at: index)
-            completion()
+        func tick() {
+            completions.remove(at: 0)()
         }
         
         typealias Completion = () -> Void
