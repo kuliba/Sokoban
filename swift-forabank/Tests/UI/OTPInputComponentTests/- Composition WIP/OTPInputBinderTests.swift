@@ -252,6 +252,6 @@ final class OTPInputBinderTests: XCTestCase {
         otpField: OTPFieldState = .init()
     ) -> State {
         
-        .init(countdown: countdown, otpField: otpField)
+        .input(.init(countdown: countdown, otpField: otpField))
     }
 }

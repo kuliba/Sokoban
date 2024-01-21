@@ -15,21 +15,35 @@ final class OTPInputReducerTests: XCTestCase {
     
     // MARK: - CountdownEvent
     
+    private func makeInput(
+        countdown: CountdownState,
+        otpField: OTPFieldState
+    ) -> OTPInputState.Input {
+        
+        .init(
+            countdown: .completed,
+            otpField: .init()
+        )
+    }
+    
     func test_countdownEvent_shouldDeliverCountdownReduceState() {
         
-        let state: State = .init(countdown: .completed, otpField: .init())
+        var input = makeInput(countdown: .completed, otpField: .init())
+        let state: State = .input(input)
         let sut = makeSUT(
             countdownReducerStub: (running(5), .init(.initiate))
         )
         
         assert(sut: sut, .countdown(.start), on: state) {
-            $0.countdown = .running(remaining: 5)
+            input.countdown = .running(remaining: 5)
+            $0 = .input(input)
         }
     }
     
     func test_countdownEvent_shouldDeliverCountdownReduceEffect() {
         
-        let state: State = .init(countdown: .completed, otpField: .init())
+        let input = makeInput(countdown: .completed, otpField: .init())
+        let state: State = .input(input)
         let sut = makeSUT(
             countdownReducerStub: (running(5), .init(.initiate))
         )
@@ -41,20 +55,23 @@ final class OTPInputReducerTests: XCTestCase {
     
     func test_otpFieldEvent_shouldDeliverOTPFieldReduceState() {
         
-        let state: State = .init(countdown: .completed, otpField: .init())
+        var input = makeInput(countdown: .completed, otpField: .init())
+        let state: State = .input(input)
         let sut = makeSUT(
             otpFieldReducerStub: (.init(text: "12345"), .submitOTP("abcde"))
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.otpField = .init(text: "12345")
+            input.otpField = .init(text: "12345")
+            $0 = .input(input)
         }
     }
     
     func test_otpFieldEvent_shouldDeliverOTPFieldReduceEffect() {
         
         let message = anyMessage()
-        let state: State = .init(countdown: .completed, otpField: .init())
+        let input = makeInput(countdown: .completed, otpField: .init())
+        let state: State = .input(input)
         let sut = makeSUT(
             otpFieldReducerStub: (.init(), .submitOTP(message))
         )
@@ -68,7 +85,7 @@ final class OTPInputReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-
+    
     private typealias CountdownReducerSpy = ReducerSpy<CountdownState, CountdownEvent, CountdownEffect>
     private typealias OTPFieldReducerSpy = ReducerSpy<OTPFieldState, OTPFieldEvent, OTPFieldEffect>
     
@@ -131,5 +148,5 @@ final class OTPInputReducerTests: XCTestCase {
             file: file, line: line
         )
     }
-
+    
 }
