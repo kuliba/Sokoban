@@ -24,12 +24,6 @@ public final class CountdownComposer {
         self.activate = activate
         self.timer = timer
         self.scheduler = scheduler
-        print("CountdownComposer init")
-    }
-    
-    deinit {
-        
-        print("CountdownComposer deinit")
     }
 }
 

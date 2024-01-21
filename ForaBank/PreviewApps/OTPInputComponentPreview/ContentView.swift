@@ -18,6 +18,22 @@ struct ContentView: View {
     
     var body: some View {
         
+        ZStack {
+            
+            Color.clear
+            
+            Button("Confirm with OTP", action: viewModel.confirmWithOTP)
+                .buttonStyle(.borderedProminent)
+        }
+        .overlay(alignment: .topTrailing, content: buttons)
+        .fullScreenCover(
+            item: $viewModel.fullScreenCover,
+            content: fullScreenCover
+        )
+    }
+    
+    private func confirmWithOTP() -> some View {
+        
         VStack(spacing: 64) {
             
             OTPInputFieldView(viewModel: .preview(
@@ -28,11 +44,6 @@ struct ContentView: View {
         }
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .overlay(alignment: .topTrailing, content: buttons)
-        .fullScreenCover(
-            item: $viewModel.fullScreenCover,
-            content: fullScreenCover
-        )
     }
     
     private func buttons() -> some View {
@@ -69,6 +80,9 @@ struct ContentView: View {
     ) -> some View {
         
         switch fullScreenCover {
+        case .confirmWithOTP:
+            confirmWithOTP()
+            
         case .countdownDemoSettings:
             NavigationView {
                 

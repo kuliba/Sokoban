@@ -16,6 +16,14 @@ final class ContentViewModel: ObservableObject {
 
 extension ContentViewModel {
     
+    func confirmWithOTP() {
+        
+        fullScreenCover = .confirmWithOTP
+    }
+}
+
+extension ContentViewModel {
+    
     func updateOTPSettings(
         _ otpFieldDemoSettings: OTPFieldDemoSettings
     ) {
@@ -35,6 +43,7 @@ extension ContentViewModel {
     
     enum FullScreenCover: Identifiable {
         
+        case confirmWithOTP
         case countdownDemoSettings
         case otpFieldDemoSettings
         
