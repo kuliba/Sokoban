@@ -221,8 +221,8 @@ final class OTPInputBinderTests: XCTestCase {
         effectHandlerSpy: OTPInputEffectHandlerSpy
     ) {
         
-        let timerSpy = TimerSpy(duration: duration)
         let initialState = initialState ?? makeState()
+        let timerSpy = TimerSpy(duration: duration)
         let reducerSpy = OTPInputReducerSpy(stub: reducerStub)
         let effectHandlerSpy = OTPInputEffectHandlerSpy()
         let viewModel = OTPInputViewModel(

@@ -40,7 +40,6 @@ public extension OTPInputViewModel {
         
         let countdownEffectHandler = CountdownEffectHandler(initiate: initiate)
         let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: submitOTP)
-        
         let otpInputEffectHandler = OTPInputEffectHandler(
             handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
             handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))

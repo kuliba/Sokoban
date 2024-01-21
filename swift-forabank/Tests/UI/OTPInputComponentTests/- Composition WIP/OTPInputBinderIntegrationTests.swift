@@ -37,7 +37,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         XCTAssertNoDiff(timerSpy.messages, [.stop])
     }
     
-    // MARK: - flow
+    // MARK: - flows
     
     func test_initiateFailureFlow() {
         
@@ -232,75 +232,5 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         trackForMemoryLeaks(submitOTPSpy, file: file, line: line)
         
         return (binder, sut, timerSpy, initiateSpy, submitOTPSpy)
-    }
-    
-    private func completed(
-        otpField: OTPFieldState = .init()
-    ) -> OTPInputState {
-        
-        .input(.init(
-            countdown: .completed,
-            otpField: otpField
-        ))
-    }
-    
-    private func running(
-        _ remaining: Int,
-        otpField: OTPFieldState = .init()
-    ) -> OTPInputState {
-        
-        .input(.init(
-            countdown: .running(remaining: remaining),
-            otpField: otpField
-        ))
-    }
-    
-    private func runningInflight(
-        _ remaining: Int,
-        _ text: String
-    ) -> OTPInputState {
-        
-        .input(.init(
-            countdown: .running(remaining: remaining),
-            otpField: .init(
-                text: text,
-                isInputComplete: true,
-                status: .inflight
-            )
-        ))
-    }
-    
-    private func text(
-        _ text: String
-    ) -> OTPFieldState {
-        
-        .init(text: text)
-    }
-    
-    private func completed(
-        _ text: String
-    ) -> OTPFieldState {
-        
-        .init(text: text, isInputComplete: true)
-    }
-    
-    private func inflight(
-        _ text: String
-    ) -> OTPFieldState {
-        
-        .init(text: text, isInputComplete: true, status: .inflight)
-    }
-    
-    private func validOTP(
-        _ text: String
-    ) -> OTPFieldState {
-        
-        .init(text: text, isInputComplete: true, status: .validOTP)
-    }
-    
-    private func prepare(
-    ) -> OTPInputEvent {
-        
-        .countdown(.prepare)
     }
 }
