@@ -81,6 +81,7 @@ private extension OTPInputReducer {
                 case let .serverError(message):
                     state = .failure(.serverError(message))
                 }
+                effect = countdownEffect.map(Effect.countdown)
                 
             default:
                 input.countdown = countdownState
@@ -121,6 +122,7 @@ private extension OTPInputReducer {
 
             effect = otpFieldEffect.map(Effect.otpField)
         }
+        
         return (state, effect)
     }
 }
