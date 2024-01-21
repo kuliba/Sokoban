@@ -42,6 +42,22 @@ final class OTPInputBinderTests: XCTestCase {
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
     
+    func test_init_shouldCallTimerWithStartOnInitialStateStarting() {
+        
+        let initialState = makeState(countdown: .starting)
+        let (_,_, timerSpy, _,_) = makeSUT(initialState: initialState)
+        
+        XCTAssertNoDiff(timerSpy.messages, [.start])
+    }
+    
+    func test_init_shouldNotCallReducerOnInitialStateStarting() {
+        
+        let initialState = makeState(countdown: .starting)
+        let (_,_,_, reducerSpy, _) = makeSUT(initialState: initialState)
+        
+        XCTAssertEqual(reducerSpy.callCount, 0)
+    }
+    
     func test_init_shouldCallTimerWithStopOnInitialFailure() {
         
         let initialState = makeState(countdown: .failure(.connectivityError))
@@ -58,7 +74,7 @@ final class OTPInputBinderTests: XCTestCase {
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
     
-    func test_init_shouldCallTimerWithStartOnInitialStateRunningAtDuration() {
+    func test_init_shouldNotCallTimerOnInitialStateRunningAtDuration() {
         
         let duration = 7
         let initialState = makeState(
@@ -68,11 +84,11 @@ final class OTPInputBinderTests: XCTestCase {
             duration: duration,
             initialState: initialState
         )
-        
-        XCTAssertNoDiff(timerSpy.messages, [.start])
+                
+        XCTAssertEqual(timerSpy.callCount, 0)
     }
     
-    func test_init_shouldCallReducerWithTickOnInitialStateRunningAtDuration() {
+    func test_init_shouldNotCallReducerOnInitialStateRunningAtDuration() {
         
         let duration = 7
         let initialState = makeState(
@@ -84,9 +100,7 @@ final class OTPInputBinderTests: XCTestCase {
             reducerStub: [(makeState(), nil)]
         )
         
-        timerSpy.tick()
-        
-        XCTAssertNoDiff(reducerSpy.messages.map(\.event), [.countdown(.tick)])
+        XCTAssertEqual(reducerSpy.callCount, 0)
     }
     
     func test_init_shouldNotCallTimerOnInitialStateRunningRemainingLessThanDuration() {
@@ -117,6 +131,34 @@ final class OTPInputBinderTests: XCTestCase {
         XCTAssertEqual(reducerSpy.callCount, 0)
     }
     
+    func test_init_shouldNotCallTimerOnInitialStateRunningRemainingZero() {
+        
+        let duration = 7
+        let initialState = makeState(
+            countdown: .running(remaining: 0)
+        )
+        let (_,_, timerSpy, _,_) = makeSUT(
+            duration: duration,
+            initialState: initialState
+        )
+        
+        XCTAssertNoDiff(timerSpy.messages, [])
+    }
+    
+    func test_init_shouldNotCallReducerOnInitialStateRunningRemainingZero() {
+        
+        let duration = 7
+        let initialState = makeState(
+            countdown: .running(remaining: 0)
+        )
+        let (_,_,_, reducerSpy, _) = makeSUT(
+            duration: duration,
+            initialState: initialState
+        )
+        
+        XCTAssertEqual(reducerSpy.callCount, 0)
+    }
+    
     // MARK: - start & tick flow
     
     func test_start_tick_flow() {
@@ -125,6 +167,7 @@ final class OTPInputBinderTests: XCTestCase {
         let (sut, viewModel, timerSpy, reducerSpy, effectHandlerSpy) = makeSUT(
             duration: duration,
             reducerStub: [
+                (makeState(countdown: .starting), nil),
                 (makeState(countdown: .running(remaining: 4)), nil),
                 (makeState(countdown: .running(remaining: 3)), nil),
                 (makeState(countdown: .running(remaining: 2)), nil),

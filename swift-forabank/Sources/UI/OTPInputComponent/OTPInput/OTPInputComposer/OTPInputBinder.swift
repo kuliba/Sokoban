@@ -28,8 +28,7 @@ public final class OTPInputBinder {
                 case .failure, .completed:
                     timer.stop()
                     
-                    #warning("suboptimal - extra detail (`duration`) is needed to define state - looks like it would be better to model this differently, like `started` and modify tick to use internal duration with is one tick smaller")
-                case .running(remaining: duration):
+                case .starting:
                     timer.start(
                         every: 1,
                         onRun: { [viewModel] in viewModel.event(.countdown(.tick)) }

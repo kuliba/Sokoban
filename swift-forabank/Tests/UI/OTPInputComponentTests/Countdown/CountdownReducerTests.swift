@@ -207,11 +207,11 @@ final class CountdownReducerTests: XCTestCase {
     
     // MARK: - start
     
-    func test_start_shouldChangeStateToRunningOnCompletedState() {
+    func test_start_shouldChangeStateToStartingOnCompletedState() {
         
         let sut = makeSUT(duration: 77)
         
-        assert(sut, completed(), .start, reducedTo: running(77))
+        assert(sut, completed(), .start, reducedTo: .starting)
     }
     
     func test_start_shouldNotDeliverEffectOnCompletedState() {
@@ -328,6 +328,20 @@ final class CountdownReducerTests: XCTestCase {
         let sut = makeSUT()
         
         assert(sut, running(0), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldChangeStateToRunningWithRemainingEqualToDurationMinusOneOnStartingState() {
+        
+        let sut = makeSUT(duration: 55)
+        
+        assert(sut, .starting, .tick, reducedTo: .running(remaining: 54))
+    }
+    
+    func test_tick_shouldNotDeliverEffectOnOnStartingState() {
+        
+        let sut = makeSUT()
+        
+        assert(sut, .starting, .tick, effect: nil)
     }
     
     // MARK: - Helpers
