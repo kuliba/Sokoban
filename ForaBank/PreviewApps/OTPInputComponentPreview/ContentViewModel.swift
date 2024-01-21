@@ -9,24 +9,24 @@ import Foundation
 
 final class ContentViewModel: ObservableObject {
     
-    @Published var otpSettings: OTPValidationSettings = .success
-    @Published var settings: CountdownDemoSettings = .shortSuccess
+    @Published var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
+    @Published var otpFieldDemoSettings: OTPFieldDemoSettings = .success
     @Published var fullScreenCover: FullScreenCover?
 }
 
 extension ContentViewModel {
     
     func updateOTPSettings(
-        _ otpSettings: OTPValidationSettings
+        _ otpFieldDemoSettings: OTPFieldDemoSettings
     ) {
-        self.otpSettings = otpSettings
+        self.otpFieldDemoSettings = otpFieldDemoSettings
         self.fullScreenCover = nil
     }
     
     func updateCountdownDemoSettings(
         _ settings: CountdownDemoSettings
     ) {
-        self.settings = settings
+        self.countdownDemoSettings = settings
         self.fullScreenCover = nil
     }
 }
@@ -35,8 +35,8 @@ extension ContentViewModel {
     
     enum FullScreenCover: Identifiable {
         
-        case otpSettings
-        case countdownSettings
+        case countdownDemoSettings
+        case otpFieldDemoSettings
         
         var id: Self { self }
     }

@@ -21,10 +21,10 @@ struct ContentView: View {
         VStack(spacing: 64) {
             
             OTPInputFieldView(viewModel: .preview(
-                viewModel.otpSettings.result
+                viewModel.otpFieldDemoSettings.result
             ))
             
-            CountdownView(settings: viewModel.settings)
+            CountdownView(settings: viewModel.countdownDemoSettings)
         }
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -48,7 +48,7 @@ struct ContentView: View {
     private func otpOptionsButton() -> some View {
         
         Button {
-            viewModel.fullScreenCover = .otpSettings
+            viewModel.fullScreenCover = .otpFieldDemoSettings
         } label: {
             Image(systemName: "checkmark.circle.badge.questionmark")
         }
@@ -57,7 +57,7 @@ struct ContentView: View {
     private func countdownOptionsButton() -> some View {
         
         Button {
-            viewModel.fullScreenCover = .countdownSettings
+            viewModel.fullScreenCover = .countdownDemoSettings
         } label: {
             Image(systemName: "timer")
         }
@@ -69,22 +69,22 @@ struct ContentView: View {
     ) -> some View {
         
         switch fullScreenCover {
-        case .countdownSettings:
+        case .countdownDemoSettings:
             NavigationView {
                 
                 CountdownDemoSettingsView(
-                    settings: viewModel.settings,
+                    settings: viewModel.countdownDemoSettings,
                     apply: viewModel.updateCountdownDemoSettings
                 )
                 .navigationTitle("Countdown Options")
                 .navigationBarTitleDisplayMode(.inline)
             }
             
-        case .otpSettings:
+        case .otpFieldDemoSettings:
             NavigationView {
                 
-                OTPValidationSettingsView(
-                    otpSettings: viewModel.otpSettings,
+                OTPFieldDemoSettingsView(
+                    otpSettings: viewModel.otpFieldDemoSettings,
                     apply: viewModel.updateOTPSettings
                 )
                 .navigationTitle("OTP Validation Options")

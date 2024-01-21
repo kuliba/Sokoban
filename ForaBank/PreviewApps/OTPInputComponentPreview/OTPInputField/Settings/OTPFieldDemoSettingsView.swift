@@ -1,5 +1,5 @@
 //
-//  OTPValidationSettingsView.swift
+//  OTPFieldDemoSettingsView.swift
 //  OTPInputComponentPreview
 //
 //  Created by Igor Malyarov on 19.01.2024.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-extension OTPValidationSettings: PickerDisplayable {}
+extension OTPFieldDemoSettings: PickerDisplayable {}
 
-struct OTPValidationSettingsView: View {
+struct OTPFieldDemoSettingsView: View {
     
-    @State var otpSettings: OTPValidationSettings
-    let apply: (OTPValidationSettings) -> Void
+    @State var otpSettings: OTPFieldDemoSettings
+    let apply: (OTPFieldDemoSettings) -> Void
     
     var body: some View {
         
@@ -40,11 +40,11 @@ struct OTPValidationSettingsView: View {
     }
 }
 
-struct OTPValidationOptionsView_Previews: PreviewProvider {
+struct OTPFieldDemoSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OTPValidationSettingsView(
+        OTPFieldDemoSettingsView(
             otpSettings: .success,
             apply: { _ in }
         )
