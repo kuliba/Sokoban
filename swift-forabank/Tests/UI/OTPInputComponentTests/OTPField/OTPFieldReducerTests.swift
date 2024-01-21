@@ -1,5 +1,5 @@
 //
-//  OTPInputReducerTests.swift
+//  OTPFieldReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.01.2024.
@@ -9,9 +9,9 @@ import OTPInputComponent
 import RxViewModel
 import XCTest
 
-extension OTPInputReducer: Reducer {}
+extension OTPFieldReducer: Reducer {}
 
-final class OTPInputReducerTests: XCTestCase {
+final class OTPFieldReducerTests: XCTestCase {
     
     // MARK: - confirmOTP
     
@@ -282,7 +282,7 @@ final class OTPInputReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = OTPInputReducer
+    private typealias SUT = OTPFieldReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -334,7 +334,7 @@ final class OTPInputReducerTests: XCTestCase {
     private func makeState(
         _ text: String,
         isInputComplete: Bool = false,
-        status: OTPInputState.Status? = nil
+        status: OTPFieldState.Status? = nil
     ) -> State {
         
         .init(text: text, isInputComplete: isInputComplete, status: status)

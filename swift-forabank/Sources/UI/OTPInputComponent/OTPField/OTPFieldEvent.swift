@@ -1,14 +1,14 @@
 //
-//  OTPInputEvent.swift
+//  OTPFieldEvent.swift
 //
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
-public enum OTPInputEvent: Equatable {
+public enum OTPFieldEvent: Equatable {
     
     case confirmOTP
     case edit(String)
-    case failure(OTPInputFailure)
+    case failure(OTPFieldFailure)
     case otpValidated
 }

@@ -1,5 +1,5 @@
 //
-//  OTPInputEffectHandler.swift
+//  OTPFieldEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 19.01.2024.
@@ -7,7 +7,7 @@
 
 import Tagged
 
-public final class OTPInputEffectHandler {
+public final class OTPFieldEffectHandler {
     
     private let submitOTP: SubmitOTP
     
@@ -17,7 +17,7 @@ public final class OTPInputEffectHandler {
     }
 }
 
-public extension OTPInputEffectHandler {
+public extension OTPFieldEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -33,10 +33,10 @@ public extension OTPInputEffectHandler {
     }
 }
 
-public extension OTPInputEffectHandler {
+public extension OTPFieldEffectHandler {
     
     typealias SubmitOTPPayload = OTP
-    typealias SubmitOTPResult = Result<Void, OTPInputFailure>
+    typealias SubmitOTPResult = Result<Void, OTPFieldFailure>
     typealias SubmitOTPCompletion = (SubmitOTPResult) -> Void
     typealias SubmitOTP = (SubmitOTPPayload, @escaping SubmitOTPCompletion) -> Void
     
@@ -44,24 +44,24 @@ public extension OTPInputEffectHandler {
     enum _OTP {}
 }
 
-public extension OTPInputEffectHandler {
+public extension OTPFieldEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias State = OTPInputState
-    typealias Event = OTPInputEvent
-    typealias Effect = OTPInputEffect
+    typealias State = OTPFieldState
+    typealias Event = OTPFieldEvent
+    typealias Effect = OTPFieldEffect
 }
 
-private extension OTPInputEffectHandler {
+private extension OTPFieldEffectHandler {
     
     func submitOTP(
-        _ result: OTPInputEffectHandler.SubmitOTPResult,
+        _ result: OTPFieldEffectHandler.SubmitOTPResult,
         _ dispatch: @escaping Dispatch
     ) {
         switch result {
-        case let .failure(otpInputFailure):
-            dispatch(.failure(otpInputFailure))
+        case let .failure(OTPFieldFailure):
+            dispatch(.failure(OTPFieldFailure))
             
         case .success(()):
             dispatch(.otpValidated)

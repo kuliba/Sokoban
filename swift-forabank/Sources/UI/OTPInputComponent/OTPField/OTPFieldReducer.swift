@@ -1,11 +1,11 @@
 //
-//  OTPInputReducer.swift
+//  OTPFieldReducer.swift
 //
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
-public final class OTPInputReducer {
+public final class OTPFieldReducer {
     
     private let length: Int
     
@@ -15,7 +15,7 @@ public final class OTPInputReducer {
     }
 }
 
-public extension OTPInputReducer {
+public extension OTPFieldReducer {
     
     func reduce(
         _ state: State,
@@ -32,10 +32,10 @@ public extension OTPInputReducer {
         case let .edit(text):
             state = edit(state, with: text)
             
-        case let .failure(otpInputFailure):
+        case let .failure(OTPFieldFailure):
             if state.isInputComplete {
                 state = state.updated(
-                    status: .failure(otpInputFailure)
+                    status: .failure(OTPFieldFailure)
                 )
             }
             
@@ -51,14 +51,14 @@ public extension OTPInputReducer {
     }
 }
 
-public extension OTPInputReducer {
+public extension OTPFieldReducer {
     
-    typealias State = OTPInputState
-    typealias Event = OTPInputEvent
-    typealias Effect = OTPInputEffect
+    typealias State = OTPFieldState
+    typealias Event = OTPFieldEvent
+    typealias Effect = OTPFieldEffect
 }
 
-private extension OTPInputReducer {
+private extension OTPFieldReducer {
     
     func confirm(
         _ state: State

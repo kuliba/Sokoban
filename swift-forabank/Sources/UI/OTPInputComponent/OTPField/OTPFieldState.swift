@@ -1,11 +1,11 @@
 //
-//  OTPInputState.swift
+//  OTPFieldState.swift
 //
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
-public struct OTPInputState: Equatable {
+public struct OTPFieldState: Equatable {
     
     public var text: String
     public var isInputComplete: Bool
@@ -22,11 +22,11 @@ public struct OTPInputState: Equatable {
     }
 }
 
-public extension OTPInputState {
+public extension OTPFieldState {
     
     enum Status: Equatable {
         
-        case failure(OTPInputFailure)
+        case failure(OTPFieldFailure)
         case inflight
         case validOTP
     }

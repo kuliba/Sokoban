@@ -10,9 +10,9 @@ import SwiftUI
 
 struct OTPInputFieldView: View {
     
-    @ObservedObject private var viewModel: OTPInputFieldViewModel
+    @ObservedObject private var viewModel: OTPFieldViewModel
     
-    init(viewModel: OTPInputFieldViewModel) {
+    init(viewModel: OTPFieldViewModel) {
         
         self.viewModel = viewModel
     }
@@ -70,7 +70,7 @@ struct OTPInputFieldView: View {
     }
 }
 
-private extension OTPInputState {
+private extension OTPFieldState {
     
     var digitModels: [DigitModel] {
         
@@ -99,18 +99,18 @@ struct OTPInputFieldView_Previews: PreviewProvider {
     }
     
     private static func otpInputView(
-        _ result: OTPInputEffectHandler.SubmitOTPResult
+        _ result: OTPFieldEffectHandler.SubmitOTPResult
     ) -> some View {
         
         OTPInputFieldView(viewModel: .preview(result))
     }
 }
 
-extension OTPInputFieldViewModel {
+extension OTPFieldViewModel {
     
     static func preview(
-        _ result: OTPInputEffectHandler.SubmitOTPResult
-    ) -> OTPInputFieldViewModel {
+        _ result: OTPFieldEffectHandler.SubmitOTPResult
+    ) -> OTPFieldViewModel {
         
         .default(submitOTP: { _, completion in
             
@@ -122,15 +122,15 @@ extension OTPInputFieldViewModel {
     }
 }
 
-extension OTPInputFieldViewModel {
+extension OTPFieldViewModel {
     
     static func `default`(
-        submitOTP: @escaping OTPInputEffectHandler.SubmitOTP,
+        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> OTPInputFieldViewModel {
+    ) -> OTPFieldViewModel {
         
-        let reducer = OTPInputReducer()
-        let effectHandler = OTPInputEffectHandler(submitOTP: submitOTP)
+        let reducer = OTPFieldReducer()
+        let effectHandler = OTPFieldEffectHandler(submitOTP: submitOTP)
         
         return .init(
             initialState: .init(),

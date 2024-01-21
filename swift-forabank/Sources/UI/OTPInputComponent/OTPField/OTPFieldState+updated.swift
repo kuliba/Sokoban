@@ -1,11 +1,11 @@
 //
-//  OTPInputState+updated.swift
-//  
+//  OTPFieldState+updated.swift
+//
 //
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
-public extension OTPInputState {
+public extension OTPFieldState {
     
     func updated(
         text: String? = nil,

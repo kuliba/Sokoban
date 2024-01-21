@@ -1,5 +1,5 @@
 //
-//  OTPInputEffectHandlerTests.swift
+//  OTPFieldEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.01.2024.
@@ -8,7 +8,7 @@
 import OTPInputComponent
 import XCTest
 
-final class OTPInputEffectHandlerTests: XCTestCase {
+final class OTPFieldEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -62,7 +62,7 @@ final class OTPInputEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = OTPInputEffectHandler
+    private typealias SUT = OTPFieldEffectHandler
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect

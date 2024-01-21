@@ -1,30 +1,29 @@
 //
-//  OTPInputIntegrationTests.swift
+//  OTPFieldIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-import OTPInputComponent
-typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
+typealias OTPFieldViewModel = RxViewModel<OTPFieldState, OTPFieldEvent, OTPFieldEffect>
 
 import OTPInputComponent
 import RxViewModel
 import XCTest
 
-final class OTPInputIntegrationTests: XCTestCase {
+final class OTPFieldIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = OTPInputViewModel
-    private typealias Reducer = OTPInputReducer
-    private typealias EffectHandler = OTPInputEffectHandler
+    private typealias SUT = OTPFieldViewModel
+    private typealias Reducer = OTPFieldReducer
+    private typealias EffectHandler = OTPFieldEffectHandler
 
     private typealias SubmitOTPSpy = Spy<EffectHandler.SubmitOTPPayload, EffectHandler.SubmitOTPResult>
 
     private func makeSUT(
-        initialState: OTPInputState = .init(
-            text: "", 
+        initialState: OTPFieldState = .init(
+            text: "",
             isInputComplete: false,
             status: nil
         ),
