@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
+import OTPInputComponent
 import SwiftUI
 
 struct ContentView: View {
@@ -112,6 +113,14 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView(viewModel: .init())
+        ContentView(viewModel: .init(
+            makeOTPInputViewModel: { _,_ in
+                
+                .default(
+                    initiate: { _ in },
+                    submitOTP: { _,_ in }
+                )
+            }
+        ))
     }
 }
