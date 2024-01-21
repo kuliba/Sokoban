@@ -234,7 +234,8 @@ final class OTPInputBinderTests: XCTestCase {
         let sut = SUT(
             timer: timerSpy,
             duration: duration,
-            viewModel: viewModel
+            otpInputViewModel: viewModel,
+            scheduler: .immediate
         )
         
         trackForMemoryLeaks(timerSpy, file: file, line: line)

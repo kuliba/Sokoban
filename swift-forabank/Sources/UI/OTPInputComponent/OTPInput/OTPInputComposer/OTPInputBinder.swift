@@ -17,7 +17,7 @@ public final class OTPInputBinder {
     public init(
         timer: TimerProtocol = RealTimer(),
         duration: Int,
-        viewModel: OTPInputViewModel,
+        otpInputViewModel viewModel: OTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         viewModel.$state

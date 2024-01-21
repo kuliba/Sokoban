@@ -21,7 +21,7 @@ final class OTPInputEffectHandlerTests: XCTestCase {
         
         expect(sut, with: .countdown(.initiate), toDeliver: .countdown(.prepare), on: {
             
-            countdownSpy.complete(with: .countdown(.prepare))
+            countdownSpy.complete(with: .prepare)
         })
     }
     
@@ -33,7 +33,7 @@ final class OTPInputEffectHandlerTests: XCTestCase {
         
         expect(sut, with: .otpField(.submitOTP(anyMessage())), toDeliver: .otpField(.confirmOTP), on: {
             
-            otpFieldSpy.complete(with: .otpField(.confirmOTP))
+            otpFieldSpy.complete(with: .confirmOTP)
         })
     }
     
@@ -43,8 +43,8 @@ final class OTPInputEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias CountdownEffectHandlerSpy = EffectHandlerSpy<Event, CountdownEffect>
-    private typealias OTPFieldEffectHandlerSpy = EffectHandlerSpy<Event, OTPFieldEffect>
+    private typealias CountdownEffectHandlerSpy = EffectHandlerSpy<CountdownEvent, CountdownEffect>
+    private typealias OTPFieldEffectHandlerSpy = EffectHandlerSpy<OTPFieldEvent, OTPFieldEffect>
     
     private func makeSUT(
         file: StaticString = #file,
