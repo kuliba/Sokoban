@@ -44,7 +44,7 @@ final class OTPInputBinderTests: XCTestCase {
     
     func test_init_shouldCallTimerWithStartOnInitialStateStarting() {
         
-        let initialState = makeState(countdown: .starting)
+        let initialState = makeState(countdown: .starting(duration: 22))
         let (_,_, timerSpy, _,_) = makeSUT(initialState: initialState)
         
         XCTAssertNoDiff(timerSpy.messages, [.start])
@@ -52,7 +52,7 @@ final class OTPInputBinderTests: XCTestCase {
     
     func test_init_shouldNotCallReducerOnInitialStateStarting() {
         
-        let initialState = makeState(countdown: .starting)
+        let initialState = makeState(countdown: .starting(duration: 22))
         let (_,_,_, reducerSpy, _) = makeSUT(initialState: initialState)
         
         XCTAssertEqual(reducerSpy.callCount, 0)
@@ -167,7 +167,7 @@ final class OTPInputBinderTests: XCTestCase {
         let (sut, viewModel, timerSpy, reducerSpy, effectHandlerSpy) = makeSUT(
             duration: duration,
             reducerStub: [
-                (makeState(countdown: .starting), nil),
+                (makeState(countdown: .starting(duration: 4)), nil),
                 (makeState(countdown: .running(remaining: 4)), nil),
                 (makeState(countdown: .running(remaining: 3)), nil),
                 (makeState(countdown: .running(remaining: 2)), nil),

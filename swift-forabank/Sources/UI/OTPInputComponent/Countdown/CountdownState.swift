@@ -10,5 +10,5 @@ public enum CountdownState: Equatable {
     case completed
     case failure(CountdownFailure)
     case running(remaining: Int)
-    case starting
+    case starting(duration: Int)
 }

@@ -38,7 +38,7 @@ public extension CountdownReducer {
             
         case .start:
             if case .completed = state {
-                state = .starting
+                state = .starting(duration: duration)
             }
             
         case .tick:

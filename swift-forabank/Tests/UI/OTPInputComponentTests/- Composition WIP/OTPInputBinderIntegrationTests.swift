@@ -41,7 +41,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     
     func test_initiateFailureFlow() {
         
-        let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(initialOTPInputState: completed())
+        let (binder, sut, _, initiateSpy, _) = makeSUT(initialOTPInputState: completed())
         let stateSpy = ValueSpy(sut.$state)
         
         sut.event(prepare())
@@ -58,7 +58,11 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     
     func test_submitOTPFailureFlow() {
         
-        let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(initialOTPInputState: completed())
+        let duration = 33
+        let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(
+            duration: duration,
+            initialOTPInputState: completed()
+        )
         let stateSpy = ValueSpy(sut.$state)
         
         sut.event(prepare())
@@ -74,12 +78,12 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(58, otpField: text("12345")),
-            running(58, otpField: completed("654321")),
-            runningInflight(58, "654321"),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(31, otpField: text("12345")),
+            running(31, otpField: completed("654321")),
+            runningInflight(31, "654321"),
             .failure(.connectivityError)
         ])
         
@@ -88,7 +92,11 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     
     func test_successFlow() {
         
-        let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(initialOTPInputState: completed())
+        let duration = 33
+        let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(
+            duration: duration,
+            initialOTPInputState: completed()
+        )
         let stateSpy = ValueSpy(sut.$state)
         
         XCTAssertNoDiff(stateSpy.values, [completed()])
@@ -106,70 +114,70 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
         ])
         
         sut.event(.otpField(.edit("12345")))
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
-            running(57, otpField: text("12345")),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
+            running(30, otpField: text("12345")),
         ])
         
         sut.event(.otpField(.confirmOTP))
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
-            running(57, otpField: text("12345")),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
+            running(30, otpField: text("12345")),
         ])
         
         sut.event(.otpField(.edit("654321")))
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
-            running(57, otpField: text("12345")),
-            running(57, otpField: completed("654321")),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
+            running(30, otpField: text("12345")),
+            running(30, otpField: completed("654321")),
         ])
         
         sut.event(.otpField(.confirmOTP))
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
-            running(57, otpField: text("12345")),
-            running(57, otpField: completed("654321")),
-            runningInflight(57, "654321"),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
+            running(30, otpField: text("12345")),
+            running(30, otpField: completed("654321")),
+            runningInflight(30, "654321"),
         ])
         
         submitOTPSpy.complete(with: .success(()))
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
             completed(),
-            .starting,
-            running(59),
-            running(58),
-            running(57),
-            running(57, otpField: text("12345")),
-            running(57, otpField: completed("654321")),
-            runningInflight(57, "654321"),
+            .starting(duration: duration),
+            running(32),
+            running(31),
+            running(30),
+            running(30, otpField: text("12345")),
+            running(30, otpField: completed("654321")),
+            runningInflight(30, "654321"),
             .validOTP
         ])
         
@@ -187,7 +195,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     private func makeSUT(
         duration: Int = 55,
         length: Int = 6,
-        initialOTPInputState: OTPInputState = .starting,
+        initialOTPInputState: OTPInputState? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -197,12 +205,15 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         initiateSpy: InitiateSpy,
         submitOTPSpy: SubmitOTPSpy
     ) {
+        let initialOTPInputState = initialOTPInputState ?? .starting(duration: duration)
+        
         let timerSpy = TimerSpy(duration: duration)
         let initiateSpy = InitiateSpy()
         let submitOTPSpy = SubmitOTPSpy()
         let sut: SUT = .default(
             initialOTPInputState: initialOTPInputState,
             timer: timerSpy,
+            duration: duration,
             initiate: initiateSpy.process(completion:),
             submitOTP: submitOTPSpy.process(_:completion:),
             scheduler: .immediate
