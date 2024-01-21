@@ -22,7 +22,7 @@ public final class OTPInputBinder {
     ) {
         viewModel.$state
             .map(\.countdown)
-            .sink { state in
+            .sink { [viewModel] state in
                 
                 switch state {
                 case .failure, .completed:
@@ -31,7 +31,7 @@ public final class OTPInputBinder {
                 case .starting:
                     timer.start(
                         every: 1,
-                        onRun: { [viewModel] in viewModel.event(.countdown(.tick)) }
+                        onRun: { viewModel.event(.countdown(.tick)) }
                     )
                     
                 case .running:
