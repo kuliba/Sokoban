@@ -29,9 +29,9 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     
     func test_init_shouldCallStopTimerOnComplete() {
         
-        let initialOTPInputState = completed()
+        let initialState = completed()
         let (_,_, timerSpy, _,_) = makeSUT(
-            initialOTPInputState: initialOTPInputState
+            initialState: initialState
         )
         
         XCTAssertNoDiff(timerSpy.messages, [.stop])
@@ -41,7 +41,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     
     func test_initiateFailureFlow() {
         
-        let (binder, sut, _, initiateSpy, _) = makeSUT(initialOTPInputState: completed())
+        let (binder, sut, _, initiateSpy, _) = makeSUT(initialState: completed())
         let stateSpy = ValueSpy(sut.$state)
         
         sut.event(prepare())
@@ -61,7 +61,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         let duration = 33
         let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(
             duration: duration,
-            initialOTPInputState: completed()
+            initialState: completed()
         )
         let stateSpy = ValueSpy(sut.$state)
         
@@ -95,7 +95,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         let duration = 33
         let (binder, sut, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(
             duration: duration,
-            initialOTPInputState: completed()
+            initialState: completed()
         )
         let stateSpy = ValueSpy(sut.$state)
         
@@ -195,7 +195,7 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
     private func makeSUT(
         duration: Int = 55,
         length: Int = 6,
-        initialOTPInputState: OTPInputState? = nil,
+        initialState: OTPInputState? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -205,13 +205,13 @@ final class OTPInputBinderIntegrationTests: XCTestCase {
         initiateSpy: InitiateSpy,
         submitOTPSpy: SubmitOTPSpy
     ) {
-        let initialOTPInputState = initialOTPInputState ?? .starting(duration: duration)
+        let initialState = initialState ?? .starting(duration: duration)
         
         let timerSpy = TimerSpy(duration: duration)
         let initiateSpy = InitiateSpy()
         let submitOTPSpy = SubmitOTPSpy()
         let sut: SUT = .default(
-            initialOTPInputState: initialOTPInputState,
+            initialState: initialState,
             timer: timerSpy,
             duration: duration,
             initiate: initiateSpy.process(completion:),

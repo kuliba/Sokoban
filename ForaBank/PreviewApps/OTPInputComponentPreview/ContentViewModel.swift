@@ -10,17 +10,17 @@ import OTPInputComponent
 
 final class ContentViewModel: ObservableObject {
     
-    typealias MakeOTPInputViewModel = (CountdownDemoSettings, OTPFieldDemoSettings) -> OTPInputViewModel
+    typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, OTPFieldDemoSettings) -> TimedOTPInputViewModel
 
     @Published var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
     @Published var otpFieldDemoSettings: OTPFieldDemoSettings = .success
     @Published var fullScreenCover: FullScreenCover?
     
-    private let makeOTPInputViewModel: MakeOTPInputViewModel
+    private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     
-    init(makeOTPInputViewModel: @escaping MakeOTPInputViewModel) {
+    init(makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel) {
 
-        self.makeOTPInputViewModel = makeOTPInputViewModel
+        self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
     }
 }
 

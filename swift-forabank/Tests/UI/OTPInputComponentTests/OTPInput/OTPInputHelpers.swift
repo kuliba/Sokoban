@@ -35,6 +35,17 @@ func running(
     ))
 }
 
+func starting(
+    _ duration: Int,
+    otpField: OTPFieldState = .init()
+) -> OTPInputState {
+    
+    .input(.init(
+        countdown: .starting(duration: duration),
+        otpField: otpField
+    ))
+}
+
 func runningInflight(
     _ remaining: Int,
     _ text: String

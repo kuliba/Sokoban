@@ -16,18 +16,11 @@ struct OTPInputComponentPreviewApp: App {
         WindowGroup {
             
             ContentView(viewModel: .init(
-                makeOTPInputViewModel: {
+                makeTimedOTPInputViewModel: {
                     
-                    let otpInputFactory = OTPInputFactory(
+                    .init(
                         countdownDemoSettings: $0,
                         otpFieldDemoSettings: $1
-                    )
-                    
-                    return otpInputFactory.make(
-                        initialOTPInputState: .input(.init(
-                            countdown: .completed,
-                            otpField: .init()
-                        ))
                     )
                 }
             ))
@@ -36,13 +29,13 @@ struct OTPInputComponentPreviewApp: App {
     }
 }
 
-private extension OTPInputFactory {
+extension TimedOTPInputViewModel {
     
     convenience init(
         countdownDemoSettings: CountdownDemoSettings,
         otpFieldDemoSettings: OTPFieldDemoSettings
     ) {
-        self.init(
+        let otpInputViewModel = OTPInputViewModel.default(
             initiate: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -67,5 +60,7 @@ private extension OTPInputFactory {
                 }
             }
         )
+        
+        self.init(viewModel: otpInputViewModel, timer: RealTimer())
     }
 }

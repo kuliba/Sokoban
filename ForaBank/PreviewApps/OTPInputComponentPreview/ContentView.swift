@@ -114,11 +114,11 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         
         ContentView(viewModel: .init(
-            makeOTPInputViewModel: { _,_ in
+            makeTimedOTPInputViewModel: {
                 
-                .default(
-                    initiate: { _ in },
-                    submitOTP: { _,_ in }
+                .init(
+                    countdownDemoSettings: $0,
+                    otpFieldDemoSettings: $1
                 )
             }
         ))

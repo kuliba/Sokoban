@@ -8,8 +8,6 @@
 import Combine
 import RxViewModel
 
-public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
-
 public final class OTPInputBinder {
     
     private var cancellables = Set<AnyCancellable>()
