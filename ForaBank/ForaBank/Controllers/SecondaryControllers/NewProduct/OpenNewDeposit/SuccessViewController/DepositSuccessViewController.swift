@@ -9,6 +9,10 @@ import UIKit
 
 class DepositSuccessViewController: UIViewController {
 
+    @IBOutlet weak var depositLabel: UILabel!
+    @IBOutlet weak var optionsButtons: UIStackView!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var statusImage: UIImageView!
     let model = Model.shared
     var id: Int?
     var printFormType: String?
@@ -76,6 +80,22 @@ class DepositSuccessViewController: UIViewController {
                 let integerCardId = cardId.intValue
                 self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
             }
+        }
+        
+        descriptionLabel.text = ""
+        
+        if confurmVCModel?.status == .antifraudCanceled {
+            termField.isHidden = true
+            closeField.isHidden = true
+            incomeField.isHidden = true
+            cardFromField.isHidden = true
+            
+            optionsButtons.isHidden = true
+            depositLabel.text = "Операция временно приостановлена в целях безопасности"
+            depositLabel.textColor = .systemRed
+            descriptionLabel.text = "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
+            
+            statusImage.image = UIImage(named: "waiting")
         }
     }
 
