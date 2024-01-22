@@ -80,7 +80,7 @@ extension ProductView {
                 replacements: .replacements)
             
             let period = Self.period(product: productData, style: style)
-            let name = Self.name(product: productData, style: style, creditProductName: .navigation)
+            let name = Self.name(product: productData, style: style, creditProductName: .navigationTitle)
             let owner = Self.owner(from: productData)
             let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
             let cardInfo: CardInfo = .init(
@@ -186,7 +186,7 @@ extension ProductView {
         
         func update(with productData: ProductData, model: Model) {
             
-            cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .card)
+            cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
             cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
@@ -276,10 +276,10 @@ extension ProductView {
                 case .profile:
                     switch creditProductName {
                         
-                    case .card:
+                    case .cardTitle:
                         return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                         
-                    case .navigation:
+                    case .navigationTitle:
                         return cardProduct.isCreditCard ? "\(cardProduct.displayName)" : cardProduct.displayName
                     }
                 }
@@ -588,8 +588,8 @@ extension ProductView.ViewModel {
         
         enum NameOfCreditProduct {
             
-            case navigation
-            case card
+            case navigationTitle
+            case cardTitle
         }
     }
     
