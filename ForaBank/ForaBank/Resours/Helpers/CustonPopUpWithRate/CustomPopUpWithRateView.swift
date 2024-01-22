@@ -239,6 +239,8 @@ class CustomPopUpWithRateView: UIViewController {
                             viewModel.paymentOperationDetailId = data.paymentOperationDetailId
                             
                             viewModel.cardFromRealm = self.cardFrom
+                        } else if data.documentStatus == .suspend {
+                            viewModel.status = .antifraudCanceled
                         }
                         
                         vc.confurmVCModel = viewModel
