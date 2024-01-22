@@ -21,43 +21,55 @@ struct ContentView: View {
         
         ZStack {
             
-            Color.clear
+            confirmWithOTPButton()
+                .fullScreenCover(
+                    item: .init(
+                        get: { viewModel.fullScreenCover },
+                        set: { if $0 == nil { viewModel.resetFullScreenCover() }}
+                    ),
+                    content: fullScreenCover
+                )
             
-            Button("Confirm with OTP", action: viewModel.confirmWithOTP)
-                .buttonStyle(.borderedProminent)
+            spinner()
         }
-        .overlay(alignment: .topTrailing, content: buttons)
-        .fullScreenCover(
-            item: .init(
-                get: { viewModel.fullScreenCover },
-                set: { if $0 == nil { viewModel.resetFullScreenCover() }}
-            ),
-            content: fullScreenCover
-        )
     }
     
-    private func confirmWithOTP() -> some View {
+    private func confirmWithOTPButton() -> some View {
         
-        VStack(spacing: 64) {
+        Button("Confirm with OTP", action: viewModel.confirmWithOTP)
+            .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .topTrailing, content: buttons)
+    }
+    
+    private func spinner() -> some View {
+        
+        ZStack {
             
-            OTPInputFieldView(viewModel: .preview(
-                viewModel.otpFieldDemoSettings.result
-            ))
+            Color.black.opacity(0.2)
             
-            CountdownView(settings: viewModel.countdownDemoSettings)
+            ProgressView()
         }
-        .padding(.top, 64)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .opacity(viewModel.isShowingSpinner ? 1 : 0)
     }
     
     private func buttons() -> some View {
         
         HStack {
             
+            confirmWithOTPOptionsButton()
             countdownOptionsButton()
             otpOptionsButton()
         }
         .padding(.horizontal)
+    }
+    
+    private func confirmWithOTPOptionsButton() -> some View {
+        
+        Button(action: viewModel.showConfirmWithOTPSettings) {
+            
+            Image(systemName: "checkmark.circle.badge.questionmark")
+        }
     }
     
     private func otpOptionsButton() -> some View {
@@ -85,28 +97,56 @@ struct ContentView: View {
         case .confirmWithOTP:
             confirmWithOTP()
             
-        case .countdownDemoSettings:
-            NavigationView {
+        case let .settings(settings):
+            switch settings {
+            case .confirmWithOTPSettings:
+                NavigationView {
+                    
+                    OTPFieldDemoSettingsView(
+                        otpSettings: viewModel.confirmWithOTPSettings,
+                        apply: viewModel.updateConfirmWithOTPSettings
+                    )
+                    .navigationTitle("Confirm OTP Options")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
                 
-                CountdownDemoSettingsView(
-                    settings: viewModel.countdownDemoSettings,
-                    apply: viewModel.updateCountdownDemoSettings
-                )
-                .navigationTitle("Countdown Options")
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            
-        case .otpFieldDemoSettings:
-            NavigationView {
+            case .countdownDemoSettings:
+                NavigationView {
+                    
+                    CountdownDemoSettingsView(
+                        settings: viewModel.countdownDemoSettings,
+                        apply: viewModel.updateCountdownDemoSettings
+                    )
+                    .navigationTitle("Countdown Options")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
                 
-                OTPFieldDemoSettingsView(
-                    otpSettings: viewModel.otpFieldDemoSettings,
-                    apply: viewModel.updateOTPSettings
-                )
-                .navigationTitle("OTP Validation Options")
-                .navigationBarTitleDisplayMode(.inline)
+            case .otpFieldDemoSettings:
+                NavigationView {
+                    
+                    OTPFieldDemoSettingsView(
+                        otpSettings: viewModel.otpFieldDemoSettings,
+                        apply: viewModel.updateOTPSettings
+                    )
+                    .navigationTitle("OTP Validation Options")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
             }
         }
+    }
+    
+    private func confirmWithOTP() -> some View {
+        
+        VStack(spacing: 64) {
+            
+            OTPInputFieldView(viewModel: .preview(
+                viewModel.otpFieldDemoSettings.result
+            ))
+            
+            CountdownView(settings: viewModel.countdownDemoSettings)
+        }
+        .padding(.top, 64)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }
 
