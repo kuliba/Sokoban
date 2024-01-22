@@ -36,9 +36,13 @@ struct AutofocusTextField: UIViewRepresentable {
             uiView.text = text
         }
         
-        if isFirstResponder {
+        if isFirstResponder && !uiView.isFirstResponder {
             
             uiView.becomeFirstResponder()
+            
+        } else if !isFirstResponder && uiView.isFirstResponder {
+        
+            uiView.resignFirstResponder()
         }
     }
     

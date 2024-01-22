@@ -50,11 +50,7 @@ struct OTPInputFieldView: View {
         AutofocusTextField(
             placeholder: "",
             text: .init(
-                get: {
-                    let text = viewModel.state.text
-                    print(text, "viewModel.state.text")
-                    return text
-                },
+                get: { viewModel.state.text },
                 set: viewModel.edit
             ),
             isFirstResponder: true,

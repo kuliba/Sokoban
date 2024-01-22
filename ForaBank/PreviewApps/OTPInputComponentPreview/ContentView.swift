@@ -21,16 +21,79 @@ struct ContentView: View {
         
         ZStack {
             
-            confirmWithOTPButton()
-                .fullScreenCover(
-                    item: .init(
-                        get: { viewModel.fullScreenCover },
-                        set: { if $0 == nil { viewModel.resetFullScreenCover() }}
-                    ),
-                    content: fullScreenCover
-                )
+            list()
             
             spinner()
+                .ignoresSafeArea()
+        }
+    }
+    
+    private func list() -> some View {
+        
+        List {
+            
+            confirmWithOTPButton()
+                .listSectionSeparator(.hidden)
+            
+            settings()
+        }
+        .padding(.top, 64)
+        .listStyle(.plain)
+        .alert(
+            item: .init(
+                get: { viewModel.alert },
+                set: { if $0 == nil { viewModel.resetModal() }}
+            ),
+            content: alert
+        )
+        .fullScreenCover(
+            item: .init(
+                get: { viewModel.fullScreenCover },
+                set: { if $0 == nil { viewModel.resetModal() }}
+            ),
+            content: fullScreenCover
+        )
+        .overlay(alignment: .center, content: informer)
+    }
+    
+    private func settings() -> some View {
+        
+        Group {
+            
+            PickerSection(
+                title: "Confirm with OTP Result",
+                selection: .init(
+                    get: { viewModel.confirmWithOTPSettings },
+                    set: viewModel.updateConfirmWithOTPSettings(_:)
+                )
+            )
+            
+            if viewModel.confirmWithOTPSettings.isSuccess {
+                
+                PickerSection(
+                    title: "Countdown Duration (sec)",
+                    selection: .init(
+                        get: { viewModel.countdownDemoSettings.duration },
+                        set: viewModel.updateCountdownDemoDuration(_:)
+                    )
+                )
+                
+                PickerSection(
+                    title: "Initiate Countdown Result",
+                    selection: .init(
+                        get: { viewModel.countdownDemoSettings.initiateResult },
+                        set: viewModel.updateCountdownDemoInitiateResult(_:)
+                    )
+                )
+                
+                PickerSection(
+                    title: "OTP Validation Result",
+                    selection: .init(
+                        get: { viewModel.otpFieldDemoSettings },
+                        set: viewModel.updateOTPFieldDemoSettings
+                    )
+                )
+            }
         }
     }
     
@@ -39,98 +102,25 @@ struct ContentView: View {
         Button("Confirm with OTP", action: viewModel.confirmWithOTP)
             .buttonStyle(.borderedProminent)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .topTrailing, content: buttons)
     }
     
-    private func spinner() -> some View {
+    private func alert(
+        alert: ContentViewModel.Modal.Alert
+    ) -> Alert {
         
-        ZStack {
-            
-            Color.black.opacity(0.2)
-            
-            ProgressView()
-        }
-        .opacity(viewModel.isShowingSpinner ? 1 : 0)
-    }
-    
-    private func buttons() -> some View {
-        
-        HStack {
-            
-            confirmWithOTPOptionsButton()
-            countdownOptionsButton()
-            otpOptionsButton()
-        }
-        .padding(.horizontal)
-    }
-    
-    private func confirmWithOTPOptionsButton() -> some View {
-        
-        Button(action: viewModel.showConfirmWithOTPSettings) {
-            
-            Image(systemName: "checkmark.circle.badge.questionmark")
-        }
-    }
-    
-    private func otpOptionsButton() -> some View {
-        
-        Button(action: viewModel.showOTPFieldDemoSettings) {
-            
-            Image(systemName: "checkmark.circle.badge.questionmark")
-        }
-    }
-    
-    private func countdownOptionsButton() -> some View {
-        
-        Button(action: viewModel.showCountdownOptions) {
-            
-            Image(systemName: "timer")
-        }
+        .init(title: Text("Error"), message: Text(alert.message))
     }
     
     @ViewBuilder
     private func fullScreenCover(
-        _ fullScreenCover: ContentViewModel.FullScreenCover
+        _ fullScreenCover: ContentViewModel.Modal.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
         case .confirmWithOTP:
-            confirmWithOTP()
-            
-        case let .settings(settings):
-            switch settings {
-            case .confirmWithOTPSettings:
-                NavigationView {
-                    
-                    OTPFieldDemoSettingsView(
-                        otpSettings: viewModel.confirmWithOTPSettings,
-                        apply: viewModel.updateConfirmWithOTPSettings
-                    )
-                    .navigationTitle("Confirm OTP Options")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
+            NavigationView {
                 
-            case .countdownDemoSettings:
-                NavigationView {
-                    
-                    CountdownDemoSettingsView(
-                        settings: viewModel.countdownDemoSettings,
-                        apply: viewModel.updateCountdownDemoSettings
-                    )
-                    .navigationTitle("Countdown Options")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
-                
-            case .otpFieldDemoSettings:
-                NavigationView {
-                    
-                    OTPFieldDemoSettingsView(
-                        otpSettings: viewModel.otpFieldDemoSettings,
-                        apply: viewModel.updateOTPSettings
-                    )
-                    .navigationTitle("OTP Validation Options")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
+                confirmWithOTP()
             }
         }
     }
@@ -147,6 +137,98 @@ struct ContentView: View {
         }
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: viewModel.resetModal) {
+                    
+                    Image(systemName: "chevron.left")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func informer() -> some View {
+        
+        viewModel.informer.map {
+            
+            Text($0.message)
+                .foregroundStyle(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding()
+        }
+    }
+    
+    private func spinner() -> some View {
+        
+        ZStack {
+            
+            Color.green.opacity(0.4)
+            
+            ProgressView()
+        }
+        .opacity(viewModel.isShowingSpinner ? 1 : 0)
+    }
+}
+
+extension DemoSettingsResult: PickerDisplayable {}
+extension CountdownDemoSettings.Duration: PickerDisplayable {}
+extension CountdownDemoSettings.InitiateResult: PickerDisplayable {}
+
+private extension DemoSettingsResult {
+    
+    var isSuccess: Bool {
+        
+        if case .success = self {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+private extension ContentViewModel {
+    
+    var alert: Modal.Alert? {
+        
+        guard case let .alert(alert) = modal else {
+            
+            return nil
+        }
+        
+        return alert
+    }
+    
+    var fullScreenCover: Modal.FullScreenCover? {
+        
+        guard case let .fullScreenCover(fullScreenCover) = modal else {
+            
+            return nil
+        }
+        
+        return fullScreenCover
+    }
+    
+    var informer: Modal.Informer? {
+        
+        guard case let .informer(informer) = modal else {
+            
+            return nil
+        }
+        
+        return informer
+    }
+    
+    var isShowingSpinner: Bool {
+        
+        if case .spinner = modal {
+            return true
+        } else {
+            return false
+        }
     }
 }
 

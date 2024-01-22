@@ -33,7 +33,7 @@ extension TimedOTPInputViewModel {
     
     convenience init(
         countdownDemoSettings: CountdownDemoSettings,
-        otpFieldDemoSettings: OTPFieldDemoSettings
+        otpFieldDemoSettings: DemoSettingsResult
     ) {
         let otpInputViewModel = OTPInputViewModel.default(
             initiate: { completion in

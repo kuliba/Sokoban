@@ -10,17 +10,14 @@ import OTPInputComponent
 
 final class ContentViewModel: ObservableObject {
     
-    typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, OTPFieldDemoSettings) -> TimedOTPInputViewModel
-   typealias ConfirmWithOTPSettings = OTPFieldDemoSettings
+    typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, DemoSettingsResult) -> TimedOTPInputViewModel
+   typealias ConfirmWithOTPSettings = DemoSettingsResult
 
-    @Published private(set) var confirmWithOTPSettings: ConfirmWithOTPSettings = .connectivity
+    @Published private(set) var confirmWithOTPSettings: ConfirmWithOTPSettings = .success
     @Published private(set) var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
-    @Published private(set) var otpFieldDemoSettings: OTPFieldDemoSettings = .success
+    @Published private(set) var otpFieldDemoSettings: DemoSettingsResult = .success
     
-    @Published private(set) var fullScreenCover: FullScreenCover?
-    @Published private(set) var isShowingSpinner = false
-    @Published private(set) var alert: String?
-    @Published private(set) var informer: String?
+    @Published private(set) var modal: Modal?
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     
@@ -34,52 +31,37 @@ extension ContentViewModel {
     
     func confirmWithOTP() {
         
-        isShowingSpinner = true
+        modal = .spinner
         
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + 2
+            deadline: .now() + 1
         ) { [weak self] in
                 
                 guard let self else { return }
                 
-                isShowingSpinner = false
+                resetModal()
                 
                 switch confirmWithOTPSettings {
                 case .connectivity:
-                    informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
+                    modal = .informer(.init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже."))
                     
                     DispatchQueue.main.asyncAfter(
                         deadline: .now() + 1,
-                        execute: { [weak self] in self?.informer = nil }
+                        execute: { [weak self] in self?.resetModal() }
                     )
                     
                 case .server:
-                    alert = "Server Error Failure"
+                    modal = .alert(.init(message: "Server Error Failure"))
                     
                 case .success:
-                    fullScreenCover = .confirmWithOTP
+                    modal = .fullScreenCover(.confirmWithOTP)
                 }
             }
     }
     
-    func showConfirmWithOTPSettings() {
+    func resetModal() {
         
-        fullScreenCover = .settings(.confirmWithOTPSettings)
-    }
-    
-    func showCountdownOptions() {
-        
-        fullScreenCover = .settings(.countdownDemoSettings)
-    }
-    
-    func showOTPFieldDemoSettings() {
-        
-        fullScreenCover = .settings(.otpFieldDemoSettings)
-    }
-    
-    func resetFullScreenCover() {
-        
-        fullScreenCover = nil
+        modal = nil
     }
 }
 
@@ -89,49 +71,64 @@ extension ContentViewModel {
         _ settings: ConfirmWithOTPSettings
     ) {
         self.confirmWithOTPSettings = settings
-        self.fullScreenCover = nil
+        self.resetModal()
     }
     
-    func updateOTPSettings(
-        _ otpFieldDemoSettings: OTPFieldDemoSettings
+    func updateOTPFieldDemoSettings(
+        _ otpFieldDemoSettings: DemoSettingsResult
     ) {
         self.otpFieldDemoSettings = otpFieldDemoSettings
-        self.fullScreenCover = nil
+        self.resetModal()
     }
     
     func updateCountdownDemoSettings(
         _ settings: CountdownDemoSettings
     ) {
         self.countdownDemoSettings = settings
-        self.fullScreenCover = nil
+        self.resetModal()
+    }
+    
+    func updateCountdownDemoDuration(
+        _ duration: CountdownDemoSettings.Duration
+    ) {
+        self.countdownDemoSettings.duration = duration
+    }
+    
+    func updateCountdownDemoInitiateResult(
+        _ initiateResult: CountdownDemoSettings.InitiateResult
+    ) {
+        self.countdownDemoSettings.initiateResult = initiateResult
     }
 }
 
 extension ContentViewModel {
     
-    enum FullScreenCover: Identifiable {
-
-        case confirmWithOTP
-        case settings(Settings)
-
-        var id: Int {
+    enum Modal {
+        
+        case alert(Alert)
+        case fullScreenCover(FullScreenCover)
+        case informer(Informer)
+        case spinner
+        
+        struct Alert: Identifiable {
             
-            switch self {
-            case .confirmWithOTP:
-                return "confirmWithOTP".hashValue
-                
-            case let .settings(settings):
-                return settings.hashValue
-            }
+            let message: String
+            
+            var id: String { message }
         }
         
-        enum Settings: Identifiable {
+        enum FullScreenCover: Identifiable {
             
-            case confirmWithOTPSettings
-            case countdownDemoSettings
-            case otpFieldDemoSettings
-
-            var id: Int { hashValue }
+            case confirmWithOTP
+            
+            var id: Self { self }
+        }
+        
+        struct Informer: Identifiable {
+            
+            let message: String
+            
+            var id: String { message }
         }
     }
 }
