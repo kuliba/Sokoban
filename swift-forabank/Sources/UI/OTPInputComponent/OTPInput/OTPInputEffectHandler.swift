@@ -27,18 +27,27 @@ public extension OTPInputEffectHandler {
     ) {
         switch effect {
         case let .countdown(countdownEffect):
-            handleCountdownEffect(countdownEffect, dispatch)
+            handleCountdownEffect(countdownEffect) {
+                
+                dispatch(.countdown($0))
+            }
             
         case let .otpField(otpFieldEffect):
-            handleOTPFieldEffect(otpFieldEffect, dispatch)
+            handleOTPFieldEffect(otpFieldEffect) {
+                
+                dispatch(.otpField($0))
+            }
         }
     }
 }
 
 public extension OTPInputEffectHandler {
     
-    typealias HandleCountdownEffect = (CountdownEffect, @escaping Dispatch) -> Void
-    typealias HandleOTPFieldEffect = (OTPFieldEffect, @escaping Dispatch) -> Void
+    typealias HandleCountdownEffect = (CountdownEffect, @escaping CountdownDispatch) -> Void
+    typealias HandleOTPFieldEffect = (OTPFieldEffect, @escaping OTPFieldDispatch) -> Void
+    
+    typealias OTPFieldDispatch = (OTPFieldEvent) -> Void
+    typealias CountdownDispatch = (CountdownEvent) -> Void
 }
 
 public extension OTPInputEffectHandler {

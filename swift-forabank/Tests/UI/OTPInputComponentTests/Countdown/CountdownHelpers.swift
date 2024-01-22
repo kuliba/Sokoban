@@ -13,3 +13,16 @@ func running(
     
     .running(remaining: remaining)
 }
+
+func connectivityError(
+) -> CountdownState {
+    
+    .failure(.connectivityError)
+}
+
+func serverError(
+    _ message: String = anyMessage()
+) -> CountdownState {
+    
+    .failure(.serverError(message))
+}
