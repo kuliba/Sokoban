@@ -53,7 +53,7 @@ public extension CountdownComposer {
                 case .failure, .completed:
                     self?.timer.stop()
                     
-                case .running(remaining: duration):
+                case .starting:
                     self?.timer.start(
                         every: 1,
                         onRun: { [weak viewModel] in viewModel?.event(.tick) }

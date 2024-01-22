@@ -2,7 +2,7 @@
 //  OTPInputReducerTests.swift
 //
 //
-//  Created by Igor Malyarov on 18.01.2024.
+//  Created by Igor Malyarov on 21.01.2024.
 //
 
 import OTPInputComponent
@@ -13,271 +13,53 @@ extension OTPInputReducer: Reducer {}
 
 final class OTPInputReducerTests: XCTestCase {
     
-    // MARK: - confirmOTP
+    // MARK: - CountdownEvent
     
-    func test_confirmOTP_shouldNotChangeStateOnIncompleteInput() {
+    func test_countdownEvent_shouldDeliverCountdownReduceState() {
         
-        let state = incomplete()
+        let state: State = .init(countdown: .completed, otpField: .init())
+        let sut = makeSUT(
+            countdownReducerStub: (running(5), .init(.initiate))
+        )
         
-        assert(.confirmOTP, on: state)
-    }
-    
-    func test_confirmOTP_shouldNotDeliverEffectOnIncompleteInput() {
-        
-        let state = incomplete()
-        
-        assert(.confirmOTP, on: state, effect: nil)
-    }
-    
-    func test_confirmOTP_shouldSetInflightStatusOnCompleteInput() {
-        
-        let state = complete()
-        
-        assert(.confirmOTP, on: state) {
-            $0.status = .inflight
+        assert(sut: sut, .countdown(.start), on: state) {
+            $0.countdown = .running(remaining: 5)
         }
     }
     
-    func test_confirmOTP_shouldDeliverEffectOnCompleteInput() {
+    func test_countdownEvent_shouldDeliverCountdownReduceEffect() {
         
-        let state = complete("876543")
+        let state: State = .init(countdown: .completed, otpField: .init())
+        let sut = makeSUT(
+            countdownReducerStub: (running(5), .init(.initiate))
+        )
         
-        assert(.confirmOTP, on: state, effect: .submitOTP("876543"))
+        assert(sut: sut, .countdown(.start), on: state, effect: .countdown(.initiate))
     }
     
-    // MARK: - edit
+    // MARK: - OTPFieldEvent
     
-    func test_edit_shouldNotChangeEmptyStateOnNonDigitInput() {
+    func test_otpFieldEvent_shouldDeliverOTPFieldReduceState() {
         
-        let nonDigit = "asB$%^"
-        let state = emptyState()
+        let state: State = .init(countdown: .completed, otpField: .init())
+        let sut = makeSUT(
+            otpFieldReducerStub: (.init(text: "12345"), .submitOTP("abcde"))
+        )
         
-        assert(.edit(nonDigit), on: state)
-    }
-    
-    func test_edit_shouldNotDeliverEffectOnNonDigitInputInEmptyState() {
-        
-        let nonDigit = "asB$%^"
-        let state = emptyState()
-        
-        assert(.edit(nonDigit), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldChangeStateToEmptyOnNonDigitInput() {
-        
-        let nonDigit = "asB$%^"
-        let state = makeState("123")
-        
-        assert(.edit(nonDigit), on: state) {
-            $0.text = ""
+        assert(sut: sut, .otpField(.confirmOTP), on: state) {
+            $0.otpField = .init(text: "12345")
         }
     }
     
-    func test_edit_shouldNotDeliverEffectOnNonDigitInput() {
-        
-        let nonDigit = "asB$%^"
-        let state = makeState("123")
-        
-        assert(.edit(nonDigit), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldChangeEmptyStateOnDigitInput() {
-        
-        let digits = "8766"
-        let state = emptyState()
-        
-        assert(.edit(digits), on: state) {
-            $0.text = digits
-        }
-    }
-    
-    func test_edit_shouldNotDeliverEffectOnDigitInputInEmptyState() {
-        
-        let digits = "8766"
-        let state = emptyState()
-        
-        assert(.edit(digits), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldChangeStateOnDigitInput() {
-        
-        let digits = "8766"
-        let state = makeState("123")
-        
-        assert(.edit(digits), on: state) {
-            $0.text = digits
-        }
-    }
-    
-    func test_edit_shouldNotDeliverEffectOnDigitInputLessThanLimit() {
-        
-        let digits = "8766"
-        let state = makeState("123")
-        
-        assert(.edit(digits), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldLimitInput() {
-        
-        let digits = "987654321"
-        let state = makeState("123")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state) {
-            $0.text = "98765"
-            $0.isInputComplete = true
-        }
-    }
-    
-    func test_edit_shouldChangeToCompleteStateOnReachingLimit() {
-        
-        let digits = "12345"
-        let state = makeState("1234")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state) {
-            $0.text = digits
-            $0.isInputComplete = true
-        }
-    }
-    
-    func test_edit_shouldNotDeliverEffectOnReachingLimit() {
-        
-        let digits = "12345"
-        let state = makeState("1234")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldChangeStateOnLimit() {
-        
-        let digits = "98765"
-        let state = makeState("12345")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state) {
-            $0.text = digits
-            $0.isInputComplete = true
-        }
-    }
-    
-    func test_edit_shouldNotDeliverEffectOnLimit() {
-        
-        let digits = "98765"
-        let state = makeState("12345")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state, effect: nil)
-    }
-    
-    func test_edit_shouldNotDeliverEffectAfterLimit() {
-        
-        let digits = "987654"
-        let state = makeState("12345")
-        let sut = makeSUT(length: 5)
-        
-        assert(sut: sut, .edit(digits), on: state, effect: nil)
-    }
-    
-    // MARK: - failure connectivityError
-    
-    func test_failure_connectivityError_shouldNotChangeIncompleteState() {
-        
-        let state = incomplete()
-        
-        assert(connectivity(), on: state)
-    }
-    
-    func test_failure_connectivityError_shouldNotDeliverEffectOnIncompleteState() {
-        
-        let state = incomplete()
-        
-        assert(connectivity(), on: state, effect: nil)
-    }
-    
-    func test_failure_connectivityError_shouldSetStatusToConnectivityErrorFailureOnCompleteState() {
-        
-        let state = complete()
-        
-        assert(connectivity(), on: state) {
-            $0.status = .failure(.connectivityError)
-        }
-    }
-    
-    func test_failure_connectivityError_shouldNotDeliverEffectOnConnectivityErrorFailureInCompleteState() {
-        
-        let state = complete()
-        
-        assert(connectivity(), on: state, effect: nil)
-    }
-    
-    // MARK: - failure serverError
-    
-    func test_failure_serverError_shouldNotChangeIncompleteState() {
+    func test_otpFieldEvent_shouldDeliverOTPFieldReduceEffect() {
         
         let message = anyMessage()
-        let state = incomplete()
+        let state: State = .init(countdown: .completed, otpField: .init())
+        let sut = makeSUT(
+            otpFieldReducerStub: (.init(), .submitOTP(message))
+        )
         
-        assert(serverError(message), on: state)
-    }
-    
-    func test_failure_serverError_shouldNotDeliverEffectOnIncompleteState() {
-        
-        let message = anyMessage()
-        let state = incomplete()
-        
-        assert(serverError(message), on: state, effect: nil)
-    }
-    
-    func test_failure_serverError_shouldSetStatusToServerErrorFailureOnCompleteState() {
-        
-        let message = anyMessage()
-        let state = complete()
-        
-        assert(serverError(message), on: state) {
-            $0.status = .failure(.serverError(message))
-        }
-    }
-    
-    func test_failure_serverError_shouldNotDeliverEffectOnServerErrorFailureInCompleteState() {
-        
-        let message = anyMessage()
-        let state = complete()
-        
-        assert(serverError(message), on: state, effect: nil)
-    }
-    
-    // MARK: - otpValidated
-    
-    func test_otpValidated_shouldNotChangeIncompleteState() {
-        
-        let state = incomplete()
-        
-        assert(.otpValidated, on: state)
-    }
-    
-    func test_otpValidated_shouldNotDeliverEffectOnIncompleteState() {
-        
-        let state = incomplete()
-        
-        assert(.otpValidated, on: state, effect: nil)
-    }
-    
-    func test_otpValidated_shouldSetStatusToValidatedCompleteState() {
-        
-        let state = complete()
-        
-        assert(.otpValidated, on: state) {
-            $0.status = .validOTP
-        }
-    }
-    
-    func test_otpValidated_shouldNotDeliverEffectOnCompleteState() {
-        
-        let state = complete()
-        
-        assert(.otpValidated, on: state, effect: nil)
+        assert(sut: sut, .otpField(.confirmOTP), on: state, effect: submitOTP(message))
     }
     
     // MARK: - Helpers
@@ -286,58 +68,31 @@ final class OTPInputReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
+
+    private typealias CountdownReducerSpy = ReducerSpy<CountdownState, CountdownEvent, CountdownEffect>
+    private typealias OTPFieldReducerSpy = ReducerSpy<OTPFieldState, OTPFieldEvent, OTPFieldEffect>
+    
+    private typealias CountdownReducerStub = (CountdownState, CountdownEffect?)
+    private typealias OTPFieldReducerStub = (OTPFieldState, OTPFieldEffect?)
     
     private func makeSUT(
-        length: Int = 6,
+        countdownReducerStub: CountdownReducerStub...,
+        otpFieldReducerStub: OTPFieldReducerStub...,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(length: length)
+        let countdownReducer = CountdownReducerSpy(stub: countdownReducerStub)
+        let otpFieldReducer = OTPFieldReducerSpy(stub: otpFieldReducerStub)
+        
+        let sut = SUT(
+            countdownReduce: countdownReducer.reduce(_:_:),
+            otpFieldReduce: otpFieldReducer.reduce(_:_:)
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
-    }
-    
-    private func connectivity() -> Event {
-        
-        .failure(.connectivityError)
-    }
-    
-    private func serverError(
-        _ message: String = anyMessage()
-    ) -> Event {
-        
-        .failure(.serverError(message))
-    }
-    
-    private func emptyState() -> State {
-        
-        makeState("", isInputComplete: false)
-    }
-    
-    private func complete(
-        _ text: String = "76543"
-    ) -> State {
-        
-        makeState(text, isInputComplete: true)
-    }
-    
-    private func incomplete(
-        _ text: String = "76543"
-    ) -> State {
-        
-        makeState(text, isInputComplete: false)
-    }
-    
-    private func makeState(
-        _ text: String,
-        isInputComplete: Bool = false,
-        status: OTPInputState.Status? = nil
-    ) -> State {
-        
-        .init(text: text, isInputComplete: isInputComplete, status: status)
     }
     
     private func assert(
@@ -376,4 +131,5 @@ final class OTPInputReducerTests: XCTestCase {
             file: file, line: line
         )
     }
+
 }

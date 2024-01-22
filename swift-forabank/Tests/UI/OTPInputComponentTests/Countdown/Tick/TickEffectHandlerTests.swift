@@ -65,7 +65,10 @@ private extension TickEffectHandler {
     }
 }
 
+import RxViewModel
 import XCTest
+
+extension TickEffectHandler: EffectHandler {}
 
 final class TickEffectHandlerTests: XCTestCase {
     
@@ -140,32 +143,5 @@ final class TickEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
-    }
-    
-    private func expect(
-        _ sut: SUT,
-        with effect: Effect,
-        toDeliver expectedEvent: Event,
-        on action: @escaping () -> Void,
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) { receivedEvent in
-            
-            XCTAssertNoDiff(
-                receivedEvent,
-                expectedEvent,
-                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
-                file: file, line: line
-            )
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: timeout)
     }
 }

@@ -27,13 +27,19 @@ public extension CountdownReducer {
         
         switch event {
         case let .failure(countdownFailure):
-            state = update(state, with: countdownFailure)
+            if case .completed = state {
+                state = .failure(countdownFailure)
+            }
             
         case .prepare:
-            effect = prepare(state)
+            if case .completed = state {
+                effect = .initiate
+            }
             
         case .start:
-            state = start(state)
+            if case .completed = state {
+                state = .starting
+            }
             
         case .tick:
             state = tick(state)
@@ -52,43 +58,6 @@ public extension CountdownReducer {
 
 private extension CountdownReducer {
     
-    func prepare(
-        _ state: State
-    ) -> Effect? {
-        
-        var effect: Effect?
-        
-        switch state {
-        case .completed:
-            effect = .initiate
-            
-        case .failure, .running:
-            break
-        }
-        
-        return effect
-    }
-    
-    func start(
-        _ state: State
-    ) -> State {
-        
-        var state = state
-        
-        switch state {
-        case .completed:
-            state = .running(remaining: duration)
-            
-        case .failure:
-            fatalError()
-            
-        case .running:
-            break
-        }
-        
-        return state
-    }
-    
     func tick(
         _ state: State
     ) -> State {
@@ -96,10 +65,7 @@ private extension CountdownReducer {
         var state = state
         
         switch state {
-        case .completed:
-            break
-            
-        case .failure:
+        case .completed, .failure:
             break
             
         case let .running(remaining: remaining):
@@ -108,27 +74,9 @@ private extension CountdownReducer {
             } else {
                 state = .completed
             }
-        }
-        
-        return state
-    }
-    
-    func update(
-        _ state: State,
-        with countdownFailure: CountdownFailure
-    ) -> State {
-        
-        var state = state
-        
-        switch state {
-        case .completed:
-            state = .failure(countdownFailure)
             
-        case .failure(_):
-            fatalError()
-            
-        case .running:
-            break
+        case .starting:
+            state = .running(remaining: duration - 1)
         }
         
         return state

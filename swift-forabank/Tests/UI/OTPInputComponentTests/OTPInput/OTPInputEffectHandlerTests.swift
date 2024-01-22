@@ -2,141 +2,71 @@
 //  OTPInputEffectHandlerTests.swift
 //
 //
-//  Created by Igor Malyarov on 18.01.2024.
+//  Created by Igor Malyarov on 21.01.2024.
 //
 
 import OTPInputComponent
+import RxViewModel
 import XCTest
+
+extension OTPInputEffectHandler: EffectHandler {}
 
 final class OTPInputEffectHandlerTests: XCTestCase {
     
-    func test_init_shouldNotCallCollaborators() {
-        
-        let (_, spy) = makeSUT()
-        
-        XCTAssertEqual(spy.callCount, 0)
-    }
+    // MARK: - CountdownEffect
     
-    // MARK: - submitOTP
-    
-    func test_submitOTP_shouldPassPayload() {
+    func test_countdownEffect_shouldDeliverHandleCountdownEffectResult() {
         
-        let otp = UUID().uuidString
-        let (sut, spy) = makeSUT()
+        let (sut, countdownSpy, _) = makeSUT()
         
-        sut.handleEffect(.submitOTP(otp)) { _ in }
-        
-        XCTAssertNoDiff(spy.payloads, [.init(otp)])
-    }
-    
-    func test_submitOTP_shouldDeliverSuccessOnSuccess() {
-        
-        let (sut, spy) = makeSUT()
-        
-        expect(sut, with: submitOTP(), toDeliver: .otpValidated, on: {
+        expect(sut, with: .countdown(.initiate), toDeliver: .countdown(.prepare), on: {
             
-            spy.complete(with: .success(()))
+            countdownSpy.complete(with: .countdown(.prepare))
         })
     }
     
-    func test_submitOTP_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
-        
-        let (sut, spy) = makeSUT()
-        
-        expect(sut, with: submitOTP(), toDeliver: connectivityError(), on: {
-            
-            spy.complete(with: .failure(.connectivityError))
-        })
-    }
+    // MARK: - OTPFieldEffect
     
-    func test_submitOTP_shouldDeliverServerErrorOnServerErrorFailure() {
+    func test_otpFieldEffect_shouldDeliverHandleOTPFieldEffectResult() {
         
-        let message = anyMessage()
-        let (sut, spy) = makeSUT()
+        let (sut, _, otpFieldSpy) = makeSUT()
         
-        expect(sut, with: submitOTP(), toDeliver: serverError(message), on: {
+        expect(sut, with: .otpField(.submitOTP(anyMessage())), toDeliver: .otpField(.confirmOTP), on: {
             
-            spy.complete(with: .failure(.serverError(message)))
+            otpFieldSpy.complete(with: .otpField(.confirmOTP))
         })
     }
     
     // MARK: - Helpers
     
     private typealias SUT = OTPInputEffectHandler
-    private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias SubmitOTPSpy = Spy<SUT.SubmitOTPPayload, SUT.SubmitOTPResult>
+    private typealias CountdownEffectHandlerSpy = EffectHandlerSpy<Event, CountdownEffect>
+    private typealias OTPFieldEffectHandlerSpy = EffectHandlerSpy<Event, OTPFieldEffect>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: SubmitOTPSpy
+        countdownSpy: CountdownEffectHandlerSpy,
+        otpFieldSpy: OTPFieldEffectHandlerSpy
     ) {
-        let spy = SubmitOTPSpy()
-        let sut = SUT(submitOTP: spy.process(_:completion:))
+        
+        let countdownEffectHandlerSpy = CountdownEffectHandlerSpy()
+        let otpFieldEffectHandlerSpy = OTPFieldEffectHandlerSpy()
+        
+        let sut = SUT(
+            handleCountdownEffect: countdownEffectHandlerSpy.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandlerSpy.handleEffect(_:_:)
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(countdownEffectHandlerSpy, file: file, line: line)
+        trackForMemoryLeaks(otpFieldEffectHandlerSpy, file: file, line: line)
         
-        return (sut, spy)
-    }
-    
-    private func anyOTP(
-        _ otp: String = UUID().uuidString
-    ) -> String {
-        
-        return otp
-    }
-    
-    private func submitOTP(
-        _ otp: String? = nil
-    ) -> Effect {
-        
-        .submitOTP(anyOTP())
-    }
-    
-    private func connectivityError(
-    ) -> Event {
-        
-        .failure(.connectivityError)
-    }
-    
-    private func serverError(
-        _ message: String = anyMessage()
-    ) -> Event {
-        
-        .failure(.serverError(message))
-    }
-    
-    private func expect(
-        _ sut: SUT,
-        with effect: Effect,
-        toDeliver expectedEvent: Event,
-        on action: @escaping () -> Void,
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) { receivedEvent in
-            
-            XCTAssertNoDiff(
-                receivedEvent,
-                expectedEvent,
-                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
-                file: file, line: line
-            )
-            
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: timeout)
+        return (sut, countdownEffectHandlerSpy, otpFieldEffectHandlerSpy)
     }
 }

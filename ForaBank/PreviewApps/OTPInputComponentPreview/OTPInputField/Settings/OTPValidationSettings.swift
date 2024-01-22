@@ -16,7 +16,7 @@ enum OTPValidationSettings: String, CaseIterable, Identifiable {
 
 extension OTPValidationSettings {
     
-    var result: OTPInputEffectHandler.SubmitOTPResult {
+    var result: OTPFieldEffectHandler.SubmitOTPResult {
         
         switch self {
         case .success:
