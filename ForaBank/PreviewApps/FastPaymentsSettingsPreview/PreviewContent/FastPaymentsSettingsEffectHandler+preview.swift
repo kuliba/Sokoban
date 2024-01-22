@@ -9,11 +9,18 @@ import FastPaymentsSettings
 
 extension FastPaymentsSettingsEffectHandler {
     
-    static let preview: FastPaymentsSettingsEffectHandler = .init(
-        createContract: { _, completion in completion(.success(.active)) },
-        getSettings: { $0(.active()) },
-        prepareSetBankDefault: { $0(.success(())) },
-        updateContract: { _, completion in completion(.success(.active)) },
-        updateProduct: { _, completion in completion(.success(())) }
-    )
+    static var preview: FastPaymentsSettingsEffectHandler {
+        
+        let contractEffectHandler = ContractEffectHandler(
+            createContract: { _, completion in completion(.success(.active)) },
+            updateContract: { _, completion in completion(.success(.active)) }
+        )
+
+        return .init(
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
+            getSettings: { $0(.active()) },
+            prepareSetBankDefault: { $0(.success(())) },
+            updateProduct: { _, completion in completion(.success(())) }
+        )
+    }
 }

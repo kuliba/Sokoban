@@ -14,64 +14,54 @@ final class CountdownReducerTests: XCTestCase {
     
     func test_failure_shouldChangeStateToFailureOnCompletedState_connectivity() {
         
-        let sut = makeSUT()
-        
-        assert(sut, completed(), connectivity(), reducedTo: connectivity())
+        assert(completed(), connectivity(), reducedTo: connectivity())
     }
     
     func test_failure_shouldNotDeliverEffectOnCompletedState_connectivity() {
         
-        let sut = makeSUT()
-        
-        assert(sut, completed(), connectivity(), effect: nil)
+        assert(completed(), connectivity(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_connectivity() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), reducedTo: state)
+        assert(state, connectivity(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_connectivity() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), effect: nil)
+        assert(state, connectivity(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_one_connectivity() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), reducedTo: state)
+        assert(state, connectivity(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_one_connectivity() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), effect: nil)
+        assert(state, connectivity(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_zero_connectivity() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), reducedTo: state)
+        assert(state, connectivity(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_zero_connectivity() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, connectivity(), effect: nil)
+        assert(state, connectivity(), effect: nil)
     }
     
     // MARK: - failure: serverError
@@ -79,64 +69,55 @@ final class CountdownReducerTests: XCTestCase {
     func test_failure_shouldChangeStateToFailureOnCompletedState_serverError() {
         
         let message = anyMessage()
-        let sut = makeSUT()
         
-        assert(sut, completed(), serverError(message), reducedTo: serverError(message))
+        assert(completed(), serverError(message), reducedTo: serverError(message))
     }
     
     func test_failure_shouldNotDeliverEffectOnCompletedState_serverError() {
         
-        let sut = makeSUT()
-        
-        assert(sut, completed(), serverError(), effect: nil)
+        assert(completed(), serverError(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_serverError() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), reducedTo: state)
+        assert(state, serverError(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_serverError() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), effect: nil)
+        assert(state, serverError(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_one_serverError() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), reducedTo: state)
+        assert(state, serverError(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_one_serverError() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), effect: nil)
+        assert(state, serverError(), effect: nil)
     }
     
     func test_failure_shouldNotChangeRunningState_zero_serverError() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), reducedTo: state)
+        assert(state, serverError(), reducedTo: state)
     }
     
     func test_failure_shouldNotDeliverEffectOnRunningState_zero_serverError() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, serverError(), effect: nil)
+        assert(state, serverError(), effect: nil)
     }
     
     // MARK: - prepare
@@ -144,130 +125,116 @@ final class CountdownReducerTests: XCTestCase {
     func test_prepare_shouldNotChangeCompletedState() {
         
         let state = completed()
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, reducedTo: state)
+        assert(state, .prepare, reducedTo: state)
     }
     
     func test_prepare_shouldDeliverInitiateEffectOnCompletedState() {
         
         let state = completed()
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, effect: .initiate)
+        assert(state, .prepare, effect: .initiate)
     }
     
     func test_prepare_shouldNotChangeRunningState() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, reducedTo: state)
+        assert(state, .prepare, reducedTo: state)
     }
     
     func test_prepare_shouldNotDeliverEffectOnRunningState() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, effect: nil)
+        assert(state, .prepare, effect: nil)
     }
     
     func test_prepare_shouldNotChangeRunningState_one() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, reducedTo: state)
+        assert(state, .prepare, reducedTo: state)
     }
     
     func test_prepare_shouldNotDeliverEffectOnRunningState_one() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, effect: nil)
+        assert(state, .prepare, effect: nil)
     }
     
     func test_prepare_shouldNotChangeRunningState_zero() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, reducedTo: state)
+        assert(state, .prepare, reducedTo: state)
     }
     
     func test_prepare_shouldNotDeliverEffectOnRunningState_zero() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, .prepare, effect: nil)
+        assert(state, .prepare, effect: nil)
     }
     
     // MARK: - start
     
-    func test_start_shouldChangeStateToRunningOnCompletedState() {
+    func test_start_shouldChangeStateToStartingOnCompletedState() {
         
-        let sut = makeSUT(duration: 77)
+        let duration = 77
+        let sut = makeSUT(duration: duration)
         
-        assert(sut, completed(), .start, reducedTo: running(77))
+        assert(sut: sut, completed(), .start, reducedTo: .starting(duration: duration))
     }
     
     func test_start_shouldNotDeliverEffectOnCompletedState() {
         
         let state = completed()
-        let sut = makeSUT()
         
-        assert(sut, state, .start, effect: nil)
+        assert(state, .start, effect: nil)
     }
     
     func test_start_shouldNotChangeRunningState() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, reducedTo: state)
+        assert(state, .start, reducedTo: state)
     }
     
     func test_start_shouldNotDeliverEffectOnRunningState() {
         
         let state = running(5)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, effect: nil)
+        assert(state, .start, effect: nil)
     }
     
     func test_start_shouldNotChangeRunningState_one() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, reducedTo: state)
+        assert(state, .start, reducedTo: state)
     }
     
     func test_start_shouldNotDeliverEffectOnRunningState_one() {
         
         let state = running(1)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, effect: nil)
+        assert(state, .start, effect: nil)
     }
     
     func test_start_shouldNotChangeRunningState_zero() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, reducedTo: state)
+        assert(state, .start, reducedTo: state)
     }
     
     func test_start_shouldNotDeliverEffectOnRunningState_zero() {
         
         let state = running(0)
-        let sut = makeSUT()
         
-        assert(sut, state, .start, effect: nil)
+        assert(state, .start, effect: nil)
     }
     
     // MARK: - tick
@@ -275,59 +242,58 @@ final class CountdownReducerTests: XCTestCase {
     func test_tick_shouldNotChangeCompletedState() {
         
         let state = completed()
-        let sut = makeSUT()
         
-        assert(sut, state, .tick, reducedTo: state)
+        assert(state, .tick, reducedTo: state)
     }
     
     func test_tick_shouldNotDeliverEffectOnCompletedState() {
         
         let state = completed()
-        let sut = makeSUT()
         
-        assert(sut, state, .tick, effect: nil)
+        assert(state, .tick, effect: nil)
     }
     
     func test_tick_shouldDecreaseRemainingOnRunningState() {
         
-        let sut = makeSUT()
-        
-        assert(sut, running(5), .tick, reducedTo: running(4))
+        assert(running(5), .tick, reducedTo: running(4))
     }
     
     func test_tick_shouldNotDeliverEffectOnRunningState() {
         
-        let sut = makeSUT()
-        
-        assert(sut, running(5), .tick, effect: nil)
+        assert(running(5), .tick, effect: nil)
     }
     
     func test_tick_shouldDecreaseRemainingOnRunningState_one() {
         
-        let sut = makeSUT()
-        
-        assert(sut, running(1), .tick, reducedTo: running(0))
+        assert(running(1), .tick, reducedTo: running(0))
     }
     
     func test_tick_shouldNotDeliverEffectOnRunningState_one() {
         
-        let sut = makeSUT()
-        
-        assert(sut, running(1), .tick, effect: nil)
+        assert(running(1), .tick, effect: nil)
     }
     
     func test_tick_shouldChangeStateToCompletedOnRunningState_zero() {
         
-        let sut = makeSUT()
-        
-        assert(sut, running(0), .tick, reducedTo: .completed)
+        assert(running(0), .tick, reducedTo: .completed)
     }
     
     func test_tick_shouldNotDeliverEffectOnRunningState_zero() {
         
-        let sut = makeSUT()
+        assert(running(0), .tick, effect: nil)
+    }
+    
+    func test_tick_shouldChangeStateToRunningWithRemainingEqualToDurationMinusOneOnStartingState() {
         
-        assert(sut, running(0), .tick, effect: nil)
+        let duration = 55
+        let sut = makeSUT(duration: duration)
+        
+        assert(sut: sut, .starting(duration: duration), .tick, reducedTo: .running(remaining: duration - 1))
+    }
+    
+    func test_tick_shouldNotDeliverEffectOnOnStartingState() {
+        
+        assert(.starting(duration: 55), .tick, effect: nil)
     }
     
     // MARK: - Helpers
@@ -387,13 +353,14 @@ final class CountdownReducerTests: XCTestCase {
     }
     
     private func assert(
-        _ sut: SUT,
+        sut: SUT? = nil,
         _ currentState: State,
         _ event: Event,
         reducedTo expectedState: State,
         file: StaticString = #file,
         line: UInt = #line
     ) {
+        let sut = sut ?? makeSUT()
         let (receivedState, _) = sut.reduce(currentState, event)
         
         XCTAssertNoDiff(
@@ -405,13 +372,14 @@ final class CountdownReducerTests: XCTestCase {
     }
     
     private func assert(
-        _ sut: SUT,
+        sut: SUT? = nil,
         _ currentState: State,
         _ event: Event,
         effect expectedEffect: Effect?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
+        let sut = sut ?? makeSUT()
         let (_, receivedEffect) = sut.reduce(currentState, event)
         
         XCTAssertNoDiff(
