@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
-import OTPInputComponent
 import SwiftUI
 
 public struct OTPInputView: View {
@@ -86,21 +85,16 @@ public struct OTPInputView: View {
         switch state {
         case .completed:
             Button("resend") { event(.prepare) }
-                .buttonStyle(.bordered)
             
         case let .failure(countdownFailure):
-            Text("Alert: \(String(describing: countdownFailure))")
-                .foregroundStyle(.red)
+            // Alert should dismiss view
+            EmptyView()
             
         case let .running(remaining: remaining):
             Text(remainingTime(remaining))
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
             
         case let .starting(duration):
             Text(remainingTime(duration))
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
         }
     }
     
@@ -115,16 +109,15 @@ public struct OTPInputView: View {
                 .padding(.vertical, 9)
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.borderedProminent)
         .padding(.horizontal)
         .padding(.bottom, 24)
-        .tint(state.isOTPInputComplete ? .red : .gray.opacity(0.4))
+        .accentColor(state.isOTPInputComplete ? .red : .gray.opacity(0.4))
     }
     
     private func descriptionView() -> some View {
         
         Text(subtitle)
-            .foregroundStyle(.secondary)
+            .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
             .fixedSize()
     }
@@ -140,10 +133,9 @@ public struct OTPInputView: View {
             keyboardType: .numberPad
         )
         .accentColor(.clear)
-        .tint(.clear)
+        .accentColor(.clear)
         .foregroundColor(.clear)
         .textContentType(.oneTimeCode)
-        // .disabled(state.isInputDisabled)
     }
     
     private func remainingTime(_ remaining: Int) -> String {

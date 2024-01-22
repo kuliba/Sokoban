@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 22.01.2024.
 //
 
-import OTPInputComponent
-
 extension OTPInputState.Input {
  
     // MARK: - CountdownState

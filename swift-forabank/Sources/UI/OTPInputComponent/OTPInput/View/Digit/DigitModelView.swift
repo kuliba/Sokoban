@@ -17,11 +17,11 @@ struct DigitModelView: View {
             
             Text(model.value)
                 .font(.largeTitle.bold())
-                .foregroundStyle(.secondary)
+                .foregroundColor(.secondary)
             
             Rectangle()
                 .frame(width: 32, height: 1)
-                .foregroundStyle(.gray)
+                .foregroundColor(.gray)
         }
     }
 }

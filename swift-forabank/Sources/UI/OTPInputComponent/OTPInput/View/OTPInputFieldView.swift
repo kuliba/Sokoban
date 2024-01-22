@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
-import OTPInputComponent
 import SwiftUI
 
 struct OTPInputFieldView: View {
@@ -34,7 +33,6 @@ struct OTPInputFieldView: View {
                 state.digitModels,
                 content: DigitModelView.init
             )
-            .monospacedDigit()
         }
     }
     
@@ -52,7 +50,6 @@ struct OTPInputFieldView: View {
             keyboardType: .numberPad
         )
         .accentColor(.clear)
-        .tint(.clear)
         .foregroundColor(.clear)
         .textContentType(.oneTimeCode)
         .onAppear { isFocused = true }
@@ -91,41 +88,6 @@ struct OTPInputFieldView_Previews: PreviewProvider {
         OTPInputFieldView(
             state: state,
             event: { _ in }
-        )
-    }
-}
-
-extension OTPFieldViewModel {
-    
-    static func preview(
-        _ result: OTPFieldEffectHandler.SubmitOTPResult
-    ) -> OTPFieldViewModel {
-        
-        .default(submitOTP: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(result)
-            }
-        })
-    }
-}
-
-extension OTPFieldViewModel {
-    
-    static func `default`(
-        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> OTPFieldViewModel {
-        
-        let reducer = OTPFieldReducer()
-        let effectHandler = OTPFieldEffectHandler(submitOTP: submitOTP)
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
         )
     }
 }
