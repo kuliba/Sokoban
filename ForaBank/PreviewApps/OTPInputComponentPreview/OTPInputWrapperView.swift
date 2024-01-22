@@ -31,6 +31,8 @@ struct OTPInputWrapperView: View {
         case let .failure(otpFieldFailure):
             Text(String(describing: otpFieldFailure))
                 .foregroundStyle(.red)
+                .font(.headline)
+                .frame(maxHeight: .infinity)
             
         case let .input(input):
             OTPInputView(
@@ -41,10 +43,48 @@ struct OTPInputWrapperView: View {
         case .validOTP:
             Text("OTP is valid!")
                 .foregroundStyle(.green)
+                .font(.headline)
+                .frame(maxHeight: .infinity)
         }
     }
 }
 
+extension TimedOTPInputViewModel {
+    
+    convenience init(
+        countdownDemoSettings: CountdownDemoSettings,
+        otpFieldDemoSettings: DemoSettingsResult
+    ) {
+        let otpInputViewModel = OTPInputViewModel.default(
+            duration: countdownDemoSettings.duration.rawValue,
+            initiate: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    switch countdownDemoSettings.initiateResult {
+                    case .success:
+                        completion(.success(()))
+                        
+                    case .connectivity:
+                        completion(.failure(.connectivityError))
+                        
+                    case .server:
+                        completion(.failure(.serverError("Initiate Server Error")))
+                    }
+                }
+            },
+            submitOTP: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(otpFieldDemoSettings.result)
+                }
+            }
+        )
+        
+        self.init(viewModel: otpInputViewModel, timer: RealTimer())
+    }
+}
 
 struct OTPInputWrapperView_Previews: PreviewProvider {
     
@@ -53,6 +93,7 @@ struct OTPInputWrapperView_Previews: PreviewProvider {
         OTPInputWrapperView(
             confirmWithOTPSettings: .success,
             countdownDemoSettings: .shortSuccess,
-            otpFieldDemoSettings: .success)
+            otpFieldDemoSettings: .success
+        )
     }
 }

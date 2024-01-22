@@ -12,20 +12,11 @@ typealias ConfirmWithOTPSettings = DemoSettingsResult
 
 final class ContentViewModel: ObservableObject {
     
-    typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, DemoSettingsResult) -> TimedOTPInputViewModel
-
     @Published private(set) var confirmWithOTPSettings: ConfirmWithOTPSettings = .success
     @Published private(set) var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
     @Published private(set) var otpFieldDemoSettings: DemoSettingsResult = .success
     
     @Published private(set) var modal: Modal?
-    
-    private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
-    
-    init(makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel) {
-
-        self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
-    }
 }
 
 extension ContentViewModel {
@@ -37,27 +28,27 @@ extension ContentViewModel {
         DispatchQueue.main.asyncAfter(
             deadline: .now() + 1
         ) { [weak self] in
+            
+            guard let self else { return }
+            
+            resetModal()
+            
+            switch confirmWithOTPSettings {
+            case .connectivity:
+                modal = .informer(.init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже."))
                 
-                guard let self else { return }
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1,
+                    execute: { [weak self] in self?.resetModal() }
+                )
                 
-                resetModal()
+            case .server:
+                modal = .alert(.init(message: "Server Error Failure"))
                 
-                switch confirmWithOTPSettings {
-                case .connectivity:
-                    modal = .informer(.init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже."))
-                    
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + 1,
-                        execute: { [weak self] in self?.resetModal() }
-                    )
-                    
-                case .server:
-                    modal = .alert(.init(message: "Server Error Failure"))
-                    
-                case .success:
-                    modal = .fullScreenCover(.confirmWithOTP)
-                }
+            case .success:
+                modal = .fullScreenCover(.confirmWithOTP)
             }
+        }
     }
     
     func resetModal() {
@@ -66,27 +57,26 @@ extension ContentViewModel {
     }
 }
 
+// MARK: - Settings Update
+
 extension ContentViewModel {
     
     func updateConfirmWithOTPSettings(
         _ settings: ConfirmWithOTPSettings
     ) {
         self.confirmWithOTPSettings = settings
-        self.resetModal()
     }
     
     func updateOTPFieldDemoSettings(
         _ otpFieldDemoSettings: DemoSettingsResult
     ) {
         self.otpFieldDemoSettings = otpFieldDemoSettings
-        self.resetModal()
     }
     
     func updateCountdownDemoSettings(
         _ settings: CountdownDemoSettings
     ) {
         self.countdownDemoSettings = settings
-        self.resetModal()
     }
     
     func updateCountdownDemoDuration(
@@ -101,6 +91,8 @@ extension ContentViewModel {
         self.countdownDemoSettings.initiateResult = initiateResult
     }
 }
+
+// MARK: - Modal
 
 extension ContentViewModel {
     

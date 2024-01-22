@@ -16,30 +16,25 @@ struct OTPInputFieldView: View {
     @State private var isFocused = false
     
     var body: some View {
-#warning("replace with ZStack")
-        VStack {
+        
+        ZStack {
             
-            HStack {
-                
-                ForEach(
-                    state.digitModels,
-                    content: DigitModelView.init
-                )
-                .monospacedDigit()
-            }
-            
-            // TextField("sdsds", text: .init(
-            //     get: {
-            //         let text = viewModel.state.text
-            //         print(text, "viewModel.state.text")
-            //         return text
-            //     },
-            //     set: viewModel.edit
-            // ))
-            // .keyboardType(.numberPad)
+            tabula()
             
             autofocusTextField()
                 .fixedSize()
+        }
+    }
+    
+    private func tabula() -> some View {
+        
+        HStack {
+            
+            ForEach(
+                state.digitModels,
+                content: DigitModelView.init
+            )
+            .monospacedDigit()
         }
     }
     
@@ -75,10 +70,7 @@ private extension OTPFieldState {
             .padding(toLength: length, withPad: " ", startingAt: 0)
             .map { String($0) }
             .enumerated()
-            .map {
-                
-                DigitModel(id: $0.offset, value: $0.element)
-            }
+            .map { .init(id: $0.offset, value: $0.element) }
     }
 }
 

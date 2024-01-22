@@ -37,8 +37,8 @@ struct ContentView: View {
             
             settings()
         }
-        .padding(.top, 64)
         .listStyle(.plain)
+        .padding(.top, 64)
         .alert(
             item: .init(
                 get: { viewModel.alert },
@@ -127,14 +127,11 @@ struct ContentView: View {
     
     private func confirmWithOTP() -> some View {
         
-        VStack(spacing: 64) {
-            
-            OTPInputWrapperView(
-                confirmWithOTPSettings: viewModel.confirmWithOTPSettings,
-                countdownDemoSettings: viewModel.countdownDemoSettings,
-                otpFieldDemoSettings: viewModel.otpFieldDemoSettings
-            )
-        }
+        OTPInputWrapperView(
+            confirmWithOTPSettings: viewModel.confirmWithOTPSettings,
+            countdownDemoSettings: viewModel.countdownDemoSettings,
+            otpFieldDemoSettings: viewModel.otpFieldDemoSettings
+        )
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .toolbar {
@@ -236,14 +233,6 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView(viewModel: .init(
-            makeTimedOTPInputViewModel: {
-                
-                .init(
-                    countdownDemoSettings: $0,
-                    otpFieldDemoSettings: $1
-                )
-            }
-        ))
+        ContentView(viewModel: .init())
     }
 }

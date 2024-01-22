@@ -50,7 +50,7 @@ struct OTPInputView: View {
             
             confirmButton()
         }
-        .padding(.top, 88)
+        .padding(.top, 0)
     }
     
     private func titleView() -> some View {
@@ -61,16 +61,10 @@ struct OTPInputView: View {
     
     private func inputField() -> some View {
         
-        ZStack {
-            
-            Text("OTP Input Field")
-                .font(.largeTitle.bold())
-                .foregroundStyle(.secondary)
-            
-            autofocusTextField()
-                .frame(width: 1, height: 1)
-                .offset(x: -400)
-        }
+        OTPInputFieldView(
+            state: state.otpField,
+            event: { event(.otpField($0)) }
+        )
     }
     
     @ViewBuilder
