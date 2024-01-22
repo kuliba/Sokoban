@@ -274,6 +274,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductProfileTests",
         "name" : "ProductProfileTests"
+        }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
       }
     }
   ],
