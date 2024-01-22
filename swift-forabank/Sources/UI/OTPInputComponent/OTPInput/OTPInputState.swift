@@ -5,16 +5,30 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
-public struct OTPInputState: Equatable {
+public enum OTPInputState: Equatable {
+    #warning("decouple from OTPFieldFailure? or vice versa up countduwn state failure to common failuer")
+    case failure(OTPFieldFailure)
+    case input(Input)
+    case validOTP
+}
+
+public extension OTPInputState {
     
-    public var countdown: CountdownState
-    public var otpField: OTPFieldState
-    
-    public init(
-        countdown: CountdownState,
-        otpField: OTPFieldState
-    ) {
-        self.countdown = countdown
-        self.otpField = otpField
+    struct Input: Equatable {
+        
+        public var countdown: CountdownState
+        public var otpField: OTPFieldState
+        
+        public init(
+            countdown: CountdownState,
+            otpField: OTPFieldState
+        ) {
+            self.countdown = countdown
+            self.otpField = otpField
+        }
     }
+    
+    typealias OTPResult = Result<OK, OTPFieldFailure>
+    
+    struct OK: Equatable {}
 }

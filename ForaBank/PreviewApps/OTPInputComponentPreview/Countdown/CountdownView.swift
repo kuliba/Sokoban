@@ -38,6 +38,11 @@ struct CountdownView: View {
             Text(remainingTime(remaining))
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
+            
+        case let .starting(duration):
+            Text(remainingTime(duration))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
         }
     }
     

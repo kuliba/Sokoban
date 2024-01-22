@@ -44,7 +44,7 @@ final class OTPInputBinderTests: XCTestCase {
     
     func test_init_shouldCallTimerWithStartOnInitialStateStarting() {
         
-        let initialState = makeState(countdown: .starting)
+        let initialState = makeState(countdown: .starting(duration: 22))
         let (_,_, timerSpy, _,_) = makeSUT(initialState: initialState)
         
         XCTAssertNoDiff(timerSpy.messages, [.start])
@@ -52,7 +52,7 @@ final class OTPInputBinderTests: XCTestCase {
     
     func test_init_shouldNotCallReducerOnInitialStateStarting() {
         
-        let initialState = makeState(countdown: .starting)
+        let initialState = makeState(countdown: .starting(duration: 22))
         let (_,_,_, reducerSpy, _) = makeSUT(initialState: initialState)
         
         XCTAssertEqual(reducerSpy.callCount, 0)
@@ -167,7 +167,7 @@ final class OTPInputBinderTests: XCTestCase {
         let (sut, viewModel, timerSpy, reducerSpy, effectHandlerSpy) = makeSUT(
             duration: duration,
             reducerStub: [
-                (makeState(countdown: .starting), nil),
+                (makeState(countdown: .starting(duration: 4)), nil),
                 (makeState(countdown: .running(remaining: 4)), nil),
                 (makeState(countdown: .running(remaining: 3)), nil),
                 (makeState(countdown: .running(remaining: 2)), nil),
@@ -234,7 +234,8 @@ final class OTPInputBinderTests: XCTestCase {
         let sut = SUT(
             timer: timerSpy,
             duration: duration,
-            viewModel: viewModel
+            otpInputViewModel: viewModel,
+            scheduler: .immediate
         )
         
         trackForMemoryLeaks(timerSpy, file: file, line: line)
@@ -251,44 +252,6 @@ final class OTPInputBinderTests: XCTestCase {
         otpField: OTPFieldState = .init()
     ) -> State {
         
-        .init(countdown: countdown, otpField: otpField)
-    }
-    
-    private final class TimerSpy: TimerProtocol {
-        
-        private let duration: Int
-        private var completions = [Completion]()
-        private(set) var messages = [Message]()
-        
-        init(duration: Int) {
-            
-            self.duration = duration
-        }
-        
-        var callCount: Int { messages.count }
-        
-        func start(
-            every interval: TimeInterval,
-            onRun completion: @escaping Completion
-        ) {
-            completions = .init(repeating: completion, count: duration/Int(interval))
-            messages.append(.start)
-        }
-        
-        func stop() {
-            
-            messages.append(.stop)
-        }
-        
-        func tick() {
-            completions.remove(at: 0)()
-        }
-        
-        typealias Completion = () -> Void
-        
-        enum Message: Equatable {
-            
-            case start, stop
-        }
+        .input(.init(countdown: countdown, otpField: otpField))
     }
 }

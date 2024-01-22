@@ -17,25 +17,30 @@ public final class OTPInputBinder {
     public init(
         timer: TimerProtocol = RealTimer(),
         duration: Int,
-        viewModel: OTPInputViewModel,
+        otpInputViewModel viewModel: OTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         viewModel.$state
-            .map(\.countdown)
-            .sink { state in
+            .sink { [viewModel] state in
                 
                 switch state {
-                case .failure, .completed:
+                case .failure, .validOTP:
                     timer.stop()
                     
-                case .starting:
-                    timer.start(
-                        every: 1,
-                        onRun: { [viewModel] in viewModel.event(.countdown(.tick)) }
-                    )
-                    
-                case .running:
-                    break
+                case let .input(input):
+                    switch input.countdown {
+                    case .failure, .completed:
+                        timer.stop()
+                        
+                    case .starting:
+                        timer.start(
+                            every: 1,
+                            onRun: { viewModel.event(.countdown(.tick)) }
+                        )
+                        
+                    case .running:
+                        break
+                    }
                 }
             }
             .store(in: &cancellables)
