@@ -8,15 +8,25 @@
 import OTPInputComponent
 import SwiftUI
 
-struct OTPInputView: View {
+public struct OTPInputView: View {
     
-    let state: OTPInputState.Input
-    let event: (OTPInputEvent) -> Void
+    private let state: OTPInputState.Input
+    private let phoneNumber: String
+    private let event: (OTPInputEvent) -> Void
     
-    let title = "Введите код из сообщения"
-    let phoneNumber = "+7 ... ... 54 15"
+    public init(
+        state: OTPInputState.Input,
+        phoneNumber: String,
+        event: @escaping (OTPInputEvent) -> Void
+    ) {
+        self.state = state
+        self.phoneNumber = phoneNumber
+        self.event = event
+    }
     
-    var subtitle: String {
+    private let title = "Введите код из сообщения"
+    
+    private var subtitle: String {
         
         if state.isTimerCompleted {
             return "Код отправлен на \(phoneNumber)"
@@ -25,7 +35,7 @@ struct OTPInputView: View {
         }
     }
     
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: 40) {
             
@@ -179,6 +189,10 @@ struct OTPInputView_Previews: PreviewProvider {
         _ state: OTPInputState.Input
     ) -> some View {
         
-        OTPInputView(state: state, event: { _ in })
+        OTPInputView(
+            state: state,
+            phoneNumber: "+7 ... ... 54 15",
+            event: { _ in }
+        )
     }
 }

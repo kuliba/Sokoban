@@ -33,6 +33,7 @@ struct OTPInputWrapperView: View {
         case let .input(input):
             OTPInputView(
                 state: input,
+                phoneNumber: "+7 ... ... 54 15",
                 event: viewModel.event
             )
             
