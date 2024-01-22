@@ -101,6 +101,19 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             }
         }
         
+        if confurmVCModel?.status == .antifraudCanceled {
+         
+            confurmView.statusImageView.image = UIImage(named: "waiting")
+            confurmView.statusLabel.text = "Операция временно приостановлена в целях безопасности"
+            confurmView.statusLabel.textColor = .systemRed
+            confurmView.statusLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            
+            confurmView.infoLabel.text = "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
+            confurmView.infoLabel.isHidden = false
+            
+            confurmView.detailButtonsStackView.isHidden = true
+        }
+        
         bind()
     }
     
