@@ -6,7 +6,7 @@
 //
 
 public final class CountdownReducer {
-    
+#warning("improve duration with Tagged")
     private let duration: Int
     
     public init(duration: Int) {
