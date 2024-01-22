@@ -25,20 +25,24 @@ struct CountdownView: View {
     
     var body: some View {
         
-        VStack {
+        switch viewModel.state {
+        case .completed:
+            Button("resend") { viewModel.event(.prepare) }
+                .buttonStyle(.bordered)
             
-            switch viewModel.state {
-            case .completed:
-                Button("resend") { viewModel.event(.prepare) }
-                
-            case let .failure(countdownFailure):
-                Text("Alert: \(String(describing: countdownFailure))")
-                    .foregroundStyle(.red)
-                
-            case let .running(remaining: remaining):
-                Text(remainingTime(remaining))
-                    .monospacedDigit()
-            }
+        case let .failure(countdownFailure):
+            Text("Alert: \(String(describing: countdownFailure))")
+                .foregroundStyle(.red)
+            
+        case let .running(remaining: remaining):
+            Text(remainingTime(remaining))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+            
+        case let .starting(duration):
+            Text(remainingTime(duration))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
         }
     }
     

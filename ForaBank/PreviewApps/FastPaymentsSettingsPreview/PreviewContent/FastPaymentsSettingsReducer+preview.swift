@@ -9,7 +9,16 @@ import FastPaymentsSettings
 
 extension FastPaymentsSettingsReducer {
     
-    static let preview: FastPaymentsSettingsReducer = .init(
-        getProducts: { .preview }
-    )
+    static var preview: FastPaymentsSettingsReducer {
+ 
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: { .preview })
+        let productsReducer = ProductsReducer(getProducts: { .preview })
+        
+        return .init(
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
+        )
+    }
 }

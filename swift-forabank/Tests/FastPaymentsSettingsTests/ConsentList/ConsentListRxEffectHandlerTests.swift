@@ -6,7 +6,10 @@
 //
 
 import FastPaymentsSettings
+import RxViewModel
 import XCTest
+
+extension ConsentListRxEffectHandler: EffectHandler {}
 
 final class ConsentListRxEffectHandlerTests: XCTestCase {
     
@@ -107,27 +110,5 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
-    }
-    
-    private func expect(
-        _ sut: SUT,
-        with effect: Effect,
-        toDeliver expectedEvent: Event,
-        on action: @escaping () -> Void,
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) {
-            
-            XCTAssertNoDiff($0, expectedEvent, file: file, line: line)
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: timeout)
     }
 }

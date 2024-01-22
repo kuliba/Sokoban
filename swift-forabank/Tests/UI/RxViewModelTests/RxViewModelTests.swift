@@ -116,6 +116,8 @@ final class RxViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias ReduceSpy = ReducerSpy<State, Event, Effect>
+    private typealias EffectHandleSpy = EffectHandlerSpy<Event, Effect>
     
     private func makeSUT(
         initialState: State = makeState(),
@@ -125,15 +127,14 @@ final class RxViewModelTests: XCTestCase {
     ) -> (
         sut: SUT,
         reducer: ReduceSpy,
-        effectHandler: EffectHandlerSpy
+        effectHandler: EffectHandleSpy
     ) {
-        
         let reducer = ReduceSpy(stub: stub)
-        let effectHandler = EffectHandlerSpy()
+        let effectHandler = EffectHandleSpy()
         let sut = SUT(
             initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+            reducer: reducer,
+            effectHandler: effectHandler,
             scheduler: .immediate
         )
         
@@ -142,56 +143,6 @@ final class RxViewModelTests: XCTestCase {
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
         return (sut, reducer, effectHandler)
-    }
-    
-    private final class ReduceSpy {
-        
-        private var stub: [(State, Effect?)]
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        init(stub: [(State, Effect?)]) {
-            
-            self.stub = stub
-        }
-        
-        func reduce(
-            _ state: State,
-            _ event: Event
-        ) -> (State, Effect?) {
-            
-            messages.append((state, event))
-            let first = stub.removeFirst()
-            
-            return first
-        }
-        
-        typealias Message = (state: State, event: Event)
-    }
-    
-    private final class EffectHandlerSpy {
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func handleEffect(
-            _ effect: Effect,
-            _ dispatch: @escaping Dispatch
-        ) {
-            messages.append((effect, dispatch))
-        }
-        
-        func complete(
-            with event: Event,
-            at index: Int = 0
-        ) {
-            messages[index].dispatch(event)
-        }
-        
-        typealias Dispatch = (Event) -> Void
-        typealias Message = (effect: Effect, dispatch: Dispatch)
     }
     
     fileprivate struct State: Equatable {
