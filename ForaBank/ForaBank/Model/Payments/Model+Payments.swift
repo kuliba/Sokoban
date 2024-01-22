@@ -1583,7 +1583,9 @@ extension Model {
                     id: Payments.Parameter.Identifier.p1.rawValue
                 )
                 
-                return .init(payeeName: numberCard ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+                let value = numberCard?.masked(mask: StringValueMask.card)
+                
+                return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
 
                 
             case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor:
@@ -1602,7 +1604,7 @@ extension Model {
                     id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
                 )
                 
-                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? paymentsServiceAmount ?? "")")
+                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? paymentsServiceAmount ?? "") ₽")
 
             case .mobileConnection:
                 if let newPhone = paymentsParameterValue(
