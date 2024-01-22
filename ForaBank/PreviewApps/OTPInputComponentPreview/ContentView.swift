@@ -63,17 +63,17 @@ struct ContentView: View {
             PickerSection(
                 title: "Confirm with OTP Result",
                 selection: .init(
-                    get: { viewModel.confirmWithOTPSettings },
+                    get: { viewModel.demoSettings.confirmWithOTPSettings },
                     set: viewModel.updateConfirmWithOTPSettings(_:)
                 )
             )
             
-            if viewModel.confirmWithOTPSettings.isSuccess {
+            if viewModel.demoSettings.confirmWithOTPSettings.isSuccess {
                 
                 PickerSection(
                     title: "Countdown Duration (sec)",
                     selection: .init(
-                        get: { viewModel.countdownDemoSettings.duration },
+                        get: { viewModel.demoSettings.countdownDemoSettings.duration },
                         set: viewModel.updateCountdownDemoDuration(_:)
                     )
                 )
@@ -81,7 +81,7 @@ struct ContentView: View {
                 PickerSection(
                     title: "Initiate Countdown Result",
                     selection: .init(
-                        get: { viewModel.countdownDemoSettings.initiateResult },
+                        get: { viewModel.demoSettings.countdownDemoSettings.initiateResult },
                         set: viewModel.updateCountdownDemoInitiateResult(_:)
                     )
                 )
@@ -89,7 +89,7 @@ struct ContentView: View {
                 PickerSection(
                     title: "OTP Validation Result",
                     selection: .init(
-                        get: { viewModel.otpFieldDemoSettings },
+                        get: { viewModel.demoSettings.otpFieldDemoSettings },
                         set: viewModel.updateOTPFieldDemoSettings
                     )
                 )
@@ -128,9 +128,7 @@ struct ContentView: View {
     private func confirmWithOTP() -> some View {
         
         OTPInputWrapperView(
-            confirmWithOTPSettings: viewModel.confirmWithOTPSettings,
-            countdownDemoSettings: viewModel.countdownDemoSettings,
-            otpFieldDemoSettings: viewModel.otpFieldDemoSettings
+            demoSettings: viewModel.demoSettings
         )
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

@@ -8,14 +8,9 @@
 import Foundation
 import OTPInputComponent
 
-typealias ConfirmWithOTPSettings = DemoSettingsResult
-
 final class ContentViewModel: ObservableObject {
     
-    @Published private(set) var confirmWithOTPSettings: ConfirmWithOTPSettings = .success
-    @Published private(set) var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
-    @Published private(set) var otpFieldDemoSettings: DemoSettingsResult = .success
-    
+    @Published private(set) var demoSettings: DemoSettings = .shortSuccess
     @Published private(set) var modal: Modal?
 }
 
@@ -33,7 +28,7 @@ extension ContentViewModel {
             
             resetModal()
             
-            switch confirmWithOTPSettings {
+            switch demoSettings.confirmWithOTPSettings {
             case .connectivity:
                 modal = .informer(.init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже."))
                 
@@ -64,31 +59,31 @@ extension ContentViewModel {
     func updateConfirmWithOTPSettings(
         _ settings: ConfirmWithOTPSettings
     ) {
-        self.confirmWithOTPSettings = settings
+        self.demoSettings.confirmWithOTPSettings = settings
     }
     
     func updateOTPFieldDemoSettings(
         _ otpFieldDemoSettings: DemoSettingsResult
     ) {
-        self.otpFieldDemoSettings = otpFieldDemoSettings
+        self.demoSettings.otpFieldDemoSettings = otpFieldDemoSettings
     }
     
     func updateCountdownDemoSettings(
         _ settings: CountdownDemoSettings
     ) {
-        self.countdownDemoSettings = settings
+        self.demoSettings.countdownDemoSettings = settings
     }
     
     func updateCountdownDemoDuration(
         _ duration: CountdownDemoSettings.Duration
     ) {
-        self.countdownDemoSettings.duration = duration
+        self.demoSettings.countdownDemoSettings.duration = duration
     }
     
     func updateCountdownDemoInitiateResult(
         _ initiateResult: CountdownDemoSettings.InitiateResult
     ) {
-        self.countdownDemoSettings.initiateResult = initiateResult
+        self.demoSettings.countdownDemoSettings.initiateResult = initiateResult
     }
 }
 

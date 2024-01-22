@@ -12,14 +12,10 @@ struct OTPInputWrapperView: View {
     
     @StateObject private var viewModel: TimedOTPInputViewModel
     
-    init(
-        confirmWithOTPSettings: ConfirmWithOTPSettings,
-        countdownDemoSettings: CountdownDemoSettings,
-        otpFieldDemoSettings: DemoSettingsResult
-    ) {
+    init(demoSettings: DemoSettings) {
+        
         let viewModel = TimedOTPInputViewModel(
-            countdownDemoSettings: countdownDemoSettings,
-            otpFieldDemoSettings: otpFieldDemoSettings
+            demoSettings: demoSettings
         )
         
         self._viewModel = .init(wrappedValue: viewModel)
@@ -52,16 +48,15 @@ struct OTPInputWrapperView: View {
 extension TimedOTPInputViewModel {
     
     convenience init(
-        countdownDemoSettings: CountdownDemoSettings,
-        otpFieldDemoSettings: DemoSettingsResult
+        demoSettings: DemoSettings
     ) {
         let otpInputViewModel = OTPInputViewModel.default(
-            duration: countdownDemoSettings.duration.rawValue,
+            duration: demoSettings.countdownDemoSettings.duration.rawValue,
             initiate: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    switch countdownDemoSettings.initiateResult {
+                    switch demoSettings.countdownDemoSettings.initiateResult {
                     case .success:
                         completion(.success(()))
                         
@@ -77,7 +72,7 @@ extension TimedOTPInputViewModel {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(otpFieldDemoSettings.result)
+                    completion(demoSettings.otpFieldDemoSettings.result)
                 }
             }
         )
@@ -91,9 +86,7 @@ struct OTPInputWrapperView_Previews: PreviewProvider {
     static var previews: some View {
         
         OTPInputWrapperView(
-            confirmWithOTPSettings: .success,
-            countdownDemoSettings: .shortSuccess,
-            otpFieldDemoSettings: .success
+            demoSettings: .shortSuccess
         )
     }
 }
