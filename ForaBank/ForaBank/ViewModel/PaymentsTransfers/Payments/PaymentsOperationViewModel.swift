@@ -628,8 +628,10 @@ enum PaymentsOperationViewModelAction {
     
     struct CancelOperation: Action {
         
+        typealias Reason = PaymentsConfirmViewModelAction.CancelOperation.Reason?
+        
         let amount: String
-        let reason: String?
+        let reason: Reason
     }
     
     struct ShowWarning: Action {

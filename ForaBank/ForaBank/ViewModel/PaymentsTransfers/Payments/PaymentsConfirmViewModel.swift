@@ -168,7 +168,13 @@ enum PaymentsConfirmViewModelAction {
     struct CancelOperation: Action {
         
         let amount: String
-        let reason: String?
+        let reason: Reason?
+        
+        enum Reason {
+            
+            case cancel
+            case timeOut
+        }
     }
 }
 
@@ -210,7 +216,16 @@ extension PaymentsConfirmViewModel {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                 
-                self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: nil))
+                self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: .cancel))
+            }
+            
+        } timeOutAction: { [weak self] in
+            
+            self?.action.send(PaymentsOperationViewModelAction.CloseBottomSheet())
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                
+                self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: .timeOut))
             }
             
         } continueAction: { [weak self] in

@@ -328,19 +328,36 @@ class PaymentsViewModel: ObservableObject {
                     
                 case let payload as PaymentsOperationViewModelAction.CancelOperation:
                     
-                    //TODO: move to convenience init
-                    let success = Payments.Success(
-                        operation: operationViewModel.operation.value,
-                        parameters: [
-                            Payments.ParameterSuccessStatus(status: .accepted),
-                            Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
-                            Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
-                            Payments.ParameterSuccessText(value: payload.amount, style: .amount),
-                            //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
-                            Payments.ParameterButton.actionButtonMain()
-                        ])
-                    
-                    self.successViewModel = .init(paymentSuccess: success, model)
+                    switch payload.reason {
+                    case .cancel, .none:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operationViewModel.operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.successViewModel = .init(paymentSuccess: success, model)
+                        
+                    case .timeOut:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operationViewModel.operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.successViewModel = .init(paymentSuccess: success, model)
+                    }
                 
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     self.content = .operation(operationViewModel)
