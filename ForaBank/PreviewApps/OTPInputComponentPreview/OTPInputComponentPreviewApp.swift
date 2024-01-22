@@ -24,7 +24,10 @@ struct OTPInputComponentPreviewApp: App {
                     )
                 }
             ))
-            //            OTPInputView()
+//            OTPInputView(
+//                state: .timerRunning, 
+//                event: { _ in }
+//            )
         }
     }
 }

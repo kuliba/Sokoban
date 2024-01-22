@@ -5,19 +5,20 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
+import OTPInputComponent
 import SwiftUI
 
 struct OTPInputView: View {
     
-    @State var isTimerCompleted: Bool = false
-    @State var isOTPInputCompleted: Bool = false
+    let state: OTPInputState.Input
+    let event: (OTPInputEvent) -> Void
     
     let title = "Введите код из сообщения"
     let phoneNumber = "+7 ... ... 54 15"
     
     var subtitle: String {
-    
-        if isTimerCompleted {
+        
+        if state.isTimerCompleted {
             return "Код отправлен на \(phoneNumber)"
         } else {
             return "Код отправлен на \(phoneNumber)\nЗапросить повторно можно через"
@@ -47,11 +48,10 @@ struct OTPInputView: View {
             confirmButton()
         }
         .padding(.top, 88)
-        .overlay(alignment: .top, content: settingsView)
     }
     
     private func titleView() -> some View {
-    
+        
         Text(title)
             .font(.headline.bold())
     }
@@ -72,7 +72,7 @@ struct OTPInputView: View {
     
     private func timerView() -> some View {
         
-        Text(isTimerCompleted ? "кнопка запросить": "00:23")
+        Text(state.isTimerCompleted ? "кнопка запросить": "00:23")
             .foregroundStyle(.secondary)
     }
     
@@ -89,9 +89,9 @@ struct OTPInputView: View {
         .buttonStyle(.borderedProminent)
         .padding(.horizontal)
         .padding(.bottom, 24)
-        .tint(isOTPInputCompleted ? .red : .gray.opacity(0.4))
+        .tint(state.isOTPInputComplete ? .red : .gray.opacity(0.4))
     }
-
+    
     private func descriptionView() -> some View {
         
         Text(subtitle)
@@ -116,15 +116,18 @@ struct OTPInputView: View {
         .textContentType(.oneTimeCode)
         // .disabled(viewModel.state.isInputDisabled)
     }
+}
 
-    private func settingsView() -> some View {
+private extension OTPInputState.Input {
+    
+    var isTimerCompleted: Bool {
         
-        HStack {
-            
-            Toggle("is Timer Completed", isOn: $isTimerCompleted)
-            Toggle("is OTP Input Completed", isOn: $isOTPInputCompleted)
-        }
-        .padding()
+        countdown == .completed
+    }
+    
+    var isOTPInputComplete: Bool {
+        
+        otpField.isInputComplete
     }
 }
 
@@ -132,33 +135,17 @@ struct OTPInputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        otpInputView(
-            isTimerCompleted: false,
-            isOTPInputCompleted: false
-        )
-        otpInputView(
-            isTimerCompleted: true,
-            isOTPInputCompleted: false
-        )
-        otpInputView(
-            isTimerCompleted: false,
-            isOTPInputCompleted: true
-        )
-        otpInputView(
-            isTimerCompleted: true,
-            isOTPInputCompleted: true
-        )
+        otpInputView(.timerCompleted)
+        otpInputView(.timerStarting)
+        otpInputView(.timerRunning)
+        otpInputView(.incompleteOTP)
+        otpInputView(.completeOTP)
     }
     
     private static func otpInputView(
-        isTimerCompleted: Bool,
-        isOTPInputCompleted: Bool
+        _ state: OTPInputState.Input
     ) -> some View {
- 
-        OTPInputView(
-            isTimerCompleted: isTimerCompleted,
-            isOTPInputCompleted: isOTPInputCompleted
-        )
+        
+        OTPInputView(state: state, event: { _ in })
     }
 }
-

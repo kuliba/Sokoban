@@ -412,6 +412,7 @@
 		2A235F7D2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */; };
 		2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */; };
 		2A235F812AFA6DD600E42E36 /* RootViewModelFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */; };
+		2A283AA42B5E88FC0065E6C1 /* OTPInputState.Input+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA32B5E88FC0065E6C1 /* OTPInputState.Input+ext.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
@@ -2775,6 +2776,7 @@
 		2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormSessionKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetProcessingSessionCodeService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+ext.swift"; sourceTree = "<group>"; };
+		2A283AA32B5E88FC0065E6C1 /* OTPInputState.Input+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPInputState.Input+ext.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
@@ -6749,6 +6751,7 @@
 			children = (
 				2A783A8A2B5A87CF0035CEAB /* Preview Assets.xcassets */,
 				2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */,
+				2A283AA32B5E88FC0065E6C1 /* OTPInputState.Input+ext.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -13314,6 +13317,7 @@
 				2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */,
 				2A6BF2B32B5B1362003E3765 /* OTPInputView.swift in Sources */,
 				2A783ACF2B5ABBC00035CEAB /* DigitModelView.swift in Sources */,
+				2A283AA42B5E88FC0065E6C1 /* OTPInputState.Input+ext.swift in Sources */,
 				2A6BF2A62B5AF7AF003E3765 /* DemoSettingsResult.swift in Sources */,
 				2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */,
 				2A783AC92B5AAB810035CEAB /* AutofocusTextField.swift in Sources */,
