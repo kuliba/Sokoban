@@ -11,18 +11,18 @@ extension Response {
     
     struct FastPayment: Decodable, Equatable {
         
-        public let opkcid: String
-        public let foreignName: String
-        public let foreignPhoneNumber: String
-        public let foreignBankBIC: String
-        public let foreignBankID: String
-        public let foreignBankName: String
-        public let documentComment: String
-        public let operTypeFP: String
-        public let tradeName: String
-        public let guid: String
+        let opkcid: String
+        let foreignName: String
+        let foreignPhoneNumber: String
+        let foreignBankBIC: String
+        let foreignBankID: String
+        let foreignBankName: String
+        let documentComment: String
+        let operTypeFP: String
+        let tradeName: String
+        let guid: String
         
-        public init(
+        init(
             opkcid: String,
             foreignName: String,
             foreignPhoneNumber: String,

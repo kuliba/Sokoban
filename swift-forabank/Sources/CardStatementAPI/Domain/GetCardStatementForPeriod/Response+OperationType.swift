@@ -12,11 +12,8 @@ extension Response {
     enum OperationType: String, Decodable {
         
         case credit = "CREDIT"
-        
         case debit = "DEBIT"
-        
         case open = "OPEN"
-        
         case demandDepositFromAccount = "DV"
     }
 }

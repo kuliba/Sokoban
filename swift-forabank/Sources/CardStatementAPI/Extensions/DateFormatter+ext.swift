@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DateFormatterISO8601: DateFormatter {
+final class DateFormatterISO8601: DateFormatter {
     
     private let formatter: ISO8601DateFormatter
     
