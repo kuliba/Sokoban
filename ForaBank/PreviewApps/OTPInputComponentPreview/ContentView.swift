@@ -129,11 +129,11 @@ struct ContentView: View {
         
         VStack(spacing: 64) {
             
-            OTPInputFieldView(viewModel: .preview(
-                viewModel.otpFieldDemoSettings.result
-            ))
-            
-            CountdownView(settings: viewModel.countdownDemoSettings)
+            OTPInputWrapperView(
+                confirmWithOTPSettings: viewModel.confirmWithOTPSettings,
+                countdownDemoSettings: viewModel.countdownDemoSettings,
+                otpFieldDemoSettings: viewModel.otpFieldDemoSettings
+            )
         }
         .padding(.top, 64)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

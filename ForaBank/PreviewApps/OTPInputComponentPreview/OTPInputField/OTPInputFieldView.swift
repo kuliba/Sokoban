@@ -10,14 +10,10 @@ import SwiftUI
 
 struct OTPInputFieldView: View {
     
-    @ObservedObject private var viewModel: OTPFieldViewModel
+    let state: OTPFieldState
+    let event: (OTPFieldEvent) -> Void
     
     @State private var isFocused = false
-
-    init(viewModel: OTPFieldViewModel) {
-        
-        self.viewModel = viewModel
-    }
     
     var body: some View {
 #warning("replace with ZStack")
@@ -26,7 +22,7 @@ struct OTPInputFieldView: View {
             HStack {
                 
                 ForEach(
-                    viewModel.state.digitModels,
+                    state.digitModels,
                     content: DigitModelView.init
                 )
                 .monospacedDigit()
@@ -52,8 +48,8 @@ struct OTPInputFieldView: View {
         AutofocusTextField(
             placeholder: "",
             text: .init(
-                get: { viewModel.state.text },
-                set: viewModel.edit
+                get: { state.text },
+                set: { event(.edit($0)) }
             ),
             isFirstResponder: isFocused,
             textColor: .clear,
@@ -91,16 +87,19 @@ struct OTPInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        otpInputView(.success(()))
-        otpInputView(.failure(.connectivityError))
-        otpInputView(.failure(.serverError("Server Error Failure")))
+        otpInputView(.init())
+        otpInputView(.init(text: "1234"))
+        otpInputView(.init(text: "123456", isInputComplete: true))
     }
     
     private static func otpInputView(
-        _ result: OTPFieldEffectHandler.SubmitOTPResult
+        _ state: OTPFieldState
     ) -> some View {
         
-        OTPInputFieldView(viewModel: .preview(result))
+        OTPInputFieldView(
+            state: state,
+            event: { _ in }
+        )
     }
 }
 

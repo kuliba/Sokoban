@@ -103,6 +103,7 @@ struct OTPInputView: View {
     private func confirmButton() -> some View {
         
         Button {
+            event(.otpField(.confirmOTP))
             
         } label: {
             Text("Подтвердить")

@@ -8,10 +8,11 @@
 import Foundation
 import OTPInputComponent
 
+typealias ConfirmWithOTPSettings = DemoSettingsResult
+
 final class ContentViewModel: ObservableObject {
     
     typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, DemoSettingsResult) -> TimedOTPInputViewModel
-   typealias ConfirmWithOTPSettings = DemoSettingsResult
 
     @Published private(set) var confirmWithOTPSettings: ConfirmWithOTPSettings = .success
     @Published private(set) var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
