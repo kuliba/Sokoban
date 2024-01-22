@@ -26,9 +26,15 @@ struct AutofocusTextField: UIViewRepresentable {
         textField.backgroundColor = backgroundColor
         textField.delegate = context.coordinator
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            context.coordinator.didBecomeFirstResponder = true
+        }
+        
         return textField
     }
     
+    // TODO: fix keyboard hangs
     func updateUIView(_ uiView: UITextField, context: Context) {
         
         if uiView.text != text {
@@ -36,13 +42,13 @@ struct AutofocusTextField: UIViewRepresentable {
             uiView.text = text
         }
         
-        if isFirstResponder && !uiView.isFirstResponder {
+        if isFirstResponder && !uiView.isFirstResponder && !context.coordinator.didBecomeFirstResponder {
             
-            uiView.becomeFirstResponder()
-            
-        } else if !isFirstResponder && uiView.isFirstResponder {
-        
-            uiView.resignFirstResponder()
+            DispatchQueue.main.async {
+                
+                uiView.becomeFirstResponder()
+                context.coordinator.didBecomeFirstResponder = true
+            }
         }
     }
     
@@ -54,6 +60,7 @@ struct AutofocusTextField: UIViewRepresentable {
     class Coordinator: NSObject, UITextFieldDelegate {
         
         var parent: AutofocusTextField
+        var didBecomeFirstResponder = false
         
         init(_ textField: AutofocusTextField) {
             
@@ -64,5 +71,23 @@ struct AutofocusTextField: UIViewRepresentable {
             
             parent.text = textField.text ?? ""
         }
+    }
+}
+
+private extension UIView {
+    
+    var subviewFirstPossibleResponder: UIView? {
+        
+        guard !canBecomeFirstResponder else { return self }
+        
+        for subview in subviews {
+            
+            if let firstResponder = subview.subviewFirstPossibleResponder {
+                
+                return firstResponder
+            }
+        }
+        
+        return nil
     }
 }

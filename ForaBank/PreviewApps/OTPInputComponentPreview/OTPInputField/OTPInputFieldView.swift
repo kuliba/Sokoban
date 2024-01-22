@@ -12,6 +12,8 @@ struct OTPInputFieldView: View {
     
     @ObservedObject private var viewModel: OTPFieldViewModel
     
+    @State private var isFocused = false
+
     init(viewModel: OTPFieldViewModel) {
         
         self.viewModel = viewModel
@@ -53,7 +55,7 @@ struct OTPInputFieldView: View {
                 get: { viewModel.state.text },
                 set: viewModel.edit
             ),
-            isFirstResponder: true,
+            isFirstResponder: isFocused,
             textColor: .clear,
             backgroundColor: .clear,
             keyboardType: .numberPad
@@ -62,7 +64,7 @@ struct OTPInputFieldView: View {
         .tint(.clear)
         .foregroundColor(.clear)
         .textContentType(.oneTimeCode)
-        // .disabled(viewModel.state.isInputDisabled)
+        .onAppear { isFocused = true }
     }
 }
 
