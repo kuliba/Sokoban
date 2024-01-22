@@ -6,7 +6,10 @@
 //
 
 import OTPInputComponent
+import RxViewModel
 import XCTest
+
+extension CountdownEffectHandler: EffectHandler {}
 
 final class CountdownEffectHandlerTests: XCTestCase {
     
@@ -72,34 +75,6 @@ final class CountdownEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(initiateSpy, file: file, line: line)
         
         return (sut, initiateSpy)
-    }
-    
-    private func expect(
-        _ sut: SUT,
-        with effect: Effect,
-        toDeliver expectedEvent: Event,
-        on action: @escaping () -> Void,
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) { receivedEvent in
-            
-            XCTAssertNoDiff(
-                receivedEvent,
-                expectedEvent,
-                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
-                file: file, line: line
-            )
-            
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: timeout)
     }
 }
 

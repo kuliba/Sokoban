@@ -141,7 +141,7 @@ private extension FlowStubSettingsView {
         
         var id: Self { self }
         
-        var response: FastPaymentsSettingsEffectHandler.CreateContractResponse {
+        var response: ContractEffectHandler.CreateContractResponse {
             
             switch self {
             case .active:   return .success(.active)
@@ -200,7 +200,7 @@ private extension FlowStubSettingsView {
         
         var id: Self { self }
         
-        var updateContractResponse: FastPaymentsSettingsEffectHandler.UpdateContractResponse {
+        var updateContractResponse: ContractEffectHandler.UpdateContractResponse {
             
             switch self {
             case .active:   return .success(.active)

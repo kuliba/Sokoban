@@ -15,11 +15,16 @@ extension UserAccountViewModel {
         flowStub: FlowStub
     ) -> UserAccountViewModel {
         
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: { flowStub.getProducts })
+        let productsReducer = ProductsReducer(getProducts: { flowStub.getProducts })
         let reducer = FastPaymentsSettingsReducer(
-            getProducts: { flowStub.getProducts }
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let effectHandler = FastPaymentsSettingsEffectHandler(
+        let contractEffectHandler = ContractEffectHandler(
             createContract: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -27,6 +32,17 @@ extension UserAccountViewModel {
                     completion(flowStub.createContract)
                 }
             },
+            updateContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.updateContract)
+                }
+            }
+        )
+
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -39,13 +55,6 @@ extension UserAccountViewModel {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
                     completion(flowStub.prepareSetBankDefault)
-                }
-            },
-            updateContract: { _, completion in
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(flowStub.updateContract)
                 }
             },
             updateProduct: { _, completion in
@@ -70,23 +79,31 @@ extension UserAccountViewModel {
     
     static func preview(
         route: Route = .init(),
-        getProducts: @escaping FastPaymentsSettingsReducer.GetProducts = { .preview },
-        createContract: @escaping FastPaymentsSettingsEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
+        getProducts: @escaping ContractReducer.GetProducts = { .preview },
+        createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
-        updateContract: @escaping FastPaymentsSettingsEffectHandler.UpdateContract,
+        updateContract: @escaping ContractEffectHandler.UpdateContract,
         updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct
     ) -> UserAccountViewModel {
         
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: getProducts)
+        let productsReducer = ProductsReducer(getProducts: getProducts)
         let reducer = FastPaymentsSettingsReducer(
-            getProducts: getProducts
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let effectHandler = FastPaymentsSettingsEffectHandler(
+        let contractEffectHandler = ContractEffectHandler(
             createContract: createContract,
+            updateContract: updateContract
+        )
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
-            updateContract: updateContract,
             updateProduct: updateProduct
         )
         

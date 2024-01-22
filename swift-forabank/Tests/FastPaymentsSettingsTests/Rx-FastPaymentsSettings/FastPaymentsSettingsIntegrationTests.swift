@@ -31,7 +31,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -62,7 +62,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -90,7 +90,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.deactivateContract)
+        sut.event(deactivateContract())
         updateContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -119,7 +119,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -150,7 +150,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -178,7 +178,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         updateContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -211,7 +211,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -252,7 +252,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .success(newContract))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -285,7 +285,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -317,7 +317,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: missing)
         
-        sut.event(.activateContract)
+        sut.event(activateContract())
         createContractSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -345,8 +345,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .success(()))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -386,8 +386,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -425,8 +425,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.expandProducts)
-        sut.event(.selectProduct(different))
+        sut.event(.products(.expandProducts))
+        sut.event(.products(.selectProduct(different)))
         updateProductSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -469,9 +469,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     
     private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
-    private typealias UpdateContractSpy = Spy<EffectHandler.UpdateContractPayload, EffectHandler.UpdateContractResponse>
+    private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
+    private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, EffectHandler.PrepareSetBankDefaultResponse>
-    private typealias CreateContractSpy = Spy<EffectHandler.CreateContractPayload, EffectHandler.CreateContractResponse>
     private typealias UpdateProductSpy = Spy<EffectHandler.UpdateProductPayload, EffectHandler.UpdateProductResponse>
     
     
@@ -489,8 +489,14 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         createContractSpy: CreateContractSpy,
         updateProductSpy: UpdateProductSpy
     ) {
-        
-        let reducer = Reducer(getProducts: { products })
+        let bankDefaultReducer = BankDefaultReducer()
+        let contractReducer = ContractReducer(getProducts: { products })
+        let productsReducer = ProductsReducer(getProducts: { products })
+        let reducer = Reducer(
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
+        )
         
         let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
@@ -498,11 +504,14 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let createContractSpy = CreateContractSpy()
         let updateProductSpy = UpdateProductSpy()
         
-        let effectHandler = EffectHandler(
+        let contractEffectHandler = ContractEffectHandler(
             createContract: createContractSpy.process(_:completion:),
+            updateContract: updateContractSpy.process(_:completion:)
+        )
+        let effectHandler = EffectHandler(
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettingsSpy.process(completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
-            updateContract: updateContractSpy.process(_:completion:),
             updateProduct: updateProductSpy.process(_:completion:)
         )
         

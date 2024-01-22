@@ -2,69 +2,49 @@
 //  OTPInputEffectHandler.swift
 //
 //
-//  Created by Igor Malyarov on 19.01.2024.
+//  Created by Igor Malyarov on 21.01.2024.
 //
-
-import Tagged
 
 public final class OTPInputEffectHandler {
     
-    private let submitOTP: SubmitOTP
+    private let handleCountdownEffect: HandleCountdownEffect
+    private let handleOTPFieldEffect: HandleOTPFieldEffect
     
-    public init(submitOTP: @escaping SubmitOTP) {
-        
-        self.submitOTP = submitOTP
+    public init(
+        handleCountdownEffect: @escaping HandleCountdownEffect,
+        handleOTPFieldEffect: @escaping HandleOTPFieldEffect
+    ) {
+        self.handleCountdownEffect = handleCountdownEffect
+        self.handleOTPFieldEffect = handleOTPFieldEffect
     }
 }
 
 public extension OTPInputEffectHandler {
     
     func handleEffect(
-        _ effect: Effect,
+        _ effect: OTPInputEffect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .submitOTP(otp):
-            submitOTP(.init(otp)) { [weak self] result in
-                
-                self?.submitOTP(result, dispatch)
-            }
+        case let .countdown(countdownEffect):
+            handleCountdownEffect(countdownEffect, dispatch)
+            
+        case let .otpField(otpFieldEffect):
+            handleOTPFieldEffect(otpFieldEffect, dispatch)
         }
     }
 }
 
 public extension OTPInputEffectHandler {
     
-    typealias SubmitOTPPayload = OTP
-    typealias SubmitOTPResult = Result<Void, OTPInputFailure>
-    typealias SubmitOTPCompletion = (SubmitOTPResult) -> Void
-    typealias SubmitOTP = (SubmitOTPPayload, @escaping SubmitOTPCompletion) -> Void
-    
-    typealias OTP = Tagged<_OTP, String>
-    enum _OTP {}
+    typealias HandleCountdownEffect = (CountdownEffect, @escaping Dispatch) -> Void
+    typealias HandleOTPFieldEffect = (OTPFieldEffect, @escaping Dispatch) -> Void
 }
 
 public extension OTPInputEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias State = OTPInputState
     typealias Event = OTPInputEvent
     typealias Effect = OTPInputEffect
-}
-
-private extension OTPInputEffectHandler {
-    
-    func submitOTP(
-        _ result: OTPInputEffectHandler.SubmitOTPResult,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch result {
-        case let .failure(otpInputFailure):
-            dispatch(.failure(otpInputFailure))
-            
-        case .success(()):
-            dispatch(.otpValidated)
-        }
-    }
 }

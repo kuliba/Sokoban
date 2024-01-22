@@ -2,16 +2,20 @@
 //  OTPInputReducer.swift
 //
 //
-//  Created by Igor Malyarov on 19.01.2024.
+//  Created by Igor Malyarov on 21.01.2024.
 //
 
 public final class OTPInputReducer {
     
-    private let length: Int
+    private let countdownReduce: CountdownReduce
+    private let otpFieldReduce: OTPFieldReduce
     
-    public init(length: Int = 6) {
-        
-        self.length = length
+    public init(
+        countdownReduce: @escaping CountdownReduce,
+        otpFieldReduce: @escaping OTPFieldReduce
+    ) {
+        self.countdownReduce = countdownReduce
+        self.otpFieldReduce = otpFieldReduce
     }
 }
 
@@ -26,25 +30,15 @@ public extension OTPInputReducer {
         var effect: Effect?
         
         switch event {
-        case .confirmOTP:
-            (state, effect) = confirm(state)
+        case let .countdown(countdownEvent):
+            let (countdownState, countdownEffect) = countdownReduce(state.countdown, countdownEvent)
+            state.countdown = countdownState
+            effect = countdownEffect.map(Effect.countdown)
             
-        case let .edit(text):
-            state = edit(state, with: text)
-            
-        case let .failure(otpInputFailure):
-            if state.isInputComplete {
-                state = state.updated(
-                    status: .failure(otpInputFailure)
-                )
-            }
-            
-        case .otpValidated:
-            if state.isInputComplete {
-                state = state.updated(
-                    status: .validOTP
-                )
-            }
+        case let .otpField(otpFieldEvent):
+            let (otpFieldState, otpFieldEffect) = otpFieldReduce(state.otpField, otpFieldEvent)
+            state.otpField = otpFieldState
+            effect = otpFieldEffect.map(Effect.otpField)
         }
         
         return (state, effect)
@@ -53,39 +47,13 @@ public extension OTPInputReducer {
 
 public extension OTPInputReducer {
     
+    typealias CountdownReduce = (CountdownState, CountdownEvent) -> (CountdownState, CountdownEffect?)
+    typealias OTPFieldReduce = (OTPFieldState, OTPFieldEvent) -> (OTPFieldState, OTPFieldEffect?)
+}
+
+public extension OTPInputReducer {
+    
     typealias State = OTPInputState
     typealias Event = OTPInputEvent
     typealias Effect = OTPInputEffect
-}
-
-private extension OTPInputReducer {
-    
-    func confirm(
-        _ state: State
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        if state.isInputComplete {
-            
-            state.status = .inflight
-            effect = .submitOTP(state.text)
-        }
-        
-        return (state, effect)
-    }
-
-    func edit(
-        _ state: State,
-        with text: String
-    ) -> State {
-        
-        let text = text.filter(\.isNumber).prefix(length)
-        
-        return state.updated(
-            text: .init(text),
-            isInputComplete: text.count >= length
-        )
-    }
 }

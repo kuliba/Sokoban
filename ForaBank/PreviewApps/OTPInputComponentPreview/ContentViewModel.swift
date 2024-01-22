@@ -1,5 +1,5 @@
 //
-//  CountdownViewDemoViewModel.swift
+//  ContentViewModel.swift
 //  OTPInputComponentPreview
 //
 //  Created by Igor Malyarov on 19.01.2024.
@@ -7,17 +7,17 @@
 
 import Foundation
 
-final class CountdownViewDemoViewModel: ObservableObject {
+final class ContentViewModel: ObservableObject {
     
-    @Published var otpSettings: OTPSettings = .success
+    @Published var otpSettings: OTPValidationSettings = .success
     @Published var settings: CountdownDemoSettings = .shortSuccess
     @Published var fullScreenCover: FullScreenCover?
 }
 
-extension CountdownViewDemoViewModel {
+extension ContentViewModel {
     
     func updateOTPSettings(
-        _ otpSettings: OTPSettings
+        _ otpSettings: OTPValidationSettings
     ) {
         self.otpSettings = otpSettings
         self.fullScreenCover = nil
@@ -31,7 +31,7 @@ extension CountdownViewDemoViewModel {
     }
 }
 
-extension CountdownViewDemoViewModel {
+extension ContentViewModel {
     
     enum FullScreenCover: Identifiable {
         

@@ -80,7 +80,7 @@ extension UserAccountViewModel {
         switch result {
         case .success:
             informer.set(text: "Банк по умолчанию установлен")
-            fpsViewModel?.event(.setBankDefaultPrepared(nil))
+            fpsViewModel?.event(.bankDefault(.setBankDefaultPrepared(nil)))
             
         case .incorrectCode:
             informer.set(text: "Банк по умолчанию не установлен")
@@ -206,7 +206,7 @@ extension UserAccountViewModel {
                             
                             self?.dismissModal()
                             viewModel.event(.resetStatus)
-                            viewModel.event(.prepareSetBankDefault)
+                            viewModel.event(.bankDefault(.prepareSetBankDefault))
                         }),
                     secondaryButton: .init(
                         type: .cancel,

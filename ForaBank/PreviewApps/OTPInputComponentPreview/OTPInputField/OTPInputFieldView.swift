@@ -1,5 +1,5 @@
 //
-//  OTPInputView.swift
+//  OTPInputFieldView.swift
 //  OTPInputComponentPreview
 //
 //  Created by Igor Malyarov on 19.01.2024.
@@ -8,11 +8,11 @@
 import OTPInputComponent
 import SwiftUI
 
-struct OTPInputView: View {
+struct OTPInputFieldView: View {
     
-    @ObservedObject private var viewModel: OTPInputViewModel
+    @ObservedObject private var viewModel: OTPFieldViewModel
     
-    init(viewModel: OTPInputViewModel) {
+    init(viewModel: OTPFieldViewModel) {
         
         self.viewModel = viewModel
     }
@@ -70,7 +70,7 @@ struct OTPInputView: View {
     }
 }
 
-private extension OTPInputState {
+private extension OTPFieldState {
     
     var digitModels: [DigitModel] {
         
@@ -89,7 +89,7 @@ private extension OTPInputState {
 }
 
 
-struct OTPInputView_Previews: PreviewProvider {
+struct OTPInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -99,18 +99,18 @@ struct OTPInputView_Previews: PreviewProvider {
     }
     
     private static func otpInputView(
-        _ result: OTPInputEffectHandler.SubmitOTPResult
+        _ result: OTPFieldEffectHandler.SubmitOTPResult
     ) -> some View {
         
-        OTPInputView(viewModel: .preview(result))
+        OTPInputFieldView(viewModel: .preview(result))
     }
 }
 
-extension OTPInputViewModel {
+extension OTPFieldViewModel {
     
     static func preview(
-        _ result: OTPInputEffectHandler.SubmitOTPResult
-    ) -> OTPInputViewModel {
+        _ result: OTPFieldEffectHandler.SubmitOTPResult
+    ) -> OTPFieldViewModel {
         
         .default(submitOTP: { _, completion in
             
@@ -119,5 +119,24 @@ extension OTPInputViewModel {
                 completion(result)
             }
         })
+    }
+}
+
+extension OTPFieldViewModel {
+    
+    static func `default`(
+        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> OTPFieldViewModel {
+        
+        let reducer = OTPFieldReducer()
+        let effectHandler = OTPFieldEffectHandler(submitOTP: submitOTP)
+        
+        return .init(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
     }
 }

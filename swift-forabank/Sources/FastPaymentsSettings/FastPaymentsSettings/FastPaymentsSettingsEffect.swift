@@ -9,15 +9,23 @@ import Tagged
 
 public enum FastPaymentsSettingsEffect: Equatable {
     
-    case activateContract(TargetContract)
-    case createContract(ProductID)
-    case deactivateContract(TargetContract)
+    case contract(Contract)
     case getSettings
     case prepareSetBankDefault
     case updateProduct(ContractCore)
 }
 
 public extension FastPaymentsSettingsEffect {
+    
+    enum Contract: Equatable {
+        
+        case activateContract(TargetContract)
+        case createContract(ProductID)
+        case deactivateContract(TargetContract)
+    }
+}
+
+public extension FastPaymentsSettingsEffect.Contract {
     
     typealias ProductID = Tagged<_ProductID, Int>
     enum _ProductID {}
@@ -27,8 +35,10 @@ public extension FastPaymentsSettingsEffect {
         public let core: ContractCore
         public let targetStatus: TargetStatus
         
-        public init(core: ContractCore, targetStatus: TargetStatus) {
-         
+        public init(
+            core: ContractCore, 
+            targetStatus: TargetStatus
+        ) {
             self.core = core
             self.targetStatus = targetStatus
         }
@@ -39,13 +49,18 @@ public extension FastPaymentsSettingsEffect {
         }
     }
     
+    typealias ContractCore = FastPaymentsSettingsEffect.ContractCore
+}
+
+public extension FastPaymentsSettingsEffect {
+    
     struct ContractCore: Equatable {
         
         public let contractID: ContractID
         public let product: Product
         
         public init(contractID: ContractID, product: Product) {
-         
+            
             self.contractID = contractID
             self.product = product
         }

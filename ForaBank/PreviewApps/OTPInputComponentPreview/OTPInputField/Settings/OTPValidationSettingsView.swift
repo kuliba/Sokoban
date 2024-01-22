@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-extension OTPSettings: PickerDisplayable {}
+extension OTPValidationSettings: PickerDisplayable {}
 
 struct OTPValidationSettingsView: View {
     
-    @State var otpSettings: OTPSettings
-    let apply: (OTPSettings) -> Void
+    @State var otpSettings: OTPValidationSettings
+    let apply: (OTPValidationSettings) -> Void
     
     var body: some View {
         

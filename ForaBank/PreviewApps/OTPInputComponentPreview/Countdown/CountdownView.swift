@@ -28,6 +28,7 @@ struct CountdownView: View {
         switch viewModel.state {
         case .completed:
             Button("resend") { viewModel.event(.prepare) }
+                .buttonStyle(.bordered)
             
         case let .failure(countdownFailure):
             Text("Alert: \(String(describing: countdownFailure))")
@@ -36,6 +37,7 @@ struct CountdownView: View {
         case let .running(remaining: remaining):
             Text(remainingTime(remaining))
                 .monospacedDigit()
+                .foregroundStyle(.secondary)
         }
     }
     
