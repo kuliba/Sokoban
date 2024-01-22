@@ -24,14 +24,11 @@ public extension Parameters {
 
 public extension Parameters.SuccessStatusIcon {
     
-    enum StatusIcon: Equatable {
+    public enum StatusIcon: Equatable {
         
-        public enum StatusIcon: Equatable {
-            
-            case complete
-            case inProgress
-            case rejected
-            case suspend
-        }
+        case complete
+        case inProgress
+        case rejected
+        case suspend
     }
 }
