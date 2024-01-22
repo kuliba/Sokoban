@@ -717,7 +717,10 @@ private extension Target {
             // internal modules
             .cardStatementAPI,
         ],
-        path: "Tests/\(String.cardStatementAPITests)"
+        path: "Tests/\(String.cardStatementAPITests)",
+        resources: [
+            .copy("Resources/StatementSample.json"),
+        ]
     )
 
     static let cryptoSwaddler = target(

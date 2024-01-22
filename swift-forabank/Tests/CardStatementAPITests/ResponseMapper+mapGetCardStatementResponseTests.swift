@@ -15,7 +15,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         let errorMessage = errorMessageByCode(400)
                 
         XCTAssertNoDiff(
-            map(statusCode: 400),
+            map(statusCode: 400, data: Data("test".utf8)),
             сardStatementError(errorMessage)
         )
     }
@@ -51,7 +51,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     
     func test_map_statusCode200_Success() throws {
         
-        let results = try XCTUnwrap(map(data: Data(String.sampleCardStatement.utf8))).get()
+        let results = try XCTUnwrap(map(data: sampleJSON())).get()
         var expectedResults: [ProductStatementData] = [.sample]
         
         assert(results, equals: &expectedResults)
@@ -61,7 +61,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         
     private func map(
         statusCode: Int = 200,
-        data: Data = Data(String.sampleCardStatement.utf8)
+        data: Data
     ) -> Result {
         
         let result = ResponseMapper.mapGetCardStatementResponse(
@@ -77,47 +77,17 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         
         HTTPURLResponse.localizedString(forStatusCode: code)
     }
+    
+    private func sampleJSON() throws -> Data {
+        
+        try Data(contentsOf: XCTUnwrap(sampleURL))
+    }
+    
+    private let sampleURL = Bundle.module.url(forResource: "StatementSample", withExtension: "json")!
 }
 
 private extension String {
     
-    static let sampleCardStatement: Self = """
-{
-  "statusCode": 0,
-  "errorMessage": "string",
-  "data": [
-    {
-            "type": "INSIDE",
-            "accountID": 1,
-            "operationType": "DEBIT",
-            "paymentDetailType": "C2B_PAYMENT",
-            "amount": 10,
-            "documentAmount": 10,
-            "comment": "comment",
-            "documentID": 2,
-            "accountNumber": "accountNumber",
-            "currencyCodeNumeric": 810,
-            "merchantName": "merchantName",
-            "merchantNameRus": "merchantNameRus",
-            "groupName": "groupName",
-            "md5hash": "md5hash",
-            "svgImage": null,
-            "fastPayment": null,
-            "terminalCode": "terminalCode",
-            "deviceCode": "deviceCode",
-            "country": "country",
-            "city": "city",
-            "operationId": "operationId",
-            "isCancellation": false,
-            "cardTranNumber": "cardTranNumber",
-            "opCode": 1,
-            "date": "2001-01-01T00:00:00.000Z",
-            "tranDate": null,
-            "MCC": 0
-    }
-  ]
-}
-"""
     static let emptyData: Self = """
     {
       "statusCode": 0,
@@ -154,7 +124,7 @@ private extension ProductStatementData {
     
     static let sample: Self = .init(
 
-        type: .inside, accountID: 1, operationType: .debit, paymentDetailType: .c2b, amount: 10, documentAmount: 10, comment: "comment", documentID: 2, accountNumber: "accountNumber", currencyCodeNumeric: 810, merchantName: "merchantName", merchantNameRus: "merchantNameRus", groupName: "groupName", md5hash: "md5hash", svgImage: nil, fastPayment: nil, terminalCode: "terminalCode", deviceCode: "deviceCode", country: "country", city: "city", operationId: "operationId", isCancellation: false, cardTranNumber: "cardTranNumber", opCode: 1, date: Date(timeIntervalSince1970: 978307200), tranDate: nil, MCC: 0
+        type: .inside, accountID: 10000872827, operationType: .debit, paymentDetailType: .c2b, amount: 10, documentAmount: 10, comment: "Перевод C2B СБП получателю ООО \"АГРОТОРГ\".", documentID: 20017126099, accountNumber: "30302810900060000006", currencyCodeNumeric: 810, merchantName: "34T4 Пятерочка", merchantNameRus: "34T4 Пятерочка", groupName: "Оплата по QR-коду", md5hash: "d46cb4ded97c143291ea3fab225b0e2f", svgImage: nil, fastPayment: .init(opkcid: "A3359170018807390000040011150101", foreignName: "ООО \"АГРОТОРГ\"", foreignPhoneNumber: "                                                  ", foreignBankBIC: "044525593", foreignBankID: "10000000818", foreignBankName: "АО \"АЛЬФА-БАНК\"", documentComment: "", operTypeFP: "CBPH", tradeName: "34T4 Пятерочка", guid: "640949825"), terminalCode: "", deviceCode: "", country: "", city: "", operationId: "a1cc1739-68cf-465e-b606-119f6dea3940", isCancellation: false, cardTranNumber: "4656260144403580", opCode: 1, date: Date(timeIntervalSince1970: 978307200), tranDate: nil, MCC: 0
     )
 }
 
