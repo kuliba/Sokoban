@@ -265,7 +265,7 @@ extension ProductView {
             }
         }
         
-        static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String { //
+        static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String {
             
             switch product {
             case let cardProduct as ProductCardData:
