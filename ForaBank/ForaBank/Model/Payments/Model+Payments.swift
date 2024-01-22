@@ -1517,7 +1517,9 @@ extension Model {
                 return nil
             }
             
-            guard antifraudParameter.value == "SUSPECT" else { return nil }
+            guard antifraudParameter.value == "F" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" else {
+                return nil
+            }
             
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
