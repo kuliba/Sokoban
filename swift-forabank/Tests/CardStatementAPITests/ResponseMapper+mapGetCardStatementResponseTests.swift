@@ -16,7 +16,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
                 
         XCTAssertNoDiff(
             map(statusCode: 400),
-            .failure(.mappingFailure(errorMessage))
+            сardStatementError(errorMessage)
         )
     }
     
@@ -24,7 +24,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data("test".utf8)),
-            .failure(.mappingFailure(.defaultError))
+            сardStatementDefaultError()
         )
     }
     
@@ -32,21 +32,21 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
                 
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.error404.utf8)),
-            .failure(.mappingFailure("404: Не найден запрос к серверу")))
+            сardStatementError("404: Не найден запрос к серверу"))
     }
     
     func test_map_statusCode200_dataEmpty_FailureMapError() {
                 
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.emptyData.utf8)),
-            .failure(.mappingFailure(.defaultError)))
+            сardStatementDefaultError())
     }
     
     func test_map_statusCode200_anyDataCodeWithOutMessage_FailureMapErrorDefaultMessage() {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.errorWithOutMessage.utf8)),
-            .failure(.mappingFailure(.defaultError)))
+            сardStatementDefaultError())
     }
     
     func test_map_statusCode200_Success() throws {
@@ -62,7 +62,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     private func map(
         statusCode: Int = 200,
         data: Data = Data(String.sampleCardStatement.utf8)
-    ) -> Swift.Result<[ProductStatementData], MappingError> {
+    ) -> Result {
         
         let result = ResponseMapper.mapGetCardStatementResponse(
             data,

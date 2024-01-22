@@ -24,6 +24,7 @@ extension Response.OperationEnvironment {
         case .inside:
             return .inside
         case .outside:
-            return .outside        }
+            return .outside
+        }
     }
 }

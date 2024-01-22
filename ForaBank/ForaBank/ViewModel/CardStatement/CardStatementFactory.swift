@@ -118,7 +118,8 @@ extension CardStatementAPI.ProductStatementData.OperationEnvironment {
         case .inside:
             return .inside
         case .outside:
-            return .outside        }
+            return .outside
+        }
     }
 }
 
