@@ -28,7 +28,10 @@ struct ContentView: View {
         }
         .overlay(alignment: .topTrailing, content: buttons)
         .fullScreenCover(
-            item: $viewModel.fullScreenCover,
+            item: .init(
+                get: { viewModel.fullScreenCover },
+                set: { if $0 == nil { viewModel.resetFullScreenCover() }}
+            ),
             content: fullScreenCover
         )
     }
@@ -59,18 +62,16 @@ struct ContentView: View {
     
     private func otpOptionsButton() -> some View {
         
-        Button {
-            viewModel.fullScreenCover = .otpFieldDemoSettings
-        } label: {
+        Button(action: viewModel.showOTPFieldDemoSettings) {
+            
             Image(systemName: "checkmark.circle.badge.questionmark")
         }
     }
     
     private func countdownOptionsButton() -> some View {
         
-        Button {
-            viewModel.fullScreenCover = .countdownDemoSettings
-        } label: {
+        Button(action: viewModel.showCountdownOptions) {
+            
             Image(systemName: "timer")
         }
     }

@@ -12,9 +12,9 @@ final class ContentViewModel: ObservableObject {
     
     typealias MakeTimedOTPInputViewModel = (CountdownDemoSettings, OTPFieldDemoSettings) -> TimedOTPInputViewModel
 
-    @Published var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
-    @Published var otpFieldDemoSettings: OTPFieldDemoSettings = .success
-    @Published var fullScreenCover: FullScreenCover?
+    @Published private(set) var countdownDemoSettings: CountdownDemoSettings = .shortSuccess
+    @Published private(set) var otpFieldDemoSettings: OTPFieldDemoSettings = .success
+    @Published private(set) var fullScreenCover: FullScreenCover?
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     
@@ -29,6 +29,21 @@ extension ContentViewModel {
     func confirmWithOTP() {
         
         fullScreenCover = .confirmWithOTP
+    }
+    
+    func showCountdownOptions() {
+        
+        fullScreenCover = .countdownDemoSettings
+    }
+    
+    func showOTPFieldDemoSettings() {
+        
+        fullScreenCover = .otpFieldDemoSettings
+    }
+    
+    func resetFullScreenCover() {
+        
+        fullScreenCover = nil
     }
 }
 
