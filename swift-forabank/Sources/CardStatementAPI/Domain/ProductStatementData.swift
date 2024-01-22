@@ -9,7 +9,6 @@ import Foundation
 
 public struct ProductStatementData: Equatable {
     
-    public var id: Int { UUID().uuidString.hashValue }
     public let type: OperationEnvironment
     public let accountID: Int?
     public let operationType: OperationType
