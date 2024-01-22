@@ -9,9 +9,88 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject private var viewModel: ContentViewModel
+    
+    init(viewModel: ContentViewModel) {
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+    
     var body: some View {
         
-        CountdownViewDemo()
+        VStack(spacing: 64) {
+            
+            OTPInputFieldView(viewModel: .preview(
+                viewModel.otpSettings.result
+            ))
+            
+            CountdownView(settings: viewModel.settings)
+        }
+        .padding(.top, 64)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .overlay(alignment: .topTrailing, content: buttons)
+        .fullScreenCover(
+            item: $viewModel.fullScreenCover,
+            content: fullScreenCover
+        )
+    }
+    
+    private func buttons() -> some View {
+        
+        HStack {
+            
+            countdownOptionsButton()
+            otpOptionsButton()
+        }
+        .padding(.horizontal)
+    }
+    
+    private func otpOptionsButton() -> some View {
+        
+        Button {
+            viewModel.fullScreenCover = .otpSettings
+        } label: {
+            Image(systemName: "checkmark.circle.badge.questionmark")
+        }
+    }
+    
+    private func countdownOptionsButton() -> some View {
+        
+        Button {
+            viewModel.fullScreenCover = .countdownSettings
+        } label: {
+            Image(systemName: "timer")
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenCover(
+        _ fullScreenCover: ContentViewModel.FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case .countdownSettings:
+            NavigationView {
+                
+                CountdownDemoSettingsView(
+                    settings: viewModel.settings,
+                    apply: viewModel.updateCountdownDemoSettings
+                )
+                .navigationTitle("Countdown Options")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+            
+        case .otpSettings:
+            NavigationView {
+                
+                OTPValidationSettingsView(
+                    otpSettings: viewModel.otpSettings,
+                    apply: viewModel.updateOTPSettings
+                )
+                .navigationTitle("OTP Validation Options")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+        }
     }
 }
 
@@ -19,6 +98,6 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView()
+        ContentView(viewModel: .init())
     }
 }

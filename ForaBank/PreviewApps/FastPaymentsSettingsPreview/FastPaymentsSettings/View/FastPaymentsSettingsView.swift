@@ -23,14 +23,14 @@ struct FastPaymentsSettingsView: View {
             case .active:
                 ActiveContractView(
                     contractDetails: contractDetails,
-                    actionOff: { viewModel.event(.deactivateContract) },
-                    setBankDefault: { viewModel.event(.setBankDefault) }
+                    actionOff: { viewModel.event(.contract(.deactivateContract)) },
+                    setBankDefault: { viewModel.event(.bankDefault(.setBankDefault)) }
                 )
                 
             case .inactive:
                 InactiveContractView {
                     
-                    viewModel.event(.activateContract)
+                    viewModel.event(.contract(.activateContract))
                 }
             }
             
@@ -47,7 +47,7 @@ struct FastPaymentsSettingsView: View {
                     
                     Button("Включить переводы СБП") {
                         
-                        viewModel.event(.activateContract)
+                        viewModel.event(.contract(.activateContract))
                     }
                 }
             }
