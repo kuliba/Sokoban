@@ -45,6 +45,7 @@ let package = Package(
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
+        .rxViewModel,
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
@@ -130,6 +131,8 @@ let package = Package(
         .pinCodeUI,
         .pinCodeUITests,
         .productUI,
+        .rxViewModel,
+        .rxViewModelTests,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -293,6 +296,13 @@ private extension Product {
         ]
     )
     
+    static let rxViewModel = library(
+        name: .rxViewModel,
+        targets: [
+            .rxViewModel,
+        ]
+    )
+    
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
@@ -449,6 +459,8 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .tagged,
+            // internal modules
+            .rxViewModel,
         ]
     )
     static let fastPaymentsSettingsTests = testTarget(
@@ -460,6 +472,7 @@ private extension Target {
             .tagged,
             // internal modules
             .fastPaymentsSettings,
+            .rxViewModel,
         ]
     )
     
@@ -906,12 +919,24 @@ private extension Target {
     
     static let otpInputComponent = target(
         name: .otpInputComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+        ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )
     
     static let otpInputComponentTests = testTarget(
         name: .otpInputComponentTests,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
             .otpInputComponent,
         ],
         path: "Tests/UI/\(String.otpInputComponentTests)"
@@ -946,6 +971,28 @@ private extension Target {
     static let productUI = target(
         name: .productUI
     )
+
+    static let rxViewModel = target(
+        name: .rxViewModel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ],
+        path: "Sources/UI/\(String.rxViewModel)"
+    )
+    
+    static let rxViewModelTests = testTarget(
+        name: .rxViewModelTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Tests/UI/\(String.rxViewModelTests)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -1194,6 +1241,10 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
     
+    static let rxViewModel = byName(
+        name: .rxViewModel
+    )
+    
     static let textFieldUI = byName(
         name: .textFieldUI
     )
@@ -1355,6 +1406,9 @@ private extension String {
     static let pinCodeUITests = "PinCodeUITests"
     
     static let productUI = "ProductUI"
+    
+    static let rxViewModel = "RxViewModel"
+    static let rxViewModelTests = "RxViewModelTests"
     
     static let searchBarComponent = "SearchBarComponent"
     

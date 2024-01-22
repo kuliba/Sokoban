@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7F37D8D9-5BC2-4CB1-BFC0-8F3FAB1F273B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}
