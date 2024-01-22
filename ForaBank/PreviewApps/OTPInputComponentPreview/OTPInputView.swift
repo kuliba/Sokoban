@@ -41,7 +41,10 @@ struct OTPInputView: View {
                     
                     descriptionView()
                     
-                    timerView()
+                    timerView(
+                        state: state.countdown,
+                        event: { event(.countdown($0)) }
+                    )
                 }
             }
             
@@ -70,10 +73,31 @@ struct OTPInputView: View {
         }
     }
     
-    private func timerView() -> some View {
+    @ViewBuilder
+    private func timerView(
+        state: CountdownState,
+        event: @escaping (CountdownEvent) -> Void
+    ) -> some View {
         
-        Text(state.isTimerCompleted ? "кнопка запросить": "00:23")
-            .foregroundStyle(.secondary)
+        switch state {
+        case .completed:
+            Button("resend") { event(.prepare) }
+                .buttonStyle(.bordered)
+            
+        case let .failure(countdownFailure):
+            Text("Alert: \(String(describing: countdownFailure))")
+                .foregroundStyle(.red)
+            
+        case let .running(remaining: remaining):
+            Text(remainingTime(remaining))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+            
+        case let .starting(duration):
+            Text(remainingTime(duration))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+        }
     }
     
     private func confirmButton() -> some View {
@@ -114,7 +138,14 @@ struct OTPInputView: View {
         .tint(.clear)
         .foregroundColor(.clear)
         .textContentType(.oneTimeCode)
-        // .disabled(viewModel.state.isInputDisabled)
+        // .disabled(state.isInputDisabled)
+    }
+    
+    private func remainingTime(_ remaining: Int) -> String {
+        
+        let minutes = remaining / 60
+        let seconds = remaining % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
@@ -136,10 +167,17 @@ struct OTPInputView_Previews: PreviewProvider {
     static var previews: some View {
         
         otpInputView(.timerCompleted)
-        otpInputView(.timerStarting)
+            .previewDisplayName("timer Completed")
+        otpInputView(.timerFailure)
+            .previewDisplayName("timer Failure")
         otpInputView(.timerRunning)
+            .previewDisplayName("timer Running")
+        otpInputView(.timerStarting)
+            .previewDisplayName("timer Starting")
         otpInputView(.incompleteOTP)
+            .previewDisplayName("incomplete OTP")
         otpInputView(.completeOTP)
+            .previewDisplayName("complete OTP")
     }
     
     private static func otpInputView(

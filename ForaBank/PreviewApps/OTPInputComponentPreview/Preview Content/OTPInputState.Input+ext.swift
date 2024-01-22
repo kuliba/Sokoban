@@ -9,18 +9,27 @@ import OTPInputComponent
 
 extension OTPInputState.Input {
  
+    // MARK: - CountdownState
+    
     static let timerCompleted: Self = .init(
         countdown: .completed,
         otpField: .init()
     )
-    static let timerStarting: Self = .init(
-        countdown: .starting(duration: 59),
+    static let timerFailure: Self = .init(
+        countdown: .failure(.connectivityError),
         otpField: .init()
     )
     static let timerRunning: Self = .init(
         countdown: .running(remaining: 23),
         otpField: .init()
     )
+    static let timerStarting: Self = .init(
+        countdown: .starting(duration: 59),
+        otpField: .init()
+    )
+    
+    // MARK: - OTPFieldState
+    
     static let incompleteOTP: Self = .init(
         countdown: .running(remaining: 23),
         otpField: .init(text: "2468")
