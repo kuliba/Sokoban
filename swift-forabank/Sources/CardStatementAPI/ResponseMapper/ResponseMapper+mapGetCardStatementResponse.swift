@@ -37,11 +37,11 @@ public extension ResponseMapper {
                 
             default:
                 guard let data = response.data
-                else { return .failure(.mappingFailure(response.errorMessage ?? .defaultError))}
+                else { return .failure(.mappingFailure(response.errorMessage ?? .defaultErrorMessage))}
                 return .success(data.map { .init(data: $0) })
             }
         } catch {
-            return .failure(.mappingFailure(.defaultError))
+            return .failure(.mappingFailure(.defaultErrorMessage))
         }
     }
     
@@ -246,7 +246,7 @@ private extension ResponseMapper._DTO.OperationType {
 
 public extension String {
     
-    static let defaultError: Self = "Возникла техническая ошибка"
+    static let defaultErrorMessage: Self = "Возникла техническая ошибка"
 }
 
 private struct GetCardStatementForPeriodResponse: Decodable {

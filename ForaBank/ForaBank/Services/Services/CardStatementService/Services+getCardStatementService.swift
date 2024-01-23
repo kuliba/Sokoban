@@ -11,7 +11,7 @@ import CardStatementAPI
 
 extension Services {
     
-    typealias GetCardStatementPayload = CardStatementForPeriodDomain.Payload
+    typealias GetCardStatementPayload = CardStatementAPI.CardStatementForPeriodPayload
     typealias GetCardStatementResult = Swift.Result<[CardStatementAPI.ProductStatementData], CardStatementAPI.MappingError>
     typealias GetCardStatementService = RemoteServiceOf<GetCardStatementPayload, GetCardStatementResult>
     

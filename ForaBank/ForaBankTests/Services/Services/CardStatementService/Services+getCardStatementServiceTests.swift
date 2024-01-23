@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import CardStatementAPI
 import GenericRemoteService
 import XCTest
 
@@ -15,7 +16,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultErrorMessage))) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -24,7 +25,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultErrorMessage))) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -79,7 +80,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         string.data(using: .utf8)!
     }
     
-    private typealias Payload = CardStatementForPeriodDomain.Payload
+    private typealias Payload =  CardStatementAPI.CardStatementForPeriodPayload
     
     private func expect(
         _ sut: Services.GetCardStatementService,
@@ -147,14 +148,14 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func testPeriod() throws -> Period {
+    private func testPeriod() throws -> Payload.Period {
         
         let calendar = Calendar.current
         
         let startDate = try XCTUnwrap(Date.date(year: 2022, month: 4, day: 10, calendar: calendar))
         let endDate = try XCTUnwrap(Date.date(year: 2022, month: 5, day: 10, calendar: calendar))
         
-        return Period(start: startDate, end: endDate)
+        return .init(start: startDate, end: endDate)
     }
 }
 

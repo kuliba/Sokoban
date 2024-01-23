@@ -171,47 +171,6 @@ extension Model {
         }
     }
     
-    func cardStatementsFetch(command: ServerCommands.CardController.GetCardStatementForPeriod) async throws -> [ProductStatementData] {
-        
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                continuation.resume(with: Model.parserGetCardStatementForPeriod(result: result))
-            }
-        }
-    }
-    
-    // TODO: промежуточный вариант для переделки запроса getCardStatementForPeriod
-    
-    typealias ResultGetCardStatementForPeriod = Result<ServerCommands.CardController.GetCardStatementForPeriod.Response, ServerAgentError>
-    
-    typealias ResultParserGetCardStatementForPeriod = Result<[ProductStatementData], ModelProductsError>
-    
-    static func parserGetCardStatementForPeriod(
-        result: ResultGetCardStatementForPeriod
-    ) -> ResultParserGetCardStatementForPeriod {
-        
-        switch result {
-            
-        case .success(let response):
-            switch response.statusCode {
-            case .ok:
-                
-                guard let data = response.data else {
-                    return .failure(ModelProductsError.emptyData(message: response.errorMessage))
-                }
-                
-                return .success(data)
-
-            default:
-                return .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage))
-            }
-            
-        case .failure(let error):
-            return .failure(ModelProductsError.serverCommandError(error: error.localizedDescription))
-        }
-    }
-    
     func accountStatementsFetch(command: ServerCommands.AccountController.GetAccountStatementForPeriod) async throws -> [ProductStatementData] {
         
         try await withCheckedThrowingContinuation { continuation in
