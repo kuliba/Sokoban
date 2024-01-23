@@ -270,35 +270,15 @@ private extension UserAccountViewModel {
 #warning("there is final & non-final alerts, see file at sha d476879f0ddd56b9ddb7103b87941ff0e00a8695")
             case let .serverError(message):
                 modelState.route.isLoading = false
-                modelState.route.modal = .fpsAlert(.ok(
-                    message: message,
-                    primaryAction: { [weak self] in
-                        
-                        self?.event(.closeAlert)
-                    }
-                ))
+                modelState.route.modal = serverError(message)
                 
             case .connectivityError:
                 modelState.route.isLoading = false
-                let message = "Превышено время ожидания. Попробуйте позже"
-                modelState.route.modal = .fpsAlert(.ok(
-                    message: message,
-                    primaryAction: { [weak self] in
-                        
-                        self?.event(.closeAlert)
-                    }
-                ))
+                modelState.route.modal = tryAgain()
                 
             case .missingProduct:
                 modelState.route.isLoading = false
-                modelState.route.modal = .fpsAlert(.ok(
-                    title: "Сервис не доступен",
-                    message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-                    primaryAction: { [weak self] in
-                        
-                        self?.event(.dismissRoute)
-                    }
-                ))
+                modelState.route.modal = missingDefaultBank()
                 
             case .updateContractFailure:
 #warning("direct change of state that is outside of reducer")
@@ -321,6 +301,42 @@ private extension UserAccountViewModel {
         return (modelState, effect)
     }
     
+    func serverError(
+        _ message: String
+    ) -> Route.Modal {
+        
+        .fpsAlert(.ok(
+            message: message,
+            primaryAction: { [weak self] in
+                
+                self?.event(.closeAlert)
+            }
+        ))
+    }
+    
+    func tryAgain() -> Route.Modal {
+        
+        let message = "Превышено время ожидания. Попробуйте позже"
+        
+        return .fpsAlert(.ok(
+            message: message,
+            primaryAction: { [weak self] in
+                
+                self?.event(.closeAlert)
+            }
+        ))
+    }
+    
+    func missingDefaultBank() -> Route.Modal {
+        
+        .fpsAlert(.missingDefaultBank(
+            action: { [weak self] in
+                
+                self?.event(.dismissRoute)
+            }
+        ))
+    }
+    
     func setBankDefault() -> Route.Modal {
         
         .fpsAlert(.setBankDefault(
@@ -337,6 +353,17 @@ private extension UserAccountViewModel {
 }
 
 private extension AlertViewModel {
+    
+    static func missingDefaultBank(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .ok(
+            title: "Сервис не доступен",
+            message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
+            primaryAction: action
+        )
+    }
     
     static func setBankDefault(
         primaryAction: @escaping () -> Void,
