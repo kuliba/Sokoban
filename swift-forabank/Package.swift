@@ -706,6 +706,9 @@ private extension Target {
     
     static let cardStatementAPI = target(
         name: .cardStatementAPI,
+        dependencies: [
+            .tagged,
+        ],
         path: "Sources/\(String.cardStatementAPI)"
     )
     static let cardStatementAPITests = testTarget(
@@ -713,10 +716,15 @@ private extension Target {
         dependencies: [
             // external packages
             .customDump,
+            .combineSchedulers,
+            .tagged,
             // internal modules
             .cardStatementAPI,
         ],
-        path: "Tests/\(String.cardStatementAPITests)"
+        path: "Tests/\(String.cardStatementAPITests)",
+        resources: [
+            .copy("Resources/StatementSample.json"),
+        ]
     )
 
     static let cryptoSwaddler = target(

@@ -70,38 +70,7 @@ extension ServerCommands {
                 self.init(token: token, payload: .init(id: productId))
             }
         }
-        
-        /*
-         http://10.1.206.21:8080/swagger-ui/index.html#/CardController/getCardStatementForPeriod_V2
-         */
-        
-        //TODO: - tests
-        struct GetCardStatementForPeriod: ServerCommand {
-            
-            let token: String
-            let endpoint = "/rest/getCardStatementForPeriod_V3"
-            let method: ServerCommandMethod = .post
-            let payload: BasePayload?
-            
-            struct Response: ServerResponse {
                 
-                let statusCode: ServerStatusCode
-                let errorMessage: String?
-                let data: [ProductStatementData]?
-            }
-            
-            internal init(token: String, payload: BasePayload) {
-                
-                self.token = token
-                self.payload = payload
-            }
-            
-            init(token: String, productId: ProductData.ID, period: Period) {
-                
-                self.init(token: token, payload: .init(id: productId, startDate: period.start, endDate: period.end))
-            }
-        }
-        
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getOwnerPhoneNumber
          */
