@@ -265,15 +265,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "OTPInputComponentTests",
-        "name" : "OTPInputComponentTests"
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "RxViewModelTests",
-        "name" : "RxViewModelTests"
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
       }
     }
   ],
