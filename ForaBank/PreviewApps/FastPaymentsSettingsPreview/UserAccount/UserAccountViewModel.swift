@@ -118,6 +118,8 @@ private extension UserAccountViewModel {
         case let .fps(fps):
             switch fps {
             case .prepareSetBankDefault:
+                modelState.route.modal = nil
+                modelState.route.isLoading = true
                 modelEffect = .fps(.bankDefault(.prepareSetBankDefault))
                 
             case let .updated(fpsState):
@@ -275,6 +277,7 @@ private extension UserAccountViewModel {
             modelState.route.modal = setBankDefaultFPSAlert()
             
         case .setBankDefaultSuccess:
+            modelState.route.isLoading = false
 #warning("direct change of state that is outside of reducer")
             self.informer.set(text: "Банк по умолчанию установлен.")
             
