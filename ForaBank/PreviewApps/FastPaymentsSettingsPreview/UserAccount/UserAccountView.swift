@@ -26,14 +26,14 @@ struct UserAccountView: View {
                 }
                 .alert(
                     item: .init(
-                        get: { viewModel.route.alert?.alert },
+                        get: { viewModel.state.alert?.alert },
                         set: { if $0 == nil { viewModel.event(.closeAlert) }}
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
-                        get: { viewModel.route.destination },
+                        get: { viewModel.state.destination },
                         set: { if $0 == nil { viewModel.event(.dismissDestination) }}
                     ),
                     destination: destinationView
@@ -91,7 +91,7 @@ struct UserAccountView: View {
             ProgressView()
         }
         .ignoresSafeArea()
-        .opacity(viewModel.route.isLoading ? 1 : 0)
+        .opacity(viewModel.state.isLoading ? 1 : 0)
     }
     
     private func destinationView(
@@ -104,14 +104,14 @@ struct UserAccountView: View {
                 .onAppear { fpsViewModel.event(.appear) }
                 .alert(
                     item: .init(
-                        get: { viewModel.route.alert?.fpsAlert },
+                        get: { viewModel.state.alert?.fpsAlert },
                         set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
-                        get: { viewModel.route.fpsDestination },
+                        get: { viewModel.state.fpsDestination },
                         set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                     ),
                     destination: fpsDestinationView
@@ -127,6 +127,26 @@ struct UserAccountView: View {
         case .confirmSetBankDefault:
             ConfirmOTPStubView(onCommit: viewModel.handleOTPResult)
         }
+    }
+}
+
+// MARK: - Demo Functionality
+
+private extension UserAccountViewModel {
+    
+    func showDemoAlert() {
+        
+        event(.demo(.show(.alert)))
+    }
+    
+    func showDemoInformer() {
+        
+        event(.demo(.show(.informer)))
+    }
+    
+    func showDemoLoader() {
+        
+        event(.demo(.show(.loader)))
     }
 }
 

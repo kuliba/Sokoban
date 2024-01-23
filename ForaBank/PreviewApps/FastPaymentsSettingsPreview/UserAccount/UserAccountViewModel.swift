@@ -12,8 +12,9 @@ import Foundation
 
 final class UserAccountViewModel: ObservableObject {
     
+    typealias State = Route
+    
     @Published private(set) var state: State
-    @Published private(set) var route: Route
     
 #warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
     let informer: InformerViewModel
@@ -21,30 +22,22 @@ final class UserAccountViewModel: ObservableObject {
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let factory: Factory
     
-    private let routeSubject = PassthroughSubject<Route, Never>()
-    private let stateSubject = PassthroughSubject<State, Never>()
+    private let stateSubject = PassthroughSubject<Route, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     private var cancellables = Set<AnyCancellable>()
     
     init(
-        state: State = .init(),
         route: Route = .init(),
         informer: InformerViewModel = .init(),
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         factory: Factory,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.state = state
         self.prepareSetBankDefault = prepareSetBankDefault
         self.factory = factory
-        self.route = route
+        self.state = route
         self.informer = informer
         self.scheduler = scheduler
-        
-        routeSubject
-            .removeDuplicates()
-            .receive(on: scheduler)
-            .assign(to: &$route)
         
         stateSubject
             .removeDuplicates()
@@ -62,9 +55,8 @@ extension UserAccountViewModel {
     
     func event(_ event: Event) {
         
-        let (modelState, effect) = reduce((route, state), event)
-        routeSubject.send(modelState.route)
-        stateSubject.send(modelState.state)
+        let (state, effect) = reduce(state, event)
+        stateSubject.send(state)
         
         if let effect {
             
@@ -93,7 +85,7 @@ extension UserAccountViewModel {
     
     private var fastPaymentsSettingsViewModel: FastPaymentsSettingsViewModel? {
         
-        guard case let .fastPaymentsSettings(viewModel) = route.destination
+        guard case let .fastPaymentsSettings(viewModel) = state.destination
         else { return nil }
         
         return viewModel
@@ -102,40 +94,38 @@ extension UserAccountViewModel {
 
 private extension UserAccountViewModel {
     
-    typealias ModelState = (route: Route, state: State)
-    
     func reduce(
-        _ modelState: ModelState,
+        _ state: Route,
         _ event: Event
-    ) -> (ModelState, Effect?) {
+    ) -> (Route, Effect?) {
         
-        var state = modelState
+        var state = state
         var eEffect: Effect?
         
         switch event {
         case .closeAlert:
-            state.route.alert = nil
+            state.alert = nil
             eEffect = .fps(.resetStatus)
             
         case .closeFPSAlert:
-            state.route.alert = nil
+            state.alert = nil
             eEffect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-//            state.route.fpsDestination = nil
+            //            state.fpsDestination = nil
             eEffect = .fps(.resetStatus)
             
         case .dismissDestination:
-            state.route.destination = nil
+            state.destination = nil
             eEffect = .fps(.resetStatus)
             
         case .dismissRoute:
-            state.route = .init()
+            state = .init()
             eEffect = .fps(.resetStatus)
             
         case let .demo(demoEvent):
-            let (status, demoEffect) = reduce(state.state.status, demoEvent)
-            state.state.status = status
+            let (demoState, demoEffect) = reduce(state, demoEvent)
+            state = demoState
             eEffect = demoEffect.map(Effect.demo)
             
         case let .fps(.updated(fpsState)):
@@ -144,8 +134,8 @@ private extension UserAccountViewModel {
         case let .otp(otp):
             switch otp {
             case .prepareSetBankDefault:
-                state.route.alert = nil
-                state.route.isLoading = true
+                state.alert = nil
+                state.isLoading = true
                 eEffect = .otp(.prepareSetBankDefault)
                 
             case let .prepareSetBankDefaultResponse(response):
@@ -157,27 +147,27 @@ private extension UserAccountViewModel {
     }
     
     func update(
-        _ state: ModelState,
+        _ state: Route,
         with response: Event.OTP.PrepareSetBankDefaultResponse
-    ) -> (ModelState, Effect?) {
+    ) -> (Route, Effect?) {
         
         var state = state
         var effect: Effect?
         
-        state.route.isLoading = false
+        state.isLoading = false
         effect = .fps(.resetStatus)
         
         switch response {
         case .success:
-            state.route.fpsDestination = .confirmSetBankDefault
+            state.fpsDestination = .confirmSetBankDefault
             
         case .connectivityError:
-            state.route.fpsDestination = nil
+            state.fpsDestination = nil
 #warning("direct change of state that is outside of reducer")
             self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.route.alert = .fpsAlert(.ok(
+            state.alert = .fpsAlert(.ok(
                 title: "Ошибка",
                 message: message,
                 primaryAction: { [weak self] in self?.event(.closeAlert) }
@@ -195,43 +185,49 @@ private extension UserAccountViewModel {
     // MARK: - Demo Domain
     
     func reduce(
-        _ status: State.Status?,
+        _ state: State,
         _ event: Event.Demo
-    ) -> (State.Status?, Effect.Demo?) {
+    ) -> (State, Effect.Demo?) {
         
-        var status = status
+        var state = state
         var effect: Effect.Demo?
         
         switch event {
         case let .loaded(loaded):
+            state.isLoading = false
+            
             switch loaded {
             case .alert:
-                status = .showingAlert
+                state.alert = .alert(.ok(
+                    title: "Error",
+                    primaryAction: { [weak self] in self?.event(.closeAlert)
+                    }
+                ))
                 
             case .informer:
-                status = .showingInformer
+#warning("direct change of state that is outside of reducer")
+                self.informer.set(text: "Demo informer here.")
                 
             case .loader:
-                status = nil
+                break
             }
             
         case let .show(show):
+            state.isLoading = true
+            
             switch show {
             case .alert:
-                status = .showingLoader
                 effect = .loadAlert
                 
             case .informer:
-                status = .showingLoader
                 effect = .loadInformer
                 
             case .loader:
-                status = .showingLoader
                 effect = .loader
             }
         }
         
-        return (status, effect)
+        return (state, effect)
     }
     
     func handleEffect(
@@ -240,19 +236,19 @@ private extension UserAccountViewModel {
     ) {
         switch effect {
         case .loadAlert:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
                 dispatch(.loaded(.alert))
             }
             
         case .loadInformer:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
                 dispatch(.loaded(.informer))
             }
             
         case .loader:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
                 dispatch(.loaded(.loader))
             }
@@ -262,11 +258,11 @@ private extension UserAccountViewModel {
     // MARK: - Fast Payments Settings domain
     
     func reduce(
-        _ modelState: ModelState,
+        _ state: Route,
         with fpsState: FastPaymentsSettingsState
-    ) -> (ModelState, Effect?) {
+    ) -> (Route, Effect?) {
         
-        var modelState = modelState
+        var state = state
         var effect: Effect?
         
         switch fpsState.userPaymentSettings {
@@ -274,81 +270,80 @@ private extension UserAccountViewModel {
             break
             
         case .contracted:
-            #warning("looks like status should be part of contracted???")
-            (modelState, effect) = update(modelState, with: fpsState.status)
+#warning("looks like status should be part of contracted???")
+            (state, effect) = update(state, with: fpsState.status)
             
         case let .failure(failure):
             // final => dismissRoute
             switch failure {
             case let .serverError(message):
-                modelState.route.isLoading = false
-                modelState.route.alert = serverErrorFPSAlert(message, .dismissRoute)
+                state.isLoading = false
+                state.alert = serverErrorFPSAlert(message, .dismissRoute)
                 
             case .connectivityError:
-                modelState.route.isLoading = false
-                modelState.route.alert = tryAgainFPSAlert(.dismissRoute)
+                state.isLoading = false
+                state.alert = tryAgainFPSAlert(.dismissRoute)
             }
             
         case .missingContract:
-            modelState.route.isLoading = false
-            modelState.route.alert = missingContractFPSAlert()
+            state.isLoading = false
+            state.alert = missingContractFPSAlert()
         }
         
-        return (modelState, effect)
+        return (state, effect)
     }
     
     func update(
-        _ modelState: ModelState,
+        _ state: Route,
         with status: FastPaymentsSettingsState.Status?
-    ) -> (ModelState, Effect?) {
+    ) -> (Route, Effect?) {
         
-        var modelState = modelState
+        var state = state
         var effect: Effect?
         
         switch status {
         case .none:
-            modelState.state.status = nil
-            modelState.route.fpsDestination = nil
-            modelState.route.alert = nil
-            modelState.route.isLoading = false
+            state.fpsDestination = nil
+            state.alert = nil
+            state.isLoading = false
             
         case .inflight:
-            modelState.route.isLoading = true
+            state.isLoading = true
             
         case let .serverError(message):
-            modelState.route.isLoading = false
+            state.isLoading = false
             // non-final => closeAlert
-            modelState.route.alert = serverErrorFPSAlert(message, .closeAlert)
+            state.alert = serverErrorFPSAlert(message, .closeAlert)
             
         case .connectivityError:
-            modelState.route.isLoading = false
+            state.isLoading = false
             // non-final => closeAlert
-            modelState.route.alert = tryAgainFPSAlert(.closeAlert)
+            state.alert = tryAgainFPSAlert(.closeAlert)
             
         case .missingProduct:
-            modelState.route.isLoading = false
-            modelState.route.alert = missingProductFPSAlert()
+            state.isLoading = false
+            state.alert = missingProductFPSAlert()
             
         case .updateContractFailure:
-            modelState.route.isLoading = false
+            state.isLoading = false
 #warning("direct change of state that is outside of reducer")
             self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            modelState.route = .init()
+            state = .init()
             
         case .setBankDefault:
-            modelState.route.alert = setBankDefaultFPSAlert()
+            state.alert = setBankDefaultFPSAlert()
             
         case .setBankDefaultSuccess:
-            modelState.route.isLoading = false
+            state.isLoading = false
 #warning("direct change of state that is outside of reducer")
             self.informer.set(text: "Банк по умолчанию установлен.")
             
         case .confirmSetBankDefault:
-            route.fpsDestination = .confirmSetBankDefault
+            state.fpsDestination = .confirmSetBankDefault
             effect = .fps(.resetStatus)
         }
         
-        return (modelState, effect)
+        return (state, effect)
     }
     
     func serverErrorFPSAlert(
@@ -474,18 +469,6 @@ private extension AlertViewModel {
 
 extension UserAccountViewModel {
     
-    struct State: Equatable {
-        
-        var status: Status?
-        
-        enum Status: Equatable {
-            
-            case showingAlert
-            case showingInformer
-            case showingLoader
-        }
-    }
-    
     enum Event: Equatable {
         
         case closeAlert
@@ -551,26 +534,6 @@ extension UserAccountViewModel {
     }
 }
 
-// MARK: - Demo Functionality
-
-extension UserAccountViewModel {
-    
-    func showDemoAlert() {
-        
-        event(.demo(.show(.alert)))
-    }
-    
-    func showDemoInformer() {
-        
-        event(.demo(.show(.informer)))
-    }
-    
-    func showDemoLoader() {
-        
-        event(.demo(.show(.loader)))
-    }
-}
-
 // MARK: - Confirm with OTP
 
 extension UserAccountViewModel {
@@ -592,7 +555,7 @@ extension UserAccountViewModel {
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
                 
-                self?.route.alert = .fpsAlert(.ok(
+                self?.state.alert = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
                     primaryAction: { [weak self] in self?.event(.closeFPSAlert) }
@@ -609,7 +572,7 @@ private extension UserAccountViewModel {
     
     var fpsViewModel: FastPaymentsSettingsViewModel? {
         
-        switch route.destination {
+        switch state.destination {
         case let .fastPaymentsSettings(fpsViewModel):
             return fpsViewModel
             
@@ -627,7 +590,7 @@ extension UserAccountViewModel {
         
         let viewModel = factory.makeFastPaymentsSettingsViewModel()
         bind(viewModel)
-        route.destination = .fastPaymentsSettings(viewModel)
+        state.destination = .fastPaymentsSettings(viewModel)
     }
     
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
