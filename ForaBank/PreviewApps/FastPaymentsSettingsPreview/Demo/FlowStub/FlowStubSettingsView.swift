@@ -93,7 +93,7 @@ struct FlowStubSettingsView: View {
         
         VStack(spacing: 16) {
             
-            Button("Happy path") {
+            Button("Happy Path") {
                 
                 getProducts = .init(flowStub: .preview)
                 createContract = .init(flowStub: .preview)

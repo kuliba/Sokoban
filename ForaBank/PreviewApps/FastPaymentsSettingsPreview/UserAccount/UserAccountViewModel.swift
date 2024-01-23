@@ -6,31 +6,248 @@
 //
 
 import Combine
+import CombineSchedulers
 import FastPaymentsSettings
 import Foundation
 
 final class UserAccountViewModel: ObservableObject {
     
+    @Published private(set) var state: State
     @Published private(set) var route: Route
     
     let informer: InformerViewModel
     
+    private let routeSubject = PassthroughSubject<Route, Never>()
+    private let stateSubject = PassthroughSubject<State, Never>()
     private let factory: Factory
     private var cancellables = Set<AnyCancellable>()
     
     init(
+        state: State = .init(),
         route: Route = .init(),
         informer: InformerViewModel = .init(),
-        factory: Factory
+        factory: Factory,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        self.state = state
         self.route = route
         self.informer = informer
         self.factory = factory
         
-        //        $route
-        //            .map(\.isLoading)
-        //            .sink { print($0) }
-        //            .store(in: &cancellables)
+        routeSubject
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$route)
+        
+        stateSubject
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$state)
+    }
+}
+
+extension UserAccountViewModel {
+        
+    func event(_ event: Event) {
+        
+        let (modelState, effect) = reduce((route, state), event)
+        routeSubject.send(modelState.route)
+        stateSubject.send(modelState.state)
+        
+        if let effect {
+            
+            handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+
+    typealias ModelState = (route: Route, state: State)
+    
+    private func reduce(
+        _ modelState: ModelState,
+        _ event: Event
+    ) -> (ModelState, Effect?) {
+        
+        var modelState = modelState
+        var modelEffect: Effect?
+        
+        let (state, effect) = reduce(modelState.state, event)
+        
+        switch state.status {
+        case .none:
+            modelState.route.modal = nil
+            modelState.route.isLoading = false
+            
+        case .showingAlert:
+            modelState.route.modal = .alert(.ok(
+                title: "Demo alert",
+                message: "Long alert message here.",
+                primaryAction: { [weak self] in self?.event(.closeAlert) }
+            ))
+            modelState.route.isLoading = false
+            
+        case .showingInformer:
+            modelState.route.modal = nil
+            modelState.route.isLoading = false
+            informer.set(text: "Demo Informer Text.")
+            
+        case .showingLoader:
+            modelState.route.isLoading = true
+        }
+        
+        modelEffect = effect
+        
+        return (modelState, modelEffect)
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .demo(demo):
+            let (status, demoEffect) = reduce(state.status, demo)
+            state.status = status
+            effect = demoEffect.map(Effect.demo)
+            
+        case .closeAlert:
+            state.status = nil
+        }
+        
+        return (state, effect)
+    }
+    
+    func handleEffect(
+        _ effect: Effect,
+        _ dispatch: @escaping (Event) -> Void
+    ) {
+        switch effect {
+        case let .demo(demoEffect):
+            handleEffect(demoEffect) { dispatch(.demo($0)) }
+        }
+    }
+}
+
+// MARK: - to be injected
+
+private extension UserAccountViewModel {
+    
+    // demo domain
+    func reduce(
+        _ status: State.Status?,
+        _ event: Event.Demo
+    ) -> (State.Status?, Effect.Demo?) {
+        
+        var status = status
+        var effect: Effect.Demo?
+        
+        switch event {
+        case let .loaded(loaded):
+            switch loaded {
+            case .alert:
+                status = .showingAlert
+                
+            case .informer:
+                status = .showingInformer
+                
+            case .loader:
+                status = nil
+            }
+            
+        case let .show(show):
+            switch show {
+            case .alert:
+                status = .showingLoader
+                effect = .loadAlert
+                
+            case .informer:
+                status = .showingLoader
+                effect = .loadInformer
+                
+            case .loader:
+                status = .showingLoader
+                effect = .loader
+            }
+        }
+        
+        return (status, effect)
+    }
+
+    // demo domain
+    func handleEffect(
+        _ effect: Effect.Demo,
+        _ dispatch: @escaping (Event.Demo) -> Void
+    ) {
+        switch effect {
+        case .loadAlert:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                dispatch(.loaded(.alert))
+            }
+            
+        case .loadInformer:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                dispatch(.loaded(.informer))
+            }
+
+        case .loader:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                dispatch(.loaded(.loader))
+            }
+        }
+    }
+}
+
+extension UserAccountViewModel {
+    
+    struct State: Equatable {
+        
+        var status: Status?
+        
+        enum Status: Equatable {
+            
+            case showingAlert
+            case showingInformer
+            case showingLoader
+        }
+    }
+    
+    enum Event: Equatable {
+        
+        case closeAlert
+        case demo(Demo)
+        
+        enum Demo: Equatable {
+            
+            case loaded(Show)
+            case show(Show)
+            
+            enum Show: Equatable {
+                case alert
+                case informer
+                case loader
+            }
+        }
+    }
+    
+    enum Effect: Equatable {
+        
+        case demo(Demo)
+        
+        enum Demo: Equatable {
+            
+            case loadAlert
+            case loadInformer
+            case loader
+        }
     }
 }
 
@@ -38,32 +255,19 @@ final class UserAccountViewModel: ObservableObject {
 
 extension UserAccountViewModel {
     
-    func showDemoLoader() {
-        
-        route.isLoading = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            
-            self?.route.isLoading = false
-        }
-    }
-    
     func showDemoAlert() {
         
-        route.modal = .alert(.init(
-            title: "Test Alert",
-            message: "Long alert message here.",
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                action: dismissModal
-            )
-        ))
+        event(.demo(.show(.alert)))
     }
     
     func showDemoInformer() {
         
-        informer.set(text: "Demo Informer Text.")
+        event(.demo(.show(.informer)))
+    }
+    
+    func showDemoLoader() {
+        
+        event(.demo(.show(.loader)))
     }
 }
 
