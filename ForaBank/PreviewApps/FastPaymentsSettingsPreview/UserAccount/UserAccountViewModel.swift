@@ -249,14 +249,7 @@ private extension UserAccountViewModel {
             
         case .missingContract:
             modelState.route.isLoading = false
-            modelState.route.modal = .fpsAlert(.ok(
-                title: "Не найден договор СБП",
-                message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-                primaryAction: { [weak self] in
-                    
-                    self?.event(.closeAlert)
-                }
-            ))
+            modelState.route.modal = missingContractFPSAlert()
             
         default:
             (modelState, effect) = update(modelState, with: fpsState.status)
@@ -340,6 +333,16 @@ private extension UserAccountViewModel {
         ))
     }
     
+    func missingContractFPSAlert() -> Route.Modal {
+        
+        .fpsAlert(.missingContract(
+            action: { [weak self] in
+                
+                self?.event(.closeAlert)
+            }
+        ))
+    }
+    
     func missingProductFPSAlert() -> Route.Modal {
         
         .fpsAlert(.missingProduct(
@@ -366,6 +369,17 @@ private extension UserAccountViewModel {
 }
 
 private extension AlertViewModel {
+    
+    static func missingContract(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .ok(
+            title: "Не найден договор СБП",
+            message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
+            primaryAction: action
+        )
+    }
     
     static func missingProduct(
         action: @escaping () -> Void
