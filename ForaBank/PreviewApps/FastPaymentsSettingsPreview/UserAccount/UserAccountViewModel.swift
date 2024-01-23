@@ -259,49 +259,62 @@ private extension UserAccountViewModel {
             ))
             
         default:
-            switch fpsState.status {
-            case .none:
-                modelState.state.status = nil
-                modelState.route.isLoading = false
-                
-            case .inflight:
-                modelState.route.isLoading = true
-                
-#warning("there is final & non-final alerts, see file at sha d476879f0ddd56b9ddb7103b87941ff0e00a8695")
-            case let .serverError(message):
-                modelState.route.isLoading = false
-                modelState.route.modal = serverError(message)
-                
-            case .connectivityError:
-                modelState.route.isLoading = false
-                modelState.route.modal = tryAgain()
-                
-            case .missingProduct:
-                modelState.route.isLoading = false
-                modelState.route.modal = missingDefaultBank()
-                
-            case .updateContractFailure:
-#warning("direct change of state that is outside of reducer")
-                self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-                modelState.route = .init()
-                
-            case .setBankDefault:
-                modelState.route.modal = setBankDefault()
-                
-            case .setBankDefaultSuccess:
-#warning("direct change of state that is outside of reducer")
-                self.informer.set(text: "Банк по умолчанию установлен.")
-                
-            case .confirmSetBankDefault:
-                route.fpsDestination = .confirmSetBankDefault
-                effect = .fps(.resetStatus)
-            }
+            (modelState, effect) = update(modelState, with: fpsState.status)
         }
         
         return (modelState, effect)
     }
     
-    func serverError(
+    func update(
+    _ modelState: ModelState,
+    with status: FastPaymentsSettingsState.Status?
+    ) -> (ModelState, Effect?) {
+        
+        var modelState = modelState
+        var effect: Effect?
+        
+        switch status {
+        case .none:
+            modelState.state.status = nil
+            modelState.route.isLoading = false
+            
+        case .inflight:
+            modelState.route.isLoading = true
+            
+        case let .serverError(message):
+            modelState.route.isLoading = false
+            modelState.route.modal = serverErrorFPSAlert(message)
+            
+        case .connectivityError:
+            modelState.route.isLoading = false
+            modelState.route.modal = tryAgainFPSAlert()
+            
+        case .missingProduct:
+            modelState.route.isLoading = false
+            modelState.route.modal = missingProductFPSAlert()
+            
+        case .updateContractFailure:
+            modelState.route.isLoading = false
+#warning("direct change of state that is outside of reducer")
+            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            modelState.route = .init()
+            
+        case .setBankDefault:
+            modelState.route.modal = setBankDefaultFPSAlert()
+            
+        case .setBankDefaultSuccess:
+#warning("direct change of state that is outside of reducer")
+            self.informer.set(text: "Банк по умолчанию установлен.")
+            
+        case .confirmSetBankDefault:
+            route.fpsDestination = .confirmSetBankDefault
+            effect = .fps(.resetStatus)
+        }
+        
+        return (modelState, effect)
+    }
+    
+    func serverErrorFPSAlert(
         _ message: String
     ) -> Route.Modal {
         
@@ -314,7 +327,7 @@ private extension UserAccountViewModel {
         ))
     }
     
-    func tryAgain() -> Route.Modal {
+    func tryAgainFPSAlert() -> Route.Modal {
         
         let message = "Превышено время ожидания. Попробуйте позже"
         
@@ -327,9 +340,9 @@ private extension UserAccountViewModel {
         ))
     }
     
-    func missingDefaultBank() -> Route.Modal {
+    func missingProductFPSAlert() -> Route.Modal {
         
-        .fpsAlert(.missingDefaultBank(
+        .fpsAlert(.missingProduct(
             action: { [weak self] in
                 
                 self?.event(.dismissRoute)
@@ -337,7 +350,7 @@ private extension UserAccountViewModel {
         ))
     }
     
-    func setBankDefault() -> Route.Modal {
+    func setBankDefaultFPSAlert() -> Route.Modal {
         
         .fpsAlert(.setBankDefault(
             primaryAction: { [weak self] in
@@ -354,7 +367,7 @@ private extension UserAccountViewModel {
 
 private extension AlertViewModel {
     
-    static func missingDefaultBank(
+    static func missingProduct(
         action: @escaping () -> Void
     ) -> Self {
         
