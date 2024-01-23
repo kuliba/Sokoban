@@ -18,6 +18,7 @@ final class UserAccountViewModel: ObservableObject {
 #warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
     let informer: InformerViewModel
     
+    private let prepareSetBankDefault: PrepareSetBankDefault
     private let factory: Factory
     
     private let routeSubject = PassthroughSubject<Route, Never>()
@@ -29,10 +30,12 @@ final class UserAccountViewModel: ObservableObject {
         state: State = .init(),
         route: Route = .init(),
         informer: InformerViewModel = .init(),
+        prepareSetBankDefault: @escaping PrepareSetBankDefault,
         factory: Factory,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = state
+        self.prepareSetBankDefault = prepareSetBankDefault
         self.factory = factory
         self.route = route
         self.informer = informer
@@ -52,6 +55,11 @@ final class UserAccountViewModel: ObservableObject {
 
 extension UserAccountViewModel {
     
+    typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
+}
+
+extension UserAccountViewModel {
+    
     func event(_ event: Event) {
         
         let (modelState, effect) = reduce((route, state), event)
@@ -67,11 +75,14 @@ extension UserAccountViewModel {
     func handleEffect(_ effect: Effect) {
         
         switch effect {
+        case let .demo(demoEffect):
+            handleEffect(demoEffect) { [weak self] in self?.event(.demo($0)) }
+            
         case let .fps(fpsEvent):
             fpsDispatch?(fpsEvent)
             
-        case let .demo(demoEffect):
-            handleEffect(demoEffect) { [weak self] in self?.event(.demo($0)) }
+        case let .otp(otpEffect):
+            handleEffect(otpEffect) { [weak self] in self?.event($0) }
         }
     }
     
@@ -98,36 +109,66 @@ private extension UserAccountViewModel {
         _ event: Event
     ) -> (ModelState, Effect?) {
         
-        var modelState = modelState
-        var modelEffect: Effect?
+        var state = modelState
+        var eEffect: Effect?
         
         switch event {
         case .closeAlert:
-            modelState.route.modal = nil
-            modelEffect = .fps(.resetStatus)
+            state.route.modal = nil
+            eEffect = .fps(.resetStatus)
             
         case .dismissRoute:
-            modelState.route = .init()
-            modelEffect = .fps(.resetStatus)
+            state.route = .init()
+            eEffect = .fps(.resetStatus)
             
         case let .demo(demoEvent):
-            let (status, demoEffect) = reduce(modelState.state.status, demoEvent)
-            modelState.state.status = status
-            modelEffect = demoEffect.map(Effect.demo)
+            let (status, demoEffect) = reduce(state.state.status, demoEvent)
+            state.state.status = status
+            eEffect = demoEffect.map(Effect.demo)
             
-        case let .fps(fps):
-            switch fps {
+        case let .fps(.updated(fpsState)):
+            (state, eEffect) = reduce(state, with: fpsState)
+            
+        case let .otp(otp):
+            switch otp {
             case .prepareSetBankDefault:
-                modelState.route.modal = nil
-                modelState.route.isLoading = true
-                modelEffect = .fps(.bankDefault(.prepareSetBankDefault))
+                state.route.modal = nil
+                state.route.isLoading = true
+                eEffect = .otp(.prepareSetBankDefault)
                 
-            case let .updated(fpsState):
-                (modelState, modelEffect) = reduce(modelState, with: fpsState)
+            case let .prepareSetBankDefaultResponse(response):
+                state = update(state, with: response)
             }
         }
         
-        return (modelState, modelEffect)
+        return (state, eEffect)
+    }
+    
+    func update(
+        _ state: ModelState,
+        with response: Event.OTP.PrepareSetBankDefaultResponse
+    ) -> ModelState {
+        
+        var state = state
+        state.route.isLoading = false
+        
+        switch response {
+        case .success:
+            state.route.fpsDestination = .confirmSetBankDefault
+            
+        case .connectivityError:
+            state.route.modal = .fpsAlert(.ok(
+                primaryAction: { [weak self] in self?.event(.closeAlert) }
+            ))
+            
+        case let .serverError(message):
+            state.route.modal = .fpsAlert(.ok(
+                message: message,
+                primaryAction: { [weak self] in self?.event(.closeAlert) }
+            ))
+        }
+        
+        return state
     }
 }
 
@@ -135,7 +176,7 @@ private extension UserAccountViewModel {
 
 private extension UserAccountViewModel {
     
-    // MARK: - demo domain
+    // MARK: - Demo Domain
     
     func reduce(
         _ status: State.Status?,
@@ -331,13 +372,37 @@ private extension UserAccountViewModel {
         .fpsAlert(.setBankDefault(
             primaryAction: { [weak self] in
                 
-                self?.event(.fps(.prepareSetBankDefault))
+                self?.event(.otp(.prepareSetBankDefault))
             },
             secondaryAction: { [weak self] in
                 
                 self?.event(.closeAlert)
             }
         ))
+    }
+    
+    // MARK: - OTP Domain
+    
+    func handleEffect(
+        _ otpEffect: Effect.OTP,
+        _ dispatch: @escaping (Event) -> Void
+    ) {
+        switch otpEffect {
+        case .prepareSetBankDefault:
+            prepareSetBankDefault { result in
+                
+                switch result {
+                case .success(()):
+                    dispatch(.otp(.prepareSetBankDefaultResponse(.success)))
+                    
+                case .failure(.connectivityError):
+                    dispatch(.otp(.prepareSetBankDefaultResponse(.connectivityError)))
+                    
+                case let .failure(.serverError(message)):
+                    dispatch(.otp(.prepareSetBankDefaultResponse(.serverError(message))))
+                }
+            }
+        }
     }
 }
 
@@ -409,6 +474,8 @@ extension UserAccountViewModel {
         
         case fps(FastPaymentsSettings)
         
+        case otp(OTP)
+        
         enum Demo: Equatable {
             
             case loaded(Show)
@@ -423,8 +490,20 @@ extension UserAccountViewModel {
         
         enum FastPaymentsSettings: Equatable {
             
-            case prepareSetBankDefault
             case updated(FastPaymentsSettingsState)
+        }
+        
+        enum OTP: Equatable {
+            
+            case prepareSetBankDefault
+            case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
+            
+            enum PrepareSetBankDefaultResponse: Equatable {
+                
+                case success
+                case connectivityError
+                case serverError(String)
+            }
         }
     }
     
@@ -432,12 +511,18 @@ extension UserAccountViewModel {
         
         case demo(Demo)
         case fps(FastPaymentsSettingsEvent)
+        case otp(OTP)
         
         enum Demo: Equatable {
             
             case loadAlert
             case loadInformer
             case loader
+        }
+        
+        enum OTP: Equatable {
+            
+            case prepareSetBankDefault
         }
     }
 }

@@ -40,7 +40,15 @@ extension UserAccountViewModel {
                 }
             }
         )
-
+        
+        let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.prepareSetBankDefault)
+            }
+        }
+        
         let effectHandler = FastPaymentsSettingsEffectHandler(
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: { completion in
@@ -50,13 +58,7 @@ extension UserAccountViewModel {
                     completion(flowStub.getSettings)
                 }
             },
-            prepareSetBankDefault: { completion in
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(flowStub.prepareSetBankDefault)
-                }
-            },
+            prepareSetBankDefault: prepareSetBankDefault,
             updateProduct: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -68,6 +70,7 @@ extension UserAccountViewModel {
         
         return .init(
             route: route,
+            prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
@@ -109,6 +112,7 @@ extension UserAccountViewModel {
         
         return .init(
             route: route,
+            prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
