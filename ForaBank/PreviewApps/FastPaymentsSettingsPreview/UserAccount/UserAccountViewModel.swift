@@ -114,7 +114,19 @@ private extension UserAccountViewModel {
         
         switch event {
         case .closeAlert:
-            state.route.modal = nil
+            state.route.alert = nil
+            eEffect = .fps(.resetStatus)
+            
+        case .closeFPSAlert:
+            state.route.alert = nil
+            eEffect = .fps(.resetStatus)
+            
+        case .dismissFPSDestination:
+//            state.route.fpsDestination = nil
+            eEffect = .fps(.resetStatus)
+            
+        case .dismissDestination:
+            state.route.destination = nil
             eEffect = .fps(.resetStatus)
             
         case .dismissRoute:
@@ -132,12 +144,12 @@ private extension UserAccountViewModel {
         case let .otp(otp):
             switch otp {
             case .prepareSetBankDefault:
-                state.route.modal = nil
+                state.route.alert = nil
                 state.route.isLoading = true
                 eEffect = .otp(.prepareSetBankDefault)
                 
             case let .prepareSetBankDefaultResponse(response):
-                state = update(state, with: response)
+                (state, eEffect) = update(state, with: response)
             }
         }
         
@@ -147,28 +159,32 @@ private extension UserAccountViewModel {
     func update(
         _ state: ModelState,
         with response: Event.OTP.PrepareSetBankDefaultResponse
-    ) -> ModelState {
+    ) -> (ModelState, Effect?) {
         
         var state = state
+        var effect: Effect?
+        
         state.route.isLoading = false
+        effect = .fps(.resetStatus)
         
         switch response {
         case .success:
             state.route.fpsDestination = .confirmSetBankDefault
             
         case .connectivityError:
-            state.route.modal = .fpsAlert(.ok(
-                primaryAction: { [weak self] in self?.event(.closeAlert) }
-            ))
+            state.route.fpsDestination = nil
+#warning("direct change of state that is outside of reducer")
+            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.route.modal = .fpsAlert(.ok(
+            state.route.alert = .fpsAlert(.ok(
+                title: "Ошибка",
                 message: message,
                 primaryAction: { [weak self] in self?.event(.closeAlert) }
             ))
         }
         
-        return state
+        return (state, effect)
     }
 }
 
@@ -254,25 +270,28 @@ private extension UserAccountViewModel {
         var effect: Effect?
         
         switch fpsState.userPaymentSettings {
+        case .none:
+            break
+            
+        case .contracted:
+            #warning("looks like status should be part of contracted???")
+            (modelState, effect) = update(modelState, with: fpsState.status)
             
         case let .failure(failure):
             // final => dismissRoute
             switch failure {
             case let .serverError(message):
                 modelState.route.isLoading = false
-                modelState.route.modal = serverErrorFPSAlert(message, .dismissRoute)
+                modelState.route.alert = serverErrorFPSAlert(message, .dismissRoute)
                 
             case .connectivityError:
                 modelState.route.isLoading = false
-                modelState.route.modal = tryAgainFPSAlert(.dismissRoute)
+                modelState.route.alert = tryAgainFPSAlert(.dismissRoute)
             }
             
         case .missingContract:
             modelState.route.isLoading = false
-            modelState.route.modal = missingContractFPSAlert()
-            
-        default:
-            (modelState, effect) = update(modelState, with: fpsState.status)
+            modelState.route.alert = missingContractFPSAlert()
         }
         
         return (modelState, effect)
@@ -289,6 +308,8 @@ private extension UserAccountViewModel {
         switch status {
         case .none:
             modelState.state.status = nil
+            modelState.route.fpsDestination = nil
+            modelState.route.alert = nil
             modelState.route.isLoading = false
             
         case .inflight:
@@ -297,16 +318,16 @@ private extension UserAccountViewModel {
         case let .serverError(message):
             modelState.route.isLoading = false
             // non-final => closeAlert
-            modelState.route.modal = serverErrorFPSAlert(message, .closeAlert)
+            modelState.route.alert = serverErrorFPSAlert(message, .closeAlert)
             
         case .connectivityError:
             modelState.route.isLoading = false
             // non-final => closeAlert
-            modelState.route.modal = tryAgainFPSAlert(.closeAlert)
+            modelState.route.alert = tryAgainFPSAlert(.closeAlert)
             
         case .missingProduct:
             modelState.route.isLoading = false
-            modelState.route.modal = missingProductFPSAlert()
+            modelState.route.alert = missingProductFPSAlert()
             
         case .updateContractFailure:
             modelState.route.isLoading = false
@@ -315,7 +336,7 @@ private extension UserAccountViewModel {
             modelState.route = .init()
             
         case .setBankDefault:
-            modelState.route.modal = setBankDefaultFPSAlert()
+            modelState.route.alert = setBankDefaultFPSAlert()
             
         case .setBankDefaultSuccess:
             modelState.route.isLoading = false
@@ -333,7 +354,7 @@ private extension UserAccountViewModel {
     func serverErrorFPSAlert(
         _ message: String,
         _ event: Event
-    ) -> Route.Modal {
+    ) -> Route.Alert {
         
         .fpsAlert(.ok(
             message: message,
@@ -343,7 +364,7 @@ private extension UserAccountViewModel {
     
     func tryAgainFPSAlert(
         _ event: Event
-    ) -> Route.Modal {
+    ) -> Route.Alert {
         
         let message = "Превышено время ожидания. Попробуйте позже"
         
@@ -353,21 +374,21 @@ private extension UserAccountViewModel {
         ))
     }
     
-    func missingContractFPSAlert() -> Route.Modal {
+    func missingContractFPSAlert() -> Route.Alert {
         
         .fpsAlert(.missingContract(
             action: { [weak self] in self?.event(.closeAlert) }
         ))
     }
     
-    func missingProductFPSAlert() -> Route.Modal {
+    func missingProductFPSAlert() -> Route.Alert {
         
         .fpsAlert(.missingProduct(
             action: { [weak self] in self?.event(.dismissRoute) }
         ))
     }
     
-    func setBankDefaultFPSAlert() -> Route.Modal {
+    func setBankDefaultFPSAlert() -> Route.Alert {
         
         .fpsAlert(.setBankDefault(
             primaryAction: { [weak self] in
@@ -468,6 +489,9 @@ extension UserAccountViewModel {
     enum Event: Equatable {
         
         case closeAlert
+        case closeFPSAlert
+        case dismissFPSDestination
+        case dismissDestination
         case dismissRoute
         
         case demo(Demo)
@@ -554,7 +578,7 @@ extension UserAccountViewModel {
     func handleOTPResult(
         _ result: ConfirmWithOTPResult
     ) {
-        dismissFPSDestination()
+        event(.dismissFPSDestination)
         fpsViewModel?.event(.resetStatus)
         
         switch result {
@@ -568,10 +592,10 @@ extension UserAccountViewModel {
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
                 
-                self?.route.modal = .fpsAlert(.ok(
+                self?.route.alert = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
-                    primaryAction: { [weak self] in self?.dismissModal() }
+                    primaryAction: { [weak self] in self?.event(.closeFPSAlert) }
                 ))
             }
             
@@ -638,48 +662,19 @@ private extension AlertViewModel {
 
 extension UserAccountViewModel {
     
-    func resetRoute() {
-        
-        routeSubject.send(.init())
-    }
-    
-    func dismissDestination() {
-        
-        var route = route
-        route.destination = nil
-        routeSubject.send(route)
-    }
-    
-    func dismissFPSDestination() {
-        
-        var route = route
-        route.fpsDestination = nil
-        routeSubject.send(route)
-    }
-    
-    func dismissModal() {
-        
-        var route = route
-        route.modal = nil
-        routeSubject.send(route)
-    }
-}
-
-extension UserAccountViewModel {
-    
     struct Route: Equatable {
         
         var destination: Destination?
         var fpsDestination: FPSDestination?
-        var modal: Modal?
+        var alert: Alert?
         var isLoading = false
         
         init(
             destination: Destination? = nil,
-            modal: Modal? = nil
+            modal: Alert? = nil
         ) {
             self.destination = destination
-            self.modal = modal
+            self.alert = modal
         }
         
         enum Destination: Equatable {
@@ -692,7 +687,7 @@ extension UserAccountViewModel {
             case confirmSetBankDefault//(phoneNumberMask: String)
         }
         
-        enum Modal: Equatable {
+        enum Alert: Equatable {
             
             case alert(AlertViewModel)
             case fpsAlert(AlertViewModel)
