@@ -17,6 +17,7 @@ let package = Package(
         .sberQR,
         .sharedAPIInfra,
         .textFieldModel,
+        .productProfile,
         // Landing
         .codableLanding,
         .landingMapping,
@@ -75,6 +76,8 @@ let package = Package(
         .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
+        .productProfile,
+        .productProfileTests,
         .sberQR,
         .sberQRTests,
         .sharedAPIInfra,
@@ -191,6 +194,13 @@ private extension Product {
         name: .phoneNumberWrapper,
         targets: [
             .phoneNumberWrapper,
+        ]
+    )
+    
+    static let productProfile = library(
+        name: .productProfile,
+        targets: [
+            .productProfile,
         ]
     )
     
@@ -547,6 +557,29 @@ private extension Target {
         ]
     )
     
+    static let productProfile = target(
+        name: .productProfile,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+        ]
+    )
+    static let productProfileTests = testTarget(
+        name: .productProfileTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .productProfile,
+            .rxViewModel,
+        ]
+    )
+
     static let sberQR = target(
         name: .sberQR,
         dependencies: [
@@ -1187,6 +1220,10 @@ private extension Target.Dependency {
         name: .phoneNumberWrapper
     )
     
+    static let productProfile = byName(
+        name: .productProfile
+    )
+
     static let sberQR = byName(
         name: .sberQR
     )
@@ -1366,6 +1403,9 @@ private extension String {
     
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
+    
+    static let productProfile = "ProductProfile"
+    static let productProfileTests = "ProductProfileTests"
     
     static let sberQR = "SberQR"
     static let sberQRTests = "SberQRTests"
