@@ -11,21 +11,21 @@ import Tagged
 
 extension Services {
     
-    typealias CardStatementForPeriodPayload = CardStatementForPeriodDomain.Payload
+    typealias CardStatementForPeriodPayload = CardStatementAPI.CardStatementForPeriodPayload
     
     static func makeCardStatementForPeriod(
         httpClient: HTTPClient,
         productId: ProductData.ID,
         period: Period,
         name: CardStatementForPeriodPayload.Name? = nil,
-        statementFormat: StatementFormat? = nil,
+        statementFormat: CardStatementForPeriodPayload.StatementFormat? = nil,
         cardNumber: CardStatementForPeriodPayload.CardNumber? = nil
     ) async throws-> [ProductStatementData] {
         
         let payload = CardStatementForPeriodPayload.init(
             id: .init(productId),
             name: name,
-            period: period,
+            period: .init(start: period.start, end: period.end),
             statementFormat: statementFormat,
             cardNumber: cardNumber)
         let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
