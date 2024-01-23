@@ -19,5 +19,5 @@ func сardStatementError(
 func сardStatementDefaultError(
 ) -> Result {
     
-    сardStatementError(.defaultError)
+    сardStatementError(.defaultErrorMessage)
 }
