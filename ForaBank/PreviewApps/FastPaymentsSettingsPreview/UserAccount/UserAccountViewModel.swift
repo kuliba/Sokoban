@@ -60,13 +60,18 @@ extension UserAccountViewModel {
         
         if let effect {
             
-            switch effect {
-            case let .fps(fpsEvent):
-                fpsDispatch?(fpsEvent)
-                
-            case let .demo(demoEffect):
-                handleEffect(demoEffect) { [weak self] in self?.event(.demo($0)) }
-            }
+            handleEffect(effect)
+        }
+    }
+    
+    func handleEffect(_ effect: Effect) {
+        
+        switch effect {
+        case let .fps(fpsEvent):
+            fpsDispatch?(fpsEvent)
+            
+        case let .demo(demoEffect):
+            handleEffect(demoEffect) { [weak self] in self?.event(.demo($0)) }
         }
     }
     
@@ -121,20 +126,6 @@ private extension UserAccountViewModel {
         }
         
         return (modelState, modelEffect)
-    }
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping (Event) -> Void
-    ) {
-        switch effect {
-        case let .fps(fpsEvent):
-#warning("duplication?")
-            fpsDispatch?(fpsEvent)
-            
-        case let .demo(demoEffect):
-            handleEffect(demoEffect) { dispatch(.demo($0)) }
-        }
     }
 }
 
@@ -222,29 +213,15 @@ private extension UserAccountViewModel {
         switch fpsState.userPaymentSettings {
             
         case let .failure(failure):
-#warning("extract to helper")
-            // final
+            // final => dismissRoute
             switch failure {
             case let .serverError(message):
                 modelState.route.isLoading = false
-                modelState.route.modal = .fpsAlert(.ok(
-                    message: message,
-                    primaryAction: { [weak self] in
-                        
-                        self?.event(.dismissRoute)
-                    }
-                ))
+                modelState.route.modal = serverErrorFPSAlert(message, .dismissRoute)
                 
             case .connectivityError:
                 modelState.route.isLoading = false
-                let message = "Превышено время ожидания. Попробуйте позже"
-                modelState.route.modal = .fpsAlert(.ok(
-                    message: message,
-                    primaryAction: { [weak self] in
-                        
-                        self?.event(.dismissRoute)
-                    }
-                ))
+                modelState.route.modal = tryAgainFPSAlert(.dismissRoute)
             }
             
         case .missingContract:
@@ -259,8 +236,8 @@ private extension UserAccountViewModel {
     }
     
     func update(
-    _ modelState: ModelState,
-    with status: FastPaymentsSettingsState.Status?
+        _ modelState: ModelState,
+        with status: FastPaymentsSettingsState.Status?
     ) -> (ModelState, Effect?) {
         
         var modelState = modelState
@@ -276,11 +253,13 @@ private extension UserAccountViewModel {
             
         case let .serverError(message):
             modelState.route.isLoading = false
-            modelState.route.modal = serverErrorFPSAlert(message)
+            // non-final => closeAlert
+            modelState.route.modal = serverErrorFPSAlert(message, .closeAlert)
             
         case .connectivityError:
             modelState.route.isLoading = false
-            modelState.route.modal = tryAgainFPSAlert()
+            // non-final => closeAlert
+            modelState.route.modal = tryAgainFPSAlert(.closeAlert)
             
         case .missingProduct:
             modelState.route.isLoading = false
@@ -308,48 +287,39 @@ private extension UserAccountViewModel {
     }
     
     func serverErrorFPSAlert(
-        _ message: String
+        _ message: String,
+        _ event: Event
     ) -> Route.Modal {
         
         .fpsAlert(.ok(
             message: message,
-            primaryAction: { [weak self] in
-                
-                self?.event(.closeAlert)
-            }
+            primaryAction: { [weak self] in self?.event(event) }
         ))
     }
     
-    func tryAgainFPSAlert() -> Route.Modal {
+    func tryAgainFPSAlert(
+        _ event: Event
+    ) -> Route.Modal {
         
         let message = "Превышено время ожидания. Попробуйте позже"
         
         return .fpsAlert(.ok(
             message: message,
-            primaryAction: { [weak self] in
-                
-                self?.event(.closeAlert)
-            }
+            primaryAction: { [weak self] in self?.event(event) }
         ))
     }
     
     func missingContractFPSAlert() -> Route.Modal {
         
         .fpsAlert(.missingContract(
-            action: { [weak self] in
-                
-                self?.event(.closeAlert)
-            }
+            action: { [weak self] in self?.event(.closeAlert) }
         ))
     }
     
     func missingProductFPSAlert() -> Route.Modal {
         
         .fpsAlert(.missingProduct(
-            action: { [weak self] in
-                
-                self?.event(.dismissRoute)
-            }
+            action: { [weak self] in self?.event(.dismissRoute) }
         ))
     }
     
