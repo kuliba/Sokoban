@@ -38,9 +38,9 @@ struct FlowStubSettingsView: View {
         
         List {
             
+            pickerSection("Get Settings (flow \"abc\")", selection: $getSettings)
             pickerSection("Products", selection: $getProducts)
             pickerSection("Create Contract", selection: $createContract)
-            pickerSection("Get Settings", selection: $getSettings)
             pickerSection("Prepare Set Bank Default", selection: $prepareSetBankDefault)
             pickerSection("Update Contract", selection: $updateContract)
             pickerSection("Update Product", selection: $updateProduct)
@@ -147,7 +147,7 @@ private extension FlowStubSettingsView {
             case .active:   return .success(.active)
             case .inactive: return .success(.inactive)
             case .error_C:  return .failure(.connectivityError)
-            case .error_S:  return .failure(.serverError(UUID().uuidString))
+            case .error_S:  return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
@@ -173,7 +173,7 @@ private extension FlowStubSettingsView {
                 return .failure(.connectivityError)
                 
             case .error_S:
-                return .failure(.serverError(UUID().uuidString))
+                return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
@@ -189,7 +189,7 @@ private extension FlowStubSettingsView {
             switch self {
             case .success: return .success(())
             case .error_C: return .failure(.connectivityError)
-            case .error_S: return .failure(.serverError(UUID().uuidString))
+            case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
@@ -206,7 +206,7 @@ private extension FlowStubSettingsView {
             case .active:   return .success(.active)
             case .inactive: return .success(.inactive)
             case .error_C:  return .failure(.connectivityError)
-            case .error_S:  return .failure(.serverError(UUID().uuidString))
+            case .error_S:  return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
@@ -222,7 +222,7 @@ private extension FlowStubSettingsView {
             switch self {
             case .success: return .success(())
             case .error_C: return .failure(.connectivityError)
-            case .error_S: return .failure(.serverError(UUID().uuidString))
+            case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
