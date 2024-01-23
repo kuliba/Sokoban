@@ -492,7 +492,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     // MARK: - prepareSetBankDefault
     
-    func test_prepareSetBankDefault_shouldResetStatusOnActive_offEnabled_setBankDefaultStatus() {
+    func test_prepareSetBankDefault_shouldStatusToInflightOnActive_offEnabled_setBankDefaultStatus() {
         
         let (details, active) = contractedState(
             .active,
@@ -502,7 +502,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         assert(prepareSetBankDefault(), on: active) {
             $0.userPaymentSettings = .contracted(details)
-            $0.status = nil
+            $0.status = .inflight
         }
     }
     
