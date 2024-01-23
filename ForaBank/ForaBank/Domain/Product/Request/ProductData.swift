@@ -351,6 +351,15 @@ extension ProductData {
         case unknown
     }
     
+    enum StatusCard: String, Codable, Unknownable {
+        
+        case notActivated = "NOT_ACTIVE"
+        case active = "ACTIVE"
+        case blockedUlockNotAvailable = "BLOCKED_UNLOCK_NOT_AVAILABLE"
+        case blockedUlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
+        case unknown
+    }
+    
     var isAccountNumber: Bool {
         
         guard let accountNumber = accountNumber else {
