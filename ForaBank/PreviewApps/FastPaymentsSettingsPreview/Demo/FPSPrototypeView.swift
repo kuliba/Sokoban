@@ -31,9 +31,11 @@ struct FPSPrototypeView: View {
                 
                 flowStubButton("Select Flow")
                     .font(.headline)
+                    .buttonStyle(.borderedProminent)
                 
                 Button("Happy Path", action: { flowStub = .preview })
                     .foregroundColor(.green)
+                    .buttonStyle(.bordered)
             }
             .frame(maxWidth: .infinity)
             
