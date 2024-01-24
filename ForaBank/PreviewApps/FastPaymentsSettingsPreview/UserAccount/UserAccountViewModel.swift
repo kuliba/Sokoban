@@ -114,16 +114,21 @@ private extension UserAccountViewModel {
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-            state.fpsDestination = nil
+            fpsDestinationCancellable?.cancel()
             fpsDestinationCancellable = nil
+            state.fpsDestination = nil
             
         case .dismissDestination:
-            state.destination = nil
+            destinationCancellable?.cancel()
             destinationCancellable = nil
+            state.destination = nil
             
         case .dismissRoute:
             state = .init()
-            effect = .fps(.resetStatus)
+            fpsDestinationCancellable?.cancel()
+            fpsDestinationCancellable = nil
+            destinationCancellable?.cancel()
+            destinationCancellable = nil
             
         case let .demo(demoEvent):
             let (demoState, demoEffect) = reduce(state, demoEvent)
