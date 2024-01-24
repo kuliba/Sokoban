@@ -74,7 +74,7 @@ extension UserAccountViewModel {
             fpsDispatch?(fpsEvent)
             
         case let .otp(otpEffect):
-            handleEffect(otpEffect) { [weak self] in self?.event($0) }
+            handleEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
         }
     }
     
@@ -402,7 +402,7 @@ private extension UserAccountViewModel {
     
     func handleEffect(
         _ otpEffect: Effect.OTP,
-        _ dispatch: @escaping (Event) -> Void
+        _ dispatch: @escaping (Event.OTP) -> Void
     ) {
         switch otpEffect {
         case .prepareSetBankDefault:
@@ -410,13 +410,13 @@ private extension UserAccountViewModel {
                 
                 switch result {
                 case .success(()):
-                    dispatch(.otp(.prepareSetBankDefaultResponse(.success)))
+                    dispatch(.prepareSetBankDefaultResponse(.success))
                     
                 case .failure(.connectivityError):
-                    dispatch(.otp(.prepareSetBankDefaultResponse(.connectivityError)))
+                    dispatch(.prepareSetBankDefaultResponse(.connectivityError))
                     
                 case let .failure(.serverError(message)):
-                    dispatch(.otp(.prepareSetBankDefaultResponse(.serverError(message))))
+                    dispatch(.prepareSetBankDefaultResponse(.serverError(message)))
                 }
             }
         }
