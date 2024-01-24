@@ -930,6 +930,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ProductProfile"
+               BuildableName = "ProductProfile"
+               BlueprintName = "ProductProfile"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1171,6 +1185,16 @@
                BlueprintIdentifier = "CardStatementAPITests"
                BuildableName = "CardStatementAPITests"
                BlueprintName = "CardStatementAPITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ProductProfileTests"
+               BuildableName = "ProductProfileTests"
+               BlueprintName = "ProductProfileTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
