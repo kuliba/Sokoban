@@ -16,7 +16,7 @@ extension UserAccountViewModel {
         initialState: OTPInputState? = nil,
         duration: Int = 10,
         length: Int = 6,
-        initiate: @escaping CountdownEffectHandler.Initiate = { completion in
+        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP = { completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
         
@@ -106,7 +106,7 @@ extension UserAccountViewModel {
                             initialState: initialState,
                             duration: duration,
                             length: length,
-                            initiate: initiate,
+                            initiateOTP: initiateOTP,
                             submitOTP: submitOTP,
                             scheduler: $0),
                         scheduler: $0
@@ -120,7 +120,7 @@ extension UserAccountViewModel {
         initialState: OTPInputState? = nil,
         duration: Int = 10,
         length: Int = 6,
-        initiate: @escaping CountdownEffectHandler.Initiate,
+        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         route: Route = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
@@ -170,7 +170,7 @@ extension UserAccountViewModel {
                             initialState: initialState,
                             duration: duration,
                             length: length,
-                            initiate: initiate,
+                            initiateOTP: initiateOTP,
                             submitOTP: submitOTP,
                             scheduler: $0),
                         scheduler: $0

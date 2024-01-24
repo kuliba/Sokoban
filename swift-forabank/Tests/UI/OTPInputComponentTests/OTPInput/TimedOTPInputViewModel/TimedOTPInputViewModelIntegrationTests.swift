@@ -14,9 +14,9 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_,_, initiateSpy, submitOTPSpy) = makeSUT()
+        let (_,_,_, initiateOTPSpy, submitOTPSpy) = makeSUT()
         
-        XCTAssertEqual(initiateSpy.callCount, 0)
+        XCTAssertEqual(initiateOTPSpy.callCount, 0)
         XCTAssertEqual(submitOTPSpy.callCount, 0)
     }
     
@@ -33,10 +33,10 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     
     func test_initiateFailureFlow() {
         
-        let (sut, stateSpy, _, initiateSpy, _) = makeSUT()
+        let (sut, stateSpy, _, initiateOTPSpy, _) = makeSUT()
         
         sut.event(prepare())
-        initiateSpy.complete(with: .failure(.connectivityError))
+        initiateOTPSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
             completed(),
@@ -49,10 +49,10 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     func test_submitOTPFailureFlow() {
         
         let duration = 33
-        let (sut, stateSpy, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(duration: duration)
+        let (sut, stateSpy, timerSpy, initiateOTPSpy, submitOTPSpy) = makeSUT(duration: duration)
         
         sut.event(prepare())
-        initiateSpy.complete(with: .success(()))
+        initiateOTPSpy.complete(with: .success(()))
         timerSpy.tick()
         timerSpy.tick()
         sut.event(.otpField(.edit("12345")))
@@ -78,10 +78,10 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     func test_successFlow() {
         
         let duration = 33
-        let (sut, stateSpy, timerSpy, initiateSpy, submitOTPSpy) = makeSUT(duration: duration)
+        let (sut, stateSpy, timerSpy, initiateOTPSpy, submitOTPSpy) = makeSUT(duration: duration)
         
         sut.event(prepare())
-        initiateSpy.complete(with: .success(()))
+        initiateOTPSpy.complete(with: .success(()))
         timerSpy.tick()
         timerSpy.tick()
         timerSpy.tick()
@@ -115,7 +115,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
 
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias InitiateSpy = Spy<Void, CountdownEffectHandler.InitiateResult>
+    private typealias InitiateOTPSpy = Spy<Void, CountdownEffectHandler.InitiateOTPResult>
     private typealias SubmitOTPSpy = Spy<OTPFieldEffectHandler.SubmitOTPPayload, OTPFieldEffectHandler.SubmitOTPResult>
 
     private func makeSUT(
@@ -127,18 +127,18 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         sut: SUT,
         stateSpy: StateSpy,
         timerSpy: TimerSpy,
-        initiateSpy: InitiateSpy,
+        initiateOTPSpy: InitiateOTPSpy,
         submitOTPSpy: SubmitOTPSpy
     ) {
         let timerSpy = TimerSpy(duration: duration)
-        let initiateSpy = InitiateSpy()
+        let initiateOTPSpy = InitiateOTPSpy()
         let submitOTPSpy = SubmitOTPSpy()
         
         let initialState = initialState ?? makeState()
         let otpInputViewModel = OTPInputViewModel.default(
             initialState: initialState,
             duration: duration,
-            initiate: initiateSpy.process(completion:),
+            initiateOTP: initiateOTPSpy.process(completion:),
             submitOTP: submitOTPSpy.process(_:completion:),
             scheduler: .immediate
         )
@@ -153,10 +153,10 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         trackForMemoryLeaks(stateSpy, file: file, line: line)
         trackForMemoryLeaks(otpInputViewModel, file: file, line: line)
         trackForMemoryLeaks(timerSpy, file: file, line: line)
-        trackForMemoryLeaks(initiateSpy, file: file, line: line)
+        trackForMemoryLeaks(initiateOTPSpy, file: file, line: line)
         trackForMemoryLeaks(submitOTPSpy, file: file, line: line)
         
-        return (sut, stateSpy, timerSpy, initiateSpy, submitOTPSpy)
+        return (sut, stateSpy, timerSpy, initiateOTPSpy, submitOTPSpy)
     }
     
     private func makeState(
