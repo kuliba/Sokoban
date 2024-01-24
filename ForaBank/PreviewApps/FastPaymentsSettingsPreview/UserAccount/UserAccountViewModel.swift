@@ -128,8 +128,8 @@ private extension UserAccountViewModel {
             state = demoState
             effect = demoEffect.map(Effect.demo)
             
-        case let .fps(.updated(fpsState)):
-            (state, effect) = reduce(state, with: fpsState)
+        case let .fps(.updated(fpsStateProjection)):
+            (state, effect) = reduce(state, with: fpsStateProjection)
             
         case let .otp(otp):
             switch otp {
@@ -259,21 +259,31 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: Route,
-        with fpsState: FastPaymentsSettingsState
+        with fpsStateProjection: FPSStateProjection
     ) -> (Route, Effect?) {
         
         var state = state
         var effect: Effect?
         
-        switch fpsState.userPaymentSettings {
-        case .none:
+        switch (fpsStateProjection.state, fpsStateProjection.status) {
+        case (_, .inflight):
+            state.isLoading = true
+            
+        case (.notLoaded, _):
             break
             
-        case .contracted:
-#warning("looks like status should be part of contracted???")
-            (state, effect) = update(state, with: fpsState.status)
+        case (.contracted, nil):
+            state.isLoading = false
             
-        case let .failure(failure):
+        case (.missingContract, nil):
+            state.isLoading = false
+            state.alert = missingContractFPSAlert()
+            
+        case let (.contracted, .some(status)),
+            let (.missingContract, .some(status)):
+            (state, effect) = update(state, with: status)
+            
+        case let (.failure(failure), _):
             // final => dismissRoute
             switch failure {
             case let .serverError(message):
@@ -284,10 +294,6 @@ private extension UserAccountViewModel {
                 state.isLoading = false
                 state.alert = tryAgainFPSAlert(.dismissRoute)
             }
-            
-        case .missingContract:
-            state.isLoading = false
-            state.alert = missingContractFPSAlert()
         }
         
         return (state, effect)
@@ -295,40 +301,33 @@ private extension UserAccountViewModel {
     
     func update(
         _ state: Route,
-        with status: FastPaymentsSettingsState.Status?
+        with status: FPSStateProjection.Status
     ) -> (Route, Effect?) {
         
         var state = state
         var effect: Effect?
         
         switch status {
-        case .none:
-            state.fpsDestination = nil
-            state.alert = nil
-            state.isLoading = false
-            
         case .inflight:
             state.isLoading = true
             
-        case let .serverError(message):
-            state.isLoading = false
-            // non-final => closeAlert
-            state.alert = serverErrorFPSAlert(message, .closeAlert)
-            
-        case .connectivityError:
+        case .failure(.connectivityError):
             state.isLoading = false
             // non-final => closeAlert
             state.alert = tryAgainFPSAlert(.closeAlert)
+            
+        case let .failure(.serverError(message)):
+            state.isLoading = false
+            // non-final => closeAlert
+            state.alert = serverErrorFPSAlert(message, .closeAlert)
             
         case .missingProduct:
             state.isLoading = false
             state.alert = missingProductFPSAlert()
             
-        case .updateContractFailure:
-            state.isLoading = false
-#warning("direct change of state that is outside of reducer")
-            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            state = .init()
+        case .confirmSetBankDefault:
+            state.fpsDestination = .confirmSetBankDefault
+            effect = .fps(.resetStatus)
             
         case .setBankDefault:
             state.alert = setBankDefaultFPSAlert()
@@ -338,9 +337,11 @@ private extension UserAccountViewModel {
 #warning("direct change of state that is outside of reducer")
             self.informer.set(text: "Банк по умолчанию установлен.")
             
-        case .confirmSetBankDefault:
-            state.fpsDestination = .confirmSetBankDefault
-            effect = .fps(.resetStatus)
+        case .updateContractFailure:
+            state.isLoading = false
+#warning("direct change of state that is outside of reducer")
+            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state = .init()
         }
         
         return (state, effect)
@@ -497,7 +498,7 @@ extension UserAccountViewModel {
         
         enum FastPaymentsSettings: Equatable {
             
-            case updated(FastPaymentsSettingsState)
+            case updated(FPSStateProjection)
         }
         
         enum OTP: Equatable {
@@ -596,6 +597,8 @@ extension UserAccountViewModel {
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
         
         destinationCancellable = viewModel.$state
+            .map(\.projection)
+            .removeDuplicates()
             .map(Event.FastPaymentsSettings.updated)
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.fps($0))}

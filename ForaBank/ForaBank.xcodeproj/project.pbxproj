@@ -624,6 +624,8 @@
 		2A783A962B5A8D620035CEAB /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A952B5A8D620035CEAB /* CountdownView.swift */; };
 		2A783A982B5A8DEB0035CEAB /* CountdownDemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */; };
 		2A783A9C2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */; };
+		2A78756A2B60E0B00048D37A /* FastPaymentsSettingsState+projection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7875692B60E0B00048D37A /* FastPaymentsSettingsState+projection.swift */; };
+		2A78756C2B60E0C30048D37A /* FPSStateProjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A78756B2B60E0C30048D37A /* FPSStateProjection.swift */; };
 		2A7915F42AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */; };
 		2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
@@ -2965,6 +2967,8 @@
 		2A783A952B5A8D620035CEAB /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		2A783A972B5A8DEB0035CEAB /* CountdownDemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownDemoSettings.swift; sourceTree = "<group>"; };
 		2A783A9B2B5A8F470035CEAB /* CountdownDemoSettings+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CountdownDemoSettings+ext.swift"; sourceTree = "<group>"; };
+		2A7875692B60E0B00048D37A /* FastPaymentsSettingsState+projection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsState+projection.swift"; sourceTree = "<group>"; };
+		2A78756B2B60E0C30048D37A /* FPSStateProjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSStateProjection.swift; sourceTree = "<group>"; };
 		2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift"; sourceTree = "<group>"; };
 		2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINSessionCache.swift; sourceTree = "<group>"; };
 		2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsGroupSettings.swift; sourceTree = "<group>"; };
@@ -6548,6 +6552,8 @@
 			children = (
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
+				2A78756B2B60E0C30048D37A /* FPSStateProjection.swift */,
+				2A7875692B60E0B00048D37A /* FastPaymentsSettingsState+projection.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
 			);
 			path = UserAccount;
@@ -13140,6 +13146,7 @@
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
 				2A6EAA9A2B506BBF0093EE83 /* AlertViewModel.swift in Sources */,
 				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
+				2A78756A2B60E0B00048D37A /* FastPaymentsSettingsState+projection.swift in Sources */,
 				2A59F92E2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */,
@@ -13157,6 +13164,7 @@
 				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,
+				2A78756C2B60E0C30048D37A /* FPSStateProjection.swift in Sources */,
 				2A40AF2B2B5902BA003B7D8A /* Product+preview.swift in Sources */,
 				2AA70FC62B52C0A20061F5DD /* ViewModel.swift in Sources */,
 			);
