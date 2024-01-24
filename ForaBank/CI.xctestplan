@@ -257,20 +257,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "OTPInputComponentTests",
-        "name" : "OTPInputComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "RxViewModelTests",
-        "name" : "RxViewModelTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "OTPInputComponentTests",
         "name" : "OTPInputComponentTests"
@@ -281,6 +267,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "RxViewModelTests",
         "name" : "RxViewModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
       }
     }
   ],

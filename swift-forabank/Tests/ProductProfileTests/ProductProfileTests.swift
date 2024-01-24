@@ -1,13 +1,13 @@
 //
-//  Tests.swift
+//  ProductProfileTests.swift
 //  
 //
-//  Created by Andryusina Nataly on 18.01.2024.
+//  Created by Andryusina Nataly on 23.01.2024.
 //
 
 import XCTest
 
-final class Tests: XCTestCase {
+final class ProductProfileTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
