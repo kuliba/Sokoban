@@ -102,7 +102,6 @@ struct UserAccountView: View {
         switch destination {
         case let .fastPaymentsSettings(fpsViewModel):
             FastPaymentsSettingsView(viewModel: fpsViewModel)
-                .onAppear { fpsViewModel.event(.appear) }
                 .alert(
                     item: .init(
                         get: { viewModel.state.alert?.fpsAlert },

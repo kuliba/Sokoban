@@ -614,11 +614,14 @@ private extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
+#warning("move to `reduce`")
     func openFastPaymentsSettings() {
         
-        let viewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
-        bind(viewModel)
-        state.destination = .fastPaymentsSettings(viewModel)
+        let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
+        bind(fpsViewModel)
+        state.destination = .fastPaymentsSettings(fpsViewModel)
+        #warning("and change to effect (??) when moved to `reduce`")
+        fpsViewModel.event(.appear)
     }
     
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
