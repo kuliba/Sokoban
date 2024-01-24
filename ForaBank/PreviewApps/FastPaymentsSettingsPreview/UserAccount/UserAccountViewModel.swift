@@ -26,6 +26,7 @@ final class UserAccountViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<Route, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     private var destinationCancellable: AnyCancellable?
+    private var fpsDestinationCancellable: AnyCancellable?
     
     init(
         route: Route = .init(),
@@ -113,8 +114,8 @@ private extension UserAccountViewModel {
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-            //            state.fpsDestination = nil
-            effect = .fps(.resetStatus)
+            state.fpsDestination = nil
+            fpsDestinationCancellable = nil
             
         case .dismissDestination:
             state.destination = nil
@@ -134,6 +135,43 @@ private extension UserAccountViewModel {
             
         case let .otp(otp):
             switch otp {
+            case let .otpInput(otpInput):
+                #warning("move nullification to reducer where fps state is reduced")
+//                state.fpsDestination = nil
+//                fpsDestinationCancellable = nil
+                
+                #warning("extract to helper")
+                switch otpInput {
+                case let .failure(failure):
+                    switch failure {
+                    case .connectivityError:
+//#warning("direct change of state that is outside of reducer")
+//                        informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
+                        
+//                    case .serverError("Введен некорректный код. Попробуйте еще раз"):
+//#warning("direct change of state that is outside of reducer")
+//                        informer.set(text: "Банк по умолчанию не установлен")
+//                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(<#T##String#>))))
+                        
+                    case let .serverError(message):
+//                        if message == "Введен некорректный код. Попробуйте еще раз" {
+//                            
+//                        } else {
+//                            state.alert = .fpsAlert(.ok(
+//                                title: "Ошибка",
+//                                message: message,
+//                                primaryAction: { [weak self] in self?.event(.closeFPSAlert) }
+//                            ))
+//                        }
+                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+                    }
+                case .validOTP:
+//#warning("direct change of state that is outside of reducer")
+//                        informer.set(text: "Банк по умолчанию установлен")
+                    effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
+                }
+                
             case .prepareSetBankDefault:
                 state.alert = nil
                 state.isLoading = true
@@ -160,7 +198,13 @@ private extension UserAccountViewModel {
         
         switch response {
         case .success:
-            state.fpsDestination = .confirmSetBankDefault
+            #warning("hardcoded duration")
+            let duration = 10
+            let length = 6
+            #warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
+            let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
+            state.fpsDestination = .confirmSetBankDefault(otpInputViewModel)
+            bind(otpInputViewModel)
             
         case .connectivityError:
             state.fpsDestination = nil
@@ -327,8 +371,9 @@ private extension UserAccountViewModel {
             state.alert = missingProductFPSAlert()
             
         case .confirmSetBankDefault:
-            state.fpsDestination = .confirmSetBankDefault
-            effect = .fps(.resetStatus)
+//            state.fpsDestination = .confirmSetBankDefault
+//            effect = .fps(.resetStatus)
+            fatalError("what should happen here?")
             
         case .setBankDefault:
             state.alert = setBankDefaultFPSAlert()
@@ -504,6 +549,7 @@ extension UserAccountViewModel {
         
         enum OTP: Equatable {
             
+            case otpInput(OTPInputStateProjection)
             case prepareSetBankDefault
             case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
             
@@ -590,7 +636,7 @@ extension UserAccountViewModel {
     
     func openFastPaymentsSettings() {
         
-        let viewModel = factory.makeFastPaymentsSettingsViewModel()
+        let viewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
         bind(viewModel)
         state.destination = .fastPaymentsSettings(viewModel)
     }
@@ -603,6 +649,56 @@ extension UserAccountViewModel {
             .map(Event.FastPaymentsSettings.updated)
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.fps($0))}
+    }
+}
+
+// MARK: - OTP for Fast Payments Settings
+
+extension UserAccountViewModel {
+    
+    private func bind(_ viewModel: TimedOTPInputViewModel) {
+        
+        fpsDestinationCancellable = viewModel.$state
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.OTP.otpInput)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.otp($0))}
+    }
+}
+
+enum OTPInputStateProjection: Equatable {
+    
+    case failure(Failure)
+    case validOTP
+    
+    enum Failure: Error, Equatable {
+        
+        case connectivityError
+        case serverError(String)
+    }
+}
+
+extension OTPInputState {
+    
+    var projection: OTPInputStateProjection? {
+        
+        switch self {
+        case let .failure(otpFieldFailure):
+            switch otpFieldFailure {
+            case .connectivityError:
+                return .failure(.connectivityError)
+                
+            case let .serverError(message):
+                return .failure(.serverError(message))
+            }
+
+        case .input:
+            return nil
+
+        case .validOTP:
+            return .validOTP
+        }
     }
 }
 
@@ -650,7 +746,7 @@ extension UserAccountViewModel {
         
         enum FPSDestination: Equatable {
             
-            case confirmSetBankDefault//(phoneNumberMask: String)
+            case confirmSetBankDefault(TimedOTPInputViewModel)//(phoneNumberMask: String)
         }
         
         enum Alert: Equatable {
@@ -692,6 +788,24 @@ extension UserAccountViewModel.Route.Destination: Hashable {
     func hash(into hasher: inout Hasher) {
         switch self {
         case let .fastPaymentsSettings(viewModel):
+            hasher.combine(ObjectIdentifier(viewModel))
+        }
+    }
+}
+
+extension UserAccountViewModel.Route.FPSDestination: Hashable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        
+        switch (lhs, rhs) {
+        case let (.confirmSetBankDefault(lhs), .confirmSetBankDefault(rhs)):
+            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .confirmSetBankDefault(viewModel):
             hasher.combine(ObjectIdentifier(viewModel))
         }
     }

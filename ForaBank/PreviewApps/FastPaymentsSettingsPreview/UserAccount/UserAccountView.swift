@@ -106,7 +106,8 @@ struct UserAccountView: View {
                 .alert(
                     item: .init(
                         get: { viewModel.state.alert?.fpsAlert },
-                        set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                        //                        set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                        set: { _ in }
                     ),
                     content: Alert.init(with:)
                 )
@@ -125,8 +126,36 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch fpsDestination {
-        case .confirmSetBankDefault:
-            ConfirmOTPStubView(onCommit: viewModel.handleOTPResult)
+        case let .confirmSetBankDefault(timedOTPInputViewModel):
+            OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+        }
+    }
+}
+
+struct OTPInputWrapperView: View {
+    
+    @ObservedObject private var viewModel: TimedOTPInputViewModel
+    
+    init(viewModel: TimedOTPInputViewModel) {
+     
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+        
+        switch viewModel.state {
+        case .failure:
+            EmptyView()
+            
+        case let .input(input):
+            OTPInputView(
+                state: input,
+                phoneNumber: "TBD: hardcoded phone number",
+                event: viewModel.event(_:)
+            )
+            
+        case .validOTP:
+            EmptyView()
         }
     }
 }
@@ -151,69 +180,22 @@ private extension UserAccountViewModel {
     }
 }
 
-struct UserAccountView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        UserAccountView(viewModel: .preview(
-            route: .init(),
-            getProducts: { .preview },
-            createContract: { _, completion in
-                
-                completion(.success(.active))
-            },
-            getSettings: { completion in
-                
-                completion(.active(bankDefault: .offEnabled))
-            },
-            prepareSetBankDefault: { completion in
-                
-                completion(.success(()))
-            },
-            updateContract: { _, completion in
-                
-                completion(.success(
-                    .init(
-                        id: .init(generateRandom11DigitNumber()),
-                        productID: Product.account.id,
-                        contractStatus: .active)
-                ))
-            },
-            updateProduct: { _, completion in
-                
-                completion(.success(()))
-            }
-        ))
-    }
-}
-
-struct ConfirmOTPStubView: View {
-    
-    let onCommit: (ConfirmWithOTPResult) -> Void
-    
-    var body: some View {
-        
-        VStack(spacing: 32) {
-            
-            Text("OTP Confirmation Stub")
-                .font(.title3.bold())
-            
-            VStack(spacing: 32) {
-                
-                Button("Confirm OK") { onCommit(.success) }
-                Button("Incorrect Code") { onCommit(.incorrectCode) }
-                Button("Server Error") { onCommit(.serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")) }
-                Button("Connectivity Error") { onCommit(.connectivityError) }
-            }
-            .frame(maxHeight: .infinity)
-        }
-    }
-}
-
+#warning("remove if unused")
 enum ConfirmWithOTPResult {
     
     case success
     case incorrectCode
     case serverError(String)
     case connectivityError
+}
+
+struct UserAccountView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        UserAccountView(viewModel: .preview(
+            route: .init(),
+            flowStub: .preview
+        ))
+    }
 }

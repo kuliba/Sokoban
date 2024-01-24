@@ -6,11 +6,30 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 import Foundation
 
 extension UserAccountViewModel {
     
+    #warning("move duration, length and other fields into settings")
     static func preview(
+        initialState: OTPInputState? = nil,
+        duration: Int = 10,
+        length: Int = 6,
+        initiate: @escaping CountdownEffectHandler.Initiate = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        
+        completion(.success(()))
+    }
+        },
+        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        
+        completion(.success(()))
+    }
+        },
         route: Route = .init(),
         flowStub: FlowStub
     ) -> UserAccountViewModel {
@@ -74,13 +93,35 @@ extension UserAccountViewModel {
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
-                    .init(reducer: reducer, effectHandler: effectHandler)
+                    .init(
+                        reducer: reducer,
+                        effectHandler: effectHandler,
+                        scheduler: $0
+                    )
+                },
+                makeTimedOTPInputViewModel: {
+                    
+                    .init(
+                        viewModel: .default(
+                            initialState: initialState,
+                            duration: duration,
+                            length: length,
+                            initiate: initiate,
+                            submitOTP: submitOTP,
+                            scheduler: $0),
+                        scheduler: $0
+                    )
                 }
             )
         )
     }
     
     static func preview(
+        initialState: OTPInputState? = nil,
+        duration: Int = 10,
+        length: Int = 6,
+        initiate: @escaping CountdownEffectHandler.Initiate,
+        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         route: Route = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
@@ -116,7 +157,24 @@ extension UserAccountViewModel {
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
-                    .init(reducer: reducer, effectHandler: effectHandler)
+                    .init(
+                        reducer: reducer,
+                        effectHandler: effectHandler,
+                        scheduler: $0
+                    )
+                },
+                makeTimedOTPInputViewModel: {
+                    
+                    .init(
+                        viewModel: .default(
+                            initialState: initialState,
+                            duration: duration,
+                            length: length,
+                            initiate: initiate,
+                            submitOTP: submitOTP,
+                            scheduler: $0),
+                        scheduler: $0
+                    )
                 }
             )
         )
@@ -127,12 +185,14 @@ private extension FastPaymentsSettingsViewModel {
     
     convenience init(
         reducer: FastPaymentsSettingsReducer,
-        effectHandler: FastPaymentsSettingsEffectHandler
+        effectHandler: FastPaymentsSettingsEffectHandler,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.init(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
         )
     }
 }

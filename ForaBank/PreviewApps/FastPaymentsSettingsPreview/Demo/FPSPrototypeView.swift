@@ -40,7 +40,6 @@ struct FPSPrototypeView: View {
         case let .some(flowStub):
             
             UserAccountView(viewModel: .preview(
-                route: .init(),
                 flowStub: flowStub
             ))
             .overlay(alignment: .topTrailing) { flowStubButton("Flow") }
