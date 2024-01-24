@@ -24,7 +24,7 @@ final class UserAccountViewModel: ObservableObject {
     
     private let stateSubject = PassthroughSubject<Route, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
-    private var cancellables = Set<AnyCancellable>()
+    private var destinationCancellable: AnyCancellable?
     
     init(
         route: Route = .init(),
@@ -100,50 +100,50 @@ private extension UserAccountViewModel {
     ) -> (Route, Effect?) {
         
         var state = state
-        var eEffect: Effect?
+        var effect: Effect?
         
         switch event {
         case .closeAlert:
             state.alert = nil
-            eEffect = .fps(.resetStatus)
+            effect = .fps(.resetStatus)
             
         case .closeFPSAlert:
             state.alert = nil
-            eEffect = .fps(.resetStatus)
+            effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
             //            state.fpsDestination = nil
-            eEffect = .fps(.resetStatus)
+            effect = .fps(.resetStatus)
             
         case .dismissDestination:
             state.destination = nil
-            eEffect = .fps(.resetStatus)
+            destinationCancellable = nil
             
         case .dismissRoute:
             state = .init()
-            eEffect = .fps(.resetStatus)
+            effect = .fps(.resetStatus)
             
         case let .demo(demoEvent):
             let (demoState, demoEffect) = reduce(state, demoEvent)
             state = demoState
-            eEffect = demoEffect.map(Effect.demo)
+            effect = demoEffect.map(Effect.demo)
             
         case let .fps(.updated(fpsState)):
-            (state, eEffect) = reduce(state, with: fpsState)
+            (state, effect) = reduce(state, with: fpsState)
             
         case let .otp(otp):
             switch otp {
             case .prepareSetBankDefault:
                 state.alert = nil
                 state.isLoading = true
-                eEffect = .otp(.prepareSetBankDefault)
+                effect = .otp(.prepareSetBankDefault)
                 
             case let .prepareSetBankDefaultResponse(response):
-                (state, eEffect) = update(state, with: response)
+                (state, effect) = update(state, with: response)
             }
         }
         
-        return (state, eEffect)
+        return (state, effect)
     }
     
     func update(
@@ -595,11 +595,10 @@ extension UserAccountViewModel {
     
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
         
-        viewModel.$state
+        destinationCancellable = viewModel.$state
             .map(Event.FastPaymentsSettings.updated)
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.fps($0))}
-            .store(in: &cancellables)
     }
 }
 
