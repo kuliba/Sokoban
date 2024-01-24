@@ -60,22 +60,21 @@ class CardDynamicParams: ProductDynamicParamsData {
     let debtAmount: Double?
     let totalDebtAmount: Double?
     let statusPc: ProductData.StatusPC
-    let statusCard: ProductData.StatusCard?
     
-    internal init(id: UUID = UUID(), balance: Double, balanceRub: Double?, customName: String?, status: Status?, debtAmount: Double?, totalDebtAmount: Double?, statusPc: ProductData.StatusPC, statusCard: ProductData.StatusCard?) {
+    internal init(id: UUID = UUID(), balance: Double, balanceRub: Double?, customName: String?, status: Status?, debtAmount: Double?, totalDebtAmount: Double?, statusPc: ProductData.StatusPC) {
         
         self.status = status
         self.debtAmount = debtAmount
         self.totalDebtAmount = totalDebtAmount
         self.statusPc = statusPc
-        self.statusCard = statusCard
+        
         super.init(balance: balance, balanceRub: balanceRub, customName: customName)
     }
     
     private enum CodingKeys: String, CodingKey {
         
         case statusPc = "statusPC"
-        case status, debtAmount, totalDebtAmount, statusCard
+        case status, debtAmount, totalDebtAmount
     }
     
     required init(from decoder: Decoder) throws {
@@ -84,7 +83,7 @@ class CardDynamicParams: ProductDynamicParamsData {
         debtAmount = try container.decodeIfPresent(Double.self, forKey: .debtAmount)
         totalDebtAmount = try container.decodeIfPresent(Double.self, forKey: .totalDebtAmount)
         statusPc = try container.decode(ProductData.StatusPC.self, forKey: .statusPc)
-        statusCard = try container.decode(ProductData.StatusCard.self, forKey: .statusCard)
+        
         try super.init(from: decoder)
     }
     
