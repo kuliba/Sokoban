@@ -257,21 +257,21 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "OTPInputComponentTests",
         "name" : "OTPInputComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "RxViewModelTests",
         "name" : "RxViewModelTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductProfileTests",
         "name" : "ProductProfileTests"
       }

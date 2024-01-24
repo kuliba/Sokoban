@@ -1,27 +1,37 @@
 //
-//  OTPInputBinder.swift
+//  TimedOTPInputViewModel.swift
 //
 //
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
 import Combine
+import Foundation
 import RxViewModel
 
 public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
 
-public final class OTPInputBinder {
+public final class TimedOTPInputViewModel: ObservableObject {
     
-    private var cancellables = Set<AnyCancellable>()
+    @Published public  private(set) var state: State
+    
+    private let viewModel: OTPInputViewModel
+    private var cancellable: AnyCancellable?
     
     public init(
+        viewModel: OTPInputViewModel,
         timer: TimerProtocol = RealTimer(),
-        duration: Int,
-        otpInputViewModel viewModel: OTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        viewModel.$state
-            .sink { [viewModel] state in
+        self.state = viewModel.state
+        self.viewModel = viewModel
+        
+        cancellable = viewModel.$state
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self, viewModel, timer] state in
+                
+                self?.state = state
                 
                 switch state {
                 case .failure, .validOTP:
@@ -43,6 +53,19 @@ public final class OTPInputBinder {
                     }
                 }
             }
-            .store(in: &cancellables)
     }
+}
+
+public extension TimedOTPInputViewModel {
+    
+    func event(_ event: Event) {
+        
+        viewModel.event(event)
+    }
+}
+
+public extension TimedOTPInputViewModel {
+    
+    typealias State = OTPInputState
+    typealias Event = OTPInputEvent
 }

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
+import OTPInputComponent
 import SwiftUI
 
 struct ContentView: View {
@@ -18,78 +19,210 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack(spacing: 64) {
+        ZStack {
             
-            OTPInputFieldView(viewModel: .preview(
-                viewModel.otpSettings.result
-            ))
+            list()
             
-            CountdownView(settings: viewModel.settings)
+            spinner()
+                .ignoresSafeArea()
         }
+    }
+    
+    private func list() -> some View {
+        
+        List {
+            
+            confirmWithOTPButton()
+                .listSectionSeparator(.hidden)
+            
+            settings()
+        }
+        .listStyle(.plain)
         .padding(.top, 64)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .overlay(alignment: .topTrailing, content: buttons)
+        .alert(
+            item: .init(
+                get: { viewModel.alert },
+                set: { if $0 == nil { viewModel.resetModal() }}
+            ),
+            content: alert
+        )
         .fullScreenCover(
-            item: $viewModel.fullScreenCover,
+            item: .init(
+                get: { viewModel.fullScreenCover },
+                set: { if $0 == nil { viewModel.resetModal() }}
+            ),
             content: fullScreenCover
         )
+        .overlay(alignment: .center, content: informer)
     }
     
-    private func buttons() -> some View {
+    private func settings() -> some View {
         
-        HStack {
+        Group {
             
-            countdownOptionsButton()
-            otpOptionsButton()
+            PickerSection(
+                title: "Confirm with OTP Result",
+                selection: .init(
+                    get: { viewModel.demoSettings.confirmWithOTPSettings },
+                    set: viewModel.updateConfirmWithOTPSettings(_:)
+                )
+            )
+            
+            if viewModel.demoSettings.confirmWithOTPSettings.isSuccess {
+                
+                PickerSection(
+                    title: "Countdown Duration (sec)",
+                    selection: .init(
+                        get: { viewModel.demoSettings.countdownDemoSettings.duration },
+                        set: viewModel.updateCountdownDemoDuration(_:)
+                    )
+                )
+                
+                PickerSection(
+                    title: "Initiate Countdown Result",
+                    selection: .init(
+                        get: { viewModel.demoSettings.countdownDemoSettings.initiateResult },
+                        set: viewModel.updateCountdownDemoInitiateResult(_:)
+                    )
+                )
+                
+                PickerSection(
+                    title: "OTP Validation Result",
+                    selection: .init(
+                        get: { viewModel.demoSettings.otpFieldDemoSettings },
+                        set: viewModel.updateOTPFieldDemoSettings
+                    )
+                )
+            }
         }
-        .padding(.horizontal)
     }
     
-    private func otpOptionsButton() -> some View {
+    private func confirmWithOTPButton() -> some View {
         
-        Button {
-            viewModel.fullScreenCover = .otpSettings
-        } label: {
-            Image(systemName: "checkmark.circle.badge.questionmark")
-        }
+        Button("Confirm with OTP", action: viewModel.confirmWithOTP)
+            .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    private func countdownOptionsButton() -> some View {
+    private func alert(
+        alert: ContentViewModel.Modal.Alert
+    ) -> Alert {
         
-        Button {
-            viewModel.fullScreenCover = .countdownSettings
-        } label: {
-            Image(systemName: "timer")
-        }
+        .init(title: Text("Error"), message: Text(alert.message))
     }
     
     @ViewBuilder
     private func fullScreenCover(
-        _ fullScreenCover: ContentViewModel.FullScreenCover
+        _ fullScreenCover: ContentViewModel.Modal.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
-        case .countdownSettings:
+        case .confirmWithOTP:
             NavigationView {
                 
-                CountdownDemoSettingsView(
-                    settings: viewModel.settings,
-                    apply: viewModel.updateCountdownDemoSettings
-                )
-                .navigationTitle("Countdown Options")
-                .navigationBarTitleDisplayMode(.inline)
+                confirmWithOTP()
             }
+        }
+    }
+    
+    private func confirmWithOTP() -> some View {
+        
+        OTPInputWrapperView(
+            demoSettings: viewModel.demoSettings
+        )
+        .padding(.top, 64)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: viewModel.resetModal) {
+                    
+                    Image(systemName: "chevron.left")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func informer() -> some View {
+        
+        viewModel.informer.map {
             
-        case .otpSettings:
-            NavigationView {
-                
-                OTPValidationSettingsView(
-                    otpSettings: viewModel.otpSettings,
-                    apply: viewModel.updateOTPSettings
-                )
-                .navigationTitle("OTP Validation Options")
-                .navigationBarTitleDisplayMode(.inline)
-            }
+            Text($0.message)
+                .foregroundStyle(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding()
+        }
+    }
+    
+    private func spinner() -> some View {
+        
+        ZStack {
+            
+            Color.green.opacity(0.4)
+            
+            ProgressView()
+        }
+        .opacity(viewModel.isShowingSpinner ? 1 : 0)
+    }
+}
+
+extension DemoSettingsResult: PickerDisplayable {}
+extension CountdownDemoSettings.Duration: PickerDisplayable {}
+extension CountdownDemoSettings.InitiateResult: PickerDisplayable {}
+
+private extension DemoSettingsResult {
+    
+    var isSuccess: Bool {
+        
+        if case .success = self {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+private extension ContentViewModel {
+    
+    var alert: Modal.Alert? {
+        
+        guard case let .alert(alert) = modal else {
+            
+            return nil
+        }
+        
+        return alert
+    }
+    
+    var fullScreenCover: Modal.FullScreenCover? {
+        
+        guard case let .fullScreenCover(fullScreenCover) = modal else {
+            
+            return nil
+        }
+        
+        return fullScreenCover
+    }
+    
+    var informer: Modal.Informer? {
+        
+        guard case let .informer(informer) = modal else {
+            
+            return nil
+        }
+        
+        return informer
+    }
+    
+    var isShowingSpinner: Bool {
+        
+        if case .spinner = modal {
+            return true
+        } else {
+            return false
         }
     }
 }
