@@ -414,8 +414,9 @@ private extension UserAccountViewModel {
         switch otp {
         case let .otpInput(otpInput):
             #warning("move nullification to reducer where fps state is reduced")
-            state.fpsDestination = nil
+            fpsDestinationCancellable?.cancel()
             fpsDestinationCancellable = nil
+            state.fpsDestination = nil
             
             switch otpInput {
             case let .failure(failure):
