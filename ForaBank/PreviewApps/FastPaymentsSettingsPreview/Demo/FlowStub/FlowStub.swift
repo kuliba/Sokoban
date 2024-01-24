@@ -11,6 +11,7 @@ import OTPInputComponent
 struct FlowStub {
     
     let getProducts: [Product]
+    let changeConsentList: ConsentListRxEffectHandler.ChangeConsentListResponse
     let createContract: ContractEffectHandler.CreateContractResponse
     let getSettings: UserPaymentSettings
     let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefaultResponse

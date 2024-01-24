@@ -14,6 +14,7 @@ typealias Pickerable = RawRepresentable & CaseIterable & Identifiable & Hashable
 struct FlowStubSettingsView: View {
     
     @State private var getProducts: GetProducts?
+    @State private var changeConsentList: ChangeConsentListResponse?
     @State private var createContract: CreateContractResponse?
     @State private var getSettings: GetSettings?
     @State private var prepareSetBankDefault: PrepareSetBankDefault?
@@ -42,13 +43,14 @@ struct FlowStubSettingsView: View {
     var body: some View {
         
         VStack(spacing: 16) {
-        
+            
             happyPathButton()
             
             List {
                 
                 pickerSection("Get Settings (flow \"abc\")", selection: $getSettings)
                 pickerSection("Products", selection: $getProducts)
+                pickerSection("Change Consent List", selection: $changeConsentList)
                 pickerSection("Create Contract", selection: $createContract)
                 pickerSection("Prepare Set Bank Default", selection: $prepareSetBankDefault)
                 pickerSection("Update Contract", selection: $updateContract)
@@ -67,6 +69,7 @@ struct FlowStubSettingsView: View {
     private var flowStub: FlowStub? {
         
         guard let getProducts = getProducts?.products,
+              let changeConsentList = changeConsentList?.response,
               let createContract = createContract?.response,
               let getSettings = getSettings?.settings,
               let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
@@ -78,6 +81,7 @@ struct FlowStubSettingsView: View {
         
         return .init(
             getProducts: getProducts,
+            changeConsentList: changeConsentList,
             createContract: createContract,
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
@@ -112,6 +116,7 @@ struct FlowStubSettingsView: View {
         Button("Happy Path") {
             
             getProducts = .init(flowStub: .preview)
+            changeConsentList = .init(flowStub: .preview)
             createContract = .init(flowStub: .preview)
             getSettings = .init(flowStub: .preview)
             prepareSetBankDefault = .init(flowStub: .preview)
@@ -151,6 +156,22 @@ private extension FlowStubSettingsView {
             switch self {
             case .empty:   return []
             case .preview: return .preview
+            }
+        }
+    }
+    
+    enum ChangeConsentListResponse: String, CaseIterable, Identifiable {
+        
+        case success, error_C, error_S
+        
+        var id: Self { self }
+        
+        var response: ConsentListRxEffectHandler.ChangeConsentListResponse {
+            
+            switch self {
+            case .success: return .success
+            case .error_C:  return .connectivityError
+            case .error_S:  return .serverError("Server Error Failure Message (#8765).")
             }
         }
     }
@@ -291,6 +312,23 @@ private extension FlowStubSettingsView.GetProducts {
             self = .empty
         } else {
             self = .preview
+        }
+    }
+}
+
+private extension FlowStubSettingsView.ChangeConsentListResponse {
+    
+    init?(flowStub: FlowStub?) {
+        
+        switch flowStub?.changeConsentList {
+        case .success:
+            self = .success
+        case .connectivityError:
+            self = .error_C
+        case .serverError(let string):
+            self = .error_S
+        case nil:
+            return nil
         }
     }
 }
@@ -498,6 +536,7 @@ extension FlowStub {
     
     static let preview: Self = .init(
         getProducts: .preview,
+        changeConsentList: .success,
         createContract:  .success(.active),
         getSettings: .contracted(.preview()),
         prepareSetBankDefault: .success(()),
