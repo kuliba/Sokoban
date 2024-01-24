@@ -1981,10 +1981,12 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     ) -> SUT {
         
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: { products })
         let productsReducer = ProductsReducer(getProducts: { products })
         let sut = SUT(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )

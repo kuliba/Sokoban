@@ -19,7 +19,7 @@ public extension UserPaymentSettings {
     struct ContractDetails: Equatable {
         
         public var paymentContract: PaymentContract
-        public let consentList: ConsentListState
+        public var consentList: ConsentListState
         public var bankDefault: BankDefault
         public var productSelector: ProductSelector
         

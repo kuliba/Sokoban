@@ -21,14 +21,26 @@ extension UserAccountViewModel {
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: { flowStub.getProducts })
         let productsReducer = ProductsReducer(getProducts: { flowStub.getProducts })
         let reducer = FastPaymentsSettingsReducer(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
         
+        #warning("add to `flowStub`")
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.success)
+                }
+            }
+        )
         let contractEffectHandler = ContractEffectHandler(
             createContract: { _, completion in
                 
@@ -55,6 +67,7 @@ extension UserAccountViewModel {
         }
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: { completion in
                 
@@ -126,6 +139,7 @@ extension UserAccountViewModel {
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         route: Route = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
+        changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
@@ -134,19 +148,25 @@ extension UserAccountViewModel {
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: getProducts)
         let productsReducer = ProductsReducer(getProducts: getProducts)
         let reducer = FastPaymentsSettingsReducer(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
         
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: changeConsentList
+        )
         let contractEffectHandler = ContractEffectHandler(
             createContract: createContract,
             updateContract: updateContract
         )
         let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,

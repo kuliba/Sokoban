@@ -9,17 +9,20 @@ import Tagged
 
 public final class FastPaymentsSettingsEffectHandler {
     
+    private let handleConsentListEffect: HandleConsentListEffect
     private let handleContractEffect: HandleContractEffect
     private let getSettings: GetSettings
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let updateProduct: UpdateProduct
     
     public init(
+        handleConsentListEffect: @escaping HandleConsentListEffect,
         handleContractEffect: @escaping HandleContractEffect,
         getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         updateProduct: @escaping UpdateProduct
     ) {
+        self.handleConsentListEffect = handleConsentListEffect
         self.handleContractEffect = handleContractEffect
         self.getSettings = getSettings
         self.prepareSetBankDefault = prepareSetBankDefault
@@ -34,6 +37,10 @@ public extension FastPaymentsSettingsEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+#warning("add tests")
+        case let .consentList(consentList):
+            handleConsentListEffect(consentList) { dispatch(.consentList($0)) }
+            
         case let .contract(contract):
             handleContractEffect(contract, dispatch)
             
@@ -52,6 +59,8 @@ public extension FastPaymentsSettingsEffectHandler {
 // micro-service `abc`
 public extension FastPaymentsSettingsEffectHandler {
     
+    typealias ConsentListDispatch = (ConsentListEvent) -> Void
+    typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
     typealias HandleContractEffect = (Effect.Contract, @escaping Dispatch) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
