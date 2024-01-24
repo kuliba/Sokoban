@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 
 struct FlowStub {
     
@@ -15,4 +16,6 @@ struct FlowStub {
     let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefaultResponse
     let updateContract: ContractEffectHandler.UpdateContractResponse
     let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProductResponse
+    let initiateOTP: CountdownEffectHandler.InitiateOTPResult
+    let submitOTP: OTPFieldEffectHandler.SubmitOTPResult
 }

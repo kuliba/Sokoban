@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 import SwiftUI
 
 typealias Pickerable = RawRepresentable & CaseIterable & Identifiable & Hashable
@@ -18,6 +19,8 @@ struct FlowStubSettingsView: View {
     @State private var prepareSetBankDefault: PrepareSetBankDefault?
     @State private var updateContract: UpdateContract?
     @State private var updateProduct: UpdateProduct?
+    @State private var initiateOTP: InitiateOTP?
+    @State private var submitOTP: SubmitOTP?
     
     private let commit: (FlowStub) -> Void
     
@@ -32,21 +35,31 @@ struct FlowStubSettingsView: View {
         self._prepareSetBankDefault = .init(initialValue: .init(flowStub: flowStub))
         self._updateContract = .init(initialValue: .init(flowStub: flowStub))
         self._updateProduct = .init(initialValue: .init(flowStub: flowStub))
+        self._initiateOTP = .init(initialValue: .init(flowStub: flowStub))
+        self._submitOTP = .init(initialValue: .init(flowStub: flowStub))
     }
     
     var body: some View {
         
-        List {
+        VStack(spacing: 16) {
+        
+            happyPathButton()
             
-            pickerSection("Get Settings (flow \"abc\")", selection: $getSettings)
-            pickerSection("Products", selection: $getProducts)
-            pickerSection("Create Contract", selection: $createContract)
-            pickerSection("Prepare Set Bank Default", selection: $prepareSetBankDefault)
-            pickerSection("Update Contract", selection: $updateContract)
-            pickerSection("Update Product", selection: $updateProduct)
+            List {
+                
+                pickerSection("Get Settings (flow \"abc\")", selection: $getSettings)
+                pickerSection("Products", selection: $getProducts)
+                pickerSection("Create Contract", selection: $createContract)
+                pickerSection("Prepare Set Bank Default", selection: $prepareSetBankDefault)
+                pickerSection("Update Contract", selection: $updateContract)
+                pickerSection("Update Product", selection: $updateProduct)
+                pickerSection("Initiate OTP", selection: $initiateOTP)
+                pickerSection("Submit OTP", selection: $submitOTP)
+            }
+            .listStyle(.plain)
+            
+            applyButton()
         }
-        .listStyle(.plain)
-        .overlay(alignment: .bottom, content: buttons)
         .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -58,7 +71,9 @@ struct FlowStubSettingsView: View {
               let getSettings = getSettings?.settings,
               let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
               let updateContract = updateContract?.updateContractResponse,
-              let updateProduct = updateProduct?.updateProductResponse
+              let updateProduct = updateProduct?.updateProductResponse,
+              let initiateOTP = initiateOTP?.initiateOTPResult,
+              let submitOTP = submitOTP?.submitOTPResult
         else { return nil }
         
         return .init(
@@ -67,7 +82,10 @@ struct FlowStubSettingsView: View {
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
             updateContract: updateContract,
-            updateProduct: updateProduct)
+            updateProduct: updateProduct,
+            initiateOTP: initiateOTP,
+            submitOTP: submitOTP
+        )
     }
     
     private func pickerSection<T: Pickerable>(
@@ -89,31 +107,33 @@ struct FlowStubSettingsView: View {
         }
     }
     
-    private func buttons() -> some View {
+    private func happyPathButton() -> some View {
         
-        VStack(spacing: 16) {
+        Button("Happy Path") {
             
-            Button("Happy Path") {
-                
-                getProducts = .init(flowStub: .preview)
-                createContract = .init(flowStub: .preview)
-                getSettings = .init(flowStub: .preview)
-                prepareSetBankDefault = .init(flowStub: .preview)
-                updateContract = .init(flowStub: .preview)
-                updateProduct = .init(flowStub: .preview)
-            }
-            
-            Button {
-                flowStub.map(commit)
-            } label: {
-                Text("Apply")
-                    .font(.headline)
-                    .padding(.vertical, 9)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-            .disabled(flowStub == nil)
+            getProducts = .init(flowStub: .preview)
+            createContract = .init(flowStub: .preview)
+            getSettings = .init(flowStub: .preview)
+            prepareSetBankDefault = .init(flowStub: .preview)
+            updateContract = .init(flowStub: .preview)
+            updateProduct = .init(flowStub: .preview)
+            initiateOTP = .init(flowStub: .preview)
+            submitOTP = .init(flowStub: .preview)
         }
+    }
+    
+    private func applyButton() -> some View {
+        
+        Button {
+            flowStub.map(commit)
+        } label: {
+            Text("Apply")
+                .font(.headline)
+                .padding(.vertical, 9)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .disabled(flowStub == nil)
         .padding(.horizontal)
     }
 }
@@ -218,6 +238,38 @@ private extension FlowStubSettingsView {
         var id: Self { self }
         
         var updateProductResponse: FastPaymentsSettingsEffectHandler.UpdateProductResponse {
+            
+            switch self {
+            case .success: return .success(())
+            case .error_C: return .failure(.connectivityError)
+            case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
+            }
+        }
+    }
+    
+    enum InitiateOTP: String, CaseIterable, Identifiable {
+        
+        case success, error_C, error_S
+        
+        var id: Self { self }
+        
+        var initiateOTPResult: CountdownEffectHandler.InitiateOTPResult {
+            
+            switch self {
+            case .success: return .success(())
+            case .error_C: return .failure(.connectivityError)
+            case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
+            }
+        }
+    }
+    
+    enum SubmitOTP: String, CaseIterable, Identifiable {
+        
+        case success, error_C, error_S
+        
+        var id: Self { self }
+        
+        var submitOTPResult: OTPFieldEffectHandler.SubmitOTPResult {
             
             switch self {
             case .success: return .success(())
@@ -377,6 +429,52 @@ private extension FlowStubSettingsView.UpdateProduct {
     }
 }
 
+private extension FlowStubSettingsView.InitiateOTP {
+    
+    init?(flowStub: FlowStub?) {
+        
+        switch flowStub?.initiateOTP {
+        case .none:
+            return nil
+            
+        case .success(()):
+            self = .success
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
+private extension FlowStubSettingsView.SubmitOTP {
+    
+    init?(flowStub: FlowStub?) {
+        
+        switch flowStub?.initiateOTP {
+        case .none:
+            return nil
+            
+        case .success(()):
+            self = .success
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
 struct FlowStubSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -404,6 +502,8 @@ extension FlowStub {
         getSettings: .contracted(.preview()),
         prepareSetBankDefault: .success(()),
         updateContract: .success(.inactive),
-        updateProduct: .success(())
+        updateProduct: .success(()),
+        initiateOTP: .success(()),
+        submitOTP: .success(())
     )
 }

@@ -11,25 +11,11 @@ import Foundation
 
 extension UserAccountViewModel {
     
-    #warning("move duration, length and other fields into settings")
+#warning("move duration, length and other fields into settings")
     static func preview(
         initialState: OTPInputState? = nil,
         duration: Int = 10,
         length: Int = 6,
-        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-        
-        completion(.success(()))
-    }
-        },
-        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-        
-        completion(.success(()))
-    }
-        },
         route: Route = .init(),
         flowStub: FlowStub
     ) -> UserAccountViewModel {
@@ -86,6 +72,22 @@ extension UserAccountViewModel {
                 }
             }
         )
+        
+        let initiateOTP: CountdownEffectHandler.InitiateOTP = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.initiateOTP)
+            }
+        }
+        
+        let submitOTP: OTPFieldEffectHandler.SubmitOTP = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.submitOTP)
+            }
+        }
         
         return .init(
             route: route,
