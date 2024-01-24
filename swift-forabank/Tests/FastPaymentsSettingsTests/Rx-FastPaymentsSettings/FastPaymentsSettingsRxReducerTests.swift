@@ -1503,8 +1503,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_updateContract_shouldSetContractOnSuccess_missing() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, selected) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: selected.id)
         let sut = makeSUT(products: [product1, selected])
@@ -1512,7 +1512,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
             $0.userPaymentSettings = .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: selected,
@@ -1524,8 +1524,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_updateContract_shouldSetContractAndSelectorWithoutSelectedProductOnSuccessAndMissingProduct_missing() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, missingProduct) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: missingProduct.id)
         let sut = makeSUT(products: [product1])
@@ -1533,7 +1533,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
             $0.userPaymentSettings = .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: nil,

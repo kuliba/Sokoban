@@ -19,7 +19,7 @@ final class ContractDetails_extTests: XCTestCase {
         
         XCTAssertNoDiff(new, .init(
             paymentContract: newContract,
-            consentResult: initial.consentResult,
+            consentList: initial.consentList,
             bankDefault: initial.bankDefault,
             productSelector: initial.productSelector
         ))
@@ -27,14 +27,14 @@ final class ContractDetails_extTests: XCTestCase {
     
     func test_updated_consentResult() {
         
-        let initial = contractDetails(consentResult: consentResultFailure())
-        let newConsentResult = consentResultSuccess()
+        let initial = contractDetails(consentList: consentListFailure())
+        let newConsentResult = consentListSuccess()
         
-        let new = initial.updated(consentResult: newConsentResult)
+        let new = initial.updated(consentList: newConsentResult)
         
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
-            consentResult: newConsentResult,
+            consentList: newConsentResult,
             bankDefault: initial.bankDefault,
             productSelector: initial.productSelector
         ))
@@ -49,7 +49,7 @@ final class ContractDetails_extTests: XCTestCase {
         
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
-            consentResult: initial.consentResult,
+            consentList: initial.consentList,
             bankDefault: newBankDefault,
             productSelector: initial.productSelector
         ))
@@ -64,7 +64,7 @@ final class ContractDetails_extTests: XCTestCase {
         
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
-            consentResult: initial.consentResult,
+            consentList: initial.consentList,
             bankDefault: initial.bankDefault,
             productSelector: newProductSelector
         ))

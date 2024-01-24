@@ -9,14 +9,14 @@ public extension UserPaymentSettings.ContractDetails {
     
     func updated(
         paymentContract: UserPaymentSettings.PaymentContract? = nil,
-        consentResult: UserPaymentSettings.ConsentResult? = nil,
+        consentList: ConsentListState? = nil,
         bankDefault: UserPaymentSettings.BankDefault? = nil,
         productSelector: UserPaymentSettings.ProductSelector? = nil
     ) -> Self {
         
         .init(
             paymentContract: paymentContract ?? self.paymentContract,
-            consentResult: consentResult ?? self.consentResult,
+            consentList: consentList ?? self.consentList,
             bankDefault: bankDefault ?? self.bankDefault,
             productSelector: productSelector ?? self.productSelector
         )

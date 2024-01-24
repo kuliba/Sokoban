@@ -200,8 +200,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d1_activationSuccessOfLoadedMissingContract() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
@@ -221,7 +221,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: missing, status: .inflight),
             .init(userPaymentSettings: .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: product2,
@@ -241,8 +241,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d1_activationSuccessOfLoadedMissingContractWithoutProduct() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
@@ -262,7 +262,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: missing, status: .inflight),
             .init(userPaymentSettings: .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: nil,
@@ -274,8 +274,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d2_activationFailureOfLoadedMissingContract() {
         
-        let consentResult = consentResultSuccess()
-        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let consentList = consentListSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentList)
         let message = anyMessage()
         let product = makeProduct()
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
@@ -307,8 +307,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d3_activationFailureOfLoadedMissingContract() {
         
-        let consentResult = consentResultSuccess()
-        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let consentList = consentListSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentList)
         let product = makeProduct()
         let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
             products: [product]
