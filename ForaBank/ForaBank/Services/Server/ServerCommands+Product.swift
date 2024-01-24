@@ -439,7 +439,7 @@ extension ServerCommands {
         struct GetProductDynamicParamsList: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/v2/getProductDynamicParamsList"
+            let endpoint = "/rest/getProductDynamicParamsList"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             

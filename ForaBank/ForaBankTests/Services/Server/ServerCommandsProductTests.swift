@@ -208,8 +208,8 @@ class ServerCommandsProductTests: XCTestCase {
         let url = bundle.url(forResource: "GetProductDynamicParamsGenericTest", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let productCard = CardDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active, debtAmount: 56305.61, totalDebtAmount: 56305.61, statusPc: .active, statusCard: .active)
-        
+        let productCard = CardDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active, debtAmount: 56305.61, totalDebtAmount: 56305.61, statusPc: .active)
+
         let expected = ServerCommands.ProductController.GetProductDynamicParams.Response(statusCode: .ok, errorMessage: "string", data: productCard)
         
         // when
@@ -225,7 +225,7 @@ class ServerCommandsProductTests: XCTestCase {
         let url = bundle.url(forResource: "GetProductDynamicParamsListGenericTest", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let productCard = CardDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active, debtAmount: 56305.61, totalDebtAmount: 56305.61, statusPc: .active, statusCard: .active)
+        let productCard = CardDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active, debtAmount: 56305.61, totalDebtAmount: 56305.61, statusPc: .active)
         let productAccount = AccountDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active)
         let productDeposit = ProductDynamicParamsData(balance: 1000123, balanceRub: 1000123, customName: "Моя карта")
         let product = ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams(id: 10000192282, type: .card, dynamicParams: productCard)
