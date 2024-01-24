@@ -133,42 +133,25 @@ private extension UserAccountViewModel {
         case let .fps(.updated(fpsStateProjection)):
             (state, effect) = reduce(state, with: fpsStateProjection)
             
+#warning("extract to helper")
         case let .otp(otp):
             switch otp {
             case let .otpInput(otpInput):
                 #warning("move nullification to reducer where fps state is reduced")
-//                state.fpsDestination = nil
-//                fpsDestinationCancellable = nil
+                state.fpsDestination = nil
+                fpsDestinationCancellable = nil
                 
-                #warning("extract to helper")
                 switch otpInput {
                 case let .failure(failure):
                     switch failure {
                     case .connectivityError:
-//#warning("direct change of state that is outside of reducer")
-//                        informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
                         effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
                         
-//                    case .serverError("Введен некорректный код. Попробуйте еще раз"):
-//#warning("direct change of state that is outside of reducer")
-//                        informer.set(text: "Банк по умолчанию не установлен")
-//                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(<#T##String#>))))
-                        
+#warning("should handle with informer not alert `serverError` with message Введен некорректный код. Попробуйте еще раз")
                     case let .serverError(message):
-//                        if message == "Введен некорректный код. Попробуйте еще раз" {
-//                            
-//                        } else {
-//                            state.alert = .fpsAlert(.ok(
-//                                title: "Ошибка",
-//                                message: message,
-//                                primaryAction: { [weak self] in self?.event(.closeFPSAlert) }
-//                            ))
-//                        }
                         effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
                     }
                 case .validOTP:
-//#warning("direct change of state that is outside of reducer")
-//                        informer.set(text: "Банк по умолчанию установлен")
                     effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
                 }
                 
@@ -198,9 +181,6 @@ private extension UserAccountViewModel {
         
         switch response {
         case .success:
-            #warning("hardcoded duration")
-            let duration = 10
-            let length = 6
             #warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
             let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel)
@@ -304,17 +284,17 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: Route,
-        with fpsStateProjection: FPSStateProjection
+        with settings: FastPaymentsSettingsState
     ) -> (Route, Effect?) {
         
         var state = state
         var effect: Effect?
         
-        switch (fpsStateProjection.state, fpsStateProjection.status) {
+        switch (settings.userPaymentSettings, settings.status) {
         case (_, .inflight):
             state.isLoading = true
             
-        case (.notLoaded, _):
+        case (nil, _):
             break
             
         case (.contracted, nil):
@@ -346,7 +326,7 @@ private extension UserAccountViewModel {
     
     func update(
         _ state: Route,
-        with status: FPSStateProjection.Status
+        with status: FastPaymentsSettingsState.Status
     ) -> (Route, Effect?) {
         
         var state = state
@@ -356,12 +336,12 @@ private extension UserAccountViewModel {
         case .inflight:
             state.isLoading = true
             
-        case .failure(.connectivityError):
+        case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
             state.alert = tryAgainFPSAlert(.closeAlert)
             
-        case let .failure(.serverError(message)):
+        case let .serverError(message):
             state.isLoading = false
             // non-final => closeAlert
             state.alert = serverErrorFPSAlert(message, .closeAlert)
@@ -544,7 +524,7 @@ extension UserAccountViewModel {
         
         enum FastPaymentsSettings: Equatable {
             
-            case updated(FPSStateProjection)
+            case updated(FastPaymentsSettingsState)
         }
         
         enum OTP: Equatable {
@@ -644,7 +624,6 @@ extension UserAccountViewModel {
     private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
         
         destinationCancellable = viewModel.$state
-            .map(\.projection)
             .removeDuplicates()
             .map(Event.FastPaymentsSettings.updated)
             .receive(on: scheduler)
