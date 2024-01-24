@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import PaymentComponents
 import SwiftUI
 
 struct ActiveContractView: View {
