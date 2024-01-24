@@ -34,10 +34,10 @@ extension ProductDynamicParamsListPayload {
     
     public enum ProductType: String {
         
-        case card = "CARD"
         case account = "ACCOUNT"
-        case loan = "LOAN"
+        case card = "CARD"
         case deposit = "DEPOSIT"
+        case loan = "LOAN"
     }
 }
 
