@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 import SwiftUI
 
 struct UserAccountView: View {
