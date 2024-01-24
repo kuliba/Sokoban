@@ -53,7 +53,7 @@ public extension ProductDynamicParamsListPayload {
                     "type": $0.type.rawValue
                 ]
             }
-            var parameters: [String: Any] = [
+            let parameters: [String: Any] = [
                 "productList": dict
             ]
             
