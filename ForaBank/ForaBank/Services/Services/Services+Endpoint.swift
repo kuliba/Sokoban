@@ -68,6 +68,7 @@ extension Services {
             case createSberQRPayment
             case formSessionKey
             case getCardStatementForPeriod
+            case getCardStatementForPeriod_V3
             case getJsonAbroad
             case getSberQRData
             case getOperationDetailByPaymentId
@@ -181,8 +182,8 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: .v4,
-        serviceName: .getCardStatementForPeriod
+        version: nil,
+        serviceName: .getCardStatementForPeriod_V3
     )
 
     static let getImageList: Self = .init(
