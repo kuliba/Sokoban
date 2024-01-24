@@ -105,7 +105,7 @@ struct UserAccountView: View {
                 .alert(
                     item: .init(
                         get: { viewModel.state.alert?.fpsAlert },
-                        //                        set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                        // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
                         set: { _ in }
                     ),
                     content: Alert.init(with:)
