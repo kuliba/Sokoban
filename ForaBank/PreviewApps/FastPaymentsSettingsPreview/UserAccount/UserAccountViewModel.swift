@@ -138,36 +138,8 @@ private extension UserAccountViewModel {
         case let .fps(.updated(fpsStateProjection)):
             (state, effect) = reduce(state, with: fpsStateProjection)
             
-#warning("extract to helper")
         case let .otp(otp):
-            switch otp {
-            case let .otpInput(otpInput):
-                #warning("move nullification to reducer where fps state is reduced")
-                state.fpsDestination = nil
-                fpsDestinationCancellable = nil
-                
-                switch otpInput {
-                case let .failure(failure):
-                    switch failure {
-                    case .connectivityError:
-                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
-                        
-#warning("should handle with informer not alert `serverError` with message Введен некорректный код. Попробуйте еще раз")
-                    case let .serverError(message):
-                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
-                    }
-                case .validOTP:
-                    effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
-                }
-                
-            case .prepareSetBankDefault:
-                state.alert = nil
-                state.isLoading = true
-                effect = .otp(.prepareSetBankDefault)
-                
-            case let .prepareSetBankDefaultResponse(response):
-                (state, effect) = update(state, with: response)
-            }
+            (state, effect) = reduce(state, with: otp)
         }
         
         return (state, effect)
@@ -430,6 +402,46 @@ private extension UserAccountViewModel {
     }
     
     // MARK: - OTP Domain
+    
+    func reduce(
+        _ state: State,
+        with otp: UserAccountViewModel.Event.OTP
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch otp {
+        case let .otpInput(otpInput):
+            #warning("move nullification to reducer where fps state is reduced")
+            state.fpsDestination = nil
+            fpsDestinationCancellable = nil
+            
+            switch otpInput {
+            case let .failure(failure):
+                switch failure {
+                case .connectivityError:
+                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
+                    
+#warning("should handle with informer not alert `serverError` with message Введен некорректный код. Попробуйте еще раз")
+                case let .serverError(message):
+                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+                }
+            case .validOTP:
+                effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
+            }
+            
+        case .prepareSetBankDefault:
+            state.alert = nil
+            state.isLoading = true
+            effect = .otp(.prepareSetBankDefault)
+            
+        case let .prepareSetBankDefaultResponse(response):
+            (state, effect) = update(state, with: response)
+        }
+        
+        return (state, effect)
+    }
     
     func handleEffect(
         _ otpEffect: Effect.OTP,
