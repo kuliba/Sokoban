@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import ForaBank
+import CardStatementAPI
 
 final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
 
@@ -55,15 +56,15 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    
+    private typealias Payload = CardStatementAPI.CardStatementForPeriodPayload
     private func makeGetCardStatementForPeriod(
-        productID: CardStatementForPeriodDomain.Payload.ProductID = 1,
-        name: CardStatementForPeriodDomain.Payload.Name? = nil,
-        period: Period,
-        statementFormat: StatementFormat? = nil,
-        cardNumber: CardStatementForPeriodDomain.Payload.CardNumber? = nil
+        productID: Payload.ProductID = 1,
+        name: Payload.Name? = nil,
+        period: Payload.Period,
+        statementFormat: Payload.StatementFormat? = nil,
+        cardNumber: Payload.CardNumber? = nil
     ) throws -> (
-        payload: CardStatementForPeriodDomain.Payload,
+        payload: Payload,
         request: URLRequest
     ) {
         let payload = anyPayload(
@@ -79,12 +80,12 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
     }
     
     private func anyPayload(
-        productID: CardStatementForPeriodDomain.Payload.ProductID = 1,
-        name: CardStatementForPeriodDomain.Payload.Name?,
-        period: Period,
-        statementFormat: StatementFormat?,
-        cardNumber: CardStatementForPeriodDomain.Payload.CardNumber?
-    ) -> CardStatementForPeriodDomain.Payload {
+        productID: Payload.ProductID = 1,
+        name: Payload.Name?,
+        period: Payload.Period,
+        statementFormat: Payload.StatementFormat?,
+        cardNumber: Payload.CardNumber?
+    ) -> Payload {
         
         .init(
             id: productID,
@@ -105,7 +106,7 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
     }
 }
 
-private extension Period {
+private extension CardStatementAPI.CardStatementForPeriodPayload.Period {
     
     static let initialPeriod: Self = {
         
@@ -114,6 +115,6 @@ private extension Period {
         let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
         let endDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
 
-        return Period(start: startDate, end: endDate)
+        return .init(start: startDate, end: endDate)
     }()
 }

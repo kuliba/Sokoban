@@ -7,11 +7,12 @@
 
 import Foundation
 import GenericRemoteService
+import CardStatementAPI
 
 extension Services {
     
-    typealias GetCardStatementPayload = CardStatementForPeriodDomain.Payload
-    typealias GetCardStatementResult = Swift.Result<[ProductStatementData], ResponseMapper.MapperError>
+    typealias GetCardStatementPayload = CardStatementAPI.CardStatementForPeriodPayload
+    typealias GetCardStatementResult = Swift.Result<[CardStatementAPI.ProductStatementData], CardStatementAPI.MappingError>
     typealias GetCardStatementService = RemoteServiceOf<GetCardStatementPayload, GetCardStatementResult>
     
     static func getCardStatementForPeriod(
@@ -21,7 +22,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getCardStatementForPeriod,
             performRequest: httpClient.performRequest,
-            mapResponse: ResponseMapper.mapGetCardStatementService
+            mapResponse: CardStatementAPI.ResponseMapper.mapGetCardStatementResponse
         )
     }
 }
