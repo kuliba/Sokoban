@@ -406,7 +406,8 @@ extension UILanding.List.VerticalRoundImage.Config {
             buttonHStack: 16,
             itemVStackBetweenTitleSubtitle: 4),
         item: ListItem(
-            imageWidthHeight: 40,
+            imageWidthHeight: 40, 
+            hstackAlignment: .center,
             font: .init(title: .headline, titleWithOutSubtitle: .subheadline, subtitle: .caption),
             color: .init(title: Color.textSecondary, subtitle: .gray),
             padding: .init(horizontal: 16, vertical: 3)),
@@ -448,7 +449,8 @@ extension UILanding.ImageBlock.Config {
             white: .white,
             defaultColor: .white),
         paddings: .init(horizontal: 16, vertical: 12),
-        cornerRadius: 12)
+        cornerRadius: 12, 
+        negativeBottomPadding: 0)
 }
 
 extension UILanding.ImageSvg.Config {

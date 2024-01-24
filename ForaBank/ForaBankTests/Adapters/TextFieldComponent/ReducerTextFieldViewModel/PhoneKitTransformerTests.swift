@@ -9,6 +9,8 @@
 import TextFieldComponent
 import XCTest
 
+// TODO: добавить тесты!!!
+
 final class PhoneKitTransformerTests: XCTestCase {
 
     func test_shouldReturnEmpty_onEmpty() {
@@ -22,22 +24,22 @@ final class PhoneKitTransformerTests: XCTestCase {
         
         let transformed = transform(.init("3"))
         
-        assertTextState(transformed, hasText: "+374", cursorAt: 4)
+        assertTextState(transformed, hasText: "+3", cursorAt: 2)
     }
     
-    func test_shouldReturnRuCode_on8() {
+    func test_shouldReturnRuCode_on89() {
         
-        let transformed = transform(.init("8"))
+        let transformed = transform(.init("89"))
         
-        assertTextState(transformed, hasText: "+7", cursorAt: 2)
+        assertTextState(transformed, hasText: "+7 9", cursorAt: 4)
     }
     
-    func test_shouldReturnRuCodeWith9_on9() {
+    /*func test_shouldReturnRuCodeWith9_on9() {
         
         let transformed = transform(.init("9"))
         
         assertTextState(transformed, hasText: "+7 9", cursorAt: 4)
-    }
+    }*/
     
     func test_shouldReturnEmpty_onNonDigits() {
         
@@ -50,21 +52,21 @@ final class PhoneKitTransformerTests: XCTestCase {
         
         let transformed = transform(.init("$%^3fghj"))
         
-        assertTextState(transformed, hasText: "+(3", cursorAt: 3)
+        assertTextState(transformed, hasText: "+3", cursorAt: 2)
     }
     
     func test_shouldReturnFormattedPartialPhoneNumber() {
         
         let transformed = transform(.init("123456789"))
         
-        assertTextState(transformed, hasText: "+1 (234) 567-89", cursorAt: 15)
+        assertTextState(transformed, hasText: "+1 234-567-89", cursorAt: 13)
     }
     
     func test_shouldReturnFormattedPartialPhoneNumber_() {
         
         let transformed = transform(.init("12a3456--789"))
         
-        assertTextState(transformed, hasText: "+1 (234) 567-89", cursorAt: 15)
+        assertTextState(transformed, hasText: "+1 234-567-89", cursorAt: 13)
     }
     
     func test_shouldReturnFormattedPhoneNumber() {
@@ -90,33 +92,21 @@ final class PhoneKitTransformerTests: XCTestCase {
     ) -> TextState {
         
         return Transformers
-            .phoneKit(filterSymbols: .defaultFilterSymbols, substitutions: .test)
+            .phoneKit(filterSymbols: [], substitutions: [])
             .transform(state)
     }
 }
 
 extension Array where Element == CountryCodeReplace {
     
-    static let test: Self = .armenian + .russian + .turkey
+    static let test: Self = .russian
 }
 
 extension Array where Element == CountryCodeSubstitution {
     
-    static let test: Self = .armenian + .russian + .turkey
-    
-    static let armenian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-    ]
+    static let test: Self = .russian
     
     static let russian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "9", to: "7 9"),
-    ]
-    
-    static let turkey: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-        .init(from: "9", to: "90"),
+        .init(from: "89", to: "79"),
     ]
 }

@@ -69,3 +69,22 @@ extension Alert {
         }
     }
 }
+
+extension Alert.ViewModel {
+    
+    static func techError(
+        message: String = "Возникла техническая ошибка",
+        primaryAction: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: message,
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: primaryAction
+            )
+        )
+    }
+}

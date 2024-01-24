@@ -27,8 +27,11 @@ class Model {
     let fcmToken: CurrentValueSubject<String?, Never>
 
     //MARK: Pre-Auth
-    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never> 
+    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    
+    //MARK: Sticker
+    let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
 
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
@@ -58,6 +61,7 @@ class Model {
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let authCatalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
+    let productListBannersWithSticker: CurrentValueSubject<[StickerBannersMyProductList], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
@@ -114,6 +118,7 @@ class Model {
 
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
+    let qrPaymentType: CurrentValueSubject<[QRPaymentType], Never>
     
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
@@ -180,11 +185,13 @@ class Model {
         self.statementsUpdating = .init([:])
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
+        self.stickerLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.authCatalogBanners = .init([])
         self.catalogBanners = .init([])
+        self.productListBannersWithSticker = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
@@ -215,6 +222,7 @@ class Model {
         self.deepLinkType = nil
         self.subscriptions = .init(nil)
         self.qrMapping = .init(nil)
+        self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
@@ -374,6 +382,7 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.ProductTemplate.List.Request())
                     action.send(ModelAction.C2B.GetC2BSubscription.Request())
+                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannersMyProductListWithSticker]))
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -445,7 +454,9 @@ class Model {
         
         action
             .receive(on: queue)
-            .sink {[unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                     
@@ -644,13 +655,17 @@ class Model {
                     //MARK: - Payments
                     
                 case let payload as ModelAction.Payment.Process.Request:
-                    Task {
+                    Task { [weak self] in
+                        
+                        guard let self else { return }
                         
                         await handlePaymentsProcessRequest(payload)
                     }
                     
                 case let payload as ModelAction.Payment.Subscription.Request:
-                    Task {
+                    Task { [weak self] in
+                        
+                        guard let self else { return }
                         
                         await handlePaymentSubscriptionRequest(payload)
                     }
@@ -864,6 +879,9 @@ class Model {
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload.serial)
                         
+                    case .bannersMyProductListWithSticker:
+                        handleDictionaryBannersMyProductListWithSticker(payload.serial)
+                        
                     case .atmList:
                         handleDictionaryAtmDataList(payload.serial)
                         
@@ -890,6 +908,9 @@ class Model {
                         
                     case .qrMapping:
                         handleDictionaryQRMapping(payload.serial)
+                        
+                    case .qrPaymentType:
+                        handleDictionaryQRPaymentType(payload.serial)
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
@@ -1132,6 +1153,11 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let productListBannersWithSticker = localAgent.load(type: [StickerBannersMyProductList].self) {
+            
+            self.productListBannersWithSticker.value = productListBannersWithSticker
         }
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
@@ -1458,6 +1484,11 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadOrderCard.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .sticker:
+            return load(type: LocalAgentDomain.AbroadSticker.self)
+                .map(\.landing)
+                .map(UILanding.init)
         }
     }
 }
@@ -1480,6 +1511,11 @@ extension LocalAgentDomain {
     }
     
     struct AbroadTransfer: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AbroadSticker: Codable {
         
         let landing: Landing
     }

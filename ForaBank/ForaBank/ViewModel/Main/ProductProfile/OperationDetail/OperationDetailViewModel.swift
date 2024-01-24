@@ -68,7 +68,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         if let documentId = productStatement.documentId {
             
-            model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+            model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
             
             withAnimation {
                 
@@ -105,7 +105,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+                    model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
                     
@@ -114,7 +114,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+                    model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case let payload as ModelAction.Operation.Detail.Response:
                     withAnimation {
@@ -130,9 +130,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
-                              details.restrictedTemplateButton else {
-                            return
-                        }
+                              details.shouldHaveTemplateButton
+                        else { return }
                         
                         self.templateButton = .init(
                             model: model,
@@ -238,7 +237,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         switch productStatement.paymentDetailType {
             
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes:
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
             if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }

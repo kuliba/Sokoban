@@ -12,12 +12,12 @@ public struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
-    let selectOption: (Operation.Parameter.Product.Option) -> Void
+    let selectOption: (ProductViewModel) -> Void
     
     public init(
         state: ProductStateViewModel.State,
         chevronTapped: @escaping () -> Void,
-        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+        selectOption: @escaping (ProductViewModel) -> Void
     ) {
         self.state = state
         self.chevronTapped = chevronTapped
@@ -36,6 +36,7 @@ extension ProductStateViewModel {
 
 public struct ProductViewModel: Hashable {
     
+    let id: Int
     let header: HeaderViewModel
     let main: MainViewModel
     let footer: FooterViewModel
@@ -45,10 +46,12 @@ extension ProductViewModel {
     
     public struct MainViewModel: Hashable {
     
-        let cardLogo: String
-        let paymentSystem: String?
+        let cardLogo: ImageData
+        let paymentSystem: ImageData?
         let name: String
         let balance: String
+        let backgroundImage: ImageData?
+        let backgroundColor: Color
     }
     
     public struct HeaderViewModel: Hashable {
@@ -61,17 +64,22 @@ extension ProductViewModel {
         let description: String
     }
     
-    static func mapper(_ product: Operation.Parameter.Product) -> ProductViewModel {
+    static func mapper(
+        _ product: Operation.Parameter.ProductSelector.Product
+    ) -> ProductViewModel {
         
         .init(
-            header: .init(title: product.selectedProduct.title),
+            id: product.id,
+            header: .init(title: product.title),
             main: .init(
-                cardLogo: .init(""),
-                paymentSystem: nil,
-                name: product.selectedProduct.nameProduct,
-                balance: product.selectedProduct.balance
+                cardLogo: product.cardImage,
+                paymentSystem: product.paymentSystem,
+                name: product.nameProduct,
+                balance: product.balanceFormatted,
+                backgroundImage: product.backgroundImage,
+                backgroundColor: Color(product.backgroundColor)
             ),
-            footer: .init(description: product.selectedProduct.description)
+            footer: .init(description: product.description)
         )
     }
 }

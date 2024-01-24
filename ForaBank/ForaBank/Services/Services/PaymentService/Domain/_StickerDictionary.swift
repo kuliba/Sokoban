@@ -12,8 +12,7 @@ extension ResponseMapper {
     enum _StickerDictionary: Decodable {
         
         case orderForm(StickerOrderForm)
-        case deliveryOffice(DeliveryOffice)
-        case deliveryCourier(DeliveryCourier)
+        case deliveryType(DeliveryType)
         
         init(from decoder: Decoder) throws {
             
@@ -27,12 +26,9 @@ extension ResponseMapper {
             if let data = try? container.decode(StickerOrderForm.self, forKey: .data) {
                 self = .orderForm(data)
                 
-            } else if let data = try? container.decode(DeliveryOffice.self, forKey: .data) {
-                self = .deliveryOffice(data)
-                
             } else {
-                let data = try container.decode(DeliveryCourier.self, forKey: .data)
-                self = .deliveryCourier(data)
+                let data = try container.decode(DeliveryType.self, forKey: .data)
+                self = .deliveryType(data)
                 
             }
         }
@@ -41,19 +37,13 @@ extension ResponseMapper {
 //MARK: StickerOrderForm
 extension ResponseMapper._StickerDictionary {
     
-    struct DeliveryOffice: Decodable {
+    struct DeliveryType: Decodable {
         
         let main: [Main]
         let serial: String
     }
     
-    struct DeliveryCourier: Decodable {
-        
-        let main: [Main]
-        let serial: String
-    }
-    
-    struct StickerOrderForm: Decodable {
+    public struct StickerOrderForm: Decodable {
         
         let header: [Header]
         let main: [Main]
@@ -72,6 +62,18 @@ extension ResponseMapper._StickerDictionary {
                 let title: String
                 let isFixed: Bool
             }
+        }
+        
+        public init(
+            header: [Header],
+            main: [Main],
+            footer: [Footer],
+            serial: String
+        ) {
+            self.header = header
+            self.main = main
+            self.footer = footer
+            self.serial = serial
         }
     }
     

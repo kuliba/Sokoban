@@ -10,93 +10,102 @@ import SwiftUI
 
 //MARK: - View
 
-struct ProductView: View {
+public struct ProductView: View {
     
     let appearance: Appearance
     let viewModel: ProductStateViewModel
     
-    var body: some View {
+    public var body: some View {
         
-        VStack {
+        VStack(spacing: 10) {
             
             switch viewModel.state {
             case let .selected(productViewModel):
-                selectProductView(productViewModel)
+                selectProductView(productViewModel, state: viewModel.state)
                 
             case let .list(productViewModel, productList):
                 
-                selectProductView(productViewModel)
-                optionsList(productList)
+                selectProductView(productViewModel, state: viewModel.state)
+                    .onTapGesture(perform: viewModel.chevronTapped)
+                
+                optionsList(
+                    productList,
+                    viewModel: viewModel,
+                    optionConfig: appearance.optionConfig
+                )
             }
         }
-        .background(background())
+        .background(appearance.background.color)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
     private func optionsList(
-        _ productList: [ProductViewModel]
+        _ productList: [ProductViewModel],
+        viewModel: ProductStateViewModel,
+        optionConfig: Appearance.OptionConfig
     ) -> some View {
-    
-        HStack(spacing: 10) {
         
-            ScrollView {
-             
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: 10) {
+                
                 ForEach(productList, id: \.self) { product in
+                    
+                    VStack(spacing: 8) {
+                     
+                        HStack {
+                            
+                            Color.clear
+                                .frame(width: 20, height: 20, alignment: .center)
+                            
+                            Text(product.footer.description)
+                                .font(optionConfig.numberFont)
+                                .foregroundColor(optionConfig.numberColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                     
+                        VStack(spacing: 4) {
+                            
+                            Text(product.main.name)
+                                .font(optionConfig.nameFont)
+                                .foregroundColor(optionConfig.nameColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            HStack {
+                                
+                                Text(product.main.balance)
+                                    .font(optionConfig.balanceFont)
+                                    .foregroundColor(optionConfig.balanceColor)
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+                    .background(background(product))
+                    .frame(width: 112, height: 71)
+                    .cornerRadius(8)
+                    .onTapGesture {
                         
-                    productOption(
-                        product: product,
-                        header: product.header
-                    )
+                        viewModel.selectOption(product)
+                    }
                 }
             }
         }
-    }
-    
-    private func productOption(
-        product: ProductViewModel,
-        header: ProductViewModel.HeaderViewModel
-    ) -> some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            ProductView.HeaderView(
-                viewModel: header,
-                appearance: .default
-            )
-            .padding(.leading, 10)
-            .padding(.top, 4)
-            
-            Spacer()
-            
-            VStack(alignment: .leading, spacing: 10) {
-                
-                Text(product.main.name)
-                    .font(.body)
-                    .foregroundColor(.black)
-                    .opacity(0.5)
-                
-                ProductView.FooterView(
-                    viewModel: product.footer,
-                    appearance: .default
-                )
-            }
-        }
-        .background(background())
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
-        .onTapGesture {
-            
-        }
+        .padding(10)
     }
     
     private func selectProductView(
-        _ productViewModel: ProductViewModel
+        _ productViewModel: ProductViewModel,
+        state: ProductStateViewModel.State
     ) -> some View {
         
         HStack(spacing: 12) {
             
-            Image(productViewModel.main.cardLogo)
+            // FIXME: create extension for data to image
+            Image(data: productViewModel.main.cardLogo.data)
                 .resizable()
-                .frame(width: 32, height: 22, alignment: .center)
+                .frame(width: 32, height: 32, alignment: .center)
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -109,42 +118,55 @@ struct ProductView: View {
                 
                 mainView(
                     productViewModel,
-                    chevronTapped: viewModel.chevronTapped
+                    state: state
                 )
             }
         }
         .padding(.init(top: 13, leading: 12, bottom: 13, trailing: 16))
+        .onTapGesture(perform: viewModel.chevronTapped)
     }
     
     private func mainView(
         _ viewModel: ProductViewModel,
-        chevronTapped: @escaping () -> Void
+        state: ProductStateViewModel.State
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 4) {
             
             HStack(alignment: .center, spacing: 8) {
-                
-                if let imageName = viewModel.main.paymentSystem {
-                    
-                    Image(imageName)
-                }
+
+                // FIXME: create extension for data to image AGAIN
+//                if let paymentSystemImage = viewModel.main.paymentSystem {
+//                    
+//                    Image(data: paymentSystemImage.data)
+//                        .resizable()
+//                        .frame(width: 24, height: 24, alignment: .center)
+//                }
                 
                 Text(viewModel.main.name)
+                    .lineLimit(1)
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
-                    .opacity(0.5)
-                
+
                 Spacer()
                 
                 Text(viewModel.main.balance)
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
-                    .opacity(0.5)
                 
-                Image(systemName: "chevron.down")
-                    .onTapGesture(perform: chevronTapped)
-                
+                if case .selected = state {
+                    
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.gray)
+                        .frame(width: 24, height: 24, alignment: .center)
+                    
+                } else {
+                    
+                    Image(systemName: "chevron.up")
+                        .foregroundColor(.gray)
+                        .frame(width: 24, height: 24, alignment: .center)
+                }
+
             }
             
             ProductView.FooterView(
@@ -155,17 +177,20 @@ struct ProductView: View {
     }
     
     @ViewBuilder
-    private func background() -> some View {
+    private func background(
+        _ product: ProductViewModel
+    ) -> some View {
         
-        if let backgroundImage = appearance.background.image {
+        if let backgroundUIImage = product.main.backgroundImage {
             
-            backgroundImage
+            // FIXME: create extension for data to image AGAIN
+            Image(data: backgroundUIImage.data)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
         } else {
             
-            appearance.background.color
+            product.main.backgroundColor
         }
     }
 }
@@ -182,8 +207,8 @@ extension ProductView {
         var body: some View {
             
             Text(viewModel.title)
-                .font(appearance.textFont)
-                .foregroundColor(appearance.textColor)
+                .font(appearance.headerTextFont)
+                .foregroundColor(appearance.headerTextColor)
         }
     }
     
@@ -195,9 +220,8 @@ extension ProductView {
         var body: some View {
             
             Text(viewModel.description)
-                .font(appearance.textFont)
-                .fontWeight(.semibold)
-                .foregroundColor(appearance.textColor)
+                .font(appearance.headerTextFont)
+                .foregroundColor(appearance.headerTextColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         
@@ -221,16 +245,70 @@ extension ProductView {
 
 extension ProductView {
     
-    struct Appearance {
+    public struct Appearance {
         
+        let headerTextColor: Color
+        let headerTextFont: Font
         let textColor: Color
         let textFont: Font
+        let optionConfig: OptionConfig
         let background: Background
         
-        struct Background {
+        public init(
+            headerTextColor: Color,
+            headerTextFont: Font,
+            textColor: Color,
+            textFont: Font,
+            optionConfig: OptionConfig,
+            background: Background
+        ) {
+            self.headerTextColor = headerTextColor
+            self.headerTextFont = headerTextFont
+            self.textColor = textColor
+            self.textFont = textFont
+            self.optionConfig = optionConfig
+            self.background = background
+        }
+        
+        public struct OptionConfig {
+            
+            let numberColor: Color
+            let numberFont: Font
+            let nameColor: Color
+            let nameFont: Font
+            let balanceColor: Color
+            let balanceFont: Font
+            
+            public init(
+                numberColor: Color,
+                numberFont: Font,
+                nameColor: Color,
+                nameFont: Font,
+                balanceColor: Color,
+                balanceFont: Font
+            ) {
+                self.numberColor = numberColor
+                self.numberFont = numberFont
+                self.nameColor = nameColor
+                self.nameFont = nameFont
+                self.balanceColor = balanceColor
+                self.balanceFont = balanceFont
+            }
+        }
+        
+        public struct Background {
             
             let color: Color
             let image: Image?
+            
+            public init(
+                color: Color,
+                image: Image? = nil
+            ) {
+                self.color = color
+                self.image = image
+            }
+
         }
     }
 }
@@ -238,8 +316,18 @@ extension ProductView {
 extension ProductView.Appearance {
     
     static let `default`: Self = .init(
+        headerTextColor: .accentColor,
+        headerTextFont: .body,
         textColor: .accentColor,
         textFont: .body,
+        optionConfig: .init(
+            numberColor: .black,
+            numberFont: .body,
+            nameColor: .black,
+            nameFont: .body,
+            balanceColor: .black,
+            balanceFont: .body
+        ),
         background: .init(color: .yellow, image: nil)
     )
 }
@@ -252,12 +340,15 @@ struct ProductView_Previews: PreviewProvider {
             appearance: .default,
             viewModel: .init(
                 state: .selected(.init(
+                    id: 1,
                     header: .init(title: "Счет списания"),
                     main: .init(
-                        cardLogo: .init(""),
+                        cardLogo: .data(.empty),
                         paymentSystem: nil,
                         name: "Gold",
-                        balance: "625 193 Р"
+                        balance: "625 193 Р",
+                        backgroundImage: .data(.empty),
+                        backgroundColor: .red
                     ),
                     footer: .init(description: "description")
                 )),

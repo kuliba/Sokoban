@@ -108,6 +108,88 @@ extension Payments.Success {
             )
         }
     }
+    
+    init(
+        with response: OutgoingTransferResponse,
+        operation: Payments.Operation,
+        title: String? = nil
+    ) throws {
+        
+        let mode: PaymentsSuccessViewModel.Mode? = {
+            
+            switch operation.service {
+            case .return: return .refund
+            case .change: return .change
+            default: return nil
+            }
+        }()
+        
+        guard let mode else {
+            
+            struct OutgoingTransferResponseOperationServiceMismatch: Error {}
+            throw OutgoingTransferResponseOperationServiceMismatch()
+        }
+        
+        let status: TransferResponseBaseData.DocumentStatus = .inProgress
+        
+        if let title {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(with: title),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: status,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+            
+        } else {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(.normal, documentStatus: status),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: status,
+                    operationDetail: nil,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+        }
+    }
+    
+    init(
+        status: Payments.ParameterSuccessStatus.Status,
+        title: String,
+        subTitle: String? = nil,
+        titleForActionButton: String
+    ) {
+        let params: [PaymentsParameterRepresentable?] = [
+            Payments.ParameterSuccessStatus(status: status),
+            Payments.ParameterSuccessText.title(with: title),
+            Payments.ParameterSuccessText.subTitle(with: subTitle),
+            Payments.ParameterButton.actionButtonClose(title: titleForActionButton)
+        ]
+        
+        self.init(operation: nil, parameters: params.compactMap { $0 })
+    }
 }
 
 //MARK: - Mode
@@ -291,7 +373,7 @@ extension Payments.Success {
             parameters.append(logoParam)
             
             // amount
-            let amount = amountFormatter(operationDetail.amount, operationDetail.currencyAmount, .fraction)
+            let amount = amountFormatter(operationDetail.amount, operationDetail.currencyAmount ?? "", .fraction)
             let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
             parameters.append(amountParam)
             
@@ -302,7 +384,7 @@ extension Payments.Success {
             parameters.append(logoParam)
             
             // amount
-            let amount = amountFormatter(operationDetail.payerAmount, operationDetail.currencyAmount, .fraction)
+            let amount = amountFormatter(operationDetail.payerAmount, operationDetail.currencyAmount ?? "", .fraction)
             let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
             parameters.append(amountParam)
             
@@ -315,7 +397,7 @@ extension Payments.Success {
             // amount
             if let payeeAmount = operationDetail.payeeAmount {
                 
-                let amount = amountFormatter(payeeAmount, operationDetail.currencyAmount, .fraction)
+                let amount = amountFormatter(payeeAmount, operationDetail.currencyAmount ?? "", .fraction)
                 let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
                 parameters.append(amountParam)
             }
@@ -367,16 +449,30 @@ extension Payments.ParameterSuccessText {
                 
             case .closeAccountEmpty:
                 return .init(id: paramId, value: "Счет успешно закрыт", style: .title)
+                
+            case .changePin:
+                return .init(id: paramId, value: "PIN-код успешно изменен", style: .title)
+                
+            case .change, .refund:
+                return .init(id: paramId, value: "Операция успешно завершена", style: .title)
+            case .sberQR:
+                return .init(id: paramId, value: "Покупка оплачена", style: .title)
             }
             
         case .inProgress:
             
             switch mode {
-            case .normal, .meToMe:
+            case .normal, .meToMe, .changePin:
                 return .init(id: paramId, value: "Операция в обработке!", style: .title)
                 
-            case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit:
+            case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit, .sberQR:
                 return .init(id: paramId, value: "Платеж принят в обработку", style: .title)
+    
+            case .change:
+                return .init(id: paramId, value: "Запрос на изменение перевода принят в обработку", style: .title)
+    
+            case .refund:
+                return .init(id: paramId, value: "Запрос на возврат перевода принят в обработку", style: .title)
             }
             
         case .rejected, .unknown:
@@ -387,6 +483,18 @@ extension Payments.ParameterSuccessText {
                 
             case .closeAccountEmpty, .closeDeposit, .closeAccount:
                 return .init(id: paramId, value: "Отказ", style: .title)
+                
+            case .changePin:
+                return .init(id: paramId, value: "Не удалось изменить PIN-код.\nПовторите попытку позднее", style: .title)
+                
+            case .change:
+                return .init(id: paramId, value: "Не удалось изменить перевод", style: .title)
+                
+            case .refund:
+                return .init(id: paramId, value: "Не удалось вернуть перевод", style: .title)
+                
+            case .sberQR:
+                return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
         }
     }
@@ -440,6 +548,11 @@ extension Payments.ParameterSuccessText {
         .init(id: Payments.Parameter.Identifier.successTitle.rawValue, value: text, style: .title)
     }
     
+    static func subTitle(with text: String?) -> Payments.ParameterSuccessText? {
+        
+        .init(id: Payments.Parameter.Identifier.successTitle.rawValue, value: text ?? "", style: .subtitle)
+    }
+
     static func amount(amount: String?) -> Payments.ParameterSuccessText? {
         
         guard let amount else { return nil }
@@ -527,6 +640,25 @@ extension Payments.ParameterSuccessOptionButtons {
                 meToMePayment: meToMePayment,
                 operation: operation
             )
+            
+        case .changePin:
+            return nil
+            
+        case .change, .refund:
+            return optionButtons(
+                operation: operation,
+                options: [.document],
+                operationDetail: operationDetail,
+                meToMePayment: meToMePayment
+            )
+            
+        case .sberQR:
+            return optionButtons(
+                operation: operation,
+                options: [.document, .details],
+                operationDetail: operationDetail,
+                meToMePayment: meToMePayment
+            )
         }
     }
     
@@ -554,7 +686,7 @@ extension Payments.ParameterSuccessOptionButtons {
                 operation: operation
             )
             
-        case .closeAccount, .closeAccountEmpty:
+        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund, .sberQR:
             return nil
         }
     }
@@ -632,10 +764,16 @@ extension Payments.ParameterButton {
         }
     }
     
-    static func actionButtonMain() -> Payments.ParameterButton {
+    static func actionButtonMain(title: String = "На главный") -> Payments.ParameterButton {
         
-        .init(parameterId: Payments.Parameter.Identifier.successActionButton.rawValue, title: "На главный", style: .primary, acton: .main, placement: .bottom)
+        .init(parameterId: Payments.Parameter.Identifier.successActionButton.rawValue, title: title, style: .primary, acton: .main, placement: .bottom)
     }
+    
+    static func actionButtonClose(title: String = "Готово") -> Payments.ParameterButton {
+        
+        .init(parameterId: Payments.Parameter.Identifier.successCloseButton.rawValue, title: title, style: .primary, acton: .close, placement: .bottom)
+    }
+
 }
 
 extension Payments.ParameterDataValue {

@@ -15,15 +15,10 @@ extension ModelAction {
         
         enum Detail {
             
-            struct Request: Action {
+            enum Request: Action, Equatable {
                 
-                let type: Kind
-                
-                enum Kind: Equatable {
-                    
-                    case documentId(Int)
-                    case paymentOperationDetailId(Int)
-                }
+                case documentId(Int)
+                case paymentOperationDetailId(Int)
             }
             
             struct Response: Action {
@@ -54,14 +49,14 @@ extension ModelAction {
 
 extension Model {
     
-    func handleOperationDetailRequest(_ payload: ModelAction.Operation.Detail.Request) {
+    func handleOperationDetailRequest(_ request: ModelAction.Operation.Detail.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
         
-        switch payload.type {
+        switch request {
         case let .documentId(documentId):
             handleOperationDetailRequestByDocumentId(token, documentId)
             
@@ -115,7 +110,6 @@ extension Model {
                     
                     guard let details = response.data else {
                         self.handleServerCommandEmptyData(command: command)
-                        self.action.send(ModelAction.Operation.Detail.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
                         return
                     }
                     

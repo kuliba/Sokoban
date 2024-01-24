@@ -12,7 +12,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
     //MARK: - test isValidPhoneNumber - not valid
     
     func test_isValidPhoneNumber_ru_notValid() {
-                
+         
         XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
         XCTAssertFalse(isValid(.ru(.startsWithPlus8(.equals10Digits))))
         XCTAssertFalse(isValid(.ru(.startsWith8(.lessThen10Digits))))
@@ -111,8 +111,8 @@ final class PhoneNumberWrapperTests: XCTestCase {
     func test_format_ru_numberStartsWith9_10Digits() {
         
         let result = format(.ru(.startsWith9(.equals10Digits)))
-        
-        XCTAssertNoDiff(result, "+7 963 000-00-00")
+        // 963 код Сирии
+        XCTAssertNoDiff(result, "+963 000 000 0")
     }
         
     func test_format_ru_NumberLessThan10Digits() {
@@ -126,7 +126,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         let result = format(.ru(.startsWith8(.moreThen10Digits)))
         
-        XCTAssertNoDiff(result, "+7 963 000-00-000")
+        XCTAssertNoDiff(result, "+7 963 000-00-00")
     }
     
     //MARK: - test format us
@@ -135,7 +135,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         let result = format(.us(.startsWithZeroNotValid))
         
-        XCTAssertNoDiff(result, "+1 800 469-92-692")
+        XCTAssertNoDiff(result, "+800 4699 2692")
     }
 
     func test_format_us_startsWithZeroValid() {
@@ -161,18 +161,46 @@ final class PhoneNumberWrapperTests: XCTestCase {
 
     //MARK: - test format other
 
-    func test_format_otherNotValid_long() {
+    func test_format_otherNotValid_longArmenia() {
         
-        let result = format(.otherNotValid(.long))
+        let result = format(.otherNotValid(.longArmenia))
         
-        XCTAssertNoDiff(result, "+3 521 112-22-33344455566")
+        XCTAssertNoDiff(result, "+374 11 122233")
+    }
+    
+    func test_format_otherNotValid_longLuxembourg() {
+        
+        let result = format(.otherNotValid(.longLuxembourg))
+        
+        XCTAssertNoDiff(result, "+352 111 222 333")
+    }
+    
+    func test_format_otherNotValid_longPhilippines() {
+        
+        let result = format(.otherNotValid(.longPhilippines))
+        
+        XCTAssertNoDiff(result, "+63 121 545 4545")
+    }
+    
+    func test_format_otherNotValid_longTurkey() {
+        
+        let result = format(.otherNotValid(.longTurkey))
+        
+        XCTAssertNoDiff(result, "+90 121 312 15 45")
+    }
+    
+    func test_format_otherNotValid_longUSA() {
+        
+        let result = format(.otherNotValid(.longUSA))
+        
+        XCTAssertNoDiff(result, "+1 232-545-4545")
     }
 
     func test_format_otherNotValid_short() {
         
         let result = format(.otherNotValid(.short))
         
-        XCTAssertNoDiff(result, "+1 122 3")
+        XCTAssertNoDiff(result, "+1 122-3")
     }
 
     // MARK: - Helpers

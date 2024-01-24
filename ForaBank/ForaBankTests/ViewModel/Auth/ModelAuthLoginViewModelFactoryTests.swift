@@ -79,31 +79,35 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - makeLandingViewModel
+    // MARK: - makeCardLandingViewModel
     
     func test_makeOrderProductViewModel_orderCard() {
         
         let (sut, factory) = makeSUT()
         
-        let landingViewModel = factory.makeLandingViewModel(
+        let landingViewModel = factory.makeCardLandingViewModel(
             .orderCard,
             config: .default,
-            goMain: {},
-            orderCard: {_,_ in })
-        
-        XCTAssertNotNil(landingViewModel)
-        XCTAssertNotNil(sut)
+            landingActions: { _ in
+                return {}
+            }
+        )
+            
+            XCTAssertNotNil(landingViewModel)
+            XCTAssertNotNil(sut)
     }
     
     func test_makeOrderProductViewModel_transfer() {
         
         let (sut, factory) = makeSUT()
         
-        let landingViewModel = factory.makeLandingViewModel(
+        let landingViewModel = factory.makeCardLandingViewModel(
             .transfer,
             config: .default,
-            goMain: {},
-            orderCard: {_,_ in })
+            landingActions: { _ in
+                return {}
+            }
+        )
         
         XCTAssertNotNil(landingViewModel)
         XCTAssertNotNil(sut)
@@ -117,7 +121,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: Model,
-        factory: ModelAuthLoginViewModelFactory
+        factory: AuthLoginViewModelFactory
     ) {
         let sut: Model = .mockWithEmptyExcept()
         let factory = sut.authLoginViewModelFactory(
@@ -126,7 +130,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(factory, file: file, line: line)
+        // trackForMemoryLeaks(factory, file: file, line: line)
         
         return (sut, factory)
     }

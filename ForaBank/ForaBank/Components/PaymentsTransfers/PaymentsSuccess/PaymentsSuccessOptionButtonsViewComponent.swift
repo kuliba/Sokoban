@@ -66,9 +66,8 @@ extension Model {
             case .template:
                 
                 guard let operationDetail = source.operationDetail,
-                      operationDetail.restrictedTemplateButton else {
-                    return nil
-                }
+                      operationDetail.shouldHaveTemplateButton 
+                else { return nil }
                 
                 switch source.templateID {
                 case let .some(templateID):
@@ -198,7 +197,7 @@ struct PaymentsSuccessOptionButtonsView: View {
                     EmptyView()
                 }
             }
-        }.padding(.bottom, 16)
+        }
     }
 }
 
@@ -215,21 +214,31 @@ extension PaymentsSuccessOptionButtonsView {
             
             Button(action: action) {
                 
+                ButtonLabel(title: viewModel.title, icon: viewModel.icon)
+            }
+        }
+        
+        struct ButtonLabel: View {
+            
+            let title: String
+            let icon: Image
+            
+            var body: some View {
+                
                 VStack(spacing: 20) {
                     
-                    viewModel.icon
+                    icon
                         .foregroundColor(.iconBlack)
                         .frame(width: 56, height: 56)
                         .background(Circle().foregroundColor(.mainColorsGrayLightest))
                         .accessibilityIdentifier("SuccessPageButtonIcon")
-                        
-                    Text(viewModel.title)
+                    
+                    Text(title)
                         .font(.textBodySM12160())
                         .foregroundColor(.textSecondary)
                         .frame(maxWidth: 100)
                         .accessibilityIdentifier("SuccessPageButtonTitle")
                 }
-                
             }
         }
     }

@@ -14,16 +14,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var model: Model = AppDelegate.shared.model
+    private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
+    private lazy var httpClient: HTTPClient = { model.authenticatedHTTPClient()
+    }()
     private lazy var rootViewModel = RootViewModelFactory.make(
-        with: model
+        httpClient: httpClient,
+        model: model,
+        logger: logger,
+        qrResolverFeatureFlag: .init(.active),
+        fastPaymentsSettingsFlag: .init(.inactive)
     )
-    
+    private lazy var rootViewFactory = RootViewFactory(
+        with: model.imageCache()
+    )
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = RootViewHostingViewController(with: rootViewModel)
+        let rootViewController = RootViewHostingViewController(
+            with: rootViewModel,
+            rootViewFactory: rootViewFactory
+        )
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         

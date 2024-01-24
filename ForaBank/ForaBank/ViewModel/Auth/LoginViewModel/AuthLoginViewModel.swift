@@ -27,6 +27,7 @@ class AuthLoginViewModel: ObservableObject {
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     lazy var card: CardViewModel = CardViewModel(
@@ -55,6 +56,7 @@ class AuthLoginViewModel: ObservableObject {
         eventPublishers: EventPublishers,
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
+        onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
         scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
     ) {
@@ -63,6 +65,7 @@ class AuthLoginViewModel: ObservableObject {
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
+        self.onRegister = onRegister
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
@@ -75,12 +78,10 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     func showTransfers() {
-        
         handleLandingAction(.transfer)
     }
     
     func showProducts() {
-        
         handleLandingAction(.orderCard)
     }
 }
@@ -105,14 +106,19 @@ protocol AuthLoginViewModelFactory {
         productData: CatalogProductData
     ) -> OrderProductView.ViewModel
     
-    typealias GoMainAction = () -> Void
-    typealias OrderCardAction = (Int, Int) -> Void
-    
-    func makeLandingViewModel(
+    func makeCardLandingViewModel(
         _ type: AbroadType,
         config: UILanding.Component.Config,
-        goMain: @escaping GoMainAction,
-        orderCard: @escaping OrderCardAction
+        landingActions: @escaping (LandingEvent.Card) -> () -> Void
+    ) -> LandingWrapperViewModel
+}
+
+protocol MainViewModelFactory {
+    
+    func makeStickerLandingViewModel(
+        _ type: AbroadType,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
     ) -> LandingWrapperViewModel
 }
 
@@ -290,16 +296,28 @@ private extension AuthLoginViewModel {
     
     func handleLandingAction(_ abroadType: AbroadType) {
         
-        let viewModel = factory.makeLandingViewModel(
+        let viewModel = factory.makeCardLandingViewModel(
             abroadType,
             config: .default,
-            goMain: handleCloseLinkAction,
-            orderCard: orderCard
+            landingActions: landingAction
         )
         
         UIApplication.shared.endEditing()
         
         link = .landing(viewModel)
+    }
+    
+    private func landingAction(for event: LandingEvent.Card) -> () -> Void {
+        
+            switch event {
+            case .goToMain:
+                return handleCloseLinkAction
+                
+             case let .order(cardTarif, cardType):
+                return { [weak self] in
+                    self?.orderCard(cardTarif, cardType) }
+                
+            }
     }
     
     func handleShowScannerAction() {
@@ -372,6 +390,7 @@ private extension AuthLoginViewModel {
             return CardViewModel.NextButtonViewModel(
                 action: { [weak self] in
                     
+                    self?.onRegister()
                     self?.action.send(.register(cardNumber: cardNumber))
                 })
             

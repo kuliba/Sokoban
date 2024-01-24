@@ -12,32 +12,75 @@ extension Services {
     struct Endpoint {
         
         let pathPrefix: PathPrefix
-        let version: Version
+        let version: Version?
         let serviceName: ServiceName
         
-        enum PathPrefix: String {
+        enum PathPrefix {
             
-            case processingRegistration = "processing/registration"
-            case dict = "dict"
-            case binding = "rest/binding"
-            case transfer = "rest/transfer"
+            case processing(Processing)
+            case dict
+            case binding
+            case rest
+            case transfer
+            
+            var path: String {
+                
+                switch self {
+                case let .processing(processing):
+                    return "processing/\(processing.rawValue)"
+
+                case .dict:
+                    return "dict"
+
+                case .binding:
+                    return "rest/binding"
+
+                case .rest:
+                    return "rest"
+
+                case .transfer:
+                    return "rest/transfer"
+                }
+            }
+            
+            enum Processing: String {
+                
+                case auth
+                case authenticate
+                case cardInfo
+                case registration
+            }
         }
         
         enum Version: String {
             
             case v1
             case v2
+            case v4
         }
         
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case changePIN
+            case createCommissionProductTransfer
+            case createStickerPayment
+            case createSberQRPayment
             case formSessionKey
+            case getCardStatementForPeriod
+            case getCardStatementForPeriod_V3
             case getJsonAbroad
+            case getSberQRData
+            case getOperationDetailByPaymentId
+            case getPINConfirmationCode
+            case getPrintForm
             case getProcessingSessionCode
+            case getSvgImageList
             case getScenarioQRData
             case getStickerPayment
-            case createStickerPayment
+            case makeTransfer
+            case processPublicKeyAuthenticationRequest
+            case showCVV
         }
     }
 }
@@ -46,21 +89,25 @@ extension Services.Endpoint {
     
     private var path: String {
         
-        "/\(pathPrefix.rawValue)/\(version.rawValue)/\(serviceName.rawValue)"
+        let version = version.map { "\($0.rawValue)/"} ?? ""
+        return "/\(pathPrefix.path)/\(version)\(serviceName.rawValue)"
     }
     
-    func url(withBase base: String) throws -> URL {
+    func url(
+        withBase base: String,
+        parameters: [(String, String)] = []
+    ) throws -> URL {
         
         guard let baseURL = URL(string: base)
-        else {
-            
-            throw URLConstructionError()
-        }
+        else { throw URLConstructionError() }
         
-        return try url(withBaseURL: baseURL)
+        return try url(withBaseURL: baseURL, parameters: parameters)
     }
     
-    func url(withBaseURL baseURL: URL) throws -> URL {
+    func url(
+        withBaseURL baseURL: URL,
+        parameters: [(String, String)] = []
+    ) throws -> URL {
         
         var components = URLComponents()
         components.scheme = baseURL.scheme
@@ -68,10 +115,20 @@ extension Services.Endpoint {
         components.port = baseURL.port
         components.path = baseURL.path + path
         
-        guard let url = components.url(relativeTo: baseURL)
-        else {
-            throw URLConstructionError()
+        if !parameters.isEmpty {
+            
+            components.queryItems = parameters.map { name, value in
+                
+                let value = value.addingPercentEncoding(
+                    withAllowedCharacters: .urlHostAllowed
+                )
+                
+                return .init(name: name, value: value)
+            }
         }
+        
+        guard let url = components.url(relativeTo: baseURL)
+        else { throw URLConstructionError() }
         
         return url
     }
@@ -82,21 +139,21 @@ extension Services.Endpoint {
 extension Services.Endpoint {
     
     static let bindPublicKeyWithEventID: Self = .init(
-        pathPrefix: .processingRegistration,
+        pathPrefix: .processing(.registration),
         version: .v1,
         serviceName: .bindPublicKeyWithEventId
     )
     
-    static let formSessionKey: Self = .init(
-        pathPrefix: .processingRegistration,
+    static let changePIN: Self = .init(
+        pathPrefix: .processing(.cardInfo),
         version: .v1,
-        serviceName: .formSessionKey
+        serviceName: .changePIN
     )
     
-    static let getProcessingSessionCode: Self = .init(
-        pathPrefix: .processingRegistration,
-        version: .v1,
-        serviceName: .getProcessingSessionCode
+    static let createCommissionProductTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .createCommissionProductTransfer
     )
     
     static let createLandingRequest: Self = .init(
@@ -105,7 +162,67 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
-    static let getScenarioQRDataRequest: Self = .init(
+    static let createStickerPayment: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .createStickerPayment
+    )
+    
+    static let createSberQRPayment: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .createSberQRPayment
+    )
+    
+    static let formSessionKey: Self = .init(
+        pathPrefix: .processing(.registration),
+        version: .v1,
+        serviceName: .formSessionKey
+    )
+    
+    static let getCardStatementForPeriod: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getCardStatementForPeriod_V3
+    )
+
+    static let getImageList: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getSvgImageList
+    )
+    
+    static let getOperationDetailByPaymentID: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getOperationDetailByPaymentId
+    )
+    
+    static let getPINConfirmationCode: Self = .init(
+        pathPrefix: .processing(.cardInfo),
+        version: .v1,
+        serviceName: .getPINConfirmationCode
+    )
+    
+    static let getPrintForm: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getPrintForm
+    )
+    
+    static let getProcessingSessionCode: Self = .init(
+        pathPrefix: .processing(.registration),
+        version: .v1,
+        serviceName: .getProcessingSessionCode
+    )
+    
+    static let getSberQRData: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getSberQRData
+    )
+    
+    static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getScenarioQRData
@@ -114,54 +231,24 @@ extension Services.Endpoint {
     static let getStickerPaymentRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
-        serviceName: .getStickerPayment
+        serviceName: .getJsonAbroad
     )
     
-    static let createStickerPayment: Self = .init(
-        pathPrefix: .binding,
+    static let makeTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .makeTransfer
+    )
+    
+    static let processPublicKeyAuthenticationRequest: Self = .init(
+        pathPrefix: .processing(.authenticate),
         version: .v1,
-        serviceName: .createStickerPayment
+        serviceName: .processPublicKeyAuthenticationRequest
     )
-}
-
-extension Services.Endpoint {
     
-    func url(withBase base: String, parameters: [(String, String)]) throws -> URL {
-        
-        guard let baseURL = URL(string: base)
-        else {
-            
-            throw URLConstructionError()
-        }
-        
-        return try url(withBaseURL: baseURL, parameters: parameters)
-    }
-    
-    
-    func url(withBaseURL baseURL: URL, parameters: [(String, String)]) throws -> URL {
-        
-        var components = URLComponents()
-        components.scheme = baseURL.scheme
-        components.host = baseURL.host
-        components.port = baseURL.port
-        components.path = baseURL.path + path
-        
-        if !parameters.isEmpty {
-            
-            components.queryItems = [URLQueryItem]()
-            
-            components.queryItems = parameters.map { (key, value) in
-                URLQueryItem(
-                    name: key,
-                    value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
-            }
-        }
-        
-        guard let url = components.url(relativeTo: baseURL)
-        else {
-            throw URLConstructionError()
-        }
-        
-        return url
-    }
+    static let showCVV: Self = .init(
+        pathPrefix: .processing(.cardInfo),
+        version: .v1,
+        serviceName: .showCVV
+    )
 }

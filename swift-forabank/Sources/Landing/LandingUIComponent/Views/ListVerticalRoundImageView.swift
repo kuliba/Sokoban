@@ -22,7 +22,7 @@ struct ListVerticalRoundImageView: View {
             model.data.title.map { Header(text: $0, config: config) }
             
             LazyVStack(alignment: .leading, spacing: config.spacings.lazyVstack) {
-                                
+                
                 ForEach(model.list(showAll: showAll), content: itemView(item:))
                 
                 if let _ = model.data.displayedCount {
@@ -48,7 +48,7 @@ struct ListVerticalRoundImageView: View {
             image: model.image(byMd5Hash: item.md5hash),
             action: { model.action(for: item) })
     }
-        
+    
     private var buttonShowAll: some View {
         
         Button(action: { showAll.toggle() }) {
@@ -60,14 +60,17 @@ struct ListVerticalRoundImageView: View {
                     Circle()
                         .frame(width: config.item.imageWidthHeight, height: config.item.imageWidthHeight)
                         .foregroundColor(.white)
+                        .accessibilityIdentifier("VerticalRoundbuttonShowAllCircle")
                     
                     Image(systemName: "ellipsis")
                         .foregroundColor(config.buttonSettings.ellipsisForegroundColor)
+                        .accessibilityIdentifier("VerticalRoundbuttonShowAllImage")
                 }
                 
                 Text(showAll ? model.data.dropButtonCloseTitle ?? "" : model.data.dropButtonOpenTitle ?? "")
                     .font(config.buttonSettings.text.font)
                     .foregroundColor(config.buttonSettings.text.color)
+                    .accessibilityIdentifier("VerticalRoundbuttonShowAllText")
                 
                 Spacer()
             }
@@ -90,6 +93,7 @@ struct ListVerticalRoundImageView: View {
                     .foregroundColor(config.title.color)
                     .padding(.horizontal, config.title.paddingHorizontal)
                     .padding(.top, config.title.paddingTop)
+                    .accessibilityIdentifier("VerticalRoundHeader")
                 
                 config.divider
                     .frame(height: 0.5)
@@ -108,22 +112,22 @@ struct ListVerticalRoundImageView: View {
             
             Button(action: action) {
                 
-                HStack(alignment: .center, spacing: config.spacings.itemHstack) {
+                HStack(alignment: config.item.hstackAlignment, spacing: config.spacings.itemHstack) {
                     
                     ImageView(image: image, config: config.item)
                     
                     VStack(alignment: .leading, spacing: config.spacings.itemVStackBetweenTitleSubtitle) {
-                        
                         if let subInfo = item.subInfo, !subInfo.isEmpty {
                             
                             TitleView(item: item, config: config)
+                                .accessibilityIdentifier("VerticalRoundItemTitle")
 
                             Text(subInfo)
                                 .font(config.item.font.subtitle)
                                 .foregroundColor(config.item.color.subtitle)
                                 .multilineTextAlignment(.leading)
+                                .accessibilityIdentifier("VerticalRoundItemText")
                         } else {
-                            
                             TitleView(item: item, config: config)
                         }
                     }
@@ -165,12 +169,14 @@ struct ListVerticalRoundImageView: View {
                     .cornerRadius(config.imageWidthHeight/2)
                     .frame(width: config.imageWidthHeight, height: config.imageWidthHeight)
                     .shimmering()
+                    .accessibilityIdentifier("VerticalRoundItemIcon")
                 
             case let .some(image):
                 image
                     .resizable()
                     .cornerRadius(config.imageWidthHeight/2)
                     .frame(width: config.imageWidthHeight, height: config.imageWidthHeight)
+                    .accessibilityIdentifier("VerticalRoundItemImage")
             }
         }
     }

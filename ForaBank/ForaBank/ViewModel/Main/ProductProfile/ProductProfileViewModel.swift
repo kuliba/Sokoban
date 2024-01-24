@@ -9,8 +9,15 @@ import Foundation
 import Combine
 import SwiftUI
 import PDFKit
+import PinCodeUI
+import Tagged
 
 class ProductProfileViewModel: ObservableObject {
+    
+    typealias CardAction = CardDomain.CardAction
+    typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
+    typealias CompletionShowCVV = (ResultShowCVV) -> Void
+    typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -29,17 +36,23 @@ class ProductProfileViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     @Published var spinner: SpinnerView.ViewModel?
-    
+    @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var successZeroAccount: ZeroAccount?
-
+    
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
-
+    
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
+    private let sberQRServices: SberQRServices
+    private let qrViewModelFactory: QRViewModelFactory
+    private let cvvPINServicesClient: CVVPINServicesClient
+    private var cardAction: CardAction?
+    
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
@@ -55,8 +68,12 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         rootView: String) {
-        
+         fastPaymentsFactory: FastPaymentsFactory,
+         fastPaymentsServices: FastPaymentsServices,         sberQRServices: SberQRServices,
+         qrViewModelFactory: QRViewModelFactory,
+         cvvPINServicesClient: CVVPINServicesClient,
+         rootView: String
+    ) {
         self.navigationBar = navigationBar
         self.product = product
         self.buttons = buttons
@@ -66,7 +83,13 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
+        self.sberQRServices = sberQRServices
+        self.qrViewModelFactory = qrViewModelFactory
+        self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
+        self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -76,18 +99,43 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
-    convenience init?(_ model: Model, product: ProductData, rootView: String, dismissAction: @escaping () -> Void) {
-        
-        guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
-            return nil
-        }
+    convenience init?(
+        _ model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
+        cvvPINServicesClient: CVVPINServicesClient,
+        product: ProductData,
+        rootView: String,
+        dismissAction: @escaping () -> Void
+    ) {
+        guard let productViewModel = ProductProfileCardView.ViewModel(
+            model,
+            productData: product,
+            cardAction: { _ in },
+            showCvv: nil)
+        else { return nil }
         
         // status bar
         let navigationBar = NavigationBarView.ViewModel(product: product, dismissAction: dismissAction)
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, fastPaymentsFactory: fastPaymentsFactory, fastPaymentsServices: fastPaymentsServices, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        
+        self.product = ProductProfileCardView.ViewModel(
+            model,
+            productData: product,
+            cardAction: self.cardAction,
+            showCvv: { [weak self] cardId, completion in
+                
+                guard let self else { return }
+                
+                self.showCvvByTap(
+                    cardId: cardId,
+                    completion: completion)
+            })!
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -96,20 +144,197 @@ class ProductProfileViewModel: ObservableObject {
         let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
         self.history = historyViewModel
         self.historyPool[product.id] = historyViewModel
-        bind(product: productViewModel)
+        
+        bind(product: self.product)
         bind(history: historyViewModel)
         bind(detail: detail)
         bind(buttons: buttons)
-
+        
         bind()
     }
 }
 
-//MARK: - Bindings
+extension ProductProfileViewModel {
+    
+    func closeLinkAndResendRequest(
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction
+    ) {
+        switch actionType {
+            
+        case .restartChangePin:
+            guard let productCard = model.product(productId: cardId.rawValue) as? ProductCardData else { return }
+            
+            checkCertificate(.init(cardId.rawValue), certificate: self.cvvPINServicesClient, productCard)
+            
+        case let .changePin(displayNumber):
+            
+            // TODO: переделать DispatchQueue.main -> combine
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.action.send(DelayWrappedAction(
+                    delayMS: 200,
+                    action: ProductProfileViewModelAction.CVVPin.ChangePin(
+                        cardId: cardId,
+                        phone: displayNumber)
+                ))
+            }
+            
+        case .showCvv:
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.showCVV(cardId: cardId)
+            }
+            
+        case let .changePinResult(result):
+            switch result {
+            case .successScreen:
+                successScreenForChangePin()
+            case .errorScreen:
+                errorScreenForChangePin()
+            }
+        }
+    }
+    
+    func showCVV(
+        cardId: CardDomain.CardId
+    ) {
+        showCvvByTap(
+            cardId: cardId
+        ) { [weak self] cvv in
+            
+            guard let self else { return }
+            
+            if let cvv {
+                let delayedShowCVVAction = DelayWrappedAction(
+                    delayMS: 200,
+                    action: ProductProfileCardView.ViewModel.CVVPinViewModelAction.ShowCVV(cardId: cardId, cvv: cvv)
+                )
+                product.action.send(delayedShowCVVAction)
+                
+                if case let .productInfo(productInfoViewModel) = link {
+                    
+                    productInfoViewModel.action.send(InfoProductModelAction.ShowCVV(cardId: cardId, cvv: cvv))
+                }
+            }
+        }
+    }
+    
+    func confirmShowCVV(
+        withOTP otp: OtpDomain.Otp,
+        completion: @escaping (ErrorDomain?) -> Void
+    ) {
+        cvvPINServicesClient.confirmWith(otp: otp.rawValue) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Сертификат Активирован", icon: .check)))
+                completion(nil)
+                
+            case let .failure(error):
+                completion(CVVPinErrorMapper.map(error))
+            }
+        }
+    }
+    
+    func pinConfirmation(
+        completion: @escaping (PinCodeViewModel.PhoneNumberState) -> Void
+    ) {
+        cvvPINServicesClient.getPINConfirmationCode { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case let .success(phone):
+                completion(.phone(.init(value: phone)))
+                
+            case let .failure(error):
+                //self.makeAlert(error.localizedDescription)
+                completion(.error(error))
+            }
+        }
+    }
+    
+    func confirmChangePin(
+        info: ConfirmViewModel.ChangePinStruct,
+        completion: @escaping (ErrorDomain?) -> Void
+    ) {
+        cvvPINServicesClient.changePin(
+            cardId: info.cardId.rawValue,
+            newPin: info.newPin.rawValue,
+            otp: info.otp.rawValue
+        ) { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case .success:
+                completion(nil)
+                
+            case let .failure(error):
+                completion(CVVPinErrorMapper.map(error))
+            }
+        }
+    }
+    
+    func createCardAction(
+        _ cvvPINServicesClient: CVVPINServicesClient,
+        _ model: Model
+    ) -> CardAction? {
+        
+        return {
+            switch $0 {
+            case let .copyCardNumber(message):
+                model.action.send(ModelAction.Informer.Show(
+                    informer: .init(
+                        message: message,
+                        icon: .copy,
+                        type: .copyInfo
+                    )
+                ))
+            }
+        }
+    }
+}
+
+// MARK: - Bindings
 
 private extension ProductProfileViewModel {
     
     func bind() {
+        
+        action
+            .compactMap { $0 as? DelayWrappedAction }
+            .flatMap {
+                
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+                
+            }
+            .sink { [weak self] in
+                
+                self?.action.send($0)
+                
+            }
+            .store(in: &bindings)
+        
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ChangePin }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] payload in
+                
+                guard let self else { return }
+
+                self.fullScreenCoverState = .changePin(.init(
+                    cardId: payload.cardId,
+                    displayNumber: payload.phone,
+                    model: self.createPinCodeViewModel(displayNumber: payload.phone), 
+                    request: self.resendOtpForPin
+                ))
+            }
+            .store(in: &bindings)
         
         // TransferButtonDidTapped
         
@@ -121,11 +346,53 @@ private extension ProductProfileViewModel {
                 model.setPreferredProductID(to: product.activeProductId)
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
+                    makeProductProfileViewModel: makeProductProfileViewModel,
+                    fastPaymentsFactory: fastPaymentsFactory,
+                    fastPaymentsServices: fastPaymentsServices,
+                    sberQRServices: sberQRServices,
+                    qrViewModelFactory: qrViewModelFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
+            }.store(in: &bindings)
+        
+        // Confirm OTP
+        
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ConfirmShow }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                
+                self?.alert = nil
+                self?.fullScreenCoverState = .confirmOTP(.init(
+                    cardId: action.cardId,
+                    action: action.actionType,
+                    phone: action.phone,
+                    request: action.resendOtp
+                ))
+            }
+            .store(in: &bindings)
+        
+        // Show Spinner
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.Spinner.Show }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                withAnimation {
+                    self.spinner = .init()
+                }
+            }.store(in: &bindings)
+        
+        // Hide Spinner
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.Spinner.Hide }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self]  _ in
+                withAnimation {
+                    self.spinner = nil
+                }
             }.store(in: &bindings)
         
         $isLinkActive
@@ -172,19 +439,10 @@ private extension ProductProfileViewModel {
                     
                 case _ as ProductProfileViewModelAction.Product.Block:
                     
-                    guard let productData = productData else {
-                        return
-                    }
-                    
-                    alert = alertBlockedCard(with: productData)
-                    
+                    blockCard(with: productData)
                 case _ as ProductProfileViewModelAction.Product.Unblock:
                     
-                    guard let productData = productData else {
-                        return
-                    }
-                    
-                    alert = alertBlockedCard(with: productData)
+                    unblockCard(with: productData)
                     
                 case _ as ProductProfileViewModelAction.Show.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
@@ -230,7 +488,7 @@ private extension ProductProfileViewModel {
                     sheet = nil
                     
                 case _ as ProductProfileViewModelAction.Close.Success:
-                    successZeroAccount = nil
+                    fullScreenCoverState = nil
                     success = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
@@ -427,6 +685,7 @@ private extension ProductProfileViewModel {
                         self.alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ок", action: {}))
                         
                     }
+                    
                 default: break
                 }
                 
@@ -554,30 +813,59 @@ private extension ProductProfileViewModel {
     func bind(product: ProductProfileCardView.ViewModel) {
         
         product.action
+            .compactMap({ $0 as? DelayWrappedAction })
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .flatMap({
                 
-                switch action {
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+                
+            })
+            .sink(receiveValue: { [weak product] in
+                
+                product?.action.send($0)
+                
+            }).store(in: &bindings)
+        
+        product.action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] productAction in
+                
+                guard let self else { return }
+                
+                switch productAction {
                 case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
                     
-                    if self.rootView == "\(MyProductsViewModel.self)" {
-                        self.action.send(ProductProfileViewModelAction.Close.SelfView())
+                    if rootView == "\(MyProductsViewModel.self)" {
                         
+                        action.send(ProductProfileViewModelAction.Close.SelfView())
                     } else {
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(
+                            model,
+                            cardAction: cardAction,
+                            makeProductProfileViewModel: makeProductProfileViewModel,
+                            openOrderSticker: {}
+                        )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                     }
                     
                 case let payload as ProductProfileCardViewModelAction.ShowAlert:
-                    self.alert = Alert.ViewModel(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ок", action: {}))
+                    alert = Alert.ViewModel(
+                        title: payload.title,
+                        message: payload.message,
+                        primary: .init(
+                            type: .default,
+                            title: "Ок",
+                            action: {}
+                        )
+                    )
                     
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
-        
+            }
+            .store(in: &bindings)
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
@@ -631,7 +919,7 @@ private extension ProductProfileViewModel {
                     
                     bind(meToMeViewModel)
                     bottomSheet = .init(type: .meToMe(meToMeViewModel))
-
+                    
                 default:
                     break
                 }
@@ -712,7 +1000,7 @@ private extension ProductProfileViewModel {
                             switch transferType {
                             case .remains:
                                 // перевести
-
+                                
                                 guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
                                     return
                                 }
@@ -724,7 +1012,7 @@ private extension ProductProfileViewModel {
                             case let .interest(amount):
                                 let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
-                                    
+                                
                             case let .close(amount):
                                 let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
@@ -760,14 +1048,9 @@ private extension ProductProfileViewModel {
                                 return
                             }
                             
-                            if productCard.isBlocked {
-                                
-                                self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
-                                
-                            } else {
-                                
-                                self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
-                            }
+                            let buttonType: ProductProfileOptionsPannelView.ViewModel.ButtonType = productCard.isBlocked ? .card(.unblock) : .card(.block)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [buttonType, .card(.changePin)], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         case .account:
                             
@@ -821,6 +1104,72 @@ private extension ProductProfileViewModel {
             }.store(in: &bindings)
     }
     
+    func bind(product: InfoProductViewModel) {
+        
+        product.action
+            .compactMap({ $0 as? DelayWrappedAction })
+            .flatMap({
+                
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+                
+            })
+            .sink(receiveValue: { [weak product] in
+                
+                product?.action.send($0)
+                
+            }).store(in: &bindings)
+        
+        product.action
+            .compactMap({ $0 as? InfoProductModelAction.ShowCVV })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak product] payload in
+                
+                guard let product else { return }
+                
+                let cardId: Int = payload.cardId.rawValue
+                
+                if product.product.id == cardId {
+                    product.additionalList = product.updateAdditionalList(
+                        oldList: product.additionalList,
+                        newCvv: payload.cvv.rawValue
+                    )
+                }
+            }.store(in: &bindings)
+        
+        product.action
+            .compactMap({ $0 as? InfoProductModelAction.Spinner.Show })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak product] _ in
+                
+                guard let product else { return }
+                
+                withAnimation {
+                    product.spinner = .init()
+                }
+            }.store(in: &bindings)
+        
+        product.action
+            .compactMap({ $0 as? InfoProductModelAction.Spinner.Hide })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak product] _ in
+                
+                guard let product else { return }
+                
+                withAnimation {
+                    product.spinner = nil
+                }
+            }.store(in: &bindings)
+        
+        product.action
+            .compactMap({ $0 as? InfoProductModelAction.Close })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.action.send(ProductProfileViewModelAction.Close.Link())
+            }
+            .store(in: &bindings)
+    }
+    
     func bind(optionsPannel: ProductProfileOptionsPannelView.ViewModel) {
         
         optionsPannel.action
@@ -829,9 +1178,9 @@ private extension ProductProfileViewModel {
                 
                 self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
                     
-                    guard let productData = self.productData else {
+                    guard let self, let productData = self.productData else {
                         return
                     }
                     
@@ -839,8 +1188,21 @@ private extension ProductProfileViewModel {
                     case let payload as ProductProfileOptionsPannelViewModelAction.ButtonTapped:
                         switch payload.buttonType {
                         case .requisites:
-                            let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: false)
+                            let productInfoViewModel = InfoProductViewModel(
+                                model: model,
+                                product: productData,
+                                info: false,
+                                showCvv: { [weak self] cardId, completion in
+                                    
+                                    guard let self else { return }
+                                    
+                                    self.showCvvByTap(
+                                        cardId: cardId,
+                                        completion: completion)
+                                }
+                            )
                             self.link = .productInfo(productInfoViewModel)
+                            self.bind(product: productInfoViewModel)
                             
                         case .info:
                             let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: true)
@@ -853,19 +1215,19 @@ private extension ProductProfileViewModel {
                         case .refillFromOtherProduct:
                             if let productData = productData as? ProductLoanData,
                                let loanAccount = self.model.products.value[.account]?
-                                                    .first(where: {$0.number == productData.settlementAccount}) {
-                                    
-                                    guard let viewModel = PaymentsMeToMeViewModel(
-                                                            self.model,
-                                                            mode: .makePaymentTo(loanAccount, 0.0))
-                                    else { return }
-                                    
-                                    self.bind(viewModel)
-                                    self.bottomSheet = .init(type: .meToMe(viewModel))
+                                .first(where: {$0.number == productData.settlementAccount}) {
+                                
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                    self.model,
+                                    mode: .makePaymentTo(loanAccount, 0.0))
+                                else { return }
+                                
+                                self.bind(viewModel)
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                                 
                             } else if let productData = productData as? ProductDepositData,
-                                    productData.isDemandDeposit { //только вклады
-                                                                
+                                      productData.isDemandDeposit { //только вклады
+                                
                                 guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .makePaymentToDeposite(productData, 0)) else {
                                     return
                                 }
@@ -877,8 +1239,8 @@ private extension ProductProfileViewModel {
                             else {
                                 
                                 guard let viewModel = PaymentsMeToMeViewModel(
-                                                        self.model,
-                                                        mode: .makePaymentTo(productData, 0.0))
+                                    self.model,
+                                    mode: .makePaymentTo(productData, 0.0))
                                 else { return }
                                 
                                 self.bind(viewModel)
@@ -993,6 +1355,12 @@ private extension ProductProfileViewModel {
                             if let productData = productData as? ProductAccountData {
                                 self.openLinkURL(productData.detailedConditionUrl)
                             }
+                            
+                        case let .card(type):
+                            
+                            guard let productCard = productData as? ProductCardData else { return }
+                            
+                            self.handleCardType(type, productCard)
                         }
                         
                     default:
@@ -1017,8 +1385,8 @@ private extension ProductProfileViewModel {
                     if let viewModel = viewModel,
                        let productIdFrom = viewModel.swapViewModel.productIdFrom,
                        let productIdTo = viewModel.swapViewModel.productIdTo {
-                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     }
                     
                     self.bind(payload.viewModel)
@@ -1053,7 +1421,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
-                    self.successZeroAccount = ZeroAccount(viewModel: payload.viewModel)
+                    self.fullScreenCoverState = .successZeroAccount(payload.viewModel)
                     bind(payload.viewModel)
                     self.success = payload.viewModel
                     
@@ -1083,6 +1451,9 @@ private extension ProductProfileViewModel {
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
                     
+                case _ as PaymentsSuccessAction.Button.Ready:
+                    self.fullScreenCoverState = nil
+                    
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
                     self.action.send(ProductProfileViewModelAction.Close.Success())
@@ -1093,8 +1464,27 @@ private extension ProductProfileViewModel {
                 }
                 
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
-
+                
             }.store(in: &bindings)
+    }
+    
+    func makeProductProfileViewModel(
+        product: ProductData,
+        rootView: String,
+        dismissAction: @escaping () -> Void
+    ) -> ProductProfileViewModel? {
+        
+        .init(
+            model,
+            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsServices: fastPaymentsServices,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
+            cvvPINServicesClient: cvvPINServicesClient,
+            product: product,
+            rootView: rootView,
+            dismissAction: dismissAction
+        )
     }
 }
 
@@ -1104,34 +1494,61 @@ private extension ProductProfileViewModel {
     
     func makeAlert(_ message: String) {
         
-        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
-            self?.action.send(ProductProfileViewModelAction.Close.Alert())
-        })
+        let alertViewModel = Alert.ViewModel(
+            title: "Ошибка",
+            message: message,
+            primary: .init(type: .default, title: "ОК") { [weak self] in
+                self?.action.send(ProductProfileViewModelAction.Close.Alert())
+            })
         
-        alert = .init(alertViewModel)
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+        }
     }
-
-    func customNameAlert(for productType: ProductType, alertTitle: String) ->  AlertTextFieldView.ViewModel? {
+    
+    func confirmOtp(
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
+        phone: PhoneDomain.Phone,
+        resendRequest: @escaping () -> Void
+    ) {
+        DispatchQueue.main.async {
+            
+            self.action.send(ProductProfileViewModelAction.CVVPin.ConfirmShow(
+                cardId: cardId,
+                actionType: actionType,
+                phone: phone,
+                resendOtp: resendRequest))
+        }
+    }
+    
+    func customNameAlert(
+        for productType: ProductType,
+        alertTitle: String
+    ) ->  AlertTextFieldView.ViewModel? {
         
         let textFieldAlert: AlertTextFieldView.ViewModel = .init(
             title: alertTitle,
             message: nil,
             maxLength: 15,
-            primary: .init(type: .default,
-                           title: "Ок",
-                           action: { [weak self] text in
-                               self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
-                               if let text = text, let product = self?.product {
-                                   
-                                   self?.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: product.activeProductId, productType: product.productType, name: text))
-                               }
-                           }),
-            secondary: .init(type: .default,
-                             title: "Отмена",
-                             action: { [weak self] _ in
-                                 
-                                 self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
-                             }))
+            primary: .init(
+                type: .default,
+                title: "Ок",
+                action: { [weak self] text in
+                    self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
+                    if let text = text, let product = self?.product {
+                        
+                        self?.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: product.activeProductId, productType: product.productType, name: text))
+                    }
+                }),
+            secondary: .init(
+                type: .default,
+                title: "Отмена",
+                action: { [weak self] _ in
+                    
+                    self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
+                }))
         
         return textFieldAlert
     }
@@ -1145,7 +1562,9 @@ private extension ProductProfileViewModel {
         }
     }
     
-    func alertBlockedCard(with product: ProductData) -> Alert.ViewModel? {
+    func alertBlockedCard(
+        with product: ProductData
+    ) -> Alert.ViewModel? {
         
         guard let product = product as? ProductCardData, let cardNumber = product.number else {
             return nil
@@ -1158,54 +1577,60 @@ private extension ProductProfileViewModel {
             }
         }
         
-        let alertViewModel: Alert.ViewModel = .init(title: alertTitle(),
-                                                    message: description,
-                                                    primary: .init(type: .default,
-                                                                   title: "Отмена",
-                                                                   action: { [weak self] in
-            
-            self?.action.send(ProductProfileViewModelAction.Close.Alert())
-        }),
-                                                    secondary: .init(type: .default,
-                                                                     title: "Oк",
-                                                                     action: { [weak self] in
-            if product.isBlocked {
-                
-                self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: product.cardId, cardNumber: cardNumber))
-                
-            } else {
-                
-                self?.model.action.send(ModelAction.Card.Block.Request(cardId: product.cardId, cardNumber: cardNumber))
-            }
-            
-        }))
+        let alertViewModel: Alert.ViewModel = .init(
+            title: alertTitle(),
+            message: description,
+            primary: .init(
+                type: .default,
+                title: "Отмена",
+                action: { [weak self] in
+                    
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                }),
+            secondary: .init(
+                type: .default,
+                title: "Oк",
+                action: { [weak self] in
+                    if product.isBlocked {
+                        
+                        self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: product.cardId, cardNumber: cardNumber))
+                        
+                    } else {
+                        
+                        self?.model.action.send(ModelAction.Card.Block.Request(cardId: product.cardId, cardNumber: cardNumber))
+                    }
+                })
+        )
         
         func alertTitle() -> String {
-
-           product.isBlocked ? "Разблокировать карту?" : "Заблокировать карту?"
+            
+            product.isBlocked ? "Разблокировать карту?" : "Заблокировать карту?"
         }
         
         return alertViewModel
     }
     
-    func errorDepositConditionAlert(data: Data, decoder: JSONDecoder = .init()) -> Alert.ViewModel {
+    func errorDepositConditionAlert(
+        data: Data,
+        decoder: JSONDecoder = .init()
+    ) -> Alert.ViewModel {
         
         do {
             
             let responseData = try decoder.decode(ServerCommands.DepositController.GetPrintFormForDepositConditions.Response.self, from: data)
             
             if let errorMessage = responseData.errorMessage {
-                    
-                    let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
-                                                         message: errorMessage,
-                                                         primary: .init(type: .cancel, title: "Наши офисы", action: { [weak self] in
-                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                         secondary: .init(type: .default, title: "ОК", action: { [weak self] in
-                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                    }))
                 
-                    return alertViewModel
+                let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
+                                                     message: errorMessage,
+                                                     primary: .init(type: .cancel, title: "Наши офисы", action: { [weak self] in
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                    self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                     secondary: .init(type: .default, title: "ОК", action: { [weak self] in
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                }))
+                
+                return alertViewModel
             } else {
                 
                 let alertViewModel = Alert.ViewModel(title: "Ошибка", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .default, title: "Ok", action: {[weak self] in
@@ -1216,15 +1641,23 @@ private extension ProductProfileViewModel {
             
         } catch {
             
-            let alertViewModel = Alert.ViewModel(title: "Ошибка", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .default, title: "Ok", action: {[weak self] in
-                self?.action.send(ProductProfileViewModelAction.Close.Alert())
-            }))
+            let alertViewModel = Alert.ViewModel(
+                title: "Ошибка",
+                message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.",
+                primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                })
+            )
             return alertViewModel
         }
     }
-
-    func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
     
+    func makeHistoryViewModel(
+        productType: ProductType,
+        productId: ProductData.ID,
+        model: Model
+    ) -> ProductProfileHistoryView.ViewModel? {
+        
         guard productType != .loan else {
             return nil
         }
@@ -1256,21 +1689,24 @@ private extension ProductProfileViewModel {
     }
     
     private func openLinkURL(_ linkURL: String) {
-
+        
         guard let url = URL(string: linkURL) else {
             return
         }
-
+        
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
-    
 }
 
 fileprivate extension NavigationBarView.ViewModel {
     
-    convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonItemViewModel] = []) {
+    convenience init(
+        product: ProductData,
+        dismissAction: @escaping () -> Void,
+        rightButtons: [ButtonItemViewModel] = []
+    ) {
         self.init(
             title: ProductView.ViewModel.name(product: product, style: .profile),
             subtitle: Self.subtitle(with: product),
@@ -1322,7 +1758,46 @@ fileprivate extension NavigationBarView.ViewModel {
     }
     
     func updateName(with name: String) {
+        
         self.title = name
+    }
+}
+
+//MARK: - Helpers
+
+private extension ProductProfileViewModel {
+    
+    func showActivateCertificateAlert(action: @escaping () -> Void) {
+        
+        let alertViewModel = Alert.ViewModel(
+            title: "Активируйте сертификат",
+            message: self.model.activateCertificateMessage,
+            primary:.init(
+                type: .default,
+                title: "Отмена",
+                action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}
+            ),
+            secondary: .init(
+                type: .default,
+                title: "Активировать",
+                action: action
+            )
+        )
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+        }
+    }
+    
+    func createPinCodeViewModel(
+        displayNumber: PhoneDomain.Phone
+    ) -> PinCodeViewModel {
+        
+        .init(
+            title: "Введите новый PIN-код для\nкарты *\(displayNumber.rawValue)",
+            pincodeLength: 4,
+            getPinConfirm: pinConfirmation
+        )
     }
 }
 
@@ -1331,7 +1806,7 @@ fileprivate extension NavigationBarView.ViewModel {
 extension ProductProfileViewModel {
     
     struct BottomSheet: BottomSheetCustomizable {
-
+        
         let id = UUID()
         let type: Kind
         
@@ -1377,21 +1852,64 @@ extension ProductProfileViewModel {
         }
     }
     
-    struct FullCover: Identifiable {
+    enum FullScreenCoverState: Hashable & Identifiable {
         
-        let id = UUID()
-        let type: Kind
+        case changePin(ChangePin)
+        case confirmOTP(ConfirmCode)
+        case successChangePin(PaymentsSuccessViewModel)
+        case successZeroAccount(PaymentsSuccessViewModel)
         
-        enum Kind {
-            case successMeToMe(PaymentsSuccessViewModel)
+        var id: Case {
+            
+            switch self {
+            case .changePin:
+                return .changePin
+                
+            case .confirmOTP:
+                return .confirmOTP
+                
+            case .successChangePin:
+                return .successChangePin
+                
+            case .successZeroAccount:
+                return .successZeroAccount
+            }
         }
-    }
-    
-    struct ZeroAccount: Identifiable {
         
-        let id = UUID()
-        let viewModel: PaymentsSuccessViewModel
-    
+        typealias ResendRequest = () -> Void
+        
+        struct ConfirmCode {
+            
+            let cardId: CardDomain.CardId
+            let action: ConfirmViewModel.CVVPinAction
+            let phone: PhoneDomain.Phone
+            let request: ResendRequest
+        }
+        
+        struct ChangePin {
+            
+            let cardId: CardDomain.CardId
+            let displayNumber: PhoneDomain.Phone
+            let model: PinCodeViewModel
+            let request: ResendRequest
+        }
+        enum Case: Hashable {
+            
+            case changePin
+            case confirmOTP
+            case successChangePin
+            case successZeroAccount
+        }
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id)
+        }
     }
 }
 
@@ -1401,7 +1919,7 @@ enum ProductProfileViewModelAction {
     
     
     enum Product {
-
+        
         struct Activate: Action {
             
             let productId: Int
@@ -1429,7 +1947,7 @@ enum ProductProfileViewModelAction {
             let productFrom: ProductData
         }
     }
-
+    
     struct PullToRefresh: Action {}
     
     enum Show {
@@ -1462,14 +1980,309 @@ enum ProductProfileViewModelAction {
     }
     
     enum MyProductsTapped {
-    
-        struct ProductProfile: Action {
-            
-            let productId: ProductData.ID
-        }
         
         struct OpenDeposit: Action {}
     }
     
     struct TransferButtonDidTapped: Action {}
+    
+    enum Spinner {
+        
+        struct Show: Action {}
+        struct Hide: Action {}
+    }
+    
+    enum CVVPin {
+        
+        struct ChangePin: Action {
+            
+            let cardId: CardDomain.CardId
+            let phone: PhoneDomain.Phone
+        }
+        
+        struct ConfirmShow: Action {
+            
+            let cardId: CardDomain.CardId
+            let actionType: ConfirmViewModel.CVVPinAction
+            let phone: PhoneDomain.Phone
+            let resendOtp: () -> Void
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    private func blockCard(with productData: ProductData?) {
+        
+        guard let productData = productData else {
+            return
+        }
+        
+        alert = alertBlockedCard(with: productData)
+    }
+    
+    private func unblockCard(with productData: ProductData?) {
+        
+        blockCard(with: productData)
+    }
+    
+    private func checkCertificate(
+        _ cardId: CardDomain.CardId,
+        certificate: CVVPINServicesClient,
+        _ productCard: ProductCardData
+    ) {
+        certificate.checkFunctionality { [weak self] result in
+            
+            guard let self else { return }
+            
+            handleCheckCertificateResult(cardId, result, displayNumber: .init(productCard.displayNumber ?? ""))
+        }
+    }
+    
+    func handleCardType(
+        _ type: ProductProfileOptionsPannelView.ViewModel.ButtonType.Card,
+        _ productCard: ProductCardData
+    ) {
+        switch type {
+        case .block:
+            self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
+            
+        case .unblock:
+            self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
+            
+        case .changePin:
+            checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+        }
+    }
+    
+    func handleCheckCertificateResult(
+        _ cardId: CardDomain.CardId,
+        _ result: Result<Void, CheckCVVPINFunctionalityError>,
+        displayNumber: PhoneDomain.Phone
+    ) {
+        switch result {
+            
+        case let .failure(pinError):
+            handlePinError(cardId, pinError, displayNumber)
+            
+        case .success:
+            fullScreenCoverState = .changePin(.init(
+                cardId: cardId,
+                displayNumber: displayNumber,
+                model: self.createPinCodeViewModel(displayNumber: displayNumber),
+                request: self.resendOtpForPin
+            ))
+        }
+    }
+    
+    func resendOtpForPin() {
+        
+        cvvPINServicesClient.getPINConfirmationCode { [weak self] result in
+            
+            guard let self else { return }
+            
+            Task { @MainActor in
+                if case let .failure(error) = result {
+                    switch error {
+                    case let .server(_, errorMessage):
+                        self.makeAlert(errorMessage)
+                    case .serviceFailure, .activationFailure:
+                        self.makeAlert("Техническая ошибка.")
+                    }
+                }
+            }
+        }
+    }
+    
+    func showSpinner() {
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            if case let .productInfo(productInfoViewModel) = self.link {
+                productInfoViewModel.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action: InfoProductModelAction.Spinner.Show()))
+            }
+            else {
+                self.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action:ProductProfileViewModelAction.Spinner.Show()))
+            }
+        }
+    }
+    
+    func activateCertificateAction(
+        cvvPINServicesClient: CVVPINServicesClient,
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction
+    ) {
+        cvvPINServicesClient.activate { [weak self] result in
+            
+            guard let self else { return }
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                guard let self else { return }
+                
+                if case let .productInfo(productInfoViewModel) = self.link {
+                    productInfoViewModel.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action: InfoProductModelAction.Spinner.Hide()))
+                }
+                else {
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action: ProductProfileViewModelAction.Spinner.Hide()))
+                }
+            }
+            
+            switch result {
+            case let .failure(error):
+                switch error {
+                case let .server(_, errorMessage):
+                    self.makeAlert(errorMessage)
+                case .serviceFailure:
+                    self.makeAlert("Техническая ошибка.")
+                }
+                
+            case let .success(phone):
+                self.confirmOtp(
+                    cardId: cardId,
+                    actionType: actionType,
+                    phone: phone,
+                    resendRequest: self.resendOtp
+                )
+            }
+        }
+    }
+    
+    func showActivateCertificate(
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction
+    ) {
+        let action: () -> Void = { [weak self] in
+            
+            guard let self else { return }
+            
+            self.showSpinner()
+            
+            self.activateCertificateAction(
+                cvvPINServicesClient: self.cvvPINServicesClient,
+                cardId: cardId,
+                actionType: actionType
+            )
+        }
+        self.showActivateCertificateAlert(action: action)
+    }
+    
+    func resendOtp() {
+        
+        self.cvvPINServicesClient.activate { [weak self] result in
+            
+            guard let self else { return }
+            
+            Task { @MainActor in
+                if case let .failure(error) = result {
+                    switch error {
+                    case let .server(_, errorMessage):
+                        self.makeAlert(errorMessage)
+                    case .serviceFailure:
+                        self.makeAlert("Техническая ошибка.")
+                    }
+                }
+            }
+        }
+    }
+    
+    func handlePinError(
+        _ cardId: CardDomain.CardId,
+        _ pinError: (CheckCVVPINFunctionalityError),
+        _ displayNumber: PhoneDomain.Phone
+    ) {
+        switch pinError {
+            
+        case .activationFailure:
+            showActivateCertificate(cardId: cardId, actionType: .changePin(displayNumber))
+            
+        case let .server(_, errorMessage):
+            makeAlert(errorMessage)
+            
+        case .serviceFailure:
+            makeAlert("Истеклo время\nожидания ответа")
+        }
+    }
+    
+    private func successScreenForChangePin() {
+        
+        let success = Payments.Success(
+            status: .success,
+            title: "PIN-код успешно изменен",
+            titleForActionButton: "Готово"
+        )
+        
+        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+        self.fullScreenCoverState = .successChangePin(successViewModel)
+        bind(successViewModel)
+    }
+    
+    private func errorScreenForChangePin() {
+        
+        let success = Payments.Success(
+            status: .error,
+            title: "Ошибка",
+            subTitle: "Не удалось изменить PIN-код.\nПовторите попытку позднее",
+            titleForActionButton: "Готово"
+        )
+        
+        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+        self.fullScreenCoverState = .successChangePin(successViewModel)
+        bind(successViewModel)
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    typealias ShowCVVCompletion = (ProductView.ViewModel.CardInfo.CVV?) -> Void
+    
+    func showCvvByTap(
+        cardId: CardDomain.CardId,
+        completion: @escaping ShowCVVCompletion
+    ) {
+        cvvPINServicesClient.showCVV(
+            cardId: cardId.rawValue
+        ) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case let .failure(error):
+                handle(error: error, forCardId: cardId)
+                completion(nil)
+                
+            case let .success(cvv):
+                completion(cvv)
+            }
+        }
+    }
+    
+    func handle(
+        error: ShowCVVError,
+        forCardId cardId: CardDomain.CardId
+    ) {
+        switch error {
+        case .activationFailure:
+            // show activate Certificate
+            self.showActivateCertificate(cardId: cardId, actionType: .showCvv)
+            
+        case let .server(code, _):
+            // show Alert with message
+            self.makeAlert("\(String.cvvNotReceived).\nКод ошибки \(code).")
+            
+        case .serviceFailure:
+            // show Alert
+            self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
+        }
+    }
 }

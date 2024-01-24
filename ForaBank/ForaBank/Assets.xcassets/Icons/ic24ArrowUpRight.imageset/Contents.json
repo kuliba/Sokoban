@@ -1,15 +1,15 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic24ArrowUpRight.svg"
+      "filename" : "ic24ArrowUpRight.svg",
+      "idiom" : "universal"
     }
   ],
-  "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
   "properties" : {
     "template-rendering-intent" : "template"
+  },
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }

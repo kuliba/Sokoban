@@ -6,82 +6,84 @@
 //
 
 import SwiftUI
+import Foundation
+import TextFieldComponent
 
 // MARK: - View
 
 struct InputView: View {
     
-    @State private var text: String = ""
-    let model: InputViewModel
+    @StateObject private var regularFieldViewModel: RegularFieldViewModel
+    private let codeObserver: NotificationObserver<String>
+    
+    private let title: String
+    private let commit: (String) -> Void
+    private let warning: String?
+    private let configuration: InputConfiguration
+    private let textFieldConfig: TextFieldView.TextFieldConfig
+    
+    init(
+        code: String?,
+        title: String,
+        commit: @escaping (String) -> Void,
+        warning: String?,
+        configuration: InputConfiguration
+    ) {
+        let regularFieldViewModel: RegularFieldViewModel = .make(
+            keyboardType: .decimal,
+            text: code,
+            placeholderText: "Введите код из смс",
+            limit: 6
+        )
+        
+        let codeObserver = NotificationObserver<String>(
+            notificationName: "otpCode",
+            userInfoKey: "otp",
+            onReceive: regularFieldViewModel.setText(to:)
+        )
+        
+        self._regularFieldViewModel = .init(
+            wrappedValue: regularFieldViewModel
+        )
+
+        self.codeObserver = codeObserver
+        
+        self.title = title
+        self.commit = commit
+        self.warning = warning
+        self.configuration = configuration
+        self.textFieldConfig = .init(
+            font: .systemFont(ofSize: 16),
+            textColor: configuration.textFieldColor,
+            tintColor: configuration.textFieldTintColor,
+            backgroundColor: configuration.textFieldBackgroundColor,
+            placeholderColor: configuration.textFieldPlaceholderColor
+        )
+    }
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: 16) {
-
-            iconView
-                .frame(width: 24, height: 24)
-                .padding(.top, 5)
-
-            content
-                .padding(.trailing, 16)
-            
-            Spacer()
-        }
-        .padding(.init(top: 13, leading: 16, bottom: 7, trailing: 16))
-        .background(Color.gray.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
-    }
-    
-    private var content: some View {
-        
-        VStack(alignment: .leading, spacing: 11) {
-            
-            titleView
-            
-            textFiled
-        }
-    }
-    
-    @ViewBuilder
-    private var iconView: some View {
-        
-        Image(model.parameter.icon)
-            .resizable()
-            .renderingMode(.original)
-            .foregroundColor(.gray)
-    }
-    
-    @ViewBuilder
-    private var titleView: some View {
-        
-        Text(model.parameter.title)
-            .font(.body)
-            .foregroundColor(.gray.opacity(0.4))
-            .transition(
-                .asymmetric(
-                    insertion: .move(edge: .bottom).combined(with: .opacity),
-                    removal: .opacity
-                )
-            )
-    }
-    
-    @ViewBuilder
-    private var textFiled: some View {
-            
-        TextField(
-            model.parameter.title,
-            text: $text
+        let textField = TextFieldView(
+            viewModel: regularFieldViewModel,
+            textFieldConfig: textFieldConfig
         )
+        
+        LabeledView(
+            title: title,
+            configuration: configuration,
+            warning: warning,
+            makeLabel: { textField }
+        )
+        .onChange(of: regularFieldViewModel.text ?? "", perform: commit)
+
     }
 }
 
 struct InputView_Previews: PreviewProvider {
     static var previews: some View {
-        InputView(model: .init(
-            parameter: .init(
-                value: "123456",
-                title: "Введите код",
-                icon: "SystemIcon"
-            )))
+       
+        #warning("add previews")
+        // ParameterView()
+        EmptyView()
     }
 }

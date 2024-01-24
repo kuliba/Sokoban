@@ -71,6 +71,7 @@ extension Payments.Parameter {
         case successTitle = "ru.forabank.sense.success.title"
         case successAmount = "ru.forabank.sense.success.amount"
         case successActionButton = "ru.forabank.sense.success.actionButton"
+        case successCloseButton = "ru.forabank.sense.success.closeButton"
         case successRepeatButton = "ru.forabank.sense.success.repeatButton"
         case successLogo = "ru.forabank.sense.success.successLogo"
         case successAdditionalButtons = "ru.forabank.sense.success.successAdditionalButtons"
@@ -241,6 +242,7 @@ extension Payments {
             case `repeat`
             case additionalChange
             case additionalReturn
+            case close
         }
     }
     
@@ -1468,7 +1470,7 @@ extension Payments {
         init(
             options: [Option],
             operationDetail: OperationDetailData? = nil,
-            placement: Payments.Parameter.Placement = .bottom,
+            placement: Payments.Parameter.Placement = .feed,
             templateID: PaymentTemplateData.ID?,
             meToMePayment: MeToMePayment?,
             operation: Payments.Operation?
@@ -1554,7 +1556,7 @@ extension Payments {
         let options: [Option]
         let placement: Payments.Parameter.Placement
         
-        init(options: [Option], placement: Payments.Parameter.Placement = .feed) {
+        init(options: [Option], placement: Payments.Parameter.Placement = .bottom) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.successAdditionalButtons.rawValue, value: nil)
             self.options = options

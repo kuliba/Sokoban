@@ -7,44 +7,48 @@
 
 import Foundation
 import SwiftUI
-//import TextFieldComponent
-//import TextFieldModel
+import TextFieldComponent
 
 struct SelectView: View {
     
     let viewModel: SelectViewModel
-    let config: PaymentSelectViewConfig.PaymentSelectConfig
+    let config: SelectViewConfiguration
     
     var body: some View {
         
         VStack(spacing: 0) {
             
             switch viewModel.parameter.state {
-            case let .idle(idleViewModel):
+            case .idle:
                 IdleView(
-                    viewModel: idleViewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    viewModel: viewModel,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 24)
                 
             case let .selected(selectedOptionViewModel):
                 SelectedOptionView(
+                    icon: .init(viewModel.icon.name ?? ""),
                     viewModel: selectedOptionViewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 15)
                 
             case let .list(optionsListViewModel):
                 OptionsListView(
+                    icon: .init(viewModel.icon.name ?? ""),
+                    selectViewModel: viewModel,
                     viewModel: optionsListViewModel,
                     config: config,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
-                    selected: viewModel.select
+                    selected: viewModel.select,
+                    isSearching: viewModel.isSearching
                 )
+                .padding(.vertical, 15)
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 24)
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
     }
@@ -54,56 +58,61 @@ extension SelectView {
     
     struct IdleView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.IdleViewModel
-        let chevronButtonTapped: () -> Void
-        let config: PaymentSelectViewConfig.SelectedOptionConfig
+        let viewModel: SelectViewModel
+        let tapAction: () -> Void
+        let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
-                    .resizable()
-                    .foregroundColor(.gray)
-                    .frame(width: 24, height: 24)
+                if let iconName = viewModel.icon.name {
+                    
+                    Image(iconName)
+                        .resizable()
+                        .foregroundColor(config.placeholderForeground)
+                        .frame(width: 24, height: 24)
+                }
                 
-                Text(viewModel.title)
+                Text(viewModel.parameter.title)
                     .lineLimit(1)
-                    .font(config.titleFont)
-                    .foregroundColor(config.titleForeground)
+                    .font(config.placeholderFont)
+                    .foregroundColor(config.placeholderForeground)
                     .padding(.vertical, 7)
                 
                 Spacer()
                 
                 Image(systemName: "chevron.down")
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct SelectedOptionView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
-        let chevronButtonTapped: () -> Void
-        let config: PaymentSelectViewConfig.SelectedOptionConfig
+        let icon: Image
+        let viewModel: SelectViewModel.ParameterSelect.State.SelectedOptionViewModel
+        let tapAction: () -> Void
+        let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 7) {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleForeground)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray.opacity(0.6))
                     
                     Text(viewModel.name)
                         .lineLimit(1)
@@ -118,28 +127,71 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct OptionsListView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
-        let config: PaymentSelectViewConfig.PaymentSelectConfig
-        let chevronButtonTapped: () -> Void
-        let selected: (SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel.ID) -> Void
-        
+        let icon: Image
+        let selectViewModel: SelectViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel
+        let config: SelectViewConfiguration
+        let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel) -> Void
+        @StateObject private var regularFieldViewModel: RegularFieldViewModel
+        let isSearching: Bool
+
+        init(
+            icon: Image,
+            selectViewModel: SelectViewModel,
+            viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel,
+            config: SelectViewConfiguration,
+            selected: @escaping (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel) -> Void,
+            isSearching: Bool
+        ) {
+            self.icon = icon
+            self.selectViewModel = selectViewModel
+            self.viewModel = viewModel
+            self.config = config
+            self.selected = selected
+            self.isSearching = isSearching
+            
+            let regularFieldViewModel: RegularFieldViewModel = .make(
+                keyboardType: .default,
+                text: selectViewModel.parameter.options.first(where: { $0.id == selectViewModel.parameter.value })?.name,
+                placeholderText: viewModel.placeholder,
+                limit: 226
+            )
+            
+            self._regularFieldViewModel = .init(
+                wrappedValue: regularFieldViewModel
+            )
+
+        }
         var body: some View {
+            
+            let textField = TextFieldView(
+                viewModel: regularFieldViewModel,
+                textFieldConfig: config.textFieldConfig
+            )
             
             VStack {
                 
-                select(viewModel.options.first)
+                select(
+                    with: selectViewModel.isSearching,
+                    viewModel.options.first,
+                    textField: textField
+                )
+                .onChange(of: regularFieldViewModel.text ?? "", perform: selectViewModel.search)
                 
                 ScrollView(.vertical) {
                     
                     VStack(spacing: 16) {
                         
-                        ForEach(viewModel.options, content: option(option:))
+                        ForEach(selectViewModel.parameter.options) { option in
+                        
+                            optionView(option: .init(iconName: option.iconName, name: option.name))
+                        }
                     }
                     .padding(.vertical, 8)
                 }
@@ -148,26 +200,38 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func select(_ option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel?) -> some View {
+        private func select(
+            with isSearching: Bool,
+            _ option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel?,
+            textField: TextFieldView
+        ) -> some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.selectOptionConfig.titleFont)
-                        .foregroundColor(config.selectOptionConfig.titleForeground)
-                    
-                    Text(viewModel.placeholder)
-                        .lineLimit(1)
                         .font(config.selectOptionConfig.placeholderFont)
                         .foregroundColor(config.selectOptionConfig.placeholderForeground)
+                    
+                    if isSearching {
+                        
+                        textField
+                        
+                    } else {
+                        
+                        Text(viewModel.placeholder)
+                            .lineLimit(1)
+                            .font(config.selectOptionConfig.placeholderFont)
+                            .foregroundColor(config.selectOptionConfig.placeholderForeground)
+                  
+                    }
                 }
                 
                 Spacer()
@@ -175,17 +239,20 @@ extension SelectView {
                 Image(systemName: "chevron.up")
                     .foregroundColor(.gray)
                     .frame(width: 24, height: 24, alignment: .center)
+                    .onTapGesture(perform: selectViewModel.tapAction)
             }
         }
         
         @ViewBuilder
-        private func option(option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel) -> some View {
+        private func optionView(
+            option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
+        ) -> some View {
             
             SelectView.OptionView(
                 viewModel: option,
                 select: {
                     
-                    selected(option.id)
+                    selected(option)
                     
                 },
                 config: config.optionConfig
@@ -202,9 +269,9 @@ extension SelectView {
     
     struct OptionView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
         let select: () -> Void
-        let config: PaymentSelectViewConfig.OptionConfig
+        let config: SelectViewConfiguration.OptionConfig
         
         var body: some View {
             
@@ -234,74 +301,43 @@ extension SelectView {
 
 struct ParameterSelectView_Previews: PreviewProvider {
     
-//    private static func textField() -> TextFieldView {
-//
-//        let textFieldConfig: TextFieldView.TextFieldConfig = .init(
-//            font: .systemFont(ofSize: 19, weight: .regular),
-//            textColor: .orange,
-//            tintColor: .black,
-//            backgroundColor: .clear,
-//            placeholderColor: .gray
-//        )
-//
-//        return .init(
-//            state: .constant(.placeholder("Выберите значение")),
-//            keyboardType: .default,
-//            toolbar: nil,
-//            send: { _ in },
-//            textFieldConfig: textFieldConfig
-//        )
-//    }
-    
     static var previews: some View {
         
         SelectView(
-            viewModel: .init(parameter: .init(
-                id: "id",
-                value: "value",
-                title: "Выберите способ доставки",
-                placeholder: "Выберите значение",
-                options: [
-                    .init(id: "option1", name: "option1", iconName: ""),
-                    .init(id: "option2", name: "option2", iconName: "")
-                ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))), chevronButtonTapped: {}, select: { id in }),
+            viewModel: .init(
+                parameter: .init(
+                    id: .transferTypeSticker,
+                    value: "value",
+                    title: "Выберите способ доставки",
+                    placeholder: "Выберите значение",
+                    options: [
+                        .init(
+                            id: "option1",
+                            name: "option1",
+                            iconName: ""
+                        ),
+                        .init(
+                            id: "option2",
+                            name: "option2",
+                            iconName: ""
+                        )
+                    ],
+                    staticOptions: [],
+                    state: .idle(.init(
+                        iconName: "",
+                        title: "Выберите значение"
+                    ))),
+                isSearching: false,
+                tapAction: { },
+                select: { id in },
+                search: { _ in}
+            ),
             config: .default
         )
     }
 }
 
-struct PaymentSelectViewConfig {
-    
-    struct PaymentSelectConfig {
-        
-        let selectOptionConfig: SelectedOptionConfig
-        let optionsListConfig: OptionsListConfig
-        let optionConfig: OptionConfig
-    }
-    
-    struct SelectedOptionConfig {
-        
-        let titleFont: Font
-        let titleForeground: Color
-        let placeholderForeground: Color
-        let placeholderFont: Font
-    }
-    
-    struct OptionsListConfig {
-        
-        let titleFont: Font
-        let titleForeground: Color
-    }
-    
-    struct OptionConfig {
-        
-        let nameFont: Font
-        let nameForeground: Color
-    }
-}
-
-extension PaymentSelectViewConfig.PaymentSelectConfig {
+extension SelectViewConfiguration {
     
     static let `default`: Self = .init(
         selectOptionConfig: .init(
@@ -317,6 +353,13 @@ extension PaymentSelectViewConfig.PaymentSelectConfig {
         optionConfig: .init(
             nameFont: .body,
             nameForeground: .accentColor
+        ), 
+        textFieldConfig: .init(
+            font: .systemFont(ofSize: 14),
+            textColor: .black,
+            tintColor: .black,
+            backgroundColor: .clear,
+            placeholderColor: .gray
         )
     )
 }

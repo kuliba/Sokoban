@@ -14,14 +14,14 @@ public struct LandingView: View {
     @State private var position: CGFloat = 0
     @State private var scrollViewContentSize: CGSize = .zero
     
-    private let action: (LandingAction) -> Void
+    private let action: (LandingEvent) -> Void
     private let openURL: (URL) -> Void
     private let images: [String: Image]
     
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
-        action: @escaping (LandingAction) -> Void,
+        action: @escaping (LandingEvent) -> Void,
         openURL: @escaping (URL) -> Void
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
@@ -41,8 +41,10 @@ public struct LandingView: View {
     var backButton : some View {
         
         Button(action: {
-            action(.goToMain)
-        }) { Image(systemName: "chevron.backward").font(.system(size: 14)) }
+            // TODO: Me, Struct
+            action(.card(.goToMain))
+            action(.sticker(.goToMain))
+        }) { Image(systemName: "chevron.backward") }
     }
     
     public var body: some View {
@@ -68,17 +70,31 @@ public struct LandingView: View {
             componentsView(viewModel.landing.footer)
         }
         .bottomSheet(
+            
             item: .init(
                 get: { viewModel.destination },
                 set: viewModel.setDestination(to:)
             ),
             content: destinationView)
-        .navigationBarTitle(
-            viewModel.landing.navigationTitle(
-                offset: position,
-                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
-            displayMode: .inline)
-        .navigationBarItems(leading: backButton)
+        .toolbar {
+            
+            ToolbarItem(placement: .principal) {
+
+                    if viewModel.landing.shouldShowNavigationTitle(
+                        offset: position,
+                        offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
+                        componentsView(viewModel.landing.header)
+                    } else {
+                        Text(viewModel.landing.titleInMain().text)
+                            .font(.system(size: 18, weight: .medium))
+                    }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                backButton
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
     }
     
     private func componentsView(
@@ -97,23 +113,38 @@ public struct LandingView: View {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) {
             
-            action(.orderCard(cardTarif: tarif, cardType: type))
+            action(.card(.order(cardTarif: tarif, cardType: type)))
         }
     }
-
     
+    
+    @ViewBuilder
     private func itemView(
         component: UILanding.Component
     ) -> some View {
         
-        return LandingComponentView(
+        let landingView = LandingComponentView(
             component: component,
             images: images,
             config: viewModel.config,
             selectDetail: viewModel.selectDetail,
             action: action,
             orderCard: orderCard
-        )
+            )
+        
+        switch component {
+            
+        case .pageTitle:
+            
+            if !viewModel.landing.titleInMain().text.isEmpty {
+               EmptyView()
+            } else {
+                landingView
+            }
+            
+        default:
+            landingView
+        }
     }
     
     @ViewBuilder
@@ -151,7 +182,7 @@ extension LandingView {
         let images: [String: Image]
         let config: UILanding.Component.Config
         let selectDetail: (DetailDestination?) -> Void
-        let action: (LandingAction) -> Void
+        let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
         
         var body: some View {
@@ -175,9 +206,8 @@ extension LandingView {
                     model: .init(data: model, images: images),
                     config: config.multiTextsWithIconsHorizontal)
                 
-                // заголовок отображается в navBar !!!
-            case .pageTitle:
-                EmptyView()
+            case .pageTitle(let model):
+                PageTitleView(model: model, config: config.pageTitle)
                 
             case let .multi(.texts(model)):
                 UILanding.Multi.TextsView(

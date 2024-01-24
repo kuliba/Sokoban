@@ -214,8 +214,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_9rub() throws {
         
         let sut = makeSUT()
-        let amount = makeParameterAmount(value: 9.0)
-        let product = makeParameterProduct(value: 10000184510)
+        let amount = makeParameterAmount(sessionIDValue: 9.0)
+        let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
@@ -225,7 +225,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.method, .post)
         
         XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.sessionIDValue), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -244,8 +244,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_10rub() throws {
         
         let sut = makeSUT()
-        let amount = makeParameterAmount(value: 10.0)
-        let product = makeParameterProduct(value: 10000184510)
+        let amount = makeParameterAmount(sessionIDValue: 10.0)
+        let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
@@ -255,7 +255,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.method, .post)
         
         XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.sessionIDValue), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -274,8 +274,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4286() throws {
         
         let sut = makeSUT()
-        let amount = makeParameterAmount(value: 1)
-        let product = makeParameterProduct(value: 10000184510)
+        let amount = makeParameterAmount(sessionIDValue: 1)
+        let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4286]
 
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
@@ -285,7 +285,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.method, .post)
         
         XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.sessionIDValue), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -513,8 +513,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
             localAgent: localAgent
         )
         
-        sut.products.value = makeProductsData(counts)
-        sut.currencyList.value = currencies
+        sut.products.sessionIDValue = makeProductsData(counts)
+        sut.currencyList.sessionIDValue = currencies
         
         // trackForMemoryLeaks(sut, file: file, line: line)
         // trackForMemoryLeaks(sessionAgent, file: file, line: line)
@@ -530,7 +530,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     }
     
     private func makeParameterAmount(
-        value: Double = 99.0,
+        sessionIDValue: Double = 99.0,
         title: String = "amount",
         currencySymbol: String = "RUB",
         minAmount: Double = 1,
@@ -538,7 +538,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     ) -> Payments.ParameterAmount {
         
         .init(
-            value: "\(value)",
+            sessionIDValue: "\(sessionIDValue)",
             title: title,
             currencySymbol: currencySymbol,
             validator: .init(
@@ -549,13 +549,13 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     }
 
     private func makeParameterProduct(
-        value: Int = 10000235538,
+        sessionIDValue: Int = 10000235538,
         title: String = "CARD",
         filter: ProductData.Filter = .generalFrom,
         isEditable: Bool = false
     ) -> Payments.ParameterProduct {
         
-        .init(value: "\(value)", title: title, filter: filter, isEditable: isEditable)
+        .init(sessionIDValue: "\(sessionIDValue)", title: title, filter: filter, isEditable: isEditable)
     }
     
     private func makeAnywayResponseData(
@@ -649,7 +649,7 @@ private extension Model {
         
         return .init(
             id: phoneParameterId,
-            value: phoneNumber
+            sessionIDValue: phoneNumber
         )
     }
     
@@ -665,7 +665,7 @@ private extension Model {
 
 private extension ServerAgentStub.EssenceStub {
     
-    static let test: Self = .preview
+    static let test: Self = .cardPreview
 }
 
 private extension TransferAnywayData.Additional {

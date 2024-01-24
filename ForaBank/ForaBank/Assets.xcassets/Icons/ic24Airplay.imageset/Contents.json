@@ -1,15 +1,15 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic24Airplay.svg"
+      "filename" : "ic24Airplay.svg",
+      "idiom" : "universal"
     }
   ],
-  "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
   "properties" : {
     "template-rendering-intent" : "template"
+  },
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }

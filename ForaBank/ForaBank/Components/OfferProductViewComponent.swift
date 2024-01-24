@@ -30,8 +30,20 @@ extension OfferProductView {
         var additionalCondition: AdditionalCondition? = nil
         @Published var isShowSheet: Bool = false
         
-        internal init(id: Int, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButton: OrderButton, conditionViewModel: ConditionViewModel, design: Design, additionalCondition: AdditionalCondition?) {
-            
+        private let openDeposit: (DepositProductData.ID?) -> Void
+        
+        internal init(
+            id: Int,
+            title: String,
+            subtitle: [String],
+            image: ImageData,
+            infoButton: InfoButton,
+            orderButton: OrderButton,
+            conditionViewModel: ConditionViewModel,
+            design: Design,
+            additionalCondition: AdditionalCondition?,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = id
             self.title = title
             self.subtitle = subtitle
@@ -41,22 +53,29 @@ extension OfferProductView {
             self.conditionViewModel = conditionViewModel
             self.design = design
             self.additionalCondition = additionalCondition
+            self.openDeposit = openDeposit
         }
         
-        init(with product: CatalogProductData) {
-            
+        init(
+            with product: CatalogProductData,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = product.id
             self.title = product.name
             self.subtitle = product.description
             self.image = .endpoint(product.imageEndpoint)
             self.orderButton = OrderButton(url: product.orderURL)
             self.design = .init(background: .mainColorsBlack, textColor: .mainColorsWhite)
+            self.openDeposit = openDeposit
             self.infoButton = createInfoButton(with: product.infoURL)
         }
         
-        init(with deposit: DepositProductData) {
-            
+        init(
+            with deposit: DepositProductData,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = deposit.depositProductID
+            self.openDeposit = openDeposit
             self.title = deposit.name
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
@@ -142,16 +161,16 @@ extension OfferProductView {
         }
         
         private func createInfoButton(with url: URL?) -> InfoButton? {
-
-           guard let url = url else {
-              return nil
-           }
-
+            
+            guard let url = url else {
+                return nil
+            }
+            
             return InfoButton(url: url, action: { [weak self] in
-                            self?.action.send(OpenDepositViewModel.ModelActionOpenDeposit.ButtonTapped())
-                        })
+                self?.action.send(OpenDepositListViewModel.ModelActionOpenDeposit.ButtonTapped())
+            })
         }
-
+        
     }
 }
 
@@ -167,6 +186,11 @@ extension OfferProductView.ViewModel {
         }
         
         return description
+    }
+    
+    func orderButtonTapped() {
+        
+        openDeposit(id)
     }
 }
 
@@ -189,6 +213,7 @@ struct OfferProductView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(viewModel.design.textColor)
                     .padding(.top, 32)
+                    .accessibilityIdentifier("OfferProductTitle")
                 
                 if let conditionViewModel = viewModel.conditionViewModel {
                     
@@ -206,12 +231,14 @@ struct OfferProductView: View {
                                 .frame(width: 5, height: 5)
                                 .padding(.leading, 10)
                                 .padding(.top, 7)
+                                .accessibilityIdentifier("OfferProductTextPoint")
                             
                             Text(line)
                                 .font(.textBodyMR14200())
                                 .foregroundColor(viewModel.design.textColor)
                                 .lineLimit(nil)
                                 .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("OfferProductText")
                         }
                     }
                 }
@@ -224,6 +251,7 @@ struct OfferProductView: View {
                         .frame(height: 236)
                         .cornerRadius(12)
                         .padding(.top, 24)
+                        .accessibilityIdentifier("OfferProductImage")
                     
                 case .endpoint:
                     Color
@@ -237,10 +265,14 @@ struct OfferProductView: View {
                 HStack(alignment: .center, spacing: 20) {
                     
                     OfferProductView.InfoButtonView(viewModel: viewModel, color: viewModel.design.textColor)
+                        .accessibilityIdentifier("OfferProductInfoButton")
                     
                     Spacer()
                     
-                    OfferProductView.OrderButtonView(viewModel: viewModel)
+                    OfferProductView.OrderButtonView(
+                        title: viewModel.orderButton.title,
+                        action: viewModel.orderButtonTapped
+                    )
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
@@ -267,18 +299,22 @@ struct OfferProductView: View {
                     .background(Color.mainColorsRed)
                     .cornerRadius(4)
                     .font(.system(size: 14))
+                    .accessibilityIdentifier("OfferProductPercent")
                 
                 Text(viewModel.amountViewModel)
                     .font(.system(size: 14))
                     .foregroundColor(color)
+                    .accessibilityIdentifier("OfferProductAmount")
                 
                 color
                     .frame(width: 1, alignment: .center)
                     .padding(.vertical, 3)
+                    .accessibilityIdentifier("OfferProductSeparator")
                 
                 Text(viewModel.date)
                     .font(.system(size: 14))
                     .foregroundColor(color)
+                    .accessibilityIdentifier("OfferProductTerm")
                 
             }
             .frame(height: 24, alignment: .leading)
@@ -310,6 +346,7 @@ struct OfferProductView: View {
                         Text(infoButton.title)
                             .foregroundColor(color)
                             .multilineTextAlignment(.leading)
+                            .accessibilityIdentifier("OfferProductInfoButtonText")
                     }
                 }
             }
@@ -318,24 +355,20 @@ struct OfferProductView: View {
     
     struct OrderButtonView: View {
         
-        let viewModel: OfferProductView.ViewModel
+        let title: String
+        let action: () -> Void
         
         var body: some View {
             
-            //FIXME: move all this to view model !!!!
-            if let depositId = viewModel.id,
-               let openViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: Model.shared) {
+            Button(action: action) {
                 
-                NavigationLink(destination: OpenDepositDetailView(viewModel: openViewModel)) {
-                    
-                    Text(viewModel.orderButton.title)
-                        .foregroundColor(.textWhite)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 17)
-                        .background(Color.buttonPrimary)
-                        .cornerRadius(8)
-                }
-            }
+                Text(title)
+                    .foregroundColor(.textWhite)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 17)
+                    .background(Color.buttonPrimary)
+                    .cornerRadius(8)
+            }.accessibilityIdentifier("OfferProductContinueButton")
         }
     }
     
@@ -349,6 +382,7 @@ struct OfferProductView: View {
                 
                 Text(viewModel.title)
                     .fontWeight(.semibold)
+                    .accessibilityIdentifier("OfferProductDetailConditionTitle")
                 
                 VStack(alignment: .leading, spacing: 15) {
                     
@@ -363,9 +397,11 @@ struct OfferProductView: View {
                                     .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(Color.green)
                                     .padding(.top, 5)
+                                    .accessibilityIdentifier("OfferProductDetailConditionIconEnabled")
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsBlack)
+                                    .accessibilityIdentifier("OfferProductDetailConditionTextEnabled")
 
                             } else {
                                 
@@ -374,9 +410,11 @@ struct OfferProductView: View {
                                     .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(.mainColorsGray)
                                     .padding(.top, 5)
+                                    .accessibilityIdentifier("OfferProductDetailConditionIconDisabled")
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsGray)
+                                    .accessibilityIdentifier("OfferProductDetailConditionTextDisabled")
                             }
                         }
                     }
@@ -409,9 +447,9 @@ struct OfferProductView_Previews: PreviewProvider {
 
 extension OfferProductView.ViewModel {
     
-    static let catalogSample: OfferProductView.ViewModel = .init(with: .init(name: "Карта «Миг»", description: ["Получите карту с кешбэком в любом офисе без предварительного заказа!"], imageEndpoint: "", infoURL: URL(string: "https://www.forabank.ru/private/cards/")!, orderURL: URL(string: "https://www.forabank.ru/private/cards/")!, tariff: 1, productType: 1))
+    static let catalogSample: OfferProductView.ViewModel = .init(with: .init(name: "Карта «Миг»", description: ["Получите карту с кешбэком в любом офисе без предварительного заказа!"], imageEndpoint: "", infoURL: URL(string: "https://www.forabank.ru/private/cards/")!, orderURL: URL(string: "https://www.forabank.ru/private/cards/")!, tariff: 1, productType: 1), openDeposit: { _ in })
     
-    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]))
+    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]), openDeposit: { _ in })
     
 }
 

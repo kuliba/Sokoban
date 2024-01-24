@@ -44,6 +44,8 @@ extension TransformingReducer: Reducer {
             placeholderText: placeholderText,
             transform: transform
         )
-        return try changingReducer.reduce(state, with: action)
+        let newState = try changingReducer.reduce(state, with: action)
+        
+        return newState
     }
 }

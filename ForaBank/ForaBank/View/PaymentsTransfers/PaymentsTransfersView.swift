@@ -5,12 +5,15 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import InfoComponent
+import SberQR
 import SwiftUI
 
 struct PaymentsTransfersView: View {
     
-    @ObservedObject
-    var viewModel: PaymentsTransfersViewModel
+    @ObservedObject var viewModel: PaymentsTransfersViewModel
+    
+    let viewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -20,49 +23,60 @@ struct PaymentsTransfersView: View {
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     
-                    ForEach(viewModel.sections) { section in
-                        
-                        switch section {
-                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
-                            
-                        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                            PTSectionTransfersView(viewModel: transfersSectionVM)
-                            
-                        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
-                            PTSectionPaymentsView(viewModel: payGroupSectionVM)
-                        default:
-                            EmptyView()
-                        }
-                    }
-                    
-                } //mainVerticalScrollView
-            } //mainVStack
-            
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map(destinationView)
+                    ForEach(viewModel.sections, content: sectionView)
+                }
             }
             
             Color.clear
-                .sheet(item: $viewModel.sheet, content: sheetView)
+                .sheet(
+                    item: .init(
+                        get: { viewModel.route.modal?.sheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }),
+                    content: sheetView
+                )
             
             Color.clear
                 .fullScreenCover(
-                    item: $viewModel.fullScreenSheet,
+                    item: .init(
+                        get: { viewModel.route.modal?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }
+                    ),
                     content: fullScreenCoverView
                 )
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
         }
+        .alert(
+            item: .init(
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: Alert.init(with:)
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route.modal?.bottomSheet },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: bottomSheetView
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() } }
+            ),
+            content: destinationView(link:)
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading: Group {
                 
                 if viewModel.mode == .normal {
                     
-                    MainView.UserAccountButton(viewModel: viewModel.userAccountButton)
+                    UserAccountButton(
+                        viewModel: viewModel.userAccountButton
+                    )
                 }
             },
             trailing:
@@ -70,11 +84,29 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
-        .tabBar(isHidden: $viewModel.isTabBarHidden)
+        .tabBar(isHidden: .init(
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
+        ))
+    }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: PaymentsTransfersSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+            
+        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+            PTSectionTransfersView(viewModel: transfersSectionVM)
+            
+        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+            PTSectionPaymentsView(viewModel: payGroupSectionVM)
+        default:
+            EmptyView()
+        }
     }
     
     @ViewBuilder
@@ -177,13 +209,23 @@ struct PaymentsTransfersView: View {
             )
             
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                viewFactory: viewFactory
+            )
             
         case let .openDeposit(depositListViewModel):
             OpenDepositDetailView(viewModel: depositListViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
+            
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.resetDestination
+                )
         }
     }
     
@@ -192,8 +234,9 @@ struct PaymentsTransfersView: View {
         transportPaymentsViewModel: TransportPaymentsViewModel
     ) -> some View {
         
-        TransportPaymentsView(viewModel: transportPaymentsViewModel) {
-            
+        TransportPaymentsView(
+            viewModel: transportPaymentsViewModel
+        ) {
             MosParkingView(
                 viewModel: .init(
                     operation: viewModel.getMosParkingPickerData
@@ -303,7 +346,19 @@ struct PaymentsTransfersView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
+    }
+}
+
+private extension PaymentsTransfersViewModel.Route {
+    
+    var isEmpty: Bool {
+        
+        destination == nil && modal == nil
     }
 }
 
@@ -323,7 +378,6 @@ extension PaymentsTransfersView {
     }
 }
 
-
 extension PaymentsTransfersView {
     
     //MARK: - ViewBarButton
@@ -342,35 +396,50 @@ extension PaymentsTransfersView {
             }
         }
     }
-    
 }
 
 //MARK: - Preview
 
 struct Payments_TransfersView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        PaymentsTransfersView(viewModel: .sample)
+        
+        paymentsTransfersView()
             .previewDevice(PreviewDevice(rawValue: "iPhone X 15.4"))
             .previewDisplayName("iPhone X")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice(PreviewDevice(rawValue: "iPhone 13 Pro Max"))
             .previewDisplayName("iPhone 13 Pro Max")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("iPhone SE (3rd generation)")
             .previewDisplayName("iPhone SE (3rd generation)")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("iPhone 13 mini")
             .previewDisplayName("iPhone 13 mini")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
+    }
+    
+    private static func paymentsTransfersView() -> some View {
         
+        PaymentsTransfersView(
+            viewModel: .sample,
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
+        )
     }
 }
-
-
-

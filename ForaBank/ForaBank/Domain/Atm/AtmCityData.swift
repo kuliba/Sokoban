@@ -13,18 +13,26 @@ struct AtmCityData: Identifiable, Codable, Equatable {
     let name: String
     let region: Int
     let location: LocationData
+    let productList: [ProductList]?
     
     enum CodingKeys : String, CodingKey, Decodable {
         
-        case id, name, region, location
+        case id, name, region, location, productList
     }
     
-    internal init(id: Int, name: String, region: Int, location: LocationData) {
+    internal init(
+        id: Int,
+        name: String,
+        region: Int,
+        location: LocationData,
+        productList: [ProductList]?
+    ) {
         
         self.id = id
         self.name = name
         self.region = region
         self.location = location
+        self.productList = productList
     }
     
     init(from decoder: Decoder) throws {
@@ -34,6 +42,7 @@ struct AtmCityData: Identifiable, Codable, Equatable {
         self.name = try container.decode(String.self, forKey: .name)
         self.region = try container.decode(Int.self, forKey: .region)
         self.location = try container.decode(LocationData.self, forKey: .location)
+        self.productList = try container.decodeIfPresent([ProductList].self, forKey: .productList)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -43,5 +52,14 @@ struct AtmCityData: Identifiable, Codable, Equatable {
         try container.encode(name, forKey: .name)
         try container.encode(region, forKey: .region)
         try container.encode(location, forKey: .location)
+        try container.encodeIfPresent(productList, forKey: .productList)
+    }
+}
+
+extension AtmCityData {
+    
+    enum ProductList: String, Codable {
+        
+        case sticker = "STICKER"
     }
 }

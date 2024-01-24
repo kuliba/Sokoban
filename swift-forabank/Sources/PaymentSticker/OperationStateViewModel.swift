@@ -1,6 +1,6 @@
 //
 //  OperationStateViewModel.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -13,7 +13,6 @@ final public class OperationStateViewModel: ObservableObject {
     @Published public var state: State
     
     private let blackBoxGet: BlackBoxAPI.AsyncGet
-//    let businessLogic: (State, Event) -> AnyPublisher<Result<State, Error>, Never>
     
     public init(
         state: State = .operation(.init(parameters: [])),
@@ -21,16 +20,7 @@ final public class OperationStateViewModel: ObservableObject {
     ) {
         self.state = state
         self.blackBoxGet = blackBoxGet
-    }
-    
-    public var scrollParameters: [Operation.Parameter] {
-        
-        operation?.parameters.filter({ $0.id != .amount }) ?? []
-    }
-    
-    public var amountParameter: Operation.Parameter? {
-        
-        operation?.parameters.first(where: { $0.id == .amount })
+        event(.continueButtonTapped(.continue))
     }
     
     public func event(_ event: Event) {
@@ -41,23 +31,13 @@ final public class OperationStateViewModel: ObservableObject {
         
         blackBoxGet((operation, event)) { result in
             
-            switch result {
-            case let .failure(error):
-                self.handleAPIError(error)
-                
-            case let .success(state):
-                
-                if operation.parameters.contains(where: { $0.id == .input }) {
+            DispatchQueue.main.async {
+             
+                switch result {
+                case let .failure(error):
+                    self.handleAPIError(error)
                     
-                    self.state = .result(.init(
-                        result: .success,
-                        title: "Успешная заявка",
-                        description: "Спасибо за заказ! В ближайшее время с вами свяжется наш курьер для уточнения места и времени доставки.",
-                        amount: "790 Р"
-                    ))
-                    
-                } else {
-                    
+                case let .success(state):
                     self.state = state
                 }
             }
@@ -68,41 +48,22 @@ final public class OperationStateViewModel: ObservableObject {
         
         // TODO: setup error
     }
-    
-    func updateOperation(with parameters: [Operation.Parameter]) {
-        
-        self.state = .operation(.init(parameters: parameters))
-    }
 }
 
 extension OperationStateViewModel {
     
-    //TODO: extract from operation state view model
-    public enum State {
+    public enum State: Equatable {
         
         case operation(Operation)
         case result(OperationResult)
     }
-    
-    public struct OperationResult {
-        
-        public let result: Result
-        public let title: String
-        public let description: String
-        public let amount: String
-        
-        public enum Result {
-            
-            case success
-            case waiting
-            case failed
-        }
-    }
 }
 
-extension OperationStateViewModel {
+//MARK: Helpers
 
-    var operation: Operation? {
+extension OperationStateViewModel {
+    
+    public var operation: Operation? {
         
         guard case let .operation(operation) = state else {
             return nil
@@ -110,16 +71,4 @@ extension OperationStateViewModel {
         
         return operation
     }
-}
-
-/// A namespace.
-public enum BlackBoxAPI {}
-
-public extension BlackBoxAPI {
-    
-    typealias Request = (Operation, Event)
-    typealias Success = OperationStateViewModel.State
-    typealias Result = Swift.Result<Success, Error>
-    typealias Completion = (Result) -> Void
-    typealias AsyncGet = (Request, @escaping Completion) -> Void
 }

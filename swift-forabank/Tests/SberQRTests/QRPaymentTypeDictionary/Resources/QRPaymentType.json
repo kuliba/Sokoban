@@ -1,0 +1,45 @@
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "serial": "0add167b51bfea09bfb5a77c32faf510",
+    "list": [
+      {
+        "content": "qr.nspk.ru",
+        "paymentType": "C2B"
+      },
+      {
+        "content": "sub.nspk.ru",
+        "paymentType": "C2B"
+      },
+      {
+        "content": "platimultiqr.ru",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "multiqrpay.ru",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "platiqr.ru",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "ift.multiqr.ru",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "sberbank.ru/qr",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "pay.multiqr.ru",
+        "paymentType": "SBERQR"
+      },
+      {
+        "content": "multiqr.ru",
+        "paymentType": "SBERQR"
+      }
+    ]
+  }
+}

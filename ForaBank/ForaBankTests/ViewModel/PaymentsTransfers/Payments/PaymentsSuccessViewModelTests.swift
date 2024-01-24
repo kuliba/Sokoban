@@ -9,7 +9,7 @@ import XCTest
 @testable import ForaBank
 
 final class PaymentsSuccessViewModelTests: XCTestCase {
-
+    
     func test_init_withEmptySections_emptyFeed_emptyBottom() {
         
         let (sut, _, _, _) = makeSUT()
@@ -49,7 +49,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.07)
-
+        
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .save))
         scheduler.advance()
         
@@ -66,7 +66,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         let (sut, model, scheduler, _) = makeSUT(with: [section])
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
-
+        
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .cancel))
         scheduler.advance()
         
@@ -178,7 +178,6 @@ private extension PaymentsSuccessViewModelTests {
     ) {
         let scheduler = DispatchQueue.test
         let model: Model = .mockWithEmptyExcept()
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let adapter = PaymentsSuccessViewModelAdapterSpy(model: model, scheduler: scheduler.eraseToAnyScheduler())
         let sut = PaymentsSuccessViewModel(
             sections: sections,
@@ -284,7 +283,7 @@ private extension PaymentsSuccessViewModelTests {
     ) -> Payments.Success {
         
         .init(
-            model: .emptyMock,
+            model: .mockWithEmptyExcept(),
             mode: mode,
             paymentOperationDetailId: paymentOperationDetailId,
             documentStatus: status,
@@ -292,7 +291,7 @@ private extension PaymentsSuccessViewModelTests {
     }
 }
 
-private class PaymentsSuccessViewModelAdapterSpy: PaymentsSuccessViewModelAdapter {
+class PaymentsSuccessViewModelAdapterSpy: PaymentsSuccessViewModelAdapter {
     
     var requestOperationDetailCalls = [Int]()
     

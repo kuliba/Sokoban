@@ -1,4 +1,4 @@
- //
+//
 //  Model+Dictionary.swift
 //  ForaBank
 //
@@ -79,6 +79,7 @@ extension ModelAction {
             .paymentSystemList,
             .fullBankInfoList,
             .qrMapping,
+            .qrPaymentType,
             .prefferedBanks,
             .clientInform
         ]
@@ -100,7 +101,7 @@ extension Model {
             
         case .countries:
             return localAgent.load(type: [CountryData].self) != nil
-           
+            
         case .countriesWithService:
             return localAgent.load(type: [CountryWithServiceData].self) != nil
             
@@ -137,6 +138,9 @@ extension Model {
         case .bannerCatalogList:
             return localAgent.load(type: [BannerCatalogListData].self) != nil
             
+        case .bannersMyProductListWithSticker:
+            return localAgent.load(type: [StickerBannersMyProductList].self) != nil
+            
         case .atmList:
             return localAgent.load(type: [AtmData].self) != nil
             
@@ -154,19 +158,22 @@ extension Model {
             
         case .atmRegionList:
             return localAgent.load(type: [AtmRegionData].self) != nil
-        
+            
         case .currencyWalletList:
             return localAgent.load(type: [CurrencyWalletData].self) != nil
             
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
-                    
+            
         case .qrMapping:
             return localAgent.load(type: QRMapping.self) != nil
             
+        case .qrPaymentType:
+            return localAgent.load(type: QRPaymentType.self) != nil
+            
         case .prefferedBanks:
             return localAgent.load(type: [PrefferedBanksList].self) != nil
-        
+            
         case .clientInform:
             return localAgent.load(type: ClientInformData.self) != nil
         }
@@ -183,7 +190,7 @@ extension Model {
             
         case .countries:
             return localAgent.serial(for: [CountryData].self)
-         
+            
         case .countriesWithService:
             return localAgent.serial(for: [CountryWithServiceData].self)
             
@@ -220,6 +227,9 @@ extension Model {
         case .bannerCatalogList:
             return localAgent.serial(for: [BannerCatalogListData].self)
             
+        case .bannersMyProductListWithSticker:
+            return localAgent.serial(for: [StickerBannersMyProductList].self)
+            
         case .atmList:
             return localAgent.serial(for: [AtmData].self)
             
@@ -237,19 +247,22 @@ extension Model {
             
         case .atmRegionList:
             return localAgent.serial(for: [AtmRegionData].self)
-        
+            
         case .currencyWalletList:
             return localAgent.serial(for: [CurrencyWalletData].self)
-        
+            
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
             
         case .qrMapping:
             return localAgent.serial(for: QRMapping.self)
             
+        case .qrPaymentType:
+            return localAgent.serial(for: QRPaymentType.self)
+            
         case .prefferedBanks:
             return localAgent.serial(for: [PrefferedBanksList].self)
-        
+            
         case .clientInform:
             return localAgent.serial(for: ClientInformData.self)
         }
@@ -266,10 +279,10 @@ extension Model {
             
         case .countries:
             try? localAgent.clear(type: [CountryData].self)
-        
+            
         case .countriesWithService:
             try? localAgent.clear(type: [CountryWithServiceData].self)
-
+            
         case .currencyList:
             try? localAgent.clear(type: [CurrencyData].self)
             
@@ -303,6 +316,9 @@ extension Model {
         case .bannerCatalogList:
             try? localAgent.clear(type: [BannerCatalogListData].self)
             
+        case .bannersMyProductListWithSticker:
+            try? localAgent.clear(type: [StickerBannersMyProductList].self)
+            
         case .atmList:
             try? localAgent.clear(type: [AtmData].self)
             
@@ -320,16 +336,19 @@ extension Model {
             
         case .atmRegionList:
             try? localAgent.clear(type: [AtmRegionData].self)
-        
+            
         case .currencyWalletList:
             try? localAgent.clear(type: [CurrencyWalletData].self)
-        
+            
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
-
+            
         case .qrMapping:
             try? localAgent.clear(type: QRMapping.self)
-                 
+            
+        case .qrPaymentType:
+            try? localAgent.clear(type: QRPaymentType.self)
+            
         case .prefferedBanks:
             try? localAgent.clear(type: [PrefferedBanksList].self)
             
@@ -349,7 +368,7 @@ extension Model {
     }
     
     func dictionaryCurrency(for code: String) -> CurrencyData? {
-
+        
         return currencyList.value.first(where: { $0.code == code })
     }
     
@@ -376,7 +395,7 @@ extension Model {
                                                   "iFora||1051001",
                                                   "iFora||1051062",
                                                   "iFora||1331001"]
-
+    
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -451,7 +470,7 @@ extension Model {
         guard let banksList = dictionaryBanks() else { return nil }
         return banksList.first(where: { $0.memberId == memberId })
     }
-     
+    
     // FullBankInfoList
     
     func dictionaryFullBankInfoList() -> [BankFullInfoData] {
@@ -470,7 +489,7 @@ extension Model {
         let banksList = bankListFullInfo.value
         
         let prefferedBanks = prefferedBanksList.value.compactMap { bankId in banksList.first(where: { $0.memberId == bankId }) }
-
+        
         //TODO: not sure if we need here two sorts. Test it first.
         let otherBanks = banksList.filter { !prefferedBanks.contains($0) }
             .sorted(by: { $0.displayName.lowercased() < $1.displayName.lowercased() })
@@ -486,7 +505,7 @@ extension Model {
         guard let regionList = dictionaryAnywayOperators() else { return [] }
         
         let regions = regionList.filter{ $0.region == region }
-
+        
         return regions
     }
     
@@ -497,10 +516,10 @@ extension Model {
         guard let regionList = dictionaryAnywayOperators() else { return [] }
         
         let regions = regionList.filter{ $0.region == region && $0.parentCode == code }
-
+        
         return regions
     }
-        
+    
     //Countries
     
     func dictionaryCountries() -> [CountryData]? {
@@ -599,7 +618,7 @@ extension Model {
     func handleDictionaryUpdateAll()  {
         
         action.send(ModelAction.Dictionary
-                               .UpdateCache.List(types: ModelAction.Dictionary.cached))
+            .UpdateCache.List(types: ModelAction.Dictionary.cached))
     }
     
     // Update list
@@ -937,17 +956,17 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
-            
+        
         let typeDict: DictionaryType = .currencyWalletList
         guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
         self.dictionariesUpdating.value.insert(typeDict)
         
         let command = ServerCommands
-                        .DictionaryController
-                        .GetCurrencyWalletList(token: token, serial: serial)
-            
+            .DictionaryController
+            .GetCurrencyWalletList(token: token, serial: serial)
+        
         serverAgent.executeCommand(command: command) { [unowned self] result in
-                
+            
             self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
@@ -959,25 +978,25 @@ extension Model {
                         handleServerCommandEmptyData(command: command)
                         return
                     }
-                        
+                    
                     // check if we have updated data
                     guard data.list.count > 0 else { return }
-                        
+                    
                     self.currencyWalletList.value = data.list
-                        
+                    
                     do {
-                            
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
-                            
+                        
                     } catch {
-                            
+                        
                         handleServerCommandCachingError(error: error, command: command)
                     }
-                        
+                    
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
-                    
+                
             case .failure(let error):
                 handleServerCommandError(error: error, command: command)
             }
@@ -991,17 +1010,17 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
-            
+        
         let typeDict: DictionaryType = .centralBanksRates
         guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
         self.dictionariesUpdating.value.insert(typeDict)
         
         let command = ServerCommands
-                        .DictionaryController
-                        .GetCentralBankRates(token: token)
-            
+            .DictionaryController
+            .GetCentralBankRates(token: token)
+        
         serverAgent.executeCommand(command: command) { [unowned self] result in
-                
+            
             self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
@@ -1013,13 +1032,13 @@ extension Model {
                         handleServerCommandEmptyData(command: command)
                         return
                     }
-                        
+                    
                     self.centralBankRates.value = data.ratesCb
-                        
+                    
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
-                    
+                
             case .failure(let error):
                 handleServerCommandError(error: error, command: command)
             }
@@ -1542,6 +1561,61 @@ extension Model {
         }
     }
     
+    // Get BannersMyProductList, with Sticker
+    func handleDictionaryBannersMyProductListWithSticker(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .bannersMyProductListWithSticker
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetBannersMyProductListWithSticker(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    guard data.stickerCardData.count > 0 else {
+                        return
+                    }
+                    
+                    self.productListBannersWithSticker.value = data.stickerCardData
+                    if let md5hashImage = data.stickerCardData.first?.md5hash {
+                        
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [md5hashImage]))
+                    }
+                   
+                    do {
+                        
+                        try self.localAgent.store(data.stickerCardData, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                
+            }
+        }
+    }
+    
     //BannerCatalogListData
     func handleDictionaryBannerCatalogList(_ serial: String?) {
         
@@ -1902,12 +1976,12 @@ extension Model {
         
         let command = ServerCommands.QRController.GetPaymentsMapping(token: token, serial: serial)
         serverAgent.executeCommand(command: command) { [unowned self] result in
-
+            
             switch result {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-
+                    
                     guard let data = response.data else {
                         self.handleServerCommandEmptyData(command: command)
                         return
@@ -1919,22 +1993,70 @@ extension Model {
                         
                         return
                     }
-
+                    
                     qrMapping.value = data.qrMapping
-
+                    
                     do {
-
+                        
                         try localAgent.store(data.qrMapping, serial: data.serial)
-
+                        
                     } catch {
-
+                        
                         handleServerCommandCachingError(error: error, command: command)
                     }
-
+                    
                 default:
                     handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    // QRPaymentType
+    func handleDictionaryQRPaymentType(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.QRController.GetQRPaymentType(
+            token: token,
+            serial: serial
+        )
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard !data.list.isEmpty else { return }
 
+                    qrPaymentType.value = data.list
+                    
+                    do {
+                        
+                        try localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
             case .failure(let error):
                 handleServerCommandError(error: error, command: command)
             }
@@ -1962,7 +2084,7 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    self.clientInform.value = .result(response.data) 
+                    self.clientInform.value = .result(response.data)
                     
                 default:
                     self.clientInform.value = .result(nil)
@@ -1985,8 +2107,8 @@ extension Model {
         }
         
         let command = ServerCommands.DictionaryController
-                        .GetSvgImageList(token: token,
-                                         payload: .init(md5HashList: payload.imagesIds))
+            .GetSvgImageList(token: token,
+                             payload: .init(md5HashList: payload.imagesIds))
         
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
@@ -2018,7 +2140,7 @@ extension Model {
                     }
                     
                     self.images.value = dictionaryImagesReduce(images: self.images.value, updateItems: responseItems)
-
+                    
                     do {
                         
                         try self.localAgent.store(images.value, serial: nil)
@@ -2041,16 +2163,16 @@ extension Model {
     }
     
     func dictionaryAnywayFirstOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
-
+        
         guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
-
+        
         return dictionaryAnywayOperators()?.first(where: { $0.synonymList.contains(inn) })
     }
     
     func dictionaryAnywayOperators(with code: QRCode, mapping: QRMapping) -> [OperatorGroupData.OperatorData]? {
-
+        
         guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
-
+        
         return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) }).filter({$0.parameterList.isEmpty == false})
     }
 }

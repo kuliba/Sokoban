@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import InfoComponent
+import SberQR
 import SwiftUI
 
 //MARK: - View
@@ -14,6 +16,8 @@ import SwiftUI
 struct MyProductsView: View {
     
     @ObservedObject var viewModel: MyProductsViewModel
+    
+    let viewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -106,10 +110,13 @@ struct MyProductsView: View {
                         AuthProductsView(viewModel: authProductsViewModel)
                         
                     case let  .openDeposit(openDepositViewModel):
-                        OpenDepositView(viewModel: openDepositViewModel)
+                        OpenDepositListView(viewModel: openDepositViewModel)
                     
                     case let .productProfile(productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
+                        ProductProfileView(
+                            viewModel: productProfileViewModel,
+                            viewFactory: viewFactory
+                        )
                     }
                 }
             }
@@ -135,7 +142,6 @@ struct MyProductsView: View {
             }
         }
     }
-    
 }
 
 extension MyProductsView {
@@ -155,17 +161,35 @@ extension MyProductsView {
 struct MyProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
-       
+        
         Group {
             NavigationView {
-                MyProductsView(viewModel: .sample)
+                myProductsView(viewModel: .sample)
             }
             
             NavigationView {
-                MyProductsView(viewModel: .sampleOpenProduct)
+                myProductsView(viewModel: .sampleOpenProduct)
             }
         }
+    }
+    
+    static func myProductsView(
+        viewModel: MyProductsViewModel
+    ) -> some View {
         
+        MyProductsView(
+            viewModel: viewModel,
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
+        )
     }
 }
-

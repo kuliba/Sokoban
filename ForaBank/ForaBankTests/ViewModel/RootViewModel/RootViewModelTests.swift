@@ -6,13 +6,14 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class RootViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialValues() {
         
-        let (sut, _, _, _) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
         XCTAssertNoDiff(sut.selected, .main)
         XCTAssertNil(sut.alert)
@@ -205,17 +206,38 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            mainViewModel: .init(model),
-            paymentsViewModel: .init(model: model),
+            fastPaymentsFactory: .legacy,
+            fastPaymentsServices: .empty,
+            mainViewModel: .init(
+                model,
+                makeProductProfileViewModel: { _,_,_ in nil },
+                fastPaymentsFactory: .legacy,
+                fastPaymentsServices: .empty,
+                                sberQRServices: .empty(),
+                qrViewModelFactory: .preview(),
+                onRegister: {}
+            ),
+            paymentsViewModel: .init(
+                model: model,
+                makeProductProfileViewModel: { _,_,_ in nil },
+                fastPaymentsFactory: .legacy,
+                fastPaymentsServices: .empty,
+                sberQRServices: .empty(),
+                qrViewModelFactory: .preview()
+            ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary,
-            model
+            model,
+            showLoginAction: { _ in
+                
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-
+        
         trackForMemoryLeaks(sut, file: file, line: line)
         
         // TODO: restore model memory tracking after model fix

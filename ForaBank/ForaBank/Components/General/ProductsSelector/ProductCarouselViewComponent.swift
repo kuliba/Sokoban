@@ -14,13 +14,15 @@ import SwiftUI
 extension ProductCarouselView {
     
     final class ViewModel: ObservableObject {
-
+        
         let action: PassthroughSubject<Action, Never> = .init()
-
+        
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
+        @Published private(set) var shouldShowSticker: Bool
+        
         var isScrollChangeSelectorEnable: Bool
-  
+        
         enum Content {
             
             case empty
@@ -33,15 +35,19 @@ extension ProductCarouselView {
             }
         }
         
-        private var products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
+        private let products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
+        let stickerViewModel: ProductCarouselView.StickerViewModel?
+        
         private var groups: [ProductGroupView.ViewModel] = []
-
+        
         private let selectedProductId: ProductData.ID?
-        private let mode: Mode
+        let mode: Mode
         
         let style: Style
-
+        
         private let model: Model
+        private let saveHideStickerSetting: () -> Void
+        
         private var bindings = Set<AnyCancellable>()
         
         internal init(
@@ -51,7 +57,8 @@ extension ProductCarouselView {
             selectedProductId: ProductData.ID?,
             mode: Mode,
             style: Style,
-            model: Model = .emptyMock
+            model: Model = .emptyMock,
+            stickerViewModel: StickerViewModel?
         ) {
             self.content = content
             self.selector = selector
@@ -60,6 +67,10 @@ extension ProductCarouselView {
             self.mode = mode
             self.style = style
             self.model = model
+            
+            self.stickerViewModel = stickerViewModel
+            self.shouldShowSticker = model.settingsAgent.shouldShowSticker
+            self.saveHideStickerSetting = model.settingsAgent.hideSticker
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductCarouselView.ViewModel initialized")
         }
@@ -74,7 +85,8 @@ extension ProductCarouselView {
             mode: Mode,
             isScrollChangeSelectorEnable: Bool = true,
             style: Style,
-            model: Model
+            model: Model,
+            stickerViewModel: StickerViewModel? = nil
         ) {
             let selector = Self.makeSelector(
                 products: model.allProducts,
@@ -89,10 +101,33 @@ extension ProductCarouselView {
                 selectedProductId: selectedProductId,
                 mode: mode,
                 style: style,
-                model: model
+                model: model,
+                stickerViewModel: stickerViewModel
             )
             
             bind()
+        }
+        
+        static func makeStickerViewModel(
+            _ model: Model,
+            show: @escaping () -> Void,
+            hide: @escaping () -> Void
+        ) -> ProductCarouselView.StickerViewModel? {
+            
+            if let productListBannersWithSticker = model.localAgent.load(type: [StickerBannersMyProductList].self),
+               let images = model.localAgent.load(type: [String: ImageData].self) {
+                
+                guard let md5hash = productListBannersWithSticker.first?.md5hash,
+                      let image = images[md5hash]?.image
+                else { return nil }
+                
+                return productListBannersWithSticker.first?.mapper(
+                    backgroundImage: image,
+                    onTap: show,
+                    onHide: hide
+                )
+            }
+            return nil
         }
         
         var selectedType: ProductType? {
@@ -130,7 +165,13 @@ extension ProductCarouselView {
                                 } else {
                                     
                                     // create new product view model
-                                    let productViewModel = ProductView.ViewModel(with: product, size: style.productAppearanceSize, style: .main, model: model)
+                                    let productViewModel = ProductView.ViewModel(
+                                        with: product,
+                                        size: style.productAppearanceSize,
+                                        style: .main,
+                                        model: model,
+                                        cardAction: nil,
+                                        showCvv: nil)
                                     bind(productViewModel)
                                     
                                     return productViewModel
@@ -150,26 +191,23 @@ extension ProductCarouselView {
                     if model.isAllProductsHidden {
                         
                         withAnimation {
-                        
+                            
                             content = .empty
                         }
                         
                     } else {
-                    
                         let updatedGroups = model.update(
                             groups: groups,
                             products: products,
                             productsUpdating: productsUpdating,
                             productGroupDimensions: style.productGroupDimensions
                         )
-                    
                         updatedGroups.last?.isSeparator = false
                         groups = updatedGroups
-                    
                         content = content(with: groups)
-                    
+                        
                         bind(groups)
-                    
+                        
                         // create product type selector
                         let selectedOptionID = selector?.selected
                         let productTypes = products.keys.sorted(by: \.order)
@@ -238,7 +276,6 @@ extension ProductCarouselView {
                 .compactMap { $0 as? ProductDidTapped }
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] _ in
-                    
                     self.action.send(CarouselProductDidTapped(productId: product.id))
                 }
                 .store(in: &bindings)
@@ -274,7 +311,7 @@ extension ProductCarouselView {
         private func bind(_ group: ProductGroupView.ViewModel) {
             
             typealias CarouselScrollToGroup = ProductCarouselViewModelAction.Products.ScrollToGroup
-
+            
             group.action
                 .compactMap { $0 as? ProductGroupAction.Group.Collapsed }
                 .receive(on: DispatchQueue.main)
@@ -299,12 +336,12 @@ extension ProductCarouselView {
                 }
             }
         }
-
+        
         private func content(with groups: [ProductGroupView.ViewModel]) -> Content {
             
             groups.isEmpty ? .placeholders : .groups(groups)
         }
-
+        
         private func productType(with offset: CGFloat) -> ProductType? {
             
             guard groups.count > 0 else {
@@ -323,6 +360,64 @@ extension ProductCarouselView {
             }
             
             return groups.last?.productType
+        }
+    }
+}
+
+// MARK: StickerActions
+private extension SettingsAgentProtocol {
+    
+    var shouldShowSticker: Bool {
+        
+        (try? load(type: .interface(.sticker))) ?? true
+    }
+    
+    func hideSticker() {
+        
+        saveShowStickerSetting(shouldShow: false)
+    }
+}
+
+extension SettingsAgentProtocol {
+    
+    func saveShowStickerSetting(shouldShow: Bool) {
+        
+        do {
+            
+            try store(shouldShow, type: .interface(.sticker))
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Sticker Hide Error: \(error.localizedDescription)")
+        }
+    }
+}
+
+extension ProductCarouselView.ViewModel {
+    
+    var sticker: Bool {
+        
+        mode.shouldShowSticker && shouldShowSticker
+    }
+    
+    func showSticker() { // TODO: Me, Delete?
+        
+        action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
+    }
+    
+    func hideSticker() { // TODO: Me, Delete?
+        
+        shouldShowSticker = false
+        saveHideStickerSetting()
+    }
+}
+
+extension ProductCarouselView.ViewModel.Mode {
+    
+    var shouldShowSticker: Bool {
+        
+        switch self {
+        case .main: return true
+        case .filtered: return false
         }
     }
 }
@@ -366,7 +461,7 @@ private extension Model {
             guard let productsForType = products[productType] else {
                 return nil
             }
-
+            
             let isGroupUpdating = productsUpdating.contains(productType)
             let group = groups.first(where: { $0.productType == productType}) ?? .init(
                 productType: productType,
@@ -440,7 +535,7 @@ private extension ProductCarouselView.ViewModel.Mode {
             let visibleProducts = products.filter { $0.isVisible }
             let uniqueTypes = Set(visibleProducts.map(\.productType))
             return uniqueTypes.sorted(by: \.order)
-
+            
         case let .filtered(filter):
             return filter.filteredProductsTypes(products)
         }
@@ -552,6 +647,8 @@ enum ProductCarouselViewModelAction {
             let productId: ProductData.ID
         }
         
+        struct StickerDidTapped: Action, Equatable {}
+        
         struct ScrollToGroup: Action {
             
             let groupId: ProductGroupView.ViewModel.ID
@@ -569,7 +666,7 @@ enum ProductCarouselViewModelAction {
 //MARK: - Make Selector
 
 extension ProductCarouselView.ViewModel {
-
+    
     static func makeSelector(
         products: [ProductData],
         mode: Mode,
@@ -593,7 +690,7 @@ extension ProductCarouselView.ViewModel {
             mode: .action
         )
     }
-
+    
     static func makeSelector(
         productTypes: [ProductType],
         style: OptionSelectorView.ViewModel.Style
@@ -676,7 +773,18 @@ struct ProductCarouselView: View {
                                 ForEach(groups) { groupViewModel in
                                     ProductGroupView(viewModel: groupViewModel)
                                         .accessibilityIdentifier("productScrollView")
+                                    
+                                    
+                                    if let vm = viewModel.stickerViewModel {
+                                        
+                                        stickerView(
+                                            isCard: groupViewModel.productType == .card,
+                                            model: vm
+                                        )
+                                    }
+                                    
                                 }
+                                
                             }
                         }
                         
@@ -689,18 +797,31 @@ struct ProductCarouselView: View {
                 }
                 .padding(.horizontal, viewModel.style.horizontalPadding)
                 .introspectScrollView(customize: { scrollView in
-
+                    
                     self.scrollView = scrollView
                 })
             }
         }
     }
+    
+    // MARK: StickerActions
+    @ViewBuilder
+    private func stickerView(
+        isCard: Bool,
+        model: StickerViewModel
+    ) -> some View {
         
+        if isCard && viewModel.sticker {
+            
+            StickerView(viewModel: model)
+        }
+    }
+    
     func scrollFor(action: Action) -> Void {
         
         typealias CarouselScrollToGroup = ProductCarouselViewModelAction.Products.ScrollToGroup
         typealias CarouselScrollToFirstGroup = ProductCarouselViewModelAction.Products.ScrollToFirstGroup
-
+        
         switch action {
         case let payload as CarouselScrollToGroup:
             scrollToGroup(groupId: payload.groupId)
@@ -712,6 +833,7 @@ struct ProductCarouselView: View {
             break
         }
     }
+    
 }
 
 extension ProductCarouselView {
@@ -738,7 +860,7 @@ extension ProductCarouselView {
 }
 
 extension ProductCarouselView {
-
+    
     func scrollToGroup(groupId: ProductGroupView.ViewModel.ID) {
         
         guard let scrollView = scrollView,
@@ -765,7 +887,7 @@ extension ProductCarouselView {
             height: scrollView.bounds.height
         )
         scrollView.scrollRectToVisible(targetRect, animated: false)
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             viewModel.isScrollChangeSelectorEnable = true
         }
@@ -822,6 +944,104 @@ extension ProductCarouselView {
     
 }
 
+extension ProductCarouselView {
+    
+    struct StickerViewModel {
+        
+        let title: String
+        let subTitle: String
+        let backgroundImage: Image
+        
+        let onTap: () -> Void
+        let onHide: () -> Void
+    }
+    
+    struct StickerView: View {
+        
+        let viewModel: StickerViewModel
+        
+        var body: some View {
+            
+            StickerImageView(
+                backgroundImage: viewModel.backgroundImage,
+                onHide: viewModel.onHide
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onTapGesture(perform: viewModel.onTap)
+        }
+    }
+    
+    struct StickerImageView: View {
+        
+        let backgroundImage: Image
+        let onHide: () -> Void
+        
+        var body: some View {
+            
+            HStack {
+                StickerBackgroundImageView(backgroundImage: backgroundImage, onHide: onHide)
+                StickerDividerView()
+            }
+        }
+    }
+    
+    struct StickerBackgroundImageView: View {
+        
+        let backgroundImage: Image
+        let onHide: () -> Void
+        
+        var body: some View {
+            ZStack(alignment: .topTrailing) {
+                backgroundImage
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 164, height: 104)
+                
+                StickerCloseButtonView(action: onHide)
+            }
+            .frame(width: 164, height: 104)
+            .cornerRadius(12)
+        }
+    }
+    
+    struct StickerDividerView: View {
+        
+        var body: some View {
+            
+            Capsule(style: .continuous)
+                .foregroundColor(.bordersDivider)
+                .frame(width: 1, height: 104 / 2)
+        }
+    }
+    
+    struct StickerCloseButtonView: View {
+        
+        let action: () -> Void
+        
+        var body: some View {
+            
+            Button {
+                withAnimation { action() }
+                
+            } label: {
+                
+                ZStack {
+                    Circle()
+                        .foregroundColor(.gray)
+                        .frame(width: 20, height: 20)
+                    
+                    Image.ic16Close
+                        .renderingMode(.template)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.white)
+                }
+                .frame(width: 20, height: 20)
+            }
+            .padding(4)
+        }
+    }
+}
+
 //MARK: - Preview
 
 struct ProdCarouselView_Previews: PreviewProvider {
@@ -849,7 +1069,7 @@ struct ProdCarouselView_Previews: PreviewProvider {
         }
         .previewLayout(.sizeThatFits)
     }
-
+    
     static var previews: some View {
         
         Group {
@@ -873,7 +1093,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
-        style: .regular
+        style: .regular,
+        stickerViewModel: nil
     )
     
     static let placeholdersSmall = ProductCarouselView.ViewModel(
@@ -882,7 +1103,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
-        style: .small
+        style: .small,
+        stickerViewModel: nil
     )
     
     static let placeholdersSmallWithSelector = ProductCarouselView.ViewModel(
@@ -891,7 +1113,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
-        style: .small
+        style: .small,
+        stickerViewModel: nil
     )
     
     static let preview = ProductCarouselView.ViewModel(
@@ -900,7 +1123,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
-        style: .regular
+        style: .regular,
+        stickerViewModel: nil
     )
     
     static let previewSmall = ProductCarouselView.ViewModel(
@@ -909,7 +1133,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
-        style: .small
+        style: .small,
+        stickerViewModel: nil
     )
     
     static let sampleProducts = ProductCarouselView.ViewModel(
@@ -918,7 +1143,8 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .main,
-        style: .regular
+        style: .regular,
+        stickerViewModel: nil
     )
     
     static let sampleProductsSmall = ProductCarouselView.ViewModel(
@@ -927,14 +1153,15 @@ extension ProductCarouselView.ViewModel {
         isScrollChangeSelectorEnable: true,
         selectedProductId: nil,
         mode: .main,
-        style: .small
+        style: .small,
+        stickerViewModel: nil
     )
     
     static let oneProductSmall = ProductCarouselView.ViewModel(
         mode: .filtered(.generalFrom),
         style: .small,
         model: .productsMock
-)
+    )
 }
 
 extension ButtonNewProduct.ViewModel {

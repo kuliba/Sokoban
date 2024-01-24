@@ -59,11 +59,18 @@ final class MultiButtonsTests: XCTestCase {
             selectDetail: { _ in startValue = .selectDetail },
             action: {
                 switch $0 {
-                case .goToMain:
-                    startValue = .goMain
-                case .orderCard:
-                    startValue = .orderCard
+                case let .card(card):
+                    switch card {
+                        
+                    case .goToMain:
+                        startValue = .goMain
+                    case .order:
+                        startValue = .orderCard
+                    }
+                case .sticker(_):
+                    break
                 }
+               
             }
         )
         
@@ -133,10 +140,16 @@ final class MultiButtonsTests: XCTestCase {
             selectDetail: { _ in received.append(.selectDetail) },
             action: {
                 switch $0 {
-                case .goToMain:
-                    received.append(.goMain)
-                case .orderCard:
-                    received.append(.orderCard)
+                case let .card(card):
+                    switch card {
+                        
+                    case .goToMain:
+                        received.append(.goMain)
+                    case .order:
+                        received.append(.orderCard)
+                    }
+                case .sticker(_):
+                    break
                 }
             },
             openLink: { item.link.map { _ in received.append(.openLink) }}
@@ -148,7 +161,7 @@ final class MultiButtonsTests: XCTestCase {
     private func makeSUT(
         items: [Item] = [.default],
         selectDetail: @escaping SelectDetail = { _ in },
-        action: @escaping (LandingAction) -> Void = { _ in }
+        action: @escaping (LandingEvent) -> Void = { _ in }
     ) -> MultiButtonsView.ViewModel {
         
         return .init(
@@ -164,6 +177,7 @@ final class MultiButtonsTests: XCTestCase {
         case openLink
         case orderCard
         case selectDetail
+        case orderSticker
     }
 }
 

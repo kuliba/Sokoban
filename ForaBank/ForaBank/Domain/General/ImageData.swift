@@ -49,13 +49,20 @@ struct ImageData: Codable, Equatable, Hashable {
 extension ImageData {
     
     var uiImage: UIImage? { UIImage(data: data) }
+    
     var image: Image? {
         
-        guard let uiImage = uiImage else {
-            return nil
+        if let uiImage = uiImage {
+            
+            return Image(uiImage: uiImage)
+        }
+        
+        if let svg = SVGImageData(data: data) {
+            
+            return svg.image
         }
  
-        return Image(uiImage: uiImage)
+        return nil
     }
     
     var jpegData: Data? {

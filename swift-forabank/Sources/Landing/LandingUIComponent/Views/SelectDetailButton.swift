@@ -21,11 +21,13 @@ struct SelectDetailButton: View {
         .padding()
         .background(Color.blue.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 16))
+        .accessibilityIdentifier("SelectDetailButtonBody")
     }
     
     private func detailView() -> some View {
         
         Text(detail.description)
+            .accessibilityIdentifier("SelectDetailButtonText")
     }
 }
 

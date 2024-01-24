@@ -22,6 +22,7 @@ struct PageTitleView: View {
             Text(model.text)
                 .font(config.title.font)
                 .foregroundColor(config.title.color)
+                .accessibilityIdentifier("LandingPageTitleText")
             
             if let subtitle = model.subTitle {
                 
@@ -31,8 +32,9 @@ struct PageTitleView: View {
             }
         }
         .padding(.horizontal)
-        .frame(maxWidth: .infinity,  alignment: .leading)
+        .frame(maxWidth: .infinity,  alignment: .center)
         .background(config.background(model.transparency))
+        .accessibilityIdentifier("LandingPageTitleBody")
     }
 }
 

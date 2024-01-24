@@ -18,12 +18,29 @@ extension ReducerTextFieldViewModel {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        
         switch state {
         case let .editing(textState):
             self.type(
                 "\(text)",
                 in: .init(location: textState.cursorPosition, length: 0)
+            )
+            
+        case .noFocus, .placeholder:
+            XCTFail("Expected `editing` state, got \(String(describing: state)).", file: file, line: line)
+        }
+    }
+    
+    func insert(
+        _ text: String,
+        atCursor cursorPosition: Int,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch state {
+        case .editing:
+            self.type(
+                "\(text)",
+                in: .init(location: cursorPosition, length: 0)
             )
             
         case .noFocus, .placeholder:

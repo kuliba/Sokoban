@@ -5,11 +5,16 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import InfoComponent
+import SberQR
 import SwiftUI
+import PaymentSticker
 
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
+    
+    let rootViewFactory: RootViewFactory
     
     var body: some View {
         
@@ -20,13 +25,13 @@ struct RootView: View {
                 TabView(selection: $viewModel.selected) {
                     
                     mainViewTab()
-                    paymentsViewTab()
+                    paymentsViewTab(viewModel.paymentsViewModel)
                     chatViewTab()
-                } //tabView
+                }
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
-            } //geo
+            }
             
             //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.
             viewModel.link.map(destinationView(link:))
@@ -41,19 +46,32 @@ struct RootView: View {
         
         NavigationView {
             
-            MainView(viewModel: viewModel.mainViewModel)
+            MainView(
+                viewModel: viewModel.mainViewModel,
+                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
+                    httpClient: viewModel.model.authenticatedHTTPClient(),
+                    model: viewModel.model,
+                    dismissAll: viewModel.rootActions.dismissAll
+                ),
+                viewFactory: rootViewFactory.mainViewFactory,
+                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory
+            )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMainButton")
     }
     
-    private func paymentsViewTab() -> some View {
+    private func paymentsViewTab(
+        _ paymentsViewModel: PaymentsTransfersViewModel
+    ) -> some View {
         
         NavigationView {
             
-            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+            rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarTransferButton")
     }
     
@@ -156,12 +174,51 @@ struct RootView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        RootView(viewModel: .init(
-            mainViewModel: .sample,
-            paymentsViewModel: .sample,
-            chatViewModel: .init(),
-            informerViewModel: .init(.emptyMock),
-            .emptyMock
-        ))
+        RootView(
+            viewModel: .init(
+                fastPaymentsFactory: .legacy,
+                fastPaymentsServices: .empty,
+                mainViewModel: .sample,
+                paymentsViewModel: .sample,
+                chatViewModel: .init(),
+                informerViewModel: .init(.emptyMock),
+                .emptyMock,
+                showLoginAction: { _ in
+                    
+                        .init(viewModel: .init(authLoginViewModel: .preview))
+                }
+            ),
+            rootViewFactory: .preview
+        )
+    }
+}
+
+private extension RootViewFactory {
+    
+    static var preview: Self {
+        
+        let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = {
+            
+            .init(
+                viewModel: $0,
+                map: Info.preview(info:),
+                config: .iFora
+            )
+        }
+        
+        return .init(
+            makePaymentsTransfersView: {
+                
+                .init(
+                    viewModel: $0,
+                    viewFactory: .init(
+                        makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                        makeUserAccountView: UserAccountView.init(viewModel:)
+                    )
+                )
+            },
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: UserAccountView.init(viewModel:)
+        )
     }
 }

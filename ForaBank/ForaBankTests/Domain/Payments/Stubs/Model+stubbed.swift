@@ -22,7 +22,7 @@ extension Model {
             "9191619658": .iFora4286,
         ]
         
-        let essenceStub: ServerAgentStub.EssenceStub = .preview
+        let essenceStub: ServerAgentStub.EssenceStub = .cardPreview
         
         let sessionAgent = ActiveSessionAgentStub()
         let serverAgent = ServerAgentStub(

@@ -10,25 +10,26 @@ import Foundation
 enum StickerDictionaryResponse: Equatable {
     
     case orderForm(StickerOrderForm)
-    case deliveryOffice(DeliveryOffice)
-    case deliveryCourier(DeliveryCourier)
+    case deliveryType(DeliveryType)
 }
 
 extension StickerDictionaryResponse {
     
-    struct DeliveryOffice: Equatable {
+    public struct DeliveryType: Equatable {
         
         let main: [Main]
         let serial: String
-    }
-    
-    struct DeliveryCourier: Equatable {
         
-        let main: [Main]
-        let serial: String
+        public init(
+            main: [Main],
+            serial: String
+        ) {
+            self.main = main
+            self.serial = serial
+        }
     }
     
-    struct StickerOrderForm: Equatable {
+    public struct StickerOrderForm: Equatable {
         
         let header: [Header]
         let main: [Main]
@@ -46,7 +47,35 @@ extension StickerDictionaryResponse {
                 
                 let title: String
                 let isFixed: Bool
+                
+                public init(
+                    title: String,
+                    isFixed: Bool
+                ) {
+                    self.title = title
+                    self.isFixed = isFixed
+                }
             }
+            
+            public init(
+                type: ComponentType,
+                data: Data
+            ) {
+                self.type = type
+                self.data = data
+            }
+        }
+        
+        public init(
+            header: [Header],
+            main: [Main],
+            footer: [Footer],
+            serial: String
+        ) {
+            self.header = header
+            self.main = main
+            self.footer = footer
+            self.serial = serial
         }
     }
     
@@ -122,9 +151,14 @@ extension StickerDictionaryResponse {
                     currencyCode: banner.currencyCode,
                     currency: banner.currency,
                     md5hash: banner.md5hash,
-                    txtConditionList: banner.txtConditionList.map({Banner.Condition(
-                        name: $0.name, description: $0.description, value: $0.value
-                    )}))
+                    txtConditionList: banner.txtConditionList.map({
+                        
+                        Banner.Condition(
+                            name: $0.name,
+                            description: $0.description,
+                            value: $0.value
+                        )  
+                    }))
                 )
                 
             case let .citySelector(citySelector):
@@ -184,7 +218,7 @@ extension StickerDictionaryResponse {
         }
     }
     
-    struct Main: Equatable {
+    public struct Main: Equatable {
         
         let type: ComponentType
         let data: DataType

@@ -150,9 +150,11 @@ extension Model {
         
         switch product.productType {
         case .card:
-            let command = ServerCommands.CardController.GetCardStatementForPeriod(token: token, productId: product.id, period: period)
             
-            return try await cardStatementsFetch(command: command)
+            return try await Services.makeCardStatementForPeriod(
+                httpClient: self.authenticatedHTTPClient(), 
+                productId: product.id,
+                period: period)
             
         case .account:
             let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: product.id, period: period)
@@ -166,33 +168,6 @@ extension Model {
             
         case .loan:
             throw ModelStatementsError.unsupportedProductType(.loan)
-        }
-    }
-    
-    func cardStatementsFetch(command: ServerCommands.CardController.GetCardStatementForPeriod) async throws -> [ProductStatementData] {
-        
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                switch result{
-                case .success(let response):
-                    switch response.statusCode {
-                    case .ok:
-                        
-                        guard let data = response.data else {
-                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
-                            return
-                        }
-                        
-                        continuation.resume(returning: data)
-
-                    default:
-                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
-                    }
-                case .failure(let error):
-                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
-                }
-            }
         }
     }
     

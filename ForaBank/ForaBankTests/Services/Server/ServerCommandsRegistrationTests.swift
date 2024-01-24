@@ -48,22 +48,22 @@ class ServerCommandsRegistrationTests: XCTestCase {
     }
     
     //MARK: - DoRegistration
-
+    
     /*
-    func testDoRegistration_Payload_Encoding() throws {
-        
-        // given
-        let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", operationSystem: "IOS", pushDeviceId: "", pushFcmToken: ""))
-        let expected = "{\"cryptoVersion\":\"1.0\",\"model\":\"iPhone SE\",\"pushDeviceId\":\"\",\"operationSystem\":\"IOS\",\"pushFcmToken\":\"\"}"
-        
-        // when
-        let result = try encoder.encode(command.payload)
-        let resultString = String(decoding: result, as: UTF8.self)
-        
-        // then
-        XCTAssertEqual(resultString, expected)
-    }
-    */
+     func testDoRegistration_Payload_Encoding() throws {
+     
+     // given
+     let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", operationSystem: "IOS", pushDeviceId: "", pushFcmToken: ""))
+     let expected = "{\"cryptoVersion\":\"1.0\",\"model\":\"iPhone SE\",\"pushDeviceId\":\"\",\"operationSystem\":\"IOS\",\"pushFcmToken\":\"\"}"
+     
+     // when
+     let result = try encoder.encode(command.payload)
+     let resultString = String(decoding: result, as: UTF8.self)
+     
+     // then
+     XCTAssertEqual(resultString, expected)
+     }
+     */
     
     func testDoRegistration_Response_Decoding() throws {
         

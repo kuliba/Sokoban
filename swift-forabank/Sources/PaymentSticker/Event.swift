@@ -7,35 +7,43 @@
 
 import Foundation
 
-public enum Event {
+public enum Event: Equatable {
     
-    public typealias ParameterProduct = Operation.Parameter.Product
-    public typealias ProductOption = ParameterProduct.Option
+    public typealias ParameterProduct = Operation.Parameter.ProductSelector
+    public typealias ProductOption = ParameterProduct.Product
     public typealias ParameterSelect = Operation.Parameter.Select
-    public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel
     public typealias ParameterInput = Operation.Parameter.Input
 
-    
     case product(ProductEvent)
     case select(SelectEvent)
-    case continueButtonTapped
+    case continueButtonTapped(ContinueEvent)
     case input(InputEvent)
     
-    public enum InputEvent {
-        
-        case valueUpdate(ParameterInput)
-        case getOtpCode
+    public enum ContinueEvent: Hashable {
+    
+        case `continue`
+        case getCode
+        case makeTransfer
     }
     
-    public enum ProductEvent {
+    public enum InputEvent: Hashable {
+        
+        case valueUpdate(String)
+        case getCode
+    }
+    
+    public enum ProductEvent: Hashable {
         
         case chevronTapped(ParameterProduct, ParameterProduct.State)
-        case selectProduct(ProductOption, ParameterProduct)
+        case selectProduct(ProductOption?, ParameterProduct)
     }
     
-    public enum SelectEvent {
+    public enum SelectEvent: Hashable {
         
         case selectOption(SelectOptionID, ParameterSelect)
-        case openBranch
+        case chevronTapped(ParameterSelect)
+        case openBranch(Location)
+        case search(String, ParameterSelect)
     }
 }

@@ -5,11 +5,11 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
+import SwiftUI
 
 class UserAccountViewModel: ObservableObject {
     
@@ -17,12 +17,13 @@ class UserAccountViewModel: ObservableObject {
     
     let navigationBar: NavigationBarView.ViewModel
     
+    @Published private(set) var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse?
     @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published private(set) var spinner: SpinnerView.ViewModel?
+    @Published var link: Link?
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
@@ -30,19 +31,27 @@ class UserAccountViewModel: ObservableObject {
     
     var appVersionFull: String? {
         
-        guard let version = model.authAppVersion else {
-            return nil
-        }
-        
-        return "Версия \(version)"
+        model.authAppVersion.map { "Версия \($0)" }
     }
     
     private let model: Model
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let fastPaymentsServices: FastPaymentsServices
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationBarView.ViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel, model: Model = .emptyMock) {
-        
+    init(
+        navigationBar: NavigationBarView.ViewModel,
+        avatar: AvatarViewModel,
+        sections: [AccountSectionViewModel],
+        exitButton: AccountCellFullButtonView.ViewModel,
+        deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
+        model: Model = .emptyMock,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices
+    ) {
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -52,23 +61,26 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
+        fastPaymentsServices: FastPaymentsServices,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil
     ) {
-        
         self.model = model
-        sections = []
-        navigationBar = .init(title: "Профиль", leftItems: [
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.fastPaymentsServices = fastPaymentsServices
+        self.sections = []
+        self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
         
-        exitButton = .init(
+        self.exitButton = .init(
             icon: .ic24LogOut, content: "Выход из приложения", action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.ExitAction())
             })
         
-        deleteAccountButton = .init(
+        self.deleteAccountButton = .init(
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteInfoAction())
@@ -77,8 +89,13 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
+        fastPaymentsServices.getFastPaymentContractFindList()
+            .map(Optional.some)
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$fpsCFLResponse)
+        
         bind()
-                
+        
         if let action = action {
             
             self.action.send(action)
@@ -159,7 +176,7 @@ class UserAccountViewModel: ObservableObject {
                 case let payload as ModelAction.C2B.CancelC2BSub.Response:
                     let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
                     self.link = .successView(paymentSuccessViewModel)
-
+                    
                 case let payload as ModelAction.C2B.GetC2BDetail.Response:
                     self.link = .successView(.init(paymentSuccess: .init(operation: nil, parameters: payload.params), model))
                     
@@ -265,26 +282,21 @@ class UserAccountViewModel: ObservableObject {
                     model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
                     
                 case _ as UserAccountViewModelAction.ExitAction:
-                    alert = .init(
-                        title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
-                        primary: .init(type: .default, title: "Выход", action: {
-                            self.model.auth.value = .unlockRequiredManual
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .exit {
+                        
+                        self.model.auth.value = .unlockRequiredManual
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteAction:
-                    
-                    alert = .init(
-                        title: "Удалить учетную запись?", message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
-                        primary: .init(type: .default, title: "ОК", action: {
-                            self.model.action.send(ModelAction.ClientInfo.Delete.Request())
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .delete {
+                        
+                        self.model.action.send(ModelAction.ClientInfo.Delete.Request())
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
                     bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
-                
+                    
                 case let payload as UserAccountViewModelAction.OpenSbpPay:
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
@@ -328,7 +340,7 @@ class UserAccountViewModel: ObservableObject {
                             }))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                            
+                        
                         let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
                         let reducer = TransformingReducer(
@@ -359,18 +371,25 @@ class UserAccountViewModel: ObservableObject {
                                   emptyViewModel: emptyViewModel,
                                   configurator: .init(
                                     backgroundColor: .mainColorsGrayLightest
-                                ))
+                                  ))
                         )
                         
                     case _ as UserAccountViewModelAction.OpenFastPayment:
-                        link = .fastPaymentSettings(MeToMeSettingView.ViewModel(
-                            model: model.fastPaymentContractFullInfo.value
-                                .map { $0.getFastPaymentContractFindListDatum() },
-                            newModel: model,
-                            closeAction: { [weak self] in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseLink())
-                            }))
+                        switch fastPaymentsFactory.fastPaymentsViewModel {
+                        case let .legacy(makeLegacy):
+                            let data = model.fastPaymentContractFullInfo.value
+                                .map { $0.getFastPaymentContractFindListDatum() }
+                            
+                            link = .fastPaymentSettings(.legacy(
+                                makeLegacy(
+                                    data,
+                                    { [weak self] in self?.dismissDestination() }
+                                )
+                            ))
+                            
+                        case let .new(makeNew):
+                            openNewFastPaymentsSettings(makeNew)
+                        }
                         
                     case let payload as UserAccountViewModelAction.Switch:
                         switch payload.type {
@@ -540,6 +559,150 @@ class UserAccountViewModel: ObservableObject {
     }
 }
 
+private extension UserAccountViewModel {
+    
+    func showSpinner() {
+        
+        DispatchQueue.main.async { [weak self] in self?.spinner = .init() }
+    }
+    
+    func hideSpinner() {
+        
+        DispatchQueue.main.async { [weak self] in self?.spinner = nil }
+    }
+    
+    func dismissAlert() {
+        
+        DispatchQueue.main.async { [weak self] in self?.alert = nil }
+    }
+}
+
+extension UserAccountViewModel {
+    
+    func dismissDestination() {
+        
+        action.send(UserAccountViewModelAction.CloseLink())
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    typealias MakeNewFastPaymentsViewModel = FastPaymentsFactory.FastPaymentsViewModel.MakeNewFastPaymentsViewModel
+    
+    func openNewFastPaymentsSettings(
+        _ makeNew: @escaping MakeNewFastPaymentsViewModel
+    ) {
+        switch fpsCFLResponse {
+        case let .contract(contract):
+            
+            showSpinner()
+            
+            fastPaymentsServices.getConsentAndDefault(
+                contract.phone
+            ) { [weak self] result in
+                
+                self?.hideSpinner()
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + .microseconds(200)
+                ) { [weak self] in
+                    
+                    self?.handleGetConsentAndDefaultResult(result, contract, makeNew)
+                }
+            }
+            
+        case .noContract:
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .seconds(2)
+            ) { [weak self] in
+                
+                guard let self else { return }
+                
+                hideSpinner()
+                
+                let data = model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() }
+                
+                link = .fastPaymentSettings(.new(makeNew(data)))
+            }
+            
+        case let .error(message):
+            alert = .techError(
+                message: message
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case .none:
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
+        }
+    }
+    
+    func handleGetConsentAndDefaultResult(
+        _ result: FastPaymentsServices.GetConsentAndDefaultResult,
+        _ contract: FastPaymentsServices.FPSCFLResponse.Contract,
+        _ makeNew: MakeNewFastPaymentsViewModel
+    ) {
+        switch result {
+        case let .failure(error):
+            
+            alert = .techError(
+                message: "Превышено время ожидания.\nПопробуйте позже."
+            ) { [weak self] in self?.dismissAlert() }
+            
+        case let .success(defaultForaBank):
+            
+            let data = model.fastPaymentContractFullInfo.value
+                .map { $0.getFastPaymentContractFindListDatum() }
+            link = .fastPaymentSettings(.new(makeNew(data)))
+        }
+    }
+}
+
+private extension Alert.ViewModel {
+    
+    static func exit(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Выход",
+            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
+            primary: .init(
+                type: .default,
+                title: "Выход",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
+    }
+    
+    static func delete(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Удалить учетную запись?",
+            message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
+            primary: .init(
+                type: .default,
+                title: "ОК",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
+    }
+}
+
 extension UserAccountViewModel {
     
     class AvatarViewModel: ObservableObject {
@@ -591,14 +754,86 @@ extension UserAccountViewModel {
         }
     }
     
-    enum Link {
+    enum Link: Hashable, Identifiable {
         
         case userDocument(UserDocumentViewModel)
-        case fastPaymentSettings(MeToMeSettingView.ViewModel)
+        case fastPaymentSettings(FastPaymentSettings)
         case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
         case imagePicker(ImagePickerViewModel)
         case managingSubscription(SubscriptionsViewModel)
         case successView(PaymentsSuccessViewModel)
+        
+        enum FastPaymentSettings {
+            
+            case legacy(MeToMeSettingView.ViewModel)
+            case new(FastPaymentsSettingsViewModel)
+            
+            var id: ID {
+                switch self {
+                case .legacy: return .legacy
+                case .new:    return .new
+                }
+            }
+            
+            enum ID {
+                
+                case legacy, new
+            }
+        }
+        
+        static func == (lhs: Link, rhs: Link) -> Bool {
+            
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id.hashValue)
+        }
+        
+        var id: Case {
+            
+            switch self {
+            case .userDocument:
+                return .userDocument
+                
+            case let .fastPaymentSettings(fastPaymentSettings):
+                switch fastPaymentSettings {
+                case .legacy:
+                    return .fastPaymentSettings(.legacy)
+                    
+                case .new:
+                    return .fastPaymentSettings(.new)
+                }
+                
+            case .deleteUserInfo:
+                return .deleteUserInfo
+                
+            case .imagePicker:
+                return .imagePicker
+                
+            case .managingSubscription:
+                return .managingSubscription
+                
+            case .successView:
+                return .successView
+            }
+        }
+        
+        enum Case: Hashable {
+            
+            case userDocument
+            case fastPaymentSettings(FastPaymentSettings)
+            case deleteUserInfo
+            case imagePicker
+            case managingSubscription
+            case successView
+            
+            enum FastPaymentSettings {
+                
+                case legacy, new
+            }
+        }
     }
     
     struct Sheet: Identifiable {

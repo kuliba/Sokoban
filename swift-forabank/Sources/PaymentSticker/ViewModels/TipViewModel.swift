@@ -10,14 +10,18 @@ import SwiftUI
 
 public struct TipViewModel {
     
-    let imageName: String
     let text: String
     
-    public init(
-        imageName: String,
-        text: String
-    ) {
-        self.imageName = imageName
+    public init(text: String) {
         self.text = text
+    }
+}
+
+//MARK: Helpers
+
+extension TipViewModel {
+    
+    public init(parameter: Operation.Parameter.Tip) {
+        self.text = parameter.title
     }
 }

@@ -30,6 +30,7 @@ struct IconWithTwoTextLinesView: View {
                     .frame(width: config.icon.size, height: config.icon.size)
                     .cornerRadius(config.icon.size/2)
                     .padding(.bottom, config.icon.paddingBottom)
+                    .accessibilityIdentifier("IconWithTwoTextLinesDefaultIcon")
                 
             case let .some(image):
                 image
@@ -38,6 +39,7 @@ struct IconWithTwoTextLinesView: View {
                     .frame(width: config.icon.size, height: config.icon.size)
                     .cornerRadius(config.icon.size/2)
                     .padding(.bottom, config.icon.paddingBottom)
+                    .accessibilityIdentifier("IconWithTwoTextLinesImageIcon")
             }
             
             model.data.title.map {
@@ -46,6 +48,7 @@ struct IconWithTwoTextLinesView: View {
                     .font(config.title.font)
                     .foregroundColor(config.title.color)
                     .padding(.bottom, config.title.paddingBottom)
+                    .accessibilityIdentifier("IconWithTwoTextLinesFirstLine")
             }
             
             model.data.subTitle.map {
@@ -54,6 +57,7 @@ struct IconWithTwoTextLinesView: View {
                     .font(config.subTitle.font)
                     .foregroundColor(config.subTitle.color)
                     .padding(.bottom, config.subTitle.paddingBottom)
+                    .accessibilityIdentifier("IconWithTwoTextLinesSecondLine")
             }
         }
         .multilineTextAlignment(.center)

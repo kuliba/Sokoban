@@ -805,6 +805,31 @@ class ServerCommandsDictionaryTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    func testGetBannerCatalogLandingListFromServer_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBannerCatalogLandingListResponseGenericFromServer", withExtension: "json") else {
+            XCTFail("testGetBannerCatalogLanding_Response_Decoding : Missing file: GetBannerCatalogLandingListResponseGenericFromServer.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let imageLink = "dict/getBannerCatalogImage?image=banner_1"
+        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        
+        let landing = BannerAction(type: .landing)
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: landing)], serial: "serial"), errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
     //MARK: - GetBannerCatalogImage
     
     func testGetBannerCatalogImage_Response_Encoding() throws {

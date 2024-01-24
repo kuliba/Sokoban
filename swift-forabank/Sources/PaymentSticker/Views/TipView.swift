@@ -8,25 +8,43 @@
 import Foundation
 import SwiftUI
 
+public struct TipViewConfiguration {
+    
+    let titleFont: Font
+    let titleForeground: Color
+    let backgroundView: Color
+    
+    public init(
+        titleFont: Font,
+        titleForeground: Color,
+        backgroundView: Color
+    ) {
+        self.titleFont = titleFont
+        self.titleForeground = titleForeground
+        self.backgroundView = backgroundView
+    }
+}
+
 struct TipView: View {
     
     let viewModel: TipViewModel
+    let configuration: TipViewConfiguration
     
     var body: some View {
         
         HStack(spacing: 12) {
             
-            icon(with: viewModel.imageName)
-            title()
+            icon()
+            title(configuration: configuration)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(Color.gray.opacity(0.2).edgesIgnoringSafeArea([]))
+        .background(configuration.backgroundView)
         .cornerRadius(90)
     }
     
-    private func icon(with imageName: String) -> some View {
+    private func icon() -> some View {
         
         ZStack {
             
@@ -34,19 +52,16 @@ struct TipView: View {
                 .foregroundColor(.white)
                 .frame(width: 32, height: 32)
             
-            Image(imageName)
-                .resizable()
-                .frame(width: 24, height: 24)
+            Text("💬")
         }
     }
     
-    private func title() -> some View {
+    private func title(configuration: TipViewConfiguration) -> some View {
         
         Text(viewModel.text)
-            .font(.subheadline)
-            .lineLimit(2)
+            .font(configuration.titleFont)
             .lineSpacing(5)
-            .foregroundColor(.gray.opacity(0.2))
+            .foregroundColor(configuration.titleForeground)
             .padding(.trailing, 40)
     }
 }
@@ -59,8 +74,12 @@ struct PaymentHintView_Previews: PreviewProvider {
         
         TipView(
             viewModel: .init(
-                imageName: "ellipsis.message",
                 text: "Выберите счет карты, к которому будет привязан стикер"
+            ),
+            configuration: .init(
+                titleFont: .body,
+                titleForeground: .black,
+                backgroundView: .gray
             )
         )
         .previewLayout(.sizeThatFits)

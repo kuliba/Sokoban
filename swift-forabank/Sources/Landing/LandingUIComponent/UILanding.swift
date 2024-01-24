@@ -81,3 +81,31 @@ extension UILanding {
         return headerTitleAlwaysFixed()
     }
 }
+
+extension UILanding {
+
+    func titleInMain() -> UILanding.PageTitle {
+        let pageTitle: UILanding.PageTitle = .init(text: "", subTitle: "", transparency: false)
+        
+        let titlesInHeader = main.map {
+            if case let .pageTitle(title) = $0 {
+                return UILanding.PageTitle.init(text: title.text,
+                                  subTitle: title.subTitle ?? "",
+                                 transparency: title.transparency)
+                
+            } else { return pageTitle }
+        }
+       
+        return titlesInHeader.first ?? pageTitle
+    }
+    
+  func shouldShowNavigationTitle(offset: CGFloat, offsetForDisplayHeader: CGFloat) -> Bool {
+      if headerTitleAlwaysFixed().isEmpty {
+          if offset > offsetForDisplayHeader {
+              return true
+          }
+      }
+      return false
+  }
+
+}

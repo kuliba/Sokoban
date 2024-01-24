@@ -9,16 +9,16 @@ import Foundation
 import SwiftUI
 import Combine
 
-class OpenProductHostingViewController: UIHostingController<OpenDepositView> {
+class OpenProductHostingViewController: UIHostingController<OpenDepositListView> {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    @ObservedObject var viewModel: OpenDepositViewModel
+    @ObservedObject var viewModel: OpenDepositListViewModel
     private var bindings = Set<AnyCancellable>()
     
-    init(with viewModel: OpenDepositViewModel) {
+    init(with viewModel: OpenDepositListViewModel) {
         
         self.viewModel = viewModel
-        super.init(rootView: OpenDepositView(viewModel: viewModel))
+        super.init(rootView: OpenDepositListView(viewModel: viewModel))
         
         bind()
     }

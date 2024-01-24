@@ -42,7 +42,9 @@ extension PaymentsInfoView {
             
             model.images
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] images in
+                .sink { [weak self] images in
+                    
+                    guard let self else { return }
                     
                     guard case .shimmer(let imageId) = icon else {
                         return
@@ -56,7 +58,7 @@ extension PaymentsInfoView {
                         
                         withAnimation {
                             
-                            icon = .remote(image)
+                            self.icon = .remote(image)
                         }
 
                     } else {
@@ -228,6 +230,17 @@ extension PaymentsInfoView {
 struct PaymentsInfoView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
+        Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    static func previewsGroup() -> some View {
         
         Group {
 

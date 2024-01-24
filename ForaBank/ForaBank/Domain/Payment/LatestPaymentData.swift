@@ -9,8 +9,8 @@
 import Foundation
 
 class LatestPaymentData: Codable, Identifiable {
-
-    var id: Int { hashValue }
+    
+    let id: Int = UUID().uuidString.hashValue
     let date: Date
     let paymentDate: String
     let type: Kind

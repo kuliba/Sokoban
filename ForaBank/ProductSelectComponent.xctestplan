@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "C32B80A9-4559-4505-860D-5B29B8845A23",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

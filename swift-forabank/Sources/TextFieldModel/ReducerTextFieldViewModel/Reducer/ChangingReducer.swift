@@ -10,17 +10,19 @@ import TextFieldDomain
 
 public struct ChangingReducer {
     
+    public typealias Change = (TextState, String, NSRange) throws -> TextState
+    
     @usableFromInline
     let placeholderText: String
     
     @usableFromInline
-    let change: (TextState, String, NSRange) throws -> TextState
+    let change: Change
     
     /// Create Text State `Reducer` with change of the text in the range.
     @inlinable
     public init(
         placeholderText: String,
-        change: @escaping (TextState, String, NSRange) throws -> TextState
+        change: @escaping Change
     ) {
         self.placeholderText = placeholderText
         self.change = change
@@ -93,8 +95,12 @@ extension ChangingReducer: Reducer {
             case .placeholder, .noFocus:
                 return .noFocus(temp.text)
                 
-            case .editing:
-                return .editing(.init(temp.text))
+            case let .editing(textState):
+                if textState.text == text {
+                    return .editing(textState)
+                } else {
+                    return .editing(.init(temp.text))
+                }
             }
         }
     }
@@ -121,7 +127,9 @@ extension ChangingReducer {
                 with: replacementText
             )
             
-            return transform(temp)
+            let transformed = transform(temp)
+            
+            return transformed
         }
     }
 }

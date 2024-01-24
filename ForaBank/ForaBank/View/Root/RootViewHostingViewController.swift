@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import PaymentSticker
 
 class RootViewHostingViewController: UIHostingController<RootView> {
     
@@ -18,13 +19,21 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     private var spinner: UIViewController?
     private var bindings = Set<AnyCancellable>()
 
-    init(with viewModel: RootViewModel) {
+    init(
+        with viewModel: RootViewModel,
+        rootViewFactory: RootViewFactory
+    ) {
         
         self.viewModel = viewModel
         self.cover = nil
         self.informer = nil
         self.isCoverDismissing = false
-        super.init(rootView: RootView(viewModel: viewModel))
+        super.init(
+            rootView: RootView(
+                viewModel: viewModel,
+                rootViewFactory: rootViewFactory
+            )
+        )
         
         bind()
     }
@@ -283,8 +292,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            viewController.view.leadingAnchor.constraint(equalTo: rootViewController.view.leadingAnchor, constant: 20),
-            viewController.view.trailingAnchor.constraint(equalTo: rootViewController.view.trailingAnchor, constant: -20),
+            viewController.view.leadingAnchor.constraint(equalTo: rootViewController.view.leadingAnchor, constant: 5),
+            viewController.view.trailingAnchor.constraint(equalTo: rootViewController.view.trailingAnchor, constant: -5),
             viewController.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor, constant: UIApplication.safeAreaInsets.top + 80),
             viewController.view.heightAnchor.constraint(equalToConstant: viewController.view.frame.height)
         ])

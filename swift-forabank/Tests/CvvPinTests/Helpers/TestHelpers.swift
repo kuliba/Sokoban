@@ -8,12 +8,13 @@
 import CvvPin
 import Foundation
 
-func uniqueSessionCode() -> SessionCode {
+func uniqueSessionCode(
+) -> GetProcessingSessionCodeDomain.SessionCode {
     
     .init(value: UUID().uuidString)
 }
 
-extension SessionCode {
+extension GetProcessingSessionCodeDomain.SessionCode {
     
     var local: LocalSessionCode {
         
@@ -25,7 +26,7 @@ extension LocalSessionCode {
     
     static let empty: Self = .init(value: "")
     
-    var toModel: SessionCode {
+    var toModel: GetProcessingSessionCodeDomain.SessionCode {
         
         .init(value: value)
     }
