@@ -780,7 +780,8 @@ class CurrencyWalletViewModel: ObservableObject {
             state: state,
             amount: amount,
             currency: currency,
-            model: model)
+            model: model
+        )
         
         if let successViewModel = successViewModel {
             successViewModel.needRepeatButton = (state == .error)
