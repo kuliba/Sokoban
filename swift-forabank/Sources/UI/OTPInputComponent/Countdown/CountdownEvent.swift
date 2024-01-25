@@ -7,7 +7,7 @@
 
 public enum CountdownEvent: Equatable {
     
-    case failure(CountdownFailure)
+    case failure(ServiceFailure)
     case prepare
     case start
     case tick

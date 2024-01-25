@@ -75,10 +75,9 @@ private extension BankDefaultReducer {
         return state
     }
     
-    #warning("`Failure` is not a member of `FastPaymentsSettingsEvent.BankDefault`")
     func update(
         _ state: State,
-        with failure: FastPaymentsSettingsEvent.Failure?
+        with failure: ServiceFailure?
     ) -> State {
         
         guard let details = state.activeDetails

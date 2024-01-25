@@ -8,7 +8,7 @@
 #warning("remake as struct, add `phoneNumber: Tagged<String>` field + maybe OTP length (used in Digits) - or it would be better to hold those in reducer")
 public enum OTPInputState: Equatable {
     #warning("decouple from OTPFieldFailure? or vice versa up countdown state failure to common failure")
-    case failure(OTPFieldFailure)
+    case failure(ServiceFailure)
     case input(Input)
     case validOTP
 }
@@ -29,7 +29,7 @@ public extension OTPInputState {
         }
     }
     
-    typealias OTPResult = Result<OK, OTPFieldFailure>
+    typealias OTPResult = Result<OK, ServiceFailure>
     
     struct OK: Equatable {}
 }

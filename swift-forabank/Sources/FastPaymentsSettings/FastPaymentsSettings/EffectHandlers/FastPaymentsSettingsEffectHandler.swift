@@ -99,12 +99,6 @@ public extension FastPaymentsSettingsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    enum ServiceFailure: Error, Equatable  {
-        
-        case connectivityError
-        case serverError(String)
-    }
-    
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
     typealias Effect = FastPaymentsSettingsEffect

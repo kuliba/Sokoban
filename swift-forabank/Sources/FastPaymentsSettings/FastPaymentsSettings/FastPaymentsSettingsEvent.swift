@@ -26,19 +26,19 @@ public enum FastPaymentsSettingsEvent: Equatable {
 
 public extension FastPaymentsSettingsEvent {
     
-    typealias GetC2BSubResult = Result<GetC2BSubResponse, Failure>
+    typealias GetC2BSubResult = Result<GetC2BSubResponse, ServiceFailure>
 }
 
 public extension FastPaymentsSettingsEvent {
     
-    typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, Failure>
-    typealias ProductUpdateResult = Result<Product.ID, Failure>
+    typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
+    typealias ProductUpdateResult = Result<Product.ID, ServiceFailure>
     
     enum BankDefault: Equatable {
         
         case prepareSetBankDefault
         case setBankDefault
-        case setBankDefaultPrepared(Failure?)
+        case setBankDefaultPrepared(ServiceFailure?)
     }
     
     enum Contract: Equatable {
@@ -46,13 +46,6 @@ public extension FastPaymentsSettingsEvent {
         case activateContract
         case deactivateContract
         case updateContract(ContractUpdateResult)
-    }
-    
-#warning("extract as `FastPaymentsFailure/ServiceFailure`")
-    enum Failure: Error, Equatable {
-        
-        case connectivityError
-        case serverError(String)
     }
     
     enum Products: Equatable {

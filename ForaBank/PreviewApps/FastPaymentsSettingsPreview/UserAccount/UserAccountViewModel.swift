@@ -672,14 +672,8 @@ extension UserAccountViewModel {
 
 enum OTPInputStateProjection: Equatable {
     
-    case failure(Failure)
+    case failure(OTPInputComponent.ServiceFailure)
     case validOTP
-    
-    enum Failure: Error, Equatable {
-        
-        case connectivityError
-        case serverError(String)
-    }
 }
 
 extension OTPInputState {

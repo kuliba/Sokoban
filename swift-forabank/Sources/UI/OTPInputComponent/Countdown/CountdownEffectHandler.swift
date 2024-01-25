@@ -30,7 +30,7 @@ public extension CountdownEffectHandler {
 
 public extension CountdownEffectHandler {
     
-    typealias InitiateOTPResult = Result<Void, CountdownFailure>
+    typealias InitiateOTPResult = Result<Void, ServiceFailure>
     typealias InitiateOTPCompletion = (InitiateOTPResult) -> Void
     typealias InitiateOTP = (@escaping InitiateOTPCompletion) -> Void
 }

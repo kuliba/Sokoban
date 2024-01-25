@@ -1,11 +1,11 @@
 //
-//  OTPFieldFailure.swift
+//  ServiceFailure.swift
 //
 //
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-public enum OTPFieldFailure: Error, Equatable {
+public enum ServiceFailure: Error, Equatable {
     
     case connectivityError
     case serverError(String)
