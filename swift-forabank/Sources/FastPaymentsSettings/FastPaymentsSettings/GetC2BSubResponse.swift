@@ -26,7 +26,7 @@ public extension GetC2BSubResponse {
     
     enum Details: Equatable {
         
-        case list(ProductSubscription)
+        case list([ProductSubscription])
         case empty
     }
 }

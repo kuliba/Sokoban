@@ -17,6 +17,7 @@ struct ActiveContractView: View {
     let productSelectEvent: (FastPaymentsSettingsEvent.Products) -> Void
     let actionOff: () -> Void
     let setBankDefault: () -> Void
+    let accountLinking: () -> Void
     let config: ActiveContractConfig
     
     var body: some View {
@@ -48,6 +49,8 @@ struct ActiveContractView: View {
                     config: config.productSelect.card.productCardConfig
                 )
             }
+            
+            AccountLinkingSettingsButton(action: accountLinking)
         }
     }
 }
@@ -171,6 +174,7 @@ struct ActiveContractView_Previews: PreviewProvider {
             productSelectEvent: { _ in },
             actionOff:  {},
             setBankDefault: {},
+            accountLinking: {},
             config: .preview
         )
     }

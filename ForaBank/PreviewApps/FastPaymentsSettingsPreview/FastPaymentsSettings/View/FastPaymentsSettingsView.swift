@@ -29,6 +29,7 @@ struct FastPaymentsSettingsView: View {
                     productSelectEvent: { viewModel.event(.products($0)) },
                     actionOff: { viewModel.event(.contract(.deactivateContract)) },
                     setBankDefault: { viewModel.event(.bankDefault(.setBankDefault)) },
+                    accountLinking: { viewModel.event(.accountLinking) },
                     config: config.activeContract
                 )
                 

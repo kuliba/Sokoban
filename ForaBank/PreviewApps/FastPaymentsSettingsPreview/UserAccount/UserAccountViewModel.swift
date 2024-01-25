@@ -158,7 +158,7 @@ private extension UserAccountViewModel {
         
         switch response {
         case .success:
-            #warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
+#warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
             let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel)
             bind(otpInputViewModel)
@@ -313,6 +313,9 @@ private extension UserAccountViewModel {
         case .inflight:
             state.isLoading = true
             
+        case let .getC2BSubResponse(getC2BSubResponse):
+            state.fpsDestination = .c2BSub(getC2BSubResponse)
+            
         case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
@@ -328,8 +331,8 @@ private extension UserAccountViewModel {
             state.alert = missingProductFPSAlert()
             
         case .confirmSetBankDefault:
-//            state.fpsDestination = .confirmSetBankDefault
-//            effect = .fps(.resetStatus)
+            //            state.fpsDestination = .confirmSetBankDefault
+            //            effect = .fps(.resetStatus)
             fatalError("what should happen here?")
             
         case .setBankDefault:
@@ -413,7 +416,7 @@ private extension UserAccountViewModel {
         
         switch otp {
         case let .otpInput(otpInput):
-            #warning("move nullification to reducer where fps state is reduced")
+#warning("move nullification to reducer where fps state is reduced")
             fpsDestinationCancellable?.cancel()
             fpsDestinationCancellable = nil
             state.fpsDestination = nil
@@ -638,7 +641,7 @@ extension UserAccountViewModel {
         let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
         bind(fpsViewModel)
         state.destination = .fastPaymentsSettings(fpsViewModel)
-        #warning("and change to effect (??) when moved to `reduce`")
+#warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
     }
     
@@ -692,10 +695,10 @@ extension OTPInputState {
             case let .serverError(message):
                 return .failure(.serverError(message))
             }
-
+            
         case .input:
             return nil
-
+            
         case .validOTP:
             return .validOTP
         }
@@ -747,6 +750,7 @@ extension UserAccountViewModel {
         enum FPSDestination: Equatable {
             
             case confirmSetBankDefault(TimedOTPInputViewModel)//(phoneNumberMask: String)
+            case c2BSub(GetC2BSubResponse)
         }
         
         enum Alert: Equatable {
@@ -799,7 +803,13 @@ extension UserAccountViewModel.Route.FPSDestination: Hashable {
         
         switch (lhs, rhs) {
         case let (.confirmSetBankDefault(lhs), .confirmSetBankDefault(rhs)):
-            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+            
+        case let (.c2BSub(lhs), .c2BSub(rhs)):
+            return lhs == rhs
+            
+        default:
+            return false
         }
     }
     
@@ -807,6 +817,17 @@ extension UserAccountViewModel.Route.FPSDestination: Hashable {
         switch self {
         case let .confirmSetBankDefault(viewModel):
             hasher.combine(ObjectIdentifier(viewModel))
+            
+        case let .c2BSub(getC2BSubResponse):
+            hasher.combine(getC2BSubResponse)
         }
+    }
+}
+
+extension GetC2BSubResponse: Hashable {
+    
+    public func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(self)
     }
 }

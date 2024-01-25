@@ -123,6 +123,7 @@ struct UserAccountView: View {
         }
     }
     
+    @ViewBuilder
     private func fpsDestinationView(
         fpsDestination: UserAccountViewModel.Route.FPSDestination
     ) -> some View {
@@ -130,6 +131,9 @@ struct UserAccountView: View {
         switch fpsDestination {
         case let .confirmSetBankDefault(timedOTPInputViewModel):
             OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+            
+        case let .c2BSub(getC2BSubResponse):
+            Text("TBD: \(String(describing: getC2BSubResponse))")
         }
     }
 }

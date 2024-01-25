@@ -31,13 +31,12 @@ extension UserAccountViewModel {
             productsReduce: productsReducer.reduce(_:_:)
         )
         
-        #warning("add to `flowStub`")
         let consentListHandler = ConsentListRxEffectHandler(
             changeConsentList: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(.success)
+                    completion(flowStub.changeConsentList)
                 }
             }
         )
@@ -65,10 +64,17 @@ extension UserAccountViewModel {
                 completion(flowStub.prepareSetBankDefault)
             }
         }
-        
+
         let effectHandler = FastPaymentsSettingsEffectHandler(
             handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
+            getC2BSub: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(flowStub.getC2BSub)
+                }
+            },
             getSettings: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -141,6 +147,7 @@ extension UserAccountViewModel {
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
         changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
+        getC2BSub: @escaping FastPaymentsSettingsEffectHandler.GetC2BSub = { $0(.success(.control)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
         updateContract: @escaping ContractEffectHandler.UpdateContract,
@@ -168,6 +175,7 @@ extension UserAccountViewModel {
         let effectHandler = FastPaymentsSettingsEffectHandler(
             handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
+            getC2BSub: getC2BSub,
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
             updateProduct: updateProduct
