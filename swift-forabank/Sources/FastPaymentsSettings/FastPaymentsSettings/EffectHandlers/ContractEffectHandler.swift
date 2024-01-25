@@ -42,7 +42,7 @@ public extension ContractEffectHandler {
 // micro-service `ea`
 public extension ContractEffectHandler {
     
-    typealias CreateContractPayload = FastPaymentsSettingsEffect.Contract.ProductID
+    typealias CreateContractPayload = FastPaymentsSettingsEffect.ContractEffect.ProductID
 #warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
     typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
@@ -52,7 +52,7 @@ public extension ContractEffectHandler {
 // micro-service `da`
 public extension ContractEffectHandler {
     
-    typealias UpdateContractPayload = FastPaymentsSettingsEffect.Contract.TargetContract
+    typealias UpdateContractPayload = FastPaymentsSettingsEffect.ContractEffect.TargetContract
 #warning("`UpdateContractResponse` success case could only be `inactive` contract - need to find a way to enforce this")
     typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
@@ -65,7 +65,7 @@ public extension ContractEffectHandler {
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
-    typealias Effect = FastPaymentsSettingsEffect.Contract
+    typealias Effect = FastPaymentsSettingsEffect.ContractEffect
 }
 
 private extension ContractEffectHandler {

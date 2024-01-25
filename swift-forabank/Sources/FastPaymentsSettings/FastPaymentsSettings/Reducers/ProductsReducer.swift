@@ -46,7 +46,7 @@ public extension ProductsReducer {
     typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.Products
+    typealias Event = FastPaymentsSettingsEvent.ProductsEvent
     typealias Effect = FastPaymentsSettingsEffect
 }
 

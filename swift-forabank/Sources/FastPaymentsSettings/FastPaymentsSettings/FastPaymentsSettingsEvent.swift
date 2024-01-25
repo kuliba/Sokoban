@@ -14,47 +14,9 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case loadSettings(UserPaymentSettings)
     case resetStatus
     
-    case bankDefault(BankDefault)
+    case bankDefault(BankDefaultEvent)
     case consentList(ConsentListEvent)
-    case contract(Contract)
-    case products(Products)
-    case subscriptions(Subscriptions)
-}
-
-public extension FastPaymentsSettingsEvent {
-    
-    typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
-    typealias ProductUpdateResult = Result<Product.ID, ServiceFailure>
-    
-    enum BankDefault: Equatable {
-        
-        case prepareSetBankDefault
-        case setBankDefault
-        case setBankDefaultPrepared(ServiceFailure?)
-    }
-    
-    enum Contract: Equatable {
-        
-        case activateContract
-        case deactivateContract
-        case updateContract(ContractUpdateResult)
-    }
-    
-    enum Products: Equatable {
-        
-        case selectProduct(Product.ID)
-        case toggleProducts
-        case updateProduct(ProductUpdateResult)
-    }
-    
-    enum Subscriptions: Equatable {
-        
-        case getC2BSubButtonTapped
-        case loaded(GetC2BSubResult)
-    }
-}
-
-public extension FastPaymentsSettingsEvent {
-    
-    typealias GetC2BSubResult = Result<GetC2BSubResponse, ServiceFailure>
+    case contract(ContractEvent)
+    case products(ProductsEvent)
+    case subscription(SubscriptionEvent)
 }

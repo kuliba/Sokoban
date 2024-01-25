@@ -45,13 +45,13 @@ public extension ContractReducer {
     typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.Contract
-    typealias Effect = FastPaymentsSettingsEffect.Contract
+    typealias Event = FastPaymentsSettingsEvent.ContractEvent
+    typealias Effect = FastPaymentsSettingsEffect.ContractEffect
 }
 
 private extension ContractReducer {
     
-    typealias Contract = FastPaymentsSettingsEffect.Contract
+    typealias Contract = FastPaymentsSettingsEffect.ContractEffect
     
     func activateContract(
         _ state: State

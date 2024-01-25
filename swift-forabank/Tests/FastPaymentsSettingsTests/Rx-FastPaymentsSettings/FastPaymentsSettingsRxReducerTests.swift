@@ -2044,8 +2044,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     private func target(
         _ contractDetails: UserPaymentSettings.ContractDetails,
-        _ targetStatus: FastPaymentsSettingsEffect.Contract.TargetContract.TargetStatus
-    ) -> FastPaymentsSettingsEffect.Contract.TargetContract? {
+        _ targetStatus: FastPaymentsSettingsEffect.ContractEffect.TargetContract.TargetStatus
+    ) -> FastPaymentsSettingsEffect.ContractEffect.TargetContract? {
         
         guard let core = core(contractDetails)
         else { return nil }

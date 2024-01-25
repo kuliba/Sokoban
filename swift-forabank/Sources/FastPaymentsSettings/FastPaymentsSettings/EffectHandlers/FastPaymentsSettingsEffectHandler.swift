@@ -68,7 +68,7 @@ public extension FastPaymentsSettingsEffectHandler {
     
     typealias ConsentListDispatch = (ConsentListEvent) -> Void
     typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
-    typealias HandleContractEffect = (Effect.Contract, @escaping Dispatch) -> Void
+    typealias HandleContractEffect = (Effect.ContractEffect, @escaping Dispatch) -> Void
     typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
@@ -110,7 +110,7 @@ private extension FastPaymentsSettingsEffectHandler {
     func getC2BSub(
         _ dispatch: @escaping Dispatch
     ) {
-        getC2BSub { dispatch(.subscriptions(.loaded($0.getC2BSubResultEvent))) }
+        getC2BSub { dispatch(.subscription(.loaded($0.getC2BSubResultEvent))) }
     }
     
     func getSettings(

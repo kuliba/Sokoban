@@ -10,48 +10,11 @@ import Tagged
 public enum FastPaymentsSettingsEffect: Equatable {
     
     case consentList(ConsentListEffect)
-    case contract(Contract)
+    case contract(ContractEffect)
     case getC2BSub
     case getSettings
     case prepareSetBankDefault
     case updateProduct(ContractCore)
-}
-
-public extension FastPaymentsSettingsEffect {
-    
-    enum Contract: Equatable {
-        
-        case activateContract(TargetContract)
-        case createContract(ProductID)
-        case deactivateContract(TargetContract)
-    }
-}
-
-public extension FastPaymentsSettingsEffect.Contract {
-    
-    typealias ProductID = Tagged<_ProductID, Int>
-    enum _ProductID {}
-    
-    struct TargetContract: Equatable {
-        
-        public let core: ContractCore
-        public let targetStatus: TargetStatus
-        
-        public init(
-            core: ContractCore, 
-            targetStatus: TargetStatus
-        ) {
-            self.core = core
-            self.targetStatus = targetStatus
-        }
-        
-        public enum TargetStatus: Equatable {
-            
-            case active, inactive
-        }
-    }
-    
-    typealias ContractCore = FastPaymentsSettingsEffect.ContractCore
 }
 
 public extension FastPaymentsSettingsEffect {

@@ -59,7 +59,7 @@ public extension FastPaymentsSettingsReducer {
         case let .products(products):
             (state, effect) = productsReduce(state, products)
             
-        case let .subscriptions(subscriptions):
+        case let .subscription(subscriptions):
 #warning("add tests")
             (state, effect) = reduce(state, with: subscriptions)
         }
@@ -70,10 +70,10 @@ public extension FastPaymentsSettingsReducer {
 
 public extension FastPaymentsSettingsReducer {
     
-    typealias BankDefaultReduce = (State, Event.BankDefault) -> (State, Effect?)
+    typealias BankDefaultReduce = (State, Event.BankDefaultEvent) -> (State, Effect?)
     typealias ConsentListReduce = (ConsentListState, ConsentListEvent) -> (ConsentListState, ConsentListEffect?)
-    typealias ContractReduce = (State, Event.Contract) -> (State, Effect.Contract?)
-    typealias ProductsReduce = (State, Event.Products) -> (State, Effect?)
+    typealias ContractReduce = (State, Event.ContractEvent) -> (State, Effect.ContractEffect?)
+    typealias ProductsReduce = (State, Event.ProductsEvent) -> (State, Effect?)
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
@@ -124,7 +124,7 @@ private extension FastPaymentsSettingsReducer {
 #warning("add tests")
     func reduce(
         _ state: State,
-        with event: FastPaymentsSettingsEvent.Subscriptions
+        with event: FastPaymentsSettingsEvent.SubscriptionEvent
     ) -> (State, Effect?) {
         
         var state = state
