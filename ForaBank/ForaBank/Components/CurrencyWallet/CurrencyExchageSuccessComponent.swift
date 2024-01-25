@@ -187,8 +187,7 @@ struct CurrencyExchangeSuccessView: View {
                                 .frame(height: 48)
                                 .padding(.horizontal, 20)
                         }
-                    }
-                    else {
+                    } else if viewModel.state != .suspend {
                         HStack(alignment: .center, spacing: 36) {
                             ButtonIconTextView(viewModel: viewModel.detailsButton)
                         }
