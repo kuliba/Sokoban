@@ -39,7 +39,7 @@ public extension BankDefaultReducer {
 public extension BankDefaultReducer {
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.BankDefaultEvent
+    typealias Event = BankDefaultEvent
     typealias Effect = FastPaymentsSettingsEffect
     
 }

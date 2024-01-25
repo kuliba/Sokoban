@@ -5,12 +5,9 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-public extension FastPaymentsSettingsEvent {
+public enum BankDefaultEvent: Equatable {
     
-    enum BankDefaultEvent: Equatable {
-        
-        case prepareSetBankDefault
-        case setBankDefault
-        case setBankDefaultPrepared(ServiceFailure?)
-    }
+    case prepareSetBankDefault
+    case setBankDefault
+    case setBankDefaultPrepared(ServiceFailure?)
 }
