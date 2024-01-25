@@ -17,9 +17,11 @@ extension Payments.Operation {
     var parametersIds: [Payments.Parameter.ID] { parameters.map(\.id)}
     var visibleParameters: [PaymentsParameterRepresentable] {
         
-        visible.compactMap { parameterId in
+        let visible = visible.compactMap { parameterId in
             parameters.first(where: { $0.id == parameterId })
         }
+        
+        return visible.filter({ $0.id != Payments.Parameter.Identifier.sfpAntifraud.rawValue })
     }
     
     var transferType: Payments.Operation.TransferType {
