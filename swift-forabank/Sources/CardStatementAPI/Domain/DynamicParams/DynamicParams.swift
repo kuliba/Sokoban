@@ -7,9 +7,27 @@
 
 import Foundation
 
-public protocol DynamicParams {
+public struct DynamicParams {
     
-    var balance: Decimal? { get }
-    var balanceRub: Decimal? { get }
-    var customName: String? { get }
+    public let balance: Decimal?
+    public let balanceRub: Decimal?
+    public let customName: String?
+    public let variableParams: VariableParams
+    
+    public init(balance: Decimal?, balanceRub: Decimal?, customName: String?, variableParams: VariableParams) {
+        self.balance = balance
+        self.balanceRub = balanceRub
+        self.customName = customName
+        self.variableParams = variableParams
+    }
+}
+
+public extension DynamicParams {
+    
+    enum VariableParams {
+        case account(AccountDynamicParams)
+        case card(CardDynamicParams)
+        case deposit
+        case loan
+    }
 }

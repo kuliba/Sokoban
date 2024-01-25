@@ -9,58 +9,46 @@ import Foundation
 
 public extension ResponseMapper {
     
+    typealias GetProductDynamicParamsListResult = Result<DynamicParamsList, MappingError>
+
     static func mapGetProductDynamicParamsList(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<DynamicParamsList, MappingError> {
+    ) -> GetProductDynamicParamsListResult {
         
-        let statusCode = response.statusCode
-        
-        switch statusCode {
-        case statusCode200:
-            return handle200(with: data)
-            
-        default:
-            return errorByCode(statusCode)
-        }
+        map(data, response, mapOrThrow: map)
     }
     
-    private static func handle200(with data: Data) -> Swift.Result<DynamicParamsList, MappingError> {
+    private static func map(
+        _ data: _Data
+    ) throws -> DynamicParamsList {
         
+        .init(data: data)
+    }
+}
+
+private extension ResponseMapper._Data {
+    
+    
+}
+
+private extension ResponseMapper {
+    
+    typealias _Data = _DTO
+}
+
+private extension ResponseMapper {
+    
+    struct _DTO: Decodable {
+        
+    }
+}
+
+private extension DynamicParamsList {
+    
+    init(
+        data: ResponseMapper._Data
+    ) {
         fatalError("unimplemented")
-
-        /*do {
-            
-            }
-        } catch {
-            return .failure(.mappingFailure(.defaultErrorMessage))
-        }*/
-    }
-    
-    private static func errorByCode(
-        _ code: Int
-    ) -> Swift.Result<DynamicParamsList, MappingError> {
-        
-        .failure(.mappingFailure(HTTPURLResponse.localizedString(forStatusCode: code)))
-    }
-}
-
-private let statusCode200 = 200
-
-private struct GetProductDynamicParamsListResponse: Decodable {
-    
-    let statusCode: Int
-    let errorMessage: String?
-    let data: ResponseMapper._Data?
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = [_DTO]
-}
-
-private extension ResponseMapper {
-    
-    struct _DTO: Decodable, Equatable {
     }
 }

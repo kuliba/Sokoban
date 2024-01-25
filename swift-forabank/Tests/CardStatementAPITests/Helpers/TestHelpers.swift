@@ -16,6 +16,13 @@ func сardStatementError(
     .failure(.mappingFailure(message))
 }
 
+func сardStatementErrorNot200(
+    _ message: String
+) -> Result {
+    
+    .failure(.not200Status(message))
+}
+
 func сardStatementDefaultError(
 ) -> Result {
     

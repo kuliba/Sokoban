@@ -7,11 +7,8 @@
 
 import Foundation
 
-public struct CardDynamicParams: DynamicParams {
+public struct CardDynamicParams {
     
-    public let balance: Decimal?
-    public let balanceRub: Decimal?
-    public let customName: String?
     public let availableExceedLimit: Decimal?
     public let status: String
     public let debtAmount: Decimal?
@@ -19,10 +16,7 @@ public struct CardDynamicParams: DynamicParams {
     public let statusPc: String
     public let statusCard: StatusCard
     
-    public init(balance: Decimal?, balanceRub: Decimal?, customName: String?, availableExceedLimit: Decimal?, status: String, debtAmount: Decimal?, totalDebtAmount: Decimal?, statusPc: String, statusCard: StatusCard) {
-        self.balance = balance
-        self.balanceRub = balanceRub
-        self.customName = customName
+    public init(availableExceedLimit: Decimal?, status: String, debtAmount: Decimal?, totalDebtAmount: Decimal?, statusPc: String, statusCard: StatusCard) {
         self.availableExceedLimit = availableExceedLimit
         self.status = status
         self.debtAmount = debtAmount
