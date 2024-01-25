@@ -2,31 +2,16 @@
 //  DynamicParamsList.swift
 //
 //
-//  Created by Andryusina Nataly on 24.01.2024.
+//  Created by Andryusina Nataly on 25.01.2024.
 //
 
 import Foundation
 
-public struct DynamicParamsList {
-   
-    public let id: Int
-    public let type: ProductType
-    public let dynamicParams: [DynamicParams]
+public struct DynamicParamsList: Equatable {
     
-    public init(id: Int, type: ProductType, dynamicParams: [DynamicParams]) {
-        self.id = id
-        self.type = type
-        self.dynamicParams = dynamicParams
-    }
-}
-
-extension DynamicParamsList {
+    public let list: [DynamicParamsItem]
     
-    public enum ProductType {
-        
-        case account
-        case card
-        case deposit
-        case loan
+    public init(list: [DynamicParamsItem]) {
+        self.list = list
     }
 }

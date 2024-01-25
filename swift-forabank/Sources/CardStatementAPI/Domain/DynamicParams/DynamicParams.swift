@@ -7,27 +7,20 @@
 
 import Foundation
 
-public struct DynamicParams {
+public struct DynamicParams: Equatable {
     
-    public let balance: Decimal?
-    public let balanceRub: Decimal?
-    public let customName: String?
     public let variableParams: VariableParams
     
-    public init(balance: Decimal?, balanceRub: Decimal?, customName: String?, variableParams: VariableParams) {
-        self.balance = balance
-        self.balanceRub = balanceRub
-        self.customName = customName
+    public init(variableParams: VariableParams) {
         self.variableParams = variableParams
     }
 }
 
 public extension DynamicParams {
     
-    enum VariableParams {
+    enum VariableParams: Equatable {
         case account(AccountDynamicParams)
         case card(CardDynamicParams)
-        case deposit
-        case loan
+        case depositOrLoan(DepositOrLoanDynamicParams)
     }
 }

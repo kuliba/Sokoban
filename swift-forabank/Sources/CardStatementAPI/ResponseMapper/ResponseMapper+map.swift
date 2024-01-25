@@ -49,6 +49,7 @@ public extension ResponseMapper {
             }
             
         } catch {
+            print("error \(error)")
             return .failure(.mappingFailure(.defaultErrorMessage))
         }
     }
