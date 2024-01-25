@@ -71,7 +71,7 @@ public extension FastPaymentsSettingsEffectHandler {
     
     typealias ConsentListDispatch = (ConsentListEvent) -> Void
     typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
-    typealias HandleContractEffect = (Effect.ContractEffect, @escaping Dispatch) -> Void
+    typealias HandleContractEffect = (ContractEffect, @escaping Dispatch) -> Void
     typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }

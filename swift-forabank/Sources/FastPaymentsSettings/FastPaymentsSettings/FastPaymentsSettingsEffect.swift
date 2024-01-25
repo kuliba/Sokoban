@@ -19,20 +19,5 @@ public enum FastPaymentsSettingsEffect: Equatable {
 
 public extension FastPaymentsSettingsEffect {
     
-    struct ContractCore: Equatable {
-        
-        public let contractID: ContractID
-        public let productID: Product.ID
-        
-        public init(
-            contractID: ContractID,
-            productID: Product.ID
-        ) {
-            self.contractID = contractID
-            self.productID = productID
-        }
-        
-        public typealias ContractID = Tagged<_ContractID, Int>
-        public enum _ContractID {}
-    }
+    typealias ContractCore = ContractEffect.ContractCore
 }

@@ -72,7 +72,7 @@ public extension FastPaymentsSettingsReducer {
     
     typealias BankDefaultReduce = (State, Event.BankDefaultEvent) -> (State, Effect?)
     typealias ConsentListReduce = (ConsentListState, ConsentListEvent) -> (ConsentListState, ConsentListEffect?)
-    typealias ContractReduce = (State, Event.ContractEvent) -> (State, Effect.ContractEffect?)
+    typealias ContractReduce = (State, ContractEvent) -> (State, ContractEffect?)
     typealias ProductsReduce = (State, ProductsEvent) -> (State, Effect?)
     
     typealias State = FastPaymentsSettingsState
