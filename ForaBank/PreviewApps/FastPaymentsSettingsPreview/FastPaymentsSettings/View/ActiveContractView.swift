@@ -14,7 +14,7 @@ struct ActiveContractView: View {
     let contractDetails: UserPaymentSettings.ContractDetails
 #warning("combine event closures into one closure")
     let consentListEvent: (ConsentListEvent) -> Void
-    let productSelectEvent: (FastPaymentsSettingsEvent.ProductsEvent) -> Void
+    let productSelectEvent: (ProductsEvent) -> Void
     let actionOff: () -> Void
     let setBankDefault: () -> Void
     let accountLinking: () -> Void
@@ -139,7 +139,7 @@ private extension UserPaymentSettings.ProductSelector {
 
 private extension ProductSelectEvent {
     
-    var productSelect: FastPaymentsSettingsEvent.ProductsEvent {
+    var productSelect: ProductsEvent {
         
         switch self {
         case .toggleProductSelect:

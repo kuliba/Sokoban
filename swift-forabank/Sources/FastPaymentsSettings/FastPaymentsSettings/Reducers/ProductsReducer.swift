@@ -46,7 +46,7 @@ public extension ProductsReducer {
     typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.ProductsEvent
+    typealias Event = ProductsEvent
     typealias Effect = FastPaymentsSettingsEffect
 }
 
@@ -138,7 +138,7 @@ private extension ProductsReducer {
     
     func update(
         _ state: State,
-        with productUpdate: FastPaymentsSettingsEvent.ProductUpdateResult
+        with productUpdate: ProductUpdateResult
     ) -> State {
         
         guard let details = state.activeDetails
