@@ -197,7 +197,8 @@ extension TransferAnywayResponseData {
             infoMessage: infoMessage,
             needSum: needSum,
             printFormType: printFormType,
-            parameterListForNextStep: parameterListForNextStep
+            parameterListForNextStep: parameterListForNextStep,
+            scenario: .ok
         )
     }
 }
