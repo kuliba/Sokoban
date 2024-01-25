@@ -133,7 +133,7 @@ private extension FastPaymentsSettingsReducer {
         switch event {
         case .getC2BSubButtonTapped:
             state.status = .inflight
-            effect = .getC2BSub
+            effect = .subscription(.getC2BSub)
             
         case let .loaded(getC2BSubResult):
             state = reduce(state, with: getC2BSubResult)

@@ -47,15 +47,18 @@ public extension FastPaymentsSettingsEffectHandler {
         case let .contract(contract):
             handleContractEffect(contract, dispatch)
             
-#warning("add tests")
-        case .getC2BSub:
-            getC2BSub(dispatch)
-            
         case .getSettings:
             getSettings(dispatch)
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(dispatch)
+            
+#warning("add tests")
+        case let .subscription(subscription):
+            switch subscription {
+            case .getC2BSub:
+                getC2BSub(dispatch)
+            }
             
         case let .updateProduct(payload):
             updateProduct(payload, dispatch)
