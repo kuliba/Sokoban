@@ -56,7 +56,7 @@ private extension BankDefaultReducer {
         else { return (state, nil) }
         
         var state = state
-        state.status = nil
+        state.status = .inflight
         
         return (state, .prepareSetBankDefault)
     }

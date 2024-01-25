@@ -13,7 +13,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy) = makeSUT()
+        let (_,_, _, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy) = makeSUT()
         
         XCTAssertEqual(getSettingsSpy.callCount, 0)
         XCTAssertEqual(updateContractSpy.callCount, 0)
@@ -26,7 +26,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         
         let details = contractedState(.active).details
         let newContract = paymentContract(contractStatus: .inactive)
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -57,7 +57,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         
         let details = contractedState(.active).details
         let message = anyMessage()
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -85,7 +85,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     func test_flow_abc1d3_deactivationFailureOfLoadedActiveContract() {
         
         let details = contractedState(.active).details
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -114,7 +114,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         
         let details = contractedState(.inactive).details
         let newContract = paymentContract(contractStatus: .active)
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -145,7 +145,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         
         let details = contractedState(.inactive).details
         let message = anyMessage()
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -173,7 +173,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     func test_flow_abc2d3_activationFailureOfLoadedInactiveContract() {
         
         let details = contractedState(.inactive).details
-        let (sut, stateSpy, getSettingsSpy, updateContractSpy, _,_,_) = makeSUT()
+        let (sut, stateSpy, _, getSettingsSpy, updateContractSpy, _, _, _) = makeSUT()
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -200,11 +200,11 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d1_activationSuccessOfLoadedMissingContract() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
+        let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product1, product2]
         )
         
@@ -221,7 +221,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: missing, status: .inflight),
             .init(userPaymentSettings: .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: product2,
@@ -241,11 +241,11 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d1_activationSuccessOfLoadedMissingContractWithoutProduct() {
         
-        let consentResult = consentResultFailure()
-        let missing = missingContract(consentResult)
+        let consentList = consentListFailure()
+        let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
         let newContract = paymentContract(productID: product2.id)
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy, _) = makeSUT(
+        let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product1]
         )
         
@@ -262,7 +262,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(userPaymentSettings: missing, status: .inflight),
             .init(userPaymentSettings: .contracted(.init(
                 paymentContract: newContract,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: .offEnabled,
                 productSelector: .init(
                     selectedProduct: nil,
@@ -274,11 +274,11 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d2_activationFailureOfLoadedMissingContract() {
         
-        let consentResult = consentResultSuccess()
-        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let consentList = consentListSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentList)
         let message = anyMessage()
         let product = makeProduct()
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+        let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product]
         )
         
@@ -307,10 +307,10 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_flow_abc3d3_activationFailureOfLoadedMissingContract() {
         
-        let consentResult = consentResultSuccess()
-        let missing: UserPaymentSettings = .missingContract(consentResult)
+        let consentList = consentListSuccess()
+        let missing: UserPaymentSettings = .missingContract(consentList)
         let product = makeProduct()
-        let (sut, stateSpy, getSettingsSpy, _,_, createContractSpy,_) = makeSUT(
+        let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product]
         )
         
@@ -340,7 +340,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     func test_flow_abc1d1_productChangeSuccessOfLoadedActiveContract() {
         
         let (different, products, details) = makeActive()
-        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
+        let (sut, stateSpy, _, getSettingsSpy, _, _, _, updateProductSpy) = makeSUT(products: products)
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -381,7 +381,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         
         let message = anyMessage()
         let (different, products, details) = makeActive()
-        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
+        let (sut, stateSpy, _, getSettingsSpy, _, _, _, updateProductSpy) = makeSUT(products: products)
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -420,7 +420,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     func test_flow_abc1d3_productChangeConnectivityFailureOfLoadedActiveContract() {
         
         let (different, products, details) = makeActive()
-        let (sut, stateSpy, getSettingsSpy, _,_,_, updateProductSpy) = makeSUT(products: products)
+        let (sut, stateSpy, _, getSettingsSpy, _, _, _, updateProductSpy) = makeSUT(products: products)
         
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
@@ -468,6 +468,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     private typealias StateSpy = ValueSpy<State>
     
+    private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
     private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
     private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
     private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
@@ -478,11 +479,13 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private func makeSUT(
         initialState: State = .init(),
         products: [Product] = [makeProduct()],
+        availableBanks: [Bank] = .preview,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
+        changeConsentListSpy: ChangeConsentListSpy,
         getSettingsSpy: GetSettingsSpy,
         updateContractSpy: UpdateContractSpy,
         prepareSetBankDefaultSpy: PrepareSetBankDefaultSpy,
@@ -490,25 +493,32 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         updateProductSpy: UpdateProductSpy
     ) {
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: { products })
         let productsReducer = ProductsReducer(getProducts: { products })
         let reducer = Reducer(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
         
+        let changeConsentListSpy = ChangeConsentListSpy()
         let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
         let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
         let createContractSpy = CreateContractSpy()
         let updateProductSpy = UpdateProductSpy()
         
+        let consentListEffectHandler = ConsentListRxEffectHandler(
+            changeConsentList: changeConsentListSpy.process(_:completion:)
+        )
         let contractEffectHandler = ContractEffectHandler(
             createContract: createContractSpy.process(_:completion:),
             updateContract: updateContractSpy.process(_:completion:)
         )
         let effectHandler = EffectHandler(
+            handleConsentListEffect: consentListEffectHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettingsSpy.process(completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
@@ -528,7 +538,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
-        return (sut, stateSpy, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy)
+        return (sut, stateSpy, changeConsentListSpy, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy)
     }
     
     private func makeActive() -> (

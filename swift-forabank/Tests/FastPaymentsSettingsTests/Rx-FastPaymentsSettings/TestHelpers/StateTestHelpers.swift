@@ -53,41 +53,46 @@ func connectivityErrorFPSState(
 }
 
 func consentError(
-) -> UserPaymentSettings.ConsentError {
+) -> ConsentListFailure {
     
-    .init()
+    .collapsedError
 }
 
 func consentList(
-) -> UserPaymentSettings.ConsentList {
+) -> ConsentList {
     
-    .init()
+    .init(
+        banks: .preview,
+        consent: .preview,
+        mode: .collapsed,
+        searchText: ""
+    )
 }
 
-func consentResultFailure(
-    _ error: UserPaymentSettings.ConsentError = consentError()
-) -> UserPaymentSettings.ConsentResult {
+func consentListFailure(
+    _ error: ConsentListFailure = consentError()
+) -> ConsentListState {
     
     .failure(error)
 }
 
-func consentResultSuccess(
-    _ consentList: UserPaymentSettings.ConsentList = consentList()
-) -> UserPaymentSettings.ConsentResult {
+func consentListSuccess(
+    _ consentList: ConsentList = consentList()
+) -> ConsentListState {
     
     .success(consentList)
 }
 
 func contractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
-    consentResult: UserPaymentSettings.ConsentResult = .success(consentList()),
+    consentList: ConsentListState = .success(consentList()),
     bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
     productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
         paymentContract: paymentContract,
-        consentResult: consentResult,
+        consentList: consentList,
         bankDefault: bankDefault,
         productSelector: productSelector
     )
@@ -202,7 +207,7 @@ func makeProductSelector(
 }
 
 func missingContract(
-    _ result: UserPaymentSettings.ConsentResult
+    _ result: ConsentListState
 ) -> UserPaymentSettings {
     
     .missingContract(result)
@@ -211,7 +216,7 @@ func missingContract(
 func missingConsentFailureSettings(
 ) -> UserPaymentSettings {
     
-    .missingContract(.failure(.init()))
+    .missingContract(.failure(.collapsedError))
 }
 
 func missingConsentSuccessSettings(
@@ -221,7 +226,7 @@ func missingConsentSuccessSettings(
 }
 
 func missingConsentSuccessFPSState(
-    _ consentList: UserPaymentSettings.ConsentList = consentList(),
+    _ consentList: ConsentList = consentList(),
     status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
     

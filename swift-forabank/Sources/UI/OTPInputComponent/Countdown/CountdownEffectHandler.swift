@@ -7,9 +7,9 @@
 
 public final class CountdownEffectHandler {
     
-    private let initiate: Initiate
+    private let initiate: InitiateOTP
     
-    public init(initiate: @escaping Initiate) {
+    public init(initiate: @escaping InitiateOTP) {
         
         self.initiate = initiate
     }
@@ -30,9 +30,9 @@ public extension CountdownEffectHandler {
 
 public extension CountdownEffectHandler {
     
-    typealias InitiateResult = Result<Void, CountdownFailure>
-    typealias InitiateCompletion = (InitiateResult) -> Void
-    typealias Initiate = (@escaping InitiateCompletion) -> Void
+    typealias InitiateOTPResult = Result<Void, CountdownFailure>
+    typealias InitiateOTPCompletion = (InitiateOTPResult) -> Void
+    typealias InitiateOTP = (@escaping InitiateOTPCompletion) -> Void
 }
 
 public extension CountdownEffectHandler {

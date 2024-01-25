@@ -27,14 +27,21 @@ struct FPSPrototypeView: View {
         
         switch flowStub {
         case .none:
-            flowStubButton("Select Flow")
-                .font(.headline)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 32) {
+                
+                flowStubButton("Select Flow")
+                    .font(.headline)
+                    .buttonStyle(.borderedProminent)
+                
+                Button("Happy Path", action: { flowStub = .preview })
+                    .foregroundColor(.green)
+                    .buttonStyle(.bordered)
+            }
+            .frame(maxWidth: .infinity)
             
         case let .some(flowStub):
             
             UserAccountView(viewModel: .preview(
-                route: .init(),
                 flowStub: flowStub
             ))
             .overlay(alignment: .topTrailing) { flowStubButton("Flow") }
@@ -43,9 +50,10 @@ struct FPSPrototypeView: View {
     
     private func flowStubButton(_ title: String) -> some View {
         
-        Button(title) {
-            
+        Button {
             isShowingFlowStubOptions = true
+        } label: {
+            Label(title, systemImage: "slider.horizontal.3")
         }
         .padding(.horizontal)
     }

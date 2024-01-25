@@ -147,7 +147,7 @@ private extension ContractReducer {
                 return .init(userPaymentSettings: .contracted(
                     .init(
                         paymentContract: contract,
-                        consentResult: consent,
+                        consentList: consent,
                         bankDefault: .offEnabled,
                         productSelector: .init(
                             selectedProduct: product,
