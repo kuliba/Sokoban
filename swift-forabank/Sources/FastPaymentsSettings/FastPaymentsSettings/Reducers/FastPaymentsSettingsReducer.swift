@@ -124,7 +124,7 @@ private extension FastPaymentsSettingsReducer {
 #warning("add tests")
     func reduce(
         _ state: State,
-        with event: FastPaymentsSettingsEvent.SubscriptionEvent
+        with event: SubscriptionEvent
     ) -> (State, Effect?) {
         
         var state = state
@@ -145,7 +145,7 @@ private extension FastPaymentsSettingsReducer {
 #warning("add tests")
     func reduce(
         _ state: State,
-        with getC2BSubResult: FastPaymentsSettingsEvent.GetC2BSubResult
+        with getC2BSubResult: GetC2BSubResult
     ) -> State {
         
         var state = state

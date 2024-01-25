@@ -162,7 +162,7 @@ private extension FastPaymentsSettingsEffectHandler {
 
 private extension FastPaymentsSettingsEffectHandler.GetC2BSubResult {
     
-    var getC2BSubResultEvent: FastPaymentsSettingsEvent.GetC2BSubResult {
+    var getC2BSubResultEvent: GetC2BSubResult {
         
         switch self {
         case let .success(success):
