@@ -23,14 +23,13 @@ public enum FastPaymentsSettingsEvent: Equatable {
 public extension FastPaymentsSettingsEvent {
     
     typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, Failure>
-    typealias ProductUpdateResult = Result<Product, Failure>
+    typealias ProductUpdateResult = Result<Product.ID, Failure>
     
-    // BankDefault - need better naming in this section
     enum BankDefault: Equatable {
         
         case prepareSetBankDefault
         case setBankDefault
-        case setBankDefaultPrepared(Failure?) // ???
+        case setBankDefaultPrepared(Failure?)
     }
     
     enum Contract: Equatable {
@@ -49,9 +48,8 @@ public extension FastPaymentsSettingsEvent {
     
     enum Products: Equatable {
         
-        case collapseProducts
-        case expandProducts
+        case selectProduct(Product.ID)
+        case toggleProducts
         case updateProduct(ProductUpdateResult)
-        case selectProduct(Product)
     }
 }

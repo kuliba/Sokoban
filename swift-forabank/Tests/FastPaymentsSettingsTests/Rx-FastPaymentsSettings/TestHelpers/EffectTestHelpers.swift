@@ -44,7 +44,7 @@ func fastPaymentsSettingsEffectTargetContract(
     .init(
         core: .init(
             contractID: contractID,
-            product: product
+            productID: product.id
         ),
         targetStatus: targetStatus)
 }
@@ -56,7 +56,7 @@ func makeCore(
     
     .init(
         contractID: .init(details.paymentContract.id.rawValue),
-        product: product
+        productID: product.id
     )
 }
 
@@ -67,6 +67,6 @@ func updateProductPayload(
     
     .init(
         contractID: .init(contractIDRawValue),
-        product: product
+        productID: product.id
     )
 }

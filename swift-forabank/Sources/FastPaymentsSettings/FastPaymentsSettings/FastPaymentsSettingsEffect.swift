@@ -58,12 +58,14 @@ public extension FastPaymentsSettingsEffect {
     struct ContractCore: Equatable {
         
         public let contractID: ContractID
-        public let product: Product
+        public let productID: Product.ID
         
-        public init(contractID: ContractID, product: Product) {
-            
+        public init(
+            contractID: ContractID,
+            productID: Product.ID
+        ) {
             self.contractID = contractID
-            self.product = product
+            self.productID = productID
         }
         
         public typealias ContractID = Tagged<_ContractID, Int>

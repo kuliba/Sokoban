@@ -211,7 +211,7 @@ private extension UserPaymentSettings.ContractDetails {
         
         return .init(
             contractID: .init(paymentContract.id.rawValue),
-            product: product
+            productID: product.id
         )
     }
 }
