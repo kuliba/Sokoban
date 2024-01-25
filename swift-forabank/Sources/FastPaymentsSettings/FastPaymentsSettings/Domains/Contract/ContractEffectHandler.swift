@@ -63,8 +63,7 @@ public extension ContractEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent
+    typealias Event = ContractEvent
     typealias Effect = ContractEffect
 }
 
@@ -85,13 +84,13 @@ private extension ContractEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contract(.updateContract(.success(contract))))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contract(.updateContract(.failure(.connectivityError))))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }
@@ -111,13 +110,13 @@ private extension ContractEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contract(.updateContract(.success(contract))))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contract(.updateContract(.failure(.connectivityError))))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }

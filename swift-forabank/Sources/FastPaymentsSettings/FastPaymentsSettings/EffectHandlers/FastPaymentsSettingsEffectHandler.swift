@@ -45,7 +45,7 @@ public extension FastPaymentsSettingsEffectHandler {
             handleConsentListEffect(consentList) { dispatch(.consentList($0)) }
             
         case let .contract(contract):
-            handleContractEffect(contract, dispatch)
+            handleContractEffect(contract) { dispatch(.contract($0)) }
             
         case .getSettings:
             getSettings(dispatch)
@@ -71,7 +71,7 @@ public extension FastPaymentsSettingsEffectHandler {
     
     typealias ConsentListDispatch = (ConsentListEvent) -> Void
     typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
-    typealias HandleContractEffect = (ContractEffect, @escaping Dispatch) -> Void
+    typealias HandleContractEffect = (ContractEffect, @escaping ContractDispatch) -> Void
     typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
@@ -101,6 +101,7 @@ public extension FastPaymentsSettingsEffectHandler {
 public extension FastPaymentsSettingsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
+    typealias ContractDispatch = (ContractEvent) -> Void
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
