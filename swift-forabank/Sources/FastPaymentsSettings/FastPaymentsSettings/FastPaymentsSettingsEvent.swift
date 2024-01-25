@@ -23,11 +23,6 @@ public enum FastPaymentsSettingsEvent: Equatable {
 
 public extension FastPaymentsSettingsEvent {
     
-    typealias GetC2BSubResult = Result<GetC2BSubResponse, ServiceFailure>
-}
-
-public extension FastPaymentsSettingsEvent {
-    
     typealias ContractUpdateResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias ProductUpdateResult = Result<Product.ID, ServiceFailure>
     
@@ -57,4 +52,9 @@ public extension FastPaymentsSettingsEvent {
         case getC2BSubButtonTapped
         case loaded(GetC2BSubResult)
     }
+}
+
+public extension FastPaymentsSettingsEvent {
+    
+    typealias GetC2BSubResult = Result<GetC2BSubResponse, ServiceFailure>
 }
