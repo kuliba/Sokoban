@@ -9,10 +9,6 @@ import Tagged
 
 public enum FastPaymentsSettingsEvent: Equatable {
     
-    // Account Linking
-    case accountLinking
-    case loadedGetC2BSub(GetC2BSubResult)
-    
     // General Settings
     case appear
     case loadSettings(UserPaymentSettings)
@@ -22,6 +18,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case consentList(ConsentListEvent)
     case contract(Contract)
     case products(Products)
+    case subscriptions(Subscriptions)
 }
 
 public extension FastPaymentsSettingsEvent {
@@ -53,5 +50,11 @@ public extension FastPaymentsSettingsEvent {
         case selectProduct(Product.ID)
         case toggleProducts
         case updateProduct(ProductUpdateResult)
+    }
+    
+    enum Subscriptions: Equatable {
+        
+        case getC2BSubButtonTapped
+        case loaded(GetC2BSubResult)
     }
 }

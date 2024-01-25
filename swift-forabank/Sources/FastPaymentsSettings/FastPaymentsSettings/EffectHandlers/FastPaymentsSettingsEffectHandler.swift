@@ -110,7 +110,7 @@ private extension FastPaymentsSettingsEffectHandler {
     func getC2BSub(
         _ dispatch: @escaping Dispatch
     ) {
-        getC2BSub { dispatch(.loadedGetC2BSub($0.getC2BSubResultEvent)) }
+        getC2BSub { dispatch(.subscriptions(.loaded($0.getC2BSubResultEvent))) }
     }
     
     func getSettings(

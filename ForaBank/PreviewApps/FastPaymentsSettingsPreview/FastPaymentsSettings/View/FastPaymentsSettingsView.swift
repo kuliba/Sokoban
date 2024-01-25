@@ -29,7 +29,7 @@ struct FastPaymentsSettingsView: View {
                     productSelectEvent: { viewModel.event(.products($0)) },
                     actionOff: { viewModel.event(.contract(.deactivateContract)) },
                     setBankDefault: { viewModel.event(.bankDefault(.setBankDefault)) },
-                    accountLinking: { viewModel.event(.accountLinking) },
+                    accountLinking: { viewModel.event(.subscriptions(.getC2BSubButtonTapped)) },
                     config: config.activeContract
                 )
                 

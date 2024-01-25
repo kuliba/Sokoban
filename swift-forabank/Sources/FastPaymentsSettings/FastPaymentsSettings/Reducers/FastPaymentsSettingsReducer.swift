@@ -36,6 +36,15 @@ public extension FastPaymentsSettingsReducer {
         var effect: Effect?
         
         switch event {
+        case .appear:
+            (state, effect) = handleAppear(state)
+            
+        case let .loadSettings(settings):
+            state = handleLoadedSettings(settings)
+            
+        case .resetStatus:
+            state = resetStatus(state)
+            
         case let .bankDefault(bankDefault):
             (state, effect) = bankDefaultReduce(state, bankDefault)
             
@@ -50,22 +59,9 @@ public extension FastPaymentsSettingsReducer {
         case let .products(products):
             (state, effect) = productsReduce(state, products)
             
+        case let .subscriptions(subscriptions):
 #warning("add tests")
-        case .accountLinking:
-            effect = .getC2BSub
-            
-#warning("add tests")
-        case let .loadedGetC2BSub(getC2BSubResult):
-            state = reduce(state, with: getC2BSubResult)
-            
-        case .appear:
-            (state, effect) = handleAppear(state)
-            
-        case let .loadSettings(settings):
-            state = handleLoadedSettings(settings)
-            
-        case .resetStatus:
-            state = resetStatus(state)
+            (state, effect) = reduce(state, with: subscriptions)
         }
         
         return (state, effect)
@@ -118,6 +114,27 @@ private extension FastPaymentsSettingsReducer {
         return (state, effect)
     }
     
+#warning("add tests")
+    func reduce(
+        _ state: State,
+        with event: FastPaymentsSettingsEvent.Subscriptions
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .getC2BSubButtonTapped:
+            state.status = .inflight
+            effect = .getC2BSub
+            
+        case let .loaded(getC2BSubResult):
+            state = reduce(state, with: getC2BSubResult)
+        }
+        
+        return (state, effect)
+    }
+    
     func handleLoadedSettings(
         _ userPaymentSettings: UserPaymentSettings
     ) -> State {
@@ -139,7 +156,7 @@ private extension FastPaymentsSettingsReducer {
         case let .failure(failure):
             switch failure {
             case .connectivityError:
-                break
+                state.status = nil
                 
             case let .serverError(message):
                 state.status = .serverError(message)
