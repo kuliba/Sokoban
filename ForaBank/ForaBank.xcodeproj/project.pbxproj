@@ -466,6 +466,14 @@
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
+		2A3D6F0C2B6224DD00D19379 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F052B6223F400D19379 /* Config.swift */; };
+		2A3D6F0E2B62277600D19379 /* ActiveContractConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F0D2B62277600D19379 /* ActiveContractConfig.swift */; };
+		2A3D6F102B62279D00D19379 /* InactiveContractConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F0F2B62279D00D19379 /* InactiveContractConfig.swift */; };
+		2A3D6F122B62283300D19379 /* ActiveContractConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F112B62283300D19379 /* ActiveContractConfig+ext.swift */; };
+		2A3D6F142B62288900D19379 /* InactiveContractConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F132B62288900D19379 /* InactiveContractConfig+ext.swift */; };
+		2A3D6F162B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F152B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift */; };
+		2A3D6F192B62293200D19379 /* FastPaymentsSettingsConfig+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F182B62293200D19379 /* FastPaymentsSettingsConfig+default.swift */; };
+		2A3D6F1B2B62296900D19379 /* ProductSelectConfig+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F1A2B62296900D19379 /* ProductSelectConfig+default.swift */; };
 		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B152A47763000D8FE55 /* MosParkingView.swift */; };
@@ -2798,6 +2806,14 @@
 		2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewModelTests.swift; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
+		2A3D6F052B6223F400D19379 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2A3D6F0D2B62277600D19379 /* ActiveContractConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveContractConfig.swift; sourceTree = "<group>"; };
+		2A3D6F0F2B62279D00D19379 /* InactiveContractConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InactiveContractConfig.swift; sourceTree = "<group>"; };
+		2A3D6F112B62283300D19379 /* ActiveContractConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActiveContractConfig+ext.swift"; sourceTree = "<group>"; };
+		2A3D6F132B62288900D19379 /* InactiveContractConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InactiveContractConfig+ext.swift"; sourceTree = "<group>"; };
+		2A3D6F152B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsConfig+ext.swift"; sourceTree = "<group>"; };
+		2A3D6F182B62293200D19379 /* FastPaymentsSettingsConfig+default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsConfig+default.swift"; sourceTree = "<group>"; };
+		2A3D6F1A2B62296900D19379 /* ProductSelectConfig+default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductSelectConfig+default.swift"; sourceTree = "<group>"; };
 		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2A3F1B152A47763000D8FE55 /* MosParkingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingView.swift; sourceTree = "<group>"; };
 		2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapperTests.swift; sourceTree = "<group>"; };
@@ -6102,6 +6118,25 @@
 			path = SberQRPayment;
 			sourceTree = "<group>";
 		};
+		2A3D6F172B6228EF00D19379 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				2A3D6F152B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift */,
+				2A3D6F112B62283300D19379 /* ActiveContractConfig+ext.swift */,
+				2A3D6F132B62288900D19379 /* InactiveContractConfig+ext.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		2A3D6F1C2B6229AC00D19379 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				2A3D6F182B62293200D19379 /* FastPaymentsSettingsConfig+default.swift */,
+				2A3D6F1A2B62296900D19379 /* ProductSelectConfig+default.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		2A3F1B192A4982EA00D8FE55 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -6531,6 +6566,9 @@
 			isa = PBXGroup;
 			children = (
 				2ACE0A9C2B53E22F007AA2ED /* View */,
+				2A3D6F052B6223F400D19379 /* Config.swift */,
+				2A3D6F0D2B62277600D19379 /* ActiveContractConfig.swift */,
+				2A3D6F0F2B62279D00D19379 /* InactiveContractConfig.swift */,
 			);
 			path = FastPaymentsSettings;
 			sourceTree = "<group>";
@@ -6547,6 +6585,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
+				2A3D6F1C2B6229AC00D19379 /* Config */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
 			);
@@ -7063,6 +7102,7 @@
 		2ABFB9062B5565BE00D6A0BA /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
+				2A3D6F172B6228EF00D19379 /* Config */,
 				2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */,
 				2A40AF262B58FFF8003B7D8A /* [Product]+ext.swift */,
 				2A40AF2A2B5902BA003B7D8A /* Product+preview.swift */,
@@ -13125,17 +13165,21 @@
 			files = (
 				2AA70FBF2B52B2450061F5DD /* InactiveContractView.swift in Sources */,
 				2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */,
+				2A3D6F0E2B62277600D19379 /* ActiveContractConfig.swift in Sources */,
 				2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */,
 				2A5987E92B593BB200131B69 /* ToggleMockView.swift in Sources */,
 				2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */,
 				2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */,
+				2A3D6F122B62283300D19379 /* ActiveContractConfig+ext.swift in Sources */,
 				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
+				2A3D6F162B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift in Sources */,
 				2A40AF272B58FFF8003B7D8A /* [Product]+ext.swift in Sources */,
 				2A95363F2B53120700E874F5 /* ExpandedConsentListView.swift in Sources */,
 				2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */,
 				2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */,
 				2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */,
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
+				2A3D6F102B62279D00D19379 /* InactiveContractConfig.swift in Sources */,
 				2A6EAA8D2B505A800093EE83 /* View+NavigationDestination.swift in Sources */,
 				2A5987ED2B59442300131B69 /* PaymentContractView.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
@@ -13144,8 +13188,11 @@
 				2A59F92E2B53CF5F00F5C6E7 /* ConsentListPrototypeView.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */,
+				2A3D6F192B62293200D19379 /* FastPaymentsSettingsConfig+default.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
+				2A3D6F0C2B6224DD00D19379 /* Config.swift in Sources */,
+				2A3D6F1B2B62296900D19379 /* ProductSelectConfig+default.swift in Sources */,
 				2A40AF292B5901D2003B7D8A /* FastPaymentsSettingsEffectHandler+preview.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A5987EB2B593DAC00131B69 /* BankDefaultView.swift in Sources */,
@@ -13155,6 +13202,7 @@
 				2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */,
 				2A6EAA9C2B506C340093EE83 /* Alert+ext.swift in Sources */,
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
+				2A3D6F142B62288900D19379 /* InactiveContractConfig+ext.swift in Sources */,
 				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
 				2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */,

@@ -1,0 +1,15 @@
+//
+//  FastPaymentsSettingsConfig+default.swift
+//  FastPaymentsSettingsPreview
+//
+//  Created by Igor Malyarov on 25.01.2024.
+//
+
+import ProductSelectComponent
+
+extension FastPaymentsSettingsConfig {
+    
+    static let `default`: Self = .init(
+        productSelectConfig: .default
+    )
+}
