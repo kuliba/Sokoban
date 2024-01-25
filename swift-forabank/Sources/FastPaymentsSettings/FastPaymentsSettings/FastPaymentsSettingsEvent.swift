@@ -9,6 +9,10 @@ import Tagged
 
 public enum FastPaymentsSettingsEvent: Equatable {
     
+    // Account Linking
+    case accountLinking
+    case loadedGetC2BSub(GetC2BSubResult)
+    
     // General Settings
     case appear
     case loadSettings(UserPaymentSettings)
@@ -18,6 +22,11 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case consentList(ConsentListEvent)
     case contract(Contract)
     case products(Products)
+}
+
+public extension FastPaymentsSettingsEvent {
+    
+    typealias GetC2BSubResult = Result<GetC2BSubResponse, Failure>
 }
 
 public extension FastPaymentsSettingsEvent {
@@ -39,7 +48,7 @@ public extension FastPaymentsSettingsEvent {
         case updateContract(ContractUpdateResult)
     }
     
-#warning("extract as `FastPaymentsFailure`")
+#warning("extract as `FastPaymentsFailure/ServiceFailure`")
     enum Failure: Error, Equatable {
         
         case connectivityError

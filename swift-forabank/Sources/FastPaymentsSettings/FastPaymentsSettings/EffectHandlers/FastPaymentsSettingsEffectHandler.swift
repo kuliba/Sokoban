@@ -11,6 +11,7 @@ public final class FastPaymentsSettingsEffectHandler {
     
     private let handleConsentListEffect: HandleConsentListEffect
     private let handleContractEffect: HandleContractEffect
+    private let getC2BSub: GetC2BSub
     private let getSettings: GetSettings
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let updateProduct: UpdateProduct
@@ -18,12 +19,14 @@ public final class FastPaymentsSettingsEffectHandler {
     public init(
         handleConsentListEffect: @escaping HandleConsentListEffect,
         handleContractEffect: @escaping HandleContractEffect,
+        getC2BSub: @escaping GetC2BSub,
         getSettings: @escaping GetSettings,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         updateProduct: @escaping UpdateProduct
     ) {
         self.handleConsentListEffect = handleConsentListEffect
         self.handleContractEffect = handleContractEffect
+        self.getC2BSub = getC2BSub
         self.getSettings = getSettings
         self.prepareSetBankDefault = prepareSetBankDefault
         self.updateProduct = updateProduct
@@ -44,6 +47,10 @@ public extension FastPaymentsSettingsEffectHandler {
         case let .contract(contract):
             handleContractEffect(contract, dispatch)
             
+#warning("add tests")
+        case .getC2BSub:
+            getC2BSub(dispatch)
+            
         case .getSettings:
             getSettings(dispatch)
             
@@ -62,6 +69,7 @@ public extension FastPaymentsSettingsEffectHandler {
     typealias ConsentListDispatch = (ConsentListEvent) -> Void
     typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
     typealias HandleContractEffect = (Effect.Contract, @escaping Dispatch) -> Void
+    typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
 }
 
@@ -84,6 +92,11 @@ public extension FastPaymentsSettingsEffectHandler {
 
 public extension FastPaymentsSettingsEffectHandler {
     
+    typealias GetC2BSubResult = Result<GetC2BSubResponse, ServiceFailure>
+}
+
+public extension FastPaymentsSettingsEffectHandler {
+    
     typealias Dispatch = (Event) -> Void
     
     enum ServiceFailure: Error, Equatable  {
@@ -98,6 +111,13 @@ public extension FastPaymentsSettingsEffectHandler {
 }
 
 private extension FastPaymentsSettingsEffectHandler {
+    
+#warning("add tests")
+    func getC2BSub(
+        _ dispatch: @escaping Dispatch
+    ) {
+        getC2BSub { dispatch(.loadedGetC2BSub($0.getC2BSubResultEvent)) }
+    }
     
     func getSettings(
         _ dispatch: @escaping Dispatch
@@ -138,6 +158,26 @@ private extension FastPaymentsSettingsEffectHandler {
                 
             case let .failure(.serverError(message)):
                 dispatch(.products(.updateProduct(.failure(.serverError(message)))))
+            }
+        }
+    }
+}
+
+private extension FastPaymentsSettingsEffectHandler.GetC2BSubResult {
+    
+    var getC2BSubResultEvent: FastPaymentsSettingsEvent.GetC2BSubResult {
+        
+        switch self {
+        case let .success(success):
+            return .success(success)
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                return .failure(.connectivityError)
+                
+            case let .serverError(message):
+                return .failure(.serverError(message))
             }
         }
     }

@@ -39,7 +39,7 @@ public extension FastPaymentsSettingsReducer {
         case let .bankDefault(bankDefault):
             (state, effect) = bankDefaultReduce(state, bankDefault)
             
-            #warning("add tests")
+#warning("add tests")
         case let .consentList(consentList):
             (state, effect) = reduce(state, consentList)
             
@@ -49,6 +49,14 @@ public extension FastPaymentsSettingsReducer {
             
         case let .products(products):
             (state, effect) = productsReduce(state, products)
+            
+#warning("add tests")
+        case .accountLinking:
+            effect = .getC2BSub
+            
+#warning("add tests")
+        case let .loadedGetC2BSub(getC2BSubResult):
+            state = reduce(state, with: getC2BSubResult)
             
         case .appear:
             (state, effect) = handleAppear(state)
@@ -115,6 +123,30 @@ private extension FastPaymentsSettingsReducer {
     ) -> State {
         
         .init(userPaymentSettings: userPaymentSettings)
+    }
+    
+    func reduce(
+        _ state: State,
+        with getC2BSubResult: FastPaymentsSettingsEvent.GetC2BSubResult
+    ) -> State {
+        
+        var state = state
+        
+        switch getC2BSubResult {
+        case let .success(getC2BSubResponse):
+            state.status = .getC2BSubResponse(getC2BSubResponse)
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                break
+                
+            case let .serverError(message):
+                state.status = .serverError(message)
+            }
+        }
+        
+        return state
     }
     
     func resetStatus(
