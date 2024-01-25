@@ -24,7 +24,7 @@ public extension OTPInputViewModel {
         timer: TimerProtocol = RealTimer(),
         duration: Int = 60,
         length: Int = 6,
-        initiate: @escaping CountdownEffectHandler.Initiate,
+        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> OTPInputViewModel {
@@ -38,7 +38,7 @@ public extension OTPInputViewModel {
             otpFieldReduce: otpFieldReducer.reduce(_:_:)
         )
         
-        let countdownEffectHandler = CountdownEffectHandler(initiate: initiate)
+        let countdownEffectHandler = CountdownEffectHandler(initiate: initiateOTP)
         let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: submitOTP)
         let otpInputEffectHandler = OTPInputEffectHandler(
             handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),

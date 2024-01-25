@@ -10,7 +10,7 @@ import Tagged
 public enum UserPaymentSettings: Equatable {
     
     case contracted(ContractDetails)
-    case missingContract(ConsentResult)
+    case missingContract(ConsentListState)
     case failure(Failure)
 }
 
@@ -19,18 +19,18 @@ public extension UserPaymentSettings {
     struct ContractDetails: Equatable {
         
         public var paymentContract: PaymentContract
-        public let consentResult: ConsentResult
+        public var consentList: ConsentListState
         public var bankDefault: BankDefault
         public var productSelector: ProductSelector
         
         public init(
             paymentContract: PaymentContract,
-            consentResult: ConsentResult,
+            consentList: ConsentListState,
             bankDefault: BankDefault,
             productSelector: ProductSelector
         ) {
             self.paymentContract = paymentContract
-            self.consentResult = consentResult
+            self.consentList = consentList
             self.bankDefault = bankDefault
             self.productSelector = productSelector
         }
@@ -85,18 +85,6 @@ public extension UserPaymentSettings {
 }
 
 public extension UserPaymentSettings {
-    
-    typealias ConsentResult = Result<ConsentList, ConsentError>
-    
-    struct ConsentList: Equatable {
-        
-        public init() {}
-    }
-    
-    struct ConsentError: Error, Equatable {
-        
-        public init() {}
-    }
     
     enum BankDefault: Equatable {
         

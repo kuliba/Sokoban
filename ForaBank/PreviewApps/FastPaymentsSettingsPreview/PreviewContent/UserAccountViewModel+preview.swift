@@ -6,24 +6,41 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 import Foundation
 
 extension UserAccountViewModel {
     
+#warning("move duration, length and other fields into settings")
     static func preview(
+        initialState: OTPInputState? = nil,
+        duration: Int = 10,
+        length: Int = 6,
         route: Route = .init(),
         flowStub: FlowStub
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: { flowStub.getProducts })
         let productsReducer = ProductsReducer(getProducts: { flowStub.getProducts })
         let reducer = FastPaymentsSettingsReducer(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
         
+        #warning("add to `flowStub`")
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.success)
+                }
+            }
+        )
         let contractEffectHandler = ContractEffectHandler(
             createContract: { _, completion in
                 
@@ -40,8 +57,17 @@ extension UserAccountViewModel {
                 }
             }
         )
-
+        
+        let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.prepareSetBankDefault)
+            }
+        }
+        
         let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: { completion in
                 
@@ -50,13 +76,7 @@ extension UserAccountViewModel {
                     completion(flowStub.getSettings)
                 }
             },
-            prepareSetBankDefault: { completion in
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(flowStub.prepareSetBankDefault)
-                }
-            },
+            prepareSetBankDefault: prepareSetBankDefault,
             updateProduct: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -66,20 +86,60 @@ extension UserAccountViewModel {
             }
         )
         
+        let initiateOTP: CountdownEffectHandler.InitiateOTP = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.initiateOTP)
+            }
+        }
+        
+        let submitOTP: OTPFieldEffectHandler.SubmitOTP = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowStub.submitOTP)
+            }
+        }
+        
         return .init(
             route: route,
+            prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
-                    .init(reducer: reducer, effectHandler: effectHandler)
+                    .init(
+                        reducer: reducer,
+                        effectHandler: effectHandler,
+                        scheduler: $0
+                    )
+                },
+                makeTimedOTPInputViewModel: {
+                    
+                    .init(
+                        viewModel: .default(
+                            initialState: initialState,
+                            duration: duration,
+                            length: length,
+                            initiateOTP: initiateOTP,
+                            submitOTP: submitOTP,
+                            scheduler: $0),
+                        scheduler: $0
+                    )
                 }
             )
         )
     }
     
     static func preview(
+        initialState: OTPInputState? = nil,
+        duration: Int = 10,
+        length: Int = 6,
+        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
+        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         route: Route = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
+        changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
@@ -88,19 +148,25 @@ extension UserAccountViewModel {
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
         let contractReducer = ContractReducer(getProducts: getProducts)
         let productsReducer = ProductsReducer(getProducts: getProducts)
         let reducer = FastPaymentsSettingsReducer(
             bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
         
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: changeConsentList
+        )
         let contractEffectHandler = ContractEffectHandler(
             createContract: createContract,
             updateContract: updateContract
         )
         let effectHandler = FastPaymentsSettingsEffectHandler(
+            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
@@ -109,10 +175,28 @@ extension UserAccountViewModel {
         
         return .init(
             route: route,
+            prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
                     
-                    .init(reducer: reducer, effectHandler: effectHandler)
+                    .init(
+                        reducer: reducer,
+                        effectHandler: effectHandler,
+                        scheduler: $0
+                    )
+                },
+                makeTimedOTPInputViewModel: {
+                    
+                    .init(
+                        viewModel: .default(
+                            initialState: initialState,
+                            duration: duration,
+                            length: length,
+                            initiateOTP: initiateOTP,
+                            submitOTP: submitOTP,
+                            scheduler: $0),
+                        scheduler: $0
+                    )
                 }
             )
         )
@@ -123,12 +207,14 @@ private extension FastPaymentsSettingsViewModel {
     
     convenience init(
         reducer: FastPaymentsSettingsReducer,
-        effectHandler: FastPaymentsSettingsEffectHandler
+        effectHandler: FastPaymentsSettingsEffectHandler,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.init(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
         )
     }
 }

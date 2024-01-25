@@ -9,6 +9,7 @@ import Tagged
 
 public enum FastPaymentsSettingsEffect: Equatable {
     
+    case consentList(ConsentListEffect)
     case contract(Contract)
     case getSettings
     case prepareSetBankDefault

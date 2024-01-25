@@ -53,7 +53,7 @@ extension TimedOTPInputViewModel {
     ) {
         let otpInputViewModel = OTPInputViewModel.default(
             duration: demoSettings.countdownDemoSettings.duration.rawValue,
-            initiate: { completion in
+            initiateOTP: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     

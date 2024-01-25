@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 import SwiftUI
 
 struct UserAccountView: View {
@@ -21,18 +22,20 @@ struct UserAccountView: View {
                 VStack(spacing: 32) {
                     
                     openFastPaymentsSettingsButton()
+                    
+                    buttons()
                 }
                 .alert(
                     item: .init(
-                        get: { viewModel.route.modal?.alert },
-                        set: { if $0 == nil { viewModel.dismissModal() }}
+                        get: { viewModel.state.alert?.alert },
+                        set: { if $0 == nil { viewModel.event(.closeAlert) }}
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
-                        get: { viewModel.route.destination },
-                        set: { if $0 == nil { viewModel.dismissDestination() }}
+                        get: { viewModel.state.destination },
+                        set: { if $0 == nil { viewModel.event(.dismissDestination) }}
                     ),
                     destination: destinationView
                 )
@@ -53,6 +56,32 @@ struct UserAccountView: View {
         .buttonStyle(.borderedProminent)
     }
     
+    private func buttons() -> some View {
+        
+        HStack(spacing: 16) {
+            
+            showLoaderButton()
+            showAlertButton()
+            showInformerButton()
+        }
+        .buttonStyle(.bordered)
+    }
+    
+    private func showLoaderButton() -> some View {
+        
+        Button("loader", action: viewModel.showDemoLoader)
+    }
+    
+    private func showAlertButton() -> some View {
+        
+        Button("alert", action: viewModel.showDemoAlert)
+    }
+    
+    private func showInformerButton() -> some View {
+        
+        Button("informer", action: viewModel.showDemoInformer)
+    }
+    
     @ViewBuilder
     private func loader() -> some View {
         
@@ -63,7 +92,7 @@ struct UserAccountView: View {
             ProgressView()
         }
         .ignoresSafeArea()
-        .opacity(viewModel.route.isLoading ? 1 : 0)
+        .opacity(viewModel.state.isLoading ? 1 : 0)
     }
     
     private func destinationView(
@@ -73,18 +102,18 @@ struct UserAccountView: View {
         switch destination {
         case let .fastPaymentsSettings(fpsViewModel):
             FastPaymentsSettingsView(viewModel: fpsViewModel)
-                .onAppear { fpsViewModel.event(.appear) }
                 .alert(
                     item: .init(
-                        get: { viewModel.route.modal?.fpsAlert },
-                        set: { if $0 == nil { viewModel.dismissModal() }}
+                        get: { viewModel.state.alert?.fpsAlert },
+                        // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                        set: { _ in }
                     ),
                     content: Alert.init(with:)
                 )
                 .navigationDestination(
                     item: .init(
-                        get: { viewModel.route.fpsDestination },
-                        set: { if $0 == nil { viewModel.dismissFPSDestination() }}
+                        get: { viewModel.state.fpsDestination },
+                        set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                     ),
                     destination: fpsDestinationView
                 )
@@ -96,10 +125,67 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch fpsDestination {
-        case .confirmSetBankDefault:
-            ConfirmOTPStubView(onCommit: viewModel.handleOTPResult)
+        case let .confirmSetBankDefault(timedOTPInputViewModel):
+            OTPInputWrapperView(viewModel: timedOTPInputViewModel)
         }
     }
+}
+
+struct OTPInputWrapperView: View {
+    
+    @ObservedObject private var viewModel: TimedOTPInputViewModel
+    
+    init(viewModel: TimedOTPInputViewModel) {
+     
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+        
+        switch viewModel.state {
+        case .failure:
+            EmptyView()
+            
+        case let .input(input):
+            OTPInputView(
+                state: input,
+                phoneNumber: "TBD: hardcoded phone number",
+                event: viewModel.event(_:)
+            )
+            
+        case .validOTP:
+            EmptyView()
+        }
+    }
+}
+
+// MARK: - Demo Functionality
+
+private extension UserAccountViewModel {
+    
+    func showDemoAlert() {
+        
+        event(.demo(.show(.alert)))
+    }
+    
+    func showDemoInformer() {
+        
+        event(.demo(.show(.informer)))
+    }
+    
+    func showDemoLoader() {
+        
+        event(.demo(.show(.loader)))
+    }
+}
+
+#warning("remove if unused")
+enum ConfirmWithOTPResult {
+    
+    case success
+    case incorrectCode
+    case serverError(String)
+    case connectivityError
 }
 
 struct UserAccountView_Previews: PreviewProvider {
@@ -108,63 +194,7 @@ struct UserAccountView_Previews: PreviewProvider {
         
         UserAccountView(viewModel: .preview(
             route: .init(),
-            getProducts: { .preview },
-            createContract: { _, completion in
-                
-                completion(.success(.active))
-            },
-            getSettings: { completion in
-                
-                completion(.active(bankDefault: .offEnabled))
-            },
-            prepareSetBankDefault: { completion in
-                
-                completion(.success(()))
-            },
-            updateContract: { _, completion in
-                
-                completion(.success(
-                    .init(
-                        id: .init(generateRandom11DigitNumber()),
-                        productID: Product.account.id,
-                        contractStatus: .active)
-                ))
-            },
-            updateProduct: { _, completion in
-                
-                completion(.success(()))
-            }
+            flowStub: .preview
         ))
     }
-}
-
-struct ConfirmOTPStubView: View {
-    
-    let onCommit: (ConfirmWithOTPResult) -> Void
-    
-    var body: some View {
-        
-        VStack(spacing: 32) {
-            
-            Text("OTP Confirmation Stub")
-                .font(.title3.bold())
-            
-            VStack(spacing: 32) {
-                
-                Button("Confirm OK") { onCommit(.success) }
-                Button("Incorrect Code") { onCommit(.incorrectCode) }
-                Button("Server Error") { onCommit(.serverError("Возникла техническая ошибка (код 4044). Свяжитесь с поддержкой банка для уточнения")) }
-                Button("Connectivity Error") { onCommit(.connectivityError) }
-            }
-            .frame(maxHeight: .infinity)
-        }
-    }
-}
-
-enum ConfirmWithOTPResult {
-    
-    case success
-    case incorrectCode
-    case serverError(String)
-    case connectivityError
 }

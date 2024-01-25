@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import OTPInputComponent
 
 struct Factory {
     
     let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
+    let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
 }
 
 extension Factory {
     
-    typealias MakeFastPaymentsSettingsViewModel = () -> FastPaymentsSettingsViewModel
+    typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
+    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
 }

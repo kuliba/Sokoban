@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import Tagged
 
 public final class ConsentListReducer {
     
     private let availableBanks: [Bank]
     private let changeConsentList: ChangeConsentList
     
+    @available(*, deprecated, message: "use `ConsentListRxReducer`")
     public init(
         availableBanks: [Bank],
         changeConsentList: @escaping ChangeConsentList
@@ -23,6 +25,7 @@ public final class ConsentListReducer {
 
 public extension ConsentListReducer {
     
+    #warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event,
@@ -55,7 +58,7 @@ public extension ConsentListReducer {
 
 public extension ConsentListReducer {
     
-    typealias ChangeConsentListPayload = [Bank.ID]
+    typealias ChangeConsentListPayload = Set<Bank.ID>
     // (h) changeClientConsentMe2MePull
     typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
     
@@ -128,7 +131,7 @@ private extension ConsentListReducer {
         // 3. parse response
         // 4. update state
         // or, 1-3. could be performed by decorated `changeConsentList` closure for error cases (alert and informer)
-        let payload = consentList.selectedBanks.map(\.id)
+        let payload = Set(consentList.selectedBanks.map(\.id))
         
         changeConsentList(payload) { result in
             

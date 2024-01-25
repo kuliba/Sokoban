@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
-#warning("remake as struct, add `phoneNumber: Tagged<String>` field + maybe OTP length (used in Digits)")
+#warning("remake as struct, add `phoneNumber: Tagged<String>` field + maybe OTP length (used in Digits) - or it would be better to hold those in reducer")
 public enum OTPInputState: Equatable {
-    #warning("decouple from OTPFieldFailure? or vice versa up countduwn state failure to common failure")
+    #warning("decouple from OTPFieldFailure? or vice versa up countdown state failure to common failure")
     case failure(OTPFieldFailure)
     case input(Input)
     case validOTP

@@ -11,6 +11,8 @@ import SwiftUI
 struct ActiveContractView: View {
     
     let contractDetails: UserPaymentSettings.ContractDetails
+    #warning("combine event closures into one closure")
+    let consentListEvent: (ConsentListEvent) -> Void
     let actionOff: () -> Void
     let setBankDefault: () -> Void
     
@@ -23,10 +25,17 @@ struct ActiveContractView: View {
                 actionOff: actionOff
             )
             
+            ConsentListView(
+                state: contractDetails.consentList.uiState,
+                event: consentListEvent
+            )
+            
             BankDefaultView(
                 bankDefault: contractDetails.bankDefault,
                 action: setBankDefault
             )
+            
+            // productSelector
         }
     }
 }
@@ -35,12 +44,9 @@ struct ActiveContractView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        VStack(spacing: 32) {
+        Group {
             
             activeContractView(.preview(paymentContract: .active))
-            
-            Divider()
-            
             activeContractView(.preview(paymentContract: .inactive))
         }
     }
@@ -51,6 +57,7 @@ struct ActiveContractView_Previews: PreviewProvider {
         
         ActiveContractView(
             contractDetails: contractDetails,
+            consentListEvent: { _ in },
             actionOff:  {},
             setBankDefault: {}
         )

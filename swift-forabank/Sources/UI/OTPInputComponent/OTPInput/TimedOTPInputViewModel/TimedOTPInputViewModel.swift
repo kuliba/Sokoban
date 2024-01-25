@@ -13,7 +13,7 @@ public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, O
 
 public final class TimedOTPInputViewModel: ObservableObject {
     
-    @Published public  private(set) var state: State
+    @Published public private(set) var state: State
     
     private let viewModel: OTPInputViewModel
     private var cancellable: AnyCancellable?

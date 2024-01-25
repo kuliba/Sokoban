@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
+import Tagged
+
 public final class ConsentListRxEffectHandler {
     
     private let changeConsentList: ChangeConsentList
@@ -49,8 +51,8 @@ public extension ConsentListRxEffectHandler {
     enum ChangeConsentListResponse {
         
         case success
-        case serverError(String)
         case connectivityError
+        case serverError(String)
     }
 }
 

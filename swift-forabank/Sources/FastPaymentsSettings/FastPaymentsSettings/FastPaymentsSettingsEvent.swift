@@ -15,6 +15,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case resetStatus
     
     case bankDefault(BankDefault)
+    case consentList(ConsentListEvent)
     case contract(Contract)
     case products(Products)
 }
