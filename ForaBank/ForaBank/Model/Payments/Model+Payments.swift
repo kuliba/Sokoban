@@ -1517,7 +1517,7 @@ extension Model {
                 return nil
             }
             
-            guard antifraudParameter.value == "F" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" else {
+            guard antifraudParameter.value == "F" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" ||  antifraudParameter.value == nil else {
                 return nil
             }
             
@@ -1531,9 +1531,10 @@ extension Model {
                 return nil
             }
             
-            return .init(payeeName: recipientValue, phone: phoneValue, amount: "- \(amountValue)")
+            let formatPhone = PhoneNumberKitFormater().format(phoneValue.digits)
+            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue)")
             
-        case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility:
+        case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility, .internetTV:
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
             guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
                 return nil
@@ -1588,7 +1589,7 @@ extension Model {
                 return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
 
                 
-            case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor:
+            case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
                 
                 if let newName = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue }) as? Payments.ParameterHeader {
                     name = newName.title
