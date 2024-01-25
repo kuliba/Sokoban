@@ -10,6 +10,6 @@ import ProductSelectComponent
 extension FastPaymentsSettingsConfig {
     
     static let `default`: Self = .init(
-        productSelectConfig: .default
+        productSelect: .default
     )
 }

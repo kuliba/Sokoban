@@ -52,9 +52,9 @@ public extension Product {
     
     struct Look: Equatable {
         
-        let background: Icon
-        let color: String
-        let icon: Icon
+        public let background: Icon
+        public let color: String
+        public let icon: Icon
         
         public init(
             background: Icon,

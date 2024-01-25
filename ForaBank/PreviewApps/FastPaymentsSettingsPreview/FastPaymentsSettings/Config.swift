@@ -9,19 +9,19 @@ import ProductSelectComponent
 
 struct FastPaymentsSettingsConfig {
     
-    let productSelectConfig: ProductSelectConfig
+    let productSelect: ProductSelectConfig
 }
 
 extension FastPaymentsSettingsConfig {
     
-    var activeContractConfig: ActiveContractConfig {
+    var activeContract: ActiveContractConfig {
         
         .init(
-            productSelectConfig: productSelectConfig
+            productSelect: productSelect
         )
     }
     
-    var inactiveContractConfig: InactiveContractConfig {
+    var inactiveContract: InactiveContractConfig {
         
         .init()
     }

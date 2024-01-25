@@ -9,5 +9,5 @@ import ProductSelectComponent
 
 struct ActiveContractConfig {
     
-    let productSelectConfig: ProductSelectConfig
+    let productSelect: ProductSelectConfig
 }

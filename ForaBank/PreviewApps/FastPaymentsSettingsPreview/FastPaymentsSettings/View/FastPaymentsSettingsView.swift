@@ -12,6 +12,8 @@ struct FastPaymentsSettingsView: View {
     
     @ObservedObject var viewModel: FastPaymentsSettingsViewModel
     
+    let config: FastPaymentsSettingsConfig
+    
     var body: some View {
         
         switch viewModel.state.userPaymentSettings {
@@ -23,16 +25,18 @@ struct FastPaymentsSettingsView: View {
             case .active:
                 ActiveContractView(
                     contractDetails: contractDetails,
-                    consentListEvent: { viewModel.event(.consentList($0)) },
+                    consentListEvent: { viewModel.event(.consentList($0)) }, 
+                    productSelectEvent: { viewModel.event(.products($0)) },
                     actionOff: { viewModel.event(.contract(.deactivateContract)) },
-                    setBankDefault: { viewModel.event(.bankDefault(.setBankDefault)) }
+                    setBankDefault: { viewModel.event(.bankDefault(.setBankDefault)) },
+                    config: config.activeContract
                 )
                 
             case .inactive:
-                InactiveContractView {
-                    
-                    viewModel.event(.contract(.activateContract))
-                }
+                InactiveContractView(
+                    action: { viewModel.event(.contract(.activateContract)) },
+                    config: config.inactiveContract
+                )
             }
             
         case let .missingContract(consentResult):
@@ -60,6 +64,9 @@ struct FastPaymentsSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        FastPaymentsSettingsView(viewModel: .preview)
+        FastPaymentsSettingsView(
+            viewModel: .preview,
+            config: .preview
+        )
     }
 }

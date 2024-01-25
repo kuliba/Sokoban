@@ -101,22 +101,25 @@ struct UserAccountView: View {
         
         switch destination {
         case let .fastPaymentsSettings(fpsViewModel):
-            FastPaymentsSettingsView(viewModel: fpsViewModel)
-                .alert(
-                    item: .init(
-                        get: { viewModel.state.alert?.fpsAlert },
-                        // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
-                        set: { _ in }
-                    ),
-                    content: Alert.init(with:)
-                )
-                .navigationDestination(
-                    item: .init(
-                        get: { viewModel.state.fpsDestination },
-                        set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
-                    ),
-                    destination: fpsDestinationView
-                )
+            FastPaymentsSettingsView(
+                viewModel: fpsViewModel,
+                config: .default
+            )
+            .alert(
+                item: .init(
+                    get: { viewModel.state.alert?.fpsAlert },
+                    // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                    set: { _ in }
+                ),
+                content: Alert.init(with:)
+            )
+            .navigationDestination(
+                item: .init(
+                    get: { viewModel.state.fpsDestination },
+                    set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+                ),
+                destination: fpsDestinationView
+            )
         }
     }
     
@@ -136,7 +139,7 @@ struct OTPInputWrapperView: View {
     @ObservedObject private var viewModel: TimedOTPInputViewModel
     
     init(viewModel: TimedOTPInputViewModel) {
-     
+        
         self.viewModel = viewModel
     }
     

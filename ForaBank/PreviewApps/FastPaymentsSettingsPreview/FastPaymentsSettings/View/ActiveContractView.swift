@@ -12,23 +12,20 @@ import SwiftUI
 struct ActiveContractView: View {
     
     let contractDetails: UserPaymentSettings.ContractDetails
-    #warning("combine event closures into one closure")
+#warning("combine event closures into one closure")
     let consentListEvent: (ConsentListEvent) -> Void
+    let productSelectEvent: (FastPaymentsSettingsEvent.Products) -> Void
     let actionOff: () -> Void
     let setBankDefault: () -> Void
+    let config: ActiveContractConfig
     
     var body: some View {
         
         List {
             
             PaymentContractView(
-                paymentContract: contractDetails.paymentContract, 
+                paymentContract: contractDetails.paymentContract,
                 actionOff: actionOff
-            )
-            
-            ConsentListView(
-                state: contractDetails.consentList.uiState,
-                event: consentListEvent
             )
             
             BankDefaultView(
@@ -36,10 +33,122 @@ struct ActiveContractView: View {
                 action: setBankDefault
             )
             
-            // productSelector
+            ConsentListView(
+                state: contractDetails.consentList.uiState,
+                event: consentListEvent
+            )
+            
+            ProductSelectView(
+                state: contractDetails.productSelect,
+                event: { productSelectEvent($0.productSelect) },
+                config: config.productSelect
+            ) {
+                ProductCardView(
+                    productCard: .init(product: $0),
+                    config: config.productSelect.card.productCardConfig
+                )
+            }
         }
     }
 }
+
+// MARK: - Adapters
+
+private extension Product {
+    
+    var product: ProductSelect.Product {
+        
+        .init(
+            id: .init(id.rawValue),
+            type: type.productSelectProductType,
+            header: header,
+            title: title,
+            footer: number,
+            amountFormatted: amountFormatted,
+            balance: balance,
+            look: look.productSelectProductLook
+        )
+    }
+}
+
+private extension Product.Look {
+    
+    var productSelectProductLook: ProductSelect.Product.Look {
+        
+        .init(
+            background: background.productSelectIcon,
+            color: color,
+            icon: icon.productSelectIcon
+        )
+    }
+}
+
+private extension Product.Look.Icon {
+    
+    var productSelectIcon: Icon {
+        
+        switch self {
+        case let .svg(svg): return .svg(svg)
+        }
+    }
+}
+
+private extension Product.ProductType {
+    
+    var productSelectProductType: ProductSelect.Product.ProductType {
+        
+        switch self {
+        case .account: return  .account
+        case .card:    return  .card
+        }
+    }
+}
+
+private extension UserPaymentSettings.ContractDetails {
+    
+    var productSelect: ProductSelect {
+        
+        .init(
+            selected: productSelector.productSelectSelected,
+            products: productSelector.productSelectProducts
+        )
+    }
+}
+
+private extension UserPaymentSettings.ProductSelector {
+    
+    var productSelectSelected: ProductSelect.Product? {
+        
+        selectedProduct.map(\.product)
+    }
+    
+    var productSelectProducts: ProductSelect.Products? {
+        
+        switch status {
+        case .collapsed:
+            return nil
+            
+        case .expanded:
+            return products.map(\.product)
+        }
+    }
+}
+
+private extension ProductSelectEvent {
+    
+    var productSelect: FastPaymentsSettingsEvent.Products {
+        
+        switch self {
+        case .toggleProductSelect:
+            return .toggleProducts
+            
+        case let .select(id):
+            return .selectProduct(.init(id.rawValue))
+        }
+    }
+}
+
+// MARK: - Previews
 
 struct ActiveContractView_Previews: PreviewProvider {
     
@@ -59,8 +168,10 @@ struct ActiveContractView_Previews: PreviewProvider {
         ActiveContractView(
             contractDetails: contractDetails,
             consentListEvent: { _ in },
+            productSelectEvent: { _ in },
             actionOff:  {},
-            setBankDefault: {}
+            setBankDefault: {},
+            config: .preview
         )
     }
 }

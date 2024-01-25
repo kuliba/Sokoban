@@ -10,6 +10,6 @@ import ProductSelectComponent
 extension ActiveContractConfig {
     
     static let preview: Self = .init(
-        productSelectConfig: .preview
+        productSelect: .preview
     )
 }

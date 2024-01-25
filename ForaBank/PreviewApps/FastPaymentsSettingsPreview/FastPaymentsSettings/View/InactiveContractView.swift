@@ -10,6 +10,7 @@ import SwiftUI
 struct InactiveContractView: View {
     
     let action: () -> Void
+    let config: InactiveContractConfig
     
     var body: some View {
         
@@ -32,6 +33,9 @@ struct InactiveContractView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        InactiveContractView(action: {})
+        InactiveContractView(
+            action: {},
+            config: .preview
+        )
     }
 }
