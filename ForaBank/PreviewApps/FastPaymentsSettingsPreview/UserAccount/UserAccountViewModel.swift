@@ -314,6 +314,7 @@ private extension UserAccountViewModel {
             state.isLoading = true
             
         case let .getC2BSubResponse(getC2BSubResponse):
+            state.isLoading = false
             state.fpsDestination = .c2BSub(getC2BSubResponse)
             
         case .connectivityError:

@@ -114,6 +114,13 @@ private extension FastPaymentsSettingsReducer {
         return (state, effect)
     }
     
+    func handleLoadedSettings(
+        _ userPaymentSettings: UserPaymentSettings
+    ) -> State {
+        
+        .init(userPaymentSettings: userPaymentSettings)
+    }
+    
 #warning("add tests")
     func reduce(
         _ state: State,
@@ -135,13 +142,7 @@ private extension FastPaymentsSettingsReducer {
         return (state, effect)
     }
     
-    func handleLoadedSettings(
-        _ userPaymentSettings: UserPaymentSettings
-    ) -> State {
-        
-        .init(userPaymentSettings: userPaymentSettings)
-    }
-    
+#warning("add tests")
     func reduce(
         _ state: State,
         with getC2BSubResult: FastPaymentsSettingsEvent.GetC2BSubResult
