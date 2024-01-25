@@ -9,7 +9,6 @@ import Tagged
 
 public extension MicroServices {
     
-#warning("replace generics with concrete types")
     final class GetSettings<Contract, GetClientConsentMe2MePullResponse, Settings> {
         
         private let fastPaymentContractFindList: FastPaymentContractFindList
@@ -36,7 +35,7 @@ public extension MicroServices {
 }
 
 public extension MicroServices.GetSettings {
-#warning("add tests")
+    
     func process(
         _ phoneNumber: PhoneNumber,
         completion: @escaping Completion
@@ -53,6 +52,7 @@ public extension MicroServices.GetSettings {
             case .success(.none):
                 process(completion)
                 
+#warning("add tests")
             case let .success(.some(contract)):
                 process(contract, phoneNumber, completion)
             }
