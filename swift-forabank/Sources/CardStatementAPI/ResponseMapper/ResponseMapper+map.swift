@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension ResponseMapper {
+internal extension ResponseMapper {
     
     /// Generic map.
     static func map<D: Decodable, T>(
