@@ -29,7 +29,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_editableAmount_editAmount_shouldChangeStateOnEditAmount() {
+    func test_reduce_editableAmount_editAmount_shouldChangeStateOnEditAmount() throws {
         
         let amount: Decimal = 11.11
         let brandName = "Some Brand Name"
@@ -46,10 +46,13 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
             amount: amount,
             isEnabled: true
         )))
-        XCTAssertGreaterThan(newState.productSelect.selected.balance, amount)
+        
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(balance, amount)
+        XCTAssertGreaterThan(balance, amount)
     }
     
-    func test_reduce_editableAmount_editAmount_shouldChangeStateToDisabledOnEditAmount() {
+    func test_reduce_editableAmount_editAmount_shouldChangeStateToDisabledOnEditAmount() throws {
         
         let amount: Decimal = 3_456.78
         let brandName = "Some Brand Name"
@@ -66,7 +69,9 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
             amount: amount,
             isEnabled: false
         )))
-        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
+
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(amount, balance)
     }
     
     func test_reduce_editableAmount_pay_shouldCallPayWithState() {

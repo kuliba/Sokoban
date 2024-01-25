@@ -35,10 +35,24 @@ public struct ProductSelectView<ProductView: View>: View {
         
         VStack(spacing: 10) {
             
-            selectedProductView(state.selected)
-                .padding(.default)
-            
-            state.products.map(productsView)
+            switch (state.selected, state.products) {
+            case (.none, .none):
+                Text("No products avail")
+                    .foregroundColor(.red.opacity(0.5))
+                
+            case let (.none, .some(products)):
+                productsView(products: products)
+                
+            case let (.some(selected), .none):
+                selectedProductView(selected)
+                    .padding(.default)
+                
+            case let (.some(selected), .some(products)):
+                selectedProductView(selected)
+                    .padding(.default)
+                
+                productsView(products: products)
+            }
         }
         .animation(.easeInOut, value: state)
     }
@@ -134,6 +148,8 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
+            ProductSelectView_Demo(.emptySelected())
+            ProductSelectView_Demo(.emptySelectedNonEmptyProducts())
             ProductSelectView_Demo(.compact())
             ProductSelectView_Demo(.expanded())
         }
@@ -171,6 +187,16 @@ struct ProductSelectView_Previews: PreviewProvider {
 }
 
 private extension ProductSelect {
+    
+    static func emptySelected() -> Self {
+        
+        .init(selected: nil)
+    }
+    
+    static func emptySelectedNonEmptyProducts() -> Self {
+        
+        .init(selected: nil, products: .allProducts)
+    }
     
     static func compact(
         selected: ProductSelect.Product = .cardPreview
