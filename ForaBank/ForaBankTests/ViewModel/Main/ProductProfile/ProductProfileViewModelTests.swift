@@ -560,7 +560,8 @@ final class ProductProfileViewModelTests: XCTestCase {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
-            dismissAction: {}
+            dismissAction: {}, 
+            fastUpdateAction: {}
         )
     }
     
@@ -594,7 +595,8 @@ final class ProductProfileViewModelTests: XCTestCase {
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",
-                dismissAction: {}
+                dismissAction: {},
+                fastUpdateAction: {}
             )
         )
         

@@ -447,7 +447,8 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        onRegister: {}
+        onRegister: {},
+        fastUpdateAction: {}
     )
     
     static let sampleProducts = MainViewModel(
@@ -464,7 +465,8 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        onRegister: {}
+        onRegister: {}, 
+        fastUpdateAction: {}
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -481,7 +483,8 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        onRegister: {}
+        onRegister: {}, 
+        fastUpdateAction: {}
     )
 }
 

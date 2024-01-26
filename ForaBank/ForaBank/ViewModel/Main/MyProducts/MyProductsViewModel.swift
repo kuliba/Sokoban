@@ -15,7 +15,7 @@ import LandingUIComponent
 class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -263,7 +263,10 @@ class MyProductsViewModel: ObservableObject {
                             .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }
+                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }, { Task {
+                            await self.model.handleProductsUpdateFastAll()
+                        }
+ }
                         )
                         else { return }
                         

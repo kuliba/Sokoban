@@ -315,7 +315,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory
+            qrViewModelFactory: qrViewModelFactory,
+            fastUpdateAction: {}
         )
         
         // TODO: restore memory leaks tracking after Model fix

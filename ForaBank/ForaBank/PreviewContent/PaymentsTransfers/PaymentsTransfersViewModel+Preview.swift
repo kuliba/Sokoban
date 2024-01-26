@@ -91,7 +91,7 @@ extension PaymentsTransfersViewModel {
         qrViewModelFactory: .preview(),
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
-        ]
+        ], fastUpdateAction: {}
     )
 }
 

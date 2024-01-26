@@ -77,7 +77,7 @@ extension MainViewController: UICollectionViewDelegate {
                
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
-                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {})
+                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {}, fastUpdateAction: {})
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)

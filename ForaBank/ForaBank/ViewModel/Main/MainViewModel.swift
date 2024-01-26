@@ -16,7 +16,7 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -36,6 +36,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let onRegister: () -> Void
+    private let fastUpdateAction: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
@@ -47,7 +48,8 @@ class MainViewModel: ObservableObject, Resetable {
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
-        onRegister: @escaping () -> Void
+        onRegister: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
     ) {
         self.model = model
         self.navButtonsRight = []
@@ -68,8 +70,8 @@ class MainViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.route = route
         self.onRegister = onRegister
+        self.fastUpdateAction = fastUpdateAction
         self.navButtonsRight = createNavButtonsRight()
-        
         bind()
         update(sections, with: model.settingsMainSections)
         bind(sections)
@@ -172,7 +174,8 @@ private extension MainViewModel {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() })
+                            { [weak self] in self?.resetDestination() }, fastUpdateAction
+                            )
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
@@ -382,7 +385,7 @@ private extension MainViewModel {
                             case .templates:
                                 
                                 let templatesListViewModel = TemplatesListViewModel(
-                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
+                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) }, fastUpdateAction: fastUpdateAction)
                                 bind(templatesListViewModel)
                                 route.destination = .templates(templatesListViewModel)
                                 

@@ -52,6 +52,8 @@ class ProductProfileViewModel: ObservableObject {
     private let qrViewModelFactory: QRViewModelFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
+    private let fastUpdateAction: () -> Void
+
     
     private var bindings = Set<AnyCancellable>()
     
@@ -72,7 +74,8 @@ class ProductProfileViewModel: ObservableObject {
          fastPaymentsServices: FastPaymentsServices,         sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          cvvPINServicesClient: CVVPINServicesClient,
-         rootView: String
+         rootView: String,
+         fastUpdateAction: @escaping () -> Void
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -89,6 +92,7 @@ class ProductProfileViewModel: ObservableObject {
         self.qrViewModelFactory = qrViewModelFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
+        self.fastUpdateAction = fastUpdateAction
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
@@ -108,7 +112,8 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
@@ -122,7 +127,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, fastPaymentsFactory: fastPaymentsFactory, fastPaymentsServices: fastPaymentsServices, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, fastPaymentsFactory: fastPaymentsFactory, fastPaymentsServices: fastPaymentsServices, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView, fastUpdateAction: fastUpdateAction)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -352,7 +357,8 @@ private extension ProductProfileViewModel {
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     isTabBarHidden: true,
-                    mode: .link
+                    mode: .link,
+                    fastUpdateAction: fastUpdateAction
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
@@ -1471,7 +1477,8 @@ private extension ProductProfileViewModel {
     func makeProductProfileViewModel(
         product: ProductData,
         rootView: String,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
     ) -> ProductProfileViewModel? {
         
         .init(
@@ -1483,7 +1490,8 @@ private extension ProductProfileViewModel {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
-            dismissAction: dismissAction
+            dismissAction: dismissAction,
+            fastUpdateAction: fastUpdateAction
         )
     }
 }

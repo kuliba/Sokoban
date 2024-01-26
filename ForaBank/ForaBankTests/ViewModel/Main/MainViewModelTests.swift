@@ -104,12 +104,13 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
-            onRegister: {}
+            onRegister: {}, 
+            fastUpdateAction: {}
         )
      
       sut.orderSticker()
@@ -141,12 +142,13 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            onRegister: {}
+            onRegister: {},
+            fastUpdateAction: {}
         )
 
         
@@ -195,12 +197,13 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
-            onRegister: {}
+            onRegister: {},
+            fastUpdateAction: {}
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)

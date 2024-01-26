@@ -29,6 +29,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var sheet: Sheet?
     
     private let model: Model
+    private let fastUpdateAction: () -> Void
     var bindings = Set<AnyCancellable>()
     
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
@@ -46,7 +47,9 @@ class TemplatesListViewModel: ObservableObject {
                   items: [ItemViewModel],
                   deletePannel: DeletePannelViewModel?,
                   dismissAction: @escaping () -> Void = {},
-                  model: Model) {
+                  model: Model,
+                  fastUpdateAction: @escaping () -> Void
+    ) {
         
         self.state = state
         self.style = style
@@ -56,9 +59,14 @@ class TemplatesListViewModel: ObservableObject {
         self.deletePanel = deletePannel
         self.dismissAction = dismissAction
         self.model = model
+        self.fastUpdateAction = fastUpdateAction
     }
     
-    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
+    convenience init(
+        _ model: Model,
+        dismissAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
+    ) {
   
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
@@ -73,7 +81,9 @@ class TemplatesListViewModel: ObservableObject {
                   items: [],
                   deletePannel: nil,
                   dismissAction: dismissAction,
-                  model: model)
+                  model: model,
+                  fastUpdateAction: fastUpdateAction
+        )
         
         updateNavBar(event: .setRegular)
         bind()
@@ -736,7 +746,7 @@ private extension TemplatesListViewModel {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    model.action.send(ModelAction.Products.Update.Fast.All())
+                    self.fastUpdateAction()
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.success = nil

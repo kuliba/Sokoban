@@ -200,7 +200,8 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
-              model: .emptyMock)
+              model: .emptyMock,
+              fastUpdateAction: {})
     }()
     
     static let sampleTiles: TemplatesListViewModel = {
@@ -211,7 +212,8 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems2,
               deletePannel: nil,
-              model: .emptyMock)
+              model: .emptyMock, 
+              fastUpdateAction: {})
     }()
     
     static let sampleDeleting: TemplatesListViewModel = {
@@ -222,7 +224,8 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems3,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
-              model: .emptyMock)
+              model: .emptyMock, 
+              fastUpdateAction: {})
     }()
 }
 

@@ -422,7 +422,8 @@ extension ProductProfileViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         cvvPINServicesClient: HappyCVVPINServicesClient(),
-        rootView: ""
+        rootView: "", 
+        fastUpdateAction: {}
     )
     
     static let sadSample = ProductProfileViewModel(
@@ -436,7 +437,8 @@ extension ProductProfileViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         cvvPINServicesClient: SadCVVPINServicesClient(),
-        rootView: ""
+        rootView: "",
+        fastUpdateAction: {}
     )
 }
 
