@@ -1524,15 +1524,20 @@ extension Model {
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
             
             guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId })?.value,
                   let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
-                  let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
+                  let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value,
+                  let productValue = operation.parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct
+            else {
                 return nil
             }
             
+            let product = self.allProducts.first(where: { $0.id == Int(productValue.id) })
+            
             let formatPhone = PhoneNumberKitFormater().format(phoneValue.digits)
-            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue)")
+            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue) \(product?.currency ?? "")")
             
         case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility, .internetTV:
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
