@@ -369,7 +369,7 @@ private extension ProductType {
 
 extension Model {
     
-    func handleProductsUpdateFastAll() async {
+    func handleProductsUpdateFastAll(file: StaticString = #file, line: UInt = #line) async {
         
         let productsList = products.value.values.flatMap{ $0 }
         productsFastUpdating.value = Set(productsList.map{ $0.id })
@@ -386,15 +386,11 @@ extension Model {
             do {
                 
                 try self.productsCacheStore(productsData: updatedProducts)
-                
             } catch {
-                
-               // self.handleServerCommandCachingError(error: error, command: command)
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: GetProductDynamicParamsList caching error: \(error.localizedDescription)", file: file, line: line)
             }
-
         } catch {
-           // self.handleServerCommandError(error: error, command: command)
-
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: GetProductDynamicParamsList  error: \(error.localizedDescription)", file: file, line: line)
         }
     }
     
