@@ -64,34 +64,16 @@ public extension MicroServices.GetSettings {
     
     typealias SettingsResult = Result<Settings, ServiceFailure>
     typealias Completion = (SettingsResult) -> Void
-}
-
-public extension MicroServices.GetSettings {
     
     typealias GetContractResult = Result<Contract?, ServiceFailure>
     typealias GetContractCompletion = (GetContractResult) -> Void
     typealias GetContract = (@escaping GetContractCompletion) -> Void
-}
-
-public extension MicroServices.GetSettings {
     
     typealias GetConsentCompletion = (Consent) -> Void
     typealias GetConsent = (@escaping GetConsentCompletion) -> Void
-}
-
-public extension MicroServices.GetSettings {
-    
-    typealias PhoneNumber = Tagged<_PhoneNumber, String>
-    enum _PhoneNumber {}
     
     typealias GetBankDefaultCompletion = (UserPaymentSettings.GetBankDefaultResponse) -> Void
     typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
-}
-
-public typealias BankDefault = Tagged<_BankDefault, Bool>
-public enum _BankDefault {}
-
-public extension MicroServices.GetSettings {
     
     typealias MapToMissing = (Consent) -> SettingsResult
     typealias MapToSettings = (Contract, Consent, UserPaymentSettings.GetBankDefaultResponse) -> Settings

@@ -163,7 +163,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
     private typealias GetConsentSpy = Spy<Void, ConsentResponse>
-    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, UserPaymentSettings.GetBankDefaultResponse>
+    private typealias GetBankDefaultSpy = Spy<PhoneNumber, UserPaymentSettings.GetBankDefaultResponse>
     
     private func makeSUT(
         mapToMissing: @escaping SUT.MapToMissing = { .success(.missing($0)) },
@@ -214,7 +214,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        with phoneNumber: SUT.PhoneNumber = .init(anyMessage()),
+        with phoneNumber: PhoneNumber = .init(anyMessage()),
         toDeliver expected: SUT.SettingsResult,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 0.05,
@@ -232,13 +232,6 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: timeout)
-    }
-    
-    private func anyPhoneNumber(
-        _ value: String = anyMessage()
-    ) -> SUT.PhoneNumber {
-        
-        .init(value)
     }
     
     private func anyConsentResponse() -> ConsentResponse {
