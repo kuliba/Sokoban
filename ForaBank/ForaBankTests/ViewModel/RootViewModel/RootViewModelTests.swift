@@ -234,7 +234,7 @@ final class RootViewModelTests: XCTestCase {
             showLoginAction: { _ in
                 
                     .init(viewModel: .init(authLoginViewModel: .preview))
-            }
+            }, fastUpdateAction: {}
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))

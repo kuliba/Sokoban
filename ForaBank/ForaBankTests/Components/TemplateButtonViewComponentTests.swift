@@ -227,7 +227,8 @@ extension TemplateButtonViewComponentTests {
         let sut = OperationDetailViewModel(
             productStatement: .stub(),
             product: .stub(),
-            model: model
+            model: model, 
+            fastUpdateAction: {}
         )
         
         let templateButton = TemplateButtonView.ViewModel(

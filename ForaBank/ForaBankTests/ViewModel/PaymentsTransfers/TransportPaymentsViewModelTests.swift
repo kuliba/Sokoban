@@ -207,7 +207,8 @@ final class TransportPaymentsViewModelTests: XCTestCase {
             operators: operators,
             latestPayments: .sample,
             makePaymentsViewModel: makePaymentsViewModel,
-            handleError: { _ in }
+            handleError: { _ in },
+            fastUpdateAction: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -222,7 +223,8 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         .init(
             source: source,
             model: .mockWithEmptyExcept(),
-            closeAction: {}
+            closeAction: {}, 
+            fastUpdateAction: {}
         )
     }
 }

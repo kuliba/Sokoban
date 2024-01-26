@@ -269,7 +269,8 @@ extension OperationDetailViewModelTests {
             OperationDetailViewModel(
                 productStatement: statement,
                 product: .stub(),
-                model: model
+                model: model, 
+                fastUpdateAction: {}
             ),
             "failed to create OperationDetailViewModel",
             file: file, line: line

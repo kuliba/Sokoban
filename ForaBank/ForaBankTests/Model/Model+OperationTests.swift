@@ -30,7 +30,8 @@ final class Model_OperationTests: XCTestCase {
         let operationDetail = OperationDetailViewModel(
             productStatement: .stub(),
             product: .stub(),
-            model: sut
+            model: sut, 
+            fastUpdateAction: {}
         )
         
         XCTAssertNoDiff(operationDetail?.isLoading, true)
