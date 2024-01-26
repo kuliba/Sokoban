@@ -201,91 +201,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(activateContract(), on: serverError, effect: nil)
     }
     
-    // MARK: - collapseProducts
-    
-    func test_collapseProducts_shouldCollapseExpandedStateOnActive_expanded() {
-        
-        let (details, active) = contractedState(.active, selector: .expanded)
-        
-        assert(collapseProducts(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
-                productSelector: details.productSelector.updated(
-                    status: .collapsed
-                )
-            ))
-        }
-    }
-    
-    func test_collapseProducts_shouldNotChangeStateOnActive_collapsed() {
-        
-        let active = contractedState(.active, selector: .collapsed).state
-        
-        assert(collapseProducts(), on: active)
-    }
-    
-    func test_collapseProducts_shouldNotDeliverEffectOnActive() {
-        
-        let active = contractedState(.active).state
-        
-        assert(collapseProducts(), on: active, effect: nil)
-    }
-    
-    func test_collapseProducts_shouldNotChangeStateOnInactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(collapseProducts(), on: inactive)
-    }
-    
-    func test_collapseProducts_shouldNotDeliverEffectOnInactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(collapseProducts(), on: inactive, effect: nil)
-    }
-    
-    func test_collapseProducts_shouldNotChangeStateOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(collapseProducts(), on: missing)
-    }
-    
-    func test_collapseProducts_shouldNotDeliverEffectOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(collapseProducts(), on: missing, effect: nil)
-    }
-    
-    func test_collapseProducts_shouldNotChangeStateOnConnectivityErrorFailure() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(collapseProducts(), on: connectivityError)
-    }
-    
-    func test_collapseProducts_shouldNotDeliverEffectOnConnectivityErrorFailure() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(collapseProducts(), on: connectivityError, effect: nil)
-    }
-    
-    func test_collapseProducts_shouldNotChangeStateOnServerErrorFailure() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(collapseProducts(), on: serverError)
-    }
-    
-    func test_collapseProducts_shouldNotDeliverEffectOnServerErrorFailure() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(collapseProducts(), on: serverError, effect: nil)
-    }
-    
     // MARK: - deactivateContract
     
     func test_deactivateContract_shouldChangeStatusToInflightOnActive() {
@@ -361,91 +276,6 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let serverError = serverErrorFPSState()
         
         assert(deactivateContract(), on: serverError, effect: nil)
-    }
-    
-    // MARK: - expandProducts
-    
-    func test_expandProducts_shouldExpandCollapsedStateOnActive_collapsed() {
-        
-        let (details, active) = contractedState(.active, selector: .collapsed)
-        
-        assert(expandProducts(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
-                productSelector: details.productSelector.updated(
-                    status: .expanded
-                )
-            ))
-        }
-    }
-    
-    func test_expandProducts_shouldNotChangeStateOnActive_expanded() {
-        
-        let active = contractedState(.active, selector: .expanded).state
-        
-        assert(expandProducts(), on: active)
-    }
-    
-    func test_expandProducts_shouldNotDeliverEffectOnActive() {
-        
-        let active = contractedState(.active).state
-        
-        assert(expandProducts(), on: active, effect: nil)
-    }
-    
-    func test_expandProducts_shouldNotChangeStateOnInactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(expandProducts(), on: inactive)
-    }
-    
-    func test_expandProducts_shouldNotDeliverEffectOnInactive() {
-        
-        let inactive = contractedState(.inactive).state
-        
-        assert(expandProducts(), on: inactive, effect: nil)
-    }
-    
-    func test_expandProducts_shouldNotChangeStateOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(expandProducts(), on: missing)
-    }
-    
-    func test_expandProducts_shouldNotDeliverEffectOnMissing() {
-        
-        let missing = missingConsentSuccessFPSState()
-        
-        assert(expandProducts(), on: missing, effect: nil)
-    }
-    
-    func test_expandProducts_shouldNotChangeStateOnConnectivityErrorFailure() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(expandProducts(), on: connectivityError)
-    }
-    
-    func test_expandProducts_shouldNotDeliverEffectOnConnectivityErrorFailure() {
-        
-        let connectivityError = connectivityErrorFPSState()
-        
-        assert(expandProducts(), on: connectivityError, effect: nil)
-    }
-    
-    func test_expandProducts_shouldNotChangeStateOnServerErrorFailure() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(expandProducts(), on: serverError)
-    }
-    
-    func test_expandProducts_shouldNotDeliverEffectOnServerErrorFailure() {
-        
-        let serverError = serverErrorFPSState()
-        
-        assert(expandProducts(), on: serverError, effect: nil)
     }
     
     // MARK: - loadSettings
@@ -1390,6 +1220,110 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(setBankDefaultPreparedServerError(), on: serverError, effect: nil)
     }
     
+    // MARK: - toggleProducts
+    
+    func test_toggleProducts_shouldCollapseExpandedStateOnActive_expanded() {
+        
+        let (details, active) = contractedState(.active, selector: .expanded)
+        
+        assert(toggleProducts(), on: active) {
+            $0.userPaymentSettings = .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    status: .collapsed
+                )
+            ))
+        }
+    }
+    
+    func test_toggleProducts_shouldExpandOnActive_collapsed() {
+        
+        let (details, active) = contractedState(.active, selector: .collapsed)
+        
+        assert(toggleProducts(), on: active) {
+            $0.userPaymentSettings = .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    status: .expanded
+                )
+            ))
+        }
+    }
+    
+    func test_toggleProducts_shouldNotDeliverEffectOnActive() {
+        
+        let active = contractedState(.active).state
+        
+        assert(toggleProducts(), on: active, effect: nil)
+    }
+    
+    func test_toggleProducts_shouldNotChangeStateOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(toggleProducts(), on: inactive)
+    }
+    
+    func test_toggleProducts_shouldNotDeliverEffectOnInactive() {
+        
+        let inactive = contractedState(.inactive).state
+        
+        assert(toggleProducts(), on: inactive, effect: nil)
+    }
+    
+    func test_toggleProducts_shouldNotChangeStateOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(toggleProducts(), on: missing)
+    }
+    
+    func test_toggleProducts_shouldNotDeliverEffectOnMissing() {
+        
+        let missing = missingConsentSuccessFPSState()
+        
+        assert(toggleProducts(), on: missing, effect: nil)
+    }
+    
+    func test_toggleProducts_shouldNotChangeStateOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(toggleProducts(), on: connectivityError)
+    }
+    
+    func test_toggleProducts_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let connectivityError = connectivityErrorFPSState()
+        
+        assert(toggleProducts(), on: connectivityError, effect: nil)
+    }
+    
+    func test_toggleProducts_shouldNotChangeStateOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(toggleProducts(), on: serverError)
+    }
+    
+    func test_toggleProducts_shouldNotDeliverEffectOnServerErrorFailure() {
+        
+        let serverError = serverErrorFPSState()
+        
+        assert(toggleProducts(), on: serverError, effect: nil)
+    }
+    
+    func test_toggleProducts_shouldExpandCollapsedStateOnActive_collapsed() {
+        
+        let (details, active) = contractedState(.active, selector: .collapsed)
+        
+        assert(toggleProducts(), on: active) {
+            $0.userPaymentSettings = .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    status: .expanded
+                )
+            ))
+        }
+    }
+    
     // MARK: - updateContract
     
     func test_updateContract_shouldSetContractOnSuccess_active() {
@@ -1677,15 +1611,36 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     // MARK: - updateProduct
     
-    func test_updateProduct_shouldSetProductOnSuccess_active_collapsed() {
+    func test_updateProduct_shouldSetExistingProductOnSuccess_active_collapsed() {
         
         let newProduct = makeProduct()
         let (details, active) = contractedState(.active, selector: .collapsed)
+        let sut = makeSUT(products: [newProduct])
         
-        assert(updateProductSuccess(newProduct), on: active) {
+        assert(sut: sut, updateProductSuccess(newProduct), on: active) {
             $0.userPaymentSettings = .contracted(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: newProduct,
+                    status: .collapsed
+                )
+            ))
+        }
+    }
+    
+    func test_updateProduct_shouldNotSetMissingProductOnSuccess_active_collapsed() {
+        
+        let missingProduct = makeProduct(1)
+        let selectedProduct = makeProduct(0)
+        let (details, active) = contractedState(
+            .active,
+            selectedProduct: selectedProduct,
+            selector: .collapsed
+        )
+        
+        assert(updateProductSuccess(missingProduct), on: active) {
+            $0.userPaymentSettings = .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    selectedProduct: nil,
                     status: .collapsed
                 )
             ))
@@ -1699,12 +1654,28 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(updateProductSuccess(), on: active, effect: nil)
     }
     
+    func test_updateProduct_shouldCollapseAndNotSetMissingProductOnSuccess_active_expanded() {
+        
+        let missingProduct = makeProduct()
+        let (details, active) = contractedState(.active, selector: .expanded)
+        
+        assert(updateProductSuccess(missingProduct), on: active) {
+            $0.userPaymentSettings = .contracted(details.updated(
+                productSelector: details.productSelector.updated(
+                    selectedProduct: nil,
+                    status: .collapsed
+                )
+            ))
+        }
+    }
+    
     func test_updateProduct_shouldCollapseAndSetProductOnSuccess_active_expanded() {
         
         let newProduct = makeProduct()
         let (details, active) = contractedState(.active, selector: .expanded)
-        
-        assert(updateProductSuccess(newProduct), on: active) {
+        let sut = makeSUT(products: [newProduct])
+
+        assert(sut: sut, updateProductSuccess(newProduct), on: active) {
             $0.userPaymentSettings = .contracted(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: newProduct,
@@ -2073,8 +2044,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     private func target(
         _ contractDetails: UserPaymentSettings.ContractDetails,
-        _ targetStatus: FastPaymentsSettingsEffect.Contract.TargetContract.TargetStatus
-    ) -> FastPaymentsSettingsEffect.Contract.TargetContract? {
+        _ targetStatus: ContractEffect.TargetContract.TargetStatus
+    ) -> ContractEffect.TargetContract? {
         
         guard let core = core(contractDetails)
         else { return nil }
@@ -2094,7 +2065,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         return .init(
             contractID: .init(contractDetails.paymentContract.id.rawValue),
-            product: product
+            productID: product.id
         )
     }
 }

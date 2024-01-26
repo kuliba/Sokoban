@@ -27,14 +27,11 @@ public extension ProductsReducer {
         var effect: Effect?
         
         switch event {
-        case .collapseProducts:
-            state = collapseProducts(state)
+        case let .selectProduct(productID):
+            (state, effect) = selectProduct(state, productID)
             
-        case .expandProducts:
-            state = expandProducts(state)
-            
-        case let .selectProduct(product):
-            (state, effect) = selectProduct(state, product)
+        case .toggleProducts:
+            state = toggleProducts(state)
             
         case let .updateProduct(result):
             state = update(state, with: result)
@@ -49,53 +46,43 @@ public extension ProductsReducer {
     typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.Products
+    typealias Event = ProductsEvent
     typealias Effect = FastPaymentsSettingsEffect
+}
+
+private extension UserPaymentSettings.ProductSelector {
+    
+    func isSelected(_ productID: Product.ID) -> Bool {
+        
+        selectedProduct?.id == productID
+    }
 }
 
 private extension ProductsReducer {
     
-    func collapseProducts(
-        _ state: State
-    ) -> State {
+    func canSelect(_ productID: Product.ID) -> Bool {
         
-        guard var details = state.activeDetails,
-              details.productSelector.isExpanded
-        else { return state }
-        
-        details.productSelector = details.productSelector.updated(status: .collapsed)
-        
-        return .init(userPaymentSettings: .contracted(details))
+        let productIDs = getProducts().map(\.id)
+        return productIDs.contains(productID)
     }
     
-    func expandProducts(
-        _ state: State
-    ) -> State {
+    func product(forID id: Product.ID) -> Product? {
         
-        guard var details = state.activeDetails,
-              !details.productSelector.isExpanded
-        else { return state }
-        
-        details.productSelector = details.productSelector.updated(status: .expanded)
-        
-        return .init(userPaymentSettings: .contracted(details))
+        getProducts().first(where: { $0.id == id })
     }
     
     func selectProduct(
         _ state: State,
-        _ product: Product
+        _ productID: Product.ID
     ) -> (State, Effect?) {
         
         guard let details = state.activeDetails,
               details.productSelector.isExpanded
         else { return (state, nil) }
         
-        let productIDs = getProducts().map(\.id)
-        
-        guard details.productSelector.selectedProduct?.id != product.id,
-              productIDs.contains(product.id)
+        guard !details.productSelector.isSelected(productID),
+              canSelect(productID)
         else {
-            
             var state = state
             state = .init(
                 userPaymentSettings: .contracted(details.updated(
@@ -104,28 +91,70 @@ private extension ProductsReducer {
                     )
                 ))
             )
-            
             return (state, nil)
         }
         
         var state = state
         state.status = .inflight
         
-        return (state, .updateProduct(details, product))
+        return (state, .updateProduct(details, productID))
+    }
+    
+    func toggleProducts(
+        _ state: State
+    ) -> State {
+        
+        guard let details = state.activeDetails
+        else { return state }
+        
+        var state = state
+        
+        switch details.productSelector.status {
+        case .collapsed:
+            state = .init(
+                userPaymentSettings: .contracted(
+                    details.updated(
+                        productSelector: details.productSelector.updated(
+                            status: .expanded
+                        )
+                    )
+                )
+            )
+            
+        case .expanded:
+            state = .init(
+                userPaymentSettings: .contracted(
+                    details.updated(
+                        productSelector: details.productSelector.updated(
+                            status: .collapsed
+                        )
+                    )
+                )
+            )
+        }
+        
+        return state
     }
     
     func update(
         _ state: State,
-        with productUpdate: FastPaymentsSettingsEvent.ProductUpdateResult
+        with productUpdate: ProductUpdateResult
     ) -> State {
         
         guard let details = state.activeDetails
         else { return state }
         
         switch productUpdate {
-        case let .success(product):
+        case let .success(productID):
             var details = details
-            details.productSelector = details.productSelector.selected(product: product)
+            let product = product(forID: productID)
+            details = details.updated(
+                productSelector: details.productSelector.updated(
+                    selectedProduct: product,
+                    status: .collapsed
+                )
+            )
+            
             return .init(userPaymentSettings: .contracted(details))
             
         case .failure(.connectivityError):
@@ -159,12 +188,12 @@ private extension FastPaymentsSettingsEffect {
     
     static func updateProduct(
         _ details: UserPaymentSettings.ContractDetails,
-        _ product: Product
+        _ productID: Product.ID
     ) -> Self {
         
         .updateProduct(.init(
             contractID: .init(details.paymentContract.id.rawValue),
-            product: product
+            productID: productID
         ))
     }
 }

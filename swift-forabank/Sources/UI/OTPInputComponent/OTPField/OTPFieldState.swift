@@ -26,7 +26,7 @@ public extension OTPFieldState {
     
     enum Status: Equatable {
         
-        case failure(OTPFieldFailure)
+        case failure(ServiceFailure)
         case inflight
         case validOTP
     }

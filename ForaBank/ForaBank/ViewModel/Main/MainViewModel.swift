@@ -817,7 +817,8 @@ private extension MainViewModel {
             rootActions?.spinner.show()
             
             // TODO: move conversion to factory
-            let payload = state.makePayload(with: url)
+            guard let payload = state.makePayload(with: url)
+            else { return }
             
             sberQRServices.createSberQRPayment(payload) { [weak self] result in
                 
