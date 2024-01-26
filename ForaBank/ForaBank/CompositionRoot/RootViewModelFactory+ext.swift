@@ -82,9 +82,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation, 
             fastUpdateAction: {
-                Task {
-                    await model.handleProductsUpdateFastAll()
-                }
+                model.action.send(ModelAction.Products.Update.Fast.All())
             }
         )
     }
