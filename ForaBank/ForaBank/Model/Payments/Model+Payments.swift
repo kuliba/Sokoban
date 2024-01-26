@@ -1589,6 +1589,14 @@ extension Model {
                     id: Payments.Parameter.Identifier.p1.rawValue
                 )
                 
+                let productParameterId = Payments.Parameter.Identifier.product.rawValue
+                if let productValue = operation.parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct {
+                    
+                    let product = self.allProducts.first(where: { $0.id == Int(productValue.id) })
+                    let value = numberCard?.masked(mask: StringValueMask.card)
+                    
+                    return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
+                }
                 let value = numberCard?.masked(mask: StringValueMask.card)
                 
                 return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
