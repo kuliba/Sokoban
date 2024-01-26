@@ -1,5 +1,5 @@
 //
-//  MicroServices+UpdateContract.swift
+//  MicroServices+ContractUpdater.swift
 //
 //
 //  Created by Igor Malyarov on 26.01.2024.

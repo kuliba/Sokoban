@@ -1,5 +1,5 @@
 //
-//  MicroServices+UpdateContractTests.swift
+//  MicroServices+ContractUpdaterTests.swift
 //
 //
 //  Created by Igor Malyarov on 26.01.2024.
@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import XCTest
 
-final class MicroServices_UpdateContractTests: XCTestCase {
+final class MicroServices_ContractUpdaterTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
