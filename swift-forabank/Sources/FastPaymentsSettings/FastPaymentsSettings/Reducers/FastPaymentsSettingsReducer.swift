@@ -100,11 +100,11 @@ private extension FastPaymentsSettingsReducer {
         var state = state
         var effect: Effect?
         
-        switch state.userPaymentSettings {
+        switch state.settingsResult {
         case var .success(.contracted(contractDetails)):
             let (consentList, consentListEffect) = consentListReduce(contractDetails.consentList, event)
             contractDetails.consentList = consentList
-            state.userPaymentSettings = .success(.contracted(contractDetails))
+            state.settingsResult = .success(.contracted(contractDetails))
             effect = consentListEffect.map(Effect.consentList)
             
         case .none, .success(.missingContract), .failure:
@@ -118,7 +118,7 @@ private extension FastPaymentsSettingsReducer {
         _ result: UserPaymentSettingsResult
     ) -> State {
         
-        .init(userPaymentSettings: result)
+        .init(settingsResult: result)
     }
     
 #warning("add tests")

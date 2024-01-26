@@ -55,7 +55,7 @@ private extension ContractReducer {
         _ state: State
     ) -> (State, Effect?) {
         
-        switch state.userPaymentSettings {
+        switch state.settingsResult {
         case let .success(.contracted(details)):
 #warning("add tests for branches")
             guard details.isInactive,
@@ -117,12 +117,12 @@ private extension ContractReducer {
         with result: ContractUpdateResult
     ) -> State {
         
-        switch state.userPaymentSettings {
+        switch state.settingsResult {
         case var .success(.contracted(details)):
             switch result {
             case let .success(contract):
                 details.paymentContract = contract
-                return .init(userPaymentSettings: .success(.contracted(details)))
+                return .init(settingsResult: .success(.contracted(details)))
                 
             case .failure(.connectivityError):
                 var state = state
@@ -141,7 +141,7 @@ private extension ContractReducer {
                 let products = getProducts()
                 let product = products.first { $0.id == contract.productID }
                 
-                return .init(userPaymentSettings: .success(.contracted(
+                return .init(settingsResult: .success(.contracted(
                     .init(
                         paymentContract: contract,
                         consentList: consent,
@@ -176,7 +176,7 @@ private extension FastPaymentsSettingsState {
     
     var activeDetails: UserPaymentSettings.ContractDetails? {
         
-        guard case let .success(.contracted(details)) = userPaymentSettings,
+        guard case let .success(.contracted(details)) = settingsResult,
               details.isActive
         else { return nil }
         

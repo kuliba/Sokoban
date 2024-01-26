@@ -35,7 +35,7 @@ func connectivityError(
     let settings: UserPaymentSettingsResult = .failure(.connectivityError)
     
     let state = FastPaymentsSettingsState(
-        userPaymentSettings: settings,
+        settingsResult: settings,
         status: status
     )
     
@@ -47,7 +47,7 @@ func connectivityErrorFPSState(
 ) -> FastPaymentsSettingsState {
     
     .init(
-        userPaymentSettings: .failure(.connectivityError),
+        settingsResult: .failure(.connectivityError),
         status: status
     )
 }
@@ -160,12 +160,12 @@ func contractedState(
 }
 
 func fastPaymentsSettingsState(
-    _ userPaymentSettings: UserPaymentSettingsResult? = nil,
+    _ settingsResult: UserPaymentSettingsResult? = nil,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
     
     .init(
-        userPaymentSettings: userPaymentSettings,
+        settingsResult: settingsResult,
         status: status
     )
 }
@@ -245,7 +245,7 @@ func serverError(
     let settings: UserPaymentSettingsResult = .failure(.serverError(UUID().uuidString))
     
     let state = FastPaymentsSettingsState(
-        userPaymentSettings: settings,
+        settingsResult: settings,
         status: status
     )
     
@@ -257,7 +257,7 @@ func serverErrorFPSState(
 ) -> FastPaymentsSettingsState {
     
     .init(
-        userPaymentSettings: .failure(.serverError(UUID().uuidString)),
+        settingsResult: .failure(.serverError(UUID().uuidString)),
         status: status
     )
 }

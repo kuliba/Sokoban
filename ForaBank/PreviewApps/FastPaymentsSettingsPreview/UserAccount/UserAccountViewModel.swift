@@ -267,7 +267,7 @@ private extension UserAccountViewModel {
         var state = state
         var effect: Effect?
         
-        switch (settings.userPaymentSettings, settings.status) {
+        switch (settings.settingsResult, settings.status) {
         case (_, .inflight):
             state.isLoading = true
             

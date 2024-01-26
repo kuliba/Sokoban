@@ -7,14 +7,14 @@
 
 public struct FastPaymentsSettingsState: Equatable {
     
-    public var userPaymentSettings: UserPaymentSettingsResult?
+    public var settingsResult: UserPaymentSettingsResult?
     public var status: Status?
     
     public init(
-        userPaymentSettings: UserPaymentSettingsResult? = nil,
+        settingsResult: UserPaymentSettingsResult? = nil,
         status: Status? = nil
     ) {
-        self.userPaymentSettings = userPaymentSettings
+        self.settingsResult = settingsResult
         self.status = status
     }
 }
@@ -22,10 +22,10 @@ public struct FastPaymentsSettingsState: Equatable {
 public extension FastPaymentsSettingsState {
     
     init(
-        userPaymentSettings: UserPaymentSettings,
+        settingsResult: UserPaymentSettings,
         status: Status? = nil
     ) {
-        self.userPaymentSettings = .success(userPaymentSettings)
+        self.settingsResult = .success(settingsResult)
         self.status = status
     }
 }
