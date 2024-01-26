@@ -5,98 +5,6 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
-extension MicroServices {
-    
-    final class ContractMaker<Contract, Payload>
-    where Contract: StatusReporting<ContractStatus> {
-        
-        private let createContract: CreateContract
-        private let getContract: GetContract
-        
-        init(
-            createContract: @escaping CreateContract,
-            getContract: @escaping GetContract
-        ) {
-            self.createContract = createContract
-            self.getContract = getContract
-        }
-    }
-}
-
-extension MicroServices.ContractMaker {
-    
-    func process(
-        _ payload: Payload,
-        completion: @escaping Completion
-    ) {
-        createContract(payload, completion)
-    }
-}
-
-private extension MicroServices.ContractMaker {
-    
-    func createContract(
-        _ payload: Payload,
-        _ completion: @escaping Completion
-    ) {
-        createContract(payload) { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case let .failure(serviceFailure):
-                completion(.failure(serviceFailure))
-                
-            case .success(()):
-                getContract(payload, completion)
-            }
-        }
-    }
-    
-    func getContract(
-        _ payload: Payload,
-        _ completion: @escaping Completion
-    ) {
-        getContract { [weak self] result in
-            
-            guard self != nil else { return }
-            
-            switch result {
-            case let .failure(serviceFailure):
-                completion(.failure(serviceFailure))
-                
-            case .success(nil):
-                completion(.failure(.connectivityError))
-                
-            case let .success(.some(contract)):
-                switch contract.status {
-                case .active:
-                    completion(.success(contract))
-                    
-                case .inactive:
-                    completion(.failure(.connectivityError))
-                }
-            }
-        }
-    }
-}
-
-extension MicroServices.ContractMaker {
-    
-    typealias ProcessResult = Result<Contract?, ServiceFailure>
-    typealias Completion = (ProcessResult) -> Void
-    
-    // createFastPaymentContract
-    typealias CreateContractResponse = Result<Void, ServiceFailure>
-    typealias CreateContractCompletion = (CreateContractResponse) -> Void
-    typealias CreateContract = (Payload, @escaping CreateContractCompletion) -> Void
-    
-    // fastPaymentContractFindList
-    typealias GetContractResult = Result<Contract?, ServiceFailure>
-    typealias GetContractCompletion = (GetContractResult) -> Void
-    typealias GetContract = (@escaping GetContractCompletion) -> Void
-}
-
 import FastPaymentsSettings
 import XCTest
 
@@ -221,7 +129,7 @@ final class MicroServices_ContractMakerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = MicroServices.ContractMaker<Contract, Payload>
+    private typealias SUT = MicroServices.ContractMaker<Payload, Contract>
     
     private typealias CreateContractSpy = Spy<Payload, SUT.CreateContractResponse>
     private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
