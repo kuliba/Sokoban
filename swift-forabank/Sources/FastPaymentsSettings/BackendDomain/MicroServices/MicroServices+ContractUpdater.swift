@@ -12,10 +12,7 @@ public protocol StatusReporting<Status> {
     var status: Status { get }
 }
 
-public enum ContractStatus {
-    
-    case active, inactive
-}
+public typealias ContractStatus = UserPaymentSettings.PaymentContract.ContractStatus
 
 public extension MicroServices {
     
