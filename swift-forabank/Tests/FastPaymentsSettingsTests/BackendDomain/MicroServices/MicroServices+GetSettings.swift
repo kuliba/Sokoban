@@ -9,27 +9,27 @@ import Tagged
 
 public extension MicroServices {
     
-    final class GetSettings<Contract, GetClientConsentMe2MePullResponse, Settings> {
+    final class GetSettings<Contract, Consent, Settings> {
         
         private let fastPaymentContractFindList: FastPaymentContractFindList
         private let getClientConsentMe2MePull: GetClientConsentMe2MePull
 #warning("getBankDefault should be decorated with caching!")
         private let getBankDefault: GetBankDefault
         private let mapToMissing: MapToMissing
-        private let mapToContracted: MapToContracted
+        private let mapToResult: MapToResult
         
         init(
             fastPaymentContractFindList: @escaping FastPaymentContractFindList,
             getClientConsentMe2MePull: @escaping GetClientConsentMe2MePull,
             getBankDefault: @escaping GetBankDefault,
             mapToMissing: @escaping MapToMissing,
-            mapToContracted: @escaping MapToContracted
+            mapToResult: @escaping MapToResult
         ) {
             self.fastPaymentContractFindList = fastPaymentContractFindList
             self.getClientConsentMe2MePull = getClientConsentMe2MePull
             self.getBankDefault = getBankDefault
             self.mapToMissing = mapToMissing
-            self.mapToContracted = mapToContracted
+            self.mapToResult = mapToResult
         }
     }
 }
@@ -40,11 +40,11 @@ public extension MicroServices.GetSettings {
         _ phoneNumber: PhoneNumber,
         completion: @escaping Completion
     ) {
-        fastPaymentContractFindList { [weak self] resultA in
+        fastPaymentContractFindList { [weak self] result in
             
             guard let self else { return }
             
-            switch resultA {
+            switch result {
             case let .failure(failure):
                 completion(.failure(failure))
                 
@@ -77,8 +77,7 @@ public extension MicroServices.GetSettings {
 
 public extension MicroServices.GetSettings {
     
-    typealias GetClientConsentMe2MePullResult = Result<GetClientConsentMe2MePullResponse, ServiceFailure>
-    typealias GetClientConsentMe2MePullCompletion = (GetClientConsentMe2MePullResult) -> Void
+    typealias GetClientConsentMe2MePullCompletion = (Consent) -> Void
     typealias GetClientConsentMe2MePull = (@escaping GetClientConsentMe2MePullCompletion) -> Void
 }
 
@@ -90,21 +89,20 @@ public extension MicroServices.GetSettings {
     typealias BankDefault = Tagged<_BankDefault, Bool>
     enum _BankDefault {}
     
-    typealias GetBankDefaultResult = Result<BankDefault, GetBankDefaultFailure>
-    typealias GetBankDefaultCompletion = (GetBankDefaultResult) -> Void
+    typealias GetBankDefaultCompletion = (GetBankDefaultResponse) -> Void
     typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
     
-    enum GetBankDefaultFailure: Error, Equatable {
+    struct GetBankDefaultResponse: Equatable {
         
-        case failure(ServiceFailure)
-        case limit
+        let bankDefault: BankDefault
+        let requestLimitMessage: String?
     }
 }
 
 public extension MicroServices.GetSettings {
     
-    typealias MapToMissing = (GetClientConsentMe2MePullResult) -> SettingsResult
-    typealias MapToContracted = (Contract, GetClientConsentMe2MePullResult, GetBankDefaultResult) -> SettingsResult
+    typealias MapToMissing = (Consent) -> SettingsResult
+    typealias MapToResult = (Contract, Consent, GetBankDefaultResponse) -> SettingsResult
 }
 
 private extension MicroServices.GetSettings {
@@ -133,7 +131,7 @@ private extension MicroServices.GetSettings {
                 
                 guard let self else { return }
                 
-                completion(mapToContracted(contract, resultB, resultC))
+                completion(mapToResult(contract, resultB, resultC))
             }
         }
     }

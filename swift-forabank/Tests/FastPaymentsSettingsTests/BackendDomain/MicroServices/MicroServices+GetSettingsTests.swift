@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
+import FastPaymentsSettings
 import Tagged
 import XCTest
 
@@ -40,42 +41,20 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         })
     }
     
-    func test_process_shouldDeliverConnectiviyErrortOn_getClientConsentMe2MePullConnectivityErrorFailure() {
+    func test_process_shouldDeliverMissingWithConsentOn_fastPaymentContractFindListSpySuccessNil() {
         
-        let (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy,_) = makeSUT()
-        
-        expect(sut, toDeliver: .failure(.connectivityError), on: {
-            
-            fastPaymentContractFindListSpy.complete(with: .success(nil))
-            getClientConsentMe2MePullSpy.complete(with: .failure(.connectivityError))
-        })
-    }
-    
-    func test_process_shouldDeliverServerErrorOn_getClientConsentMe2MePullServerErrorFailure() {
-        
-        let message = anyMessage()
-        let (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy,_) = makeSUT()
-        
-        expect(sut, toDeliver: .failure(.serviceError(message)), on: {
-            
-            fastPaymentContractFindListSpy.complete(with: .success(nil))
-            getClientConsentMe2MePullSpy.complete(with: .failure(.serviceError(message)))
-        })
-    }
-    
-    func test_process_shouldDeliverMissingContractWithConsentOn_getClientConsentMe2MePullSuccess() {
-        
-        let consent = GetClientConsentMe2MePullResponse()
+        let consent = anyConsentResponse()
         let (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy,_) = makeSUT()
         
         expect(sut, toDeliver: .success(.missing(consent)), on: {
             
             fastPaymentContractFindListSpy.complete(with: .success(nil))
-            getClientConsentMe2MePullSpy.complete(with: .success(consent))
+            getClientConsentMe2MePullSpy.complete(with: consent)
         })
     }
     
     func test_process_shouldNotDeliver_fastPaymentContractFindListResultOnInstanceDeallocation() {
+        
         var sut: SUT?
         let fastPaymentContractFindListSpy: FastPaymentContractFindListSpy
         (sut, fastPaymentContractFindListSpy, _,_) = makeSUT()
@@ -89,6 +68,8 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     }
     
     func test_process_shouldNotDeliver_getClientConsentMe2MePullResultOnInstanceDeallocation() {
+        
+        let consent = anyConsentResponse()
         var sut: SUT?
         let fastPaymentContractFindListSpy: FastPaymentContractFindListSpy
         let getClientConsentMe2MePullSpy: GetClientConsentMe2MePullSpy
@@ -98,7 +79,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         sut?.process(anyPhoneNumber()) { receivedResult = $0 }
         fastPaymentContractFindListSpy.complete(with: .success(nil))
         sut = nil
-        getClientConsentMe2MePullSpy.complete(with: .success(.init()))
+        getClientConsentMe2MePullSpy.complete(with: consent)
         
         XCTAssertNil(receivedResult)
     }
@@ -107,14 +88,14 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = MicroServices.GetSettings<Contract, GetClientConsentMe2MePullResponse, Settings>
+    private typealias SUT = MicroServices.GetSettings<Contract, ConsentResponse, Settings>
     
     private typealias FastPaymentContractFindListSpy = Spy<Void, SUT.FastPaymentContractFindListResult>
-    private typealias GetClientConsentMe2MePullSpy = Spy<Void, SUT.GetClientConsentMe2MePullResult>
-    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, SUT.GetBankDefaultResult>
+    private typealias GetClientConsentMe2MePullSpy = Spy<Void, ConsentResponse>
+    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, SUT.GetBankDefaultResponse>
     
     private func makeSUT(
-        mapToMissing: @escaping SUT.MapToMissing = { $0.map(Settings.missing) },
+        mapToMissing: @escaping SUT.MapToMissing = { .success(.missing($0)) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -127,15 +108,14 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         let getClientConsentMe2MePullSpy = GetClientConsentMe2MePullSpy()
         let getBankDefaultSpy = GetBankDefaultSpy()
         
-//        let mapToMissing: SUT.MapToMissing = { _ in fatalError() }
-        let mapToContracted: SUT.MapToContracted = { _,_,_ in fatalError() }
+        let mapToResult: SUT.MapToResult = { _,_,_ in fatalError() }
         
         let sut = SUT(
             fastPaymentContractFindList: fastPaymentContractFindListSpy.process(completion:),
             getClientConsentMe2MePull: getClientConsentMe2MePullSpy.process(completion:),
             getBankDefault: getBankDefaultSpy.process(_:completion:),
             mapToMissing: mapToMissing,
-            mapToContracted: mapToContracted
+            mapToResult: mapToResult
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -151,14 +131,14 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         let id = anyMessage()
     }
     
-    private struct GetClientConsentMe2MePullResponse: Equatable {
+    private struct ConsentResponse: Equatable {
         
         let id = anyMessage()
     }
     
     private enum Settings: Equatable {
         
-        case missing(GetClientConsentMe2MePullResponse)
+        case missing(ConsentResponse)
     }
     
     private func expect(
@@ -188,5 +168,10 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     ) -> SUT.PhoneNumber {
         
         .init(value)
+    }
+    
+    private func anyConsentResponse() -> ConsentResponse {
+        
+        .init()
     }
 }
