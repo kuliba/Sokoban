@@ -68,9 +68,9 @@ public extension MicroServices.GetSettings {
 
 public extension MicroServices.GetSettings {
     
-    typealias FastPaymentContractFindListResult = Result<Contract?, ServiceFailure>
-    typealias FastPaymentContractFindListCompletion = (FastPaymentContractFindListResult) -> Void
-    typealias GetContract = (@escaping FastPaymentContractFindListCompletion) -> Void
+    typealias GetContractResult = Result<Contract?, ServiceFailure>
+    typealias GetContractCompletion = (GetContractResult) -> Void
+    typealias GetContract = (@escaping GetContractCompletion) -> Void
 }
 
 public extension MicroServices.GetSettings {
@@ -110,6 +110,7 @@ private extension MicroServices.GetSettings {
         }
     }
     
+#warning("add tests")
     func process(
         _ contract: Contract,
         _ phoneNumber: PhoneNumber,
@@ -165,6 +166,56 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         })
     }
     
+    func test_process_shouldNotCallGetConsentOn_getContractConnectivityFailure() {
+        
+        let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.connectivityError), on: {
+            
+            getContractSpy.complete(with: .failure(.connectivityError))
+        })
+        
+        XCTAssertEqual(getConsentSpy.callCount, 0)
+    }
+    
+    func test_process_shouldNotCallGetConsentOn_getContractServerFailure() {
+        
+        let message = anyMessage()
+        let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.serverError(message)), on: {
+            
+            getContractSpy.complete(with: .failure(.serverError(message)))
+        })
+        
+        XCTAssertEqual(getConsentSpy.callCount, 0)
+    }
+    
+    func test_process_shouldNotCallGetBankDefaultOn_getContractConnectivityFailure() {
+        
+        let (sut, getContractSpy, _, getGetBankDefaultSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.connectivityError), on: {
+            
+            getContractSpy.complete(with: .failure(.connectivityError))
+        })
+        
+        XCTAssertEqual(getGetBankDefaultSpy.callCount, 0)
+    }
+    
+    func test_process_shouldNotCallGetBankDefaultOn_getContractServerFailure() {
+        
+        let message = anyMessage()
+        let (sut, getContractSpy, _, getGetBankDefaultSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.serverError(message)), on: {
+            
+            getContractSpy.complete(with: .failure(.serverError(message)))
+        })
+        
+        XCTAssertEqual(getGetBankDefaultSpy.callCount, 0)
+    }
+    
     func test_process_shouldDeliverMissingWithConsentOn_getContractSpySuccessNil() {
         
         let consent = anyConsentResponse()
@@ -175,6 +226,27 @@ final class MicroServices_GetSettingsTests: XCTestCase {
             getContractSpy.complete(with: .success(nil))
             getConsentSpy.complete(with: consent)
         })
+    }
+    
+    func test_process_shouldCallGetConsentOn_getContractSpySuccessNil() {
+        
+        let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        getContractSpy.complete(with: .success(nil))
+        
+        XCTAssertEqual(getConsentSpy.callCount, 1)
+    }
+    
+    func test_process_shouldNotCallGetBankDefaultOn_getContractSpySuccessNil() {
+        
+        let (sut, getContractSpy, getConsentSpy, getGetBankDefaultSpy) = makeSUT()
+        
+        sut.process(anyPhoneNumber()) { _ in }
+        getContractSpy.complete(with: .success(nil))
+        getConsentSpy.complete(with: .init())
+        
+        XCTAssertEqual(getGetBankDefaultSpy.callCount, 0)
     }
     
     func test_process_shouldNotDeliver_fastPaymentContractFindListResultOnInstanceDeallocation() {
@@ -214,7 +286,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private typealias SUT = MicroServices.GetSettings<Contract, ConsentResponse, Settings>
     
-    private typealias GetContractSpy = Spy<Void, SUT.FastPaymentContractFindListResult>
+    private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
     private typealias GetConsentSpy = Spy<Void, ConsentResponse>
     private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, UserPaymentSettings.GetBankDefaultResponse>
     
