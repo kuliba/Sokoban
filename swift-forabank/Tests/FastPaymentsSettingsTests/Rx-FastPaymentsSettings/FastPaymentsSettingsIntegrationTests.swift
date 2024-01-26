@@ -22,6 +22,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertEqual(updateProductSpy.callCount, 0)
     }
     
+#warning("add tests for bankDefault with non-nil limit")
+
     func test_flow_abc1d1_deactivationSuccessOfLoadedActiveContract() {
         
         let details = contractedState(.active).details
@@ -222,7 +224,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(settingsResult: .contracted(.init(
                 paymentContract: newContract,
                 consentList: consentList,
-                bankDefault: .offEnabled,
+                bankDefaultResponse: bankDefault(.offEnabled),
                 productSelector: .init(
                     selectedProduct: product2,
                     products: [product1, product2]
@@ -263,7 +265,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
             .init(settingsResult: .contracted(.init(
                 paymentContract: newContract,
                 consentList: consentList,
-                bankDefault: .offEnabled,
+                bankDefaultResponse: bankDefault(.offEnabled),
                 productSelector: .init(
                     selectedProduct: nil,
                     products: [product1]

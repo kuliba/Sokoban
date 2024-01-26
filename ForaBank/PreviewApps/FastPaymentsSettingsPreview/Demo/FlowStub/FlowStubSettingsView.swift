@@ -226,7 +226,7 @@ private extension FlowStubSettingsView {
     
     enum GetSettings: String, CaseIterable, Identifiable {
         
-        case active, inactive, missing, error_C, error_S
+        case active, limit, inactive, missing, error_C, error_S
         
         var id: Self { self }
         
@@ -234,7 +234,18 @@ private extension FlowStubSettingsView {
             
             switch self {
             case .active:
-                return .success(.contracted(.preview(paymentContract: .active)))
+                return .success(.contracted(.preview(
+                    paymentContract: .active
+                )))
+                
+            case .limit:
+                return .success(.contracted(.preview(
+                    paymentContract: .active,
+                    bankDefaultResponse: .init(
+                        bankDefault: .offEnabled,
+                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку  через 24 часа."
+                    )
+                )))
                 
             case .inactive:
                 return .success(.contracted(.preview(paymentContract: .inactive)))

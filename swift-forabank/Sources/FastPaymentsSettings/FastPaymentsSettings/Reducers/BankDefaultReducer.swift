@@ -51,7 +51,8 @@ private extension BankDefaultReducer {
     ) -> (State, Effect?) {
         
         guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled,
+              details.bankDefaultResponse.bankDefault == .offEnabled,
+              details.bankDefaultResponse.requestLimitMessage == nil,
               state.status == .setBankDefault
         else { return (state, nil) }
         
@@ -66,7 +67,8 @@ private extension BankDefaultReducer {
     ) -> State {
         
         guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled
+              details.bankDefaultResponse.bankDefault == .offEnabled,
+              details.bankDefaultResponse.requestLimitMessage == nil
         else { return state }
         
         var state = state
@@ -86,7 +88,7 @@ private extension BankDefaultReducer {
         switch failure {
         case .none:
             var details = details
-            details.bankDefault = .onDisabled
+            details.bankDefaultResponse.bankDefault = .onDisabled
             return .init(
                 settingsResult: .success(.contracted(details)),
                 status: .setBankDefaultSuccess

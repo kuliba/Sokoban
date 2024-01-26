@@ -20,7 +20,7 @@ final class ContractDetails_extTests: XCTestCase {
         XCTAssertNoDiff(new, .init(
             paymentContract: newContract,
             consentList: initial.consentList,
-            bankDefault: initial.bankDefault,
+            bankDefaultResponse: initial.bankDefaultResponse,
             productSelector: initial.productSelector
         ))
     }
@@ -35,22 +35,22 @@ final class ContractDetails_extTests: XCTestCase {
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
             consentList: newConsentResult,
-            bankDefault: initial.bankDefault,
+            bankDefaultResponse: initial.bankDefaultResponse,
             productSelector: initial.productSelector
         ))
     }
-    
+    #warning("add tests for bankDefault with non-nil limit")
     func test_updated_bankDefault() {
         
-        let initial = contractDetails(bankDefault: .offDisabled)
-        let newBankDefault: UserPaymentSettings.BankDefault = .onDisabled
+        let initial = contractDetails(bankDefaultResponse: bankDefault(.offDisabled))
+        let newBankDefault = bankDefault(.onDisabled)
         
-        let new = initial.updated(bankDefault: newBankDefault)
+        let new = initial.updated(bankDefaultResponse: newBankDefault)
         
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
             consentList: initial.consentList,
-            bankDefault: newBankDefault,
+            bankDefaultResponse: newBankDefault,
             productSelector: initial.productSelector
         ))
     }
@@ -65,7 +65,7 @@ final class ContractDetails_extTests: XCTestCase {
         XCTAssertNoDiff(new, .init(
             paymentContract: initial.paymentContract,
             consentList: initial.consentList,
-            bankDefault: initial.bankDefault,
+            bankDefaultResponse: initial.bankDefaultResponse,
             productSelector: newProductSelector
         ))
     }

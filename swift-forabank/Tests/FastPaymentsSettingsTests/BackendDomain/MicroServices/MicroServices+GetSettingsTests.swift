@@ -16,20 +16,20 @@ public extension MicroServices {
 #warning("getBankDefault should be decorated with caching!")
         private let getBankDefault: GetBankDefault
         private let mapToMissing: MapToMissing
-        private let mapToResult: MapToResult
+        private let mapToSettings: MapToSettings
         
         init(
             getContract: @escaping GetContract,
             getConsent: @escaping GetConsent,
             getBankDefault: @escaping GetBankDefault,
             mapToMissing: @escaping MapToMissing,
-            mapToResult: @escaping MapToResult
+            mapToSettings: @escaping MapToSettings
         ) {
             self.getContract = getContract
             self.getConsent = getConsent
             self.getBankDefault = getBankDefault
             self.mapToMissing = mapToMissing
-            self.mapToResult = mapToResult
+            self.mapToSettings = mapToSettings
         }
     }
 }
@@ -83,23 +83,18 @@ public extension MicroServices.GetSettings {
     
     typealias PhoneNumber = Tagged<_PhoneNumber, String>
     enum _PhoneNumber {}
-    typealias GetBankDefaultCompletion = (GetBankDefaultResponse) -> Void
+    
+    typealias GetBankDefaultCompletion = (UserPaymentSettings.GetBankDefaultResponse) -> Void
     typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
 }
 
 public typealias BankDefault = Tagged<_BankDefault, Bool>
 public enum _BankDefault {}
 
-public struct GetBankDefaultResponse: Equatable {
-    
-    let bankDefault: BankDefault
-    let requestLimitMessage: String?
-}
-
 public extension MicroServices.GetSettings {
     
     typealias MapToMissing = (Consent) -> SettingsResult
-    typealias MapToResult = (Contract, Consent, GetBankDefaultResponse) -> SettingsResult
+    typealias MapToSettings = (Contract, Consent, UserPaymentSettings.GetBankDefaultResponse) -> Settings
 }
 
 private extension MicroServices.GetSettings {
@@ -128,7 +123,7 @@ private extension MicroServices.GetSettings {
                 
                 guard let self else { return }
                 
-                completion(mapToResult(contract, resultB, resultC))
+                completion(.success(mapToSettings(contract, resultB, resultC)))
             }
         }
     }
@@ -221,7 +216,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private typealias GetContractSpy = Spy<Void, SUT.FastPaymentContractFindListResult>
     private typealias GetConsentSpy = Spy<Void, ConsentResponse>
-    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, GetBankDefaultResponse>
+    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, UserPaymentSettings.GetBankDefaultResponse>
     
     private func makeSUT(
         mapToMissing: @escaping SUT.MapToMissing = { .success(.missing($0)) },
@@ -237,14 +232,14 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         let getConsentSpy = GetConsentSpy()
         let getBankDefaultSpy = GetBankDefaultSpy()
         
-        let mapToResult: SUT.MapToResult = { _,_,_ in fatalError() }
+        let mapToSettings: SUT.MapToSettings = { _,_,_ in fatalError() }
         
         let sut = SUT(
             getContract: getContractSpy.process(completion:),
             getConsent: getConsentSpy.process(completion:),
             getBankDefault: getBankDefaultSpy.process(_:completion:),
             mapToMissing: mapToMissing,
-            mapToResult: mapToResult
+            mapToSettings: mapToSettings
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

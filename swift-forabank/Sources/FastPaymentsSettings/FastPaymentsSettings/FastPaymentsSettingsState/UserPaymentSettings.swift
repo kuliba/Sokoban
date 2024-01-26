@@ -19,18 +19,18 @@ public extension UserPaymentSettings {
         
         public var paymentContract: PaymentContract
         public var consentList: ConsentListState
-        public var bankDefault: BankDefault
+        public var bankDefaultResponse: GetBankDefaultResponse
         public var productSelector: ProductSelector
         
         public init(
             paymentContract: PaymentContract,
             consentList: ConsentListState,
-            bankDefault: BankDefault,
+            bankDefaultResponse: GetBankDefaultResponse,
             productSelector: ProductSelector
         ) {
             self.paymentContract = paymentContract
             self.consentList = consentList
-            self.bankDefault = bankDefault
+            self.bankDefaultResponse = bankDefaultResponse
             self.productSelector = productSelector
         }
     }
@@ -84,6 +84,23 @@ public extension UserPaymentSettings {
 }
 
 public extension UserPaymentSettings {
+    
+    struct GetBankDefaultResponse: Equatable {
+        
+        public var bankDefault: BankDefault
+        public var requestLimitMessage: String?
+        
+        public init(
+            bankDefault: BankDefault, 
+            requestLimitMessage: String? = nil
+        ) {
+            self.bankDefault = bankDefault
+            self.requestLimitMessage = requestLimitMessage
+        }
+    }
+}
+
+public extension UserPaymentSettings.GetBankDefaultResponse {
     
     enum BankDefault: Equatable {
         

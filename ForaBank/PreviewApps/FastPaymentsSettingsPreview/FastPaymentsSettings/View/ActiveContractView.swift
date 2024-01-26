@@ -30,7 +30,7 @@ struct ActiveContractView: View {
             )
             
             BankDefaultView(
-                bankDefault: contractDetails.bankDefault,
+                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
                 action: setBankDefault
             )
             

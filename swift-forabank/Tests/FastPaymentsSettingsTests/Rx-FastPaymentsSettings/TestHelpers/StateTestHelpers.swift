@@ -26,6 +26,14 @@ func activePaymentContract(
     .init(id: contractID, productID: productID, contractStatus: .active)
 }
 
+func bankDefault(
+    _ bankDefault: UserPaymentSettings.GetBankDefaultResponse.BankDefault = .offEnabled,
+    requestLimitMessage: String? = nil
+) -> UserPaymentSettings.GetBankDefaultResponse {
+    
+    .init(bankDefault: bankDefault, requestLimitMessage: requestLimitMessage)
+}
+
 func connectivityError(
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
@@ -86,14 +94,14 @@ func consentListSuccess(
 func contractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
     consentList: ConsentListState = .success(consentList()),
-    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
     productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
 ) -> UserPaymentSettings.ContractDetails {
     
     .init(
         paymentContract: paymentContract,
         consentList: consentList,
-        bankDefault: bankDefault,
+        bankDefaultResponse: bankDefaultResponse,
         productSelector: productSelector
     )
 }
@@ -107,7 +115,7 @@ func contractedSettings(
 
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
-    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
     selectedProduct: Product = makeProduct(),
     selector selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
     status: FastPaymentsSettingsState.Status? = nil
@@ -119,7 +127,7 @@ func contractedState(
         paymentContract: paymentContract(
             contractStatus: contractStatus
         ),
-        bankDefault: bankDefault,
+        bankDefaultResponse: bankDefaultResponse,
         productSelector: makeProductSelector(
             selected: selectedProduct,
             status: selectorStatus
@@ -136,7 +144,7 @@ func contractedState(
 
 func contractedState(
     _ contractStatus: UserPaymentSettings.PaymentContract.ContractStatus,
-    bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+    bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
     productSelector: UserPaymentSettings.ProductSelector,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
@@ -147,7 +155,7 @@ func contractedState(
         paymentContract: paymentContract(
             contractStatus: contractStatus
         ),
-        bankDefault: bankDefault,
+        bankDefaultResponse: bankDefaultResponse,
         productSelector: productSelector
     )
     

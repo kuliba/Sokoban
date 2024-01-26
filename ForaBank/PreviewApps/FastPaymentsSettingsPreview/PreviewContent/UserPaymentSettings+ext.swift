@@ -11,28 +11,28 @@ extension UserPaymentSettings {
     
     static func active(
         _ consentList: ConsentListState = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .active,
                 consentList: consentList,
-                bankDefault: bankDefault
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
     
     static func inactive(
         _ consentList: ConsentListState = .success,
-        _ bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .inactive,
                 consentList: consentList,
-                bankDefault: bankDefault
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
@@ -50,7 +50,7 @@ extension UserPaymentSettings.ContractDetails {
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
         consentList: ConsentListState = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
         productSelector: UserPaymentSettings.ProductSelector = .init(
             selectedProduct: .card,
             products: .preview
@@ -60,7 +60,7 @@ extension UserPaymentSettings.ContractDetails {
         .init(
             paymentContract: paymentContract,
             consentList: consentList,
-            bankDefault: bankDefault,
+            bankDefaultResponse: bankDefaultResponse,
             productSelector: productSelector
         )
     }
