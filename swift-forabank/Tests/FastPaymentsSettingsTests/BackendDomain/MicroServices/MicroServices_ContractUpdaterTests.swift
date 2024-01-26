@@ -166,7 +166,6 @@ final class MicroServices_ContractUpdaterTests: XCTestCase {
         getContractSpy: GetContractSpy,
         updateContractSpy: UpdateContractSpy
     ) {
-        
         let getContractSpy = GetContractSpy()
         let updateContractSpy = UpdateContractSpy()
         
