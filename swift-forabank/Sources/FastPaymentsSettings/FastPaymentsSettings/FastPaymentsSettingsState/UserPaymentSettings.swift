@@ -11,7 +11,6 @@ public enum UserPaymentSettings: Equatable {
     
     case contracted(ContractDetails)
     case missingContract(ConsentListState)
-    case failure(Failure)
 }
 
 public extension UserPaymentSettings {

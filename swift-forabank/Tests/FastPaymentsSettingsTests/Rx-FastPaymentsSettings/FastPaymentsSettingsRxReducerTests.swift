@@ -331,7 +331,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         )
         
         assert(prepareSetBankDefault(), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .inflight
         }
     }
@@ -584,7 +584,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         )
         
         assert(.resetStatus, on: activeWithStatus) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = nil
         }
     }
@@ -627,7 +627,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         )
         
         assert(.resetStatus, on: inactiveWithStatus) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = nil
         }
     }
@@ -748,7 +748,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [selected, different])
         
         assert(sut: sut, selectProduct(different), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .inflight
         }
     }
@@ -777,7 +777,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [selected, product2])
         
         assert(sut: sut, selectProduct(selected), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .collapsed
                 )
@@ -807,7 +807,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [])
         
         assert(sut: sut, selectProduct(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .collapsed
                 )
@@ -900,7 +900,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, bankDefault: .offEnabled)
         
         assert(setBankDefault(), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .setBankDefault
         }
     }
@@ -1003,7 +1003,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active)
         
         assert(setBankDefaultPreparedSuccess(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 bankDefault: .onDisabled
             ))
             $0.status = .setBankDefaultSuccess
@@ -1227,7 +1227,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .expanded)
         
         assert(toggleProducts(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .collapsed
                 )
@@ -1240,7 +1240,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .collapsed)
         
         assert(toggleProducts(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .expanded
                 )
@@ -1316,7 +1316,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .collapsed)
         
         assert(toggleProducts(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .expanded
                 )
@@ -1332,7 +1332,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let newContract = paymentContract()
         
         assert(updateContractSuccess(newContract), on: activeContract) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 paymentContract: newContract
             ))
         }
@@ -1351,7 +1351,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let event = updateContractConnectivityError()
         
         assert(event, on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .connectivityError
         }
     }
@@ -1369,7 +1369,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active)
         
         assert(updateContractServerError(message), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .serverError(message)
         }
     }
@@ -1387,7 +1387,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let newContract = paymentContract()
         
         assert(updateContractSuccess(newContract), on: inactive) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 paymentContract: newContract
             ))
         }
@@ -1405,7 +1405,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, inactive) = contractedState(.inactive)
         
         assert(updateContractConnectivityError(), on: inactive) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .connectivityError
         }
     }
@@ -1423,7 +1423,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, inactive) = contractedState(.inactive)
         
         assert(updateContractServerError(message), on: inactive) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .serverError(message)
         }
     }
@@ -1444,7 +1444,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [product1, selected])
         
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
-            $0.userPaymentSettings = .contracted(.init(
+            $0.userPaymentSettings = contractedSettings(.init(
                 paymentContract: newContract,
                 consentList: consentList,
                 bankDefault: .offEnabled,
@@ -1465,7 +1465,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [product1])
         
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
-            $0.userPaymentSettings = .contracted(.init(
+            $0.userPaymentSettings = contractedSettings(.init(
                 paymentContract: newContract,
                 consentList: consentList,
                 bankDefault: .offEnabled,
@@ -1618,7 +1618,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [newProduct])
         
         assert(sut: sut, updateProductSuccess(newProduct), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: newProduct,
                     status: .collapsed
@@ -1638,7 +1638,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         )
         
         assert(updateProductSuccess(missingProduct), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: nil,
                     status: .collapsed
@@ -1660,7 +1660,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .expanded)
         
         assert(updateProductSuccess(missingProduct), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: nil,
                     status: .collapsed
@@ -1676,7 +1676,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let sut = makeSUT(products: [newProduct])
 
         assert(sut: sut, updateProductSuccess(newProduct), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: newProduct,
                     status: .collapsed
@@ -1697,7 +1697,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .collapsed)
         
         assert(updateProductConnectivityError(), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .connectivityError
         }
     }
@@ -1714,7 +1714,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .expanded)
         
         assert(updateProductConnectivityError(), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .collapsed
                 )
@@ -1736,7 +1736,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .collapsed)
         
         assert(updateProductServerError(message), on: active) {
-            $0.userPaymentSettings = .contracted(details)
+            $0.userPaymentSettings = contractedSettings(details)
             $0.status = .serverError(message)
         }
     }
@@ -1754,7 +1754,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let (details, active) = contractedState(.active, selector: .expanded)
         
         assert(updateProductServerError(message), on: active) {
-            $0.userPaymentSettings = .contracted(details.updated(
+            $0.userPaymentSettings = contractedSettings(details.updated(
                 productSelector: details.productSelector.updated(
                     status: .collapsed
                 )
@@ -1971,7 +1971,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     private func assert(
         sut: SUT? = nil,
         _ event: Event,
-        on settings: UserPaymentSettings,
+        on settings: UserPaymentSettingsResult,
         updateStateToExpected: UpdateStateToExpected<State>? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -2006,7 +2006,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     private func assert(
         sut: SUT? = nil,
-        _ settings: UserPaymentSettings,
+        _ settings: UserPaymentSettingsResult,
         _ event: Event,
         effect expectedEffect: Effect?,
         file: StaticString = #file,

@@ -203,7 +203,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_getSettings_shouldDeliverLoadedConnectivityErrorOnConnectivityErrorFailure() {
         
-        let failure: UserPaymentSettings = .failure(.connectivityError)
+        let failure: UserPaymentSettingsResult = .failure(.connectivityError)
         let (sut, _, getSettingsSpy, _,_,_,_) = makeSUT()
         
         expect(sut, with: .getSettings, toDeliver: .loadSettings(failure), on: {
@@ -312,7 +312,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
     private typealias GetC2BSubSpy = Spy<Void, SUT.GetC2BSubResult>
-    private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
+    private typealias GetSettingsSpy = Spy<Void, UserPaymentSettingsResult>
     private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, SUT.PrepareSetBankDefaultResponse>
     private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>

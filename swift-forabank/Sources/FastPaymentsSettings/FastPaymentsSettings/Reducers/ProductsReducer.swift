@@ -85,9 +85,11 @@ private extension ProductsReducer {
         else {
             var state = state
             state = .init(
-                userPaymentSettings: .contracted(details.updated(
-                    productSelector: details.productSelector.updated(
-                        status: .collapsed
+                userPaymentSettings: .success(.contracted(
+                    details.updated(
+                        productSelector: details.productSelector.updated(
+                            status: .collapsed
+                        )
                     )
                 ))
             )
@@ -112,24 +114,24 @@ private extension ProductsReducer {
         switch details.productSelector.status {
         case .collapsed:
             state = .init(
-                userPaymentSettings: .contracted(
+                userPaymentSettings: .success(.contracted(
                     details.updated(
                         productSelector: details.productSelector.updated(
                             status: .expanded
                         )
                     )
-                )
+                ))
             )
             
         case .expanded:
             state = .init(
-                userPaymentSettings: .contracted(
+                userPaymentSettings: .success(.contracted(
                     details.updated(
                         productSelector: details.productSelector.updated(
                             status: .collapsed
                         )
                     )
-                )
+                ))
             )
         }
         
@@ -155,7 +157,7 @@ private extension ProductsReducer {
                 )
             )
             
-            return .init(userPaymentSettings: .contracted(details))
+            return .init(userPaymentSettings: .success(.contracted(details)))
             
         case .failure(.connectivityError):
             var details = details
@@ -164,7 +166,7 @@ private extension ProductsReducer {
             )
             
             return .init(
-                userPaymentSettings: .contracted(details),
+                userPaymentSettings: .success(.contracted(details)),
                 status: .connectivityError
             )
             
@@ -175,7 +177,7 @@ private extension ProductsReducer {
             )
             
             return .init(
-                userPaymentSettings: .contracted(details),
+                userPaymentSettings: .success(.contracted(details)),
                 status: .serverError(message)
             )
         }
@@ -207,7 +209,7 @@ private extension FastPaymentsSettingsState {
     
     var activeDetails: UserPaymentSettings.ContractDetails? {
         
-        guard case let .contracted(details) = userPaymentSettings,
+        guard case let .success(.contracted(details)) = userPaymentSettings,
               details.isActive
         else { return nil }
         

@@ -9,13 +9,13 @@ import FastPaymentsSettings
 import Foundation
 
 func activeContractSettings(
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .contracted(contractDetails(
+    .success(.contracted(contractDetails(
         paymentContract: paymentContract(
             contractStatus: .active
         )
-    ))
+    )))
 }
 
 func activePaymentContract(
@@ -29,10 +29,10 @@ func activePaymentContract(
 func connectivityError(
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
-    settings: UserPaymentSettings,
+    settings: UserPaymentSettingsResult,
     state: FastPaymentsSettingsState
 ) {
-    let settings: UserPaymentSettings = .failure(.connectivityError)
+    let settings: UserPaymentSettingsResult = .failure(.connectivityError)
     
     let state = FastPaymentsSettingsState(
         userPaymentSettings: settings,
@@ -100,9 +100,9 @@ func contractDetails(
 
 func contractedSettings(
     _ details: UserPaymentSettings.ContractDetails = contractDetails()
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .contracted(details)
+    .success(.contracted(details))
 }
 
 func contractedState(
@@ -127,7 +127,7 @@ func contractedState(
     )
     
     let state = fastPaymentsSettingsState(
-        .contracted(details),
+        .success(.contracted(details)),
         status: status
     )
     
@@ -152,7 +152,7 @@ func contractedState(
     )
     
     let state = fastPaymentsSettingsState(
-        .contracted(details),
+        .success(.contracted(details)),
         status: status
     )
     
@@ -160,7 +160,7 @@ func contractedState(
 }
 
 func fastPaymentsSettingsState(
-    _ userPaymentSettings: UserPaymentSettings? = nil,
+    _ userPaymentSettings: UserPaymentSettingsResult? = nil,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
     
@@ -171,13 +171,13 @@ func fastPaymentsSettingsState(
 }
 
 func inactiveContractSettings(
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .contracted(contractDetails(
+    .success(.contracted(contractDetails(
         paymentContract: paymentContract(
             contractStatus: .inactive
         )
-    ))
+    )))
 }
 
 func makeProductSelector(
@@ -195,21 +195,21 @@ func makeProductSelector(
 
 func missingContract(
     _ result: ConsentListState
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .missingContract(result)
+    .success(.missingContract(result))
 }
 
 func missingConsentFailureSettings(
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .missingContract(.failure(.collapsedError))
+    .success(.missingContract(.failure(.collapsedError)))
 }
 
 func missingConsentSuccessSettings(
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
-    .missingContract(.success(consentList()))
+    .success(.missingContract(.success(consentList())))
 }
 
 func missingConsentSuccessFPSState(
@@ -218,7 +218,7 @@ func missingConsentSuccessFPSState(
 ) -> FastPaymentsSettingsState {
     
     fastPaymentsSettingsState(
-        .missingContract(.success(consentList)),
+        .success(.missingContract(.success(consentList))),
         status: status
     )
 }
@@ -239,10 +239,10 @@ func paymentContract(
 func serverError(
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
-    settings: UserPaymentSettings,
+    settings: UserPaymentSettingsResult,
     state: FastPaymentsSettingsState
 ) {
-    let settings: UserPaymentSettings = .failure(.serverError(UUID().uuidString))
+    let settings: UserPaymentSettingsResult = .failure(.serverError(UUID().uuidString))
     
     let state = FastPaymentsSettingsState(
         userPaymentSettings: settings,
@@ -263,7 +263,7 @@ func serverErrorFPSState(
 }
 
 func serverErrorSettings(
-) -> UserPaymentSettings {
+) -> UserPaymentSettingsResult {
     
     .failure(.serverError(UUID().uuidString))
 }

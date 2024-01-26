@@ -274,15 +274,14 @@ private extension UserAccountViewModel {
         case (nil, _):
             break
             
-        case (.contracted, nil):
+        case (.success(.contracted), nil):
             state.isLoading = false
             
-        case (.missingContract, nil):
+        case (.success(.missingContract), nil):
             state.isLoading = false
             state.alert = missingContractFPSAlert()
             
-        case let (.contracted, .some(status)),
-            let (.missingContract, .some(status)):
+        case let (.success, .some(status)):
             (state, effect) = update(state, with: status)
             
         case let (.failure(failure), _):

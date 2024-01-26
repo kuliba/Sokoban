@@ -18,12 +18,12 @@ extension FastPaymentsSettingsEffectHandler {
             createContract: { _, completion in completion(.success(.active)) },
             updateContract: { _, completion in completion(.success(.active)) }
         )
-        #warning("add `getC2BSub` to flowStub")
+
         return .init(
             handleConsentListEffect: consentListEffectHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getC2BSub: { $0(.success(.control)) },
-            getSettings: { $0(.active()) },
+            getSettings: { $0(.success(.active())) },
             prepareSetBankDefault: { $0(.success(())) },
             updateProduct: { _, completion in completion(.success(())) }
         )

@@ -20,7 +20,7 @@ struct FastPaymentsSettingsView: View {
         case .none, .failure:
             Text("Empty View").opacity(0.1)
             
-        case let .contracted(contractDetails):
+        case let .success(.contracted(contractDetails)):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
                 ActiveContractView(
@@ -40,7 +40,7 @@ struct FastPaymentsSettingsView: View {
                 )
             }
             
-        case let .missingContract(consentResult):
+        case let .success(.missingContract(consentResult)):
             VStack(spacing: 32) {
                 
                 Text("Missing Payment Contract.\n\n\(String(describing: consentResult))")

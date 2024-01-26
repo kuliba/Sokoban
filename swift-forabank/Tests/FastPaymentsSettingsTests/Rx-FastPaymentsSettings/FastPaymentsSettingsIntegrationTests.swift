@@ -470,7 +470,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
     private typealias GetC2BSubSpy = Spy<Void, EffectHandler.GetC2BSubResult>
-    private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
+    private typealias GetSettingsSpy = ResultSpy<Void, UserPaymentSettings, ServiceFailure>
     private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
     private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, EffectHandler.PrepareSetBankDefaultResponse>
@@ -587,13 +587,13 @@ private extension FastPaymentsSettingsState {
         case .none:
             return nil
             
-        case let .contracted(details):
+        case let .success(.contracted(details)):
             switch details.paymentContract.contractStatus {
             case .active:   return .active
             case .inactive: return .inactive
             }
             
-        case .missingContract:
+        case .success(.missingContract):
             return .missingContract
             
         case .failure:

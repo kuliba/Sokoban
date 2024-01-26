@@ -88,7 +88,7 @@ private extension BankDefaultReducer {
             var details = details
             details.bankDefault = .onDisabled
             return .init(
-                userPaymentSettings: .contracted(details),
+                userPaymentSettings: .success(.contracted(details)),
                 status: .setBankDefaultSuccess
             )
             
@@ -111,7 +111,7 @@ private extension FastPaymentsSettingsState {
     
     var activeDetails: UserPaymentSettings.ContractDetails? {
         
-        guard case let .contracted(details) = userPaymentSettings,
+        guard case let .success(.contracted(details)) = userPaymentSettings,
               details.isActive
         else { return nil }
         

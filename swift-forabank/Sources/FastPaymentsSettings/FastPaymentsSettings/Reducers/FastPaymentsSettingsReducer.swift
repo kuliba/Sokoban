@@ -40,7 +40,7 @@ public extension FastPaymentsSettingsReducer {
             (state, effect) = handleAppear(state)
             
         case let .loadSettings(settings):
-            state = handleLoadedSettings(settings)
+            state = handleLoadedSettingsResult(settings)
             
         case .resetStatus:
             state = resetStatus(state)
@@ -101,24 +101,24 @@ private extension FastPaymentsSettingsReducer {
         var effect: Effect?
         
         switch state.userPaymentSettings {
-        case var .contracted(contractDetails):
+        case var .success(.contracted(contractDetails)):
             let (consentList, consentListEffect) = consentListReduce(contractDetails.consentList, event)
             contractDetails.consentList = consentList
-            state.userPaymentSettings = .contracted(contractDetails)
+            state.userPaymentSettings = .success(.contracted(contractDetails))
             effect = consentListEffect.map(Effect.consentList)
             
-        case .none, .missingContract, .failure:
+        case .none, .success(.missingContract), .failure:
             break
         }
         
         return (state, effect)
     }
     
-    func handleLoadedSettings(
-        _ userPaymentSettings: UserPaymentSettings
+    func handleLoadedSettingsResult(
+        _ result: UserPaymentSettingsResult
     ) -> State {
         
-        .init(userPaymentSettings: userPaymentSettings)
+        .init(userPaymentSettings: result)
     }
     
 #warning("add tests")
