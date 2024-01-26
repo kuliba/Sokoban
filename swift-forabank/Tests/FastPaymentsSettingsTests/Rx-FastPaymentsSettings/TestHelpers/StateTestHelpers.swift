@@ -18,14 +18,6 @@ func activeContractSettings(
     )))
 }
 
-func activePaymentContract(
-    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
-    _ productID: Product.ID = .init(generateRandom11DigitNumber())
-) -> UserPaymentSettings.PaymentContract {
-    
-    .init(id: contractID, productID: productID, contractStatus: .active)
-}
-
 func bankDefault(
     _ bankDefault: UserPaymentSettings.GetBankDefaultResponse.BankDefault = .offEnabled,
     requestLimitMessage: String? = nil
@@ -96,7 +88,7 @@ func contractDetails(
     consentList: ConsentListState = .success(consentList()),
     bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
     productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
-) -> UserPaymentSettings.ContractDetails {
+) -> UserPaymentSettings.Details {
     
     .init(
         paymentContract: paymentContract,
@@ -107,7 +99,7 @@ func contractDetails(
 }
 
 func contractedSettings(
-    _ details: UserPaymentSettings.ContractDetails = contractDetails()
+    _ details: UserPaymentSettings.Details = contractDetails()
 ) -> UserPaymentSettingsResult {
     
     .success(.contracted(details))
@@ -120,7 +112,7 @@ func contractedState(
     selector selectorStatus: UserPaymentSettings.ProductSelector.Status = .collapsed,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
-    details: UserPaymentSettings.ContractDetails,
+    details: UserPaymentSettings.Details,
     state: FastPaymentsSettingsState
 ) {
     let details = contractDetails(
@@ -148,7 +140,7 @@ func contractedState(
     productSelector: UserPaymentSettings.ProductSelector,
     status: FastPaymentsSettingsState.Status? = nil
 ) -> (
-    details: UserPaymentSettings.ContractDetails,
+    details: UserPaymentSettings.Details,
     state: FastPaymentsSettingsState
 ) {
     let details = contractDetails(
@@ -234,13 +226,17 @@ func missingConsentSuccessFPSState(
 func paymentContract(
     _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
     productID: Product.ID = .init(generateRandom11DigitNumber()),
-    contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active
+    contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active,
+    phoneNumber: PhoneNumber = anyPhoneNumber(),
+    phoneNumberMasked: String = anyMessage()
 ) -> UserPaymentSettings.PaymentContract {
     
     .init(
         id: contractID,
         productID: productID,
-        contractStatus: contractStatus
+        contractStatus: contractStatus,
+        phoneNumber: phoneNumber,
+        phoneNumberMasked: phoneNumberMasked
     )
 }
 

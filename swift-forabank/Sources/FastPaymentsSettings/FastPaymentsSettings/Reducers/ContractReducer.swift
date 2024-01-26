@@ -176,7 +176,7 @@ private extension ContractReducer {
 
 private extension FastPaymentsSettingsState {
     
-    var activeDetails: UserPaymentSettings.ContractDetails? {
+    var activeDetails: UserPaymentSettings.Details? {
         
         guard case let .success(.contracted(details)) = settingsResult,
               details.isActive
@@ -186,7 +186,7 @@ private extension FastPaymentsSettingsState {
     }
 }
 
-private extension UserPaymentSettings.ContractDetails {
+private extension UserPaymentSettings.Details {
     
     var isActive: Bool {
         
@@ -201,7 +201,7 @@ private extension UserPaymentSettings.ContractDetails {
 
 // MARK: - Adapters
 
-private extension UserPaymentSettings.ContractDetails {
+private extension UserPaymentSettings.Details {
     
     var core: FastPaymentsSettingsEffect.ContractCore? {
         

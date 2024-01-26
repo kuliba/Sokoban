@@ -171,7 +171,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     
     private func details(
         in settings: UserPaymentSettings
-    ) -> UserPaymentSettings.ContractDetails? {
+    ) -> UserPaymentSettings.Details? {
         
         guard case let .contracted(details) = settings
         else { return nil }

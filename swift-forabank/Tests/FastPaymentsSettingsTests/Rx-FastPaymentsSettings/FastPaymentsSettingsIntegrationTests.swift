@@ -563,7 +563,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private func makeActive() -> (
         different: Product,
         products: [Product],
-        details: UserPaymentSettings.ContractDetails
+        details: UserPaymentSettings.Details
     ) {
         let (selected, different) = (makeProduct(), makeProduct())
         let productSelector = makeProductSelector(

@@ -7,9 +7,14 @@
 
 import Tagged
 
+public protocol PhoneNumbered {
+    
+    var phoneNumber: PhoneNumber { get }
+}
+
 public extension MicroServices {
     
-    final class GetSettings<Contract, Consent, Settings> {
+    final class GetSettings<Contract: PhoneNumbered, Consent, Settings> {
         
         private let getContract: GetContract
         private let getConsent: GetConsent
@@ -37,7 +42,6 @@ public extension MicroServices {
 public extension MicroServices.GetSettings {
     
     func process(
-        _ phoneNumber: PhoneNumber,
         completion: @escaping Completion
     ) {
         getContract { [weak self] result in
@@ -50,11 +54,11 @@ public extension MicroServices.GetSettings {
                 
                 // missing contract
             case .success(.none):
-                process(completion)
+                processGetConsent(completion)
                 
 #warning("add tests")
             case let .success(.some(contract)):
-                process(contract, phoneNumber, completion)
+                process(contract, completion)
             }
         }
     }
@@ -81,7 +85,7 @@ public extension MicroServices.GetSettings {
 
 private extension MicroServices.GetSettings {
     
-    func process(
+    func processGetConsent(
         _ completion: @escaping Completion
     ) {
         getConsent { [weak self] resultB in
@@ -95,14 +99,13 @@ private extension MicroServices.GetSettings {
 #warning("add tests")
     func process(
         _ contract: Contract,
-        _ phoneNumber: PhoneNumber,
         _ completion: @escaping Completion
     ) {
         getConsent { [weak self] resultB in
             
             guard let self else { return }
             
-            getBankDefault(phoneNumber) { [weak self] resultC in
+            getBankDefault(contract.phoneNumber) { [weak self] resultC in
                 
                 guard let self else { return }
                 

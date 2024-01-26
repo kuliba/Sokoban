@@ -1,11 +1,11 @@
 //
-//  ContractDetails+updated.swift
+//  Details+updated.swift
 //  
 //
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-public extension UserPaymentSettings.ContractDetails {
+public extension UserPaymentSettings.Details {
     
     func updated(
         paymentContract: UserPaymentSettings.PaymentContract? = nil,

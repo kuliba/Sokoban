@@ -2038,7 +2038,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     }
     
     private func target(
-        _ contractDetails: UserPaymentSettings.ContractDetails,
+        _ contractDetails: UserPaymentSettings.Details,
         _ targetStatus: ContractEffect.TargetContract.TargetStatus
     ) -> ContractEffect.TargetContract? {
         
@@ -2052,7 +2052,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     }
     
     private func core(
-        _ contractDetails: UserPaymentSettings.ContractDetails
+        _ contractDetails: UserPaymentSettings.Details
     ) -> FastPaymentsSettingsEffect.ContractCore? {
         
         guard let product = contractDetails.productSelector.selectedProduct

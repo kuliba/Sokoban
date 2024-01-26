@@ -39,7 +39,7 @@ public extension MicroServices.GetSettingsMapper {
             status: .collapsed
         )
         
-        let details = UserPaymentSettings.ContractDetails(
+        let details = UserPaymentSettings.Details(
             paymentContract: paymentContract,
             consentList: consentList,
             bankDefaultResponse: bankDefaultResponse,

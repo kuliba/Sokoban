@@ -20,7 +20,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         XCTAssertEqual(getBankDefaultSpy.callCount, 0)
     }
     
-    func test_process_shouldDeliverConnectivityErrorOn_fastPaymentContractFindListConnectivityErrorFailure() {
+    func test_process_shouldDeliverConnectivityErrorOn_getContractConnectivityErrorFailure() {
         
         let (sut, getContractSpy, _,_) = makeSUT()
         
@@ -30,7 +30,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         })
     }
     
-    func test_process_shouldDeliverServerErrorOn_fastPaymentContractFindListServerErrorFailure() {
+    func test_process_shouldDeliverServerErrorOn_getContractServerErrorFailure() {
         
         let message = anyMessage()
         let (sut, getContractSpy, _,_) = makeSUT()
@@ -91,7 +91,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         XCTAssertEqual(getGetBankDefaultSpy.callCount, 0)
     }
     
-    func test_process_shouldDeliverMissingWithConsentOn_getContractSpySuccessNil() {
+    func test_process_shouldDeliverMissingWithConsentOn_getContractSuccessNil() {
         
         let consent = anyConsentResponse()
         let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
@@ -103,35 +103,35 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         })
     }
     
-    func test_process_shouldCallGetConsentOn_getContractSpySuccessNil() {
+    func test_process_shouldCallGetConsentOn_getContractSuccessNil() {
         
         let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
         
-        sut.process(anyPhoneNumber()) { _ in }
+        sut.process { _ in }
         getContractSpy.complete(with: .success(nil))
         
         XCTAssertEqual(getConsentSpy.callCount, 1)
     }
     
-    func test_process_shouldNotCallGetBankDefaultOn_getContractSpySuccessNil() {
+    func test_process_shouldNotCallGetBankDefaultOn_getContractSuccessNil() {
         
         let (sut, getContractSpy, getConsentSpy, getGetBankDefaultSpy) = makeSUT()
         
-        sut.process(anyPhoneNumber()) { _ in }
+        sut.process { _ in }
         getContractSpy.complete(with: .success(nil))
         getConsentSpy.complete(with: .init())
         
         XCTAssertEqual(getGetBankDefaultSpy.callCount, 0)
     }
     
-    func test_process_shouldNotDeliver_fastPaymentContractFindListResultOnInstanceDeallocation() {
+    func test_process_shouldNotDeliver_getContractResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let getContractSpy: GetContractSpy
         (sut, getContractSpy, _,_) = makeSUT()
         var receivedResult: SUT.SettingsResult?
         
-        sut?.process(anyPhoneNumber()) { receivedResult = $0 }
+        sut?.process { receivedResult = $0 }
         sut = nil
         getContractSpy.complete(with: .success(.init()))
         
@@ -147,7 +147,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         (sut, getContractSpy, getConsentSpy,_) = makeSUT()
         var receivedResult: SUT.SettingsResult?
         
-        sut?.process(anyPhoneNumber()) { receivedResult = $0 }
+        sut?.process { receivedResult = $0 }
         getContractSpy.complete(with: .success(nil))
         sut = nil
         getConsentSpy.complete(with: consent)
@@ -156,6 +156,8 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     }
     
 #warning("add tests for instance deallocation")
+
+#warning("add tests involving phoneNumber")
     
     // MARK: - Helpers
     
@@ -197,9 +199,10 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         return (sut, getContractSpy, getConsentSpy, getBankDefaultSpy)
     }
     
-    private struct Contract {
+    private struct Contract: PhoneNumbered {
         
         let id = anyMessage()
+        let phoneNumber = anyPhoneNumber()
     }
     
     private struct ConsentResponse: Equatable {
@@ -214,7 +217,6 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        with phoneNumber: PhoneNumber = .init(anyMessage()),
         toDeliver expected: SUT.SettingsResult,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 0.05,
@@ -223,7 +225,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.process(phoneNumber) {
+        sut.process {
             
             XCTAssertNoDiff($0, expected, "\nExpected \(expected), but got \($0) instead.", file: file, line: line)
             exp.fulfill()

@@ -1,5 +1,5 @@
 //
-//  ContractDetails+extTests.swift
+//  Details+extTests.swift
 //
 //
 //  Created by Igor Malyarov on 17.01.2024.

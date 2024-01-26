@@ -45,7 +45,7 @@ extension UserPaymentSettings {
     }
 }
 
-extension UserPaymentSettings.ContractDetails {
+extension UserPaymentSettings.Details {
     
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
@@ -71,13 +71,17 @@ extension UserPaymentSettings.PaymentContract {
     static let active: Self = .init(
         id: .init(generateRandom11DigitNumber()),
         productID: Product.card.id,
-        contractStatus: .active
+        contractStatus: .active,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
     )
     
     static let inactive: Self = .init(
         id: .init(generateRandom11DigitNumber()),
         productID: Product.account.id,
-        contractStatus: .inactive
+        contractStatus: .inactive,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
     )
 }
 

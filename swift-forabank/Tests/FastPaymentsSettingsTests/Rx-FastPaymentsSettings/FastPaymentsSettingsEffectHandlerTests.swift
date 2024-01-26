@@ -40,7 +40,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_activateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
         
         let targetContract = fastPaymentsSettingsEffectTargetContract()
-        let activatedContract = activePaymentContract()
+        let activatedContract = paymentContract(contractStatus: .active)
         let (sut, _,_, updateContractSpy, _,_,_) = makeSUT()
         
         expect(sut, with: activateContract(targetContract), toDeliver: updateContractSuccess(activatedContract), on: {
@@ -87,7 +87,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_createContract_shouldDeliverContractOnSuccess() {
         
         let productID = anyEffectProductID()
-        let activatedContract = activePaymentContract()
+        let activatedContract = paymentContract(contractStatus: .active)
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
         expect(sut, with: createContract(productID), toDeliver: updateContractSuccess(activatedContract), on: {
@@ -134,7 +134,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     func test_deactivateContract_shouldDeliverContractUpdateSuccessOnSuccess() {
         
         let targetContract = fastPaymentsSettingsEffectTargetContract()
-        let activatedContract = activePaymentContract()
+        let activatedContract = paymentContract(contractStatus: .active)
         let (sut, _,_, updateContractSpy, _,_,_) = makeSUT()
         
         expect(sut, with: deactivateContract(targetContract), toDeliver: updateContractSuccess(activatedContract), on: {
