@@ -90,7 +90,8 @@ struct QRSearchOperatorView_Previews: PreviewProvider {
                 navigationBar: .init(title: "Все регионы"),
                 model: .emptyMock,
                 addCompanyAction: {},
-                requisitesAction: {}
+                requisitesAction: {}, 
+                fastUpdateAction: {}
             )
         )
     }

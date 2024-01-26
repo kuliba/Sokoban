@@ -231,7 +231,7 @@ private extension MainViewModel {
             .sink(receiveValue: { [unowned self] qrCode in
                 
                 action.send(MainViewModelAction.Close.FullScreenSheet())
-                let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: qrCode), model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link() )})
+                let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: qrCode), model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link() )}, fastUpdateAction: fastUpdateAction)
                 bind(paymentsViewModel)
                 
                 action.send(DelayWrappedAction(
@@ -425,16 +425,22 @@ private extension MainViewModel {
                                 }))
                                 
                             case let payload as BannerActionMigTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                let paymentsViewModel = PaymentsViewModel(
+                                    source: .direct(
+                                        phone: nil,
+                                        countryId: payload.countryId),
+                                    model: model,
+                                    closeAction:  { [weak self] in
                                     
                                     self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                }
+                                },
+                                    fastUpdateAction: fastUpdateAction)
                                 bind(paymentsViewModel)
                                 
                                 self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                                 
                             case let payload as BannerActionContactTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model, closeAction: { [weak self] in
                                     
                                     guard let self else { return }
                                     
@@ -443,7 +449,7 @@ private extension MainViewModel {
                                         delayMS: 300,
                                         action: MainViewModelAction.Show.Countries())
                                     )
-                                }
+                                }, fastUpdateAction: fastUpdateAction)
                                 bind(paymentsViewModel)
                                 
                                 self.action.send(DelayWrappedAction(
@@ -488,7 +494,8 @@ private extension MainViewModel {
                                     handleLandingAction(.sticker)
                                     
                                 }
-                            }
+                            }, 
+                            fastUpdateAction: fastUpdateAction
                         )
                         myProductsViewModel.rootActions = rootActions
                         route.destination = .myProducts(myProductsViewModel)
@@ -627,7 +634,8 @@ private extension MainViewModel {
                                 closeAction: {
                                     
                                     self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                }
+                                },
+                                fastUpdateAction: fastUpdateAction
                             )
                             self.bind(paymentsViewModel)
                             
@@ -689,7 +697,8 @@ private extension MainViewModel {
                                 self?.resetDestination()
                                 self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                             },
-                            qrCode: qr
+                            qrCode: qr, 
+                            fastUpdateAction: self.fastUpdateAction
                         )
                         
                         self.route.destination = .searchOperators(operatorsViewModel)
@@ -721,7 +730,7 @@ private extension MainViewModel {
                         
                         self?.resetModal()
                         self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
-                    }
+                    }, fastUpdateAction: self.fastUpdateAction
                 )
                 self.route.destination = .failedView(failedView)
             }
@@ -735,7 +744,7 @@ private extension MainViewModel {
                 do {
                     
                     let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.Close.Link())})
+                        self?.action.send(MainViewModelAction.Close.Link())}, fastUpdateAction: fastUpdateAction)
                     bind(operationViewModel)
                     
                     await MainActor.run {
@@ -764,7 +773,8 @@ private extension MainViewModel {
                 closeAction: { [weak self] in
                     
                     self?.action.send(MainViewModelAction.Close.Link())
-                }
+                },
+                fastUpdateAction: fastUpdateAction
             )
             bind(paymentsViewModel)
             
@@ -876,14 +886,14 @@ private extension MainViewModel {
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
                             self?.action.send(MainViewModelAction.Close.Link())
-                        })
+                        }, fastUpdateAction: fastUpdateAction)
                         self.bind(paymentsViewModel)
                         
                         self.action.send(DelayWrappedAction(
                             delayMS: 700,
                             action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                         )
-                    }
+                    }, fastUpdateAction: self.fastUpdateAction
                 )
                 self.route.destination = .failedView(failedView)
             }
@@ -910,15 +920,14 @@ private extension MainViewModel {
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
                             self?.action.send(MainViewModelAction.Close.Link())
-                        }
-                        )
+                        }, fastUpdateAction: fastUpdateAction)
                         self.bind(paymentsViewModel)
                         
                         self.action.send(DelayWrappedAction(
                             delayMS: 700,
                             action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                         )
-                    }
+                    }, fastUpdateAction: self.fastUpdateAction
                 )
                 self.route.destination = .failedView(failedView)
             }
@@ -1009,7 +1018,7 @@ private extension MainViewModel {
                 
                 guard let source else { return }
                 
-                let paymentsViewModel = PaymentsViewModel(source: source, model: model) { [weak self] in
+                let paymentsViewModel = PaymentsViewModel(source: source, model: model, closeAction: { [weak self] in
                     
                     guard let self else { return }
                     
@@ -1018,7 +1027,7 @@ private extension MainViewModel {
                         delayMS: 300,
                         action: MainViewModelAction.Show.Contacts())
                     )
-                }
+                }, fastUpdateAction: fastUpdateAction)
                 bind(paymentsViewModel)
                 
                 self.action.send(DelayWrappedAction(

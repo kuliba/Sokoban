@@ -186,7 +186,8 @@ struct RootView_Previews: PreviewProvider {
                 showLoginAction: { _ in
                     
                         .init(viewModel: .init(authLoginViewModel: .preview))
-                }
+                }, 
+                fastUpdateAction: {}
             ),
             rootViewFactory: .preview
         )

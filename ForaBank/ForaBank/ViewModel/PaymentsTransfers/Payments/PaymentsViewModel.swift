@@ -20,6 +20,7 @@ class PaymentsViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     
     let closeAction: () -> Void
+    private let fastUpdateAction: () -> Void
     
     private let model: Model
     private var source: Payments.Operation.Source?
@@ -33,16 +34,27 @@ class PaymentsViewModel: ObservableObject {
         case linkNotActive(PaymentsSuccessViewModel)
     }
     
-    init(content: ContentType, model: Model, closeAction: @escaping () -> Void) {
+    init(
+        content: ContentType,
+        model: Model,
+        closeAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
+    ) {
         
         self.content = content
         self.model = model
         self.closeAction = closeAction
+        self.fastUpdateAction = fastUpdateAction
     }
         
-    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
+    convenience init(
+        category: Payments.Category,
+        model: Model,
+        closeAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
+    ) {
         
-        self.init(content: .loading, model: model, closeAction: closeAction)
+        self.init(content: .loading, model: model, closeAction: closeAction, fastUpdateAction: fastUpdateAction)
         bind()
 
         Task {
@@ -87,18 +99,18 @@ class PaymentsViewModel: ObservableObject {
         }
     }
     
-    convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void) {
+    convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void, fastUpdateAction: @escaping () -> Void) {
         
-        self.init(content: .loading, model: model, closeAction: closeAction)
+        self.init(content: .loading, model: model, closeAction: closeAction, fastUpdateAction: fastUpdateAction)
         self.source = source
         bind()
         
         sourceOperation(model, source, closeAction)
     }
     
-    convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void) {
+    convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void, fastUpdateAction: @escaping () -> Void) {
         
-        self.init(content: .loading, model: model, closeAction: closeAction)
+        self.init(content: .loading, model: model, closeAction: closeAction, fastUpdateAction: fastUpdateAction)
         
         bind()
         
@@ -145,7 +157,7 @@ class PaymentsViewModel: ObservableObject {
                         self.successViewModel = successViewModel
                         bind(successViewModel: successViewModel)
                         // update products balances
-                        model.action.send(ModelAction.Products.Update.Fast.All())
+                        fastUpdateAction()
                         // update latest operations list
                         model.action.send(ModelAction.LatestPayments.List.Requested())
                         

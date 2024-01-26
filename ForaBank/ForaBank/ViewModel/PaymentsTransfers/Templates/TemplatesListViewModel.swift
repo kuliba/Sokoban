@@ -311,7 +311,7 @@ private extension TemplatesListViewModel {
                         link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
                             
                             self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
+                        }, fastUpdateAction: fastUpdateAction))
                     }
             //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:

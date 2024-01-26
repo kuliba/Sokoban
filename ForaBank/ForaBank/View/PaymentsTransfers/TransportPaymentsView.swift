@@ -249,10 +249,12 @@ private extension TransportPaymentsViewModel {
             .init(
                 source: $0,
                 model: .emptyMock,
-                closeAction: {}
+                closeAction: {}, 
+                fastUpdateAction: {}
             )
         },
-        handleError: { _ in }
+        handleError: { _ in },
+        fastUpdateAction: {}
     )
 }
 

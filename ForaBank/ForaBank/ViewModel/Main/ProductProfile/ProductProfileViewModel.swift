@@ -850,7 +850,8 @@ private extension ProductProfileViewModel {
                             model,
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {}
+                            openOrderSticker: {},
+                            fastUpdateAction: fastUpdateAction
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -890,7 +891,7 @@ private extension ProductProfileViewModel {
                     guard let storage = self.model.statements.value[self.product.activeProductId],
                           let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
                           let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
+                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model, fastUpdateAction: fastUpdateAction) else {
                         
                         return
                     }

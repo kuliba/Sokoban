@@ -12,7 +12,7 @@ class PaymentsServicesViewModel: ObservableObject {
     
     typealias ItemViewModel = PaymentsServicesOperatorItemView.ViewModel
     typealias OpenCityViewPublisher = AnyPublisher<PaymentsServicesViewModelWithNavBarAction.OpenCityView, Never>
-    typealias MakePaymentsViewModel = (Payments.Operation.Source) -> PaymentsViewModel
+    typealias MakePaymentsViewModel = (Payments.Operation.Source, @escaping () -> Void) -> PaymentsViewModel
     typealias MakeSearchCityViewModel = (String, [OperatorGroupData.OperatorData], @escaping (String) -> Void) -> SearchCityViewModel
     
     static let allRegion = "Все регионы"
@@ -35,6 +35,7 @@ class PaymentsServicesViewModel: ObservableObject {
     private let openCityViewPublisher: OpenCityViewPublisher
     private let makePaymentsViewModel: MakePaymentsViewModel
     private let makeSearchCityViewModel: MakeSearchCityViewModel
+    private let fastUpdateAction: () -> Void
     
     private var bindings = Set<AnyCancellable>()
     
@@ -47,7 +48,8 @@ class PaymentsServicesViewModel: ObservableObject {
         makePaymentsViewModel: @escaping PaymentsServicesViewModel.MakePaymentsViewModel,
         makeSearchCityViewModel: @escaping PaymentsServicesViewModel.MakeSearchCityViewModel,
         addCompanyAction: @escaping () -> Void,
-        requisitesAction: @escaping () -> Void
+        requisitesAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
     ) {
         self.navigationBar = navigationBar
         self.searchBar = searchBar
@@ -63,8 +65,8 @@ class PaymentsServicesViewModel: ObservableObject {
         self.openCityViewPublisher = openCityViewPublisher
         self.makePaymentsViewModel = makePaymentsViewModel
         self.makeSearchCityViewModel = makeSearchCityViewModel
-        
-        self.setStartValues()
+        self.fastUpdateAction = fastUpdateAction
+        self.setStartValues(fastUpdateAction: fastUpdateAction)
         self.bind()
     }
 
@@ -88,7 +90,7 @@ class PaymentsServicesViewModel: ObservableObject {
                         puref: payload.latestPayment.puref,
                         additionalList: payload.latestPayment.additionalList,
                         amount: payload.latestPayment.amount
-                    )
+                    ), fastUpdateAction
                 )
                 
                 Task { @MainActor [weak self] in
@@ -129,7 +131,8 @@ extension PaymentsServicesViewModel {
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
         allOperators: [OperatorGroupData.OperatorData],
         addCompanyAction: @escaping () -> Void,
-        requisitesAction: @escaping () -> Void
+        requisitesAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
     ) {
         let openCityViewPublisher = model.action
             .compactMap { $0 as? PaymentsServicesViewModelWithNavBarAction.OpenCityView }
@@ -141,10 +144,11 @@ extension PaymentsServicesViewModel {
             latestPayments: latestPayments,
             allOperators: allOperators,
             openCityViewPublisher: openCityViewPublisher,
-            makePaymentsViewModel: model.makePaymentsViewModel(source:),
+            makePaymentsViewModel: model.makePaymentsViewModel(source:fastUpdateAction:),
             makeSearchCityViewModel: model.makeSearchCityViewModel(placeholderText:operators:action:),
             addCompanyAction: addCompanyAction,
-            requisitesAction: requisitesAction
+            requisitesAction: requisitesAction,
+            fastUpdateAction: fastUpdateAction
         )
     }
 }
@@ -161,6 +165,22 @@ enum PaymentsServicesViewModelWithNavBarAction {
 extension Model {
     
     func makePaymentsViewModel(
+        source: Payments.Operation.Source,
+        fastUpdateAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
+        
+        return .init(
+            source: source,
+            model: self,
+            closeAction: { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }, 
+            fastUpdateAction: fastUpdateAction
+        )
+    }
+    
+    func makePaymentsViewModel(
         source: Payments.Operation.Source
     ) -> PaymentsViewModel {
         
@@ -170,7 +190,8 @@ extension Model {
             closeAction: { [weak self] in
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }
+            },
+            fastUpdateAction: { self.action.send(ModelAction.Products.Update.Fast.All())}
         )
     }
     
@@ -191,11 +212,11 @@ extension Model {
 
 extension PaymentsServicesViewModel {
     
-    private func setStartValues() {
+    private func setStartValues(fastUpdateAction: @escaping () -> Void) {
         
         let action: (String) -> Void = { [weak self] code in
             
-            guard let link = self?.link(for: code) else { return }
+            guard let link = self?.link(for: code, fastUpdateAction: fastUpdateAction) else { return }
             
             Task { @MainActor [weak self] in self?.link = link }
         }
@@ -203,10 +224,10 @@ extension PaymentsServicesViewModel {
         self.operators = Self.reduceOperators(operatorsList: allOperators, action: action)
     }
     
-    func link(for code: String) -> Link {
+    func link(for code: String, fastUpdateAction: @escaping () -> Void) -> Link {
         
         let paymentsViewModel = makePaymentsViewModel(
-            .servicePayment(puref: code, additionalList: .none, amount: 0)
+            .servicePayment(puref: code, additionalList: .none, amount: 0), fastUpdateAction
         )
         
         return .payments(paymentsViewModel)

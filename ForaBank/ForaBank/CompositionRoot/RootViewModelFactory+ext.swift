@@ -328,7 +328,8 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction
+            showLoginAction: showLoginAction, 
+            fastUpdateAction: fastUpdateAction
         )
     }
 }

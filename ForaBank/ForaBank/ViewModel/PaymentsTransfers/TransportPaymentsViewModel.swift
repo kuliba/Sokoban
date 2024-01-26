@@ -22,18 +22,21 @@ final class TransportPaymentsViewModel: ObservableObject {
     
     private let makePaymentsViewModel: MakePaymentsViewModel
     private let handleError: HandleError
+    private let fastUpdateAction: () -> Void
+
     
     init(
         operators: [OperatorGroupData.OperatorData],
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
         makePaymentsViewModel: @escaping MakePaymentsViewModel,
-        handleError: @escaping HandleError
+        handleError: @escaping HandleError,
+        fastUpdateAction: @escaping () -> Void
     ) {
         self.operators = operators
         self.latestPayments = latestPayments
         self.makePaymentsViewModel = makePaymentsViewModel
         self.handleError = handleError
-        
+        self.fastUpdateAction = fastUpdateAction
         latestPayments.action
             .compactMap { $0 as? PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped }
             .map(Payments.Operation.Source.init(withItemDidTapped:))

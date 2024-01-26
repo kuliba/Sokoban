@@ -14,6 +14,7 @@ class QRSearchOperatorViewModel: ObservableObject {
     let navigationBar: NavigationBarView.ViewModel
     let searchBar: SearchBarView.ViewModel
     let noCompanyInListViewModel: NoCompanyInListViewModel
+    private let fastUpdateAction: () -> Void
 
     @Published var operators: [QRSearchOperatorComponent.ViewModel] = []
     @Published var filteredOperators: [QRSearchOperatorComponent.ViewModel] = []
@@ -24,14 +25,16 @@ class QRSearchOperatorViewModel: ObservableObject {
 
     private var bindings = Set<AnyCancellable>()
     
-    init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) {
+    init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void,
+        fastUpdateAction: @escaping () -> Void
+    ) {
         
         self.searchBar = searchBar
         self.navigationBar = navigationBar
         self.model = model
         self.noCompanyInListViewModel = .init(title: NoCompanyInListViewModel.defaultTitle, content: NoCompanyInListViewModel.defaultContent, subtitle: NoCompanyInListViewModel.defaultSubtitle, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
-        
-        //TODO: create convenience init 
+        self.fastUpdateAction = fastUpdateAction
+        //TODO: create convenience init
         bind()
         let operatorsData = model.dictionaryQRAnewayOperator().filter({ !$0.parameterList.isEmpty })
         self.operators = operatorsData.map { QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
@@ -57,7 +60,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                                 closeAction: {
                                     
                                     self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                })
+                                }, fastUpdateAction: fastUpdateAction)
                             await MainActor.run {
                                 
                                 self.link = .payments(paymentsViewModel)
@@ -80,9 +83,18 @@ class QRSearchOperatorViewModel: ObservableObject {
         }
     }
     
-    convenience init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, operators: [OperatorGroupData.OperatorData], addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void, qrCode: QRCode) {
+    convenience init(
+        searchBar: SearchBarView.ViewModel,
+        navigationBar: NavigationBarView.ViewModel,
+        model: Model,
+        operators: [OperatorGroupData.OperatorData],
+        addCompanyAction: @escaping () -> Void,
+        requisitesAction: @escaping () -> Void,
+        qrCode: QRCode,
+        fastUpdateAction: @escaping () -> Void
+    ) {
         
-        self.init(searchBar: searchBar, navigationBar: navigationBar, model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
+        self.init(searchBar: searchBar, navigationBar: navigationBar, model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction, fastUpdateAction: fastUpdateAction)
         
         guard let qrMapping = model.qrMapping.value else {
             return
@@ -104,7 +116,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                             model: model,
                             closeAction: {
                                 self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
+                            }, fastUpdateAction: fastUpdateAction)
                         await MainActor.run {
                             
                             self.link = .payments(paymentsViewModel)
