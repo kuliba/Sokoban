@@ -39,7 +39,7 @@ public extension BankDefaultReducer {
 public extension BankDefaultReducer {
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.BankDefault
+    typealias Event = BankDefaultEvent
     typealias Effect = FastPaymentsSettingsEffect
     
 }
@@ -56,7 +56,7 @@ private extension BankDefaultReducer {
         else { return (state, nil) }
         
         var state = state
-        state.status = nil
+        state.status = .inflight
         
         return (state, .prepareSetBankDefault)
     }
@@ -75,10 +75,9 @@ private extension BankDefaultReducer {
         return state
     }
     
-    #warning("`Failure` is not a member of `FastPaymentsSettingsEvent.BankDefault`")
     func update(
         _ state: State,
-        with failure: FastPaymentsSettingsEvent.Failure?
+        with failure: ServiceFailure?
     ) -> State {
         
         guard let details = state.activeDetails

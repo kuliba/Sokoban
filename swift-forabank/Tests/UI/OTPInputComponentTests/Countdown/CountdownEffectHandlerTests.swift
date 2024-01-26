@@ -59,7 +59,7 @@ final class CountdownEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias InitiateSpy = Spy<Void, SUT.InitiateResult>
+    private typealias InitiateSpy = Spy<Void, SUT.InitiateOTPResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -85,7 +85,7 @@ private func connectivity(
 }
 
 private func connectivity(
-) -> CountdownEffectHandler.InitiateResult {
+) -> CountdownEffectHandler.InitiateOTPResult {
     
     .failure(.connectivityError)
 }
@@ -99,7 +99,7 @@ private func serverError(
 
 private func serverError(
     _ message: String = anyMessage()
-) -> CountdownEffectHandler.InitiateResult {
+) -> CountdownEffectHandler.InitiateOTPResult {
     
     .failure(.serverError(message))
 }

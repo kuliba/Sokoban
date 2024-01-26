@@ -263,6 +263,20 @@
         "identifier" : "RxViewModelTests",
         "name" : "RxViewModelTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
+      }
     }
   ],
   "version" : 1

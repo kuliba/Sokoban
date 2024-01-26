@@ -24,12 +24,6 @@ public final class CountdownComposer {
         self.activate = activate
         self.timer = timer
         self.scheduler = scheduler
-        print("CountdownComposer init")
-    }
-    
-    deinit {
-        
-        print("CountdownComposer deinit")
     }
 }
 
@@ -71,7 +65,7 @@ public extension CountdownComposer {
 
 public extension CountdownComposer {
     
-    typealias ActivateResult = Result<Void, CountdownFailure>
+    typealias ActivateResult = Result<Void, ServiceFailure>
     typealias ActivateCompletion = (ActivateResult) -> Void
     typealias Activate = (@escaping ActivateCompletion) -> Void
 }

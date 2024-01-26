@@ -26,7 +26,7 @@ struct CountdownDemoSettings {
         
         var id: Self { self }
         
-        var result: CountdownEffectHandler.InitiateResult {
+        var result: CountdownEffectHandler.InitiateOTPResult {
             
             switch self {
             case .success:

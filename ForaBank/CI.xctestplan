@@ -257,23 +257,30 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "OTPInputComponentTests",
         "name" : "OTPInputComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "OTPInputComponentTests",
-        "name" : "OTPInputComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "RxViewModelTests",
         "name" : "RxViewModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
+        }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
       }
     }
   ],

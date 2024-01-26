@@ -61,6 +61,9 @@ private extension ProductSelect {
     
     func canPay(_ amount: Decimal) -> Bool {
         
-        0 < amount && amount <= selected.balance
+        guard let balance = selected?.balance
+        else { return false }
+        
+        return 0 < amount && amount <= balance
     }
 }

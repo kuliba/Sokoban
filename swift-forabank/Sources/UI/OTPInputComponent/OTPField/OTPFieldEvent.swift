@@ -9,6 +9,6 @@ public enum OTPFieldEvent: Equatable {
     
     case confirmOTP
     case edit(String)
-    case failure(OTPFieldFailure)
+    case failure(ServiceFailure)
     case otpValidated
 }

@@ -36,7 +36,7 @@ public extension OTPFieldEffectHandler {
 public extension OTPFieldEffectHandler {
     
     typealias SubmitOTPPayload = OTP
-    typealias SubmitOTPResult = Result<Void, OTPFieldFailure>
+    typealias SubmitOTPResult = Result<Void, ServiceFailure>
     typealias SubmitOTPCompletion = (SubmitOTPResult) -> Void
     typealias SubmitOTP = (SubmitOTPPayload, @escaping SubmitOTPCompletion) -> Void
     

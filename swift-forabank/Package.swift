@@ -17,6 +17,7 @@ let package = Package(
         .sberQR,
         .sharedAPIInfra,
         .textFieldModel,
+        .productProfile,
         // Landing
         .codableLanding,
         .landingMapping,
@@ -51,6 +52,7 @@ let package = Package(
         .uiKitHelpers,
         // UI Components
         .paymentComponents,
+        .carouselComponent,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -75,6 +77,8 @@ let package = Package(
         .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
+        .productProfile,
+        .productProfileTests,
         .sberQR,
         .sberQRTests,
         .sharedAPIInfra,
@@ -147,6 +151,8 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .carouselComponent,
+        .carouselComponentTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -191,6 +197,13 @@ private extension Product {
         name: .phoneNumberWrapper,
         targets: [
             .phoneNumberWrapper,
+        ]
+    )
+    
+    static let productProfile = library(
+        name: .productProfile,
+        targets: [
+            .productProfile,
         ]
     )
     
@@ -335,6 +348,13 @@ private extension Product {
             .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
+        ]
+    )
+    
+    static let carouselComponent = library(
+        name: .carouselComponent,
+        targets: [
+            .carouselComponent
         ]
     )
     
@@ -547,6 +567,29 @@ private extension Target {
         ]
     )
     
+    static let productProfile = target(
+        name: .productProfile,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+        ]
+    )
+    static let productProfileTests = testTarget(
+        name: .productProfileTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .productProfile,
+            .rxViewModel,
+        ]
+    )
+
     static let sberQR = target(
         name: .sberQR,
         dependencies: [
@@ -706,6 +749,9 @@ private extension Target {
     
     static let cardStatementAPI = target(
         name: .cardStatementAPI,
+        dependencies: [
+            .tagged,
+        ],
         path: "Sources/\(String.cardStatementAPI)"
     )
     static let cardStatementAPITests = testTarget(
@@ -713,10 +759,15 @@ private extension Target {
         dependencies: [
             // external packages
             .customDump,
+            .combineSchedulers,
+            .tagged,
             // internal modules
             .cardStatementAPI,
         ],
-        path: "Tests/\(String.cardStatementAPITests)"
+        path: "Tests/\(String.cardStatementAPITests)",
+        resources: [
+            .copy("Resources/StatementSample.json"),
+        ]
     )
 
     static let cryptoSwaddler = target(
@@ -1082,6 +1133,22 @@ private extension Target {
         path: "Sources/UI/Components/\(String.paymentComponents)"
     )
     
+    static let carouselComponent = target(
+        name: .carouselComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.carouselComponent)"
+    )
+    
+    static let carouselComponentTests = testTarget(
+        name: .carouselComponentTests,
+        dependencies: [
+            .carouselComponent
+        ],
+        path: "Tests/UI/Components/\(String.carouselComponentTests)"
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -1179,6 +1246,10 @@ private extension Target.Dependency {
         name: .phoneNumberWrapper
     )
     
+    static let productProfile = byName(
+        name: .productProfile
+    )
+
     static let sberQR = byName(
         name: .sberQR
     )
@@ -1279,6 +1350,10 @@ private extension Target.Dependency {
         name: .sharedConfigs
     )
     
+    static let carouselComponent = byName(
+        name: .carouselComponent
+    )
+    
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1359,6 +1434,9 @@ private extension String {
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
     
+    static let productProfile = "ProductProfile"
+    static let productProfileTests = "ProductProfileTests"
+    
     static let sberQR = "SberQR"
     static let sberQRTests = "SberQRTests"
     
@@ -1431,6 +1509,9 @@ private extension String {
     static let productSelectComponentTests = "ProductSelectComponentTests"
 
     static let sharedConfigs = "SharedConfigs"
+    
+    static let carouselComponent = "CarouselComponent"
+    static let carouselComponentTests = "CarouselComponentTests"
     
     // MARK: - Infra
     

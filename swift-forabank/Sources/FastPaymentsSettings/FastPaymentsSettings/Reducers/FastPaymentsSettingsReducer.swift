@@ -8,15 +8,18 @@
 public final class FastPaymentsSettingsReducer {
     
     private let bankDefaultReduce: BankDefaultReduce
+    private let consentListReduce: ConsentListReduce
     private let contractReduce: ContractReduce
     private let productsReduce: ProductsReduce
     
     public init(
         bankDefaultReduce: @escaping BankDefaultReduce,
+        consentListReduce: @escaping ConsentListReduce,
         contractReduce: @escaping ContractReduce,
         productsReduce: @escaping ProductsReduce
     ) {
         self.bankDefaultReduce = bankDefaultReduce
+        self.consentListReduce = consentListReduce
         self.contractReduce = contractReduce
         self.productsReduce = productsReduce
     }
@@ -33,16 +36,6 @@ public extension FastPaymentsSettingsReducer {
         var effect: Effect?
         
         switch event {
-        case let .bankDefault(bankDefault):
-            (state, effect) = bankDefaultReduce(state, bankDefault)
-            
-        case let .contract(contract):
-            let (newState, contractEffect) = contractReduce(state, contract)
-            (state, effect) = (newState, contractEffect.map(Effect.contract))
-            
-        case let .products(products):
-            (state, effect) = productsReduce(state, products)
-            
         case .appear:
             (state, effect) = handleAppear(state)
             
@@ -51,6 +44,24 @@ public extension FastPaymentsSettingsReducer {
             
         case .resetStatus:
             state = resetStatus(state)
+            
+        case let .bankDefault(bankDefault):
+            (state, effect) = bankDefaultReduce(state, bankDefault)
+            
+#warning("add tests")
+        case let .consentList(consentList):
+            (state, effect) = reduce(state, consentList)
+            
+        case let .contract(contract):
+            let (newState, contractEffect) = contractReduce(state, contract)
+            (state, effect) = (newState, contractEffect.map(Effect.contract))
+            
+        case let .products(products):
+            (state, effect) = productsReduce(state, products)
+            
+        case let .subscription(subscriptions):
+#warning("add tests")
+            (state, effect) = reduce(state, with: subscriptions)
         }
         
         return (state, effect)
@@ -59,9 +70,10 @@ public extension FastPaymentsSettingsReducer {
 
 public extension FastPaymentsSettingsReducer {
     
-    typealias BankDefaultReduce = (State, Event.BankDefault) -> (State, Effect?)
-    typealias ContractReduce = (State, Event.Contract) -> (State, Effect.Contract?)
-    typealias ProductsReduce = (State, Event.Products) -> (State, Effect?)
+    typealias BankDefaultReduce = (State, BankDefaultEvent) -> (State, Effect?)
+    typealias ConsentListReduce = (ConsentListState, ConsentListEvent) -> (ConsentListState, ConsentListEffect?)
+    typealias ContractReduce = (State, ContractEvent) -> (State, ContractEffect?)
+    typealias ProductsReduce = (State, ProductsEvent) -> (State, Effect?)
     
     typealias State = FastPaymentsSettingsState
     typealias Event = FastPaymentsSettingsEvent
@@ -80,11 +92,79 @@ private extension FastPaymentsSettingsReducer {
         return (state, .getSettings)
     }
     
+    func reduce(
+        _ state: State,
+        _ event: ConsentListEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch state.userPaymentSettings {
+        case var .contracted(contractDetails):
+            let (consentList, consentListEffect) = consentListReduce(contractDetails.consentList, event)
+            contractDetails.consentList = consentList
+            state.userPaymentSettings = .contracted(contractDetails)
+            effect = consentListEffect.map(Effect.consentList)
+            
+        case .none, .missingContract, .failure:
+            break
+        }
+        
+        return (state, effect)
+    }
+    
     func handleLoadedSettings(
         _ userPaymentSettings: UserPaymentSettings
     ) -> State {
         
         .init(userPaymentSettings: userPaymentSettings)
+    }
+    
+#warning("add tests")
+    func reduce(
+        _ state: State,
+        with event: SubscriptionEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .getC2BSubButtonTapped:
+            state.status = .inflight
+            effect = .subscription(.getC2BSub)
+            
+        case let .loaded(getC2BSubResult):
+            state = reduce(state, with: getC2BSubResult)
+        }
+        
+        return (state, effect)
+    }
+    
+#warning("add tests")
+    func reduce(
+        _ state: State,
+        with getC2BSubResult: GetC2BSubResult
+    ) -> State {
+        
+        var state = state
+        
+        switch getC2BSubResult {
+        case let .success(getC2BSubResponse):
+            state.status = .getC2BSubResponse(getC2BSubResponse)
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                state.status = nil
+                
+            case let .serverError(message):
+                state.status = .serverError(message)
+            }
+        }
+        
+        return state
     }
     
     func resetStatus(

@@ -6,25 +6,17 @@
 //
 
 @testable import ForaBank
+import CardStatementAPI
 import GenericRemoteService
 import XCTest
 
 final class Services_getCardStatementServiceTests: XCTestCase {
-    
-    func test_getCardStatementData_success() throws {
         
-        let (sut, spy) = makeSUT()
-        
-        try expect(sut, toDeliver: .success([.sample])) {
-            spy.complete(with: .success(makeSuccessResponse(with: .sampleCardStatement)))
-        }
-    }
-    
     func test_getCardStatementData_statusOkEmptyData_shouldDeliverError() throws {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultErrorMessage))) {
             spy.complete(with: .success(makeSuccessResponse(with: .emptyData)))
         }
     }
@@ -33,7 +25,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultError))) {
+        try expect(sut, toDeliver: .failure(.mappingFailure(.defaultErrorMessage))) {
             spy.complete(with: .success(makeSuccessResponse(with: .errorData)))
         }
     }
@@ -88,7 +80,7 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         string.data(using: .utf8)!
     }
     
-    private typealias Payload = CardStatementForPeriodDomain.Payload
+    private typealias Payload =  CardStatementAPI.CardStatementForPeriodPayload
     
     private func expect(
         _ sut: Services.GetCardStatementService,
@@ -156,54 +148,19 @@ final class Services_getCardStatementServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func testPeriod() throws -> Period {
+    private func testPeriod() throws -> Payload.Period {
         
         let calendar = Calendar.current
         
         let startDate = try XCTUnwrap(Date.date(year: 2022, month: 4, day: 10, calendar: calendar))
         let endDate = try XCTUnwrap(Date.date(year: 2022, month: 5, day: 10, calendar: calendar))
         
-        return Period(start: startDate, end: endDate)
+        return .init(start: startDate, end: endDate)
     }
 }
 
 private extension String {
     
-    static let sampleCardStatement: Self = """
-{
-  "statusCode": 0,
-  "errorMessage": "string",
-  "data": [
-    {
-        "type": "INSIDE",
-        "accountID": 100,
-        "date": "2001-01-01T00:00:00.000Z",
-        "tranDate": "2001-01-01T00:00:00.000Z",
-        "operationType": "DEBIT",
-        "paymentDetailType": "SFP",
-        "amount": 20,
-        "documentAmount": 20,
-        "comment": "",
-        "documentID": 102,
-        "accountNumber": "302",
-        "currencyCodeNumeric": 810,
-        "merchantName": "",
-        "merchantNameRus": "merchantNameRus",
-        "groupName": "groupName",
-        "md5hash": "md5hash",
-        "terminalCode": "",
-        "deviceCode": "",
-        "country": "",
-        "city": "",
-        "operationId": "105",
-        "isCancellation": false,
-        "cardTranNumber": "465",
-        "opCode": 1,
-        "MCC": 0
-    }
-  ]
-}
-"""
     static let emptyData: Self = """
     {
       "statusCode": 0,
@@ -218,37 +175,4 @@ private extension String {
       "data": {}
     }
 """
-}
-
-private extension ProductStatementData {
-    
-    static let sample: Self = .init(
-        mcc: 0,
-        accountId: 100,
-        accountNumber: "302",
-        amount: 20,
-        cardTranNumber: "465",
-        city: "",
-        comment: "",
-        country: "",
-        currencyCodeNumeric: 810,
-        date: Date(timeIntervalSince1970: 978307200),
-        deviceCode: "",
-        documentAmount: 20,
-        documentId: 102,
-        fastPayment: nil,
-        groupName: "groupName",
-        isCancellation: false,
-        md5hash: "md5hash",
-        merchantName: "",
-        merchantNameRus: "merchantNameRus",
-        opCode: 1,
-        operationId: "105",
-        operationType: .debit,
-        paymentDetailType: .sfp,
-        svgImage: nil,
-        terminalCode: "",
-        tranDate: Date(timeIntervalSince1970: 978307200),
-        type: .inside
-    )
 }

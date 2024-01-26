@@ -6,38 +6,117 @@
 //
 
 import Foundation
+import OTPInputComponent
 
 final class ContentViewModel: ObservableObject {
     
-    @Published var otpSettings: OTPValidationSettings = .success
-    @Published var settings: CountdownDemoSettings = .shortSuccess
-    @Published var fullScreenCover: FullScreenCover?
+    @Published private(set) var demoSettings: DemoSettings = .shortSuccess
+    @Published private(set) var modal: Modal?
 }
 
 extension ContentViewModel {
     
-    func updateOTPSettings(
-        _ otpSettings: OTPValidationSettings
+    func confirmWithOTP() {
+        
+        modal = .spinner
+        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 1
+        ) { [weak self] in
+            
+            guard let self else { return }
+            
+            resetModal()
+            
+            switch demoSettings.confirmWithOTPSettings {
+            case .connectivity:
+                modal = .informer(.init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже."))
+                
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1,
+                    execute: { [weak self] in self?.resetModal() }
+                )
+                
+            case .server:
+                modal = .alert(.init(message: "Server Error Failure"))
+                
+            case .success:
+                modal = .fullScreenCover(.confirmWithOTP)
+            }
+        }
+    }
+    
+    func resetModal() {
+        
+        modal = nil
+    }
+}
+
+// MARK: - Settings Update
+
+extension ContentViewModel {
+    
+    func updateConfirmWithOTPSettings(
+        _ settings: ConfirmWithOTPSettings
     ) {
-        self.otpSettings = otpSettings
-        self.fullScreenCover = nil
+        self.demoSettings.confirmWithOTPSettings = settings
+    }
+    
+    func updateOTPFieldDemoSettings(
+        _ otpFieldDemoSettings: DemoSettingsResult
+    ) {
+        self.demoSettings.otpFieldDemoSettings = otpFieldDemoSettings
     }
     
     func updateCountdownDemoSettings(
         _ settings: CountdownDemoSettings
     ) {
-        self.settings = settings
-        self.fullScreenCover = nil
+        self.demoSettings.countdownDemoSettings = settings
+    }
+    
+    func updateCountdownDemoDuration(
+        _ duration: CountdownDemoSettings.Duration
+    ) {
+        self.demoSettings.countdownDemoSettings.duration = duration
+    }
+    
+    func updateCountdownDemoInitiateResult(
+        _ initiateResult: CountdownDemoSettings.InitiateResult
+    ) {
+        self.demoSettings.countdownDemoSettings.initiateResult = initiateResult
     }
 }
 
+// MARK: - Modal
+
 extension ContentViewModel {
     
-    enum FullScreenCover: Identifiable {
+    enum Modal {
         
-        case otpSettings
-        case countdownSettings
+        case alert(Alert)
+        case fullScreenCover(FullScreenCover)
+        case informer(Informer)
+        case spinner
         
-        var id: Self { self }
+        struct Alert: Identifiable {
+            
+            let message: String
+            
+            var id: String { message }
+        }
+        
+        enum FullScreenCover: Identifiable {
+            
+            case confirmWithOTP
+            
+            var id: Self { self }
+        }
+        
+        struct Informer: Identifiable {
+            
+            let message: String
+            
+            var id: String { message }
+        }
     }
 }

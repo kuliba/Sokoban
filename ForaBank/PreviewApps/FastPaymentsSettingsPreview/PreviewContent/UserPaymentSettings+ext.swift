@@ -10,35 +10,35 @@ import FastPaymentsSettings
 extension UserPaymentSettings {
     
     static func active(
-        _ consentResult: UserPaymentSettings.ConsentResult = .success,
+        _ consentList: ConsentListState = .success,
         bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .active,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: bankDefault
             )
         )
     }
     
     static func inactive(
-        _ consentResult: UserPaymentSettings.ConsentResult = .success,
+        _ consentList: ConsentListState = .success,
         _ bankDefault: UserPaymentSettings.BankDefault = .offEnabled
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .inactive,
-                consentResult: consentResult,
+                consentList: consentList,
                 bankDefault: bankDefault
             )
         )
     }
     
     static func missingContract(
-        consent: UserPaymentSettings.ConsentResult = .success
+        consent: ConsentListState = .success
     ) -> Self {
         
         .missingContract(consent)
@@ -49,7 +49,7 @@ extension UserPaymentSettings.ContractDetails {
     
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
-        consentResult: UserPaymentSettings.ConsentResult = .success,
+        consentList: ConsentListState = .success,
         bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
         productSelector: UserPaymentSettings.ProductSelector = .init(
             selectedProduct: .card,
@@ -59,7 +59,7 @@ extension UserPaymentSettings.ContractDetails {
         
         .init(
             paymentContract: paymentContract,
-            consentResult: consentResult,
+            consentList: consentList,
             bankDefault: bankDefault,
             productSelector: productSelector
         )
@@ -81,13 +81,17 @@ extension UserPaymentSettings.PaymentContract {
     )
 }
 
-private extension UserPaymentSettings.ConsentResult {
+private extension ConsentListState {
     
     static let success: Self = .success(.preview)
-    static let failure: Self = .failure(.init())
 }
 
-private extension UserPaymentSettings.ConsentList {
+private extension ConsentList {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(
+        banks: .preview,
+        consent: .preview,
+        mode: .collapsed,
+        searchText: ""
+    )
 }

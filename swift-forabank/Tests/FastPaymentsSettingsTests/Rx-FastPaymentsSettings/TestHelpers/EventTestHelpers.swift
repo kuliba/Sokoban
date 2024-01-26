@@ -13,22 +13,10 @@ func activateContract(
     .contract(.activateContract)
 }
 
-func collapseProducts(
-) -> FastPaymentsSettingsEvent {
-    
-    .products(.collapseProducts)
-}
-
 func deactivateContract(
 ) -> FastPaymentsSettingsEvent {
     
     .contract(.deactivateContract)
-}
-
-func expandProducts(
-) -> FastPaymentsSettingsEvent {
-    
-    .products(.expandProducts)
 }
 
 func prepareSetBankDefault(
@@ -66,7 +54,13 @@ func selectProduct(
     _ product: Product = makeProduct()
 ) -> FastPaymentsSettingsEvent {
     
-    .products(.selectProduct(product))
+    .products(.selectProduct(product.id))
+}
+
+func toggleProducts(
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.toggleProducts)
 }
 
 func updateContractConnectivityError(
@@ -93,7 +87,7 @@ func updateProductSuccess(
     _ product: Product = makeProduct()
 ) -> FastPaymentsSettingsEvent {
     
-    .products(.updateProduct(.success(product)))
+    .products(.updateProduct(.success(product.id)))
 }
 
 func updateProductConnectivityError(
@@ -111,5 +105,5 @@ func updateProductServerError(
 
 func updateProductSuccess() -> FastPaymentsSettingsEvent {
     
-    .products(.updateProduct(.success(makeProduct())))
+    .products(.updateProduct(.success(makeProduct().id)))
 }
