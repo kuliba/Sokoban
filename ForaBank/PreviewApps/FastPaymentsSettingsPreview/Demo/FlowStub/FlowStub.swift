@@ -13,6 +13,7 @@ struct FlowStub {
     let getProducts: [Product]
     let changeConsentList: ConsentListRxEffectHandler.ChangeConsentListResponse
     let createContract: ContractEffectHandler.CreateContractResponse
+    let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSubResult
     let getSettings: UserPaymentSettings
     let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefaultResponse
     let updateContract: ContractEffectHandler.UpdateContractResponse

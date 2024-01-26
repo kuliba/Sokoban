@@ -9,27 +9,27 @@ import FastPaymentsSettings
 
 func anyEffectProductID(
     _ rawValue: Int = generateRandom11DigitNumber()
-) -> FastPaymentsSettingsEffect.Contract.ProductID {
+) -> ContractEffect.ProductID {
     
     .init(rawValue)
 }
 
 func activateContract(
-    _ contract: FastPaymentsSettingsEffect.Contract.TargetContract
+    _ contract: ContractEffect.TargetContract
 ) -> FastPaymentsSettingsEffect {
     
     .contract(.activateContract(contract))
 }
 
 func createContract(
-    _ productID: FastPaymentsSettingsEffect.Contract.ProductID
+    _ productID: ContractEffect.ProductID
 ) -> FastPaymentsSettingsEffect {
     
     .contract(.createContract(productID))
 }
 
 func deactivateContract(
-    _ contract: FastPaymentsSettingsEffect.Contract.TargetContract
+    _ contract: ContractEffect.TargetContract
 ) -> FastPaymentsSettingsEffect {
     
     .contract(.deactivateContract(contract))
@@ -39,12 +39,12 @@ func fastPaymentsSettingsEffectTargetContract(
     contractID: FastPaymentsSettingsEffect.ContractCore.ContractID = .init(generateRandom11DigitNumber()),
     product: Product = makeProduct(),
     targetStatus: ContractEffectHandler.UpdateContractPayload.TargetStatus = .active
-) -> FastPaymentsSettingsEffect.Contract.TargetContract {
+) -> ContractEffect.TargetContract {
     
     .init(
         core: .init(
             contractID: contractID,
-            product: product
+            productID: product.id
         ),
         targetStatus: targetStatus)
 }
@@ -56,7 +56,7 @@ func makeCore(
     
     .init(
         contractID: .init(details.paymentContract.id.rawValue),
-        product: product
+        productID: product.id
     )
 }
 
@@ -67,6 +67,6 @@ func updateProductPayload(
     
     .init(
         contractID: .init(contractIDRawValue),
-        product: product
+        productID: product.id
     )
 }

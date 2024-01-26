@@ -65,7 +65,7 @@ public extension CountdownComposer {
 
 public extension CountdownComposer {
     
-    typealias ActivateResult = Result<Void, CountdownFailure>
+    typealias ActivateResult = Result<Void, ServiceFailure>
     typealias ActivateCompletion = (ActivateResult) -> Void
     typealias Activate = (@escaping ActivateCompletion) -> Void
 }

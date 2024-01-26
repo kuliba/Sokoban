@@ -42,7 +42,7 @@ public extension ContractEffectHandler {
 // micro-service `ea`
 public extension ContractEffectHandler {
     
-    typealias CreateContractPayload = FastPaymentsSettingsEffect.Contract.ProductID
+    typealias CreateContractPayload = ContractEffect.ProductID
 #warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
     typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResponse) -> Void
@@ -52,7 +52,7 @@ public extension ContractEffectHandler {
 // micro-service `da`
 public extension ContractEffectHandler {
     
-    typealias UpdateContractPayload = FastPaymentsSettingsEffect.Contract.TargetContract
+    typealias UpdateContractPayload = ContractEffect.TargetContract
 #warning("`UpdateContractResponse` success case could only be `inactive` contract - need to find a way to enforce this")
     typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
@@ -63,15 +63,8 @@ public extension ContractEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    enum ServiceFailure: Error, Equatable  {
-        
-        case connectivityError
-        case serverError(String)
-    }
-    
-    typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent
-    typealias Effect = FastPaymentsSettingsEffect.Contract
+    typealias Event = ContractEvent
+    typealias Effect = ContractEffect
 }
 
 private extension ContractEffectHandler {
@@ -91,13 +84,13 @@ private extension ContractEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contract(.updateContract(.success(contract))))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contract(.updateContract(.failure(.connectivityError))))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }
@@ -117,13 +110,13 @@ private extension ContractEffectHandler {
             
             switch result {
             case let .success(contract):
-                dispatch(.contract(.updateContract(.success(contract))))
+                dispatch(.updateContract(.success(contract)))
                 
             case .failure(.connectivityError):
-                dispatch(.contract(.updateContract(.failure(.connectivityError))))
+                dispatch(.updateContract(.failure(.connectivityError)))
                 
             case let .failure(.serverError(message)):
-                dispatch(.contract(.updateContract(.failure(.serverError(message)))))
+                dispatch(.updateContract(.failure(.serverError(message))))
             }
         }
     }

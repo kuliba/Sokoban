@@ -14,8 +14,9 @@ typealias Pickerable = RawRepresentable & CaseIterable & Identifiable & Hashable
 struct FlowStubSettingsView: View {
     
     @State private var getProducts: GetProducts?
-    @State private var changeConsentList: ChangeConsentListResponse?
-    @State private var createContract: CreateContractResponse?
+    @State private var changeConsentList: ChangeConsentList?
+    @State private var createContract: CreateContract?
+    @State private var getC2BSub: GetC2BSub?
     @State private var getSettings: GetSettings?
     @State private var prepareSetBankDefault: PrepareSetBankDefault?
     @State private var updateContract: UpdateContract?
@@ -31,7 +32,9 @@ struct FlowStubSettingsView: View {
     ) {
         self.commit = commit
         self._getProducts = .init(initialValue: .init(flowStub: flowStub))
+        self._changeConsentList = .init(initialValue: .init(flowStub: flowStub))
         self._createContract = .init(initialValue: .init(flowStub: flowStub))
+        self._getC2BSub = .init(initialValue: .init(flowStub: flowStub))
         self._getSettings = .init(initialValue: .init(flowStub: flowStub))
         self._prepareSetBankDefault = .init(initialValue: .init(flowStub: flowStub))
         self._updateContract = .init(initialValue: .init(flowStub: flowStub))
@@ -57,6 +60,7 @@ struct FlowStubSettingsView: View {
                 pickerSection("Update Product", selection: $updateProduct)
                 pickerSection("Initiate OTP", selection: $initiateOTP)
                 pickerSection("Submit OTP", selection: $submitOTP)
+                pickerSection("Get C2B Subscriptions", selection: $getC2BSub)
             }
             .listStyle(.plain)
             
@@ -71,6 +75,7 @@ struct FlowStubSettingsView: View {
         guard let getProducts = getProducts?.products,
               let changeConsentList = changeConsentList?.response,
               let createContract = createContract?.response,
+              let getC2BSub = getC2BSub?.settings,
               let getSettings = getSettings?.settings,
               let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
               let updateContract = updateContract?.updateContractResponse,
@@ -83,6 +88,7 @@ struct FlowStubSettingsView: View {
             getProducts: getProducts,
             changeConsentList: changeConsentList,
             createContract: createContract,
+            getC2BSub: getC2BSub,
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
             updateContract: updateContract,
@@ -118,6 +124,7 @@ struct FlowStubSettingsView: View {
             getProducts = .init(flowStub: .preview)
             changeConsentList = .init(flowStub: .preview)
             createContract = .init(flowStub: .preview)
+            getC2BSub = .init(flowStub: .preview)
             getSettings = .init(flowStub: .preview)
             prepareSetBankDefault = .init(flowStub: .preview)
             updateContract = .init(flowStub: .preview)
@@ -160,7 +167,7 @@ private extension FlowStubSettingsView {
         }
     }
     
-    enum ChangeConsentListResponse: String, CaseIterable, Identifiable {
+    enum ChangeConsentList: String, CaseIterable, Identifiable {
         
         case success, error_C, error_S
         
@@ -176,7 +183,7 @@ private extension FlowStubSettingsView {
         }
     }
     
-    enum CreateContractResponse: String, CaseIterable, Identifiable {
+    enum CreateContract: String, CaseIterable, Identifiable {
         
         case active, inactive, error_C, error_S
         
@@ -189,6 +196,30 @@ private extension FlowStubSettingsView {
             case .inactive: return .success(.inactive)
             case .error_C:  return .failure(.connectivityError)
             case .error_S:  return .failure(.serverError("Server Error Failure Message (#8765)."))
+            }
+        }
+    }
+    
+    enum GetC2BSub: String, CaseIterable, Identifiable {
+        
+        case control, empty, error_C, error_S
+        
+        var id: Self { self }
+        
+        var settings: FastPaymentsSettingsEffectHandler.GetC2BSubResult {
+            
+            switch self {
+            case .control:
+                return .success(.control)
+            
+            case .empty:
+                return .success(.empty)
+                
+            case .error_C:
+                return .failure(.connectivityError)
+                
+            case .error_S:
+                return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
     }
@@ -316,24 +347,27 @@ private extension FlowStubSettingsView.GetProducts {
     }
 }
 
-private extension FlowStubSettingsView.ChangeConsentListResponse {
+private extension FlowStubSettingsView.ChangeConsentList {
     
     init?(flowStub: FlowStub?) {
         
         switch flowStub?.changeConsentList {
+        case .none:
+            return nil
+            
         case .success:
             self = .success
+            
         case .connectivityError:
             self = .error_C
-        case .serverError(let string):
+            
+        case .serverError:
             self = .error_S
-        case nil:
-            return nil
         }
     }
 }
 
-private extension FlowStubSettingsView.CreateContractResponse {
+private extension FlowStubSettingsView.CreateContract {
     
     init?(flowStub: FlowStub?) {
         
@@ -347,6 +381,35 @@ private extension FlowStubSettingsView.CreateContractResponse {
                 self = .active
             case .inactive:
                 self = .inactive
+            }
+            
+        case let .failure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .error_C
+                
+            case .serverError:
+                self = .error_S
+            }
+        }
+    }
+}
+
+private extension FlowStubSettingsView.GetC2BSub {
+    
+    init?(flowStub: FlowStub?) {
+        
+        switch flowStub?.getC2BSub {
+        case .none:
+            return nil
+            
+        case let .success(success):
+            switch success.details {
+            case .list:
+                self = .control
+                
+            case .empty:
+                self = .empty
             }
             
         case let .failure(failure):
@@ -538,6 +601,7 @@ extension FlowStub {
         getProducts: .preview,
         changeConsentList: .success,
         createContract:  .success(.active),
+        getC2BSub: .success(.control),
         getSettings: .contracted(.preview()),
         prepareSetBankDefault: .success(()),
         updateContract: .success(.inactive),

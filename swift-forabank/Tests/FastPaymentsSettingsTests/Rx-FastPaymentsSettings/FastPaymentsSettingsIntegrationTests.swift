@@ -345,8 +345,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.products(.expandProducts))
-        sut.event(.products(.selectProduct(different)))
+        sut.event(.products(.toggleProducts))
+        sut.event(.products(.selectProduct(different.id)))
         updateProductSpy.complete(with: .success(()))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -386,8 +386,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.products(.expandProducts))
-        sut.event(.products(.selectProduct(different)))
+        sut.event(.products(.toggleProducts))
+        sut.event(.products(.selectProduct(different.id)))
         updateProductSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -425,8 +425,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         sut.event(.appear)
         getSettingsSpy.complete(with: .contracted(details))
         
-        sut.event(.products(.expandProducts))
-        sut.event(.products(.selectProduct(different)))
+        sut.event(.products(.toggleProducts))
+        sut.event(.products(.selectProduct(different.id)))
         updateProductSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -469,6 +469,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     
     private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
+    private typealias GetC2BSubSpy = Spy<Void, EffectHandler.GetC2BSubResult>
     private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
     private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
     private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
@@ -504,6 +505,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         )
         
         let changeConsentListSpy = ChangeConsentListSpy()
+        let getC2BSubSpy = GetC2BSubSpy()
         let getSettingsSpy = GetSettingsSpy()
         let updateContractSpy = UpdateContractSpy()
         let prepareSetBankDefaultSpy = PrepareSetBankDefaultSpy()
@@ -520,6 +522,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let effectHandler = EffectHandler(
             handleConsentListEffect: consentListEffectHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
+            getC2BSub: getC2BSubSpy.process(completion:),
             getSettings: getSettingsSpy.process(completion:),
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
             updateProduct: updateProductSpy.process(_:completion:)
@@ -535,7 +538,21 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let stateSpy = StateSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(bankDefaultReducer, file: file, line: line)
+        trackForMemoryLeaks(consentListReducer, file: file, line: line)
+        trackForMemoryLeaks(contractReducer, file: file, line: line)
+        trackForMemoryLeaks(productsReducer, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
+        trackForMemoryLeaks(changeConsentListSpy, file: file, line: line)
+#warning("use `getC2BSubSpy` in tests")
+        trackForMemoryLeaks(getC2BSubSpy, file: file, line: line)
+        trackForMemoryLeaks(getSettingsSpy, file: file, line: line)
+        trackForMemoryLeaks(updateContractSpy, file: file, line: line)
+        trackForMemoryLeaks(prepareSetBankDefaultSpy, file: file, line: line)
+        trackForMemoryLeaks(createContractSpy, file: file, line: line)
+        trackForMemoryLeaks(updateProductSpy, file: file, line: line)
+        trackForMemoryLeaks(consentListEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(contractEffectHandler, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         
         return (sut, stateSpy, changeConsentListSpy, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy)
