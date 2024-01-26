@@ -45,13 +45,11 @@ public extension ContractReducer {
     typealias GetProducts = () -> [Product]
     
     typealias State = FastPaymentsSettingsState
-    typealias Event = FastPaymentsSettingsEvent.Contract
-    typealias Effect = FastPaymentsSettingsEffect.Contract
+    typealias Event = ContractEvent
+    typealias Effect = ContractEffect
 }
 
 private extension ContractReducer {
-    
-    typealias Contract = FastPaymentsSettingsEffect.Contract
     
     func activateContract(
         _ state: State
@@ -67,7 +65,7 @@ private extension ContractReducer {
             var state = state
             state.status = .inflight
             
-            let updateContract = Contract.TargetContract(
+            let updateContract = ContractEffect.TargetContract(
                 core: core,
                 targetStatus: .active
             )
@@ -106,7 +104,7 @@ private extension ContractReducer {
         var state = state
         state.status = .inflight
         
-        let updateContract = Contract.TargetContract(
+        let updateContract = ContractEffect.TargetContract(
             core: core,
             targetStatus: .inactive
         )
@@ -114,10 +112,9 @@ private extension ContractReducer {
         return (state, .deactivateContract(updateContract))
     }
     
-#warning("'ContractUpdateResult' is not a member type of enum 'FastPaymentsSettings.FastPaymentsSettingsEvent.Contract'")
     func updateContract(
         _ state: State,
-        with result: FastPaymentsSettingsEvent.ContractUpdateResult
+        with result: ContractUpdateResult
     ) -> State {
         
         switch state.userPaymentSettings {
@@ -211,7 +208,7 @@ private extension UserPaymentSettings.ContractDetails {
         
         return .init(
             contractID: .init(paymentContract.id.rawValue),
-            product: product
+            productID: product.id
         )
     }
 }

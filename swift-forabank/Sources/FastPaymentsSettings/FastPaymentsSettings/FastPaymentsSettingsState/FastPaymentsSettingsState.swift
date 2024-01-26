@@ -31,5 +31,6 @@ public extension FastPaymentsSettingsState {
         case setBankDefault
         case setBankDefaultSuccess
         case confirmSetBankDefault//(phoneNumberMask) from contract details
+        case getC2BSubResponse(GetC2BSubResponse)
     }
 }

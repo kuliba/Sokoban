@@ -13,7 +13,7 @@ public extension UserPaymentSettings.ProductSelector {
     }
     
     func updated(
-        selectedProduct: Product?? = nil,
+        selectedProduct: Product? = nil,
         products: [Product]? = nil,
         status: Status? = nil
     ) -> Self {

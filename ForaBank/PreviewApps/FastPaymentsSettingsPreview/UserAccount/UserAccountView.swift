@@ -101,25 +101,29 @@ struct UserAccountView: View {
         
         switch destination {
         case let .fastPaymentsSettings(fpsViewModel):
-            FastPaymentsSettingsView(viewModel: fpsViewModel)
-                .alert(
-                    item: .init(
-                        get: { viewModel.state.alert?.fpsAlert },
-                        // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
-                        set: { _ in }
-                    ),
-                    content: Alert.init(with:)
-                )
-                .navigationDestination(
-                    item: .init(
-                        get: { viewModel.state.fpsDestination },
-                        set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
-                    ),
-                    destination: fpsDestinationView
-                )
+            FastPaymentsSettingsView(
+                viewModel: fpsViewModel,
+                config: .default
+            )
+            .alert(
+                item: .init(
+                    get: { viewModel.state.alert?.fpsAlert },
+                    // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                    set: { _ in }
+                ),
+                content: Alert.init(with:)
+            )
+            .navigationDestination(
+                item: .init(
+                    get: { viewModel.state.fpsDestination },
+                    set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+                ),
+                destination: fpsDestinationView
+            )
         }
     }
     
+    @ViewBuilder
     private func fpsDestinationView(
         fpsDestination: UserAccountViewModel.Route.FPSDestination
     ) -> some View {
@@ -127,6 +131,9 @@ struct UserAccountView: View {
         switch fpsDestination {
         case let .confirmSetBankDefault(timedOTPInputViewModel):
             OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+            
+        case let .c2BSub(getC2BSubResponse):
+            Text("TBD: \(String(describing: getC2BSubResponse))")
         }
     }
 }
@@ -136,7 +143,7 @@ struct OTPInputWrapperView: View {
     @ObservedObject private var viewModel: TimedOTPInputViewModel
     
     init(viewModel: TimedOTPInputViewModel) {
-     
+        
         self.viewModel = viewModel
     }
     

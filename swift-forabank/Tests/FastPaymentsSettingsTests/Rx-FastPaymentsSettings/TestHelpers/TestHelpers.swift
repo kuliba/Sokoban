@@ -14,9 +14,28 @@ func anyMessage() -> String {
 }
 
 func makeProduct(
-    _ rawValue: Int = generateRandom11DigitNumber(),
-    productType: Product.ProductType = .account
+    _ id: Product.ID = .init(generateRandom11DigitNumber()),
+    type: Product.ProductType = .account,
+    header: String = "Header",
+    title: String = "title",
+    number: String = "number",
+    amountFormatted: String = "amountFormatted",
+    balance: Decimal = 12_345.67,
+    look: Product.Look = .init(
+        background: .svg("background"),
+        color: "green",
+        icon: .svg("icon")
+    )
 ) -> Product {
     
-    .init(id: .init(rawValue), productType: productType)
+    .init(
+        id: id,
+        type: type,
+        header: header,
+        title: title,
+        number: number,
+        amountFormatted: amountFormatted,
+        balance: balance,
+        look: look
+    )
 }

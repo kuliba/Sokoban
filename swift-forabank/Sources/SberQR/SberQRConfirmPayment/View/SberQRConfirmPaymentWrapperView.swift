@@ -47,7 +47,7 @@ private extension SberQRConfirmPaymentState {
         return editableAmount.amount.value
     }
     
-    var product: ProductSelect.Product {
+    var product: ProductSelect.Product? {
         
         switch self {
         case let .editableAmount(editableAmount):
@@ -79,8 +79,16 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
         SberQRConfirmPaymentWrapperView(
             viewModel: .preview(
                 initialState: initialState,
-                pay: { print("pay!", String(describing: $0.amount), $0.product.type, $0.product.id) }
-            ), 
+                pay: {
+                    if let product = $0.product {
+                        
+                        print("pay!", String(describing: $0.amount), product.type, product.id)
+                    } else {
+                        
+                        print("product is nil")
+                    }
+                }
+            ),
             map: Info.preview,
             config: .preview
         )
