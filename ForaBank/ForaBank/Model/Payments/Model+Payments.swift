@@ -1632,16 +1632,15 @@ extension Model {
                 }
                 
                 let productID = Int(name?.dropFirst(2) ?? "")
-                let product = self.allProducts.first(where: { $0.id == productID })
-                if let card = product as? ProductCardData {
-                    
-                    let amount = paymentsParameterValue(
-                        operation.parameters,
-                        id: Payments.Parameter.Identifier.amount.rawValue
-                    )
-                    
-                    return .init(payeeName: card.numberMasked ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
-                }
+                
+                let product = self.productTemplates.value.first(where: { $0.id == productID })
+                
+                let amount = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.amount.rawValue
+                )
+                
+                return .init(payeeName: product?.numberMaskSuffix ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
                 
             default:
                 let amount = paymentsParameterValue(
@@ -1650,18 +1649,6 @@ extension Model {
                 )
                 return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
             }
-            
-            let amount = paymentsParameterValue(
-                operation.parameters,
-                id: Payments.Parameter.Identifier.amount.rawValue
-            )
-            
-            let serviceAmount = paymentsParameterValue(
-                operation.parameters,
-                id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
-            )
-            
-            return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? serviceAmount ?? "")")
         
         default:
             return nil
