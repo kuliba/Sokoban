@@ -42,7 +42,7 @@ public extension MicroServices {
 public extension MicroServices.GetSettings {
     
     func process(
-        completion: @escaping Completion
+        completion: @escaping ProcessCompletion
     ) {
         getContract { [weak self] result in
             
@@ -56,7 +56,6 @@ public extension MicroServices.GetSettings {
             case .success(.none):
                 processGetConsent(completion)
                 
-#warning("add tests")
             case let .success(.some(contract)):
                 process(contract, completion)
             }
@@ -66,27 +65,30 @@ public extension MicroServices.GetSettings {
 
 public extension MicroServices.GetSettings {
     
-    typealias SettingsResult = Result<Settings, ServiceFailure>
-    typealias Completion = (SettingsResult) -> Void
+    typealias ProcessResult = Result<Settings, ServiceFailure>
+    typealias ProcessCompletion = (ProcessResult) -> Void
     
+    // fastPaymentContractFindList
     typealias GetContractResult = Result<Contract?, ServiceFailure>
     typealias GetContractCompletion = (GetContractResult) -> Void
     typealias GetContract = (@escaping GetContractCompletion) -> Void
     
+    // getClientConsentMe2MePull
     typealias GetConsentCompletion = (Consent) -> Void
     typealias GetConsent = (@escaping GetConsentCompletion) -> Void
     
+    // getBankDefault
     typealias GetBankDefaultCompletion = (UserPaymentSettings.GetBankDefaultResponse) -> Void
     typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
     
-    typealias MapToMissing = (Consent) -> SettingsResult
+    typealias MapToMissing = (Consent) -> ProcessResult
     typealias MapToSettings = (Contract, Consent, UserPaymentSettings.GetBankDefaultResponse) -> Settings
 }
 
 private extension MicroServices.GetSettings {
     
     func processGetConsent(
-        _ completion: @escaping Completion
+        _ completion: @escaping ProcessCompletion
     ) {
         getConsent { [weak self] resultB in
             
@@ -99,7 +101,7 @@ private extension MicroServices.GetSettings {
 #warning("add tests")
     func process(
         _ contract: Contract,
-        _ completion: @escaping Completion
+        _ completion: @escaping ProcessCompletion
     ) {
         getConsent { [weak self] resultB in
             
@@ -114,4 +116,3 @@ private extension MicroServices.GetSettings {
         }
     }
 }
-

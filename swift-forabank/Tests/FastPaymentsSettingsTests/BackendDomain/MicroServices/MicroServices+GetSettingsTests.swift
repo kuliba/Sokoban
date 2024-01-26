@@ -129,11 +129,11 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         var sut: SUT?
         let getContractSpy: GetContractSpy
         (sut, getContractSpy, _,_) = makeSUT()
-        var receivedResult: SUT.SettingsResult?
+        var receivedResult: SUT.ProcessResult?
         
         sut?.process { receivedResult = $0 }
         sut = nil
-        getContractSpy.complete(with: .success(.init()))
+        getContractSpy.complete(with: .success(anyContract()))
         
         XCTAssertNil(receivedResult)
     }
@@ -145,7 +145,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         let getContractSpy: GetContractSpy
         let getConsentSpy: GetConsentSpy
         (sut, getContractSpy, getConsentSpy,_) = makeSUT()
-        var receivedResult: SUT.SettingsResult?
+        var receivedResult: SUT.ProcessResult?
         
         sut?.process { receivedResult = $0 }
         getContractSpy.complete(with: .success(nil))
@@ -156,8 +156,18 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     }
     
 #warning("add tests for instance deallocation")
-
-#warning("add tests involving phoneNumber")
+    
+    func test_process_shouldCallGetBankDefaultWithPhoneNumberFromGetSettings() {
+        
+        let contract = anyContract()
+        let (sut, getContractSpy, getConsentSpy, getBankDefaultSpy) = makeSUT()
+        
+        sut.process { _ in }
+        getContractSpy.complete(with: .success(contract))
+        getConsentSpy.complete(with: .init())
+        
+        XCTAssertEqual(getBankDefaultSpy.payloads, [contract.phoneNumber])
+    }
     
     // MARK: - Helpers
     
@@ -201,8 +211,8 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private struct Contract: PhoneNumbered {
         
-        let id = anyMessage()
-        let phoneNumber = anyPhoneNumber()
+        let id: String
+        let phoneNumber: PhoneNumber
     }
     
     private struct ConsentResponse: Equatable {
@@ -217,7 +227,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        toDeliver expected: SUT.SettingsResult,
+        toDeliver expected: SUT.ProcessResult,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 0.05,
         file: StaticString = #file,
@@ -234,6 +244,14 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: timeout)
+    }
+    
+    private func anyContract(
+        id: String = anyMessage(),
+        phoneNumber: PhoneNumber = anyPhoneNumber()
+    ) -> Contract {
+        
+        .init(id: id, phoneNumber: phoneNumber)
     }
     
     private func anyConsentResponse() -> ConsentResponse {
