@@ -44,22 +44,7 @@ public extension MicroServices.GetSettings {
     func process(
         completion: @escaping ProcessCompletion
     ) {
-        getContract { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case let .failure(failure):
-                completion(.failure(failure))
-                
-                // missing contract
-            case .success(.none):
-                processGetConsent(completion)
-                
-            case let .success(.some(contract)):
-                process(contract, completion)
-            }
-        }
+        getContract(completion)
     }
 }
 
@@ -86,6 +71,27 @@ public extension MicroServices.GetSettings {
 }
 
 private extension MicroServices.GetSettings {
+    
+    func getContract(
+        _ completion: @escaping ProcessCompletion
+    ) {
+        getContract { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+                // missing contract
+            case .success(.none):
+                processGetConsent(completion)
+                
+            case let .success(.some(contract)):
+                process(contract, completion)
+            }
+        }
+    }
     
     func processGetConsent(
         _ completion: @escaping ProcessCompletion

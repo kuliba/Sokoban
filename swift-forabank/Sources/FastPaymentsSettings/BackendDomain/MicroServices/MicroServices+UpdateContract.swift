@@ -43,39 +43,7 @@ public extension MicroServices.ContractUpdater {
         _ payload: Payload,
         _ completion: @escaping Completion
     ) {
-        updateContract(payload) { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case let .failure(serviceFailure):
-                completion(.failure(serviceFailure))
-                
-            case .success(()):
-                getContract { [weak self] result in
-                    
-                    guard self != nil else { return }
-                    
-                    switch result {
-                    case let .failure(serviceFailure):
-                        completion(.failure(serviceFailure))
-                        
-                    case .success(nil):
-                        completion(.success(nil))
-                        
-                    case let .success(.some(contract)):
-                        switch (payload.target, contract.status) {
-                        case (.active, .active),
-                            (.inactive, .inactive):
-                            completion(.success(contract))
-                            
-                        default:
-                            completion(.failure(.connectivityError))
-                        }
-                    }
-                }
-            }
-        }
+        updateContract(payload, completion)
     }
 }
 
@@ -89,7 +57,7 @@ public extension MicroServices.ContractUpdater {
         
         public init(
             contractID: ContractID, 
-            accountID: AccountID, 
+            accountID: AccountID,
             target: TargetStatus
         ) {
             self.contractID = contractID
@@ -115,4 +83,53 @@ public extension MicroServices.ContractUpdater {
     typealias UpdateContractResponse = Result<Void, ServiceFailure>
     typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
     typealias UpdateContract = (Payload, @escaping UpdateContractCompletion) -> Void
+}
+
+private extension MicroServices.ContractUpdater {
+    
+    func updateContract(
+        _ payload: Payload,
+        _ completion: @escaping Completion
+    ) {
+        updateContract(payload) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case let .failure(serviceFailure):
+                completion(.failure(serviceFailure))
+                
+            case .success(()):
+                getContract(payload.target, completion)
+            }
+        }
+    }
+    
+    func getContract(
+        _ targetStatus: Payload.TargetStatus,
+        _ completion: @escaping Completion
+    ) {
+        getContract { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case let .failure(serviceFailure):
+                completion(.failure(serviceFailure))
+                
+            case .success(nil):
+                completion(.success(nil))
+                
+            case let .success(.some(contract)):
+                switch (targetStatus, contract.status) {
+                case (.active, .active),
+                    (.inactive, .inactive):
+                    completion(.success(contract))
+                    
+                default:
+                    completion(.failure(.connectivityError))
+                }
+            }
+        }
+    }
 }
