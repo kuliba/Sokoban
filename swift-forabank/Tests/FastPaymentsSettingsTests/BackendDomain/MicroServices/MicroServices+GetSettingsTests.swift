@@ -5,6 +5,135 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
+import Tagged
+
+public extension MicroServices {
+    
+    final class GetSettings<Contract, Consent, Settings> {
+        
+        private let getContract: GetContract
+        private let getConsent: GetConsent
+#warning("getBankDefault should be decorated with caching!")
+        private let getBankDefault: GetBankDefault
+        private let mapToMissing: MapToMissing
+        private let mapToResult: MapToResult
+        
+        init(
+            getContract: @escaping GetContract,
+            getConsent: @escaping GetConsent,
+            getBankDefault: @escaping GetBankDefault,
+            mapToMissing: @escaping MapToMissing,
+            mapToResult: @escaping MapToResult
+        ) {
+            self.getContract = getContract
+            self.getConsent = getConsent
+            self.getBankDefault = getBankDefault
+            self.mapToMissing = mapToMissing
+            self.mapToResult = mapToResult
+        }
+    }
+}
+
+public extension MicroServices.GetSettings {
+    
+    func process(
+        _ phoneNumber: PhoneNumber,
+        completion: @escaping Completion
+    ) {
+        getContract { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+                // missing contract
+            case .success(.none):
+                process(completion)
+                
+#warning("add tests")
+            case let .success(.some(contract)):
+                process(contract, phoneNumber, completion)
+            }
+        }
+    }
+}
+
+public extension MicroServices.GetSettings {
+    
+    typealias SettingsResult = Result<Settings, ServiceFailure>
+    typealias Completion = (SettingsResult) -> Void
+}
+
+public extension MicroServices.GetSettings {
+    
+    typealias FastPaymentContractFindListResult = Result<Contract?, ServiceFailure>
+    typealias FastPaymentContractFindListCompletion = (FastPaymentContractFindListResult) -> Void
+    typealias GetContract = (@escaping FastPaymentContractFindListCompletion) -> Void
+}
+
+public extension MicroServices.GetSettings {
+    
+    typealias GetConsentCompletion = (Consent) -> Void
+    typealias GetConsent = (@escaping GetConsentCompletion) -> Void
+}
+
+public extension MicroServices.GetSettings {
+    
+    typealias PhoneNumber = Tagged<_PhoneNumber, String>
+    enum _PhoneNumber {}
+    typealias GetBankDefaultCompletion = (GetBankDefaultResponse) -> Void
+    typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
+}
+
+public typealias BankDefault = Tagged<_BankDefault, Bool>
+public enum _BankDefault {}
+
+public struct GetBankDefaultResponse: Equatable {
+    
+    let bankDefault: BankDefault
+    let requestLimitMessage: String?
+}
+
+public extension MicroServices.GetSettings {
+    
+    typealias MapToMissing = (Consent) -> SettingsResult
+    typealias MapToResult = (Contract, Consent, GetBankDefaultResponse) -> SettingsResult
+}
+
+private extension MicroServices.GetSettings {
+    
+    func process(
+        _ completion: @escaping Completion
+    ) {
+        getConsent { [weak self] resultB in
+            
+            guard let self else { return }
+            
+            completion(self.mapToMissing(resultB))
+        }
+    }
+    
+    func process(
+        _ contract: Contract,
+        _ phoneNumber: PhoneNumber,
+        _ completion: @escaping Completion
+    ) {
+        getConsent { [weak self] resultB in
+            
+            guard let self else { return }
+            
+            getBankDefault(phoneNumber) { [weak self] resultC in
+                
+                guard let self else { return }
+                
+                completion(mapToResult(contract, resultB, resultC))
+            }
+        }
+    }
+}
+
 import FastPaymentsSettings
 import Tagged
 import XCTest
@@ -13,56 +142,56 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy, getBankDefaultSpy) = makeSUT()
+        let (_, getContractSpy, getConsentSpy, getBankDefaultSpy) = makeSUT()
         
-        XCTAssertEqual(fastPaymentContractFindListSpy.callCount, 0)
-        XCTAssertEqual(getClientConsentMe2MePullSpy.callCount, 0)
+        XCTAssertEqual(getContractSpy.callCount, 0)
+        XCTAssertEqual(getConsentSpy.callCount, 0)
         XCTAssertEqual(getBankDefaultSpy.callCount, 0)
     }
     
     func test_process_shouldDeliverConnectivityErrorOn_fastPaymentContractFindListConnectivityErrorFailure() {
         
-        let (sut, fastPaymentContractFindListSpy, _,_) = makeSUT()
+        let (sut, getContractSpy, _,_) = makeSUT()
         
         expect(sut, toDeliver: .failure(.connectivityError), on: {
             
-            fastPaymentContractFindListSpy.complete(with: .failure(.connectivityError))
+            getContractSpy.complete(with: .failure(.connectivityError))
         })
     }
     
     func test_process_shouldDeliverServerErrorOn_fastPaymentContractFindListServerErrorFailure() {
         
         let message = anyMessage()
-        let (sut, fastPaymentContractFindListSpy, _,_) = makeSUT()
+        let (sut, getContractSpy, _,_) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(message)), on: {
+        expect(sut, toDeliver: .failure(.serverError(message)), on: {
             
-            fastPaymentContractFindListSpy.complete(with: .failure(.serviceError(message)))
+            getContractSpy.complete(with: .failure(.serverError(message)))
         })
     }
     
-    func test_process_shouldDeliverMissingWithConsentOn_fastPaymentContractFindListSpySuccessNil() {
+    func test_process_shouldDeliverMissingWithConsentOn_getContractSpySuccessNil() {
         
         let consent = anyConsentResponse()
-        let (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy,_) = makeSUT()
+        let (sut, getContractSpy, getConsentSpy,_) = makeSUT()
         
         expect(sut, toDeliver: .success(.missing(consent)), on: {
             
-            fastPaymentContractFindListSpy.complete(with: .success(nil))
-            getClientConsentMe2MePullSpy.complete(with: consent)
+            getContractSpy.complete(with: .success(nil))
+            getConsentSpy.complete(with: consent)
         })
     }
     
     func test_process_shouldNotDeliver_fastPaymentContractFindListResultOnInstanceDeallocation() {
         
         var sut: SUT?
-        let fastPaymentContractFindListSpy: FastPaymentContractFindListSpy
-        (sut, fastPaymentContractFindListSpy, _,_) = makeSUT()
+        let getContractSpy: GetContractSpy
+        (sut, getContractSpy, _,_) = makeSUT()
         var receivedResult: SUT.SettingsResult?
         
         sut?.process(anyPhoneNumber()) { receivedResult = $0 }
         sut = nil
-        fastPaymentContractFindListSpy.complete(with: .success(.init()))
+        getContractSpy.complete(with: .success(.init()))
         
         XCTAssertNil(receivedResult)
     }
@@ -71,15 +200,15 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         
         let consent = anyConsentResponse()
         var sut: SUT?
-        let fastPaymentContractFindListSpy: FastPaymentContractFindListSpy
-        let getClientConsentMe2MePullSpy: GetClientConsentMe2MePullSpy
-        (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy,_) = makeSUT()
+        let getContractSpy: GetContractSpy
+        let getConsentSpy: GetConsentSpy
+        (sut, getContractSpy, getConsentSpy,_) = makeSUT()
         var receivedResult: SUT.SettingsResult?
         
         sut?.process(anyPhoneNumber()) { receivedResult = $0 }
-        fastPaymentContractFindListSpy.complete(with: .success(nil))
+        getContractSpy.complete(with: .success(nil))
         sut = nil
-        getClientConsentMe2MePullSpy.complete(with: consent)
+        getConsentSpy.complete(with: consent)
         
         XCTAssertNil(receivedResult)
     }
@@ -90,9 +219,9 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     private typealias SUT = MicroServices.GetSettings<Contract, ConsentResponse, Settings>
     
-    private typealias FastPaymentContractFindListSpy = Spy<Void, SUT.FastPaymentContractFindListResult>
-    private typealias GetClientConsentMe2MePullSpy = Spy<Void, ConsentResponse>
-    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, SUT.GetBankDefaultResponse>
+    private typealias GetContractSpy = Spy<Void, SUT.FastPaymentContractFindListResult>
+    private typealias GetConsentSpy = Spy<Void, ConsentResponse>
+    private typealias GetBankDefaultSpy = Spy<SUT.PhoneNumber, GetBankDefaultResponse>
     
     private func makeSUT(
         mapToMissing: @escaping SUT.MapToMissing = { .success(.missing($0)) },
@@ -100,30 +229,30 @@ final class MicroServices_GetSettingsTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        fastPaymentContractFindListSpy: FastPaymentContractFindListSpy,
-        getClientConsentMe2MePullSpy: GetClientConsentMe2MePullSpy,
+        getContractSpy: GetContractSpy,
+        getConsentSpy: GetConsentSpy,
         getBankDefaultSpy: GetBankDefaultSpy
     ) {
-        let fastPaymentContractFindListSpy = FastPaymentContractFindListSpy()
-        let getClientConsentMe2MePullSpy = GetClientConsentMe2MePullSpy()
+        let getContractSpy = GetContractSpy()
+        let getConsentSpy = GetConsentSpy()
         let getBankDefaultSpy = GetBankDefaultSpy()
         
         let mapToResult: SUT.MapToResult = { _,_,_ in fatalError() }
         
         let sut = SUT(
-            fastPaymentContractFindList: fastPaymentContractFindListSpy.process(completion:),
-            getClientConsentMe2MePull: getClientConsentMe2MePullSpy.process(completion:),
+            getContract: getContractSpy.process(completion:),
+            getConsent: getConsentSpy.process(completion:),
             getBankDefault: getBankDefaultSpy.process(_:completion:),
             mapToMissing: mapToMissing,
             mapToResult: mapToResult
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(fastPaymentContractFindListSpy, file: file, line: line)
-        trackForMemoryLeaks(getClientConsentMe2MePullSpy, file: file, line: line)
+        trackForMemoryLeaks(getContractSpy, file: file, line: line)
+        trackForMemoryLeaks(getConsentSpy, file: file, line: line)
         trackForMemoryLeaks(getBankDefaultSpy, file: file, line: line)
         
-        return (sut, fastPaymentContractFindListSpy, getClientConsentMe2MePullSpy, getBankDefaultSpy)
+        return (sut, getContractSpy, getConsentSpy, getBankDefaultSpy)
     }
     
     private struct Contract {
