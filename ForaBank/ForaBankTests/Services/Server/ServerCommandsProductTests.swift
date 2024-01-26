@@ -218,30 +218,7 @@ class ServerCommandsProductTests: XCTestCase {
         // then
         XCTAssertNoDiff(result, expected)
     }
-    
-    func testGetProductDynamicParamsList_Response_Decoding() throws {
         
-        // given
-        let url = bundle.url(forResource: "GetProductDynamicParamsListGenericTest", withExtension: "json")!
-        let json = try Data(contentsOf: url)
-        
-        let productCard = CardDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active, debtAmount: 56305.61, totalDebtAmount: 56305.61, statusPc: .active)
-        let productAccount = AccountDynamicParams(balance: 1000123, balanceRub: 1000123, customName: "Моя карта", status: .active)
-        let productDeposit = ProductDynamicParamsData(balance: 1000123, balanceRub: 1000123, customName: "Моя карта")
-        let product = ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams(id: 10000192282, type: .card, dynamicParams: productCard)
-        let account = ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams(id: 10000192282, type: .account, dynamicParams: productAccount)
-        let deposit = ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams(id: 10000192282, type: .deposit, dynamicParams: productDeposit)
-        let dynamicProductParamsList = ServerCommands.ProductController.GetProductDynamicParamsList.Response.List(dynamicProductParamsList:  [product, account, deposit])
-        
-        let expected = ServerCommands.ProductController.GetProductDynamicParamsList.Response(statusCode: .ok, errorMessage: "string", data: dynamicProductParamsList)
-        
-        // when
-        let result = try decoder.decode(ServerCommands.ProductController.GetProductDynamicParamsList.Response.self, from: json)
-        
-        // then
-        XCTAssertNoDiff(result, expected)
-    }
-    
     //MARK: - Corrupted products data
     
     func testGetProductListByType_Response_Decoding_Corrupted() throws {

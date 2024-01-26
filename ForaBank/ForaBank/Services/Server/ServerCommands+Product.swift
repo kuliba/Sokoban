@@ -435,67 +435,8 @@ extension ServerCommands {
         
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/rest/getProductDynamicParamsList
+         
+         see GetProductDynamicParamsListFactory
          */
-        struct GetProductDynamicParamsList: ServerCommand {
-            
-            let token: String
-            let endpoint = "/rest/getProductDynamicParamsList"
-            let method: ServerCommandMethod = .post
-            let payload: Payload?
-            
-            struct Payload: Encodable {
-                
-                var productList: [ProductListData]
-                
-                struct ProductListData: Encodable {
-                    
-                    let id: Int
-                    let type: ProductType
-                }
-            }
-            
-            struct Response: ServerResponse {
-                
-                let statusCode: ServerStatusCode
-                let errorMessage: String?
-                let data: List?
-                
-                struct List: Codable, Equatable {
-                    
-                    let dynamicProductParamsList: [DynamicListParams]
-                    
-                    static func == (lhs: ServerCommands.ProductController.GetProductDynamicParamsList.Response.List, rhs: ServerCommands.ProductController.GetProductDynamicParamsList.Response.List) -> Bool {
-                        return lhs.dynamicProductParamsList == rhs.dynamicProductParamsList
-                    }
-                    
-                    struct DynamicListParams: Codable, Equatable {
-                        
-                        let id: Int
-                        let type: ProductType
-                        let dynamicParams: ProductDynamicParamsData
-                    }
-                }
-            }
-            
-            internal init(token: String, payload: Payload) {
-                
-                self.token = token
-                self.payload = payload
-            }
-            
-            init(token: String, products: [ProductData]) {
-                
-                self.token = token
-                
-                var productListData = [Payload.ProductListData]()
-                
-                for product in products {
-                    
-                    productListData.append(.init(id: product.id, type: product.productType))
-                }
-                
-                self.payload = .init(productList: productListData)
-            }
-        }
     }
 }
