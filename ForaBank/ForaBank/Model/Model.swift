@@ -589,7 +589,13 @@ class Model {
         //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
-                    handleProductsUpdateFastAll()
+                    
+                    Task { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        await handleProductsUpdateFastAll()
+                    }
                     
                 case let payload as ModelAction.Products.Update.Fast.Single.Request:
                     handleProductsUpdateFastSingleRequest(payload)

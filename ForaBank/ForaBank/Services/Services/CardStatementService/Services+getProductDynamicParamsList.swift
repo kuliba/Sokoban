@@ -13,7 +13,7 @@ extension Services {
     
     typealias GetProductDynamicParamsListPayload = CardStatementAPI.ProductDynamicParamsListPayload
     typealias GetProductDynamicParamsListResult = Swift.Result<CardStatementAPI.DynamicParamsList, CardStatementAPI.MappingError>
-    typealias GetProductDynamicParamsListService = RemoteServiceOf<ProductDynamicParamsListPayload, ProductDynamicParamsListResult>
+    typealias GetProductDynamicParamsListService = RemoteServiceOf<GetProductDynamicParamsListPayload, GetProductDynamicParamsListResult>
     
     static func getProductDynamicParamsList(
         httpClient: HTTPClient

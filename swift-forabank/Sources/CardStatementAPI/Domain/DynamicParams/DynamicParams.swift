@@ -22,5 +22,41 @@ public extension DynamicParams {
         case account(AccountDynamicParams)
         case card(CardDynamicParams)
         case depositOrLoan(DepositOrLoanDynamicParams)
+        
+        public var balance: Decimal? {
+            switch self {
+                
+            case let .account(value):
+                return value.balance
+            case let .card(value):
+                return value.balance
+            case let .depositOrLoan(value):
+                return value.balance
+            }
+        }
+        
+        public var balanceRub: Decimal? {
+            switch self {
+                
+            case let .account(value):
+                return value.balanceRub
+            case let .card(value):
+                return value.balanceRub
+            case let .depositOrLoan(value):
+                return value.balanceRub
+            }
+        }
+        
+        public var customName: String? {
+            switch self {
+                
+            case let .account(value):
+                return value.customName
+            case let .card(value):
+                return value.customName
+            case let .depositOrLoan(value):
+                return value.customName
+            }
+        }
     }
 }

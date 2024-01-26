@@ -66,8 +66,9 @@ private extension ResponseMapper {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             productId = try container.decode(Int.self, forKey: .productId)
             type = try container.decode(ProductTypeDecodable.self, forKey: .type)
-            print("type \(type.rawValue)")
+
             switch type {
+                
             case .card:
                 let cardParams = try container.decode( ResponseMapper.ItemDecodable.CardParamsDecodable.self, forKey: .dynamicParams)
 

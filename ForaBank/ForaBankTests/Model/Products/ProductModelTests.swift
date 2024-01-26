@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import ForaBank
+import CardStatementAPI
 
 class ProductModelTests: XCTestCase {
 
@@ -160,7 +161,10 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [productCard], .account: [productAcc], .deposit: [productDep]]
         
         // when
-        let params: ProductsDynamicParams = [.init(id: productCard.id, type: .card, dynamicParams: .init(balance: 200, balanceRub: 200, customName: "Custom Card")), .init(id: productDep.id, type: .deposit, dynamicParams: .init(balance: 300, balanceRub: 300, customName: "Custom Dep"))]
+        let params: ProductsDynamicParams = .init(list: [
+            .init(id: productCard.id, type: .card, dynamicParams: .init(variableParams: .card(.init(balance: 200, balanceRub: 200, customName: "Custom Card", availableExceedLimit: nil, status: "", debtAmount: nil, totalDebtAmount: nil, statusPc: "", statusCard: .active)))),
+            .init(id: productDep.id, type: .deposit, dynamicParams: .init(variableParams: .depositOrLoan(.init(balance: 300, balanceRub: 300, customName: "Custom Dep"))))
+        ])
         let result = Model.reduce(products: existing, with: params)
         
         // then
@@ -196,7 +200,10 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [productCard], .account: [productAcc], .deposit: [productDep]]
         
         // when
-        let params: ProductsDynamicParams = [.init(id: 500, type: .card, dynamicParams: .init(balance: 200, balanceRub: 200, customName: "Custom Card")), .init(id: 700, type: .deposit, dynamicParams: .init(balance: 300, balanceRub: 300, customName: "Custom Dep"))]
+        let params: ProductsDynamicParams = .init(list: [
+            .init(id: 500, type: .card, dynamicParams: .init(variableParams: .card(.init(balance: 200, balanceRub: 200, customName: "Custom Card", availableExceedLimit: nil, status: "", debtAmount: nil, totalDebtAmount: nil, statusPc: "", statusCard: .active)))),
+            .init(id: 700, type: .deposit, dynamicParams: .init(variableParams: .depositOrLoan(.init(balance: 300, balanceRub: 300, customName: "Custom Dep"))))
+        ])
         let result = Model.reduce(products: existing, with: params)
         
         // then

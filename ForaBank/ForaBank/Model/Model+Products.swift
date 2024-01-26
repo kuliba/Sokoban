@@ -8,11 +8,12 @@
 import CloudKit
 import Foundation
 import ServerAgent
+import CardStatementAPI
 
 //MARK: - Actions
 
 typealias ProductsData = [ProductType : [ProductData]]
-typealias ProductsDynamicParams = [ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams]
+typealias ProductsDynamicParams = CardStatementAPI.DynamicParamsList
 typealias LoansData = [PersonsCreditData]
 
 //MARK: - Helpers
@@ -348,55 +349,52 @@ extension ModelAction {
 
 //MARK: - Handlers
 
+private extension ProductType {
+    
+    var typeValueForRequest: ProductDynamicParamsListPayload.ProductType {
+        
+        switch self {
+            
+        case .card:
+            return .card
+        case .account:
+            return .account
+        case .deposit:
+            return .deposit
+        case .loan:
+            return .loan
+        }
+    }
+}
+
 extension Model {
     
-    func handleProductsUpdateFastAll() {
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
+    func handleProductsUpdateFastAll() async {
         
         let productsList = products.value.values.flatMap{ $0 }
         productsFastUpdating.value = Set(productsList.map{ $0.id })
         
-        let command = ServerCommands.ProductController.GetProductDynamicParamsList(token: token, products: productsList)
+        let payload: ProductDynamicParamsListPayload = .init(productList: productsList.map { .init(productId: .init($0.id), type: $0.productType.typeValueForRequest)})
         
-        serverAgent.executeCommand(command: command) { result in
-            
+        do {
+            let params = try await Services.makeGetProductDynamicParamsList(httpClient: self.authenticatedHTTPClient(), payload: payload)
             self.productsFastUpdating.value = []
+            let updatedProducts = Self.reduce(products: self.products.value, with: params)
+            self.products.value = updatedProducts
             
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let params = response.data?.dynamicProductParamsList else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    // update products
-                    let updatedProducts = Self.reduce(products: self.products.value, with: params)
-                    self.products.value = updatedProducts
-                    
-                    // cache products
-                    do {
-                        
-                        try self.productsCacheStore(productsData: updatedProducts)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                }
+            // cache products
+            do {
                 
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
+                try self.productsCacheStore(productsData: updatedProducts)
+                
+            } catch {
+                
+               // self.handleServerCommandCachingError(error: error, command: command)
             }
+
+        } catch {
+           // self.handleServerCommandError(error: error, command: command)
+
         }
     }
     
@@ -1267,7 +1265,7 @@ extension Model {
             
             for product in productsForType {
                 
-                if let dynamicParam = params.first(where: { $0.id == product.id })?.dynamicParams {
+                if let dynamicParam = params.list.first(where: { $0.id == product.id })?.dynamicParams {
                     
                     product.update(with: dynamicParam)
                     
