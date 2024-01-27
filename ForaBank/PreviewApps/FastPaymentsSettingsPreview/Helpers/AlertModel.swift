@@ -1,15 +1,13 @@
 //
-//  AlertViewModel.swift
-//  FastPaymentsSettingsPreview
+//  AlertModel.swift
+//
 //
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
 import Foundation
 
-typealias AlertViewModelOf<Event> = AlertViewModel<Event, Event>
-
-struct AlertViewModel<PrimaryEvent, SecondaryEvent>: Identifiable {
+struct AlertModel<PrimaryEvent, SecondaryEvent>: Identifiable {
     
     let id: UUID
     let title: String
@@ -44,6 +42,6 @@ struct ButtonViewModel<Event> {
     }
 }
 
-extension AlertViewModel: Equatable where PrimaryEvent: Equatable, SecondaryEvent: Equatable {}
+extension AlertModel: Equatable where PrimaryEvent: Equatable, SecondaryEvent: Equatable {}
 
 extension ButtonViewModel: Equatable where Event: Equatable {}

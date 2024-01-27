@@ -10,7 +10,7 @@ import SwiftUI
 extension Alert {
     
     init<Event>(
-        with viewModel: AlertViewModelOf<Event>,
+        with viewModel: AlertModelOf<Event>,
         event: @escaping (Event) -> Void
     ) {
         let title = Text(viewModel.title)
@@ -28,9 +28,6 @@ extension Alert {
             self.init(title: title, message: message, dismissButton: primaryButton)
         }
     }
-}
-
-extension Alert {
     
     static func button<Event>(
         with viewModel: ButtonViewModel<Event>,

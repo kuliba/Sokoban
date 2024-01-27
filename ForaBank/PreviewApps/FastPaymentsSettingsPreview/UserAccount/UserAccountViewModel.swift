@@ -421,7 +421,7 @@ private extension UserAccountViewModel {
     }
 }
 
-private extension AlertViewModel
+private extension AlertModel
 where PrimaryEvent == UserAccountViewModel.Event,
       SecondaryEvent == UserAccountViewModel.Event {
     
@@ -763,10 +763,10 @@ extension UserAccountViewModel {
         
         enum Alert: Equatable {
             
-            case alert(AlertViewModelOf<Event>)
-            case fpsAlert(AlertViewModelOf<Event>)
+            case alert(AlertModelOf<Event>)
+            case fpsAlert(AlertModelOf<Event>)
             
-            var alert: AlertViewModelOf<Event>? {
+            var alert: AlertModelOf<Event>? {
                 
                 if case let .alert(alert) = self {
                     return alert
@@ -775,7 +775,7 @@ extension UserAccountViewModel {
                 }
             }
             
-            var fpsAlert: AlertViewModelOf<Event>? {
+            var fpsAlert: AlertModelOf<Event>? {
                 
                 if case let .fpsAlert(fpsAlert) = self {
                     return fpsAlert
