@@ -14,7 +14,7 @@ final class UserAccountReducer {
     private let otpReduce: OTPReduce
     private let factory: Factory
     private let scheduler: AnySchedulerOfDispatchQueue
-
+    
     init(
         demoReduce: @escaping DemoReduce,
         otpReduce: @escaping OTPReduce,
@@ -83,7 +83,7 @@ extension UserAccountReducer {
     
     typealias OTPDispatch = (Event.OTP) -> Void
     typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
-        
+    
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event
     typealias Effect = UserAccountViewModel.Effect
@@ -197,143 +197,5 @@ private extension UserAccountReducer {
         }
         
         return state
-    }
-}
-
-private extension UserAccountReducer {
-    
-    func defaultBankRequestsLimitFPSAlert(
-        _ message: String
-    ) -> State.Alert {
-        
-#warning("extract helper as `static AlertViewModel.missingContract(action:)`")
-        return         .fpsAlert(.ok(
-            title: "Ошибка",
-            message: message,
-            event: .closeAlert
-        ))
-    }
-    
-    func missingContractFPSAlert() -> State.Alert {
-        
-        .fpsAlert(.missingContract(event: .closeAlert))
-    }
-    
-    func serverErrorFPSAlert(
-        _ message: String,
-        _ event: Event
-    ) -> State.Alert {
-        
-        .fpsAlert(.ok(message: message, event: event))
-    }
-    
-    func tryAgainFPSAlert(
-        _ event: Event
-    ) -> State.Alert {
-        
-        let message = "Превышено время ожидания. Попробуйте позже"
-        
-        return .fpsAlert(.ok(message: message, event: event))
-    }
-}
-
-extension AlertModel
-where PrimaryEvent == UserAccountViewModel.Event,
-      SecondaryEvent == UserAccountViewModel.Event {
-    
-    static func `default`(
-        title: String,
-        message: String,
-        primaryEvent: PrimaryEvent,
-        secondaryEvent: SecondaryEvent
-    ) -> Self {
-        
-        .init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: primaryEvent
-            ),
-            secondaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: secondaryEvent
-            )
-        )
-    }
-    
-    static func error(
-        message: String? = nil,
-        event: PrimaryEvent
-    ) -> Self {
-        
-        .ok(
-            title: "Ошибка",
-            message: message,
-            event: event
-        )
-    }
-    
-    static func ok(
-        title: String = "",
-        message: String? = nil,
-        event: PrimaryEvent
-    ) -> Self {
-        
-        self.init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: event
-            )
-        )
-    }
-    
-    static func missingContract(
-        event: PrimaryEvent
-    ) -> Self {
-        
-        .ok(
-            title: "Не найден договор СБП",
-            message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-            event: event
-        )
-    }
-    
-    static func missingProduct(
-        event: PrimaryEvent
-    ) -> Self {
-        
-        .ok(
-            title: "Сервис не доступен",
-            message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-            event: event
-        )
-    }
-    
-    static func setBankDefault(
-        primaryEvent: PrimaryEvent,
-        secondaryEvent: SecondaryEvent
-    ) -> Self {
-        
-        .default(
-            title: "Внимание",
-            message: "Фора-банк будет выбран банком по умолчанию",
-            primaryEvent: primaryEvent,
-            secondaryEvent: secondaryEvent
-        )
-    }
-    
-    static func tryAgainFPSAlert(
-        _ event: PrimaryEvent
-    ) -> Self {
-        
-        let message = "Превышено время ожидания. Попробуйте позже"
-        
-        return .error(message: message, event: event)
     }
 }
