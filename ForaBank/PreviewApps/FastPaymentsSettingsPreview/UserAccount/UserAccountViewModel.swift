@@ -13,7 +13,7 @@ import OTPInputComponent
 import UIPrimitives
 
 final class UserAccountViewModel: ObservableObject {
-        
+    
     @Published private(set) var state: State
     
 #warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
@@ -81,10 +81,10 @@ extension UserAccountViewModel {
     
     private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
         
-        fastPaymentsSettingsViewModel?.event(_:)
+        fpsViewModel?.event(_:)
     }
     
-    private var fastPaymentsSettingsViewModel: FastPaymentsSettingsViewModel? {
+    private var fpsViewModel: FastPaymentsSettingsViewModel? {
         
         guard case let .fastPaymentsSettings(viewModel, _) = state.destination
         else { return nil }
@@ -151,12 +151,12 @@ private extension UserAccountViewModel {
         case .success:
             let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
             let cancellable = otpInputViewModel.$state
-                            .compactMap(\.projection)
-                            .removeDuplicates()
-                            .map(Event.OTP.otpInput)
-                            .receive(on: scheduler)
-                            .sink { [weak self] in self?.event(.otp($0))}
-
+                .compactMap(\.projection)
+                .removeDuplicates()
+                .map(Event.OTP.otpInput)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.otp($0))}
+            
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
             
         case .connectivityError:
@@ -166,7 +166,7 @@ private extension UserAccountViewModel {
             
         case let .serverError(message):
             state.alert = .fpsAlert(.error(
-                message: message, 
+                message: message,
                 event: .closeAlert
             ))
         }
@@ -322,7 +322,7 @@ private extension UserAccountViewModel {
             state.isLoading = false
             // non-final => closeAlert
             state.alert = .fpsAlert(.ok(
-                message: message, 
+                message: message,
                 event: .closeAlert
             ))
             
@@ -589,53 +589,6 @@ extension UserAccountViewModel {
     }
 }
 
-// MARK: - Confirm with OTP
-
-extension UserAccountViewModel {
-    
-    func handleOTPResult(
-        _ result: ConfirmWithOTPResult
-    ) {
-        event(.dismissFPSDestination)
-        fpsViewModel?.event(.resetStatus)
-        
-        switch result {
-        case .success:
-            informer.set(text: "Банк по умолчанию установлен")
-            fpsViewModel?.event(.bankDefault(.setBankDefaultPrepared(nil)))
-            
-        case .incorrectCode:
-            informer.set(text: "Банк по умолчанию не установлен")
-            
-        case let .serverError(message):
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                
-                self?.state.alert = .fpsAlert(.error(
-                    message: message,
-                    event: .closeFPSAlert
-                ))
-            }
-            
-        case .connectivityError:
-            informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-        }
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    var fpsViewModel: FastPaymentsSettingsViewModel? {
-        
-        switch state.destination {
-        case let .fastPaymentsSettings(fpsViewModel,_ ):
-            return fpsViewModel
-            
-        default:
-            return nil
-        }
-    }
-}
-
 // MARK: - Fast Payments Settings
 
 extension UserAccountViewModel {
@@ -712,7 +665,7 @@ extension UserAccountViewModel {
         enum FPSDestination: Equatable {
             
             case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
-            #warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
+#warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
             case c2BSub(GetC2BSubResponse, AnyCancellable?)
         }
         
