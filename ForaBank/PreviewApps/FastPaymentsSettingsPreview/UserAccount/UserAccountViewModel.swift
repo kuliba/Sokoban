@@ -56,7 +56,7 @@ extension UserAccountViewModel {
     
     func event(_ event: Event) {
         
-        let (state, effect) = reduce(state, event, informer.set(text:))
+        let (state, effect) = reduce(state, event, informer.set(text:), self.event(_:))
         stateSubject.send(state)
         
         if let effect {
@@ -120,7 +120,8 @@ private extension UserAccountViewModel {
     func reduce(
         _ state: State,
         _ event: Event,
-        _ informer: @escaping (String) -> Void
+        _ informer: @escaping (String) -> Void,
+        _ dispatch: @escaping (Event) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -153,7 +154,7 @@ private extension UserAccountViewModel {
             state = reduce(state, with: fpsState, informer: informer)
             
         case let .otp(otp):
-            (state, effect) = reduce(state, with: otp, informer)
+            (state, effect) = reduce(state, with: otp, informer, dispatch)
         }
         
         return (state, effect)
@@ -275,7 +276,8 @@ private extension UserAccountViewModel {
     func reduce(
         _ state: State,
         with otp: UserAccountViewModel.Event.OTP,
-        _ informer: @escaping (String) -> Void
+        _ informer: @escaping (String) -> Void,
+        _ dispatch: @escaping (Event) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -306,7 +308,7 @@ private extension UserAccountViewModel {
             effect = .otp(.prepareSetBankDefault)
             
         case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response, informer)
+            (state, effect) = update(state, with: response, informer, dispatch)
         }
         
         return (state, effect)
@@ -315,7 +317,8 @@ private extension UserAccountViewModel {
     func update(
         _ state: State,
         with response: Event.OTP.PrepareSetBankDefaultResponse,
-        _ informer: @escaping (String) -> Void
+        _ informer: @escaping (String) -> Void,
+        _ dispatch: @escaping (Event) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -332,7 +335,7 @@ private extension UserAccountViewModel {
                 .removeDuplicates()
                 .map(Event.OTP.otpInput)
                 .receive(on: scheduler)
-                .sink { [weak self] in self?.event(.otp($0))}
+                .sink { dispatch(.otp($0)) }
             
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
             
@@ -451,6 +454,8 @@ private extension UserAccountViewModel {
     }
 }
 
+// MARK: - Alerts
+
 private extension AlertModel
 where PrimaryEvent == UserAccountViewModel.Event,
       SecondaryEvent == UserAccountViewModel.Event {
@@ -552,6 +557,8 @@ where PrimaryEvent == UserAccountViewModel.Event,
     }
 }
 
+// MARK: - Types
+
 extension UserAccountViewModel {
     
     enum Event: Equatable {
@@ -616,37 +623,6 @@ extension UserAccountViewModel {
         enum OTP: Equatable {
             
             case prepareSetBankDefault
-        }
-    }
-}
-
-// MARK: - OTP for Fast Payments Settings
-
-enum OTPInputStateProjection: Equatable {
-    
-    case failure(OTPInputComponent.ServiceFailure)
-    case validOTP
-}
-
-extension OTPInputState {
-    
-    var projection: OTPInputStateProjection? {
-        
-        switch self {
-        case let .failure(otpFieldFailure):
-            switch otpFieldFailure {
-            case .connectivityError:
-                return .failure(.connectivityError)
-                
-            case let .serverError(message):
-                return .failure(.serverError(message))
-            }
-            
-        case .input:
-            return nil
-            
-        case .validOTP:
-            return .validOTP
         }
     }
 }
@@ -756,5 +732,36 @@ extension GetC2BSubResponse: Hashable {
     public func hash(into hasher: inout Hasher) {
         
         hasher.combine(self)
+    }
+}
+
+// MARK: - OTP for Fast Payments Settings
+
+enum OTPInputStateProjection: Equatable {
+    
+    case failure(OTPInputComponent.ServiceFailure)
+    case validOTP
+}
+
+extension OTPInputState {
+    
+    var projection: OTPInputStateProjection? {
+        
+        switch self {
+        case let .failure(otpFieldFailure):
+            switch otpFieldFailure {
+            case .connectivityError:
+                return .failure(.connectivityError)
+                
+            case let .serverError(message):
+                return .failure(.serverError(message))
+            }
+            
+        case .input:
+            return nil
+            
+        case .validOTP:
+            return .validOTP
+        }
     }
 }
