@@ -13,9 +13,7 @@ import OTPInputComponent
 import UIPrimitives
 
 final class UserAccountViewModel: ObservableObject {
-    
-    typealias State = Route
-    
+        
     @Published private(set) var state: State
     
 #warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
@@ -24,13 +22,13 @@ final class UserAccountViewModel: ObservableObject {
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let factory: Factory
     
-    private let stateSubject = PassthroughSubject<Route, Never>()
+    private let stateSubject = PassthroughSubject<State, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     private var destinationCancellable: AnyCancellable?
     private var fpsDestinationCancellable: AnyCancellable?
     
     init(
-        route: Route = .init(),
+        route: State = .init(),
         informer: InformerViewModel = .init(),
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         factory: Factory,
@@ -691,7 +689,7 @@ extension OTPInputState {
 
 extension UserAccountViewModel {
     
-    struct Route: Equatable {
+    struct State: Equatable {
         
         var destination: Destination?
         var fpsDestination: FPSDestination?

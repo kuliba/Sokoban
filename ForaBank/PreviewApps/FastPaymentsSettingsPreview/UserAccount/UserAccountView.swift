@@ -96,7 +96,7 @@ struct UserAccountView: View {
     }
     
     private func destinationView(
-        destination: UserAccountViewModel.Route.Destination
+        destination: UserAccountViewModel.State.Destination
     ) -> some View {
         
         switch destination {
@@ -125,7 +125,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.Route.FPSDestination
+        fpsDestination: UserAccountViewModel.State.FPSDestination
     ) -> some View {
         
         switch fpsDestination {
@@ -200,7 +200,7 @@ struct UserAccountView_Previews: PreviewProvider {
     static var previews: some View {
         
         UserAccountView(viewModel: .preview(
-            route: .init(),
+            state: .init(),
             flowStub: .preview
         ))
     }

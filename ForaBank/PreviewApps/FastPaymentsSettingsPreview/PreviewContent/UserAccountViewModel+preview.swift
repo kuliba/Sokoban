@@ -16,7 +16,7 @@ extension UserAccountViewModel {
         initialState: OTPInputState? = nil,
         duration: Int = 10,
         length: Int = 6,
-        route: Route = .init(),
+        state: State = .init(),
         flowStub: FlowStub
     ) -> UserAccountViewModel {
         
@@ -109,7 +109,7 @@ extension UserAccountViewModel {
         }
         
         return .init(
-            route: route,
+            route: state,
             prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
@@ -143,7 +143,7 @@ extension UserAccountViewModel {
         length: Int = 6,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
-        route: Route = .init(),
+        state: State = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
         changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
@@ -182,7 +182,7 @@ extension UserAccountViewModel {
         )
         
         return .init(
-            route: route,
+            route: state,
             prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
