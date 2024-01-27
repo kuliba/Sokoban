@@ -114,21 +114,17 @@ private extension UserAccountViewModel {
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
+            unbindFPSDestination()
             state.fpsDestination = nil
             
         case .dismissDestination:
-            destinationCancellable?.cancel()
-            destinationCancellable = nil
+            unbindDestination()
             state.destination = nil
             
         case .dismissRoute:
             state = .init()
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
-            destinationCancellable?.cancel()
-            destinationCancellable = nil
+            unbindFPSDestination()
+            unbindDestination()
             
         case let .demo(demoEvent):
             let (demoState, demoEffect) = reduce(state, demoEvent)
@@ -430,8 +426,7 @@ private extension UserAccountViewModel {
         switch otp {
         case let .otpInput(otpInput):
 #warning("move nullification to reducer where fps state is reduced")
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
+            unbindFPSDestination()
             state.fpsDestination = nil
             
             switch otpInput {
@@ -694,6 +689,18 @@ private extension UserAccountViewModel {
                 .receive(on: scheduler)
                 .sink { [weak self] in self?.event(.otp($0))}
         }
+    }
+    
+    func unbindDestination() {
+        
+        destinationCancellable?.cancel()
+        destinationCancellable = nil
+    }
+    
+    func unbindFPSDestination() {
+        
+        fpsDestinationCancellable?.cancel()
+        fpsDestinationCancellable = nil
     }
 }
 
