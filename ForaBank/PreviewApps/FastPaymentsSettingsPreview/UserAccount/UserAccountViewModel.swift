@@ -10,6 +10,7 @@ import CombineSchedulers
 import FastPaymentsSettings
 import Foundation
 import OTPInputComponent
+import UIPrimitives
 
 final class UserAccountViewModel: ObservableObject {
     

@@ -1,5 +1,5 @@
 //
-//  View+NavigationDestination.swift
+//  View+navigationDestination.swift
 //
 //
 //  Created by Andryusina Nataly on 15.09.2023.

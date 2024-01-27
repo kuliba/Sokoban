@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Alert {
+public extension Alert {
     
     init<Event>(
         with viewModel: AlertModelOf<Event>,

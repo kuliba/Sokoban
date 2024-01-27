@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct AlertModel<PrimaryEvent, SecondaryEvent>: Identifiable {
+public struct AlertModel<PrimaryEvent, SecondaryEvent>: Identifiable {
     
-    let id: UUID
-    let title: String
-    let message: String?
-    let primaryButton: ButtonViewModel<PrimaryEvent>
-    let secondaryButton: ButtonViewModel<SecondaryEvent>?
+    public let id: UUID
+    public let title: String
+    public let message: String?
+    public let primaryButton: ButtonViewModel<PrimaryEvent>
+    public let secondaryButton: ButtonViewModel<SecondaryEvent>?
     
-    init(
+    public init(
         id: UUID = .init(),
         title: String,
         message: String?,
@@ -30,13 +30,23 @@ struct AlertModel<PrimaryEvent, SecondaryEvent>: Identifiable {
     }
 }
 
-struct ButtonViewModel<Event> {
+public struct ButtonViewModel<Event> {
     
-    let type: ButtonType
-    let title: String
-    let event: Event
+    public let type: ButtonType
+    public let title: String
+    public let event: Event
     
-    enum ButtonType: Equatable {
+    public init(
+        type: ButtonType, 
+        title: String,
+        event: Event
+    ) {
+        self.type = type
+        self.title = title
+        self.event = event
+    }
+    
+    public enum ButtonType: Equatable {
         
         case `default`, destructive, cancel
     }
