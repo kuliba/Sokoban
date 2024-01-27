@@ -132,15 +132,18 @@ extension UserAccountViewModel {
             }
         )
         
+        let userAccountDemoReducer = UserAccountDemoReducer()
+
+        let userAccountFPSReducer = UserAccountFPSReducer()
+        
         let userAccountOTPReducer = UserAccountOTPReducer(
             factory: factory,
             scheduler: .makeMain()
         )
         
-        let userAccountDemoReducer = UserAccountDemoReducer()
-        
         let userAccountReducer = UserAccountReducer(
             demoReduce: userAccountDemoReducer.reduce(_:_:_:),
+            fpsReduce: userAccountFPSReducer.reduce(_:_:_:),
             otpReduce: userAccountOTPReducer.reduce(_:_:_:_:),
             factory: factory,
             scheduler: .makeMain()

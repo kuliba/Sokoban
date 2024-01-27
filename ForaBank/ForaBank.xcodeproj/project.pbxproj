@@ -411,6 +411,7 @@
 		2A2253F52B6510EB00C44440 /* UserAccountOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */; };
 		2A2253F72B65140C00C44440 /* UserAccountDemoReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2253F62B65140C00C44440 /* UserAccountDemoReducer.swift */; };
 		2A2253F92B6519BD00C44440 /* AlertHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2253F82B6519BD00C44440 /* AlertHelpers.swift */; };
+		2A2253FB2B651FD100C44440 /* UserAccountFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */; };
 		2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */; };
 		2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */; };
 		2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */; };
@@ -2763,6 +2764,7 @@
 		2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountOTPReducer.swift; sourceTree = "<group>"; };
 		2A2253F62B65140C00C44440 /* UserAccountDemoReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountDemoReducer.swift; sourceTree = "<group>"; };
 		2A2253F82B6519BD00C44440 /* AlertHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelpers.swift; sourceTree = "<group>"; };
+		2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountFPSReducer.swift; sourceTree = "<group>"; };
 		2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticateWithPublicKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+FetcherTests.swift"; sourceTree = "<group>"; };
@@ -6577,6 +6579,7 @@
 				2A3D6F1C2B6229AC00D19379 /* Config */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
 				2A2253F22B64F20500C44440 /* UserAccountReducer.swift */,
+				2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */,
 				2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */,
 				2A2253F62B65140C00C44440 /* UserAccountDemoReducer.swift */,
 				2A2253F82B6519BD00C44440 /* AlertHelpers.swift */,
@@ -13190,6 +13193,7 @@
 				2A2253F72B65140C00C44440 /* UserAccountDemoReducer.swift in Sources */,
 				2A3D6F1B2B62296900D19379 /* ProductSelectConfig+default.swift in Sources */,
 				2A40AF292B5901D2003B7D8A /* FastPaymentsSettingsEffectHandler+preview.swift in Sources */,
+				2A2253FB2B651FD100C44440 /* UserAccountFPSReducer.swift in Sources */,
 				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A5987EB2B593DAC00131B69 /* BankDefaultView.swift in Sources */,
 				2A3D6F202B62A16000D19379 /* GetC2BSubResponse+preview.swift in Sources */,
