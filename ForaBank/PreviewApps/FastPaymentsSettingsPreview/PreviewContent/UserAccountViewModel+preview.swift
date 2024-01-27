@@ -17,7 +17,8 @@ extension UserAccountViewModel {
         duration: Int = 10,
         length: Int = 6,
         state: State = .init(),
-        flowStub: FlowStub
+        flowStub: FlowStub,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
@@ -64,7 +65,7 @@ extension UserAccountViewModel {
                 completion(flowStub.prepareSetBankDefault)
             }
         }
-
+        
         let effectHandler = FastPaymentsSettingsEffectHandler(
             handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
@@ -133,19 +134,18 @@ extension UserAccountViewModel {
         )
         
         let userAccountDemoReducer = UserAccountDemoReducer()
-
+        
         let userAccountFPSReducer = UserAccountFPSReducer()
         
         let userAccountOTPReducer = UserAccountOTPReducer(
-            factory: factory,
-            scheduler: .makeMain()
+            makeTimedOTPInputViewModel: factory.makeTimedOTPInputViewModel,
+            scheduler: scheduler
         )
         
         let userAccountReducer = UserAccountReducer(
             demoReduce: userAccountDemoReducer.reduce(_:_:_:),
             fpsReduce: userAccountFPSReducer.reduce(_:_:_:),
             otpReduce: userAccountOTPReducer.reduce(_:_:_:_:),
-            factory: factory,
             scheduler: .makeMain()
         )
         
@@ -153,7 +153,8 @@ extension UserAccountViewModel {
             initialState: state,
             reduce: userAccountReducer.reduce,
             prepareSetBankDefault: prepareSetBankDefault,
-            factory: factory
+            makeFastPaymentsSettingsViewModel: factory.makeFastPaymentsSettingsViewModel,
+            scheduler: scheduler
         )
     }
     
@@ -172,7 +173,8 @@ extension UserAccountViewModel {
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
         updateContract: @escaping ContractEffectHandler.UpdateContract,
-        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct
+        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
@@ -206,29 +208,15 @@ extension UserAccountViewModel {
             initialState: state,
             reduce: reduce,
             prepareSetBankDefault: prepareSetBankDefault,
-            factory: .init(
-                makeFastPaymentsSettingsViewModel: {
-                    
-                    .init(
-                        reducer: reducer,
-                        effectHandler: effectHandler,
-                        scheduler: $0
-                    )
-                },
-                makeTimedOTPInputViewModel: {
-                    
-                    .init(
-                        viewModel: .default(
-                            initialState: initialState,
-                            duration: duration,
-                            length: length,
-                            initiateOTP: initiateOTP,
-                            submitOTP: submitOTP,
-                            scheduler: $0),
-                        scheduler: $0
-                    )
-                }
-            )
+            makeFastPaymentsSettingsViewModel: {
+                
+                .init(
+                    reducer: reducer,
+                    effectHandler: effectHandler,
+                    scheduler: $0
+                )
+            },
+            scheduler: scheduler
         )
     }
 }

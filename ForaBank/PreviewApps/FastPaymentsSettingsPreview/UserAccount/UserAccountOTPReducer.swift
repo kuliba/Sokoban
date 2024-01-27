@@ -6,17 +6,18 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 
 final class UserAccountOTPReducer {
     
-    private let factory: Factory
+    private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     private let scheduler: AnySchedulerOfDispatchQueue
 
     init(
-        factory: Factory,
+        makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.factory = factory
+        self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
         self.scheduler = scheduler
     }
 }
@@ -79,7 +80,7 @@ extension UserAccountOTPReducer {
         
         switch response {
         case .success:
-            let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
+            let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
             let cancellable = otpInputViewModel.$state
                 .compactMap(\.projection)
                 .removeDuplicates()
@@ -108,6 +109,8 @@ extension UserAccountOTPReducer {
     
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
+    
+    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event.OTP

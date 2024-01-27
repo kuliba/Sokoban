@@ -21,7 +21,7 @@ final class UserAccountViewModel: ObservableObject {
     
     private let reduce: Reduce
     private let prepareSetBankDefault: PrepareSetBankDefault
-    private let factory: Factory
+    private let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
     
     private let stateSubject = PassthroughSubject<State, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
@@ -33,14 +33,14 @@ final class UserAccountViewModel: ObservableObject {
         informer: InformerViewModel = .init(),
         reduce: @escaping Reduce,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
-        factory: Factory,
+        makeFastPaymentsSettingsViewModel: @escaping MakeFastPaymentsSettingsViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = initialState
         self.informer = informer
         self.reduce = reduce
         self.prepareSetBankDefault = prepareSetBankDefault
-        self.factory = factory
+        self.makeFastPaymentsSettingsViewModel = makeFastPaymentsSettingsViewModel
         self.scheduler = scheduler
         
         stateSubject
@@ -98,7 +98,7 @@ extension UserAccountViewModel {
 #warning("move to `reduce`")
     func openFastPaymentsSettings() {
         
-        let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
+        let fpsViewModel = makeFastPaymentsSettingsViewModel(scheduler)
         let cancellable = fpsViewModel.$state
             .removeDuplicates()
             .map(Event.FastPaymentsSettings.updated)
@@ -175,6 +175,7 @@ extension UserAccountViewModel {
     typealias Dispatch = (Event) -> Void
     typealias Reduce = (State, Event, @escaping Inform, @escaping Dispatch) -> (State, Effect?)
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
+    typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
 }
 
 // MARK: - Event

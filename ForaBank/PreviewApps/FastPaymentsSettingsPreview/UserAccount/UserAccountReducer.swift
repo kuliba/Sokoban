@@ -13,20 +13,17 @@ final class UserAccountReducer {
     private let demoReduce: DemoReduce
     private let fpsReduce: FPSReduce
     private let otpReduce: OTPReduce
-    private let factory: Factory
     private let scheduler: AnySchedulerOfDispatchQueue
     
     init(
         demoReduce: @escaping DemoReduce,
         fpsReduce: @escaping FPSReduce,
         otpReduce: @escaping OTPReduce,
-        factory: Factory,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.demoReduce = demoReduce
         self.fpsReduce = fpsReduce
         self.otpReduce = otpReduce
-        self.factory = factory
         self.scheduler = scheduler
     }
 }
