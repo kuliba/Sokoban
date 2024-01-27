@@ -482,3 +482,24 @@ where ViewModel: ObservableObject {
         self.alert = alert
     }
 }
+
+extension GRoute: Equatable where Destination: Equatable, Modal: Equatable, Alert: Equatable {
+    
+    static func == (_ lhs: Self, rhs: Self) -> Bool {
+        
+        ObjectIdentifier(lhs.viewModel) == ObjectIdentifier(rhs.viewModel)
+        && lhs.destination == rhs.destination
+        && lhs.modal == rhs.modal
+        && lhs.alert == rhs.alert
+    }
+}
+
+extension GRoute: Hashable where Destination: Hashable, Modal: Hashable, Alert: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(viewModel))
+        hasher.combine(destination)
+        hasher.combine(modal)
+        hasher.combine(alert)
+    }
+}
