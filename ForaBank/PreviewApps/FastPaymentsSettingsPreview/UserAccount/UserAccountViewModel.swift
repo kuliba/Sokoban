@@ -165,9 +165,8 @@ private extension UserAccountViewModel {
             self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.alert = .fpsAlert(.ok(
-                title: "Ошибка",
-                message: message,
+            state.alert = .fpsAlert(.error(
+                message: message, 
                 event: .closeAlert
             ))
         }
@@ -196,7 +195,7 @@ private extension UserAccountViewModel {
             
             switch loaded {
             case .alert:
-                state.alert = .alert(.ok(title: "Error", event: .closeAlert))
+                state.alert = .alert(.error(event: .closeAlert))
                 
             case .informer:
 #warning("direct change of state that is outside of reducer")
@@ -268,7 +267,10 @@ private extension UserAccountViewModel {
         case let (.success(.contracted(contracted)), nil):
             state.isLoading = false
             let message = contracted.bankDefaultResponse.requestLimitMessage
-            state.alert = message.map(closeAlert)
+            state.alert = message.map { .fpsAlert(.error(
+                message: $0,
+                event: .closeAlert
+            )) }
             
         case (.success(.missingContract), nil):
             state.isLoading = false
@@ -282,7 +284,10 @@ private extension UserAccountViewModel {
             switch failure {
             case let .serverError(message):
                 state.isLoading = false
-                state.alert = .fpsAlert(.ok(message: message, event: .dismissRoute))
+                state.alert = .fpsAlert(.error(
+                    message: message,
+                    event: .dismissRoute
+                ))
                 
             case .connectivityError:
                 state.isLoading = false
@@ -316,11 +321,14 @@ private extension UserAccountViewModel {
         case let .serverError(message):
             state.isLoading = false
             // non-final => closeAlert
-            state.alert = .fpsAlert(.ok(message: message, event: .closeAlert))
+            state.alert = .fpsAlert(.ok(
+                message: message, 
+                event: .closeAlert
+            ))
             
         case .missingProduct:
             state.isLoading = false
-            state.alert = missingProductFPSAlert()
+            state.alert = .fpsAlert(.missingProduct(event: .dismissRoute))
             
         case .confirmSetBankDefault:
             // state.fpsDestination = .confirmSetBankDefault
@@ -328,7 +336,10 @@ private extension UserAccountViewModel {
             fatalError("what should happen here?")
             
         case .setBankDefault:
-            state.alert = setBankDefaultFPSAlert()
+            state.alert = .fpsAlert(.setBankDefault(
+                primaryEvent: .otp(.prepareSetBankDefault),
+                secondaryEvent: .closeAlert
+            ))
             
         case .setBankDefaultSuccess:
             state.isLoading = false
@@ -343,32 +354,6 @@ private extension UserAccountViewModel {
         }
         
         return state
-    }
-        
-    func closeAlert(
-        _ message: String
-    ) -> State.Alert {
-        
-        
-#warning("extract helper as `static AlertViewModel.missingContract(action:)`")
-        return         .fpsAlert(.ok(
-            title: "Ошибка",
-            message: message,
-            event: .closeAlert
-        ))
-    }
-    
-    func missingProductFPSAlert() -> State.Alert {
-        
-        .fpsAlert(.missingProduct(event: .dismissRoute))
-    }
-    
-    func setBankDefaultFPSAlert() -> State.Alert {
-        
-        .fpsAlert(.setBankDefault(
-            primaryEvent: .otp(.prepareSetBankDefault),
-            secondaryEvent: .closeAlert
-        ))
     }
     
     // MARK: - OTP Domain
@@ -440,6 +425,41 @@ private extension AlertViewModel
 where PrimaryEvent == UserAccountViewModel.Event,
       SecondaryEvent == UserAccountViewModel.Event {
     
+    static func `default`(
+        title: String,
+        message: String,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: secondaryEvent
+            )
+        )
+    }
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .ok(
+            title: "Ошибка",
+            message: message,
+            event: event
+        )
+    }
+    
     static func ok(
         title: String = "",
         message: String? = nil,
@@ -455,15 +475,6 @@ where PrimaryEvent == UserAccountViewModel.Event,
                 event: event
             )
         )
-    }
-    
-    static func tryAgainFPSAlert(
-        _ event: PrimaryEvent
-    ) -> Self {
-        
-        let message = "Превышено время ожидания. Попробуйте позже"
-        
-        return .ok(message: message, event: event)
     }
     
     static func missingContract(
@@ -493,20 +504,21 @@ where PrimaryEvent == UserAccountViewModel.Event,
         secondaryEvent: SecondaryEvent
     ) -> Self {
         
-        .init(
+        .default(
             title: "Внимание",
             message: "Фора-банк будет выбран банком по умолчанию",
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: primaryEvent
-            ),
-            secondaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: secondaryEvent
-            )
+            primaryEvent: primaryEvent,
+            secondaryEvent: secondaryEvent
         )
+    }
+    
+    static func tryAgainFPSAlert(
+        _ event: PrimaryEvent
+    ) -> Self {
+        
+        let message = "Превышено время ожидания. Попробуйте позже"
+        
+        return .error(message: message, event: event)
     }
 }
 
@@ -599,8 +611,7 @@ extension UserAccountViewModel {
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
                 
-                self?.state.alert = .fpsAlert(.ok(
-                    title: "Ошибка",
+                self?.state.alert = .fpsAlert(.error(
                     message: message,
                     event: .closeFPSAlert
                 ))
