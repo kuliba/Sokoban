@@ -569,7 +569,7 @@ private extension FlowStubSettingsView.SubmitOTP {
     
     init?(flowStub: FlowStub?) {
         
-        switch flowStub?.initiateOTP {
+        switch flowStub?.submitOTP {
         case .none:
             return nil
             

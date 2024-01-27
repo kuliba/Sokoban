@@ -62,12 +62,14 @@ struct FPSPrototypeView: View {
         
         FlowStubSettingsView(
             flowStub: flowStub,
-            commit: {
-                
-                flowStub = $0
-                isShowingFlowStubOptions = false
-            }
+            commit: commit
         )
+    }
+    
+    private func commit(flowStub: FlowStub) {
+        
+        self.flowStub = flowStub
+        isShowingFlowStubOptions = false
     }
 }
 
