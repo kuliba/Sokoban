@@ -26,8 +26,8 @@ extension UserAccountOTPReducer {
     func reduce(
         _ state: State,
         _ event: Event,
-        _ informer: @escaping (String) -> Void,
-        _ dispatch: @escaping (Event) -> Void
+        _ inform: @escaping Inform,
+        _ dispatch: @escaping Dispatch
     ) -> (State, Effect?) {
         
         var state = state
@@ -58,7 +58,7 @@ extension UserAccountOTPReducer {
             effect = .otp(.prepareSetBankDefault)
             
         case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response, informer, dispatch)
+            (state, effect) = update(state, with: response, inform, dispatch)
         }
         
         return (state, effect)
@@ -67,8 +67,8 @@ extension UserAccountOTPReducer {
     func update(
         _ state: State,
         with response: Event.PrepareSetBankDefaultResponse,
-        _ informer: @escaping (String) -> Void,
-        _ dispatch: @escaping (Event) -> Void
+        _ inform: @escaping Inform,
+        _ dispatch: @escaping Dispatch
     ) -> (State, Effect?) {
         
         var state = state
@@ -91,7 +91,7 @@ extension UserAccountOTPReducer {
             
         case .connectivityError:
             state.fpsDestination = nil
-            informer("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
             state.alert = .fpsAlert(.error(
@@ -105,6 +105,9 @@ extension UserAccountOTPReducer {
 }
 
 extension UserAccountOTPReducer {
+    
+    typealias Inform = (String) -> Void
+    typealias Dispatch = (Event) -> Void
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event.OTP

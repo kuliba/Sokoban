@@ -14,7 +14,7 @@ extension UserAccountDemoReducer {
     func reduce(
         _ state: State,
         _ event: Event,
-        _ informer: @escaping (String) -> Void
+        _ inform: @escaping Inform
     ) -> (State, Effect?) {
         
         var state = state
@@ -32,7 +32,7 @@ extension UserAccountDemoReducer {
                 ))
                 
             case .informer:
-                informer("Demo informer here.")
+                inform("Demo informer here.")
                 
             case .loader:
                 break
@@ -58,6 +58,8 @@ extension UserAccountDemoReducer {
 }
 
 extension UserAccountDemoReducer {
+    
+    typealias Inform = (String) -> Void
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event.Demo

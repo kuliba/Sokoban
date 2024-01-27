@@ -34,8 +34,8 @@ extension UserAccountReducer {
     func reduce(
         _ state: State,
         _ event: Event,
-        _ informer: @escaping (String) -> Void,
-        _ dispatch: @escaping (Event) -> Void
+        _ inform: @escaping Inform,
+        _ dispatch: @escaping Dispatch
     ) -> (State, Effect?) {
         
         var state = state
@@ -60,15 +60,15 @@ extension UserAccountReducer {
             state = .init()
             
         case let .demo(demoEvent):
-            let (demoState, demoEffect) = demoReduce(state, demoEvent, informer)
+            let (demoState, demoEffect) = demoReduce(state, demoEvent, inform)
             state = demoState
             effect = demoEffect.map(Effect.demo)
             
         case let .fps(.updated(fpsState)):
-            state = reduce(state, with: fpsState, informer: informer)
+            state = reduce(state, with: fpsState, inform: inform)
             
         case let .otp(otp):
-            (state, effect) = otpReduce(state, otp, informer) { dispatch(.otp($0)) }
+            (state, effect) = otpReduce(state, otp, inform) { dispatch(.otp($0)) }
         }
         
         return (state, effect)
@@ -83,6 +83,8 @@ extension UserAccountReducer {
     
     typealias OTPDispatch = (Event.OTP) -> Void
     typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
+
+    typealias Dispatch = (Event) -> Void
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event
@@ -96,7 +98,7 @@ private extension UserAccountReducer {
     func reduce(
         _ state: State,
         with settings: FastPaymentsSettingsState,
-        informer: @escaping (String) -> Void
+        inform: @escaping (String) -> Void
     ) -> State {
         
         var state = state
@@ -121,7 +123,7 @@ private extension UserAccountReducer {
             state.alert = .fpsAlert(.missingContract(event: .closeAlert))
             
         case let (.success, .some(status)):
-            state = update(state, with: status, informer)
+            state = update(state, with: status, inform)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -145,7 +147,7 @@ private extension UserAccountReducer {
     func update(
         _ state: State,
         with status: FastPaymentsSettingsState.Status,
-        _ informer: @escaping (String) -> Void
+        _ inform: @escaping Inform
     ) -> State {
         
         var state = state
@@ -188,11 +190,11 @@ private extension UserAccountReducer {
             
         case .setBankDefaultSuccess:
             state.isLoading = false
-            informer("Банк по умолчанию установлен.")
+            inform("Банк по умолчанию установлен.")
             
         case .updateContractFailure:
             state.isLoading = false
-            informer("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             state = .init()
         }
         
