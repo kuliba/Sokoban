@@ -1,6 +1,6 @@
 //
 //  Alert+ext.swift
-//  FastPaymentsSettingsPreview
+//  
 //
 //  Created by Igor Malyarov on 11.01.2024.
 //
