@@ -13,9 +13,9 @@ where PrimaryEvent == UserAccountViewModel.Event,
     
     static func `default`(
         title: String,
-        message: String,
-        primaryEvent: PrimaryEvent,
-        secondaryEvent: SecondaryEvent
+        message: String?,
+        event: PrimaryEvent,
+        secondaryEvent: SecondaryEvent? = nil
     ) -> Self {
         
         .init(
@@ -24,13 +24,16 @@ where PrimaryEvent == UserAccountViewModel.Event,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: primaryEvent
+                event: event
             ),
-            secondaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: secondaryEvent
-            )
+            secondaryButton: secondaryEvent.map {
+                
+                .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: $0
+                )
+            }
         )
     }
     
@@ -39,27 +42,10 @@ where PrimaryEvent == UserAccountViewModel.Event,
         event: PrimaryEvent
     ) -> Self {
         
-        .ok(
+        .default(
             title: "Ошибка",
             message: message,
             event: event
-        )
-    }
-    
-    static func ok(
-        title: String = "",
-        message: String? = nil,
-        event: PrimaryEvent
-    ) -> Self {
-        
-        self.init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: event
-            )
         )
     }
     
@@ -67,7 +53,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         event: PrimaryEvent
     ) -> Self {
         
-        .ok(
+        .default(
             title: "Не найден договор СБП",
             message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
             event: event
@@ -78,7 +64,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         event: PrimaryEvent
     ) -> Self {
         
-        .ok(
+        .default(
             title: "Сервис не доступен",
             message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
             event: event
@@ -86,14 +72,14 @@ where PrimaryEvent == UserAccountViewModel.Event,
     }
     
     static func setBankDefault(
-        primaryEvent: PrimaryEvent,
+        event: PrimaryEvent,
         secondaryEvent: SecondaryEvent
     ) -> Self {
         
         .default(
             title: "Внимание",
             message: "Фора-банк будет выбран банком по умолчанию",
-            primaryEvent: primaryEvent,
+            event: event,
             secondaryEvent: secondaryEvent
         )
     }

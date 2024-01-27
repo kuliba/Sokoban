@@ -336,6 +336,26 @@ extension UserAccountViewModel.State.Destination {
     }
 }
 
+extension UserAccountViewModel.State {
+    
+    var fpsRoute: UserAccountViewModel.State.Destination.FPSRoute? {
+        
+        get {
+            guard case let .fastPaymentsSettings(fpsRoute) = destination
+            else { return nil }
+            
+            return fpsRoute
+        }
+        
+        set(newValue) {
+            guard case .fastPaymentsSettings = destination
+            else { return }
+            
+            self.destination = newValue.map(Destination.fastPaymentsSettings)
+        }
+    }
+}
+
 extension UserAccountViewModel.State.Destination.FPSRoute {
     
     typealias Alert = AlertModelOf<UserAccountViewModel.Event>
@@ -409,6 +429,7 @@ extension UserAccountViewModel.State.Destination.FPSRoute.Destination: Hashable 
     }
     
     func hash(into hasher: inout Hasher) {
+        
         switch self {
         case let .confirmSetBankDefault(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
@@ -416,14 +437,6 @@ extension UserAccountViewModel.State.Destination.FPSRoute.Destination: Hashable 
         case let .c2BSub(getC2BSubResponse, _):
             hasher.combine(getC2BSubResponse)
         }
-    }
-}
-
-extension GetC2BSubResponse: Hashable {
-    
-    public func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(self)
     }
 }
 
@@ -455,51 +468,5 @@ extension OTPInputState {
         case .validOTP:
             return .validOTP
         }
-    }
-}
-
-#warning("reuse generic route?")
-struct GRoute<ViewModel, Destination, Modal, Alert>
-where ViewModel: ObservableObject {
-    
-    let viewModel: ViewModel
-    let cancellable: AnyCancellable
-    var destination: Destination?
-    var modal: Modal?
-    var alert: Alert?
-    
-    init(
-        _ viewModel: ViewModel,
-        _ cancellable: AnyCancellable,
-        destination: Destination? = nil,
-        modal: Modal? = nil,
-        alert: Alert? = nil
-    ) {
-        self.viewModel = viewModel
-        self.cancellable = cancellable
-        self.destination = destination
-        self.modal = modal
-        self.alert = alert
-    }
-}
-
-extension GRoute: Equatable where Destination: Equatable, Modal: Equatable, Alert: Equatable {
-    
-    static func == (_ lhs: Self, rhs: Self) -> Bool {
-        
-        ObjectIdentifier(lhs.viewModel) == ObjectIdentifier(rhs.viewModel)
-        && lhs.destination == rhs.destination
-        && lhs.modal == rhs.modal
-        && lhs.alert == rhs.alert
-    }
-}
-
-extension GRoute: Hashable where Destination: Hashable, Modal: Hashable, Alert: Hashable {
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(viewModel))
-        hasher.combine(destination)
-        hasher.combine(modal)
-        hasher.combine(alert)
     }
 }

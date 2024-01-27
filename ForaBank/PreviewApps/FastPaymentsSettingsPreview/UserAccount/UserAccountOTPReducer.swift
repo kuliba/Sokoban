@@ -37,15 +37,7 @@ extension UserAccountOTPReducer {
         switch event {
         case let .otpInput(otpInput):
 #warning("move nullification to reducer where fps state is reduced")
-            #warning("add helpers")
-            switch state.destination {
-            case .none:
-                break
-                
-            case var .fastPaymentsSettings(fpsRoute):
-                fpsRoute.destination = nil
-                state.destination = .fastPaymentsSettings(fpsRoute)
-            }
+            state.fpsRoute?.destination = nil
             
             switch otpInput {
             case let .failure(failure):
@@ -53,10 +45,15 @@ extension UserAccountOTPReducer {
                 case .connectivityError:
                     effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
                     
-#warning("should handle with informer not alert `serverError` with message Введен некорректный код. Попробуйте еще раз")
                 case let .serverError(message):
-                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+                    let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+                    if message == tryAgain {
+                        inform(message)
+                    } else {
+                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+                    }
                 }
+                
             case .validOTP:
                 effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
             }
@@ -96,39 +93,15 @@ extension UserAccountOTPReducer {
                 .receive(on: scheduler)
                 .sink { dispatch($0) }
             
-            switch state.destination {
-            case .none:
-                break
-                
-            case var .fastPaymentsSettings(fpsRoute):
-                fpsRoute.destination = .confirmSetBankDefault(otpInputViewModel, cancellable)
-                state.destination = .fastPaymentsSettings(fpsRoute)
-            }
+            state.fpsRoute?.destination = .confirmSetBankDefault(otpInputViewModel, cancellable)
             
         case .connectivityError:
-            #warning("add helpers")
-            switch state.destination {
-            case .none:
-                break
-                
-            case var .fastPaymentsSettings(fpsRoute):
-                fpsRoute.destination = nil
-                state.destination = .fastPaymentsSettings(fpsRoute)
-            }
-            
+            state.fpsRoute?.destination = nil
             inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            switch state.destination {
-            case .none:
-                break
-                
-            case var .fastPaymentsSettings(fpsRoute):
-                fpsRoute.alert = .error(
-                    message: message,
-                    event: .closeAlert
-                )
-            }
+            state.fpsRoute?.destination = nil
+            state.fpsRoute?.alert = .error(message: message, event: .closeAlert)
         }
         
         return (state, effect)

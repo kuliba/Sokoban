@@ -107,7 +107,7 @@ struct UserAccountView: View {
             )
             .alert(
                 item: .init(
-                    get: { fps.alert },
+                    get: { viewModel.state.fpsRoute?.alert },
                     // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
                     // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                     set: { _ in }
@@ -116,7 +116,7 @@ struct UserAccountView: View {
             )
             .navigationDestination(
                 item: .init(
-                    get: { fps.destination },
+                    get: { viewModel.state.fpsRoute?.destination },
                     set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                 ),
                 destination: fpsDestinationView

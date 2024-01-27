@@ -329,7 +329,7 @@ private extension FlowStubSettingsView {
     
     enum SubmitOTP: String, CaseIterable, Identifiable {
         
-        case success, error_C, error_S
+        case success, error_C, incorrect, error_S
         
         var id: Self { self }
         
@@ -338,6 +338,7 @@ private extension FlowStubSettingsView {
             switch self {
             case .success: return .success(())
             case .error_C: return .failure(.connectivityError)
+            case .incorrect: return .failure(.serverError("Введен некорректный код. Попробуйте еще раз"))
             case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
@@ -581,8 +582,12 @@ private extension FlowStubSettingsView.SubmitOTP {
             case .connectivityError:
                 self = .error_C
                 
-            case .serverError:
-                self = .error_S
+            case let .serverError(message):
+                if message == "Введен некорректный код. Попробуйте еще раз" {
+                    self = .incorrect
+                } else {
+                    self = .error_S
+                }
             }
         }
     }
