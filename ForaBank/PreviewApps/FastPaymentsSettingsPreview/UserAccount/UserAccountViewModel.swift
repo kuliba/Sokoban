@@ -97,9 +97,9 @@ extension UserAccountViewModel {
 private extension UserAccountViewModel {
     
     func reduce(
-        _ state: Route,
+        _ state: State,
         _ event: Event
-    ) -> (Route, Effect?) {
+    ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
@@ -142,9 +142,9 @@ private extension UserAccountViewModel {
     }
     
     func update(
-        _ state: Route,
+        _ state: State,
         with response: Event.OTP.PrepareSetBankDefaultResponse
-    ) -> (Route, Effect?) {
+    ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
@@ -198,8 +198,7 @@ private extension UserAccountViewModel {
             case .alert:
                 state.alert = .alert(.ok(
                     title: "Error",
-                    action: { [weak self] in self?.event(.closeAlert)
-                    }
+                    action: { [weak self] in self?.event(.closeAlert) }
                 ))
                 
             case .informer:
@@ -352,7 +351,7 @@ private extension UserAccountViewModel {
     func serverErrorFPSAlert(
         _ message: String,
         _ event: Event
-    ) -> Route.Alert {
+    ) -> State.Alert {
         
         .fpsAlert(.ok(
             message: message,
@@ -362,7 +361,7 @@ private extension UserAccountViewModel {
     
     func tryAgainFPSAlert(
         _ event: Event
-    ) -> Route.Alert {
+    ) -> State.Alert {
         
         let message = "Превышено время ожидания. Попробуйте позже"
         
@@ -374,7 +373,7 @@ private extension UserAccountViewModel {
     
     func defaultBankRequestsLimitFPSAlert(
         _ message: String
-    ) -> Route.Alert {
+    ) -> State.Alert {
         
         
 #warning("extract helper as `static AlertViewModel.missingContract(action:)`")
@@ -385,21 +384,21 @@ private extension UserAccountViewModel {
         ))
     }
     
-    func missingContractFPSAlert() -> Route.Alert {
+    func missingContractFPSAlert() -> State.Alert {
         
         .fpsAlert(.missingContract(
             action: { [weak self] in self?.event(.closeAlert) }
         ))
     }
     
-    func missingProductFPSAlert() -> Route.Alert {
+    func missingProductFPSAlert() -> State.Alert {
         
         .fpsAlert(.missingProduct(
             action: { [weak self] in self?.event(.dismissRoute) }
         ))
     }
     
-    func setBankDefaultFPSAlert() -> Route.Alert {
+    func setBankDefaultFPSAlert() -> State.Alert {
         
         .fpsAlert(.setBankDefault(
             primaryAction: { [weak self] in
