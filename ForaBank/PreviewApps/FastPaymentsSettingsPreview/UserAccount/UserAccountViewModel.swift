@@ -161,7 +161,7 @@ private extension UserAccountViewModel {
 #warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
             let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel)
-            bind(otpInputViewModel)
+            bind(fpsDestination: state.fpsDestination)
             
         case .connectivityError:
             state.fpsDestination = nil
@@ -652,36 +652,52 @@ extension UserAccountViewModel {
     func openFastPaymentsSettings() {
         
         let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
-        bind(fpsViewModel)
         state.destination = .fastPaymentsSettings(fpsViewModel)
+        bind(state.destination)
 #warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
     }
+}
+
+// MARK: - Bind Destinations
+
+private extension UserAccountViewModel {
     
-    private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
+    func bind(
+        _ destination: State.Destination? = nil,
+        fpsDestination: State.FPSDestination? = nil
+    ) {
+        switch destination {
+        case .none:
+            break
+            
+        case let .fastPaymentsSettings(fastPaymentsSettings):
+            destinationCancellable = fastPaymentsSettings.$state
+                .removeDuplicates()
+                .map(Event.FastPaymentsSettings.updated)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.fps($0)) }
+        }
         
-        destinationCancellable = viewModel.$state
-            .removeDuplicates()
-            .map(Event.FastPaymentsSettings.updated)
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.fps($0))}
+        switch fpsDestination {
+        case .none:
+            break
+            
+        case let .c2BSub(c2BSub):
+            break
+            
+        case let .confirmSetBankDefault(confirmSetBankDefault):
+            fpsDestinationCancellable = confirmSetBankDefault.$state
+                .compactMap(\.projection)
+                .removeDuplicates()
+                .map(Event.OTP.otpInput)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.otp($0))}
+        }
     }
 }
 
 // MARK: - OTP for Fast Payments Settings
-
-extension UserAccountViewModel {
-    
-    private func bind(_ viewModel: TimedOTPInputViewModel) {
-        
-        fpsDestinationCancellable = viewModel.$state
-            .compactMap(\.projection)
-            .removeDuplicates()
-            .map(Event.OTP.otpInput)
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.otp($0))}
-    }
-}
 
 enum OTPInputStateProjection: Equatable {
     
