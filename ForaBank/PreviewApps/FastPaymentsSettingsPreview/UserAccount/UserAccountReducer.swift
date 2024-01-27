@@ -10,13 +10,16 @@ import UIPrimitives
 
 final class UserAccountReducer {
     
+    private let otpReduce: OTPReduce
     private let factory: Factory
     private let scheduler: AnySchedulerOfDispatchQueue
 
     init(
+        otpReduce: @escaping OTPReduce,
         factory: Factory,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        self.otpReduce = otpReduce
         self.factory = factory
         self.scheduler = scheduler
     }
@@ -62,7 +65,7 @@ extension UserAccountReducer {
             state = reduce(state, with: fpsState, informer: informer)
             
         case let .otp(otp):
-            (state, effect) = reduce(state, with: otp, informer, dispatch)
+            (state, effect) = otpReduce(state, otp, informer) { dispatch(.otp($0)) }
         }
         
         return (state, effect)
@@ -71,11 +74,11 @@ extension UserAccountReducer {
 
 extension UserAccountReducer {
     
-    typealias BindDestination = (State.Destination?) -> Void
-    typealias BindFPSDestination = (State.FPSDestination?) -> Void
-    typealias UnbindDestination = () -> Void
-    typealias UnbindFPSDestination = () -> Void
+    typealias Inform = (String) -> Void
     
+    typealias OTPDispatch = (Event.OTP) -> Void
+    typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
+        
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event
     typealias Effect = UserAccountViewModel.Effect
@@ -191,88 +194,6 @@ private extension UserAccountReducer {
         return state
     }
     
-    // MARK: - OTP Domain
-    
-    func reduce(
-        _ state: State,
-        with otp: UserAccountViewModel.Event.OTP,
-        _ informer: @escaping (String) -> Void,
-        _ dispatch: @escaping (Event) -> Void
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch otp {
-        case let .otpInput(otpInput):
-#warning("move nullification to reducer where fps state is reduced")
-            state.fpsDestination = nil
-            
-            switch otpInput {
-            case let .failure(failure):
-                switch failure {
-                case .connectivityError:
-                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
-                    
-#warning("should handle with informer not alert `serverError` with message Введен некорректный код. Попробуйте еще раз")
-                case let .serverError(message):
-                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
-                }
-            case .validOTP:
-                effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
-            }
-            
-        case .prepareSetBankDefault:
-            state.alert = nil
-            state.isLoading = true
-            effect = .otp(.prepareSetBankDefault)
-            
-        case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response, informer, dispatch)
-        }
-        
-        return (state, effect)
-    }
-    
-    func update(
-        _ state: State,
-        with response: Event.OTP.PrepareSetBankDefaultResponse,
-        _ informer: @escaping (String) -> Void,
-        _ dispatch: @escaping (Event) -> Void
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        state.isLoading = false
-        effect = .fps(.resetStatus)
-        
-        switch response {
-        case .success:
-            let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
-            let cancellable = otpInputViewModel.$state
-                .compactMap(\.projection)
-                .removeDuplicates()
-                .map(Event.OTP.otpInput)
-                .receive(on: scheduler)
-                .sink { dispatch(.otp($0)) }
-            
-            state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
-            
-        case .connectivityError:
-            state.fpsDestination = nil
-            informer("Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            
-        case let .serverError(message):
-            state.alert = .fpsAlert(.error(
-                message: message,
-                event: .closeAlert
-            ))
-        }
-        
-        return (state, effect)
-    }
-
     // MARK: - Demo Domain
     
     func reduce(
@@ -355,7 +276,7 @@ private extension UserAccountReducer {
     }
 }
 
-private extension AlertModel
+extension AlertModel
 where PrimaryEvent == UserAccountViewModel.Event,
       SecondaryEvent == UserAccountViewModel.Event {
     
