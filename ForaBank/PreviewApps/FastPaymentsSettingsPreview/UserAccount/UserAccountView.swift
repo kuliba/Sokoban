@@ -100,7 +100,7 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch destination {
-        case let .fastPaymentsSettings(fpsViewModel):
+        case let .fastPaymentsSettings(fpsViewModel, _):
             FastPaymentsSettingsView(
                 viewModel: fpsViewModel,
                 config: .default
@@ -129,10 +129,10 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch fpsDestination {
-        case let .confirmSetBankDefault(timedOTPInputViewModel):
+        case let .confirmSetBankDefault(timedOTPInputViewModel, _):
             OTPInputWrapperView(viewModel: timedOTPInputViewModel)
             
-        case let .c2BSub(getC2BSubResponse):
+        case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
         }
     }
