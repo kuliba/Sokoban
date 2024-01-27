@@ -91,6 +91,7 @@ private extension UserAccountFPSReducer {
         case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
+            state.fpsRoute?.destination = nil
             state.fpsRoute?.alert = .tryAgainFPSAlert(.closeAlert)
             
         case let .serverError(message):

@@ -397,6 +397,7 @@
 		2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */; };
 		2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = 2A1F086D2A7A2EE400C5B11B /* public.crt */; };
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
+		2A1F5A9D2B656F0C00A54C43 /* GenericRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */; };
 		2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
 		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
 		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
@@ -2745,6 +2746,7 @@
 		2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyTests.swift; sourceTree = "<group>"; };
 		2A1F086D2A7A2EE400C5B11B /* public.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public.crt; sourceTree = "<group>"; };
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
+		2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericRoute.swift; sourceTree = "<group>"; };
 		2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SberQR.xctestplan; sourceTree = "<group>"; };
 		2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SberQRPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPreviewApp.swift; sourceTree = "<group>"; };
@@ -6578,6 +6580,7 @@
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
 				2A3D6F1C2B6229AC00D19379 /* Config */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
+				2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */,
 				2A2253F22B64F20500C44440 /* UserAccountReducer.swift */,
 				2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */,
 				2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */,
@@ -13205,6 +13208,7 @@
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 				2A2253F92B6519BD00C44440 /* AlertHelpers.swift in Sources */,
 				2A3D6F1E2B62936900D19379 /* AccountLinkingSettingsButton.swift in Sources */,
+				2A1F5A9D2B656F0C00A54C43 /* GenericRoute.swift in Sources */,
 				2A3D6F142B62288900D19379 /* InactiveContractConfig+ext.swift in Sources */,
 				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,

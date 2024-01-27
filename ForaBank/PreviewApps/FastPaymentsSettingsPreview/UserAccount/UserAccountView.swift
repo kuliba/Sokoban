@@ -8,6 +8,7 @@
 import FastPaymentsSettings
 import OTPInputComponent
 import SwiftUI
+import UIPrimitives
 
 struct UserAccountView: View {
     
@@ -126,7 +127,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.State.Destination.FPSRoute.Destination
+        fpsDestination: UserAccountViewModel.State.Destination.FPSDestination
     ) -> some View {
         
         switch fpsDestination {
@@ -135,6 +136,18 @@ struct UserAccountView: View {
             
         case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
+        }
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    var alert: AlertModelOf<Event>? {
+        
+        if case let .alert(alert) = state.alert {
+            return alert
+        } else {
+            return nil
         }
     }
 }
@@ -185,15 +198,6 @@ private extension UserAccountViewModel {
         
         event(.demo(.show(.loader)))
     }
-}
-
-#warning("remove if unused")
-enum ConfirmWithOTPResult {
-    
-    case success
-    case incorrectCode
-    case serverError(String)
-    case connectivityError
 }
 
 struct UserAccountView_Previews: PreviewProvider {

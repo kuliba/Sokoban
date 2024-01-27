@@ -119,3 +119,28 @@ extension UserAccountOTPReducer {
     typealias Event = UserAccountViewModel.Event.OTP
     typealias Effect = UserAccountViewModel.Effect
 }
+
+// MARK: - OTP for Fast Payments Settings
+
+private extension OTPInputState {
+    
+    var projection: OTPInputStateProjection? {
+        
+        switch self {
+        case let .failure(otpFieldFailure):
+            switch otpFieldFailure {
+            case .connectivityError:
+                return .failure(.connectivityError)
+                
+            case let .serverError(message):
+                return .failure(.serverError(message))
+            }
+            
+        case .input:
+            return nil
+            
+        case .validOTP:
+            return .validOTP
+        }
+    }
+}
