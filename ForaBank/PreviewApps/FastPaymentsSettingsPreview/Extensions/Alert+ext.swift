@@ -9,17 +9,19 @@ import SwiftUI
 
 extension Alert {
     
-    init(with viewModel: AlertViewModel) {
-        
+    init<Event>(
+        with viewModel: AlertViewModelOf<Event>,
+        event: @escaping (Event) -> Void
+    ) {
         let title = Text(viewModel.title)
         let message = Text(viewModel.message ?? "")
-        let primaryButton = Self.button(with: viewModel.primaryButton)
+        let primaryButton = Self.button(with: viewModel.primaryButton, event: event)
         
-        if let secondaryButtonViewModel = viewModel.secondaryButton {
+        if let secondary = viewModel.secondaryButton {
             
-            let secondary = Self.button(with: secondaryButtonViewModel)
+            let secondaryButton = Self.button(with: secondary, event: event)
             
-            self.init(title: title, message: message, primaryButton: primaryButton, secondaryButton: secondary)
+            self.init(title: title, message: message, primaryButton: primaryButton, secondaryButton: secondaryButton)
             
         } else {
             
@@ -30,19 +32,29 @@ extension Alert {
 
 extension Alert {
     
-    static func button(
-        with viewModel: AlertViewModel.ButtonViewModel
+    static func button<Event>(
+        with viewModel: ButtonViewModel<Event>,
+        event: @escaping (Event) -> Void
     ) -> Alert.Button {
         
         switch viewModel.type {
         case .default:
-            return .default(Text(viewModel.title), action: viewModel.action)
+            return .default(
+                Text(viewModel.title),
+                action: { event(viewModel.event) }
+            )
             
         case .destructive:
-            return .destructive(Text(viewModel.title), action: viewModel.action)
+            return .destructive(
+                Text(viewModel.title),
+                action: { event(viewModel.event) }
+            )
             
         case .cancel:
-            return .cancel(Text(viewModel.title), action: viewModel.action)
+            return .cancel(
+                Text(viewModel.title),
+                action: { event(viewModel.event) }
+            )
         }
     }
 }

@@ -7,42 +7,43 @@
 
 import Foundation
 
-struct AlertViewModel: Identifiable {
+typealias AlertViewModelOf<Event> = AlertViewModel<Event, Event>
+
+struct AlertViewModel<PrimaryEvent, SecondaryEvent>: Identifiable {
     
-    let id = UUID()
+    let id: UUID
     let title: String
     let message: String?
-    let primaryButton: ButtonViewModel
-    let secondaryButton: ButtonViewModel?
-    
-    struct ButtonViewModel {
-        
-        let type: ButtonType
-        let title: String
-        let action: () -> Void
-        
-        enum ButtonType {
-            
-            case `default`, destructive, cancel
-        }
-    }
-}
-
-extension AlertViewModel: Equatable {
-    
-    static func == (lhs: AlertViewModel, rhs: AlertViewModel) -> Bool {
-        
-        lhs.id == rhs.id
-    }
-}
-
-extension AlertViewModel {
+    let primaryButton: ButtonViewModel<PrimaryEvent>
+    let secondaryButton: ButtonViewModel<SecondaryEvent>?
     
     init(
-        title: String = "",
-        message: String? = nil,
-        primaryButton: ButtonViewModel
+        id: UUID = .init(),
+        title: String,
+        message: String?,
+        primaryButton: ButtonViewModel<PrimaryEvent>,
+        secondaryButton: ButtonViewModel<SecondaryEvent>? = nil
     ) {
-        self.init(title: title, message: message, primaryButton: primaryButton, secondaryButton: nil)
+        self.id = id
+        self.title = title
+        self.message = message
+        self.primaryButton = primaryButton
+        self.secondaryButton = secondaryButton
     }
 }
+
+struct ButtonViewModel<Event> {
+    
+    let type: ButtonType
+    let title: String
+    let event: Event
+    
+    enum ButtonType: Equatable {
+        
+        case `default`, destructive, cancel
+    }
+}
+
+extension AlertViewModel: Equatable where PrimaryEvent: Equatable, SecondaryEvent: Equatable {}
+
+extension ButtonViewModel: Equatable where Event: Equatable {}

@@ -168,7 +168,7 @@ private extension UserAccountViewModel {
             state.alert = .fpsAlert(.ok(
                 title: "Ошибка",
                 message: message,
-                action: { [weak self] in self?.event(.closeAlert) }
+                event: .closeAlert
             ))
         }
         
@@ -196,10 +196,7 @@ private extension UserAccountViewModel {
             
             switch loaded {
             case .alert:
-                state.alert = .alert(.ok(
-                    title: "Error",
-                    action: { [weak self] in self?.event(.closeAlert) }
-                ))
+                state.alert = .alert(.ok(title: "Error", event: .closeAlert))
                 
             case .informer:
 #warning("direct change of state that is outside of reducer")
@@ -275,7 +272,7 @@ private extension UserAccountViewModel {
             
         case (.success(.missingContract), nil):
             state.isLoading = false
-            state.alert = missingContractFPSAlert()
+            state.alert = .fpsAlert(.missingContract(event: .closeAlert))
             
         case let (.success, .some(status)):
             state = update(state, with: status)
@@ -353,10 +350,7 @@ private extension UserAccountViewModel {
         _ event: Event
     ) -> State.Alert {
         
-        .fpsAlert(.ok(
-            message: message,
-            action: { [weak self] in self?.event(event) }
-        ))
+        .fpsAlert(.ok(message: message, event: event))
     }
     
     func tryAgainFPSAlert(
@@ -365,10 +359,7 @@ private extension UserAccountViewModel {
         
         let message = "Превышено время ожидания. Попробуйте позже"
         
-        return .fpsAlert(.ok(
-            message: message,
-            action: { [weak self] in self?.event(event) }
-        ))
+        return .fpsAlert(.ok(message: message, event: event))
     }
     
     func defaultBankRequestsLimitFPSAlert(
@@ -380,35 +371,20 @@ private extension UserAccountViewModel {
         return         .fpsAlert(.ok(
             title: "Ошибка",
             message: message,
-            action: { [weak self] in self?.event(.closeAlert) }
-        ))
-    }
-    
-    func missingContractFPSAlert() -> State.Alert {
-        
-        .fpsAlert(.missingContract(
-            action: { [weak self] in self?.event(.closeAlert) }
+            event: .closeAlert
         ))
     }
     
     func missingProductFPSAlert() -> State.Alert {
         
-        .fpsAlert(.missingProduct(
-            action: { [weak self] in self?.event(.dismissRoute) }
-        ))
+        .fpsAlert(.missingProduct(event: .dismissRoute))
     }
     
     func setBankDefaultFPSAlert() -> State.Alert {
         
         .fpsAlert(.setBankDefault(
-            primaryAction: { [weak self] in
-                
-                self?.event(.otp(.prepareSetBankDefault))
-            },
-            secondaryAction: { [weak self] in
-                
-                self?.event(.closeAlert)
-            }
+            primaryEvent: .otp(.prepareSetBankDefault),
+            secondaryEvent: .closeAlert
         ))
     }
     
@@ -477,33 +453,35 @@ private extension UserAccountViewModel {
     }
 }
 
-private extension AlertViewModel {
+private extension AlertViewModel
+where PrimaryEvent == UserAccountViewModel.Event,
+      SecondaryEvent == UserAccountViewModel.Event {
     
     static func missingContract(
-        action: @escaping () -> Void
+        event: PrimaryEvent
     ) -> Self {
         
         .ok(
             title: "Не найден договор СБП",
             message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-            action: action
+            event: event
         )
     }
     
     static func missingProduct(
-        action: @escaping () -> Void
+        event: PrimaryEvent
     ) -> Self {
         
         .ok(
             title: "Сервис не доступен",
             message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-            action: action
+            event: event
         )
     }
     
     static func setBankDefault(
-        primaryAction: @escaping () -> Void,
-        secondaryAction: @escaping () -> Void
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent
     ) -> Self {
         
         .init(
@@ -512,11 +490,12 @@ private extension AlertViewModel {
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                action: primaryAction),
+                event: primaryEvent
+            ),
             secondaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                action: secondaryAction
+                event: secondaryEvent
             )
         )
     }
@@ -614,7 +593,7 @@ extension UserAccountViewModel {
                 self?.state.alert = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
-                    action: { [weak self] in self?.event(.closeFPSAlert) }
+                    event: .closeFPSAlert
                 ))
             }
             
@@ -739,7 +718,7 @@ private extension AlertViewModel {
     static func ok(
         title: String = "",
         message: String? = nil,
-        action: @escaping () -> Void
+        event: PrimaryEvent
     ) -> Self {
         
         self.init(
@@ -748,7 +727,7 @@ private extension AlertViewModel {
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                action: action
+                event: event
             )
         )
     }
@@ -784,10 +763,10 @@ extension UserAccountViewModel {
         
         enum Alert: Equatable {
             
-            case alert(AlertViewModel)
-            case fpsAlert(AlertViewModel)
+            case alert(AlertViewModelOf<Event>)
+            case fpsAlert(AlertViewModelOf<Event>)
             
-            var alert: AlertViewModel? {
+            var alert: AlertViewModelOf<Event>? {
                 
                 if case let .alert(alert) = self {
                     return alert
@@ -796,7 +775,7 @@ extension UserAccountViewModel {
                 }
             }
             
-            var fpsAlert: AlertViewModel? {
+            var fpsAlert: AlertViewModelOf<Event>? {
                 
                 if case let .fpsAlert(fpsAlert) = self {
                     return fpsAlert
