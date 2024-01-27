@@ -93,6 +93,28 @@ extension UserAccountViewModel {
     }
 }
 
+// MARK: - Fast Payments Settings
+
+extension UserAccountViewModel {
+    
+#warning("move to `reduce`")
+    func openFastPaymentsSettings() {
+        
+        let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
+        let cancellable = fpsViewModel.$state
+            .removeDuplicates()
+            .map(Event.FastPaymentsSettings.updated)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.fps($0)) }
+        
+        state.destination = .fastPaymentsSettings(fpsViewModel, cancellable)
+#warning("and change to effect (??) when moved to `reduce`")
+        fpsViewModel.event(.appear)
+    }
+}
+
+// MARK: - to be injected
+
 private extension UserAccountViewModel {
     
     func reduce(
@@ -135,118 +157,9 @@ private extension UserAccountViewModel {
         
         return (state, effect)
     }
-    
-    func update(
-        _ state: State,
-        with response: Event.OTP.PrepareSetBankDefaultResponse
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        state.isLoading = false
-        effect = .fps(.resetStatus)
-        
-        switch response {
-        case .success:
-            let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
-            let cancellable = otpInputViewModel.$state
-                .compactMap(\.projection)
-                .removeDuplicates()
-                .map(Event.OTP.otpInput)
-                .receive(on: scheduler)
-                .sink { [weak self] in self?.event(.otp($0))}
-            
-            state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
-            
-        case .connectivityError:
-            state.fpsDestination = nil
-#warning("direct change of state that is outside of reducer")
-            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            
-        case let .serverError(message):
-            state.alert = .fpsAlert(.error(
-                message: message,
-                event: .closeAlert
-            ))
-        }
-        
-        return (state, effect)
-    }
 }
 
-// MARK: - to be injected
-
 private extension UserAccountViewModel {
-    
-    // MARK: - Demo Domain
-    
-    func reduce(
-        _ state: State,
-        _ event: Event.Demo
-    ) -> (State, Effect.Demo?) {
-        
-        var state = state
-        var effect: Effect.Demo?
-        
-        switch event {
-        case let .loaded(loaded):
-            state.isLoading = false
-            
-            switch loaded {
-            case .alert:
-                state.alert = .alert(.error(event: .closeAlert))
-                
-            case .informer:
-#warning("direct change of state that is outside of reducer")
-                self.informer.set(text: "Demo informer here.")
-                
-            case .loader:
-                break
-            }
-            
-        case let .show(show):
-            state.isLoading = true
-            
-            switch show {
-            case .alert:
-                effect = .loadAlert
-                
-            case .informer:
-                effect = .loadInformer
-                
-            case .loader:
-                effect = .loader
-            }
-        }
-        
-        return (state, effect)
-    }
-    
-    func handleEffect(
-        _ effect: Effect.Demo,
-        _ dispatch: @escaping (Event.Demo) -> Void
-    ) {
-        switch effect {
-        case .loadAlert:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.alert))
-            }
-            
-        case .loadInformer:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.informer))
-            }
-            
-        case .loader:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.loader))
-            }
-        }
-    }
     
     // MARK: - Fast Payments Settings domain
     
@@ -397,6 +310,95 @@ private extension UserAccountViewModel {
         return (state, effect)
     }
     
+    func update(
+        _ state: State,
+        with response: Event.OTP.PrepareSetBankDefaultResponse
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.isLoading = false
+        effect = .fps(.resetStatus)
+        
+        switch response {
+        case .success:
+            let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
+            let cancellable = otpInputViewModel.$state
+                .compactMap(\.projection)
+                .removeDuplicates()
+                .map(Event.OTP.otpInput)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.otp($0))}
+            
+            state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
+            
+        case .connectivityError:
+            state.fpsDestination = nil
+#warning("direct change of state that is outside of reducer")
+            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            
+        case let .serverError(message):
+            state.alert = .fpsAlert(.error(
+                message: message,
+                event: .closeAlert
+            ))
+        }
+        
+        return (state, effect)
+    }
+
+    // MARK: - Demo Domain
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.Demo
+    ) -> (State, Effect.Demo?) {
+        
+        var state = state
+        var effect: Effect.Demo?
+        
+        switch event {
+        case let .loaded(loaded):
+            state.isLoading = false
+            
+            switch loaded {
+            case .alert:
+                state.alert = .alert(.error(event: .closeAlert))
+                
+            case .informer:
+#warning("direct change of state that is outside of reducer")
+                self.informer.set(text: "Demo informer here.")
+                
+            case .loader:
+                break
+            }
+            
+        case let .show(show):
+            state.isLoading = true
+            
+            switch show {
+            case .alert:
+                effect = .loadAlert
+                
+            case .informer:
+                effect = .loadInformer
+                
+            case .loader:
+                effect = .loader
+            }
+        }
+        
+        return (state, effect)
+    }
+}
+
+// MARK: - Effect Handling
+
+private extension UserAccountViewModel {
+    
+    // MARK: - OTP Effect Handling
+    
     func handleEffect(
         _ otpEffect: Effect.OTP,
         _ dispatch: @escaping (Event.OTP) -> Void
@@ -415,6 +417,33 @@ private extension UserAccountViewModel {
                 case let .failure(.serverError(message)):
                     dispatch(.prepareSetBankDefaultResponse(.serverError(message)))
                 }
+            }
+        }
+    }
+    
+    // MARK: - Demo Effect Handling
+    
+    func handleEffect(
+        _ effect: Effect.Demo,
+        _ dispatch: @escaping (Event.Demo) -> Void
+    ) {
+        switch effect {
+        case .loadAlert:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                dispatch(.loaded(.alert))
+            }
+            
+        case .loadInformer:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                dispatch(.loaded(.informer))
+            }
+            
+        case .loader:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                dispatch(.loaded(.loader))
             }
         }
     }
@@ -586,26 +615,6 @@ extension UserAccountViewModel {
             
             case prepareSetBankDefault
         }
-    }
-}
-
-// MARK: - Fast Payments Settings
-
-extension UserAccountViewModel {
-    
-#warning("move to `reduce`")
-    func openFastPaymentsSettings() {
-        
-        let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
-        let cancellable = fpsViewModel.$state
-            .removeDuplicates()
-            .map(Event.FastPaymentsSettings.updated)
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.fps($0)) }
-        
-        state.destination = .fastPaymentsSettings(fpsViewModel, cancellable)
-#warning("and change to effect (??) when moved to `reduce`")
-        fpsViewModel.event(.appear)
     }
 }
 
