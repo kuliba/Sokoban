@@ -137,8 +137,11 @@ extension UserAccountViewModel {
             scheduler: .makeMain()
         )
         
+        let userAccountDemoReducer = UserAccountDemoReducer()
+        
         let userAccountReducer = UserAccountReducer(
-            otpReduce: userAccountOTPReducer.reduce,
+            demoReduce: userAccountDemoReducer.reduce(_:_:_:),
+            otpReduce: userAccountOTPReducer.reduce(_:_:_:_:),
             factory: factory,
             scheduler: .makeMain()
         )

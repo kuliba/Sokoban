@@ -10,15 +10,18 @@ import UIPrimitives
 
 final class UserAccountReducer {
     
+    private let demoReduce: DemoReduce
     private let otpReduce: OTPReduce
     private let factory: Factory
     private let scheduler: AnySchedulerOfDispatchQueue
 
     init(
+        demoReduce: @escaping DemoReduce,
         otpReduce: @escaping OTPReduce,
         factory: Factory,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        self.demoReduce = demoReduce
         self.otpReduce = otpReduce
         self.factory = factory
         self.scheduler = scheduler
@@ -57,7 +60,7 @@ extension UserAccountReducer {
             state = .init()
             
         case let .demo(demoEvent):
-            let (demoState, demoEffect) = reduce(state, demoEvent, informer)
+            let (demoState, demoEffect) = demoReduce(state, demoEvent, informer)
             state = demoState
             effect = demoEffect.map(Effect.demo)
             
@@ -75,6 +78,8 @@ extension UserAccountReducer {
 extension UserAccountReducer {
     
     typealias Inform = (String) -> Void
+    
+    typealias DemoReduce = (State, Event.Demo, @escaping Inform) -> (State, Effect.Demo?)
     
     typealias OTPDispatch = (Event.OTP) -> Void
     typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
@@ -192,50 +197,6 @@ private extension UserAccountReducer {
         }
         
         return state
-    }
-    
-    // MARK: - Demo Domain
-    
-    func reduce(
-        _ state: State,
-        _ event: Event.Demo,
-        _ informer: @escaping (String) -> Void
-    ) -> (State, Effect.Demo?) {
-        
-        var state = state
-        var effect: Effect.Demo?
-        
-        switch event {
-        case let .loaded(loaded):
-            state.isLoading = false
-            
-            switch loaded {
-            case .alert:
-                state.alert = .alert(.error(event: .closeAlert))
-                
-            case .informer:
-                informer("Demo informer here.")
-                
-            case .loader:
-                break
-            }
-            
-        case let .show(show):
-            state.isLoading = true
-            
-            switch show {
-            case .alert:
-                effect = .loadAlert
-                
-            case .informer:
-                effect = .loadInformer
-                
-            case .loader:
-                effect = .loader
-            }
-        }
-        
-        return (state, effect)
     }
 }
 
