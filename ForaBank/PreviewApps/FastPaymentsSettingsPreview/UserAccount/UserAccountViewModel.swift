@@ -84,10 +84,10 @@ extension UserAccountViewModel {
     
     private var fpsViewModel: FastPaymentsSettingsViewModel? {
         
-        guard case let .fastPaymentsSettings(viewModel, _) = state.destination
+        guard case let .fastPaymentsSettings(route) = state.destination
         else { return nil }
         
-        return viewModel
+        return route.viewModel
     }
 }
 
@@ -105,7 +105,7 @@ extension UserAccountViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.fps($0)) }
         
-        state.destination = .fastPaymentsSettings(fpsViewModel, cancellable)
+        state.destination = .fastPaymentsSettings(.init(fpsViewModel, cancellable))
 #warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
     }
@@ -171,6 +171,8 @@ private extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
+    typealias State = Route
+    
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
     typealias Reduce = (State, Event, @escaping Inform, @escaping Dispatch) -> (State, Effect?)
@@ -191,42 +193,48 @@ extension UserAccountViewModel {
         case dismissRoute
         
         case demo(Demo)
-        
         case fps(FastPaymentsSettings)
-        
         case otp(OTP)
+    }
+}
+
+extension UserAccountViewModel.Event {
+    
+    enum Demo: Equatable {
         
-        enum Demo: Equatable {
-            
-            case loaded(Show)
-            case show(Show)
-            
-            enum Show: Equatable {
-                case alert
-                case informer
-                case loader
-            }
-        }
+        case loaded(Show)
+        case show(Show)
         
-        enum FastPaymentsSettings: Equatable {
-            
-            case updated(FastPaymentsSettingsState)
-        }
-        
-        enum OTP: Equatable {
-            
-            case otpInput(OTPInputStateProjection)
-            case prepareSetBankDefault
-            case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
-            
-            enum PrepareSetBankDefaultResponse: Equatable {
-                
-                case success
-                case connectivityError
-                case serverError(String)
-            }
+        enum Show: Equatable {
+            case alert
+            case informer
+            case loader
         }
     }
+    
+    enum FastPaymentsSettings: Equatable {
+        
+        case updated(FastPaymentsSettingsState)
+    }
+    
+    enum OTP: Equatable {
+        
+        case otpInput(OTPInputStateProjection)
+        case prepareSetBankDefault
+        case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
+        
+        enum PrepareSetBankDefaultResponse: Equatable {
+            
+            case success
+            case connectivityError
+            case serverError(String)
+        }
+    }
+}
+
+// MARK: - Effect
+
+extension UserAccountViewModel {
     
     enum Effect: Equatable {
         
@@ -252,56 +260,102 @@ extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
-    struct State: Equatable {
+    struct Route: Equatable {
         
         var destination: Destination?
-        var fpsDestination: FPSDestination?
         var alert: Alert?
-        var isLoading = false
+        var isLoading: Bool
         
         init(
             destination: Destination? = nil,
-            modal: Alert? = nil
+            modal: Alert? = nil,
+            isLoading: Bool = false
         ) {
             self.destination = destination
             self.alert = modal
+            self.isLoading = isLoading
         }
+    }
+}
+
+extension UserAccountViewModel.Route {
+    
+    typealias Event = UserAccountViewModel.Event
+    
+    enum Destination: Equatable {
         
-        enum Destination: Equatable {
-            
-            case fastPaymentsSettings(FastPaymentsSettingsViewModel, AnyCancellable)
+        case fastPaymentsSettings(FPSRoute)
+    }
+    
+    enum Alert: Equatable {
+        
+        case alert(AlertModelOf<Event>)
+    }
+}
+
+extension UserAccountViewModel {
+    
+    var alert: AlertModelOf<Event>? {
+        
+        if case let .alert(alert) = state.alert {
+            return alert
+        } else {
+            return nil
         }
+    }
+    
+    var fpsAlert: AlertModelOf<Event>? {
         
-        enum FPSDestination: Equatable {
-            
-            case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
+        guard case let .fastPaymentsSettings(fps) = state.destination
+        else { return nil }
+        
+        return fps.alert
+    }
+}
+
+extension UserAccountViewModel.State.Destination {
+    
+    struct FPSRoute {
+        
+        let viewModel: FastPaymentsSettingsViewModel
+        let cancellable: AnyCancellable
+        var destination: Destination?
+        var alert: Alert?
+        
+        init(
+            _ viewModel: FastPaymentsSettingsViewModel,
+            _ cancellable: AnyCancellable,
+            destination: Destination? = nil,
+            alert: Alert? = nil
+        ) {
+            self.viewModel = viewModel
+            self.cancellable = cancellable
+            self.destination = destination
+            self.alert = alert
+        }
+    }
+}
+
+extension UserAccountViewModel.State.Destination.FPSRoute {
+    
+    typealias Alert = AlertModelOf<UserAccountViewModel.Event>
+    
+    enum Destination: Equatable {
+        
+        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
 #warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
-            case c2BSub(GetC2BSubResponse, AnyCancellable?)
-        }
-        
-        enum Alert: Equatable {
-            
-            case alert(AlertModelOf<Event>)
-            case fpsAlert(AlertModelOf<Event>)
-            
-            var alert: AlertModelOf<Event>? {
-                
-                if case let .alert(alert) = self {
-                    return alert
-                } else {
-                    return nil
-                }
-            }
-            
-            var fpsAlert: AlertModelOf<Event>? {
-                
-                if case let .fpsAlert(fpsAlert) = self {
-                    return fpsAlert
-                } else {
-                    return nil
-                }
-            }
-        }
+        case c2BSub(GetC2BSubResponse, AnyCancellable?)
+    }
+}
+
+extension AlertModel: Hashable where PrimaryEvent: Equatable, SecondaryEvent: Equatable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -310,20 +364,35 @@ extension UserAccountViewModel.State.Destination: Hashable {
     static func == (lhs: Self, rhs: Self) -> Bool {
         
         switch (lhs, rhs) {
-        case let (.fastPaymentsSettings(lhs, _), .fastPaymentsSettings(rhs, _)):
-            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
+            lhs.hashValue == rhs.hashValue
         }
     }
     
     func hash(into hasher: inout Hasher) {
         switch self {
-        case let .fastPaymentsSettings(viewModel, _):
-            hasher.combine(ObjectIdentifier(viewModel))
+        case let .fastPaymentsSettings(route):
+            hasher.combine(route.hashValue)
         }
     }
 }
 
-extension UserAccountViewModel.State.FPSDestination: Hashable {
+extension UserAccountViewModel.State.Destination.FPSRoute: Hashable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        ObjectIdentifier(lhs.viewModel) == ObjectIdentifier(rhs.viewModel)
+        && lhs.destination == rhs.destination
+        && lhs.alert == rhs.alert
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(viewModel))
+        hasher.combine(destination)
+        hasher.combine(alert)
+    }
+}
+
+extension UserAccountViewModel.State.Destination.FPSRoute.Destination: Hashable {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
         
@@ -386,5 +455,30 @@ extension OTPInputState {
         case .validOTP:
             return .validOTP
         }
+    }
+}
+
+#warning("reuse generic route?")
+struct GRoute<ViewModel, Destination, Modal, Alert>
+where ViewModel: ObservableObject {
+    
+    let viewModel: ViewModel
+    let cancellable: AnyCancellable
+    var destination: Destination?
+    var modal: Modal?
+    var alert: Alert?
+    
+    init(
+        _ viewModel: ViewModel,
+        _ cancellable: AnyCancellable,
+        destination: Destination? = nil,
+        modal: Modal? = nil,
+        alert: Alert? = nil
+    ) {
+        self.viewModel = viewModel
+        self.cancellable = cancellable
+        self.destination = destination
+        self.modal = modal
+        self.alert = alert
     }
 }

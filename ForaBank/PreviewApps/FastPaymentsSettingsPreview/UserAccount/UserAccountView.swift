@@ -27,7 +27,7 @@ struct UserAccountView: View {
                 }
                 .alert(
                     item: .init(
-                        get: { viewModel.state.alert?.alert },
+                        get: { viewModel.alert },
                         set: { if $0 == nil { viewModel.event(.closeAlert) }}
                     ),
                     content: { .init(with: $0, event: viewModel.event) }
@@ -100,22 +100,23 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch destination {
-        case let .fastPaymentsSettings(fpsViewModel, _):
+        case let .fastPaymentsSettings(fps):
             FastPaymentsSettingsView(
-                viewModel: fpsViewModel,
+                viewModel: fps.viewModel,
                 config: .default
             )
             .alert(
                 item: .init(
-                    get: { viewModel.state.alert?.fpsAlert },
+                    get: { fps.alert },
                     // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                    // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                     set: { _ in }
                 ),
                 content: { .init(with: $0, event: viewModel.event) }
             )
             .navigationDestination(
                 item: .init(
-                    get: { viewModel.state.fpsDestination },
+                    get: { fps.destination },
                     set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                 ),
                 destination: fpsDestinationView
@@ -125,7 +126,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.State.FPSDestination
+        fpsDestination: UserAccountViewModel.State.Destination.FPSRoute.Destination
     ) -> some View {
         
         switch fpsDestination {

@@ -29,14 +29,30 @@ extension UserAccountFPSReducer {
         case let (.success(.contracted(contracted)), nil):
             state.isLoading = false
             let message = contracted.bankDefaultResponse.requestLimitMessage
-            state.alert = message.map { .fpsAlert(.error(
-                message: $0,
-                event: .closeAlert
-            )) }
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = message.map { .error(
+                    message: $0,
+                    event: .closeAlert
+                ) }
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
         case (.success(.missingContract), nil):
             state.isLoading = false
-            state.alert = .fpsAlert(.missingContract(event: .closeAlert))
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .missingContract(event: .closeAlert)
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
         case let (.success, .some(status)):
             state = update(state, with: status, inform)
@@ -46,14 +62,29 @@ extension UserAccountFPSReducer {
             switch failure {
             case let .serverError(message):
                 state.isLoading = false
-                state.alert = .fpsAlert(.error(
-                    message: message,
-                    event: .dismissRoute
-                ))
-                
+                #warning("add helpers- like mutating funcs")
+                switch state.destination {
+                case .none:
+                    break
+                    
+                case var .fastPaymentsSettings(fpsRoute):
+                    fpsRoute.alert = .error(
+                        message: message,
+                        event: .dismissRoute
+                    )
+                    state.destination = .fastPaymentsSettings(fpsRoute)
+                }
+
             case .connectivityError:
                 state.isLoading = false
-                state.alert = .fpsAlert(.tryAgainFPSAlert(.dismissRoute))
+                switch state.destination {
+                case .none:
+                    break
+                    
+                case var .fastPaymentsSettings(fpsRoute):
+                    fpsRoute.alert = .tryAgainFPSAlert(.dismissRoute)
+                    state.destination = .fastPaymentsSettings(fpsRoute)
+                }
             }
         }
         
@@ -86,36 +117,76 @@ private extension UserAccountFPSReducer {
             
         case let .getC2BSubResponse(getC2BSubResponse):
             state.isLoading = false
-            state.fpsDestination = .c2BSub(getC2BSubResponse, nil)
-            
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.destination = .c2BSub(getC2BSubResponse, nil)
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
+
         case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
-            state.alert = .fpsAlert(.tryAgainFPSAlert(.closeAlert))
-            
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .tryAgainFPSAlert(.closeAlert)
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
+
         case let .serverError(message):
             state.isLoading = false
             // non-final => closeAlert
-            state.alert = .fpsAlert(.ok(
-                message: message,
-                event: .closeAlert
-            ))
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .ok(
+                    message: message,
+                    event: .closeAlert
+                )
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
         case .missingProduct:
             state.isLoading = false
-            state.alert = .fpsAlert(.missingProduct(event: .dismissRoute))
-            
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .missingProduct(event: .dismissRoute)
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
+
         case .confirmSetBankDefault:
             // state.fpsDestination = .confirmSetBankDefault
             // effect = .fps(.resetStatus)
             fatalError("what should happen here?")
             
         case .setBankDefault:
-            state.alert = .fpsAlert(.setBankDefault(
-                primaryEvent: .otp(.prepareSetBankDefault),
-                secondaryEvent: .closeAlert
-            ))
-            
+            #warning("add helpers- like mutating funcs")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .setBankDefault(
+                    primaryEvent: .otp(.prepareSetBankDefault),
+                    secondaryEvent: .closeAlert
+                )
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
+
         case .setBankDefaultSuccess:
             state.isLoading = false
             inform("Банк по умолчанию установлен.")

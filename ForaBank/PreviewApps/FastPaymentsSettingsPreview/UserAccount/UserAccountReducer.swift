@@ -51,7 +51,15 @@ extension UserAccountReducer {
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-            state.fpsDestination = nil
+            #warning("make helpers")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.destination = nil
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
         case .dismissDestination:
             state.destination = nil

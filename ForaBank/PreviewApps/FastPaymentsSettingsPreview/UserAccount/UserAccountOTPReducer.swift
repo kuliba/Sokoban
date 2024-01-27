@@ -37,7 +37,15 @@ extension UserAccountOTPReducer {
         switch event {
         case let .otpInput(otpInput):
 #warning("move nullification to reducer where fps state is reduced")
-            state.fpsDestination = nil
+            #warning("add helpers")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.destination = nil
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
             switch otpInput {
             case let .failure(failure):
@@ -88,17 +96,39 @@ extension UserAccountOTPReducer {
                 .receive(on: scheduler)
                 .sink { dispatch($0) }
             
-            state.fpsDestination = .confirmSetBankDefault(otpInputViewModel, cancellable)
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.destination = .confirmSetBankDefault(otpInputViewModel, cancellable)
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
             
         case .connectivityError:
-            state.fpsDestination = nil
+            #warning("add helpers")
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.destination = nil
+                state.destination = .fastPaymentsSettings(fpsRoute)
+            }
+            
             inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.alert = .fpsAlert(.error(
-                message: message,
-                event: .closeAlert
-            ))
+            switch state.destination {
+            case .none:
+                break
+                
+            case var .fastPaymentsSettings(fpsRoute):
+                fpsRoute.alert = .error(
+                    message: message,
+                    event: .closeAlert
+                )
+            }
         }
         
         return (state, effect)
