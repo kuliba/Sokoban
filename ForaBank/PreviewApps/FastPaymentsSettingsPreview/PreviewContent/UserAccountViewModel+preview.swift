@@ -108,37 +108,46 @@ extension UserAccountViewModel {
             }
         }
         
+        let factory = Factory(
+            makeFastPaymentsSettingsViewModel: {
+                
+                .init(
+                    reducer: reducer,
+                    effectHandler: effectHandler,
+                    scheduler: $0
+                )
+            },
+            makeTimedOTPInputViewModel: {
+                
+                .init(
+                    viewModel: .default(
+                        initialState: initialState,
+                        duration: duration,
+                        length: length,
+                        initiateOTP: initiateOTP,
+                        submitOTP: submitOTP,
+                        scheduler: $0),
+                    scheduler: $0
+                )
+            }
+        )
+        
+        let userAccountReducer = UserAccountReducer(
+            factory: factory,
+            scheduler: .makeMain()
+        )
+        
         return .init(
-            route: state,
+            initialState: state,
+            reduce: userAccountReducer.reduce,
             prepareSetBankDefault: prepareSetBankDefault,
-            factory: .init(
-                makeFastPaymentsSettingsViewModel: {
-                    
-                    .init(
-                        reducer: reducer,
-                        effectHandler: effectHandler,
-                        scheduler: $0
-                    )
-                },
-                makeTimedOTPInputViewModel: {
-                    
-                    .init(
-                        viewModel: .default(
-                            initialState: initialState,
-                            duration: duration,
-                            length: length,
-                            initiateOTP: initiateOTP,
-                            submitOTP: submitOTP,
-                            scheduler: $0),
-                        scheduler: $0
-                    )
-                }
-            )
+            factory: factory
         )
     }
     
     static func preview(
         initialState: OTPInputState? = nil,
+        reduce: @escaping Reduce,
         duration: Int = 10,
         length: Int = 6,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
@@ -182,7 +191,8 @@ extension UserAccountViewModel {
         )
         
         return .init(
-            route: state,
+            initialState: state,
+            reduce: reduce,
             prepareSetBankDefault: prepareSetBankDefault,
             factory: .init(
                 makeFastPaymentsSettingsViewModel: {
