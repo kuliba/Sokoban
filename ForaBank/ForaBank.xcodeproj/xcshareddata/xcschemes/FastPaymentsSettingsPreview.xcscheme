@@ -57,7 +57,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:PreviewApps/FastPaymentsSettingsPreview/FastPaymentsSettingsPreview.xctestplan"
+            reference = "container:FastPaymentsSettingsPreview.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
