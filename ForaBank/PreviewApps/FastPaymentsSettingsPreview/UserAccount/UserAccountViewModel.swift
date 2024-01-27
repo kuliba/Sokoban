@@ -56,7 +56,7 @@ extension UserAccountViewModel {
     
     func event(_ event: Event) {
         
-        let (state, effect) = reduce(state, event)
+        let (state, effect) = reduce(state, event, informer.set(text:))
         stateSubject.send(state)
         
         if let effect {
@@ -119,7 +119,8 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: State,
-        _ event: Event
+        _ event: Event,
+        _ informer: @escaping (String) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -144,15 +145,15 @@ private extension UserAccountViewModel {
             state = .init()
             
         case let .demo(demoEvent):
-            let (demoState, demoEffect) = reduce(state, demoEvent)
+            let (demoState, demoEffect) = reduce(state, demoEvent, informer)
             state = demoState
             effect = demoEffect.map(Effect.demo)
             
         case let .fps(.updated(fpsState)):
-            state = reduce(state, with: fpsState)
+            state = reduce(state, with: fpsState, informer: informer)
             
         case let .otp(otp):
-            (state, effect) = reduce(state, with: otp)
+            (state, effect) = reduce(state, with: otp, informer)
         }
         
         return (state, effect)
@@ -165,7 +166,8 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: State,
-        with settings: FastPaymentsSettingsState
+        with settings: FastPaymentsSettingsState,
+        informer: @escaping (String) -> Void
     ) -> State {
         
         var state = state
@@ -190,7 +192,7 @@ private extension UserAccountViewModel {
             state.alert = .fpsAlert(.missingContract(event: .closeAlert))
             
         case let (.success, .some(status)):
-            state = update(state, with: status)
+            state = update(state, with: status, informer)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -213,7 +215,8 @@ private extension UserAccountViewModel {
     
     func update(
         _ state: State,
-        with status: FastPaymentsSettingsState.Status
+        with status: FastPaymentsSettingsState.Status,
+        _ informer: @escaping (String) -> Void
     ) -> State {
         
         var state = state
@@ -256,13 +259,11 @@ private extension UserAccountViewModel {
             
         case .setBankDefaultSuccess:
             state.isLoading = false
-#warning("direct change of state that is outside of reducer")
-            self.informer.set(text: "Банк по умолчанию установлен.")
+            informer("Банк по умолчанию установлен.")
             
         case .updateContractFailure:
             state.isLoading = false
-#warning("direct change of state that is outside of reducer")
-            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            informer("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             state = .init()
         }
         
@@ -273,7 +274,8 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: State,
-        with otp: UserAccountViewModel.Event.OTP
+        with otp: UserAccountViewModel.Event.OTP,
+        _ informer: @escaping (String) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -304,7 +306,7 @@ private extension UserAccountViewModel {
             effect = .otp(.prepareSetBankDefault)
             
         case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response)
+            (state, effect) = update(state, with: response, informer)
         }
         
         return (state, effect)
@@ -312,7 +314,8 @@ private extension UserAccountViewModel {
     
     func update(
         _ state: State,
-        with response: Event.OTP.PrepareSetBankDefaultResponse
+        with response: Event.OTP.PrepareSetBankDefaultResponse,
+        _ informer: @escaping (String) -> Void
     ) -> (State, Effect?) {
         
         var state = state
@@ -335,8 +338,7 @@ private extension UserAccountViewModel {
             
         case .connectivityError:
             state.fpsDestination = nil
-#warning("direct change of state that is outside of reducer")
-            self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            informer("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
             state.alert = .fpsAlert(.error(
@@ -352,7 +354,8 @@ private extension UserAccountViewModel {
     
     func reduce(
         _ state: State,
-        _ event: Event.Demo
+        _ event: Event.Demo,
+        _ informer: @escaping (String) -> Void
     ) -> (State, Effect.Demo?) {
         
         var state = state
@@ -367,8 +370,7 @@ private extension UserAccountViewModel {
                 state.alert = .alert(.error(event: .closeAlert))
                 
             case .informer:
-#warning("direct change of state that is outside of reducer")
-                self.informer.set(text: "Demo informer here.")
+                informer("Demo informer here.")
                 
             case .loader:
                 break
