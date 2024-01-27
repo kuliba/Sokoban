@@ -43,19 +43,20 @@ extension UserAccountOTPReducer {
             case let .failure(failure):
                 switch failure {
                 case .connectivityError:
-                    effect = .fps(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
+                    effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
                     
                 case let .serverError(message):
                     let tryAgain = "Введен некорректный код. Попробуйте еще раз"
                     if message == tryAgain {
-                        inform(message)
+                        effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+
                     } else {
-                        effect = .fps(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+                        effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
                     }
                 }
                 
             case .validOTP:
-                effect = .fps(.bankDefault(.setBankDefaultPrepared(nil)))
+                effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
             }
             
         case .prepareSetBankDefault:

@@ -117,6 +117,10 @@ private extension UserAccountFPSReducer {
                 secondaryEvent: .closeAlert
             )
             
+        case let .setBankDefaultFailure(message):
+            state.isLoading = false
+            inform(message)
+            
         case .setBankDefaultSuccess:
             state.isLoading = false
             inform("Банк по умолчанию установлен.")

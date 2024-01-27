@@ -225,32 +225,43 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     // MARK: - prepareSetBankDefault
     
-    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareNilFailureOnSuccess() {
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultSuccessFailureOnSuccess() {
         
         let (sut, _,_,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .bankDefault(.setBankDefaultPrepared(nil)), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: setBankDefaultSuccess(), on: {
             
             prepareSetBankDefaultSpy.complete(with: .success(()))
         })
     }
     
-    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareConnectivityFailureOnConnectivityError() {
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultIncorrectOTPOnServerErrorWithMessage() {
+        
+        let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+        let (sut, _,_,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
+        
+        expect(sut, with: .prepareSetBankDefault, toDeliver: setBankDefaultIncorrectOTP(), on: {
+            
+            prepareSetBankDefaultSpy.complete(with: .failure(.serverError(tryAgain)))
+        })
+    }
+    
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultConnectivityFailureOnConnectivityError() {
         
         let (sut, _,_,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .bankDefault(.setBankDefaultPrepared(.connectivityError)), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: setBankDefaultConnectivityError(), on: {
             
             prepareSetBankDefaultSpy.complete(with: .failure(.connectivityError))
         })
     }
     
-    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultPrepareServerErrorFailureOnServerError() {
+    func test_prepareSetBankDefault_shouldDeliverSetBankDefaultServerErrorFailureOnServerError() {
         
         let message = UUID().uuidString
         let (sut, _,_,_, prepareSetBankDefaultSpy, _,_) = makeSUT()
         
-        expect(sut, with: .prepareSetBankDefault, toDeliver: .bankDefault(.setBankDefaultPrepared(.serverError(message))), on: {
+        expect(sut, with: .prepareSetBankDefault, toDeliver: setBankDefaultServerError(message), on: {
             
             prepareSetBankDefaultSpy.complete(with: .failure(.serverError(message)))
         })
