@@ -25,6 +25,8 @@ class ProductData: Identifiable, Codable {
     private(set) var balance: Double?
     private(set) var balanceRub: Double?
     
+    private(set) var statusCard: CardStatementAPI.CardDynamicParams.StatusCard?
+    
     //TODO: Currency type??
     let currency: String // example: RUB
     
@@ -187,6 +189,7 @@ extension ProductData {
         self.balance = params.variableParams.balance?.doubleValue
         self.customName = params.variableParams.customName
         self.balanceRub = params.variableParams.balanceRub?.doubleValue
+        self.statusCard = params.variableParams.statusCardValue
     }
 }
 

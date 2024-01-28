@@ -2023,7 +2023,7 @@ extension ProductProfileViewModel {
     
     private func blockCard(with productData: ProductData?) {
         
-        guard let productData = productData else {
+        guard let productData = productData, let statusCard = productData.statusCard, statusCard == .active else {
             return
         }
         
@@ -2032,7 +2032,11 @@ extension ProductProfileViewModel {
     
     private func unblockCard(with productData: ProductData?) {
         
-        blockCard(with: productData)
+        guard let productData = productData, let statusCard = productData.statusCard, statusCard == .active else {
+            return
+        }
+        
+        alert = alertBlockedCard(with: productData)
     }
     
     private func checkCertificate(

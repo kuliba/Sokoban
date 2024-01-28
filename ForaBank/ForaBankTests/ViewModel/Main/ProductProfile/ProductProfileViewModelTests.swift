@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import CardStatementAPI
 import PinCodeUI
 import SberQR
 import SwiftUI
@@ -568,6 +569,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     private func makeSUT(
         status: ProductData.Status = .active,
         statusPC: ProductData.StatusPC = .active,
+        statusCard: CardStatementAPI.CardDynamicParams.StatusCard = .active,
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
@@ -576,12 +578,14 @@ final class ProductProfileViewModelTests: XCTestCase {
         model: Model
     ) {
         let model = Model.mockWithEmptyExcept()
-        model.products.value = [.card: [
-            ProductCardData(
+        let card: ProductCardData = ProductCardData(
                 status: status,
                 statusPc: statusPC
             )
-        ]]
+        #warning("remove after refactoring getProductListByType!!!")
+        card.update(with: .init(variableParams: .card(.init(statusCard: statusCard))))
+        
+        model.products.value = [ .card: [card]]
         
         let product = try XCTUnwrap(model.products.value[.card]?.first)
         
@@ -740,6 +744,14 @@ private extension ProductCardData {
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "")
+    }
+}
+
+private extension CardStatementAPI.CardDynamicParams {
+    
+    init(statusCard: StatusCard) {
+        
+        self.init(balance: .none, balanceRub: .none, customName: .none, availableExceedLimit: .none, status: "", debtAmount: .none, totalDebtAmount: .none, statusPc: "", statusCard: statusCard)
     }
 }
 

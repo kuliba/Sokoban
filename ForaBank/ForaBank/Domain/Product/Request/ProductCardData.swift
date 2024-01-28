@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CardStatementAPI
 
 class ProductCardData: ProductData {
 
@@ -54,7 +55,7 @@ class ProductCardData: ProductData {
         case accountId = "accountID"
         case externalId = "externalID"
         case statusPc = "statusPC"
-        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain
+        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain, statusCard
     }
     
     required init(from decoder: Decoder) throws {
@@ -257,11 +258,20 @@ extension ProductCardData {
 
         return true
     }
-  
-    
-    var isCanBeUnblocked: Bool {
 
-        return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
+    var isCanBeBlocked: Bool {
+
+        return productType == .card && statusCard == .active
+    }
+
+    var isBeUnblockedAvailable: Bool {
+
+        return productType == .card && statusCard == .blockedUlockAvailable
+    }
+
+    var isBeUnblockedNotAvailable: Bool {
+
+        return productType == .card && statusCard == .blockedUlockNotAvailable
     }
     
     var isCreditCard: Bool {
@@ -287,4 +297,30 @@ extension ProductCardData.LoanBaseParamInfoData {
     }
     var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
     var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
+}
+
+private extension ProductCardData {
+    
+    enum StatusCard: String, Equatable, Decodable {
+        
+        case active = "ACTIVE"
+        case blockedUlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
+        case blockedUlockNotAvailable = "BLOCKED_UNLOCK_NOT_AVAILABLE"
+        case notActivated = "NOT_ACTIVE"
+        
+        var value: CardStatementAPI.CardDynamicParams.StatusCard {
+            
+            switch self {
+                
+            case .active:
+                return .active
+            case .blockedUlockAvailable:
+                return .blockedUlockAvailable
+            case .blockedUlockNotAvailable:
+                return .blockedUlockNotAvailable
+            case .notActivated:
+                return .notActivated
+            }
+        }
+    }
 }

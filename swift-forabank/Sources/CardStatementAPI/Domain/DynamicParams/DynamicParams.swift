@@ -58,5 +58,15 @@ public extension DynamicParams {
                 return value.customName
             }
         }
+        
+        public var statusCardValue: CardDynamicParams.StatusCard? {
+            switch self {
+                
+            case .account, .depositOrLoan:
+                return .none
+            case let .card(value):
+                return value.statusCard
+            }
+        }
     }
 }
