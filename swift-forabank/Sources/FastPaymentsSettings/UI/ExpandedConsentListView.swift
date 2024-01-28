@@ -1,11 +1,10 @@
 //
 //  ExpandedConsentListView.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-import FastPaymentsSettings
 import SwiftUI
 
 struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
@@ -121,7 +120,9 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     private func applyButton() -> some View {
         
         Button("Применить") { event(.applyConsent) }
-            .buttonStyle(.borderedProminent)
+            .padding()
+            .background(Color.gray.opacity(0.4))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

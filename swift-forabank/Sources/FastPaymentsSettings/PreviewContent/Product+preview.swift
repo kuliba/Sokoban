@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-import FastPaymentsSettings
 import Foundation
 
-extension Product {
+public extension Product {
     
     static let card: Self = _product(
         id: .init(generateRandom11DigitNumber()),

@@ -1,18 +1,23 @@
 //
 //  Config.swift
-//  ForaBank
+//  
 //
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
 import ProductSelectComponent
 
-struct FastPaymentsSettingsConfig {
+public struct FastPaymentsSettingsConfig {
     
-    let productSelect: ProductSelectConfig
+    public let productSelect: ProductSelectConfig
+    
+    public init(productSelect: ProductSelectConfig) {
+     
+        self.productSelect = productSelect
+    }
 }
 
-extension FastPaymentsSettingsConfig {
+public extension FastPaymentsSettingsConfig {
     
     var activeContract: ActiveContractConfig {
         

@@ -110,36 +110,39 @@ extension UserAccountViewModel {
             }
         }
         
-        let factory = Factory(
-            makeFastPaymentsSettingsViewModel: {
-                
-                .init(
-                    reducer: reducer,
-                    effectHandler: effectHandler,
-                    scheduler: $0
-                )
-            },
-            makeTimedOTPInputViewModel: {
-                
-                .init(
-                    viewModel: .default(
-                        initialState: initialState,
-                        duration: duration,
-                        length: length,
-                        initiateOTP: initiateOTP,
-                        submitOTP: submitOTP,
-                        scheduler: $0),
-                    scheduler: $0
-                )
-            }
-        )
+        typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
+        typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+        
+        let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel = {
+            
+            .init(
+                reducer: reducer,
+                effectHandler: effectHandler,
+                scheduler: $0
+            )
+        }
+        
+        let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel = {
+            
+            .init(
+                viewModel: .default(
+                    initialState: initialState,
+                    duration: duration,
+                    length: length,
+                    initiateOTP: initiateOTP,
+                    submitOTP: submitOTP,
+                    scheduler: $0),
+                scheduler: $0
+            )
+        }
+        
         
         let userAccountNavigationDemoReducer = UserAccountNavigationDemoReducer()
         
         let userAccountNavigationFPSReducer = UserAccountNavigationFPSReducer()
         
         let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer(
-            makeTimedOTPInputViewModel: factory.makeTimedOTPInputViewModel,
+            makeTimedOTPInputViewModel: makeTimedOTPInputViewModel,
             scheduler: scheduler
         )
         
@@ -158,7 +161,7 @@ extension UserAccountViewModel {
             initialState: state,
             reduce: userAccountNavigationReducer.reduce(_:_:_:_:),
             handleOTPEffect: userAccountNavigationOTPEffectHandler.handleEffect(_:dispatch:),
-            makeFastPaymentsSettingsViewModel: factory.makeFastPaymentsSettingsViewModel,
+            makeFastPaymentsSettingsViewModel: makeFastPaymentsSettingsViewModel,
             scheduler: scheduler
         )
     }

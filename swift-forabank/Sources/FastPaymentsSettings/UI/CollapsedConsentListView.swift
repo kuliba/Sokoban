@@ -1,11 +1,10 @@
 //
 //  CollapsedConsentListView.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
-import FastPaymentsSettings
 import SwiftUI
 
 struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {

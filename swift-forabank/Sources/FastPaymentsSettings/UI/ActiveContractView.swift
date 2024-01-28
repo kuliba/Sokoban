@@ -1,11 +1,10 @@
 //
 //  ActiveContractView.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 12.01.2024.
 //
 
-import FastPaymentsSettings
 import PaymentComponents
 import SwiftUI
 
@@ -53,7 +52,7 @@ struct ActiveContractView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(.thinMaterial)
+                .background(Color.gray.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 9))
                 .padding(.horizontal)
             }

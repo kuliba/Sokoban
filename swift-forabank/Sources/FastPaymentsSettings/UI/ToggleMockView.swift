@@ -1,6 +1,6 @@
 //
 //  ToggleMockView.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 18.01.2024.
 //
@@ -10,21 +10,21 @@ import SwiftUI
 struct ToggleMockView: View {
     
     let status: Status
-    var hight: CGFloat = 24
+    var height: CGFloat = 24
     var padding: CGFloat = 6
     
     var body: some View {
         
         Capsule(style: .continuous)
             .strokeBorder(color)
-            .frame(width: hight * 2 + padding, height: hight + padding)
-            .overlay(alignment: alignment) {
-                
-                color
-                    .clipShape(.circle)
-                    .frame(width: hight, height: hight)
-                    .padding(padding)
-            }
+            .frame(width: height * 2 + padding, height: height + padding)
+            .overlay(
+                Circle()
+                    .fill(color)
+                    .frame(width: height, height: height)
+                    .padding(padding),
+                alignment: alignment
+            )
     }
     
     var color: Color {
@@ -68,6 +68,6 @@ struct ToggleMockView_Previews: PreviewProvider {
         height: CGFloat = 24
     ) -> some View {
         
-        ToggleMockView(status: status, hight: height)
+        ToggleMockView(status: status, height: height)
     }
 }

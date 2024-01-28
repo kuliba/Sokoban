@@ -105,7 +105,7 @@ struct UserAccountView: View {
         case let .fastPaymentsSettings(fps):
             FastPaymentsSettingsWrapperView(
                 viewModel: fps.viewModel,
-                config: .default
+                config: .preview
             )
             .alert(
                 item: .init(

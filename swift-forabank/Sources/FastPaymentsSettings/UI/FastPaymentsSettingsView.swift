@@ -1,20 +1,29 @@
 //
 //  FastPaymentsSettingsView.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
-import FastPaymentsSettings
 import SwiftUI
 
-struct FastPaymentsSettingsView: View {
+public struct FastPaymentsSettingsView: View {
     
     let settingsResult: UserPaymentSettingsResult?
     let event: (FastPaymentsSettingsEvent) -> Void
     let config: FastPaymentsSettingsConfig
     
-    var body: some View {
+    public init(
+        settingsResult: UserPaymentSettingsResult?,
+        event: @escaping (FastPaymentsSettingsEvent) -> Void,
+        config: FastPaymentsSettingsConfig
+    ) {
+        self.settingsResult = settingsResult
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         switch settingsResult {
         case .none, .failure:
