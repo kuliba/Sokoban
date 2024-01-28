@@ -13,6 +13,8 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     let collapsed: ConsentListState.UIState.Collapsed
     let icon: () -> Icon
     let expandButton: () -> ExpandButton
+    let namespace: Namespace.ID
+    let anchor: UnitPoint
     
     var body: some View {
         
@@ -31,6 +33,12 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
+            .matchedGeometryEffect(
+                id: Match.toggle,
+                in: namespace,
+                properties: .size,
+                anchor: anchor
+            )
         }
     }
 }

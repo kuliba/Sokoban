@@ -8,11 +8,19 @@
 import FastPaymentsSettings
 import SwiftUI
 
+enum Match {
+    
+    case toggle
+}
+
 struct ConsentListView: View {
     
     let state: ConsentListState.UIState
     let event: (ConsentListEvent) -> Void
     
+    @Namespace private var animationNamespace
+    private let anchor: UnitPoint = .top
+
     var body: some View {
         
         Group {
@@ -32,7 +40,7 @@ struct ConsentListView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .animation(.easeInOut, value: state)
+        .animation(.easeInOut, value: chevronRotationAngle)
     }
     
     private func toggleButton() -> some View {
@@ -81,7 +89,9 @@ struct ConsentListView: View {
         CollapsedConsentListView(
             collapsed: collapsed,
             icon: icon,
-            expandButton: toggleButton
+            expandButton: toggleButton, 
+            namespace: animationNamespace,
+            anchor: anchor
         )
     }
     
@@ -95,7 +105,9 @@ struct ConsentListView: View {
                 expanded: expanded,
                 event: event,
                 icon: icon,
-                collapseButton: toggleButton
+                collapseButton: toggleButton,
+                namespace: animationNamespace,
+                anchor: anchor
             )
         }
     }

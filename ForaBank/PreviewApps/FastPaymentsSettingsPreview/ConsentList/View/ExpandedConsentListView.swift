@@ -14,6 +14,8 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     let event: (ConsentListEvent) -> Void
     let icon: () -> Icon
     let collapseButton: () -> CollapseButton
+    let namespace: Namespace.ID
+    let anchor: UnitPoint
     
     var body: some View {
         
@@ -33,6 +35,13 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             header()
             
             bankList()
+                .matchedGeometryEffect(
+                    id: Match.toggle,
+                    in: namespace,
+                    properties: .size,
+                    anchor: anchor,
+                    isSource: false
+                )
         }
     }
     
@@ -54,7 +63,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     private func textField() -> some View {
         
         TextField(
-            "Search Banks",
+            "Поиск по банкам",
             text: .init(
                 get: { expanded.searchText },
                 set: { event(.search($0)) }
@@ -97,7 +106,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             Text(bank.name)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .animation(.default, value: bank)
+        .animation(.easeInOut(duration: 0.2), value: bank.isSelected)
     }
     
     private func bankIcon(
