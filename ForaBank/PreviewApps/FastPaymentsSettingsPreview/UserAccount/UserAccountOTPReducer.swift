@@ -35,47 +35,69 @@ extension UserAccountOTPReducer {
         var effect: Effect?
         
         switch event {
-        case let .otpInput(otpInput):            
-            switch otpInput {
-            case let .failure(failure):
-            #warning("extract to helper")
-                state.isLoading = false
-                state.fpsRoute?.destination = nil
-                switch failure {
-                case .connectivityError:
-                    effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
-                    
-                case let .serverError(message):
-                    let tryAgain = "Введен некорректный код. Попробуйте еще раз"
-                    if message == tryAgain {
-                        effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
-
-                    } else {
-                        effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
-                    }
-                }
-                
-            case .inflight:
-                state.isLoading = true
-                
-            case .validOTP:
-                state.isLoading = false
-                effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
-            }
+        case let .otpInput(otpInput):
+            (state, effect) = reduce(state, otpInput)
             
         case .prepareSetBankDefault:
-            #warning("extract to helper")
-            #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
-            guard state.fpsRoute != nil,
-                  state.fpsRoute?.destination == nil
-                  // state.fpsRoute?.alert == nil
-            else { break }
-            
-            state.isLoading = true
-            effect = .otp(.prepareSetBankDefault)
+            (state, effect) = prepareSetBankDefault(state)
             
         case let .prepareSetBankDefaultResponse(response):
             (state, effect) = update(state, with: response, inform, dispatch)
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ otpInput: OTPInputStateProjection
+    ) -> (State, Effect?) {
+
+        var state = state
+        var effect: Effect?
+        
+        switch otpInput {
+        case let .failure(failure):
+        #warning("extract to helper")
+            state.isLoading = false
+            state.fpsRoute?.destination = nil
+            switch failure {
+            case .connectivityError:
+                effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
+                
+            case let .serverError(message):
+                let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+                if message == tryAgain {
+                    effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+
+                } else {
+                    effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
+                }
+            }
+            
+        case .inflight:
+            state.isLoading = true
+            
+        case .validOTP:
+            state.isLoading = false
+            effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
+        }
+        return (state, effect)
+    }
+    
+    func prepareSetBankDefault(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
+        if state.fpsRoute != nil,
+           state.fpsRoute?.destination == nil {
+            
+            state.isLoading = true
+            effect = .otp(.prepareSetBankDefault)
         }
         
         return (state, effect)
