@@ -448,7 +448,7 @@ private extension FlowStubSettingsView.GetSettings {
         case let .success(.contracted(contractDetails)):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
-                self = .active
+                self = contractDetails.bankDefaultResponse.requestLimitMessage == nil ? .active : .limit
                 
             case .inactive:
                 self = .inactive
