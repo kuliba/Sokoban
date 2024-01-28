@@ -11,10 +11,10 @@ extension AlertModel
 where PrimaryEvent == UserAccountViewModel.Event,
       SecondaryEvent == UserAccountViewModel.Event {
     
-    static func `default`(
+    private static func `default`(
         title: String,
         message: String?,
-        event: PrimaryEvent,
+        primaryEvent: PrimaryEvent,
         secondaryEvent: SecondaryEvent? = nil
     ) -> Self {
         
@@ -24,7 +24,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: event
+                event: primaryEvent
             ),
             secondaryButton: secondaryEvent.map {
                 
@@ -45,7 +45,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         .default(
             title: "Ошибка",
             message: message,
-            event: event
+            primaryEvent: event
         )
     }
     
@@ -56,7 +56,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         .default(
             title: "Не найден договор СБП",
             message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-            event: event
+            primaryEvent: event
         )
     }
     
@@ -67,7 +67,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         .default(
             title: "Сервис не доступен",
             message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-            event: event
+            primaryEvent: event
         )
     }
     
@@ -79,7 +79,7 @@ where PrimaryEvent == UserAccountViewModel.Event,
         .default(
             title: "Внимание",
             message: "Фора-банк будет выбран банком по умолчанию",
-            event: event,
+            primaryEvent: event,
             secondaryEvent: secondaryEvent
         )
     }
