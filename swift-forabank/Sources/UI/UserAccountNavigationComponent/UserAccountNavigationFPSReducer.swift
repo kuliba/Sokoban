@@ -1,5 +1,5 @@
 //
-//  UserAccountFPSReducer.swift
+//  UserAccountNavigationFPSReducer.swift
 //
 //
 //  Created by Igor Malyarov on 27.01.2024.
@@ -7,12 +7,12 @@
 
 import FastPaymentsSettings
 
-public final class UserAccountFPSReducer {
+public final class UserAccountNavigationFPSReducer {
     
     public init() {}
 }
 
-public extension UserAccountFPSReducer {
+public extension UserAccountNavigationFPSReducer {
     
     func reduce(
         _ state: State,
@@ -64,7 +64,7 @@ public extension UserAccountFPSReducer {
     }
 }
 
-public extension UserAccountFPSReducer {
+public extension UserAccountNavigationFPSReducer {
     
     typealias Inform = (String) -> Void
     
@@ -73,7 +73,7 @@ public extension UserAccountFPSReducer {
     typealias Effect = UserAccountNavigation.Effect
 }
 
-private extension UserAccountFPSReducer {
+private extension UserAccountNavigationFPSReducer {
     
     func update(
         _ state: State,

@@ -1,5 +1,5 @@
 //
-//  UserAccountReducer.swift
+//  UserAccountNavigationReducer.swift
 //
 //
 //  Created by Igor Malyarov on 27.01.2024.
@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import UIPrimitives
 
-public final class UserAccountReducer {
+public final class UserAccountNavigationReducer {
     
     private let demoReduce: DemoReduce
     private let fpsReduce: FPSReduce
@@ -28,7 +28,7 @@ public final class UserAccountReducer {
     }
 }
 
-public extension UserAccountReducer {
+public extension UserAccountNavigationReducer {
     
     /// `dispatch` is used in `sink`
     func reduce(
@@ -78,7 +78,7 @@ public extension UserAccountReducer {
     }
 }
 
-public extension UserAccountReducer {
+public extension UserAccountNavigationReducer {
     
     typealias Inform = (String) -> Void
     

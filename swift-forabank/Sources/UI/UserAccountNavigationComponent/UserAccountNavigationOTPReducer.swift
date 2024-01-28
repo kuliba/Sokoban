@@ -1,5 +1,5 @@
 //
-//  UserAccountOTPReducer.swift
+//  UserAccountNavigationOTPReducer.swift
 //  
 //
 //  Created by Igor Malyarov on 27.01.2024.
@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import OTPInputComponent
 
-public final class UserAccountOTPReducer {
+public final class UserAccountNavigationOTPReducer {
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     private let scheduler: AnySchedulerOfDispatchQueue
@@ -22,7 +22,7 @@ public final class UserAccountOTPReducer {
     }
 }
 
-public extension UserAccountOTPReducer {
+public extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: State,
@@ -49,7 +49,7 @@ public extension UserAccountOTPReducer {
     }
 }
 
-public extension UserAccountOTPReducer {
+public extension UserAccountNavigationOTPReducer {
     
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
@@ -61,7 +61,7 @@ public extension UserAccountOTPReducer {
     typealias Effect = UserAccountNavigation.Effect
 }
 
-private extension UserAccountOTPReducer {
+private extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: State,

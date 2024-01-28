@@ -1,5 +1,5 @@
 //
-//  UserAccountDemoReducer.swift
+//  UserAccountNavigationDemoReducer.swift
 //  
 //
 //  Created by Igor Malyarov on 27.01.2024.
@@ -7,12 +7,12 @@
 
 import FastPaymentsSettings
 
-public final class UserAccountDemoReducer {
+public final class UserAccountNavigationDemoReducer {
     
     public init() {}
 }
 
-public extension UserAccountDemoReducer {
+public extension UserAccountNavigationDemoReducer {
     
     func reduce(
         _ state: State,
@@ -60,7 +60,7 @@ public extension UserAccountDemoReducer {
     }
 }
 
-public extension UserAccountDemoReducer {
+public extension UserAccountNavigationDemoReducer {
     
     typealias Inform = (String) -> Void
     

@@ -1,5 +1,5 @@
 //
-//  UserAccountOTPEffectHandler.swift
+//  UserAccountNavigationOTPEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 28.01.2024.
@@ -7,7 +7,7 @@
 
 import FastPaymentsSettings
 
-public final class UserAccountOTPEffectHandler {
+public final class UserAccountNavigationOTPEffectHandler {
     
     private let prepareSetBankDefault: PrepareSetBankDefault
     
@@ -18,7 +18,7 @@ public final class UserAccountOTPEffectHandler {
     }
 }
 
-public extension UserAccountOTPEffectHandler {
+public extension UserAccountNavigationOTPEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -43,7 +43,7 @@ public extension UserAccountOTPEffectHandler {
     }
 }
 
-public extension UserAccountOTPEffectHandler {
+public extension UserAccountNavigationOTPEffectHandler {
     
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
 

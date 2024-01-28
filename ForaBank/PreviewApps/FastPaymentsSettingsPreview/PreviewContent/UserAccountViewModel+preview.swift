@@ -134,30 +134,30 @@ extension UserAccountViewModel {
             }
         )
         
-        let userAccountDemoReducer = UserAccountDemoReducer()
+        let userAccountNavigationDemoReducer = UserAccountNavigationDemoReducer()
         
-        let userAccountFPSReducer = UserAccountFPSReducer()
+        let userAccountNavigationFPSReducer = UserAccountNavigationFPSReducer()
         
-        let userAccountOTPReducer = UserAccountOTPReducer(
+        let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer(
             makeTimedOTPInputViewModel: factory.makeTimedOTPInputViewModel,
             scheduler: scheduler
         )
         
-        let userAccountReducer = UserAccountReducer(
-            demoReduce: userAccountDemoReducer.reduce(_:_:_:),
-            fpsReduce: userAccountFPSReducer.reduce(_:_:_:),
-            otpReduce: userAccountOTPReducer.reduce(_:_:_:_:),
+        let userAccountNavigationReducer = UserAccountNavigationReducer(
+            demoReduce: userAccountNavigationDemoReducer.reduce(_:_:_:),
+            fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:_:),
+            otpReduce: userAccountNavigationOTPReducer.reduce(_:_:_:_:),
             scheduler: .makeMain()
         )
         
-        let userAccountOTPEffectHandler = UserAccountOTPEffectHandler(
+        let userAccountNavigationOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
             prepareSetBankDefault: prepareSetBankDefault
         )
         
         return .init(
             initialState: state,
-            reduce: userAccountReducer.reduce(_:_:_:_:),
-            handleOTPEffect: userAccountOTPEffectHandler.handleEffect(_:dispatch:),
+            reduce: userAccountNavigationReducer.reduce(_:_:_:_:),
+            handleOTPEffect: userAccountNavigationOTPEffectHandler.handleEffect(_:dispatch:),
             makeFastPaymentsSettingsViewModel: factory.makeFastPaymentsSettingsViewModel,
             scheduler: scheduler
         )
@@ -209,7 +209,7 @@ extension UserAccountViewModel {
             updateProduct: updateProduct
         )
         
-        let userAccountOTPEffectHandler = UserAccountOTPEffectHandler(
+        let userAccountOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
             prepareSetBankDefault: prepareSetBankDefault
         )
         
