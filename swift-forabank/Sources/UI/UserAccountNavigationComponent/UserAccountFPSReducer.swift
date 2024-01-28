@@ -1,16 +1,18 @@
 //
 //  UserAccountFPSReducer.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 27.01.2024.
 //
 
 import FastPaymentsSettings
-import UserAccountNavigationComponent
 
-final class UserAccountFPSReducer {}
+public final class UserAccountFPSReducer {
+    
+    public init() {}
+}
 
-extension UserAccountFPSReducer {
+public extension UserAccountFPSReducer {
     
     func reduce(
         _ state: State,
@@ -45,7 +47,7 @@ extension UserAccountFPSReducer {
         case let (.failure(failure), _):
             // final => dismissRoute
             state.isLoading = false
-
+            
             switch failure {
             case let .serverError(message):
                 state.fpsRoute?.alert = .error(
@@ -62,7 +64,7 @@ extension UserAccountFPSReducer {
     }
 }
 
-extension UserAccountFPSReducer {
+public extension UserAccountFPSReducer {
     
     typealias Inform = (String) -> Void
     
@@ -122,13 +124,13 @@ private extension UserAccountFPSReducer {
             state.isLoading = false
             state.fpsRoute?.destination = nil
             inform(message)
-            #warning("effect = .fps(.resetStatus)")
+#warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
             state.fpsRoute?.destination = nil
             inform("Банк по умолчанию установлен.")
-            #warning("effect = .fps(.resetStatus)")
+#warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
             state.isLoading = false

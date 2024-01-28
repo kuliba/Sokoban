@@ -1,20 +1,19 @@
 //
 //  UserAccountOTPReducer.swift
-//  FastPaymentsSettingsPreview
+//  
 //
 //  Created by Igor Malyarov on 27.01.2024.
 //
 
 import FastPaymentsSettings
 import OTPInputComponent
-import UserAccountNavigationComponent
 
-final class UserAccountOTPReducer {
+public final class UserAccountOTPReducer {
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     private let scheduler: AnySchedulerOfDispatchQueue
     
-    init(
+    public init(
         makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
@@ -23,7 +22,7 @@ final class UserAccountOTPReducer {
     }
 }
 
-extension UserAccountOTPReducer {
+public extension UserAccountOTPReducer {
     
     func reduce(
         _ state: State,
@@ -50,7 +49,7 @@ extension UserAccountOTPReducer {
     }
 }
 
-extension UserAccountOTPReducer {
+public extension UserAccountOTPReducer {
     
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void

@@ -1,22 +1,21 @@
 //
 //  UserAccountReducer.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 27.01.2024.
 //
 
 import FastPaymentsSettings
 import UIPrimitives
-import UserAccountNavigationComponent
 
-final class UserAccountReducer {
+public final class UserAccountReducer {
     
     private let demoReduce: DemoReduce
     private let fpsReduce: FPSReduce
     private let otpReduce: OTPReduce
     private let scheduler: AnySchedulerOfDispatchQueue
     
-    init(
+    public init(
         demoReduce: @escaping DemoReduce,
         fpsReduce: @escaping FPSReduce,
         otpReduce: @escaping OTPReduce,
@@ -29,7 +28,7 @@ final class UserAccountReducer {
     }
 }
 
-extension UserAccountReducer {
+public extension UserAccountReducer {
     
     /// `dispatch` is used in `sink`
     func reduce(
@@ -79,7 +78,7 @@ extension UserAccountReducer {
     }
 }
 
-extension UserAccountReducer {
+public extension UserAccountReducer {
     
     typealias Inform = (String) -> Void
     

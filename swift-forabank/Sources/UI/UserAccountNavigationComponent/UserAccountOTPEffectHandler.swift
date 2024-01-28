@@ -1,25 +1,24 @@
 //
 //  UserAccountOTPEffectHandler.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
 import FastPaymentsSettings
-import UserAccountNavigationComponent
 
-final class UserAccountOTPEffectHandler {
+public final class UserAccountOTPEffectHandler {
     
     private let prepareSetBankDefault: PrepareSetBankDefault
     
-    init(
+    public init(
         prepareSetBankDefault: @escaping PrepareSetBankDefault
     ) {
         self.prepareSetBankDefault = prepareSetBankDefault
     }
 }
 
-extension UserAccountOTPEffectHandler {
+public extension UserAccountOTPEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -44,7 +43,7 @@ extension UserAccountOTPEffectHandler {
     }
 }
 
-extension UserAccountOTPEffectHandler {
+public extension UserAccountOTPEffectHandler {
     
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
 

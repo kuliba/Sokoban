@@ -6,11 +6,13 @@
 //
 
 import FastPaymentsSettings
-import UserAccountNavigationComponent
 
-final class UserAccountDemoReducer {}
+public final class UserAccountDemoReducer {
+    
+    public init() {}
+}
 
-extension UserAccountDemoReducer {
+public extension UserAccountDemoReducer {
     
     func reduce(
         _ state: State,
@@ -58,7 +60,7 @@ extension UserAccountDemoReducer {
     }
 }
 
-extension UserAccountDemoReducer {
+public extension UserAccountDemoReducer {
     
     typealias Inform = (String) -> Void
     
