@@ -1,6 +1,6 @@
 //
-//  UserAccountViewModel.Event.swift
-//  
+//  UserAccountNavigation+Event.swift
+//
 //
 //  Created by Igor Malyarov on 28.01.2024.
 //
@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import OTPInputComponent
 
-extension UserAccountViewModel {
+extension UserAccountNavigation {
     
     enum Event: Equatable {
         
@@ -24,7 +24,7 @@ extension UserAccountViewModel {
     }
 }
 
-extension UserAccountViewModel.Event {
+extension UserAccountNavigation.Event {
     
     enum Demo: Equatable {
         

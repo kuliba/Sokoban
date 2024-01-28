@@ -62,6 +62,6 @@ extension UserAccountDemoReducer {
     typealias Inform = (String) -> Void
     
     typealias State = UserAccountViewModel.State
-    typealias Event = UserAccountViewModel.Event.Demo
+    typealias Event = UserAccountNavigation.Event.Demo
     typealias Effect = UserAccountNavigation.Effect.Demo
 }

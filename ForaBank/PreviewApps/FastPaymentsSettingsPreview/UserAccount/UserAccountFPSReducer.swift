@@ -66,7 +66,7 @@ extension UserAccountFPSReducer {
     typealias Inform = (String) -> Void
     
     typealias State = UserAccountViewModel.State
-    typealias Event = UserAccountViewModel.Event
+    typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect
 }
 

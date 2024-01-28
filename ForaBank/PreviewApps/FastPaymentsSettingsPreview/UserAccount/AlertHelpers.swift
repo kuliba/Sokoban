@@ -8,8 +8,8 @@
 import UIPrimitives
 
 extension AlertModel
-where PrimaryEvent == UserAccountViewModel.Event,
-      SecondaryEvent == UserAccountViewModel.Event {
+where PrimaryEvent == UserAccountNavigation.Event,
+      SecondaryEvent == UserAccountNavigation.Event {
     
     private static func `default`(
         title: String,

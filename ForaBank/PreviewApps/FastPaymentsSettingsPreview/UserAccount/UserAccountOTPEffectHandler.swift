@@ -48,5 +48,5 @@ extension UserAccountOTPEffectHandler {
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
 
     typealias Effect = UserAccountNavigation.Effect.OTP
-    typealias Event = UserAccountViewModel.Event.OTP
+    typealias Event = UserAccountNavigation.Event.OTP
 }

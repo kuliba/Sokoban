@@ -57,7 +57,7 @@ extension UserAccountOTPReducer {
     typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     
     typealias State = UserAccountViewModel.State
-    typealias Event = UserAccountViewModel.Event.OTP
+    typealias Event = UserAccountNavigation.Event.OTP
     typealias Effect = UserAccountNavigation.Effect
 }
 

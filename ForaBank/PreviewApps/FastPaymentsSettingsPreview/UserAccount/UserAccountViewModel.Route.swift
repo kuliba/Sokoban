@@ -32,7 +32,7 @@ extension UserAccountViewModel {
 
 extension UserAccountViewModel.Route {
     
-    typealias Event = UserAccountViewModel.Event
+    typealias Event = UserAccountNavigation.Event
     
     enum Destination: Equatable {
         
@@ -47,7 +47,7 @@ extension UserAccountViewModel.Route {
 
 extension UserAccountViewModel.Route.Destination {
     
-    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountViewModel.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountViewModel.Event>>
+    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountViewModel.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
     
     enum FPSDestination: Equatable {
         

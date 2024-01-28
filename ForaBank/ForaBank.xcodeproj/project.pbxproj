@@ -563,7 +563,7 @@
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
 		2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */; };
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
-		2A6495362B663C0400FC874A /* UserAccountViewModel.Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495352B663C0400FC874A /* UserAccountViewModel.Event.swift */; };
+		2A6495362B663C0400FC874A /* UserAccountNavigation+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */; };
 		2A64953A2B663CD900FC874A /* UserAccountViewModel.Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495392B663CD900FC874A /* UserAccountViewModel.Route.swift */; };
 		2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */; };
 		2A6495462B665DCB00FC874A /* UserAccountNavigation+Effect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */; };
@@ -2910,7 +2910,7 @@
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
-		2A6495352B663C0400FC874A /* UserAccountViewModel.Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.Event.swift; sourceTree = "<group>"; };
+		2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountNavigation+Event.swift"; sourceTree = "<group>"; };
 		2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountNavigation+Effect.swift"; sourceTree = "<group>"; };
 		2A6495392B663CD900FC874A /* UserAccountViewModel.Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.Route.swift; sourceTree = "<group>"; };
 		2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -6489,6 +6489,7 @@
 		2A6495402B665CCB00FC874A /* UserAccountNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */,
 				2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */,
 				2A6495412B665CDF00FC874A /* UserAccountNavigation.swift */,
 			);
@@ -6600,7 +6601,6 @@
 				2A3D6F1C2B6229AC00D19379 /* Config */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
 				2A6495392B663CD900FC874A /* UserAccountViewModel.Route.swift */,
-				2A6495352B663C0400FC874A /* UserAccountViewModel.Event.swift */,
 				2A6495402B665CCB00FC874A /* UserAccountNavigation */,
 				2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */,
 				2A2253F22B64F20500C44440 /* UserAccountReducer.swift */,
@@ -13218,7 +13218,7 @@
 				2A2253F32B64F20500C44440 /* UserAccountReducer.swift in Sources */,
 				2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
-				2A6495362B663C0400FC874A /* UserAccountViewModel.Event.swift in Sources */,
+				2A6495362B663C0400FC874A /* UserAccountNavigation+Event.swift in Sources */,
 				2A3D6F0C2B6224DD00D19379 /* Config.swift in Sources */,
 				2A2253F72B65140C00C44440 /* UserAccountDemoReducer.swift in Sources */,
 				2A3D6F1B2B62296900D19379 /* ProductSelectConfig+default.swift in Sources */,
