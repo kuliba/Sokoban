@@ -17,44 +17,45 @@ struct ActiveContractView: View {
     
     var body: some View {
         
-        List {
+        ScrollView(showsIndicators: false) {
             
-            PaymentContractView(
-                paymentContract: contractDetails.paymentContract,
-                actionOff: { event(.contract(.deactivateContract)) }
-            )
-            
-            BankDefaultView(
-                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                action: { event(.bankDefault(.setBankDefault)) }
-            )
-            
-            Section("Consent List") {
+            VStack {
                 
-                ConsentListView(
-                    state: contractDetails.consentList.uiState,
-                    event: { event(.consentList($0)) }
-                )
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
-            
-            Section("Product Select") {
-                
-                ProductSelectView(
-                    state: contractDetails.productSelect,
-                    event: { event(.products($0.productSelect)) },
-                    config: config.productSelect
-                ) {
-                    ProductCardView(
-                        productCard: .init(product: $0),
-                        config: config.productSelect.card.productCardConfig
+                Group {
+                    
+                    PaymentContractView(
+                        paymentContract: contractDetails.paymentContract,
+                        action: { event(.contract(.deactivateContract)) }
                     )
+                    
+                    BankDefaultView(
+                        bankDefault: contractDetails.bankDefaultResponse.bankDefault,
+                        action: { event(.bankDefault(.setBankDefault)) }
+                    )
+                    
+                    ConsentListView(
+                        state: contractDetails.consentList.uiState,
+                        event: { event(.consentList($0)) }
+                    )
+                    
+                    ProductSelectView(
+                        state: contractDetails.productSelect,
+                        event: { event(.products($0.productSelect)) },
+                        config: config.productSelect
+                    ) {
+                        ProductCardView(
+                            productCard: .init(product: $0),
+                            config: config.productSelect.card.productCardConfig
+                        )
+                    }
+                    
+                    AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
                 }
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
-            
-            Section("Linking") {
-                AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+                .padding(.horizontal)
             }
         }
     }

@@ -34,10 +34,6 @@ struct ConsentListView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding()
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 9))
-        .padding(.horizontal)
         .animation(.easeInOut, value: state)
     }
     

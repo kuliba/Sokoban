@@ -15,10 +15,7 @@ struct BankDefaultView: View {
     
     var body: some View {
         
-        Section("Банк по умолчанию") {
-            
-            bankDefaultIcon(bankDefault)
-        }
+        bankDefaultIcon(bankDefault)
     }
     
     @ViewBuilder

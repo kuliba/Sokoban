@@ -13,10 +13,7 @@ struct AccountLinkingSettingsButton: View {
     
     var body: some View {
         
-        Section {
-            
-            Button("Настройки привязки счета", action: action)
-        }
+        Button("Настройки привязки счета", action: action)
     }
 }
 

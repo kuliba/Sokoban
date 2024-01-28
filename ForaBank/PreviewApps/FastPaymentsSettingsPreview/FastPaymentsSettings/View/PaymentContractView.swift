@@ -11,44 +11,54 @@ import SwiftUI
 struct PaymentContractView: View {
     
     let paymentContract: PaymentContract
-    let actionOff: () -> Void
+    let action: () -> Void
     
     var body: some View {
         
-        Section("Переводы СПБ") {
-            
-            VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
 
-                HStack(spacing: 16) {
-                    
-                    Text(title)
-                        .font(.subheadline)
-                    
-                    ToggleMockView(status: status)
-                }
+            labeledToggle()
+            
+            subtitleView()
+        }
+    }
+
+    private func labeledToggle() -> some View {
+        
+        HStack {
+            
+            Text(title)
+                .font(.headline)
+            
+            Spacer()
+            
+            Button(action: action) {
                 
-                Button(buttonTitle, action: actionOff)
+                ToggleMockView(status: status)
             }
         }
     }
     
-    var buttonTitle: String {
+    private var title: String { "Включить переводы СБП" }
+    
+    @ViewBuilder
+    private func subtitleView() -> some View {
         
-        switch paymentContract.contractStatus {
-        case .active:   return "Выключить переводы СБП"
-        case .inactive: return "Включить переводы СБП"
+        Group {
+            switch paymentContract.contractStatus {
+            case .active:
+                Text("Настройки для входящих и исходящих переводов СБП  ")
+                
+            case .inactive:
+#warning("link inside!!!")
+                Text("Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь с условиями осуществления переводов СБП")
+            }
         }
+        .foregroundColor(.secondary)
+        .font(.subheadline)
     }
     
-    var title: String {
-        
-        switch paymentContract.contractStatus {
-        case .active:   return "Переводы включены"
-        case .inactive: return "Переводы выключены"
-        }
-    }
-    
-    var status: ToggleMockView.Status {
+    private var status: ToggleMockView.Status {
         
         switch paymentContract.contractStatus {
         case .active:   return .active
@@ -66,7 +76,7 @@ struct PaymentContractView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        List {
+        VStack {
             
             paymentContractView(.active)
             
@@ -74,12 +84,13 @@ struct PaymentContractView_Previews: PreviewProvider {
             
             paymentContractView(.inactive)
         }
+        .padding()
     }
     
     private static func paymentContractView(
         _ paymentContract: PaymentContractView.PaymentContract
     ) -> some View {
         
-        PaymentContractView(paymentContract: paymentContract, actionOff: {})
+        PaymentContractView(paymentContract: paymentContract, action: {})
     }
 }
