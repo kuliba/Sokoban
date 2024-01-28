@@ -1,6 +1,6 @@
 //
 //  UserAccountViewModel.Event.swift
-//  FastPaymentsSettingsPreview
+//  
 //
 //  Created by Igor Malyarov on 28.01.2024.
 //

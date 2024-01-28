@@ -180,30 +180,6 @@ extension UserAccountViewModel {
     typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
 }
 
-// MARK: - Effect
-
-extension UserAccountViewModel {
-    
-    enum Effect: Equatable {
-        
-        case demo(Demo)
-        case fps(FastPaymentsSettingsEvent)
-        case otp(OTP)
-        
-        enum Demo: Equatable {
-            
-            case loadAlert
-            case loadInformer
-            case loader
-        }
-        
-        enum OTP: Equatable {
-            
-            case prepareSetBankDefault
-        }
-    }
-}
-
 // MARK: - State
 
 extension UserAccountViewModel {
