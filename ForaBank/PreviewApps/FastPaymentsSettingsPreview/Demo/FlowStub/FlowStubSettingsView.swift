@@ -243,7 +243,7 @@ private extension FlowStubSettingsView {
                     paymentContract: .active,
                     bankDefaultResponse: .init(
                         bankDefault: .offEnabled,
-                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку  через 24 часа."
+                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку через 24 часа."
                     )
                 )))
                 
