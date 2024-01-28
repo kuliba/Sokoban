@@ -35,15 +35,12 @@ extension UserAccountOTPReducer {
         var effect: Effect?
         
         switch event {
-        case let .otpInput(otpInput):
-            #warning("LOOKS LIKE HANDLING HERE IS WRONG - this is a place for observing otpInput state")
-#warning("move nullification to reducer where fps state is reduced")
-            state.fpsRoute?.destination = nil
-            
+        case let .otpInput(otpInput):            
             switch otpInput {
             case let .failure(failure):
             #warning("extract to helper")
                 state.isLoading = false
+                state.fpsRoute?.destination = nil
                 switch failure {
                 case .connectivityError:
                     effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))

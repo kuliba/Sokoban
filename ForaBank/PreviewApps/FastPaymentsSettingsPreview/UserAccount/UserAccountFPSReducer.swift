@@ -119,11 +119,15 @@ private extension UserAccountFPSReducer {
             
         case let .setBankDefaultFailure(message):
             state.isLoading = false
+            state.fpsRoute?.destination = nil
             inform(message)
+            #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
+            state.fpsRoute?.destination = nil
             inform("Банк по умолчанию установлен.")
+            #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
             state.isLoading = false
