@@ -180,58 +180,6 @@ extension UserAccountViewModel {
     typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
 }
 
-// MARK: - Event
-
-extension UserAccountViewModel {
-    
-    enum Event: Equatable {
-        
-        case closeAlert
-        case closeFPSAlert
-        case dismissFPSDestination
-        case dismissDestination
-        case dismissRoute
-        
-        case demo(Demo)
-        case fps(FastPaymentsSettings)
-        case otp(OTP)
-    }
-}
-
-extension UserAccountViewModel.Event {
-    
-    enum Demo: Equatable {
-        
-        case loaded(Show)
-        case show(Show)
-        
-        enum Show: Equatable {
-            case alert
-            case informer
-            case loader
-        }
-    }
-    
-    enum FastPaymentsSettings: Equatable {
-        
-        case updated(FastPaymentsSettingsState)
-    }
-    
-    enum OTP: Equatable {
-        
-        case otpInput(OTPInputStateProjection)
-        case prepareSetBankDefault
-        case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
-        
-        enum PrepareSetBankDefaultResponse: Equatable {
-            
-            case success
-            case connectivityError
-            case serverError(String)
-        }
-    }
-}
-
 // MARK: - Effect
 
 extension UserAccountViewModel {
@@ -292,6 +240,8 @@ extension UserAccountViewModel.Route {
         case alert(AlertModelOf<Event>)
     }
 }
+
+// MARK: - Helpers
 
 extension UserAccountViewModel.State {
     
@@ -382,12 +332,4 @@ extension UserAccountViewModel.State.Destination.FPSDestination: Hashable {
             hasher.combine(getC2BSubResponse)
         }
     }
-}
-
-// MARK: - OTP for Fast Payments Settings
-
-enum OTPInputStateProjection: Equatable {
-    
-    case failure(OTPInputComponent.ServiceFailure)
-    case validOTP
 }
