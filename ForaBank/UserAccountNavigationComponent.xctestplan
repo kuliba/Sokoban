@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A564CB39-7EB8-4983-A797-985694453FD1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

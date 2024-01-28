@@ -3195,6 +3195,7 @@
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
+		2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UserAccountNavigationComponent.xctestplan; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WIPTests.xctestplan; sourceTree = "<group>"; };
@@ -11362,6 +11363,7 @@
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
 				2AC4BE9B2B62C53C00650962 /* FastPaymentsSettingsPreview.xctestplan */,
 				8306C12B2B600EB7007FDA89 /* ProductProfile.xctestplan */,
 				8333253F2B5AA765001920EB /* CardStatementAPI.xctestplan */,

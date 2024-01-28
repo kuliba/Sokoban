@@ -275,6 +275,13 @@
         "identifier" : "ProductProfileTests",
         "name" : "ProductProfileTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
     }
   ],
   "version" : 1
