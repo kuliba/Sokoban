@@ -103,7 +103,7 @@ struct UserAccountView: View {
         
         switch destination {
         case let .fastPaymentsSettings(fps):
-            FastPaymentsSettingsView(
+            FastPaymentsSettingsWrapperView(
                 viewModel: fps.viewModel,
                 config: .default
             )
