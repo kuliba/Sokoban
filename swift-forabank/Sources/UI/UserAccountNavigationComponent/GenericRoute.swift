@@ -7,16 +7,16 @@
 
 import Combine
 
-struct GenericRoute<ViewModel, Destination, Modal, Alert>
+public struct GenericRoute<ViewModel, Destination, Modal, Alert>
 where ViewModel: ObservableObject {
     
-    let viewModel: ViewModel
-    let cancellable: AnyCancellable
-    var destination: Destination?
-    var modal: Modal?
-    var alert: Alert?
+    public let viewModel: ViewModel
+    public let cancellable: AnyCancellable
+    public var destination: Destination?
+    public var modal: Modal?
+    public var alert: Alert?
     
-    init(
+    public init(
         _ viewModel: ViewModel,
         _ cancellable: AnyCancellable,
         destination: Destination? = nil,
@@ -36,7 +36,7 @@ where Destination: Equatable,
       Modal: Equatable,
       Alert: Equatable {
     
-    static func == (_ lhs: Self, rhs: Self) -> Bool {
+    public static func == (_ lhs: Self, rhs: Self) -> Bool {
         
         ObjectIdentifier(lhs.viewModel) == ObjectIdentifier(rhs.viewModel)
         && lhs.destination == rhs.destination
@@ -50,7 +50,8 @@ where Destination: Hashable,
       Modal: Hashable,
       Alert: Hashable {
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
+        
         hasher.combine(ObjectIdentifier(viewModel))
         hasher.combine(destination)
         hasher.combine(modal)

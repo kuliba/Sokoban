@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import UserAccountNavigationComponent
 
 final class UserAccountDemoReducer {}
 

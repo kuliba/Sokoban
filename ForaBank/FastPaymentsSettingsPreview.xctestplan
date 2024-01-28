@@ -25,6 +25,13 @@
         "identifier" : "FastPaymentsSettingsTests",
         "name" : "FastPaymentsSettingsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
     }
   ],
   "version" : 1

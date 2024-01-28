@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 27.01.2024.
 //
 
+import UserAccountNavigationComponent
 import UIPrimitives
 
 extension AlertModel

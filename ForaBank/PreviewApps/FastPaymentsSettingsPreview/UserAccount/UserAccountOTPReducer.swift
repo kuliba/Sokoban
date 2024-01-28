@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import OTPInputComponent
+import UserAccountNavigationComponent
 
 final class UserAccountOTPReducer {
     

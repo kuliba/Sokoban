@@ -1111,6 +1111,7 @@ private extension Target {
             // internal modules
             .fastPaymentsSettings,
             .otpInputComponent,
+            .rxViewModel,
             .uiPrimitives,
         ],
         path: "Sources/UI/\(String.userAccountNavigationComponent)"

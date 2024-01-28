@@ -8,17 +8,18 @@
 import Combine
 import FastPaymentsSettings
 import OTPInputComponent
+import RxViewModel
 import UIPrimitives
 
-extension UserAccountNavigation {
+public extension UserAccountNavigation {
     
     struct State: Equatable {
         
-        var destination: Destination?
-        var alert: Alert?
-        var isLoading: Bool
+        public var destination: Destination?
+        public var alert: Alert?
+        public var isLoading: Bool
         
-        init(
+        public init(
             destination: Destination? = nil,
             modal: Alert? = nil,
             isLoading: Bool = false
@@ -30,7 +31,7 @@ extension UserAccountNavigation {
     }
 }
 
-extension UserAccountNavigation.State {
+public extension UserAccountNavigation.State {
     
     typealias Event = UserAccountNavigation.Event
     
@@ -45,7 +46,9 @@ extension UserAccountNavigation.State {
     }
 }
 
-extension UserAccountNavigation.State.Destination {
+public extension UserAccountNavigation.State.Destination {
+    
+    typealias FastPaymentsSettingsViewModel = RxViewModel<FastPaymentsSettingsState, FastPaymentsSettingsEvent, FastPaymentsSettingsEffect>
     
     typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
     
@@ -59,7 +62,7 @@ extension UserAccountNavigation.State.Destination {
 
 // MARK: - Helpers
 
-extension UserAccountNavigation.State {
+public extension UserAccountNavigation.State {
     
     var fpsRoute: UserAccountNavigation.State.Destination.FPSRoute? {
         
@@ -85,7 +88,7 @@ extension AlertModel: Hashable
 where PrimaryEvent: Equatable,
       SecondaryEvent: Equatable {
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -96,7 +99,7 @@ where PrimaryEvent: Equatable,
 
 extension UserAccountNavigation.State.Destination: Hashable {
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         
         switch (lhs, rhs) {
         case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
@@ -104,7 +107,7 @@ extension UserAccountNavigation.State.Destination: Hashable {
         }
     }
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         switch self {
         case let .fastPaymentsSettings(route):
             hasher.combine(route.hashValue)
@@ -114,7 +117,7 @@ extension UserAccountNavigation.State.Destination: Hashable {
 
 extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         
         switch (lhs, rhs) {
         case let (.confirmSetBankDefault(lhs, _), .confirmSetBankDefault(rhs, _)):
@@ -128,7 +131,7 @@ extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
         }
     }
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         
         switch self {
         case let .confirmSetBankDefault(viewModel, _):

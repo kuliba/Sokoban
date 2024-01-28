@@ -6,4 +6,4 @@
 //
 
 /// A namespace.
-enum UserAccountNavigation {}
+public enum UserAccountNavigation {}

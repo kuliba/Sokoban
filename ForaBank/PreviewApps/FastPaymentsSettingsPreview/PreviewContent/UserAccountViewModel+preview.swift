@@ -6,8 +6,9 @@
 //
 
 import FastPaymentsSettings
-import OTPInputComponent
 import Foundation
+import OTPInputComponent
+import UserAccountNavigationComponent
 
 extension UserAccountViewModel {
     

@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import OTPInputComponent
 
-extension UserAccountNavigation {
+public extension UserAccountNavigation {
     
     enum Event: Equatable {
         
@@ -24,14 +24,14 @@ extension UserAccountNavigation {
     }
 }
 
-extension UserAccountNavigation.Event {
+public extension UserAccountNavigation.Event {
     
     enum Demo: Equatable {
         
         case loaded(Show)
         case show(Show)
         
-        enum Show: Equatable {
+        public enum Show: Equatable {
             case alert
             case informer
             case loader
@@ -49,7 +49,7 @@ extension UserAccountNavigation.Event {
         case prepareSetBankDefault
         case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
         
-        enum PrepareSetBankDefaultResponse: Equatable {
+        public enum PrepareSetBankDefaultResponse: Equatable {
             
             case success
             case connectivityError
@@ -60,7 +60,7 @@ extension UserAccountNavigation.Event {
 
 // MARK: - OTP for Fast Payments Settings
 
-enum OTPInputStateProjection: Equatable {
+public enum OTPInputStateProjection: Equatable {
     
     case failure(OTPInputComponent.ServiceFailure)
     case inflight

@@ -9,6 +9,7 @@ import FastPaymentsSettings
 import OTPInputComponent
 import SwiftUI
 import UIPrimitives
+import UserAccountNavigationComponent
 
 struct UserAccountView: View {
     

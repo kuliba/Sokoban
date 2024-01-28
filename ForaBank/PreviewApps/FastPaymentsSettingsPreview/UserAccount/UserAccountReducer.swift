@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import UIPrimitives
+import UserAccountNavigationComponent
 
 final class UserAccountReducer {
     

@@ -11,6 +11,7 @@ import FastPaymentsSettings
 import Foundation
 import OTPInputComponent
 import UIPrimitives
+import UserAccountNavigationComponent
 
 final class UserAccountViewModel: ObservableObject {
     

@@ -397,7 +397,6 @@
 		2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */; };
 		2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = 2A1F086D2A7A2EE400C5B11B /* public.crt */; };
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
-		2A1F5A9D2B656F0C00A54C43 /* GenericRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */; };
 		2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
 		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
 		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
@@ -563,11 +562,7 @@
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
 		2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */; };
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
-		2A6495362B663C0400FC874A /* UserAccountNavigation+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */; };
-		2A64953A2B663CD900FC874A /* UserAccountNavigation+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495392B663CD900FC874A /* UserAccountNavigation+State.swift */; };
 		2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */; };
-		2A6495462B665DCB00FC874A /* UserAccountNavigation+Effect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */; };
-		2A6495472B665DCB00FC874A /* UserAccountNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495412B665CDF00FC874A /* UserAccountNavigation.swift */; };
 		2A649E0C2A1CE2F900B7EA8B /* RegularTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */; };
 		2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
@@ -842,6 +837,7 @@
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
 		2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */; };
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
+		2AF5AC322B66628D00845E7A /* UserAccountNavigationComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
 		2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */; };
 		2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F2F4329AE338E0054B920 /* MCError.swift */; };
@@ -2751,7 +2747,6 @@
 		2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyTests.swift; sourceTree = "<group>"; };
 		2A1F086D2A7A2EE400C5B11B /* public.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public.crt; sourceTree = "<group>"; };
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
-		2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericRoute.swift; sourceTree = "<group>"; };
 		2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SberQR.xctestplan; sourceTree = "<group>"; };
 		2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SberQRPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPreviewApp.swift; sourceTree = "<group>"; };
@@ -2910,11 +2905,7 @@
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
-		2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountNavigation+Event.swift"; sourceTree = "<group>"; };
-		2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountNavigation+Effect.swift"; sourceTree = "<group>"; };
-		2A6495392B663CD900FC874A /* UserAccountNavigation+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountNavigation+State.swift"; sourceTree = "<group>"; };
 		2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountOTPEffectHandler.swift; sourceTree = "<group>"; };
-		2A6495412B665CDF00FC874A /* UserAccountNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigation.swift; sourceTree = "<group>"; };
 		2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularTextFieldView.swift; sourceTree = "<group>"; };
 		2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldComponentTextFieldConfig+Extension.swift"; sourceTree = "<group>"; };
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
@@ -4654,6 +4645,7 @@
 				2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */,
 				2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */,
 				2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */,
+				2AF5AC322B66628D00845E7A /* UserAccountNavigationComponent in Frameworks */,
 				2AA70FBD2B52B1940061F5DD /* Tagged in Frameworks */,
 				2A76E0BA2B60F01E00371725 /* OTPInputComponent in Frameworks */,
 			);
@@ -6487,17 +6479,6 @@
 			path = Reducer;
 			sourceTree = "<group>";
 		};
-		2A6495402B665CCB00FC874A /* UserAccountNavigation */ = {
-			isa = PBXGroup;
-			children = (
-				2A6495392B663CD900FC874A /* UserAccountNavigation+State.swift */,
-				2A6495352B663C0400FC874A /* UserAccountNavigation+Event.swift */,
-				2A6495372B663C8400FC874A /* UserAccountNavigation+Effect.swift */,
-				2A6495412B665CDF00FC874A /* UserAccountNavigation.swift */,
-			);
-			path = UserAccountNavigation;
-			sourceTree = "<group>";
-		};
 		2A65D8AE2A333144003B3FEA /* SupportingTypes */ = {
 			isa = PBXGroup;
 			children = (
@@ -6602,8 +6583,6 @@
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
 				2A3D6F1C2B6229AC00D19379 /* Config */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
-				2A6495402B665CCB00FC874A /* UserAccountNavigation */,
-				2A1F5A9C2B656F0C00A54C43 /* GenericRoute.swift */,
 				2A2253F22B64F20500C44440 /* UserAccountReducer.swift */,
 				2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */,
 				2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */,
@@ -12299,6 +12278,7 @@
 				2A76E0B92B60F01E00371725 /* OTPInputComponent */,
 				2A3D6F032B61902700D19379 /* PaymentComponents */,
 				2A2253F02B64EFD300C44440 /* UIPrimitives */,
+				2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */,
 			);
 			productName = FastPaymentsSettingsPreview;
 			productReference = 2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */;
@@ -13194,7 +13174,6 @@
 				2AA70FB62B51BDCA0061F5DD /* ActiveContractView.swift in Sources */,
 				2A3D6F0E2B62277600D19379 /* ActiveContractConfig.swift in Sources */,
 				2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */,
-				2A64953A2B663CD900FC874A /* UserAccountNavigation+State.swift in Sources */,
 				2A5987E92B593BB200131B69 /* ToggleMockView.swift in Sources */,
 				2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */,
 				2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */,
@@ -13208,7 +13187,6 @@
 				2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */,
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
 				2A3D6F102B62279D00D19379 /* InactiveContractConfig.swift in Sources */,
-				2A6495472B665DCB00FC874A /* UserAccountNavigation.swift in Sources */,
 				2A5987ED2B59442300131B69 /* PaymentContractView.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsView.swift in Sources */,
 				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
@@ -13220,7 +13198,6 @@
 				2A2253F32B64F20500C44440 /* UserAccountReducer.swift in Sources */,
 				2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
-				2A6495362B663C0400FC874A /* UserAccountNavigation+Event.swift in Sources */,
 				2A3D6F0C2B6224DD00D19379 /* Config.swift in Sources */,
 				2A2253F72B65140C00C44440 /* UserAccountDemoReducer.swift in Sources */,
 				2A3D6F1B2B62296900D19379 /* ProductSelectConfig+default.swift in Sources */,
@@ -13230,7 +13207,6 @@
 				2A5987EB2B593DAC00131B69 /* BankDefaultView.swift in Sources */,
 				2A3D6F202B62A16000D19379 /* GetC2BSubResponse+preview.swift in Sources */,
 				2A40AF2F2B591530003B7D8A /* FlowStubSettingsView.swift in Sources */,
-				2A6495462B665DCB00FC874A /* UserAccountNavigation+Effect.swift in Sources */,
 				2AA70FCE2B52C25A0061F5DD /* ConsentListView.swift in Sources */,
 				2A2253F52B6510EB00C44440 /* UserAccountOTPReducer.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
@@ -13238,7 +13214,6 @@
 				2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */,
 				2A2253F92B6519BD00C44440 /* AlertHelpers.swift in Sources */,
 				2A3D6F1E2B62936900D19379 /* AccountLinkingSettingsButton.swift in Sources */,
-				2A1F5A9D2B656F0C00A54C43 /* GenericRoute.swift in Sources */,
 				2A3D6F142B62288900D19379 /* InactiveContractConfig+ext.swift in Sources */,
 				2AA70FC32B52BE9B0061F5DD /* ConsentListWrapperView.swift in Sources */,
 				2A6EAA942B5060870093EE83 /* Factory.swift in Sources */,
@@ -17615,6 +17590,10 @@
 		2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ButtonWithSheet;
+		};
+		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserAccountNavigationComponent;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;
