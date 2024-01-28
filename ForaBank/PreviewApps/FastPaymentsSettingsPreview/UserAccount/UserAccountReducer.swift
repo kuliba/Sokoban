@@ -44,10 +44,11 @@ extension UserAccountReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-            effect = .fps(.resetStatus)
+           // effect = .fps(.resetStatus)
             
         case .closeFPSAlert:
-            state.alert = nil
+           // state.alert = nil
+            state.fpsRoute?.alert = nil
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
@@ -69,8 +70,8 @@ extension UserAccountReducer {
         case let .fps(.updated(fpsState)):
             (state, effect) = fpsReduce(state, fpsState, inform)
             
-        case let .otp(otp):
-            (state, effect) = otpReduce(state, otp, inform) { dispatch(.otp($0)) }
+        case let .otp(otpEvent):
+            (state, effect) = otpReduce(state, otpEvent, inform) { dispatch(.otp($0)) }
         }
         
         return (state, effect)

@@ -36,6 +36,7 @@ extension UserAccountOTPReducer {
         
         switch event {
         case let .otpInput(otpInput):
+            #warning("LOOKS LIKE HANDLING HERE IS WRONG - this is a place for observing otpInput state")
 #warning("move nullification to reducer where fps state is reduced")
             state.fpsRoute?.destination = nil
             
@@ -60,7 +61,12 @@ extension UserAccountOTPReducer {
             }
             
         case .prepareSetBankDefault:
-            state.alert = nil
+            #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
+            guard state.fpsRoute != nil,
+                  state.fpsRoute?.destination == nil
+                  // state.fpsRoute?.alert == nil
+            else { break }
+            
             state.isLoading = true
             effect = .otp(.prepareSetBankDefault)
             
