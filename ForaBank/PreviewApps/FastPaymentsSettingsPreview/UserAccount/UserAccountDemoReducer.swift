@@ -1,6 +1,6 @@
 //
 //  UserAccountDemoReducer.swift
-//  FastPaymentsSettingsPreview
+//  
 //
 //  Created by Igor Malyarov on 27.01.2024.
 //
@@ -63,5 +63,5 @@ extension UserAccountDemoReducer {
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event.Demo
-    typealias Effect = UserAccountViewModel.Effect.Demo
+    typealias Effect = UserAccountNavigation.Effect.Demo
 }

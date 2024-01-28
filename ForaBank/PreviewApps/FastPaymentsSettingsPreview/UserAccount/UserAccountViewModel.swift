@@ -146,6 +146,7 @@ private extension UserAccountViewModel {
 extension UserAccountViewModel {
     
     typealias State = Route
+    typealias Effect = UserAccountNavigation.Effect
     
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void

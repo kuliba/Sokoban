@@ -58,7 +58,7 @@ extension UserAccountOTPReducer {
     
     typealias State = UserAccountViewModel.State
     typealias Event = UserAccountViewModel.Event.OTP
-    typealias Effect = UserAccountViewModel.Effect
+    typealias Effect = UserAccountNavigation.Effect
 }
 
 private extension UserAccountOTPReducer {
