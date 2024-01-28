@@ -11,6 +11,20 @@ import CardStatementAPI
 
 class ProductData: Identifiable, Codable {
     
+#warning("remove after refactoring getProductListByType!!!")
+    private struct StatusCardValue {
+        static var _property: CardStatementAPI.CardDynamicParams.StatusCard?
+    }
+    
+    var statusCard: CardStatementAPI.CardDynamicParams.StatusCard? {
+        get {
+            return StatusCardValue._property
+        }
+        set(newValue) {
+            StatusCardValue._property = newValue
+        }
+    }
+    
     let id: Int
     
     let productType: ProductType
@@ -24,8 +38,6 @@ class ProductData: Identifiable, Codable {
     
     private(set) var balance: Double?
     private(set) var balanceRub: Double?
-    
-    private(set) var statusCard: CardStatementAPI.CardDynamicParams.StatusCard?
     
     //TODO: Currency type??
     let currency: String // example: RUB
