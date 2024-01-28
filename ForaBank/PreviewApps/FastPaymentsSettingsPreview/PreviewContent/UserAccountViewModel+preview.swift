@@ -149,10 +149,14 @@ extension UserAccountViewModel {
             scheduler: .makeMain()
         )
         
+        let userAccountOTPEffectHandler = UserAccountOTPEffectHandler(
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+        
         return .init(
             initialState: state,
-            reduce: userAccountReducer.reduce,
-            prepareSetBankDefault: prepareSetBankDefault,
+            reduce: userAccountReducer.reduce(_:_:_:_:),
+            handleOTPEffect: userAccountOTPEffectHandler.handleEffect(_:dispatch:),
             makeFastPaymentsSettingsViewModel: factory.makeFastPaymentsSettingsViewModel,
             scheduler: scheduler
         )
@@ -204,10 +208,14 @@ extension UserAccountViewModel {
             updateProduct: updateProduct
         )
         
+        let userAccountOTPEffectHandler = UserAccountOTPEffectHandler(
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+        
         return .init(
             initialState: state,
             reduce: reduce,
-            prepareSetBankDefault: prepareSetBankDefault,
+            handleOTPEffect: userAccountOTPEffectHandler.handleEffect(_:dispatch:),
             makeFastPaymentsSettingsViewModel: {
                 
                 .init(

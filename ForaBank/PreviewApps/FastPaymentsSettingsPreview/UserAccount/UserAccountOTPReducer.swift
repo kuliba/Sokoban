@@ -144,6 +144,7 @@ private extension OTPInputState {
             }
             
         case .input:
+            #warning("looks like we're missing inflight state here and thus cannot react")
             return nil
             
         case .validOTP:

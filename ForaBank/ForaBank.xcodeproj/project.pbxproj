@@ -566,6 +566,7 @@
 		2A6495362B663C0400FC874A /* UserAccountViewModel.Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495352B663C0400FC874A /* UserAccountViewModel.Event.swift */; };
 		2A6495382B663C8400FC874A /* UserAccountViewModel.Effect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495372B663C8400FC874A /* UserAccountViewModel.Effect.swift */; };
 		2A64953A2B663CD900FC874A /* UserAccountViewModel.Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6495392B663CD900FC874A /* UserAccountViewModel.Route.swift */; };
+		2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */; };
 		2A649E0C2A1CE2F900B7EA8B /* RegularTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */; };
 		2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
@@ -2911,6 +2912,7 @@
 		2A6495352B663C0400FC874A /* UserAccountViewModel.Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.Event.swift; sourceTree = "<group>"; };
 		2A6495372B663C8400FC874A /* UserAccountViewModel.Effect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.Effect.swift; sourceTree = "<group>"; };
 		2A6495392B663CD900FC874A /* UserAccountViewModel.Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.Route.swift; sourceTree = "<group>"; };
+		2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountOTPEffectHandler.swift; sourceTree = "<group>"; };
 		2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularTextFieldView.swift; sourceTree = "<group>"; };
 		2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldComponentTextFieldConfig+Extension.swift"; sourceTree = "<group>"; };
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
@@ -6594,6 +6596,7 @@
 				2A2253FA2B651FD100C44440 /* UserAccountFPSReducer.swift */,
 				2A2253F42B6510EB00C44440 /* UserAccountOTPReducer.swift */,
 				2A2253F62B65140C00C44440 /* UserAccountDemoReducer.swift */,
+				2A64953B2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift */,
 				2A2253F82B6519BD00C44440 /* AlertHelpers.swift */,
 				2A6EAA932B5060870093EE83 /* Factory.swift */,
 			);
@@ -13202,6 +13205,7 @@
 				2A3D6F192B62293200D19379 /* FastPaymentsSettingsConfig+default.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
 				2A2253F32B64F20500C44440 /* UserAccountReducer.swift in Sources */,
+				2A64953C2B663EBF00FC874A /* UserAccountOTPEffectHandler.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A6495362B663C0400FC874A /* UserAccountViewModel.Event.swift in Sources */,
 				2A3D6F0C2B6224DD00D19379 /* Config.swift in Sources */,

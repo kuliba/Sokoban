@@ -20,7 +20,7 @@ final class UserAccountViewModel: ObservableObject {
     let informer: InformerViewModel
     
     private let reduce: Reduce
-    private let prepareSetBankDefault: PrepareSetBankDefault
+    private let handleOTPEffect: HandleOTPEffect
     private let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
     
     private let stateSubject = PassthroughSubject<State, Never>()
@@ -30,14 +30,14 @@ final class UserAccountViewModel: ObservableObject {
         initialState: State = .init(),
         informer: InformerViewModel = .init(),
         reduce: @escaping Reduce,
-        prepareSetBankDefault: @escaping PrepareSetBankDefault,
+        handleOTPEffect: @escaping HandleOTPEffect,
         makeFastPaymentsSettingsViewModel: @escaping MakeFastPaymentsSettingsViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = initialState
         self.informer = informer
         self.reduce = reduce
-        self.prepareSetBankDefault = prepareSetBankDefault
+        self.handleOTPEffect = handleOTPEffect
         self.makeFastPaymentsSettingsViewModel = makeFastPaymentsSettingsViewModel
         self.scheduler = scheduler
         
@@ -71,7 +71,7 @@ extension UserAccountViewModel {
             fpsDispatch?(fpsEvent)
             
         case let .otp(otpEffect):
-            handleEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+            handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
         }
     }
     
@@ -113,30 +113,6 @@ extension UserAccountViewModel {
 
 private extension UserAccountViewModel {
     
-    // MARK: - OTP Effect Handling
-    
-    func handleEffect(
-        _ otpEffect: Effect.OTP,
-        _ dispatch: @escaping (Event.OTP) -> Void
-    ) {
-        switch otpEffect {
-        case .prepareSetBankDefault:
-            prepareSetBankDefault { result in
-                
-                switch result {
-                case .success(()):
-                    dispatch(.prepareSetBankDefaultResponse(.success))
-                    
-                case .failure(.connectivityError):
-                    dispatch(.prepareSetBankDefaultResponse(.connectivityError))
-                    
-                case let .failure(.serverError(message)):
-                    dispatch(.prepareSetBankDefaultResponse(.serverError(message)))
-                }
-            }
-        }
-    }
-    
     // MARK: - Demo Effect Handling
     
     func handleEffect(
@@ -173,7 +149,11 @@ extension UserAccountViewModel {
     
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
+    
     typealias Reduce = (State, Event, @escaping Inform, @escaping Dispatch) -> (State, Effect?)
-    typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
+    
+    typealias OTPDispatch = (Event.OTP) -> Void
+    typealias HandleOTPEffect = (Effect.OTP, @escaping OTPDispatch) -> Void
+    
     typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
 }
