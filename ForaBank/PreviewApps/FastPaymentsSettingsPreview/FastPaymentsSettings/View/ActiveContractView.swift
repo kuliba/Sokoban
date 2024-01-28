@@ -29,23 +29,33 @@ struct ActiveContractView: View {
                 action: { event(.bankDefault(.setBankDefault)) }
             )
             
-            ConsentListView(
-                state: contractDetails.consentList.uiState,
-                event: { event(.consentList($0)) }
-            )
-            
-            ProductSelectView(
-                state: contractDetails.productSelect,
-                event: { event(.products($0.productSelect)) },
-                config: config.productSelect
-            ) {
-                ProductCardView(
-                    productCard: .init(product: $0),
-                    config: config.productSelect.card.productCardConfig
+            Section("Consent List") {
+                
+                ConsentListView(
+                    state: contractDetails.consentList.uiState,
+                    event: { event(.consentList($0)) }
                 )
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             
-            AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
+            Section("Product Select") {
+                
+                ProductSelectView(
+                    state: contractDetails.productSelect,
+                    event: { event(.products($0.productSelect)) },
+                    config: config.productSelect
+                ) {
+                    ProductCardView(
+                        productCard: .init(product: $0),
+                        config: config.productSelect.card.productCardConfig
+                    )
+                }
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            
+            Section("Linking") {
+                AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
+            }
         }
     }
 }
@@ -155,7 +165,6 @@ struct ActiveContractView_Previews: PreviewProvider {
         Group {
             
             activeContractView(.preview(paymentContract: .active))
-            activeContractView(.preview(paymentContract: .inactive))
         }
     }
     
