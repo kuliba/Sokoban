@@ -12,12 +12,7 @@ import SwiftUI
 struct ActiveContractView: View {
     
     let contractDetails: UserPaymentSettings.Details
-#warning("combine event closures into one closure")
-    let consentListEvent: (ConsentListEvent) -> Void
-    let productSelectEvent: (ProductsEvent) -> Void
-    let actionOff: () -> Void
-    let setBankDefault: () -> Void
-    let accountLinking: () -> Void
+    let event: (FastPaymentsSettingsEvent) -> Void
     let config: ActiveContractConfig
     
     var body: some View {
@@ -26,22 +21,22 @@ struct ActiveContractView: View {
             
             PaymentContractView(
                 paymentContract: contractDetails.paymentContract,
-                actionOff: actionOff
+                actionOff: { event(.contract(.deactivateContract)) }
             )
             
             BankDefaultView(
                 bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                action: setBankDefault
+                action: { event(.bankDefault(.setBankDefault)) }
             )
             
             ConsentListView(
                 state: contractDetails.consentList.uiState,
-                event: consentListEvent
+                event: { event(.consentList($0)) }
             )
             
             ProductSelectView(
                 state: contractDetails.productSelect,
-                event: { productSelectEvent($0.productSelect) },
+                event: { event(.products($0.productSelect)) },
                 config: config.productSelect
             ) {
                 ProductCardView(
@@ -50,7 +45,7 @@ struct ActiveContractView: View {
                 )
             }
             
-            AccountLinkingSettingsButton(action: accountLinking)
+            AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
         }
     }
 }
@@ -170,11 +165,7 @@ struct ActiveContractView_Previews: PreviewProvider {
         
         ActiveContractView(
             contractDetails: contractDetails,
-            consentListEvent: { _ in },
-            productSelectEvent: { _ in },
-            actionOff:  {},
-            setBankDefault: {},
-            accountLinking: {},
+            event: { _ in },
             config: .preview
         )
     }

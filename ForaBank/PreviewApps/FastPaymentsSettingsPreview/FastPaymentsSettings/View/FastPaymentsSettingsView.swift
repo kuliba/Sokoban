@@ -25,11 +25,7 @@ struct FastPaymentsSettingsView: View {
             case .active:
                 ActiveContractView(
                     contractDetails: contractDetails,
-                    consentListEvent: { event(.consentList($0)) },
-                    productSelectEvent: { event(.products($0)) },
-                    actionOff: { event(.contract(.deactivateContract)) },
-                    setBankDefault: { event(.bankDefault(.setBankDefault)) },
-                    accountLinking: { event(.subscription(.getC2BSubButtonTapped)) },
+                    event: event,
                     config: config.activeContract
                 )
                 
