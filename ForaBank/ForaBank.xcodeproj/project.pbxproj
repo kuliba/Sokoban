@@ -833,6 +833,7 @@
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
 		2AF5AC322B66628D00845E7A /* UserAccountNavigationComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */; };
 		2AF5AC342B66811800845E7A /* FastPaymentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5AC332B66811800845E7A /* FastPaymentsSettingsView.swift */; };
+		2AF5AC362B66953000845E7A /* CollapsedConsentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5AC352B66953000845E7A /* CollapsedConsentListView.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
 		2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */; };
 		2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F2F4329AE338E0054B920 /* MCError.swift */; };
@@ -3177,6 +3178,7 @@
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
 		2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UserAccountNavigationComponent.xctestplan; sourceTree = "<group>"; };
 		2AF5AC332B66811800845E7A /* FastPaymentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsView.swift; sourceTree = "<group>"; };
+		2AF5AC352B66953000845E7A /* CollapsedConsentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsedConsentListView.swift; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WIPTests.xctestplan; sourceTree = "<group>"; };
@@ -7163,6 +7165,7 @@
 			children = (
 				2AA70FCD2B52C25A0061F5DD /* ConsentListView.swift */,
 				2A95363E2B53120700E874F5 /* ExpandedConsentListView.swift */,
+				2AF5AC352B66953000845E7A /* CollapsedConsentListView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -13163,6 +13166,7 @@
 				2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */,
 				2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */,
 				2A3D6F122B62283300D19379 /* ActiveContractConfig+ext.swift in Sources */,
+				2AF5AC362B66953000845E7A /* CollapsedConsentListView.swift in Sources */,
 				2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */,
 				2A3D6F162B6228CD00D19379 /* FastPaymentsSettingsConfig+ext.swift in Sources */,
 				2A40AF272B58FFF8003B7D8A /* [Product]+ext.swift in Sources */,

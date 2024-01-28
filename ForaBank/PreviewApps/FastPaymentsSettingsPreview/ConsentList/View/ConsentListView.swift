@@ -15,9 +15,7 @@ struct ConsentListView: View {
     
     var body: some View {
         
-        VStack {
-            
-            expandCollapseButton()
+        Group {
             
             switch state {
             case let .collapsed(collapsed):
@@ -37,19 +35,27 @@ struct ConsentListView: View {
         .animation(.easeInOut, value: state)
     }
     
-    private func expandCollapseButton() -> some View {
+    private func toggleButton() -> some View {
         
-        Button {
-            event(.toggle)
-        } label: {
+        Button(action: toggle) {
+            
             HStack {
                 
-                Text("Request transfers from")
+                Text("Запросы на переводы из банков")
+                
+                Spacer()
+                
                 Image(systemName: "chevron.down")
                     .rotationEffect(.degrees(chevronRotationAngle))
             }
         }
+        .foregroundColor(.secondary)
         .font(.subheadline)
+    }
+    
+    private func toggle() {
+        
+        event(.toggle)
     }
     
     private var chevronRotationAngle: CGFloat {
@@ -60,29 +66,38 @@ struct ConsentListView: View {
         }
     }
     
+#warning("replace with actual")
+    private func icon() -> some View {
+        
+        Image(systemName: "building.columns")
+            .imageScale(.large)
+    }
+    
     @ViewBuilder
     private func collapsedView(
         _ collapsed: ConsentListState.UIState.Collapsed
     ) -> some View {
         
-        if !collapsed.bankNames.isEmpty {
-            
-            Text(collapsed.bankNames.joined(separator: ", "))
-                .font(.headline)
-                .fontWeight(.medium)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
+        CollapsedConsentListView(
+            collapsed: collapsed,
+            icon: icon,
+            expandButton: toggleButton
+        )
     }
     
     private func expandedView(
         _ expanded: ConsentListState.UIState.Expanded
     ) -> some View {
         
-        ExpandedConsentListView(
-            expanded: expanded,
-            event: event
-        )
+        VStack(alignment: .leading) {
+            
+            ExpandedConsentListView(
+                expanded: expanded,
+                event: event,
+                icon: icon,
+                collapseButton: toggleButton
+            )
+        }
     }
     
     private func expandedErrorView() -> some View {
@@ -103,6 +118,14 @@ struct ConsentListView: View {
 struct ConsentListView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
+        VStack(content: previewsGroup)
+            .previewDisplayName("all")
+        
+        previewsGroup()
+    }
+    
+    static func previewsGroup() -> some View {
         
         Group {
             
