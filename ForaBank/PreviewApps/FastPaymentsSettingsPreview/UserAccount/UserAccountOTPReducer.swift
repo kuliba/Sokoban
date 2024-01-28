@@ -12,7 +12,7 @@ final class UserAccountOTPReducer {
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     private let scheduler: AnySchedulerOfDispatchQueue
-
+    
     init(
         makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -47,33 +47,33 @@ extension UserAccountOTPReducer {
         
         return (state, effect)
     }
+}
+
+extension UserAccountOTPReducer {
+    
+    typealias Inform = (String) -> Void
+    typealias Dispatch = (Event) -> Void
+    
+    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+    
+    typealias State = UserAccountViewModel.State
+    typealias Event = UserAccountViewModel.Event.OTP
+    typealias Effect = UserAccountViewModel.Effect
+}
+
+private extension UserAccountOTPReducer {
     
     func reduce(
         _ state: State,
         _ otpInput: OTPInputStateProjection
     ) -> (State, Effect?) {
-
+        
         var state = state
         var effect: Effect?
         
         switch otpInput {
         case let .failure(failure):
-        #warning("extract to helper")
-            state.isLoading = false
-            state.fpsRoute?.destination = nil
-            switch failure {
-            case .connectivityError:
-                effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
-                
-            case let .serverError(message):
-                let tryAgain = "Введен некорректный код. Попробуйте еще раз"
-                if message == tryAgain {
-                    effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
-
-                } else {
-                    effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
-                }
-            }
+            (state, effect) = reduce(state, failure)
             
         case .inflight:
             state.isLoading = true
@@ -82,6 +82,34 @@ extension UserAccountOTPReducer {
             state.isLoading = false
             effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
         }
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ failure: OTPInputComponent.ServiceFailure
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.isLoading = false
+        state.fpsRoute?.destination = nil
+        switch failure {
+        case .connectivityError:
+            effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
+            
+        case let .serverError(message):
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+            if message == tryAgain {
+                effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                
+            } else {
+                effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
+            }
+        }
+        
         return (state, effect)
     }
     
@@ -92,7 +120,7 @@ extension UserAccountOTPReducer {
         var state = state
         var effect: Effect?
         
-        #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
+#warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
         if state.fpsRoute != nil,
            state.fpsRoute?.destination == nil {
             
@@ -118,15 +146,7 @@ extension UserAccountOTPReducer {
         
         switch response {
         case .success:
-            let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
-            let cancellable = otpInputViewModel.$state
-                .compactMap(\.projection)
-                .removeDuplicates()
-                .map(Event.otpInput)
-                .receive(on: scheduler)
-                .sink { dispatch($0) }
-            
-            state.fpsRoute?.destination = .confirmSetBankDefault(otpInputViewModel, cancellable)
+            state.fpsRoute?.destination = makeDestination(dispatch)
             
         case .connectivityError:
             state.fpsRoute?.destination = nil
@@ -139,18 +159,21 @@ extension UserAccountOTPReducer {
         
         return (state, effect)
     }
-}
-
-extension UserAccountOTPReducer {
     
-    typealias Inform = (String) -> Void
-    typealias Dispatch = (Event) -> Void
-    
-    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
-    
-    typealias State = UserAccountViewModel.State
-    typealias Event = UserAccountViewModel.Event.OTP
-    typealias Effect = UserAccountViewModel.Effect
+    func makeDestination(
+        _ dispatch: @escaping Dispatch
+    ) -> UserAccountViewModel.State.Destination.FPSDestination {
+        
+        let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
+        let cancellable = otpInputViewModel.$state
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.otpInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .confirmSetBankDefault(otpInputViewModel, cancellable)
+    }
 }
 
 // MARK: - OTP for Fast Payments Settings
@@ -170,7 +193,7 @@ private extension OTPInputState {
             }
             
         case let .input(input):
-            guard input.otpField.status == .inflight 
+            guard input.otpField.status == .inflight
             else { return nil }
             
             return .inflight
