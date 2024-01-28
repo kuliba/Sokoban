@@ -48,7 +48,7 @@ public extension UserAccountNavigationReducer {
             
         case .closeFPSAlert:
            // state.alert = nil
-            state.fpsRoute?.alert = nil
+            // state.fpsRoute?.alert = nil
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:

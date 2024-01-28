@@ -34,7 +34,7 @@ public extension UserAccountNavigationFPSReducer {
             let message = contracted.bankDefaultResponse.requestLimitMessage
             state.fpsRoute?.alert = message.map { .error(
                 message: $0,
-                event: .closeAlert
+                event: .closeFPSAlert
             ) }
             
         case (.success(.missingContract), nil):
