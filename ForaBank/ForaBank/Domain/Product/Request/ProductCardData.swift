@@ -55,7 +55,7 @@ class ProductCardData: ProductData {
         case accountId = "accountID"
         case externalId = "externalID"
         case statusPc = "statusPC"
-        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain, statusCard
+        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain
     }
     
     required init(from decoder: Decoder) throws {
