@@ -1,5 +1,5 @@
 //
-//  UserAccountViewModel.Route.swift
+//  UserAccountNavigation+State.swift
 //
 //
 //  Created by Igor Malyarov on 28.01.2024.
@@ -10,9 +10,9 @@ import FastPaymentsSettings
 import OTPInputComponent
 import UIPrimitives
 
-extension UserAccountViewModel {
+extension UserAccountNavigation {
     
-    struct Route: Equatable {
+    struct State: Equatable {
         
         var destination: Destination?
         var alert: Alert?
@@ -30,7 +30,7 @@ extension UserAccountViewModel {
     }
 }
 
-extension UserAccountViewModel.Route {
+extension UserAccountNavigation.State {
     
     typealias Event = UserAccountNavigation.Event
     
@@ -45,9 +45,9 @@ extension UserAccountViewModel.Route {
     }
 }
 
-extension UserAccountViewModel.Route.Destination {
+extension UserAccountNavigation.State.Destination {
     
-    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountViewModel.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
+    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
     
     enum FPSDestination: Equatable {
         
@@ -59,9 +59,9 @@ extension UserAccountViewModel.Route.Destination {
 
 // MARK: - Helpers
 
-extension UserAccountViewModel.Route {
+extension UserAccountNavigation.State {
     
-    var fpsRoute: UserAccountViewModel.State.Destination.FPSRoute? {
+    var fpsRoute: UserAccountNavigation.State.Destination.FPSRoute? {
         
         get {
             guard case let .fastPaymentsSettings(fpsRoute) = destination
@@ -94,7 +94,7 @@ where PrimaryEvent: Equatable,
     }
 }
 
-extension UserAccountViewModel.State.Destination: Hashable {
+extension UserAccountNavigation.State.Destination: Hashable {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
         
@@ -112,7 +112,7 @@ extension UserAccountViewModel.State.Destination: Hashable {
     }
 }
 
-extension UserAccountViewModel.State.Destination.FPSDestination: Hashable {
+extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
         

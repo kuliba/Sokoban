@@ -56,7 +56,7 @@ extension UserAccountOTPReducer {
     
     typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     
-    typealias State = UserAccountViewModel.State
+    typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event.OTP
     typealias Effect = UserAccountNavigation.Effect
 }
@@ -162,7 +162,7 @@ private extension UserAccountOTPReducer {
     
     func makeDestination(
         _ dispatch: @escaping Dispatch
-    ) -> UserAccountViewModel.State.Destination.FPSDestination {
+    ) -> UserAccountNavigation.State.Destination.FPSDestination {
         
         let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
         let cancellable = otpInputViewModel.$state

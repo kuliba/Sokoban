@@ -91,7 +91,7 @@ extension UserAccountReducer {
 
     typealias Dispatch = (Event) -> Void
     
-    typealias State = UserAccountViewModel.State
+    typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect
 }

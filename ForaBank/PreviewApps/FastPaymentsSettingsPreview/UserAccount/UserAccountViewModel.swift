@@ -145,7 +145,7 @@ private extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
-    typealias State = Route
+    typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect
     
