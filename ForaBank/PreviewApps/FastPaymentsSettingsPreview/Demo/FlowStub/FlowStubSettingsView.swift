@@ -45,9 +45,7 @@ struct FlowStubSettingsView: View {
     
     var body: some View {
         
-        VStack(spacing: 16) {
-            
-            happyPathButton()
+        VStack {
             
             List {
                 
@@ -68,6 +66,7 @@ struct FlowStubSettingsView: View {
         }
         .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(content: happyPathButton)
     }
     
     private var flowStub: FlowStub? {
@@ -132,6 +131,8 @@ struct FlowStubSettingsView: View {
             initiateOTP = .init(flowStub: .preview)
             submitOTP = .init(flowStub: .preview)
         }
+        .buttonStyle(.bordered)
+        .tint(.green)
     }
     
     private func applyButton() -> some View {
