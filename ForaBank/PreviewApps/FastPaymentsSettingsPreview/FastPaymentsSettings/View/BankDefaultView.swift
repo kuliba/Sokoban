@@ -15,7 +15,32 @@ struct BankDefaultView: View {
     
     var body: some View {
         
-        bankDefaultIcon(bankDefault)
+        HStack {
+         
+            icon()
+            label()
+            Spacer()
+            bankDefaultIcon(bankDefault)
+        }
+    }
+    
+    #warning("replace with actual")
+    private func icon() -> some View {
+        
+        Image(systemName: "building.columns")
+            .imageScale(.large)
+    }
+
+    private func label() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            Text("Банк по умолчанию")
+                .foregroundColor(.secondary)
+                .font(.subheadline)
+            
+            Text("Фора-банк")
+        }
     }
     
     @ViewBuilder
@@ -31,8 +56,10 @@ struct BankDefaultView: View {
         case .offEnabled:
             VStack(alignment: .leading) {
                 
-                ToggleMockView(status: .inactive)
-                Button("Установить Фора-банк", action: action)
+                Button(action: action) {
+            
+                    ToggleMockView(status: .inactive)
+                }
             }
             
         case .offDisabled:
