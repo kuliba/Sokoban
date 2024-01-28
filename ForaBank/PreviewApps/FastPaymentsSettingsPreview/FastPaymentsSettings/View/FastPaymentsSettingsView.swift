@@ -1,0 +1,98 @@
+//
+//  FastPaymentsSettingsView.swift
+//  FastPaymentsSettingsPreview
+//
+//  Created by Igor Malyarov on 28.01.2024.
+//
+
+import FastPaymentsSettings
+import SwiftUI
+
+struct FastPaymentsSettingsView: View {
+    
+    let settingsResult: UserPaymentSettingsResult?
+    let event: (FastPaymentsSettingsEvent) -> Void
+    let config: FastPaymentsSettingsConfig
+    
+    var body: some View {
+        
+        switch settingsResult {
+        case .none, .failure:
+            Text("Empty View").opacity(0.1)
+            
+        case let .success(.contracted(contractDetails)):
+            switch contractDetails.paymentContract.contractStatus {
+            case .active:
+                ActiveContractView(
+                    contractDetails: contractDetails,
+                    consentListEvent: { event(.consentList($0)) },
+                    productSelectEvent: { event(.products($0)) },
+                    actionOff: { event(.contract(.deactivateContract)) },
+                    setBankDefault: { event(.bankDefault(.setBankDefault)) },
+                    accountLinking: { event(.subscription(.getC2BSubButtonTapped)) },
+                    config: config.activeContract
+                )
+                
+            case .inactive:
+                inactiveContractView()
+            }
+            
+        case .success(.missingContract):
+            inactiveContractView()
+        }
+    }
+    
+    private func inactiveContractView() -> some View {
+        
+        InactiveContractView(
+            action: { event(.contract(.activateContract)) },
+            config: config.inactiveContract
+        )
+    }
+}
+
+struct FastPaymentsSettingsView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        fastPaymentsSettingsView(.success(.active()))
+            .previewDisplayName("active")
+        
+        VStack(content: other)
+            .previewDisplayName("non-active")
+        
+        other()
+    }
+    
+    private static func other() -> some View {
+        
+        Group {
+            
+            fastPaymentsSettingsView(.success(.inactive()))
+                .previewDisplayName("inactive")
+            
+            fastPaymentsSettingsView(.success(.missingContract()))
+                .previewDisplayName("missing")
+            
+            fastPaymentsSettingsView(.none)
+                .previewDisplayName("nil")
+            
+            fastPaymentsSettingsView(.failure(.connectivityError))
+                .previewDisplayName("connectivityError")
+            
+            fastPaymentsSettingsView(.failure(.serverError("Server Error (#8765).")))
+                .previewDisplayName("serverError")
+        }
+    }
+    
+    private static func fastPaymentsSettingsView(
+        _ settingsResult: UserPaymentSettingsResult?
+    ) -> some View {
+        
+        FastPaymentsSettingsView(
+            settingsResult: settingsResult,
+            event: { _ in },
+            config: .preview
+        )
+    }
+}
