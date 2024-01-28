@@ -63,6 +63,6 @@ extension UserAccountViewModel.Event {
 enum OTPInputStateProjection: Equatable {
     
     case failure(OTPInputComponent.ServiceFailure)
+    case inflight
     case validOTP
 }
-

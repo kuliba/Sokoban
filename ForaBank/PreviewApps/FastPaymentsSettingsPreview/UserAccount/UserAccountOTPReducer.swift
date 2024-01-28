@@ -42,6 +42,8 @@ extension UserAccountOTPReducer {
             
             switch otpInput {
             case let .failure(failure):
+            #warning("extract to helper")
+                state.isLoading = false
                 switch failure {
                 case .connectivityError:
                     effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
@@ -56,11 +58,16 @@ extension UserAccountOTPReducer {
                     }
                 }
                 
+            case .inflight:
+                state.isLoading = true
+                
             case .validOTP:
+                state.isLoading = false
                 effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
             }
             
         case .prepareSetBankDefault:
+            #warning("extract to helper")
             #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
             guard state.fpsRoute != nil,
                   state.fpsRoute?.destination == nil
@@ -143,9 +150,11 @@ private extension OTPInputState {
                 return .failure(.serverError(message))
             }
             
-        case .input:
-            #warning("looks like we're missing inflight state here and thus cannot react")
-            return nil
+        case let .input(input):
+            guard input.otpField.status == .inflight 
+            else { return nil }
+            
+            return .inflight
             
         case .validOTP:
             return .validOTP

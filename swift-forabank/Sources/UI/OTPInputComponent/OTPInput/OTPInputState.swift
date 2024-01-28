@@ -11,6 +11,14 @@ public enum OTPInputState: Equatable {
     case failure(ServiceFailure)
     case input(Input)
     case validOTP
+    #warning("idea for better - more readable model:")
+    /*
+     enum OTPInputState: Equatable {
+     
+         case input(Input)
+         case result(ServiceFailure?)
+     }
+     */
 }
 
 public extension OTPInputState {
