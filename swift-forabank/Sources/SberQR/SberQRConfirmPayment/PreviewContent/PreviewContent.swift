@@ -7,7 +7,7 @@
 
 import PaymentComponents
 
-extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+extension EditableAmount<Info> {
     
     static var preview: Self {
         
@@ -22,7 +22,7 @@ extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     }
 }
 
-extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
+extension FixedAmount<Info> {
     
     static var preview: Self {
         
@@ -37,7 +37,7 @@ extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
     }
 }
 
-public extension SberQRConfirmPaymentState.EditableAmount {
+public extension EditableAmount<GetSberQRDataResponse.Parameter.Info> {
     
     static var preview: Self {
         
@@ -52,7 +52,7 @@ public extension SberQRConfirmPaymentState.EditableAmount {
     }
 }
 
-public extension SberQRConfirmPaymentState.FixedAmount {
+public extension FixedAmount<GetSberQRDataResponse.Parameter.Info> {
     
     static var preview: Self {
         
@@ -71,7 +71,7 @@ extension ProductSelect {
     
     static let preview: Self = .init(selected: .cardPreview)
     static let previewExpanded: Self = .init(
-        selected: .accountPreview, 
+        selected: .accountPreview,
         products: .allProducts
     )
 }
@@ -110,7 +110,7 @@ extension GetSberQRDataResponse.Parameter.DataString {
     )
 }
 
-extension SberQRConfirmPaymentState.Header {
+extension Header {
     
     static let preview: Self = .init(
         id: .title,

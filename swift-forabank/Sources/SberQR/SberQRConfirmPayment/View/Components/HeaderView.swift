@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    let header: SberQRConfirmPaymentState.Header
+    let header: Header
     
     var body: some View {
         

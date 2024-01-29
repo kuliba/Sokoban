@@ -10,7 +10,7 @@ import SwiftUI
 
 struct EditableAmountSberQRConfirmPaymentView: View {
     
-    typealias State = SberQRConfirmPaymentStateOf<PaymentComponents.Info>.EditableAmount
+    typealias State = EditableAmount<PaymentComponents.Info>
     typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
     let state: State
@@ -66,7 +66,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
     }
 }
 
-private extension SberQRConfirmPaymentStateOf<PaymentComponents.Info>.EditableAmount {
+private extension EditableAmount<PaymentComponents.Info> {
     
     var currencySymbol: String {
         

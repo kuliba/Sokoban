@@ -11,28 +11,28 @@ extension UserPaymentSettings {
     
     static func active(
         _ consentList: ConsentListState = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .active,
                 consentList: consentList,
-                bankDefault: bankDefault
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
     
     static func inactive(
         _ consentList: ConsentListState = .success,
-        _ bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .inactive,
                 consentList: consentList,
-                bankDefault: bankDefault
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
@@ -45,12 +45,12 @@ extension UserPaymentSettings {
     }
 }
 
-extension UserPaymentSettings.ContractDetails {
+extension UserPaymentSettings.Details {
     
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
         consentList: ConsentListState = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled,
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
         productSelector: UserPaymentSettings.ProductSelector = .init(
             selectedProduct: .card,
             products: .preview
@@ -60,7 +60,7 @@ extension UserPaymentSettings.ContractDetails {
         .init(
             paymentContract: paymentContract,
             consentList: consentList,
-            bankDefault: bankDefault,
+            bankDefaultResponse: bankDefaultResponse,
             productSelector: productSelector
         )
     }
@@ -71,13 +71,17 @@ extension UserPaymentSettings.PaymentContract {
     static let active: Self = .init(
         id: .init(generateRandom11DigitNumber()),
         productID: Product.card.id,
-        contractStatus: .active
+        contractStatus: .active,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
     )
     
     static let inactive: Self = .init(
         id: .init(generateRandom11DigitNumber()),
         productID: Product.account.id,
-        contractStatus: .inactive
+        contractStatus: .inactive,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
     )
 }
 

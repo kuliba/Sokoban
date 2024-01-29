@@ -11,7 +11,7 @@ extension SberQRConfirmPaymentViewModel {
     
     var navTitle: String {
         
-        switch state {
+        switch state.confirm {
         case let .editableAmount(editableAmount):
             return editableAmount.header.value
             

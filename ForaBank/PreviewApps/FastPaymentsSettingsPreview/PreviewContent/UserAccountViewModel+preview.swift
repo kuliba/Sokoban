@@ -6,8 +6,9 @@
 //
 
 import FastPaymentsSettings
-import OTPInputComponent
 import Foundation
+import OTPInputComponent
+import UserAccountNavigationComponent
 
 extension UserAccountViewModel {
     
@@ -16,8 +17,9 @@ extension UserAccountViewModel {
         initialState: OTPInputState? = nil,
         duration: Int = 10,
         length: Int = 6,
-        route: Route = .init(),
-        flowStub: FlowStub
+        state: State = .init(),
+        flowStub: FlowStub,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
@@ -64,7 +66,7 @@ extension UserAccountViewModel {
                 completion(flowStub.prepareSetBankDefault)
             }
         }
-
+        
         let effectHandler = FastPaymentsSettingsEffectHandler(
             handleConsentListEffect: consentListHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
@@ -108,42 +110,70 @@ extension UserAccountViewModel {
             }
         }
         
-        return .init(
-            route: route,
-            prepareSetBankDefault: prepareSetBankDefault,
-            factory: .init(
-                makeFastPaymentsSettingsViewModel: {
-                    
-                    .init(
-                        reducer: reducer,
-                        effectHandler: effectHandler,
-                        scheduler: $0
-                    )
-                },
-                makeTimedOTPInputViewModel: {
-                    
-                    .init(
-                        viewModel: .default(
-                            initialState: initialState,
-                            duration: duration,
-                            length: length,
-                            initiateOTP: initiateOTP,
-                            submitOTP: submitOTP,
-                            scheduler: $0),
-                        scheduler: $0
-                    )
-                }
+        typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
+        typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+        
+        let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel = {
+            
+            .init(
+                reducer: reducer,
+                effectHandler: effectHandler,
+                scheduler: $0
             )
+        }
+        
+        let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel = {
+            
+            .init(
+                viewModel: .default(
+                    initialState: initialState,
+                    duration: duration,
+                    length: length,
+                    initiateOTP: initiateOTP,
+                    submitOTP: submitOTP,
+                    scheduler: $0),
+                scheduler: $0
+            )
+        }
+        
+        
+        let userAccountNavigationDemoReducer = UserAccountNavigationDemoReducer()
+        
+        let userAccountNavigationFPSReducer = UserAccountNavigationFPSReducer()
+        
+        let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer(
+            makeTimedOTPInputViewModel: makeTimedOTPInputViewModel,
+            scheduler: scheduler
+        )
+        
+        let userAccountNavigationReducer = UserAccountNavigationReducer(
+            demoReduce: userAccountNavigationDemoReducer.reduce(_:_:_:),
+            fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:_:),
+            otpReduce: userAccountNavigationOTPReducer.reduce(_:_:_:_:),
+            scheduler: .makeMain()
+        )
+        
+        let userAccountNavigationOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+        
+        return .init(
+            initialState: state,
+            reduce: userAccountNavigationReducer.reduce(_:_:_:_:),
+            handleOTPEffect: userAccountNavigationOTPEffectHandler.handleEffect(_:dispatch:),
+            makeFastPaymentsSettingsViewModel: makeFastPaymentsSettingsViewModel,
+            scheduler: scheduler
         )
     }
     
     static func preview(
         initialState: OTPInputState? = nil,
+        reduce: @escaping Reduce,
         duration: Int = 10,
         length: Int = 6,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
-        route: Route = .init(),
+        state: State = .init(),
         getProducts: @escaping ContractReducer.GetProducts = { .preview },
         changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
         createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
@@ -151,7 +181,8 @@ extension UserAccountViewModel {
         getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
         prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
         updateContract: @escaping ContractEffectHandler.UpdateContract,
-        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct
+        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> UserAccountViewModel {
         
         let bankDefaultReducer = BankDefaultReducer()
@@ -181,32 +212,23 @@ extension UserAccountViewModel {
             updateProduct: updateProduct
         )
         
+        let userAccountOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+        
         return .init(
-            route: route,
-            prepareSetBankDefault: prepareSetBankDefault,
-            factory: .init(
-                makeFastPaymentsSettingsViewModel: {
-                    
-                    .init(
-                        reducer: reducer,
-                        effectHandler: effectHandler,
-                        scheduler: $0
-                    )
-                },
-                makeTimedOTPInputViewModel: {
-                    
-                    .init(
-                        viewModel: .default(
-                            initialState: initialState,
-                            duration: duration,
-                            length: length,
-                            initiateOTP: initiateOTP,
-                            submitOTP: submitOTP,
-                            scheduler: $0),
-                        scheduler: $0
-                    )
-                }
-            )
+            initialState: state,
+            reduce: reduce,
+            handleOTPEffect: userAccountOTPEffectHandler.handleEffect(_:dispatch:),
+            makeFastPaymentsSettingsViewModel: {
+                
+                .init(
+                    reducer: reducer,
+                    effectHandler: effectHandler,
+                    scheduler: $0
+                )
+            },
+            scheduler: scheduler
         )
     }
 }
