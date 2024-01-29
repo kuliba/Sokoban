@@ -517,6 +517,7 @@
 		2A5457572A3B48F9007617C3 /* TransportPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */; };
 		2A5457592A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */; };
 		2A566EA32B67763700359E05 /* UserAccountNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A566EA22B67763700359E05 /* UserAccountNavigationStateManager.swift */; };
+		2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A566EA42B67830B00359E05 /* UserAccountNavigationComponent */; };
 		2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5762FA2AD805BA0026EBFE /* URLRequestFactory */; };
 		2A5871642A335E9E0059D4B6 /* AvtodorCrutchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */; };
 		2A58FA9F2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FA9E2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift */; };
@@ -4724,6 +4725,7 @@
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
+				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 				2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */,
@@ -12412,6 +12414,7 @@
 				C1AF2EA22B2C882100569F2B /* SberQR */,
 				2AB9E0B82B371E0C00D36D07 /* PaymentComponents */,
 				833325402B5AE955001920EB /* CardStatementAPI */,
+				2A566EA42B67830B00359E05 /* UserAccountNavigationComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -17362,6 +17365,10 @@
 		2A5190302A7E0BE80014B0B7 /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = URLRequestFactory;
+		};
+		2A566EA42B67830B00359E05 /* UserAccountNavigationComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserAccountNavigationComponent;
 		};
 		2A5762FA2AD805BA0026EBFE /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
