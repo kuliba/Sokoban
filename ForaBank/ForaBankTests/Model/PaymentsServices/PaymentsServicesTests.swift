@@ -345,7 +345,7 @@ final class PaymentsServicesTests: XCTestCase {
         
         let excludingParameters = try sut.paymentsServicesStepExcludingParameters(response: transferAnywayResponse)
         
-        XCTAssertEqual(Set(excludingParameters), Set(["a3_NUMBER_1_21"]))
+        XCTAssertEqual(Set(excludingParameters), Set(["a3_NUMBER_1_21", "AFResponse"]))
     }
     
     func test_paymentsServicesStepRequired_notContainsRequiredParameters() async throws {
