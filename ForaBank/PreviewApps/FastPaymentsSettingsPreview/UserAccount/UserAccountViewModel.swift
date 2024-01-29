@@ -135,8 +135,8 @@ private extension UserAccountViewModel {
             state = demoState
             effect = demoEffect.map(Effect.demo)
             
-        case let .fps(.updated(fpsStateProjection)):
-            (state, effect) = reduce(state, with: fpsStateProjection)
+        case let .fps(.updated(fpsState)):
+            state = reduce(state, with: fpsState)
             
         case let .otp(otp):
             (state, effect) = reduce(state, with: otp)
@@ -172,7 +172,7 @@ private extension UserAccountViewModel {
             state.alert = .fpsAlert(.ok(
                 title: "Ошибка",
                 message: message,
-                primaryAction: { [weak self] in self?.event(.closeAlert) }
+                action: { [weak self] in self?.event(.closeAlert) }
             ))
         }
         
@@ -202,7 +202,7 @@ private extension UserAccountViewModel {
             case .alert:
                 state.alert = .alert(.ok(
                     title: "Error",
-                    primaryAction: { [weak self] in self?.event(.closeAlert)
+                    action: { [weak self] in self?.event(.closeAlert)
                     }
                 ))
                 
@@ -260,30 +260,30 @@ private extension UserAccountViewModel {
     // MARK: - Fast Payments Settings domain
     
     func reduce(
-        _ state: Route,
+        _ state: State,
         with settings: FastPaymentsSettingsState
-    ) -> (Route, Effect?) {
+    ) -> State {
         
         var state = state
-        var effect: Effect?
         
-        switch (settings.userPaymentSettings, settings.status) {
+        switch (settings.settingsResult, settings.status) {
         case (_, .inflight):
             state.isLoading = true
             
         case (nil, _):
             break
             
-        case (.contracted, nil):
+        case let (.success(.contracted(contracted)), nil):
             state.isLoading = false
+            let message = contracted.bankDefaultResponse.requestLimitMessage
+            state.alert = message.map(defaultBankRequestsLimitFPSAlert)
             
-        case (.missingContract, nil):
+        case (.success(.missingContract), nil):
             state.isLoading = false
             state.alert = missingContractFPSAlert()
             
-        case let (.contracted, .some(status)),
-            let (.missingContract, .some(status)):
-            (state, effect) = update(state, with: status)
+        case let (.success, .some(status)):
+            state = update(state, with: status)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -298,16 +298,15 @@ private extension UserAccountViewModel {
             }
         }
         
-        return (state, effect)
+        return state
     }
     
     func update(
-        _ state: Route,
+        _ state: State,
         with status: FastPaymentsSettingsState.Status
-    ) -> (Route, Effect?) {
+    ) -> State {
         
         var state = state
-        var effect: Effect?
         
         switch status {
         case .inflight:
@@ -332,8 +331,8 @@ private extension UserAccountViewModel {
             state.alert = missingProductFPSAlert()
             
         case .confirmSetBankDefault:
-            //            state.fpsDestination = .confirmSetBankDefault
-            //            effect = .fps(.resetStatus)
+            // state.fpsDestination = .confirmSetBankDefault
+            // effect = .fps(.resetStatus)
             fatalError("what should happen here?")
             
         case .setBankDefault:
@@ -351,7 +350,7 @@ private extension UserAccountViewModel {
             state = .init()
         }
         
-        return (state, effect)
+        return state
     }
     
     func serverErrorFPSAlert(
@@ -361,7 +360,7 @@ private extension UserAccountViewModel {
         
         .fpsAlert(.ok(
             message: message,
-            primaryAction: { [weak self] in self?.event(event) }
+            action: { [weak self] in self?.event(event) }
         ))
     }
     
@@ -373,7 +372,20 @@ private extension UserAccountViewModel {
         
         return .fpsAlert(.ok(
             message: message,
-            primaryAction: { [weak self] in self?.event(event) }
+            action: { [weak self] in self?.event(event) }
+        ))
+    }
+    
+    func defaultBankRequestsLimitFPSAlert(
+        _ message: String
+    ) -> Route.Alert {
+        
+        
+#warning("extract helper as `static AlertViewModel.missingContract(action:)`")
+        return         .fpsAlert(.ok(
+            title: "Ошибка",
+            message: message,
+            action: { [weak self] in self?.event(.closeAlert) }
         ))
     }
     
@@ -480,7 +492,7 @@ private extension AlertViewModel {
         .ok(
             title: "Не найден договор СБП",
             message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-            primaryAction: action
+            action: action
         )
     }
     
@@ -491,7 +503,7 @@ private extension AlertViewModel {
         .ok(
             title: "Сервис не доступен",
             message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-            primaryAction: action
+            action: action
         )
     }
     
@@ -608,7 +620,7 @@ extension UserAccountViewModel {
                 self?.state.alert = .fpsAlert(.ok(
                     title: "Ошибка",
                     message: message,
-                    primaryAction: { [weak self] in self?.event(.closeFPSAlert) }
+                    action: { [weak self] in self?.event(.closeFPSAlert) }
                 ))
             }
             
@@ -705,7 +717,7 @@ private extension AlertViewModel {
     static func ok(
         title: String = "",
         message: String? = nil,
-        primaryAction: @escaping () -> Void
+        action: @escaping () -> Void
     ) -> Self {
         
         self.init(
@@ -714,7 +726,7 @@ private extension AlertViewModel {
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                action: primaryAction
+                action: action
             )
         )
     }

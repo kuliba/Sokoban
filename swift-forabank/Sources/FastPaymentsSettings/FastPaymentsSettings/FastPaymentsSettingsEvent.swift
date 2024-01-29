@@ -11,7 +11,7 @@ public enum FastPaymentsSettingsEvent: Equatable {
     
     // General Settings
     case appear
-    case loadSettings(UserPaymentSettings)
+    case loadSettings(UserPaymentSettingsResult)
     case resetStatus
     
     case bankDefault(BankDefaultEvent)

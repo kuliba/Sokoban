@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ActiveContractView: View {
     
-    let contractDetails: UserPaymentSettings.ContractDetails
+    let contractDetails: UserPaymentSettings.Details
 #warning("combine event closures into one closure")
     let consentListEvent: (ConsentListEvent) -> Void
     let productSelectEvent: (ProductsEvent) -> Void
@@ -30,7 +30,7 @@ struct ActiveContractView: View {
             )
             
             BankDefaultView(
-                bankDefault: contractDetails.bankDefault,
+                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
                 action: setBankDefault
             )
             
@@ -107,7 +107,7 @@ private extension Product.ProductType {
     }
 }
 
-private extension UserPaymentSettings.ContractDetails {
+private extension UserPaymentSettings.Details {
     
     var productSelect: ProductSelect {
         
@@ -165,7 +165,7 @@ struct ActiveContractView_Previews: PreviewProvider {
     }
     
     private static func activeContractView(
-        _ contractDetails: UserPaymentSettings.ContractDetails
+        _ contractDetails: UserPaymentSettings.Details
     ) -> some View {
         
         ActiveContractView(

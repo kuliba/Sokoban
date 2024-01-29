@@ -73,7 +73,7 @@ public extension FastPaymentsSettingsEffectHandler {
     typealias HandleConsentListEffect = (ConsentListEffect, @escaping ConsentListDispatch) -> Void
     typealias HandleContractEffect = (ContractEffect, @escaping ContractDispatch) -> Void
     typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
-    typealias GetSettings = (@escaping (UserPaymentSettings) -> Void) -> Void
+    typealias GetSettings = (@escaping (UserPaymentSettingsResult) -> Void) -> Void
 }
 
 // micro-service `f`

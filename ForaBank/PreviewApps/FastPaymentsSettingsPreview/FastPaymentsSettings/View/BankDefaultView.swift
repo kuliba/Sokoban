@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BankDefaultView: View {
     
-    let bankDefault: UserPaymentSettings.BankDefault
+    let bankDefault: BankDefault
     let action: () -> Void
     
     var body: some View {
@@ -23,7 +23,7 @@ struct BankDefaultView: View {
     
     @ViewBuilder
     private func bankDefaultIcon(
-        _ bankDefault: UserPaymentSettings.BankDefault
+        _ bankDefault: BankDefault
     ) -> some View {
         
         switch bankDefault {
@@ -45,6 +45,11 @@ struct BankDefaultView: View {
     }
 }
 
+extension BankDefaultView {
+    
+    typealias BankDefault = UserPaymentSettings.GetBankDefaultResponse.BankDefault
+}
+
 struct BankDefaultView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -58,7 +63,7 @@ struct BankDefaultView_Previews: PreviewProvider {
     }
     
     static func bankDefaultView(
-        _ bankDefault: UserPaymentSettings.BankDefault
+        _ bankDefault: BankDefaultView.BankDefault
     ) -> some View {
         
         BankDefaultView(bankDefault: bankDefault, action: {})
