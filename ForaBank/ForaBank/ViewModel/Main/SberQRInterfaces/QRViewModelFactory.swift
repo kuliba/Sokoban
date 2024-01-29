@@ -27,7 +27,7 @@ extension QRViewModelFactory {
             makeSberQRConfirmPaymentViewModel: { _,_ in
                 
                 SberQRConfirmPaymentViewModel(
-                    initialState: .editableAmount(.preview),
+                    initialState: .init(confirm: .editableAmount(.preview)),
                     reduce: { state, _ in state },
                     scheduler: .makeMain()
                 )
