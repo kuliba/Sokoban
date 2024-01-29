@@ -245,13 +245,30 @@ extension ProductProfileViewModel {
                 makeTemplatesListViewModel: makeTemplatesListViewModel
             )
             
+            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
+                
+                .init(
+                    productStatement: productStatementData,
+                    product: productData,
+                    updateFastAll: {
+                        model.action.send(ModelAction.Products.Update.Fast.All())
+                    },
+                    model: model
+                )
+            }
+
+            let operationDetailFactory = OperationDetailFactory(
+                makeOperationDetailViewModel: makeOperationDetailViewModel
+            )
+            
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 fastPaymentsServices: fastPaymentsServices,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
-                paymentsTransfersFactory: paymentsTransfersFactory,
+                paymentsTransfersFactory: paymentsTransfersFactory, 
+                operationDetailFactory: operationDetailFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: rootView,

@@ -28,9 +28,20 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     let model: Model
     private var bindings = Set<AnyCancellable>()
     private let animationDuration: Double = 0.5
+    private let updateFastAll: UpdateFastAll
     private var paymentTemplateId: Int?
     
-    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]? = nil, featureButtons: [FeatureButtonViewModel], templateButton: TemplateButtonView.ViewModel?, isLoading: Bool, model: Model = .emptyMock) {
+    init(
+        id: ProductStatementData.ID,
+        header: HeaderViewModel,
+        operation: OperationViewModel,
+        actionButtons: [ActionButtonViewModel]? = nil,
+        featureButtons: [FeatureButtonViewModel],
+        templateButton: TemplateButtonView.ViewModel?,
+        isLoading: Bool,
+        updateFastAll: @escaping UpdateFastAll,
+        model: Model = .emptyMock
+    ) {
         
         self.id = id
         self.header = header
@@ -39,6 +50,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.templateButton = templateButton
         self.featureButtons = featureButtons
         self.isLoading = isLoading
+        self.updateFastAll = updateFastAll
         self.model = model
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel initilazed")
@@ -49,7 +61,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel deinitilazed")
     }
     
-    convenience init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
+    convenience init?(
+        productStatement: ProductStatementData,
+        product: ProductData,
+        updateFastAll: @escaping UpdateFastAll,
+        model: Model
+    ) {
         
         guard productStatement.paymentDetailType != .notFinance else {
             return nil
@@ -58,7 +75,15 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         let header = HeaderViewModel(statement: productStatement, model: model)
         let operation = OperationViewModel(productStatement: productStatement, model: model)
         
-        self.init(id: productStatement.id, header: header, operation: operation, featureButtons: [], templateButton: nil, isLoading: false, model: model)
+        self.init(
+            id: productStatement.id,
+            header: header,
+            operation: operation,
+            featureButtons: [],
+            templateButton: nil,
+            isLoading: false,
+            updateFastAll: updateFastAll,
+            model: model)
         bind()
 
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
@@ -76,7 +101,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             }
         }
         
-        self.model.action.send(ModelAction.Products.Update.Fast.All())
+        self.updateFastAll()
     }
     
     func bindTemplateButton(with button: TemplateButtonView.ViewModel) {
@@ -378,6 +403,8 @@ private extension OperationDetailViewModel {
 //MARK: - Types
 
 extension OperationDetailViewModel {
+    
+    typealias UpdateFastAll = () -> Void
 
     enum PayeeViewModel {
         

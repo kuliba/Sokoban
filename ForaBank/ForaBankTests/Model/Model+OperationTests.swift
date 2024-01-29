@@ -29,7 +29,8 @@ final class Model_OperationTests: XCTestCase {
         let sut = makeSUT(detail: .emptyDataDetail)
         let operationDetail = OperationDetailViewModel(
             productStatement: .stub(),
-            product: .stub(),
+            product: .stub(), 
+            updateFastAll: {},
             model: sut
         )
         
