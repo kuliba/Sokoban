@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/LinkableText.xctestplan"
+            reference = "container:../ForaBank/TestPlans/LinkableText.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
