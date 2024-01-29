@@ -10,6 +10,7 @@ import CombineSchedulers
 import FastPaymentsSettings
 import Foundation
 import OTPInputComponent
+import UIPrimitives
 
 final class UserAccountViewModel: ObservableObject {
     
@@ -97,9 +98,9 @@ extension UserAccountViewModel {
 private extension UserAccountViewModel {
     
     func reduce(
-        _ state: Route,
+        _ state: State,
         _ event: Event
-    ) -> (Route, Effect?) {
+    ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
@@ -114,21 +115,17 @@ private extension UserAccountViewModel {
             effect = .fps(.resetStatus)
             
         case .dismissFPSDestination:
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
+            unbindFPSDestination()
             state.fpsDestination = nil
             
         case .dismissDestination:
-            destinationCancellable?.cancel()
-            destinationCancellable = nil
+            unbindDestination()
             state.destination = nil
             
         case .dismissRoute:
             state = .init()
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
-            destinationCancellable?.cancel()
-            destinationCancellable = nil
+            unbindFPSDestination()
+            unbindDestination()
             
         case let .demo(demoEvent):
             let (demoState, demoEffect) = reduce(state, demoEvent)
@@ -146,9 +143,9 @@ private extension UserAccountViewModel {
     }
     
     func update(
-        _ state: Route,
+        _ state: State,
         with response: Event.OTP.PrepareSetBankDefaultResponse
-    ) -> (Route, Effect?) {
+    ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
@@ -161,7 +158,7 @@ private extension UserAccountViewModel {
 #warning("using factory and the need to subscribe to state changes prevents from making this injectable pure function")
             let otpInputViewModel = factory.makeTimedOTPInputViewModel(scheduler)
             state.fpsDestination = .confirmSetBankDefault(otpInputViewModel)
-            bind(otpInputViewModel)
+            bind(fpsDestination: state.fpsDestination)
             
         case .connectivityError:
             state.fpsDestination = nil
@@ -169,10 +166,9 @@ private extension UserAccountViewModel {
             self.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.alert = .fpsAlert(.ok(
-                title: "Ошибка",
-                message: message,
-                action: { [weak self] in self?.event(.closeAlert) }
+            state.alert = .fpsAlert(.error(
+                message: message, 
+                event: .closeAlert
             ))
         }
         
@@ -200,11 +196,7 @@ private extension UserAccountViewModel {
             
             switch loaded {
             case .alert:
-                state.alert = .alert(.ok(
-                    title: "Error",
-                    action: { [weak self] in self?.event(.closeAlert)
-                    }
-                ))
+                state.alert = .alert(.error(event: .closeAlert))
                 
             case .informer:
 #warning("direct change of state that is outside of reducer")
@@ -276,11 +268,14 @@ private extension UserAccountViewModel {
         case let (.success(.contracted(contracted)), nil):
             state.isLoading = false
             let message = contracted.bankDefaultResponse.requestLimitMessage
-            state.alert = message.map(defaultBankRequestsLimitFPSAlert)
+            state.alert = message.map { .fpsAlert(.error(
+                message: $0,
+                event: .closeAlert
+            )) }
             
         case (.success(.missingContract), nil):
             state.isLoading = false
-            state.alert = missingContractFPSAlert()
+            state.alert = .fpsAlert(.missingContract(event: .closeAlert))
             
         case let (.success, .some(status)):
             state = update(state, with: status)
@@ -290,11 +285,14 @@ private extension UserAccountViewModel {
             switch failure {
             case let .serverError(message):
                 state.isLoading = false
-                state.alert = serverErrorFPSAlert(message, .dismissRoute)
+                state.alert = .fpsAlert(.error(
+                    message: message,
+                    event: .dismissRoute
+                ))
                 
             case .connectivityError:
                 state.isLoading = false
-                state.alert = tryAgainFPSAlert(.dismissRoute)
+                state.alert = .fpsAlert(.tryAgainFPSAlert(.dismissRoute))
             }
         }
         
@@ -319,16 +317,19 @@ private extension UserAccountViewModel {
         case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
-            state.alert = tryAgainFPSAlert(.closeAlert)
+            state.alert = .fpsAlert(.tryAgainFPSAlert(.closeAlert))
             
         case let .serverError(message):
             state.isLoading = false
             // non-final => closeAlert
-            state.alert = serverErrorFPSAlert(message, .closeAlert)
+            state.alert = .fpsAlert(.ok(
+                message: message, 
+                event: .closeAlert
+            ))
             
         case .missingProduct:
             state.isLoading = false
-            state.alert = missingProductFPSAlert()
+            state.alert = .fpsAlert(.missingProduct(event: .dismissRoute))
             
         case .confirmSetBankDefault:
             // state.fpsDestination = .confirmSetBankDefault
@@ -336,7 +337,10 @@ private extension UserAccountViewModel {
             fatalError("what should happen here?")
             
         case .setBankDefault:
-            state.alert = setBankDefaultFPSAlert()
+            state.alert = .fpsAlert(.setBankDefault(
+                primaryEvent: .otp(.prepareSetBankDefault),
+                secondaryEvent: .closeAlert
+            ))
             
         case .setBankDefaultSuccess:
             state.isLoading = false
@@ -353,70 +357,6 @@ private extension UserAccountViewModel {
         return state
     }
     
-    func serverErrorFPSAlert(
-        _ message: String,
-        _ event: Event
-    ) -> Route.Alert {
-        
-        .fpsAlert(.ok(
-            message: message,
-            action: { [weak self] in self?.event(event) }
-        ))
-    }
-    
-    func tryAgainFPSAlert(
-        _ event: Event
-    ) -> Route.Alert {
-        
-        let message = "Превышено время ожидания. Попробуйте позже"
-        
-        return .fpsAlert(.ok(
-            message: message,
-            action: { [weak self] in self?.event(event) }
-        ))
-    }
-    
-    func defaultBankRequestsLimitFPSAlert(
-        _ message: String
-    ) -> Route.Alert {
-        
-        
-#warning("extract helper as `static AlertViewModel.missingContract(action:)`")
-        return         .fpsAlert(.ok(
-            title: "Ошибка",
-            message: message,
-            action: { [weak self] in self?.event(.closeAlert) }
-        ))
-    }
-    
-    func missingContractFPSAlert() -> Route.Alert {
-        
-        .fpsAlert(.missingContract(
-            action: { [weak self] in self?.event(.closeAlert) }
-        ))
-    }
-    
-    func missingProductFPSAlert() -> Route.Alert {
-        
-        .fpsAlert(.missingProduct(
-            action: { [weak self] in self?.event(.dismissRoute) }
-        ))
-    }
-    
-    func setBankDefaultFPSAlert() -> Route.Alert {
-        
-        .fpsAlert(.setBankDefault(
-            primaryAction: { [weak self] in
-                
-                self?.event(.otp(.prepareSetBankDefault))
-            },
-            secondaryAction: { [weak self] in
-                
-                self?.event(.closeAlert)
-            }
-        ))
-    }
-    
     // MARK: - OTP Domain
     
     func reduce(
@@ -430,8 +370,7 @@ private extension UserAccountViewModel {
         switch otp {
         case let .otpInput(otpInput):
 #warning("move nullification to reducer where fps state is reduced")
-            fpsDestinationCancellable?.cancel()
-            fpsDestinationCancellable = nil
+            unbindFPSDestination()
             state.fpsDestination = nil
             
             switch otpInput {
@@ -483,48 +422,104 @@ private extension UserAccountViewModel {
     }
 }
 
-private extension AlertViewModel {
+private extension AlertModel
+where PrimaryEvent == UserAccountViewModel.Event,
+      SecondaryEvent == UserAccountViewModel.Event {
+    
+    static func `default`(
+        title: String,
+        message: String,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: secondaryEvent
+            )
+        )
+    }
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .ok(
+            title: "Ошибка",
+            message: message,
+            event: event
+        )
+    }
+    
+    static func ok(
+        title: String = "",
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        self.init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: event
+            )
+        )
+    }
     
     static func missingContract(
-        action: @escaping () -> Void
+        event: PrimaryEvent
     ) -> Self {
         
         .ok(
             title: "Не найден договор СБП",
             message: "Договор будет создан автоматически, если Вы включите переводы через СБП",
-            action: action
+            event: event
         )
     }
     
     static func missingProduct(
-        action: @escaping () -> Void
+        event: PrimaryEvent
     ) -> Self {
         
         .ok(
             title: "Сервис не доступен",
             message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-            action: action
+            event: event
         )
     }
     
     static func setBankDefault(
-        primaryAction: @escaping () -> Void,
-        secondaryAction: @escaping () -> Void
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent
     ) -> Self {
         
-        .init(
+        .default(
             title: "Внимание",
             message: "Фора-банк будет выбран банком по умолчанию",
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                action: primaryAction),
-            secondaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                action: secondaryAction
-            )
+            primaryEvent: primaryEvent,
+            secondaryEvent: secondaryEvent
         )
+    }
+    
+    static func tryAgainFPSAlert(
+        _ event: PrimaryEvent
+    ) -> Self {
+        
+        let message = "Превышено время ожидания. Попробуйте позже"
+        
+        return .error(message: message, event: event)
     }
 }
 
@@ -617,10 +612,9 @@ extension UserAccountViewModel {
         case let .serverError(message):
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
                 
-                self?.state.alert = .fpsAlert(.ok(
-                    title: "Ошибка",
+                self?.state.alert = .fpsAlert(.error(
                     message: message,
-                    action: { [weak self] in self?.event(.closeFPSAlert) }
+                    event: .closeFPSAlert
                 ))
             }
             
@@ -652,36 +646,64 @@ extension UserAccountViewModel {
     func openFastPaymentsSettings() {
         
         let fpsViewModel = factory.makeFastPaymentsSettingsViewModel(scheduler)
-        bind(fpsViewModel)
         state.destination = .fastPaymentsSettings(fpsViewModel)
+        bind(state.destination)
 #warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
     }
+}
+
+// MARK: - Bind Destinations
+
+private extension UserAccountViewModel {
     
-    private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
+    func bind(
+        _ destination: State.Destination? = nil,
+        fpsDestination: State.FPSDestination? = nil
+    ) {
+        switch destination {
+        case .none:
+            break
+            
+        case let .fastPaymentsSettings(fastPaymentsSettings):
+            destinationCancellable = fastPaymentsSettings.$state
+                .removeDuplicates()
+                .map(Event.FastPaymentsSettings.updated)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.fps($0)) }
+        }
         
-        destinationCancellable = viewModel.$state
-            .removeDuplicates()
-            .map(Event.FastPaymentsSettings.updated)
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.fps($0))}
+        switch fpsDestination {
+        case .none:
+            break
+            
+        case let .c2BSub(c2BSub):
+            break
+            
+        case let .confirmSetBankDefault(confirmSetBankDefault):
+            fpsDestinationCancellable = confirmSetBankDefault.$state
+                .compactMap(\.projection)
+                .removeDuplicates()
+                .map(Event.OTP.otpInput)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.event(.otp($0))}
+        }
+    }
+    
+    func unbindDestination() {
+        
+        destinationCancellable?.cancel()
+        destinationCancellable = nil
+    }
+    
+    func unbindFPSDestination() {
+        
+        fpsDestinationCancellable?.cancel()
+        fpsDestinationCancellable = nil
     }
 }
 
 // MARK: - OTP for Fast Payments Settings
-
-extension UserAccountViewModel {
-    
-    private func bind(_ viewModel: TimedOTPInputViewModel) {
-        
-        fpsDestinationCancellable = viewModel.$state
-            .compactMap(\.projection)
-            .removeDuplicates()
-            .map(Event.OTP.otpInput)
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.otp($0))}
-    }
-}
 
 enum OTPInputStateProjection: Equatable {
     
@@ -709,26 +731,6 @@ extension OTPInputState {
         case .validOTP:
             return .validOTP
         }
-    }
-}
-
-private extension AlertViewModel {
-    
-    static func ok(
-        title: String = "",
-        message: String? = nil,
-        action: @escaping () -> Void
-    ) -> Self {
-        
-        self.init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                action: action
-            )
-        )
     }
 }
 
@@ -762,10 +764,10 @@ extension UserAccountViewModel {
         
         enum Alert: Equatable {
             
-            case alert(AlertViewModel)
-            case fpsAlert(AlertViewModel)
+            case alert(AlertModelOf<Event>)
+            case fpsAlert(AlertModelOf<Event>)
             
-            var alert: AlertViewModel? {
+            var alert: AlertModelOf<Event>? {
                 
                 if case let .alert(alert) = self {
                     return alert
@@ -774,7 +776,7 @@ extension UserAccountViewModel {
                 }
             }
             
-            var fpsAlert: AlertViewModel? {
+            var fpsAlert: AlertModelOf<Event>? {
                 
                 if case let .fpsAlert(fpsAlert) = self {
                     return fpsAlert

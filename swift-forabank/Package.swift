@@ -50,6 +50,7 @@ let package = Package(
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        .uiPrimitives,
         // UI Components
         .paymentComponents,
         // tools
@@ -142,6 +143,7 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        .uiPrimitives,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -331,6 +333,13 @@ private extension Product {
         name: .uiKitHelpers,
         targets: [
             .uiKitHelpers,
+        ]
+    )
+    
+    static let uiPrimitives = library(
+        name: .uiPrimitives,
+        targets: [
+            .uiPrimitives,
         ]
     )
     
@@ -1079,6 +1088,11 @@ private extension Target {
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
+    static let uiPrimitives = target(
+        name: .uiPrimitives,
+        path: "Sources/UI/\(String.uiPrimitives)"
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1298,6 +1312,10 @@ private extension Target.Dependency {
         name: .uiKitHelpers
     )
     
+    static let uiPrimitives = byName(
+        name: .uiPrimitives
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = byName(
@@ -1464,6 +1482,8 @@ private extension String {
     static let textFieldUITests = "TextFieldUITests"
     
     static let uiKitHelpers = "UIKitHelpers"
+    
+    static let uiPrimitives = "UIPrimitives"
     
     // MARK: - UI Components
 
