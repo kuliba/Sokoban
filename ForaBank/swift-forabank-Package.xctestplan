@@ -277,6 +277,13 @@
         "identifier" : "UserAccountNavigationComponentTests",
         "name" : "UserAccountNavigationComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
     }
   ],
   "version" : 1

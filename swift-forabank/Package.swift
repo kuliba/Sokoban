@@ -54,6 +54,7 @@ let package = Package(
         .userAccountNavigationComponent,
         // UI Components
         .paymentComponents,
+        .carouselComponent,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -155,6 +156,8 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .carouselComponent,
+        .carouselComponentTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -363,6 +366,13 @@ private extension Product {
             .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
+        ]
+    )
+    
+    static let carouselComponent = library(
+        name: .carouselComponent,
+        targets: [
+            .carouselComponent
         ]
     )
     
@@ -1173,6 +1183,22 @@ private extension Target {
         path: "Sources/UI/Components/\(String.paymentComponents)"
     )
     
+    static let carouselComponent = target(
+        name: .carouselComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.carouselComponent)"
+    )
+    
+    static let carouselComponentTests = testTarget(
+        name: .carouselComponentTests,
+        dependencies: [
+            .carouselComponent
+        ],
+        path: "Tests/UI/Components/\(String.carouselComponentTests)"
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -1382,6 +1408,10 @@ private extension Target.Dependency {
         name: .sharedConfigs
     )
     
+    static let carouselComponent = byName(
+        name: .carouselComponent
+    )
+    
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1542,6 +1572,9 @@ private extension String {
     static let productSelectComponentTests = "ProductSelectComponentTests"
 
     static let sharedConfigs = "SharedConfigs"
+    
+    static let carouselComponent = "CarouselComponent"
+    static let carouselComponentTests = "CarouselComponentTests"
     
     // MARK: - Infra
     

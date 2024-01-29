@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E6995ECB-C60B-456A-BFE1-22B4B1AF890E",
+      "name" : "CarouselComponentTests",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}
