@@ -33,8 +33,8 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldCallReducerWithEvent_fixed() {
         
-        let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let event: SUT.Event = .pay
+        let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let (sut, _, reducerSpy) = makeSUT(initialState: initialState)
         
         sut.event(event)
@@ -45,8 +45,8 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldCallReducerWithEvent_editable() {
         
-        let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let event: SUT.Event = .pay
+        let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let (sut, _, reducerSpy) = makeSUT(initialState: initialState)
         
         sut.event(event)
@@ -57,9 +57,9 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldChangeStateByReducer_fixed() {
         
+        let event: SUT.Event = .pay
         let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -72,9 +72,9 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldChangeStateByReducer_editable() {
         
+        let event: SUT.Event = .pay
         let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -87,9 +87,9 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldNotChangeStateTwice_fixed() {
         
+        let event: SUT.Event = .pay
         let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -103,9 +103,9 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     func test_event_pay_shouldNotChangeStateTwice_editable() {
         
+        let event: SUT.Event = .pay
         let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
