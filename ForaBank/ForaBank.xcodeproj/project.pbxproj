@@ -1952,7 +1952,6 @@
 		C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */; };
 		C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */ = {isa = PBXBuildFile; productRef = C1AF2EA22B2C882100569F2B /* SberQR */; };
 		C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */; };
-		C1BA23DF2AC701EC00425B10 /* StickersStyleConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */; };
 		C1BA23E52ACD543B00425B10 /* Service+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E42ACD543B00425B10 /* Service+Payments.swift */; };
 		C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */; };
 		C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1BC73E42AE277CE0022D849 /* TextFieldComponent */; };
@@ -4246,7 +4245,6 @@
 		C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SbpPayTests.swift"; sourceTree = "<group>"; };
 		C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTemplateDataTests.swift; sourceTree = "<group>"; };
 		C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsC2BTests.swift"; sourceTree = "<group>"; };
-		C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStyleConfiguration.swift; sourceTree = "<group>"; };
 		C1BA23E42ACD543B00425B10 /* Service+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+Payments.swift"; sourceTree = "<group>"; };
 		C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+stickerPayment.swift"; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
@@ -4276,6 +4274,7 @@
 		C1F8F600294A53B600FE5703 /* HintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintViewModel.swift; sourceTree = "<group>"; };
 		C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Font+Assets.swift"; sourceTree = "<group>"; };
 		C8BDBA5E8E5B98668466191C /* Color+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Color+Assets.swift"; sourceTree = "<group>"; };
+		D4AF64D02B6014E4003F8E79 /* CarouselComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CarouselComponent.xctestplan; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -9449,7 +9448,6 @@
 				5059D4482863B75900DA446D /* CurrencyWallet */,
 				ED15DAE32811639D00BF7E9F /* Account */,
 				0B4145BA2810931A0097430C /* Messages */,
-				C1BA23DD2AC701C800425B10 /* StickersOrder */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -10441,14 +10439,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		C1BA23DD2AC701C800425B10 /* StickersOrder */ = {
-			isa = PBXGroup;
-			children = (
-				C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */,
-			);
-			path = StickersOrder;
-			sourceTree = "<group>";
-		};
 		C1BA23E32ACD542400425B10 /* PaymentService */ = {
 			isa = PBXGroup;
 			children = (
@@ -11229,6 +11219,7 @@
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				D4AF64D02B6014E4003F8E79 /* CarouselComponent.xctestplan */,
 				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
 				2AC4BE9B2B62C53C00650962 /* FastPaymentsSettingsPreview.xctestplan */,
 				8306C12B2B600EB7007FDA89 /* ProductProfile.xctestplan */,
@@ -13344,7 +13335,6 @@
 				68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */,
 				777460F72922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift in Sources */,
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
-				C1BA23DF2AC701EC00425B10 /* StickersStyleConfiguration.swift in Sources */,
 				774A8B4D2865FD3600B81140 /* MyProductsSectionView.swift in Sources */,
 				2AEF68582AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,

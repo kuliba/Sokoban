@@ -910,6 +910,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CarouselComponent"
+               BuildableName = "CarouselComponent"
+               BlueprintName = "CarouselComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ProductProfile"
                BuildableName = "ProductProfile"
                BlueprintName = "ProductProfile"
@@ -1175,6 +1189,16 @@
                BlueprintIdentifier = "ProductProfileTests"
                BuildableName = "ProductProfileTests"
                BlueprintName = "ProductProfileTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CarouselComponentTests"
+               BuildableName = "CarouselComponentTests"
+               BlueprintName = "CarouselComponentTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

@@ -278,7 +278,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UserAccountNavigationComponentTests",
         "name" : "UserAccountNavigationComponentTests"
       }
