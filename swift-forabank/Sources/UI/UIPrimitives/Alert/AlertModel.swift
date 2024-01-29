@@ -37,7 +37,7 @@ public struct ButtonViewModel<Event> {
     public let event: Event
     
     public init(
-        type: ButtonType, 
+        type: ButtonType,
         title: String,
         event: Event
     ) {
@@ -53,5 +53,7 @@ public struct ButtonViewModel<Event> {
 }
 
 extension AlertModel: Equatable where PrimaryEvent: Equatable, SecondaryEvent: Equatable {}
+//extension AlertModel: Hashable where PrimaryEvent: Hashable, SecondaryEvent: Hashable {}
 
 extension ButtonViewModel: Equatable where Event: Equatable {}
+//extension ButtonViewModel: Hashable where Event: Hashable {}

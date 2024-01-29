@@ -9,5 +9,15 @@ public enum BankDefaultEvent: Equatable {
     
     case prepareSetBankDefault
     case setBankDefault
-    case setBankDefaultPrepared(ServiceFailure?)
+    case setBankDefaultResult(SetBankDefaultResult)
+}
+
+public extension BankDefaultEvent {
+    
+    enum SetBankDefaultResult: Equatable {
+        
+        case success
+        case incorrectOTP(String)
+        case serviceFailure(ServiceFailure)
+    }
 }

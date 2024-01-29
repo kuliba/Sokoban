@@ -48,6 +48,34 @@
                ReferencedContainer = "container:../swift-forabank">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserAccountNavigationComponent"
+               BuildableName = "UserAccountNavigationComponent"
+               BlueprintName = "UserAccountNavigationComponent"
+               ReferencedContainer = "container:../swift-forabank">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UIPrimitives"
+               BuildableName = "UIPrimitives"
+               BlueprintName = "UIPrimitives"
+               ReferencedContainer = "container:../swift-forabank">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

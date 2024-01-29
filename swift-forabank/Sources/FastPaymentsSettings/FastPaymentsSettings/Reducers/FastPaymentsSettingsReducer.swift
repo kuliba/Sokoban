@@ -174,6 +174,13 @@ private extension FastPaymentsSettingsReducer {
         var state = state
         state.status = nil
         
+        #warning("extract helper")
+        if case var .success(.contracted(details)) = state.settingsResult {
+            
+            details.bankDefaultResponse.requestLimitMessage = nil
+            state.settingsResult = .success(.contracted(details))
+        }
+        
         return state
     }
 }

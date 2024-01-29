@@ -51,6 +51,7 @@ let package = Package(
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
+        .userAccountNavigationComponent,
         // UI Components
         .paymentComponents,
         .carouselComponent,
@@ -145,6 +146,8 @@ let package = Package(
         .textFieldUITests,
         .uiKitHelpers,
         .uiPrimitives,
+        .userAccountNavigationComponent,
+        .userAccountNavigationComponentTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -345,6 +348,12 @@ private extension Product {
             .uiPrimitives,
         ]
     )
+    static let userAccountNavigationComponent = library(
+        name: .userAccountNavigationComponent,
+        targets: [
+            .userAccountNavigationComponent,
+        ]
+    )
     
     // MARK: - UI Components
     
@@ -489,6 +498,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .paymentComponents,
             .rxViewModel,
         ]
     )
@@ -1103,6 +1113,32 @@ private extension Target {
         path: "Sources/UI/\(String.uiPrimitives)"
     )
     
+    static let userAccountNavigationComponent = target(
+        name: .userAccountNavigationComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .fastPaymentsSettings,
+            .otpInputComponent,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.userAccountNavigationComponent)"
+    )
+    
+    static let userAccountNavigationComponentTests = testTarget(
+        name: .userAccountNavigationComponentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .userAccountNavigationComponent,
+        ],
+        path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1342,6 +1378,10 @@ private extension Target.Dependency {
         name: .uiPrimitives
     )
     
+    static let userAccountNavigationComponent = byName(
+        name: .userAccountNavigationComponent
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = byName(
@@ -1514,6 +1554,9 @@ private extension String {
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"
+    
+    static let userAccountNavigationComponent = "UserAccountNavigationComponent"
+    static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
     // MARK: - UI Components
 
