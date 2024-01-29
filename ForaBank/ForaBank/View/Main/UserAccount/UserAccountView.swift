@@ -22,7 +22,7 @@ struct UserAccountView: View {
             
             scrollView
             
-            viewModel.spinner.map(SpinnerView.init(viewModel:))
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
         }
     }
     
@@ -42,35 +42,35 @@ struct UserAccountView: View {
             }
             .navigationDestination(
                 item: .init(
-                    get: { viewModel.link },
+                    get: { viewModel.route.link },
                     set: { if $0 == nil { viewModel.resetLink() }}),
                 content: destinationView(link:)
             )
         }
         .sheet(
             item: .init(
-                get: { viewModel.sheet },
+                get: { viewModel.route.sheet },
                 set: { if $0 == nil { viewModel.resetSheet() }}
             ),
             content: sheetView
         )
         .bottomSheet(
             item: .init(
-                get: { viewModel.bottomSheet },
+                get: { viewModel.route.bottomSheet },
                 set: { if $0 == nil { viewModel.resetBottomSheet() }}
             ),
             content: bottomSheetView
         )
         .alert(
             item: .init(
-                get: { viewModel.alert },
+                get: { viewModel.route.alert },
                 set: { if $0 == nil { viewModel.resetAlert() }}
             ),
             content: Alert.init(with:)
         )
         .textfieldAlert(
             alert: .init(
-                get: { viewModel.textFieldAlert },
+                get: { viewModel.route.textFieldAlert },
                 set: { if $0 == nil { viewModel.resetTextFieldAlert() }}
             )
         )
