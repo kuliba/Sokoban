@@ -24,11 +24,11 @@ class UserAccountViewModel: ObservableObject {
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
     @Published private(set) var spinner: SpinnerView.ViewModel?
-    @Published var link: Link?
-    @Published var bottomSheet: BottomSheet?
-    @Published var sheet: Sheet?
-    @Published var alert: Alert.ViewModel?
-    @Published var textFieldAlert: AlertTextFieldView.ViewModel?
+    @Published private(set) var link: Link?
+    @Published private(set) var bottomSheet: BottomSheet?
+    @Published private(set) var sheet: Sheet?
+    @Published private(set) var alert: Alert.ViewModel?
+    @Published private(set) var textFieldAlert: AlertTextFieldView.ViewModel?
     
     var appVersionFull: String? {
         
@@ -102,6 +102,37 @@ class UserAccountViewModel: ObservableObject {
             self.action.send(action)
         }
     }
+}
+
+extension UserAccountViewModel {
+    
+    func resetLink() {
+        
+        link = nil
+    }
+    
+    func resetBottomSheet() {
+        
+        bottomSheet = nil
+    }
+    
+    func resetSheet() {
+        
+        sheet = nil
+    }
+    
+    func resetAlert() {
+        
+        alert = nil
+    }
+    
+    func resetTextFieldAlert() {
+        
+        textFieldAlert = nil
+    }
+}
+
+extension UserAccountViewModel {
     
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
         

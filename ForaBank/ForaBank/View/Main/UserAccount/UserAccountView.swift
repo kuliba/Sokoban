@@ -41,14 +41,39 @@ struct UserAccountView: View {
                 appVersionFullView
             }
             .navigationDestination(
-                item: $viewModel.link,
+                item: .init(
+                    get: { viewModel.link },
+                    set: { if $0 == nil { viewModel.resetLink() }}),
                 content: destinationView(link:)
             )
         }
-        .sheet(item: $viewModel.sheet, content: sheetView)
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .textfieldAlert(alert: $viewModel.textFieldAlert)
+        .sheet(
+            item: .init(
+                get: { viewModel.sheet },
+                set: { if $0 == nil { viewModel.resetSheet() }}
+            ),
+            content: sheetView
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.bottomSheet },
+                set: { if $0 == nil { viewModel.resetBottomSheet() }}
+            ),
+            content: bottomSheetView
+        )
+        .alert(
+            item: .init(
+                get: { viewModel.alert },
+                set: { if $0 == nil { viewModel.resetAlert() }}
+            ),
+            content: Alert.init(with:)
+        )
+        .textfieldAlert(
+            alert: .init(
+                get: { viewModel.textFieldAlert },
+                set: { if $0 == nil { viewModel.resetTextFieldAlert() }}
+            )
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
     }
