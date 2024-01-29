@@ -9,7 +9,7 @@ import PaymentComponents
 
 public final class SberQRConfirmPaymentStateFixedAmountReducer {
     
-    public typealias State = SberQRConfirmPaymentState.FixedAmount
+    public typealias State = FixedAmount<GetSberQRDataResponse.Parameter.Info>
     public typealias Event = SberQRConfirmPaymentEvent.FixedAmount
 
     public typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect

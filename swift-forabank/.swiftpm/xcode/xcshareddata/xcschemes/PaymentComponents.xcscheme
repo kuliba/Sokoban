@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/PaymentComponents.xctestplan"
+            reference = "container:../ForaBank/TestPlans/PaymentComponents.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

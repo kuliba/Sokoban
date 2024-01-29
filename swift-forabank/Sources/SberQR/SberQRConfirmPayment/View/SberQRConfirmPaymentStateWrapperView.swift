@@ -47,7 +47,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
             
             SberQRConfirmPaymentStateWrapperView(
                 viewModel: .preview(
-                    initialState: .fixedAmount(.preview)
+                    initialState: .init(confirm: .fixedAmount(.preview))
                 ),
                 map: Info.preview,
                 config: .preview
@@ -55,7 +55,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
             
             SberQRConfirmPaymentStateWrapperView(
                 viewModel: .preview(
-                    initialState: .editableAmount(.preview)
+                    initialState: .init(confirm: .editableAmount(.preview))
                 ),
                 map: Info.preview,
                 config: .preview

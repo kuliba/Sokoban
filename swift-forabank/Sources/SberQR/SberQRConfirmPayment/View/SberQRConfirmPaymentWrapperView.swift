@@ -30,7 +30,7 @@ public struct SberQRConfirmPaymentWrapperView: View {
     public var body: some View {
         
         SberQRConfirmPaymentView(
-            state: .init(viewModel.state, map: map),
+            state: .init(viewModel.state.confirm, map: map),
             event: viewModel.event(_:),
             config: config
         )
@@ -41,7 +41,7 @@ private extension SberQRConfirmPaymentState {
     
     var amount: Decimal? {
         
-        guard case let .editableAmount(editableAmount) = self
+        guard case let .editableAmount(editableAmount) = confirm
         else { return nil }
         
         return editableAmount.amount.value
@@ -49,7 +49,7 @@ private extension SberQRConfirmPaymentState {
     
     var product: ProductSelect.Product? {
         
-        switch self {
+        switch confirm {
         case let .editableAmount(editableAmount):
             return editableAmount.productSelect.selected
             
@@ -67,8 +67,8 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
         
         Group {
             
-            wrapper(initialState: .fixedAmount(.preview))
-            wrapper(initialState: .editableAmount(.preview))
+            wrapper(initialState: .init(confirm: .fixedAmount(.preview)))
+            wrapper(initialState: .init(confirm: .editableAmount(.preview)))
         }
     }
     
@@ -112,10 +112,10 @@ private extension SberQRConfirmPaymentStateOf<Info> {
     }
 }
 
-private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+private extension EditableAmount<Info> {
     
     init(
-        _ editableAmount: SberQRConfirmPaymentStateOf<GetSberQRDataResponse.Parameter.Info>.EditableAmount,
+        _ editableAmount: EditableAmount<GetSberQRDataResponse.Parameter.Info>,
         map: @escaping (GetSberQRDataResponse.Parameter.Info) -> Info
     ) {
         self.init(
@@ -129,10 +129,10 @@ private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     }
 }
 
-private extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
+private extension FixedAmount<Info> {
     
     init(
-        _ fixedAmount: SberQRConfirmPaymentStateOf<GetSberQRDataResponse.Parameter.Info>.FixedAmount,
+        _ fixedAmount: FixedAmount<GetSberQRDataResponse.Parameter.Info>,
         map: @escaping (GetSberQRDataResponse.Parameter.Info) -> Info
     ) {
         self.init(

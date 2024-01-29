@@ -7,8 +7,8 @@
 
 public enum SberQRConfirmPaymentStateOf<Info> {
     
-    case editableAmount(EditableAmount)
-    case fixedAmount(FixedAmount)
+    case editableAmount(EditableAmount<Info>)
+    case fixedAmount(FixedAmount<Info>)
 }
 
 extension SberQRConfirmPaymentStateOf: Equatable where Info: Equatable {}
