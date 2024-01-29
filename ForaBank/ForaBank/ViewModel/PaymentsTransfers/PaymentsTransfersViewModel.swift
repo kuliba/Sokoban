@@ -14,7 +14,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -36,21 +35,20 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let fastPaymentsFactory: FastPaymentsFactory
     private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
-    private let fastUpdateAction: () -> Void
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
-        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty,
@@ -64,11 +62,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         ]
         self.mode = mode
         self.model = model
-        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.fastUpdateAction = fastUpdateAction
         self.navButtonsRight = createNavButtonsRight()
@@ -81,11 +79,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         mode: Mode = .normal,
         route: Route = .empty,
@@ -95,11 +93,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.navButtonsRight = navButtonsRight
         self.fastUpdateAction = fastUpdateAction
         
@@ -147,7 +145,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = makeProductProfileViewModel(
+                          let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
                             { [weak self] in self?.resetDestination() }, fastUpdateAction
@@ -311,8 +309,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         //LatestPayment Section TemplateButton
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                        let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        }, fastUpdateAction: fastUpdateAction)
+                        
+                        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }
+                        
                         bind(viewModel)
                         route.destination = .template(viewModel)
                         

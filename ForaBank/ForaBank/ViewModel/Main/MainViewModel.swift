@@ -35,6 +35,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let fastUpdateAction: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
@@ -48,8 +49,8 @@ class MainViewModel: ObservableObject, Resetable {
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
-        onRegister: @escaping () -> Void,
-        fastUpdateAction: @escaping () -> Void
+        paymentsTransfersFactory: PaymentsTransfersFactory,
+        onRegister: @escaping () -> Void
     ) {
         self.model = model
         self.navButtonsRight = []
@@ -68,6 +69,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
         self.fastUpdateAction = fastUpdateAction
@@ -384,8 +386,9 @@ private extension MainViewModel {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListViewModel = TemplatesListViewModel(
-                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) }, fastUpdateAction: fastUpdateAction)
+                                let templatesListViewModel = paymentsTransfersFactory.makeTemplatesListViewModel (
+                                    { [weak self] in self?.action.send(MainViewModelAction.Close.Link())
+                                })
                                 bind(templatesListViewModel)
                                 route.destination = .templates(templatesListViewModel)
                                 

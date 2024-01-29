@@ -213,19 +213,18 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_,_  in nil },
                 fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
-                                sberQRServices: .empty(),
+                sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
-                onRegister: {}, 
-                fastUpdateAction: {}
+                paymentsTransfersFactory: .preview,
+                onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
-                makeProductProfileViewModel: { _,_,_,_  in nil },
                 fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                fastUpdateAction: {}
+                qrViewModelFactory: .preview(), 
+                paymentsTransfersFactory: .preview
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

@@ -224,18 +224,42 @@ extension ProductProfileViewModel {
         
         return { product, rootView, dismissAction, fastUpdateAction in
             
+            let makeProductProfileViewModel = ProductProfileViewModel.make(
+                with: model,
+                fastPaymentsFactory: fastPaymentsFactory,
+                fastPaymentsServices: fastPaymentsServices,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                cvvPINServicesClient: cvvPINServicesClient
+            )
+            
+            let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+                
                 .init(
                     model,
-                    fastPaymentsFactory: fastPaymentsFactory,
-                    fastPaymentsServices: fastPaymentsServices,
-                    sberQRServices: sberQRServices,
-                    qrViewModelFactory: qrViewModelFactory,
-                    cvvPINServicesClient: cvvPINServicesClient,
-                    product: product,
-                    rootView: rootView,
-                    dismissAction: dismissAction,
-                    fastUpdateAction: fastUpdateAction
-                )
+                    dismissAction: $0,
+                    updateFastAll: {
+                        model.action.send(ModelAction.Products.Update.Fast.All())
+                    })
+            }
+            
+            let paymentsTransfersFactory = PaymentsTransfersFactory(
+                makeProductProfileViewModel: makeProductProfileViewModel, 
+                makeTemplatesListViewModel: makeTemplatesListViewModel
+            )
+            
+            return .init(
+                model,
+                fastPaymentsFactory: fastPaymentsFactory,
+                fastPaymentsServices: fastPaymentsServices,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                paymentsTransfersFactory: paymentsTransfersFactory,
+                cvvPINServicesClient: cvvPINServicesClient,
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
         }
     }
 }
@@ -280,6 +304,20 @@ private extension RootViewModelFactory {
         fastUpdateAction: @escaping () -> Void
     ) -> RootViewModel {
         
+        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+            
+            .init(
+                model,
+                dismissAction: $0,
+                updateFastAll: {
+                    model.action.send(ModelAction.Products.Update.Fast.All())
+                })
+        }
+        
+        let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeProductProfileViewModel: makeProductProfileViewModel, makeTemplatesListViewModel: makeTemplatesListViewModel
+        )
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -287,18 +325,17 @@ private extension RootViewModelFactory {
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            onRegister: onRegister, 
-            fastUpdateAction: fastUpdateAction
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            fastUpdateAction: fastUpdateAction
+            paymentsTransfersFactory: paymentsTransfersFactory
         )
         
         let chatViewModel = ChatViewModel()

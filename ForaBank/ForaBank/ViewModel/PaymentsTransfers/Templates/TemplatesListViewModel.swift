@@ -37,20 +37,21 @@ class TemplatesListViewModel: ObservableObject {
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     
     let dismissAction: () -> Void
+    private let updateFastAll: UpdateFastAll
     
     var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
-    internal init(state: State, style: Style,
-                  navBarState: NavBarState,
-                  categorySelector: OptionSelectorView.ViewModel?,
-                  items: [ItemViewModel],
-                  deletePannel: DeletePannelViewModel?,
-                  dismissAction: @escaping () -> Void = {},
-                  model: Model,
-                  fastUpdateAction: @escaping () -> Void
+    internal init(
+        state: State, style: Style,
+        navBarState: NavBarState,
+        categorySelector: OptionSelectorView.ViewModel?,
+        items: [ItemViewModel],
+        deletePannel: DeletePannelViewModel?,
+        dismissAction: @escaping () -> Void = {},
+        updateFastAll: @escaping UpdateFastAll,
+        model: Model
     ) {
-        
         self.state = state
         self.style = style
         self.navBarState = navBarState
@@ -58,6 +59,7 @@ class TemplatesListViewModel: ObservableObject {
         self.items = items
         self.deletePanel = deletePannel
         self.dismissAction = dismissAction
+        self.updateFastAll = updateFastAll
         self.model = model
         self.fastUpdateAction = fastUpdateAction
     }
@@ -65,25 +67,31 @@ class TemplatesListViewModel: ObservableObject {
     convenience init(
         _ model: Model,
         dismissAction: @escaping () -> Void,
-        fastUpdateAction: @escaping () -> Void
+        updateFastAll: @escaping UpdateFastAll
     ) {
-  
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
-        self.init(state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
-                  style: model.settingsPaymentTemplates.style,
-                  navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
-                                                                action: dismissAction),
-                                              menuList: [],
-                                              searchButton: .init(icon: .ic24Search,
-                                                                  action: {} ))),
-                  categorySelector: nil,
-                  items: [],
-                  deletePannel: nil,
-                  dismissAction: dismissAction,
-                  model: model,
-                  fastUpdateAction: fastUpdateAction
-        )
+        self.init(
+            state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
+            style: model.settingsPaymentTemplates.style,
+            navBarState: .regular(
+                .init(
+                    backButton: .init(
+                        icon: .ic24ChevronLeft,
+                        action: dismissAction),
+                    menuList: [],
+                    searchButton: .init(
+                        icon: .ic24Search,
+                        action: {}
+                    )
+                )
+            ),
+            categorySelector: nil,
+            items: [],
+            deletePannel: nil,
+            dismissAction: dismissAction,
+            updateFastAll: updateFastAll,
+            model: model)
         
         updateNavBar(event: .setRegular)
         bind()
@@ -746,7 +754,7 @@ private extension TemplatesListViewModel {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    self.fastUpdateAction()
+                    self.updateFastAll()
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.success = nil
@@ -802,6 +810,8 @@ private extension TemplatesListViewModel {
 //MARK: - Settings
 
 extension TemplatesListViewModel {
+    
+    typealias UpdateFastAll = () -> Void
     
     struct Sheet: BottomSheetCustomizable {
         

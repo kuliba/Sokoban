@@ -109,8 +109,8 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
-            onRegister: {}, 
-            fastUpdateAction: {}
+            paymentsTransfersFactory: .preview,
+            onRegister: {}
         )
      
       sut.orderSticker()
@@ -147,8 +147,8 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            onRegister: {},
-            fastUpdateAction: {}
+            paymentsTransfersFactory: .preview,
+            onRegister: {}
         )
 
         
@@ -202,8 +202,8 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
-            onRegister: {},
-            fastUpdateAction: {}
+            paymentsTransfersFactory: .preview,
+            onRegister: {}
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
