@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/FastPaymentsSettings.xctestplan"
+            reference = "container:../ForaBank/TestPlans/FastPaymentsSettings.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

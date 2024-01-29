@@ -18,14 +18,17 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         
         let state = try SberQRConfirmPaymentState(product: .test2, response: response)
         
-        XCTAssertNoDiff(state, .fixedAmount(.init(
-            header: .payQR,
-            productSelect: .compact(.test2),
-            brandName: .brandName(value: "сббол енот_QR"),
-            amount: .amount,
-            recipientBank: .recipientBank,
-            button: .preview
-        )))
+        XCTAssertNoDiff(state, .init(
+            confirm: .fixedAmount(.init(
+                header: .payQR,
+                productSelect: .compact(.test2),
+                brandName: .brandName(value: "сббол енот_QR"),
+                amount: .amount,
+                recipientBank: .recipientBank,
+                button: .preview
+            )),
+            isInflight: false
+        ))
     }
     
     func test_init_editableAmount_fromResponseWithEditableAmount_zero() throws {
@@ -35,17 +38,20 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         
         let state = try SberQRConfirmPaymentState(product: .test2, response: response)
         
-        XCTAssertNoDiff(state, .editableAmount(.init(
-            header: .payQR,
-            productSelect: .compact(.test2),
-            brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
-            recipientBank: .recipientBank,
-            currency: .rub,
-            amount: .paymentAmount(
-                value: amount,
-                isEnabled: false
-            )
-        )))
+        XCTAssertNoDiff(state, .init(
+            confirm: .editableAmount(.init(
+                header: .payQR,
+                productSelect: .compact(.test2),
+                brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
+                recipientBank: .recipientBank,
+                currency: .rub,
+                amount: .paymentAmount(
+                    value: amount,
+                    isEnabled: false
+                )
+            )),
+            isInflight: false
+        ))
     }
     
     func test_init_editableAmount_fromResponseWithEditableAmount() throws {
@@ -55,16 +61,19 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         
         let state = try SberQRConfirmPaymentState(product: .test2, response: response)
         
-        XCTAssertNoDiff(state, .editableAmount(.init(
-            header: .payQR,
-            productSelect: .compact(.test2),
-            brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
-            recipientBank: .recipientBank,
-            currency: .rub,
-            amount: .paymentAmount(
-                value: amount,
-                isEnabled: true
-            )
-        )))
+        XCTAssertNoDiff(state, .init(
+            confirm: .editableAmount(.init(
+                header: .payQR,
+                productSelect: .compact(.test2),
+                brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
+                recipientBank: .recipientBank,
+                currency: .rub,
+                amount: .paymentAmount(
+                    value: amount,
+                    isEnabled: true
+                )
+            )),
+            isInflight: false
+        ))
     }
 }
