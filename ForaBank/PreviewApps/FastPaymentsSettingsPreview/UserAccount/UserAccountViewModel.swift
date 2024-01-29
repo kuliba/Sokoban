@@ -56,7 +56,7 @@ extension UserAccountViewModel {
         }
     }
     
-    func handleEffect(_ effect: Effect) {
+    private func handleEffect(_ effect: Effect) {
         
         switch effect {
         case let .fps(fpsEvent):
