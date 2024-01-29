@@ -6353,36 +6353,6 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
-				D4AF64D02B6014E4003F8E79 /* CarouselComponent.xctestplan */,
-				2AC4BE9B2B62C53C00650962 /* FastPaymentsSettingsPreview.xctestplan */,
-				8306C12B2B600EB7007FDA89 /* ProductProfile.xctestplan */,
-				8333253F2B5AA765001920EB /* CardStatementAPI.xctestplan */,
-				2A7093AB2B597DD9007C0C85 /* RxViewModel.xctestplan */,
-				2A8AFCE52B5975DD00B9FADD /* OTPInputComponent.xctestplan */,
-				2A09C2B42B3D53FE0076DC93 /* FastPaymentsSettings.xctestplan */,
-				2A67A4532B3717C700149C9E /* PaymentComponents.xctestplan */,
-				2AC67EE02B35BC8B00CC456D /* ProductSelectComponent.xctestplan */,
-				2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */,
-				2A6AF2162AF8E52700655156 /* Fetcher.xctestplan */,
-				2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */,
-				2AC3282E2ADEF2C500443A84 /* CVVPINServices.xctestplan */,
-				2A3599A52ADA69F900820369 /* KeyChainStore.xctestplan */,
-				2AC410E62A986BBF00D0AC00 /* CryptoSwaddler.xctestplan */,
-				833885742AA7845800CE8834 /* LandingMapping.xctestplan */,
-				2AEF71992AA0A51800480990 /* LinkableText.xctestplan */,
-				2AB66F052A5F57D800B6FF5B /* CvvPin.xctestplan */,
-				2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */,
-				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
-				C140F14B2AEA719600623E1D /* PaymentSticker.xctestplan */,
-				833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */,
-				835D7A962A61890A0076D371 /* PinCodeUITests.xctestplan */,
-				83F948EB2AE02ACB009AD8E2 /* PhoneNumberWrapper.xctestplan */,
-				2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */,
-				2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */,
-				779511A52A6A7F9400A570F8 /* SymmetricEncryption.xctestplan */,
-				83A59F972A9C987E002F8AD4 /* LandingUIComponent.xctestplan */,
-				2ABFB9072B556F4F00D6A0BA /* FastPaymentsSettingsPreview-Info.plist */,
-				2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
@@ -15894,7 +15864,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -15971,7 +15941,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -16124,7 +16094,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -16153,7 +16123,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -16246,7 +16216,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -16321,7 +16291,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -16806,7 +16776,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -16841,7 +16811,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
