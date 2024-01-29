@@ -109,6 +109,7 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
      
@@ -146,6 +147,7 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
 
@@ -200,6 +202,7 @@ final class MainViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
 
