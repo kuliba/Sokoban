@@ -20,9 +20,7 @@ final class UserAccountViewModel: ObservableObject {
 #warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
     let informer: InformerViewModel
     
-    private let reduce: Reduce
-    private let handleOTPEffect: HandleOTPEffect
-    private let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
+    private let navigationStateManager: UserAccountNavigationStateManager
     
     private let stateSubject = PassthroughSubject<State, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
@@ -30,16 +28,12 @@ final class UserAccountViewModel: ObservableObject {
     init(
         initialState: State = .init(),
         informer: InformerViewModel = .init(),
-        reduce: @escaping Reduce,
-        handleOTPEffect: @escaping HandleOTPEffect,
-        makeFastPaymentsSettingsViewModel: @escaping MakeFastPaymentsSettingsViewModel,
+        navigationStateManager: UserAccountNavigationStateManager,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = initialState
         self.informer = informer
-        self.reduce = reduce
-        self.handleOTPEffect = handleOTPEffect
-        self.makeFastPaymentsSettingsViewModel = makeFastPaymentsSettingsViewModel
+        self.navigationStateManager = navigationStateManager
         self.scheduler = scheduler
         
         stateSubject
@@ -53,7 +47,7 @@ extension UserAccountViewModel {
     
     func event(_ event: Event) {
         
-        let (state, effect) = reduce(state, event, informer.set(text:), self.event(_:))
+        let (state, effect) = navigationStateManager.reduce(state, event, informer.set(text:), self.event(_:))
         stateSubject.send(state)
         
         if let effect {
@@ -72,7 +66,7 @@ extension UserAccountViewModel {
             fpsDispatch?(fpsEvent)
             
         case let .otp(otpEffect):
-            handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+            navigationStateManager.handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
         }
     }
     
@@ -97,7 +91,7 @@ extension UserAccountViewModel {
 #warning("move to `reduce`")
     func openFastPaymentsSettings() {
         
-        let fpsViewModel = makeFastPaymentsSettingsViewModel(scheduler)
+        let fpsViewModel = navigationStateManager.makeFastPaymentsSettingsViewModel(scheduler)
         let cancellable = fpsViewModel.$state
             .removeDuplicates()
             .map(Event.FastPaymentsSettings.updated)
@@ -149,14 +143,4 @@ extension UserAccountViewModel {
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect
-    
-    typealias Inform = (String) -> Void
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Reduce = (State, Event, @escaping Inform, @escaping Dispatch) -> (State, Effect?)
-    
-    typealias OTPDispatch = (Event.OTP) -> Void
-    typealias HandleOTPEffect = (Effect.OTP, @escaping OTPDispatch) -> Void
-    
-    typealias MakeFastPaymentsSettingsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
 }

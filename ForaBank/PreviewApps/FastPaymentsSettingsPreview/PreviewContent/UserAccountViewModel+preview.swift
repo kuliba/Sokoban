@@ -157,77 +157,15 @@ extension UserAccountViewModel {
             prepareSetBankDefault: prepareSetBankDefault
         )
         
-        return .init(
-            initialState: state,
+        let navigationStateManager = UserAccountNavigationStateManager(
             reduce: userAccountNavigationReducer.reduce(_:_:_:_:),
             handleOTPEffect: userAccountNavigationOTPEffectHandler.handleEffect(_:dispatch:),
-            makeFastPaymentsSettingsViewModel: makeFastPaymentsSettingsViewModel,
-            scheduler: scheduler
-        )
-    }
-    
-    static func preview(
-        initialState: OTPInputState? = nil,
-        reduce: @escaping Reduce,
-        duration: Int = 10,
-        length: Int = 6,
-        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
-        submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
-        state: State = .init(),
-        getProducts: @escaping ContractReducer.GetProducts = { .preview },
-        changeConsentList: @escaping ConsentListRxEffectHandler.ChangeConsentList,
-        createContract: @escaping ContractEffectHandler.CreateContract = { _, completion in completion(.success(.active)) },
-        getC2BSub: @escaping FastPaymentsSettingsEffectHandler.GetC2BSub = { $0(.success(.control)) },
-        getSettings: @escaping FastPaymentsSettingsEffectHandler.GetSettings,
-        prepareSetBankDefault: @escaping FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { $0(.success(())) },
-        updateContract: @escaping ContractEffectHandler.UpdateContract,
-        updateProduct: @escaping FastPaymentsSettingsEffectHandler.UpdateProduct,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> UserAccountViewModel {
-        
-        let bankDefaultReducer = BankDefaultReducer()
-        let consentListReducer = ConsentListRxReducer()
-        let contractReducer = ContractReducer(getProducts: getProducts)
-        let productsReducer = ProductsReducer(getProducts: getProducts)
-        let reducer = FastPaymentsSettingsReducer(
-            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
-            consentListReduce: consentListReducer.reduce(_:_:),
-            contractReduce: contractReducer.reduce(_:_:),
-            productsReduce: productsReducer.reduce(_:_:)
-        )
-        
-        let consentListHandler = ConsentListRxEffectHandler(
-            changeConsentList: changeConsentList
-        )
-        let contractEffectHandler = ContractEffectHandler(
-            createContract: createContract,
-            updateContract: updateContract
-        )
-        let effectHandler = FastPaymentsSettingsEffectHandler(
-            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
-            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
-            getC2BSub: getC2BSub,
-            getSettings: getSettings,
-            prepareSetBankDefault: prepareSetBankDefault,
-            updateProduct: updateProduct
-        )
-        
-        let userAccountOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
-            prepareSetBankDefault: prepareSetBankDefault
+            makeFastPaymentsSettingsViewModel: makeFastPaymentsSettingsViewModel
         )
         
         return .init(
             initialState: state,
-            reduce: reduce,
-            handleOTPEffect: userAccountOTPEffectHandler.handleEffect(_:dispatch:),
-            makeFastPaymentsSettingsViewModel: {
-                
-                .init(
-                    reducer: reducer,
-                    effectHandler: effectHandler,
-                    scheduler: $0
-                )
-            },
+            navigationStateManager: navigationStateManager,
             scheduler: scheduler
         )
     }
