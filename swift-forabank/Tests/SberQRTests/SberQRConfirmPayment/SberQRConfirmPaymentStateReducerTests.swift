@@ -84,14 +84,43 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.payloads.map(\.confirm), [.editableAmount(state)])
     }
     
-    func test_reduce_editableAmount_pay_shouldNotChangeState() {
+    func test_reduce_editableAmount_pay_shouldChangeStatusToInflight() {
         
+        let state: SUT.State = .init(
+            confirm: .editableAmount(makeEditableAmount())
+        )
         let (sut, _) = makeSUT()
-        let state = makeEditableAmount()
         
-        let newState = sut.reduce(.editableAmount(state), .pay)
+        let newState = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(newState, .editableAmount(state))
+        XCTAssertNoDiff(newState.confirm, state.confirm)
+        XCTAssertNoDiff(newState.isInflight, true)
+    }
+    
+    func test_reduce_editableAmount_pay_shouldNotCallPayWithState_inflight() {
+        
+        let state: SUT.State = .init(
+            confirm: .editableAmount(makeEditableAmount()),
+            isInflight: true
+        )
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(spy.payloads.map(\.confirm), [])
+    }
+    
+    func test_reduce_editableAmount_pay_shouldNotChangeState_inflight() {
+        
+        let state: SUT.State = .init(
+            confirm: .editableAmount(makeEditableAmount()),
+            isInflight: true
+        )
+        let (sut, _) = makeSUT()
+        
+        let newState = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(newState, state)
     }
     
     func test_reduce_editableAmount_select_shouldNotCallPay() {
@@ -193,14 +222,43 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.payloads.map(\.confirm), [.fixedAmount(state)])
     }
     
-    func test_reduce_fixedAmount_pay_shouldNotChangeState() {
+    func test_reduce_fixedAmount_pay_shouldChangeStateToInflight() {
         
+        let state: SUT.State = .init(
+            confirm: .fixedAmount(makeFixedAmount())
+        )
         let (sut, _) = makeSUT()
-        let state = makeFixedAmount()
         
-        let newState = sut.reduce(.fixedAmount(state), .pay)
+        let newState = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(newState.confirm, .fixedAmount(state))
+        XCTAssertNoDiff(newState.confirm, state.confirm)
+        XCTAssertNoDiff(newState.isInflight, true)
+    }
+    
+    func test_reduce_fixedAmount_pay_shouldNotCallPayWithState_inflight() {
+        
+        let state: SUT.State = .init(
+            confirm: .fixedAmount(makeFixedAmount()),
+            isInflight: true
+        )
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(spy.payloads.map(\.confirm), [])
+    }
+    
+    func test_reduce_fixedAmount_pay_shouldNotChangeState_inflight() {
+        
+        let state: SUT.State = .init(
+            confirm: .fixedAmount(makeFixedAmount()),
+            isInflight: true
+        )
+        let (sut, _) = makeSUT()
+        
+        let newState = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(newState, state)
     }
     
     func test_reduce_fixedAmount_select_shouldNotCallPay() {
