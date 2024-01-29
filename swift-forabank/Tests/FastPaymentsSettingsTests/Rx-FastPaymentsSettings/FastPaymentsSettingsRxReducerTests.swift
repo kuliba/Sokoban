@@ -993,13 +993,13 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         assert(setBankDefault(), on: serverError, effect: nil)
     }
     
-    // MARK: - setBankDefaultPrepared
+    // MARK: - setBankDefaultResult
     
-    func test_setBankDefaultPrepared_shouldSetBankDefaultAndInformerOnSuccess_active() {
+    func test_setBankDefaultResult_shouldSetBankDefaultAndInformerOnSuccess_active() {
         
         let (details, active) = contractedState(.active)
         
-        assert(setBankDefaultPreparedSuccess(), on: active) {
+        assert(setBankDefaultSuccess(), on: active) {
             $0.settingsResult = contractedSettings(details.updated(
                 bankDefaultResponse: bankDefault(.onDisabled)
             ))
@@ -1007,214 +1007,214 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         }
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_active() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnSuccess_active() {
         
         let active = contractedState(.active).state
         
-        assert(setBankDefaultPreparedSuccess(), on: active, effect: nil)
+        assert(setBankDefaultSuccess(), on: active, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldSetStatusOnConnectivityErrorFailure_active() {
+    func test_setBankDefaultResult_shouldSetStatusOnConnectivityErrorFailure_active() {
         
         let active = activeContractSettings()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: active) {
+        assert(setBankDefaultConnectivityError(), on: active) {
             $0.settingsResult = active
             $0.status = .connectivityError
         }
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnConnectivityErrorFailure_active() {
         
         let active = activeContractSettings()
         
-        assert(active, setBankDefaultPreparedConnectivityError(), effect: nil)
+        assert(active, setBankDefaultConnectivityError(), effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldSetStatusOnServerErrorFailure_active() {
+    func test_setBankDefaultResult_shouldSetStatusOnServerErrorFailure_active() {
         
         let message = anyMessage()
         let active = activeContractSettings()
         
-        assert(.bankDefault(.setBankDefaultPrepared(.serverError(message))), on: active) {
+        assert(setBankDefaultServerError(message), on: active) {
             $0.settingsResult = active
             $0.status = .serverError(message)
         }
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_active() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnServerErrorFailure_active() {
         
         let active = activeContractSettings()
         
-        assert(active, setBankDefaultPreparedServerError(), effect: nil)
+        assert(active, setBankDefaultServerError(), effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_inactive() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnSuccess_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedSuccess(), on: inactive)
+        assert(setBankDefaultSuccess(), on: inactive)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_inactive() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnSuccess_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedSuccess(), on: inactive, effect: nil)
+        assert(setBankDefaultSuccess(), on: inactive, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnConnectivityErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedConnectivityError(), on: inactive)
+        assert(setBankDefaultConnectivityError(), on: inactive)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnConnectivityErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedConnectivityError(), on: inactive, effect: nil)
+        assert(setBankDefaultConnectivityError(), on: inactive, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_inactive() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnServerErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedServerError(), on: inactive)
+        assert(setBankDefaultServerError(), on: inactive)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnServerErrorFailure_inactive() {
         
         let inactive = contractedState(.inactive).state
         
-        assert(setBankDefaultPreparedServerError(), on: inactive, effect: nil)
+        assert(setBankDefaultServerError(), on: inactive, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_missing() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnSuccess_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: missing)
+        assert(setBankDefaultSuccess(), on: missing)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_missing() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnSuccess_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: missing, effect: nil)
+        assert(setBankDefaultSuccess(), on: missing, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnConnectivityErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: missing)
+        assert(setBankDefaultConnectivityError(), on: missing)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnConnectivityErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: missing, effect: nil)
+        assert(setBankDefaultConnectivityError(), on: missing, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_missing() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnServerErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: missing)
+        assert(setBankDefaultServerError(), on: missing)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_missing() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnServerErrorFailure_missing() {
         
         let missing = missingConsentSuccessFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: missing, effect: nil)
+        assert(setBankDefaultServerError(), on: missing, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_connectivityError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnSuccess_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: connectivityError)
+        assert(setBankDefaultSuccess(), on: connectivityError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_connectivityError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnSuccess_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: connectivityError, effect: nil)
+        assert(setBankDefaultSuccess(), on: connectivityError, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: connectivityError)
+        assert(setBankDefaultConnectivityError(), on: connectivityError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnConnectivityErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: connectivityError, effect: nil)
+        assert(setBankDefaultConnectivityError(), on: connectivityError, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnServerErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: connectivityError)
+        assert(setBankDefaultServerError(), on: connectivityError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnServerErrorFailure_connectivityError() {
         
         let connectivityError = connectivityErrorFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: connectivityError, effect: nil)
+        assert(setBankDefaultServerError(), on: connectivityError, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnSuccess_serverError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnSuccess_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: serverError)
+        assert(setBankDefaultSuccess(), on: serverError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnSuccess_serverError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnSuccess_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedSuccess(), on: serverError, effect: nil)
+        assert(setBankDefaultSuccess(), on: serverError, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnConnectivityErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: serverError)
+        assert(setBankDefaultConnectivityError(), on: serverError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnConnectivityErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedConnectivityError(), on: serverError, effect: nil)
+        assert(setBankDefaultConnectivityError(), on: serverError, effect: nil)
     }
     
-    func test_setBankDefaultPrepared_shouldNotChangeStateOnServerErrorFailure_serverError() {
+    func test_setBankDefaultResult_shouldNotChangeStateOnServerErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: serverError)
+        assert(setBankDefaultServerError(), on: serverError)
     }
     
-    func test_setBankDefaultPrepared_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
+    func test_setBankDefaultResult_shouldNotDeliverEffectOnServerErrorFailure_serverError() {
         
         let serverError = serverErrorFPSState()
         
-        assert(setBankDefaultPreparedServerError(), on: serverError, effect: nil)
+        assert(setBankDefaultServerError(), on: serverError, effect: nil)
     }
     
     // MARK: - toggleProducts

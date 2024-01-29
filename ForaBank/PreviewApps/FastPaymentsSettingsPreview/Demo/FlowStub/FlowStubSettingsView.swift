@@ -45,9 +45,7 @@ struct FlowStubSettingsView: View {
     
     var body: some View {
         
-        VStack(spacing: 16) {
-            
-            happyPathButton()
+        VStack {
             
             List {
                 
@@ -68,6 +66,7 @@ struct FlowStubSettingsView: View {
         }
         .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(content: happyPathButton)
     }
     
     private var flowStub: FlowStub? {
@@ -132,6 +131,8 @@ struct FlowStubSettingsView: View {
             initiateOTP = .init(flowStub: .preview)
             submitOTP = .init(flowStub: .preview)
         }
+        .buttonStyle(.bordered)
+        .tint(.green)
     }
     
     private func applyButton() -> some View {
@@ -243,7 +244,7 @@ private extension FlowStubSettingsView {
                     paymentContract: .active,
                     bankDefaultResponse: .init(
                         bankDefault: .offEnabled,
-                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку  через 24 часа."
+                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку через 24 часа."
                     )
                 )))
                 
@@ -329,7 +330,7 @@ private extension FlowStubSettingsView {
     
     enum SubmitOTP: String, CaseIterable, Identifiable {
         
-        case success, error_C, error_S
+        case success, error_C, incorrect, error_S
         
         var id: Self { self }
         
@@ -338,6 +339,7 @@ private extension FlowStubSettingsView {
             switch self {
             case .success: return .success(())
             case .error_C: return .failure(.connectivityError)
+            case .incorrect: return .failure(.serverError("Введен некорректный код. Попробуйте еще раз"))
             case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
@@ -447,7 +449,7 @@ private extension FlowStubSettingsView.GetSettings {
         case let .success(.contracted(contractDetails)):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
-                self = .active
+                self = contractDetails.bankDefaultResponse.requestLimitMessage == nil ? .active : .limit
                 
             case .inactive:
                 self = .inactive
@@ -569,7 +571,7 @@ private extension FlowStubSettingsView.SubmitOTP {
     
     init?(flowStub: FlowStub?) {
         
-        switch flowStub?.initiateOTP {
+        switch flowStub?.submitOTP {
         case .none:
             return nil
             
@@ -581,8 +583,12 @@ private extension FlowStubSettingsView.SubmitOTP {
             case .connectivityError:
                 self = .error_C
                 
-            case .serverError:
-                self = .error_S
+            case let .serverError(message):
+                if message == "Введен некорректный код. Попробуйте еще раз" {
+                    self = .incorrect
+                } else {
+                    self = .error_S
+                }
             }
         }
     }

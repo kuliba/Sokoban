@@ -67,7 +67,7 @@ private extension OTPFieldReducer {
         var state = state
         var effect: Effect?
         
-        if state.isInputComplete {
+        if state.isInputComplete && state.status != .inflight {
             
             state.status = .inflight
             effect = .submitOTP(state.text)

@@ -130,13 +130,22 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.bankDefault(.setBankDefaultPrepared(nil)))
+                dispatch(.bankDefault(.setBankDefaultResult(.success)))
                 
-            case .failure(.connectivityError):
-                dispatch(.bankDefault(.setBankDefaultPrepared(.connectivityError)))
-                
-            case let .failure(.serverError(message)):
-                dispatch(.bankDefault(.setBankDefaultPrepared(.serverError(message))))
+            case let .failure(failure):
+                switch failure {
+                case .connectivityError:
+                    dispatch(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
+                    
+                case let .serverError(message):
+                    let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+                    
+                    if message == tryAgain {
+                        dispatch(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                    } else {
+                        dispatch(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
+                    }
+                }
             }
         }
     }
