@@ -30,7 +30,7 @@ struct UserAccountView: View {
                         get: { viewModel.state.alert?.alert },
                         set: { if $0 == nil { viewModel.event(.closeAlert) }}
                     ),
-                    content: Alert.init(with:)
+                    content: { .init(with: $0, event: viewModel.event) }
                 )
                 .navigationDestination(
                     item: .init(
@@ -111,7 +111,7 @@ struct UserAccountView: View {
                     // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
                     set: { _ in }
                 ),
-                content: Alert.init(with:)
+                content: { .init(with: $0, event: viewModel.event) }
             )
             .navigationDestination(
                 item: .init(

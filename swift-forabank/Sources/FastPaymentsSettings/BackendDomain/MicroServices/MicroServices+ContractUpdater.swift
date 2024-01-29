@@ -1,5 +1,5 @@
 //
-//  MicroServices+UpdateContract.swift
+//  MicroServices+ContractUpdater.swift
 //
 //
 //  Created by Igor Malyarov on 26.01.2024.
@@ -12,10 +12,7 @@ public protocol StatusReporting<Status> {
     var status: Status { get }
 }
 
-public enum ContractStatus {
-    
-    case active, inactive
-}
+public typealias ContractStatus = UserPaymentSettings.PaymentContract.ContractStatus
 
 public extension MicroServices {
     
