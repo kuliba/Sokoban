@@ -137,8 +137,6 @@ extension UserAccountViewModel {
         }
         
         
-        let userAccountNavigationDemoReducer = UserAccountNavigationDemoReducer()
-        
         let userAccountNavigationFPSReducer = UserAccountNavigationFPSReducer()
         
         let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer(
@@ -147,7 +145,6 @@ extension UserAccountViewModel {
         )
         
         let userAccountNavigationReducer = UserAccountNavigationReducer(
-            demoReduce: userAccountNavigationDemoReducer.reduce(_:_:_:),
             fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:_:),
             otpReduce: userAccountNavigationOTPReducer.reduce(_:_:_:_:),
             scheduler: .makeMain()
@@ -187,7 +184,7 @@ private extension FastPaymentsSettingsViewModel {
     }
 }
 
-func generateRandom11DigitNumber() -> Int {
+private func generateRandom11DigitNumber() -> Int {
     
     let firstDigit = Int.random(in: 1...9)
     let remainingDigits = (1..<11)

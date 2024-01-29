@@ -59,9 +59,6 @@ extension UserAccountViewModel {
     func handleEffect(_ effect: Effect) {
         
         switch effect {
-        case let .demo(demoEffect):
-            handleEffect(demoEffect) { [weak self] in self?.event(.demo($0)) }
-            
         case let .fps(fpsEvent):
             fpsDispatch?(fpsEvent)
             
@@ -101,38 +98,6 @@ extension UserAccountViewModel {
         state.destination = .fastPaymentsSettings(.init(fpsViewModel, cancellable))
 #warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
-    }
-}
-
-// MARK: - Effect Handling
-
-private extension UserAccountViewModel {
-    
-    // MARK: - Demo Effect Handling
-    
-    func handleEffect(
-        _ effect: Effect.Demo,
-        _ dispatch: @escaping (Event.Demo) -> Void
-    ) {
-        switch effect {
-        case .loadAlert:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.alert))
-            }
-            
-        case .loadInformer:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.informer))
-            }
-            
-        case .loader:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                dispatch(.loaded(.loader))
-            }
-        }
     }
 }
 
