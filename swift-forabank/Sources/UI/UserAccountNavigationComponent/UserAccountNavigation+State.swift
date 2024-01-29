@@ -103,7 +103,7 @@ extension UserAccountNavigation.State.Destination: Hashable {
         
         switch (lhs, rhs) {
         case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
-            lhs.hashValue == rhs.hashValue
+            return lhs.hashValue == rhs.hashValue
         }
     }
     
