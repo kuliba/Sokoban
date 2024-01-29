@@ -423,8 +423,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
-        rootView: "", 
-        fastUpdateAction: {}
+        rootView: ""
     )
     
     static let sadSample = ProductProfileViewModel(
@@ -439,8 +438,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
-        rootView: "",
-        fastUpdateAction: {}
+        rootView: ""
     )
 }
 

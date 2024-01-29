@@ -29,7 +29,6 @@ class TemplatesListViewModel: ObservableObject {
     @Published var sheet: Sheet?
     
     private let model: Model
-    private let fastUpdateAction: () -> Void
     var bindings = Set<AnyCancellable>()
     
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
@@ -61,7 +60,6 @@ class TemplatesListViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.updateFastAll = updateFastAll
         self.model = model
-        self.fastUpdateAction = fastUpdateAction
     }
     
     convenience init(
@@ -319,7 +317,7 @@ private extension TemplatesListViewModel {
                         link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
                             
                             self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, fastUpdateAction: fastUpdateAction))
+                        }))
                     }
             //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:

@@ -80,10 +80,7 @@ extension RootViewModelFactory {
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            onRegister: resetCVVPINActivation, 
-            fastUpdateAction: {
-                model.action.send(ModelAction.Products.Update.Fast.All())
-            }
+            onRegister: resetCVVPINActivation
         )
     }
     
@@ -211,7 +208,7 @@ extension RootViewModelFactory {
 
 extension ProductProfileViewModel {
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
         with model: Model,
@@ -222,7 +219,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient
     ) -> MakeProductProfileViewModel {
         
-        return { product, rootView, dismissAction, fastUpdateAction in
+        return { product, rootView, dismissAction in
             
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
@@ -244,7 +241,7 @@ extension ProductProfileViewModel {
             }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeProductProfileViewModel: makeProductProfileViewModel, 
+                makeProductProfileViewModel: makeProductProfileViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel
             )
             
@@ -290,7 +287,7 @@ private extension RootViewModelFactory {
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     
     static func make(
@@ -300,8 +297,7 @@ private extension RootViewModelFactory {
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
-        onRegister: @escaping OnRegister,
-        fastUpdateAction: @escaping () -> Void
+        onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
@@ -363,8 +359,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction, 
-            fastUpdateAction: fastUpdateAction
+            showLoginAction: showLoginAction
         )
     }
 }

@@ -31,7 +31,6 @@ class RootViewModel: ObservableObject, Resetable {
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
-    private let fastUpdateAction: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -44,8 +43,7 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        showLoginAction: @escaping ShowLoginAction,
-        fastUpdateAction: @escaping () -> Void
+        showLoginAction: @escaping ShowLoginAction
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -57,7 +55,6 @@ class RootViewModel: ObservableObject, Resetable {
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
-        self.fastUpdateAction = fastUpdateAction
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -237,8 +234,7 @@ class RootViewModel: ObservableObject, Resetable {
                         closeAction: { [weak self] in
                             
                             self?.action.send(RootViewModelAction.CloseLink())
-                        },
-                        fastUpdateAction: fastUpdateAction
+                        }
                     )
                     self.link = .payments(operationViewModel)
                     
@@ -249,8 +245,7 @@ class RootViewModel: ObservableObject, Resetable {
                         closeAction: { [weak self] in
                             
                             self?.action.send(RootViewModelAction.CloseLink())
-                        },
-                        fastUpdateAction: fastUpdateAction
+                        }
                     )
                     self.link = .payments(operationViewModel)
                     

@@ -15,7 +15,7 @@ import LandingUIComponent
 class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -39,7 +39,6 @@ class MyProductsViewModel: ObservableObject {
     private let model: Model
     private let cardAction: CardAction?
     private let makeProductProfileViewModel: MakeProductProfileViewModel
-    private let fastUpdateAction: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     
@@ -53,8 +52,7 @@ class MyProductsViewModel: ObservableObject {
          makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
-         openOrderSticker: @escaping () -> Void,
-         fastUpdateAction: @escaping () -> Void
+         openOrderSticker: @escaping () -> Void
     ) {
         self.model = model
         self.cardAction = cardAction
@@ -67,15 +65,13 @@ class MyProductsViewModel: ObservableObject {
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
         self.openOrderSticker = openOrderSticker
-        self.fastUpdateAction = fastUpdateAction
     }
     
     convenience init(
         _ model: Model,
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        openOrderSticker: @escaping () -> Void,
-        fastUpdateAction: @escaping () -> Void
+        openOrderSticker: @escaping () -> Void
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
@@ -88,8 +84,7 @@ class MyProductsViewModel: ObservableObject {
             makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
-            openOrderSticker: openOrderSticker,
-            fastUpdateAction: fastUpdateAction
+            openOrderSticker: openOrderSticker
         )
         
         updateNavBar(state: .normal)
@@ -268,7 +263,8 @@ class MyProductsViewModel: ObservableObject {
                             .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }, fastUpdateAction)
+                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }
+                        )
                         else { return }
                         
                         productProfileViewModel.rootActions = rootActions
@@ -335,7 +331,7 @@ class MyProductsViewModel: ObservableObject {
                             self.link = .openCard(authProductsViewModel)
                         }
                         
-                    default: 
+                    default:
                         bottomSheet = nil
                         
                         openOrderSticker()

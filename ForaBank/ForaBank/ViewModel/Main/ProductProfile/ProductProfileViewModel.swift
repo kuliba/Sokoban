@@ -53,8 +53,6 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
-    private let fastUpdateAction: () -> Void
-
     
     private var bindings = Set<AnyCancellable>()
     
@@ -72,13 +70,12 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         fastPaymentsServices: FastPaymentsServices,         
+         fastPaymentsServices: FastPaymentsServices,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          cvvPINServicesClient: CVVPINServicesClient,
-         rootView: String,
-         fastUpdateAction: @escaping () -> Void
+         rootView: String
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -96,7 +93,6 @@ class ProductProfileViewModel: ObservableObject {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
-        self.fastUpdateAction = fastUpdateAction
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
@@ -117,8 +113,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
-        dismissAction: @escaping () -> Void,
-        fastUpdateAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
@@ -354,7 +349,7 @@ private extension ProductProfileViewModel {
                 self.fullScreenCoverState = .changePin(.init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
-                    model: self.createPinCodeViewModel(displayNumber: payload.phone), 
+                    model: self.createPinCodeViewModel(displayNumber: payload.phone),
                     request: self.resendOtpForPin
                 ))
             }
@@ -377,8 +372,7 @@ private extension ProductProfileViewModel {
                     qrViewModelFactory: qrViewModelFactory,
                     paymentsTransfersFactory: paymentsTransfersFactory,
                     isTabBarHidden: true,
-                    mode: .link,
-                    fastUpdateAction: fastUpdateAction
+                    mode: .link
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
@@ -870,8 +864,7 @@ private extension ProductProfileViewModel {
                             model,
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {},
-                            fastUpdateAction: fastUpdateAction
+                            openOrderSticker: {}
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -911,7 +904,7 @@ private extension ProductProfileViewModel {
                     guard let storage = self.model.statements.value[self.product.activeProductId],
                           let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
                           let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model, fastUpdateAction: fastUpdateAction) else {
+                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
                         
                         return
                     }
@@ -1498,8 +1491,7 @@ private extension ProductProfileViewModel {
     func makeProductProfileViewModel(
         product: ProductData,
         rootView: String,
-        dismissAction: @escaping () -> Void,
-        fastUpdateAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void
     ) -> ProductProfileViewModel? {
         
         .init(
@@ -1507,13 +1499,12 @@ private extension ProductProfileViewModel {
             fastPaymentsFactory: fastPaymentsFactory,
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory, 
+            qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
-            dismissAction: dismissAction,
-            fastUpdateAction: fastUpdateAction
+            dismissAction: dismissAction
         )
     }
 }
@@ -2044,7 +2035,7 @@ extension ProductProfileViewModel {
     
     private func blockCard(with productData: ProductData?) {
         
-        guard let productData = productData, let statusCard = productData.statusCard, statusCard == .active else {
+        guard let productData = productData else {
             return
         }
         
@@ -2053,11 +2044,7 @@ extension ProductProfileViewModel {
     
     private func unblockCard(with productData: ProductData?) {
         
-        guard let productData = productData, let statusCard = productData.statusCard, statusCard == .active else {
-            return
-        }
-        
-        alert = alertBlockedCard(with: productData)
+        blockCard(with: productData)
     }
     
     private func checkCertificate(

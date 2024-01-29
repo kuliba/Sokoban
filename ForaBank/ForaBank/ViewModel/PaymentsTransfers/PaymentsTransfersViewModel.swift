@@ -51,8 +51,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
-        route: Route = .empty,
-        fastUpdateAction: @escaping () -> Void
+        route: Route = .empty
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -68,8 +67,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.fastUpdateAction = fastUpdateAction
         self.navButtonsRight = createNavButtonsRight()
+        
         bind()
         bindSections(sections)
         
@@ -86,8 +85,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         mode: Mode = .normal,
-        route: Route = .empty,
-        fastUpdateAction: @escaping () -> Void
+        route: Route = .empty
     ) {
         self.sections = sections
         self.mode = mode
@@ -99,7 +97,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.navButtonsRight = navButtonsRight
-        self.fastUpdateAction = fastUpdateAction
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }
@@ -148,8 +145,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                           let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() }, fastUpdateAction
-                            )
+                            { [weak self] in self?.resetDestination() })
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
@@ -214,7 +210,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: payload.qrCode), model: model, closeAction: {[weak self] in
                         
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    }, fastUpdateAction: fastUpdateAction)
+                    })
                     bind(paymentsViewModel)
                     
                     self.action.send(DelayWrappedAction(
@@ -344,7 +340,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .anotherCard:
                             model.action.send(ModelAction.ProductTemplate.List.Request())
                             let paymentsViewModel = PaymentsViewModel(model, service: .toAnotherCard, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, fastUpdateAction: fastUpdateAction)
+                            })
                             bind(paymentsViewModel)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
@@ -362,7 +358,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .requisites:
                             let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, fastUpdateAction: fastUpdateAction)
+                            })
                             bind(paymentsViewModel)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
@@ -379,7 +375,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             let paymentsViewModel = PaymentsViewModel(model, service: .mobileConnection, closeAction: { [weak self] in
                                 
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, fastUpdateAction: fastUpdateAction)
+                            })
                             bind(paymentsViewModel)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
@@ -432,7 +428,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     self?.resetDestination()
                                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
-                                }, fastUpdateAction: fastUpdateAction
+                                }
                             )
                             
                             self.route.destination = .paymentsServices(paymentsServicesViewModel)
@@ -442,8 +438,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             bindTransport()
                             
                         case .taxAndStateService:
-                            let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, fastUpdateAction: fastUpdateAction)
+                            let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }
                             route.destination = .payments(paymentsViewModel)
                             
                         case .socialAndGame:
@@ -472,7 +468,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             handleError: { [weak self] in
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: $0))
-            }, fastUpdateAction: fastUpdateAction
+            }
         )
         
         if let transportPaymentsViewModel {
@@ -542,10 +538,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     self.openScanner()
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
-                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model, closeAction: { [weak self] in
+                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
                         
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    }, fastUpdateAction: fastUpdateAction)
+                    }
                     
                     self.action.send(DelayWrappedAction(
                         delayMS: 700,
@@ -648,7 +644,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         handle(latestPayment: latestPayment)
                         
                     default:
-                        let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model, closeAction: { [weak self] in
+                        let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
                             
                             guard let self else { return }
                             
@@ -669,7 +665,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                             default: break
                             }
-                        }, fastUpdateAction: fastUpdateAction)
+                        }
                         
                         bind(paymentsViewModel)
                         
@@ -680,7 +676,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     }
                     
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model, closeAction: { [weak self] in
+                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
                         
                         guard let self else { return }
                         
@@ -701,7 +697,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         default: break
                         }
-                    }, fastUpdateAction: fastUpdateAction)
+                    }
                     
                     bind(paymentsViewModel)
                     self.action.send(DelayWrappedAction(
@@ -786,8 +782,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             closeAction: { [weak self] in
                                 
                                 self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            },
-                            fastUpdateAction: fastUpdateAction
+                            }
                         )
                         self.bind(paymentsViewModel)
                         
@@ -843,8 +838,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self?.resetDestination()
                             self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                         },
-                        qrCode: qr, 
-                        fastUpdateAction: self.fastUpdateAction
+                        qrCode: qr
                     )
                     
                     self.route.destination = .searchOperators(operatorsViewModel)
@@ -882,8 +876,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         closeAction: {
                             
                             self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        }, 
-                        fastUpdateAction: fastUpdateAction
+                        }
                     )
                     self.bind(paymentsViewModel)
                     
@@ -891,7 +884,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         delayMS: 800,
                         action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                     )
-                }, fastUpdateAction: self.fastUpdateAction
+                }
             )
             self.route.destination = .failedView(failedView)
         }
@@ -915,8 +908,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     self?.resetModal()
                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                }, 
-                fastUpdateAction: self.fastUpdateAction
+                }
             )
             self.route.destination = .failedView(failedView)
         }
@@ -931,8 +923,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             closeAction: {[weak self] in
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, 
-            fastUpdateAction: fastUpdateAction
+            }
         )
         bind(paymentsViewModel)
         
@@ -951,8 +942,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             closeAction: { [weak self] in
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, 
-            fastUpdateAction: fastUpdateAction
+            }
         )
         bind(paymentsViewModel)
         
@@ -1069,8 +1059,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         closeAction: { [weak self] in
                             
                             self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        },
-                        fastUpdateAction: fastUpdateAction
+                        }
                     )
                     self.bind(paymentsViewModel)
                     
@@ -1078,8 +1067,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         delayMS: 800,
                         action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                     )
-                }, 
-                fastUpdateAction: self.fastUpdateAction
+                }
             )
             self.route.destination = .failedView(failedView)
         }
@@ -1152,8 +1140,7 @@ private extension Model {
     // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
     func makeTransportPaymentsViewModel(
         type: PTSectionPaymentsView.ViewModel.PaymentsType,
-        handleError: @escaping (String) -> Void,
-        fastUpdateAction: @escaping () -> Void
+        handleError: @escaping (String) -> Void
     ) -> TransportPaymentsViewModel? {
         
         guard let anywayOperators = dictionaryAnywayOperators(),
@@ -1175,8 +1162,7 @@ private extension Model {
             operators: operators,
             latestPayments: latestPayments,
             makePaymentsViewModel: makePaymentsViewModel(source:),
-            handleError: handleError, 
-            fastUpdateAction: fastUpdateAction
+            handleError: handleError
         )
     }
     
@@ -1298,15 +1284,13 @@ extension PaymentsTransfersViewModel {
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
-                model: model,
-                closeAction:
-             { [weak self] in
+                model: model
+            ) { [weak self] in
                 
                 guard let self else { return }
                 
                 self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            },
-                fastUpdateAction: fastUpdateAction)
+            }
             
             bind(paymentsViewModel)
             

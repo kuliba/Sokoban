@@ -14,32 +14,28 @@ class QRFailedViewModel: ObservableObject {
     let icon: Image
     let title: String
     let content: String
-    
-    private let fastUpdateAction: () -> Void
-    
     @Published var searchOperatorButton: [ButtonSimpleView.ViewModel]
     @Published var alert: Alert.ViewModel?
     @Published var isLinkActive: Bool = false
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     
-    init(model: Model, icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel], fastUpdateAction: @escaping () -> Void) {
+    init(model: Model, icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel]) {
         
         self.model = model
         self.icon = icon
         self.title = title
         self.content = content
         self.searchOperatorButton = searchOpratorButton
-        self.fastUpdateAction = fastUpdateAction
     }
     
-    convenience init(model: Model, addCompanyAction: @escaping () -> Void, requisitsAction: @escaping () -> Void, fastUpdateAction: @escaping () -> Void) {
+    convenience init(model: Model, addCompanyAction: @escaping () -> Void, requisitsAction: @escaping () -> Void) {
         
-        self.init(model: model, icon: Image.ic48BarcodeScanner, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [], fastUpdateAction: fastUpdateAction)
+        self.init(model: model, icon: Image.ic48BarcodeScanner, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
         
-        self.searchOperatorButton = createButtons(model, addCompanyAction: addCompanyAction, requisitesAction: requisitsAction, fastUpdateAction: fastUpdateAction)
+        self.searchOperatorButton = createButtons(model, addCompanyAction: addCompanyAction, requisitesAction: requisitsAction)
     }
     
-    private func createButtons(_ model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void, fastUpdateAction: @escaping () -> Void) -> [ButtonSimpleView.ViewModel] {
+    private func createButtons(_ model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) -> [ButtonSimpleView.ViewModel] {
         
         return [
             ButtonSimpleView.ViewModel(title: "Найти поставщика вручную", style: .gray, action: { [weak self] in
@@ -53,7 +49,7 @@ class QRFailedViewModel: ObservableObject {
                             leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: Image.ic24ChevronLeft,
                                                                                           action: { [weak self] in
                                                                                               self?.link = nil})]),
-                                               model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction, fastUpdateAction: fastUpdateAction))
+                                               model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction))
                 
             }),
             ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: requisitesAction)

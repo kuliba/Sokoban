@@ -283,7 +283,7 @@ extension OperationDetailViewModel {
         
         let featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
         
-        return OperationDetailViewModel(id: "1", header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, templateButton: .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub()), isLoading: false, fastUpdateAction: {})
+        return OperationDetailViewModel(id: "1", header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, templateButton: .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub()), isLoading: false)
         
     }()
 }

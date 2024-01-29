@@ -210,7 +210,7 @@ final class RootViewModelTests: XCTestCase {
             fastPaymentsServices: .empty,
             mainViewModel: .init(
                 model,
-                makeProductProfileViewModel: { _,_,_,_  in nil },
+                makeProductProfileViewModel: { _,_,_ in nil },
                 fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
@@ -223,7 +223,7 @@ final class RootViewModelTests: XCTestCase {
                 fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
-                qrViewModelFactory: .preview(), 
+                qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview
             ),
             chatViewModel: .init(),
@@ -233,7 +233,7 @@ final class RootViewModelTests: XCTestCase {
             showLoginAction: { _ in
                 
                     .init(viewModel: .init(authLoginViewModel: .preview))
-            }, fastUpdateAction: {}
+            }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))

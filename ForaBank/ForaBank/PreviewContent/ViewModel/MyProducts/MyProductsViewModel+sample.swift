@@ -28,8 +28,7 @@ extension MyProductsViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
         refreshingIndicator: .init(isActive: true),
-        openOrderSticker: {}, 
-        fastUpdateAction: {}
+        openOrderSticker: {}
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -52,7 +51,6 @@ extension MyProductsViewModel {
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
-        openOrderSticker: {}, 
-        fastUpdateAction: {}
+        openOrderSticker: {}
     )
 }

@@ -128,8 +128,7 @@ struct PaymentsServicesOperatorsView_Previews: PreviewProvider {
                 latestPayments: .sample,
                 allOperators: [],
                 addCompanyAction: {},
-                requisitesAction: {}, 
-                fastUpdateAction: {}
+                requisitesAction: {}
             )
         )
     }
