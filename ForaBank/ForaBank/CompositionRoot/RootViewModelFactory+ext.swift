@@ -241,7 +241,7 @@ extension ProductProfileViewModel {
             }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeProductProfileViewModel: makeProductProfileViewModel,
+                makeProductProfileViewModel: makeProductProfileViewModel, 
                 makeTemplatesListViewModel: makeTemplatesListViewModel
             )
             
