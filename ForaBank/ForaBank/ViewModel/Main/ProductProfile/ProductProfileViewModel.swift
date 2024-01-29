@@ -50,6 +50,7 @@ class ProductProfileViewModel: ObservableObject {
     private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -69,8 +70,10 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         fastPaymentsServices: FastPaymentsServices,         sberQRServices: SberQRServices,
+         fastPaymentsServices: FastPaymentsServices,         
+         sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
+         paymentsTransfersFactory: PaymentsTransfersFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -87,6 +90,7 @@ class ProductProfileViewModel: ObservableObject {
         self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -105,6 +109,7 @@ class ProductProfileViewModel: ObservableObject {
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -122,7 +127,21 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, fastPaymentsFactory: fastPaymentsFactory, fastPaymentsServices: fastPaymentsServices, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(
+            navigationBar: navigationBar,
+            product: productViewModel,
+            buttons: buttons,
+            detail: nil,
+            history: nil,
+            accentColor: accentColor,
+            model: model,
+            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsServices: fastPaymentsServices,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            cvvPINServicesClient: cvvPINServicesClient,
+            rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -344,13 +363,14 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] _ in
                 
                 model.setPreferredProductID(to: product.activeProductId)
+                
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    makeProductProfileViewModel: makeProductProfileViewModel,
                     fastPaymentsFactory: fastPaymentsFactory,
                     fastPaymentsServices: fastPaymentsServices,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
+                    paymentsTransfersFactory: paymentsTransfersFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1479,7 +1499,8 @@ private extension ProductProfileViewModel {
             fastPaymentsFactory: fastPaymentsFactory,
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory, 
+            paymentsTransfersFactory: paymentsTransfersFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
