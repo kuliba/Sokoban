@@ -286,7 +286,7 @@ class PaymentsViewModel: ObservableObject {
                     self.action.send(PaymentsViewModelAction.CloseSuccessView())
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
-                    //TODO: correct implementation required
+                    //TODO: correct implementation required                    
                     switch content {
                         
                     case .linkNotActive:

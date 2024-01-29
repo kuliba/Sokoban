@@ -31,7 +31,7 @@ class QRSearchOperatorViewModel: ObservableObject {
         self.model = model
         self.noCompanyInListViewModel = .init(title: NoCompanyInListViewModel.defaultTitle, content: NoCompanyInListViewModel.defaultContent, subtitle: NoCompanyInListViewModel.defaultSubtitle, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
         
-        //TODO: create convenience init
+        //TODO: create convenience init 
         bind()
         let operatorsData = model.dictionaryQRAnewayOperator().filter({ !$0.parameterList.isEmpty })
         self.operators = operatorsData.map { QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in

@@ -552,7 +552,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         trackForMemoryLeaks(model, file: file, line: line)
 
         return .init(
-            model,
+            model, 
             fastPaymentsFactory: .legacy,
             fastPaymentsServices: .empty,
             sberQRServices: .empty(),
