@@ -421,6 +421,7 @@ extension ProductProfileViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -435,6 +436,7 @@ extension ProductProfileViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

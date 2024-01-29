@@ -447,6 +447,7 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview, 
         onRegister: {}
     )
     
@@ -464,6 +465,7 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
         onRegister: {}
     )
     
@@ -481,6 +483,7 @@ extension MainViewModel {
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
         onRegister: {}
     )
 }
