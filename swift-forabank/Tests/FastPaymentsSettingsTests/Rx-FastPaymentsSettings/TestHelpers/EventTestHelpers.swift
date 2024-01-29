@@ -31,23 +31,29 @@ func setBankDefault(
     .bankDefault(.setBankDefault)
 }
 
-func setBankDefaultPreparedSuccess(
+func setBankDefaultSuccess(
 ) -> FastPaymentsSettingsEvent {
     
-    .bankDefault(.setBankDefaultPrepared(nil))
+    .bankDefault(.setBankDefaultResult(.success))
 }
 
-func setBankDefaultPreparedConnectivityError(
+func setBankDefaultIncorrectOTP(
 ) -> FastPaymentsSettingsEvent {
     
-    .bankDefault(.setBankDefaultPrepared(.connectivityError))
+    .bankDefault(.setBankDefaultResult(.incorrectOTP("Введен некорректный код. Попробуйте еще раз")))
 }
 
-func setBankDefaultPreparedServerError(
+func setBankDefaultConnectivityError(
+) -> FastPaymentsSettingsEvent {
+    
+    .bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError)))
+}
+
+func setBankDefaultServerError(
     _ message: String = anyMessage()
 ) -> FastPaymentsSettingsEvent {
     
-    .bankDefault(.setBankDefaultPrepared(.serverError(message)))
+    .bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message))))
 }
 
 func selectProduct(

@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/CvvPin.xctestplan"
+            reference = "container:../ForaBank/TestPlans/CvvPin.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

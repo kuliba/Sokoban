@@ -100,10 +100,7 @@ public struct OTPInputView: View {
     
     private func confirmButton() -> some View {
         
-        Button {
-            event(.otpField(.confirmOTP))
-            
-        } label: {
+        Button(action: confirmButtonAction) {
             Text("Подтвердить")
                 .bold()
                 .padding(.vertical, 9)
@@ -111,7 +108,15 @@ public struct OTPInputView: View {
         }
         .padding(.horizontal)
         .padding(.bottom, 24)
-        .accentColor(state.isOTPInputComplete ? .red : .gray.opacity(0.4))
+        .accentColor(state.isConfirmButtonActive ? .red : .gray.opacity(0.4))
+    }
+    
+    private func confirmButtonAction() {
+        
+        if state.isConfirmButtonActive {
+            
+            event(.otpField(.confirmOTP))
+        }
     }
     
     private func descriptionView() -> some View {
@@ -156,6 +161,11 @@ private extension OTPInputState.Input {
     var isOTPInputComplete: Bool {
         
         otpField.isInputComplete
+    }
+    
+    var isConfirmButtonActive: Bool {
+        
+        isOTPInputComplete && otpField.status != .inflight
     }
 }
 

@@ -85,9 +85,11 @@ private extension ProductsReducer {
         else {
             var state = state
             state = .init(
-                userPaymentSettings: .contracted(details.updated(
-                    productSelector: details.productSelector.updated(
-                        status: .collapsed
+                settingsResult: .success(.contracted(
+                    details.updated(
+                        productSelector: details.productSelector.updated(
+                            status: .collapsed
+                        )
                     )
                 ))
             )
@@ -112,24 +114,24 @@ private extension ProductsReducer {
         switch details.productSelector.status {
         case .collapsed:
             state = .init(
-                userPaymentSettings: .contracted(
+                settingsResult: .success(.contracted(
                     details.updated(
                         productSelector: details.productSelector.updated(
                             status: .expanded
                         )
                     )
-                )
+                ))
             )
             
         case .expanded:
             state = .init(
-                userPaymentSettings: .contracted(
+                settingsResult: .success(.contracted(
                     details.updated(
                         productSelector: details.productSelector.updated(
                             status: .collapsed
                         )
                     )
-                )
+                ))
             )
         }
         
@@ -155,7 +157,7 @@ private extension ProductsReducer {
                 )
             )
             
-            return .init(userPaymentSettings: .contracted(details))
+            return .init(settingsResult: .success(.contracted(details)))
             
         case .failure(.connectivityError):
             var details = details
@@ -164,7 +166,7 @@ private extension ProductsReducer {
             )
             
             return .init(
-                userPaymentSettings: .contracted(details),
+                settingsResult: .success(.contracted(details)),
                 status: .connectivityError
             )
             
@@ -175,7 +177,7 @@ private extension ProductsReducer {
             )
             
             return .init(
-                userPaymentSettings: .contracted(details),
+                settingsResult: .success(.contracted(details)),
                 status: .serverError(message)
             )
         }
@@ -187,7 +189,7 @@ private extension ProductsReducer {
 private extension FastPaymentsSettingsEffect {
     
     static func updateProduct(
-        _ details: UserPaymentSettings.ContractDetails,
+        _ details: UserPaymentSettings.Details,
         _ productID: Product.ID
     ) -> Self {
         
@@ -205,9 +207,9 @@ private extension UserPaymentSettings.ProductSelector {
 
 private extension FastPaymentsSettingsState {
     
-    var activeDetails: UserPaymentSettings.ContractDetails? {
+    var activeDetails: UserPaymentSettings.Details? {
         
-        guard case let .contracted(details) = userPaymentSettings,
+        guard case let .success(.contracted(details)) = settingsResult,
               details.isActive
         else { return nil }
         
@@ -215,7 +217,7 @@ private extension FastPaymentsSettingsState {
     }
 }
 
-private extension UserPaymentSettings.ContractDetails {
+private extension UserPaymentSettings.Details {
     
     var isActive: Bool {
         

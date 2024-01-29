@@ -106,6 +106,32 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    #warning("add similar tests for reducer")
+    func test_confirmOTP_shouldNotFireTwice() {
+        
+        let duration = 33
+        let (sut, stateSpy, timerSpy, initiateOTPSpy, submitOTPSpy) = makeSUT(duration: duration)
+        
+        sut.event(prepare())
+        initiateOTPSpy.complete(with: .success(()))
+        timerSpy.tick()
+        sut.event(.otpField(.edit("654321")))
+        sut.event(.otpField(.confirmOTP))
+        sut.event(.otpField(.confirmOTP))
+        submitOTPSpy.complete(with: .success(()))
+        
+        XCTAssertNoDiff(stateSpy.values, [
+            completed(),
+            .starting(duration: duration),
+            running(32),
+            running(32, otpField: completed("654321")),
+            runningInflight(32, "654321"),
+            .validOTP
+        ])
+        
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TimedOTPInputViewModel

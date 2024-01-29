@@ -379,6 +379,7 @@ private extension ProductProfileViewModel {
                     isTabBarHidden: true,
                     mode: .link
                 )
+                paymentsTransfersViewModel.rootActions = rootActions
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
             }.store(in: &bindings)

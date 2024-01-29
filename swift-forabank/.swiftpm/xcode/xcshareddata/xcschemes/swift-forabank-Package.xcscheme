@@ -868,34 +868,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CardStatementServices"
-               BuildableName = "CardStatementServices"
-               BlueprintName = "CardStatementServices"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "&#x421;ardStatementAPI"
-               BuildableName = "&#x421;ardStatementAPI"
-               BlueprintName = "&#x421;ardStatementAPI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "CardStatementAPI"
                BuildableName = "CardStatementAPI"
                BlueprintName = "CardStatementAPI"
@@ -955,6 +927,34 @@
                BlueprintIdentifier = "ProductProfile"
                BuildableName = "ProductProfile"
                BlueprintName = "ProductProfile"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UIPrimitives"
+               BuildableName = "UIPrimitives"
+               BlueprintName = "UIPrimitives"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserAccountNavigationComponent"
+               BuildableName = "UserAccountNavigationComponent"
+               BlueprintName = "UserAccountNavigationComponent"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -1169,26 +1169,6 @@
                BlueprintIdentifier = "LoadableModelTests"
                BuildableName = "LoadableModelTests"
                BlueprintName = "LoadableModelTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CardStatementServicesTests"
-               BuildableName = "CardStatementServicesTests"
-               BlueprintName = "CardStatementServicesTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "&#x421;ardStatementAPITests"
-               BuildableName = "&#x421;ardStatementAPITests"
-               BlueprintName = "&#x421;ardStatementAPITests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

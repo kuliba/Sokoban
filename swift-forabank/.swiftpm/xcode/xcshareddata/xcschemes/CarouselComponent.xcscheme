@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/CarouselComponent.xctestplan"
+            reference = "container:../ForaBank/TestPlans/CarouselComponent.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

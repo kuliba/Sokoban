@@ -8,6 +8,8 @@
 import FastPaymentsSettings
 import OTPInputComponent
 import SwiftUI
+import UIPrimitives
+import UserAccountNavigationComponent
 
 struct UserAccountView: View {
     
@@ -27,10 +29,10 @@ struct UserAccountView: View {
                 }
                 .alert(
                     item: .init(
-                        get: { viewModel.state.alert?.alert },
+                        get: { viewModel.alert },
                         set: { if $0 == nil { viewModel.event(.closeAlert) }}
                     ),
-                    content: Alert.init(with:)
+                    content: { .init(with: $0, event: viewModel.event) }
                 )
                 .navigationDestination(
                     item: .init(
@@ -96,26 +98,27 @@ struct UserAccountView: View {
     }
     
     private func destinationView(
-        destination: UserAccountViewModel.Route.Destination
+        destination: UserAccountViewModel.State.Destination
     ) -> some View {
         
         switch destination {
-        case let .fastPaymentsSettings(fpsViewModel):
-            FastPaymentsSettingsView(
-                viewModel: fpsViewModel,
-                config: .default
+        case let .fastPaymentsSettings(fps):
+            FastPaymentsSettingsWrapperView(
+                viewModel: fps.viewModel,
+                config: .preview
             )
             .alert(
                 item: .init(
-                    get: { viewModel.state.alert?.fpsAlert },
+                    get: { viewModel.state.fpsRoute?.alert },
                     // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                    // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                     set: { _ in }
                 ),
-                content: Alert.init(with:)
+                content: { .init(with: $0, event: viewModel.event) }
             )
             .navigationDestination(
                 item: .init(
-                    get: { viewModel.state.fpsDestination },
+                    get: { viewModel.state.fpsRoute?.destination },
                     set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                 ),
                 destination: fpsDestinationView
@@ -125,15 +128,27 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.Route.FPSDestination
+        fpsDestination: UserAccountViewModel.State.Destination.FPSDestination
     ) -> some View {
         
         switch fpsDestination {
-        case let .confirmSetBankDefault(timedOTPInputViewModel):
+        case let .confirmSetBankDefault(timedOTPInputViewModel, _):
             OTPInputWrapperView(viewModel: timedOTPInputViewModel)
             
-        case let .c2BSub(getC2BSubResponse):
+        case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
+        }
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    var alert: AlertModelOf<Event>? {
+        
+        if case let .alert(alert) = state.alert {
+            return alert
+        } else {
+            return nil
         }
     }
 }
@@ -186,21 +201,12 @@ private extension UserAccountViewModel {
     }
 }
 
-#warning("remove if unused")
-enum ConfirmWithOTPResult {
-    
-    case success
-    case incorrectCode
-    case serverError(String)
-    case connectivityError
-}
-
 struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         UserAccountView(viewModel: .preview(
-            route: .init(),
+            state: .init(),
             flowStub: .preview
         ))
     }
