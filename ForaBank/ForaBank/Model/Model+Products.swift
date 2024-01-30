@@ -354,7 +354,6 @@ private extension ProductType {
     var typeValueForRequest: ProductDynamicParamsListPayload.ProductType {
         
         switch self {
-            
         case .card:
             return .card
         case .account:
