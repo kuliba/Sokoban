@@ -287,17 +287,9 @@ extension UserAccountViewModel {
                         
                     } else {
                         
-#warning("extract to static helper func")
-                        let alert = Alert.ViewModel(
-                            title: "Ошибка",
-                            message: "Нет доступа к камере",
-                            primary: .init(
-                                type: .default,
-                                title: "Ok",
-                                action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                            ))
-                        
-                        self.event(.route(.alert(.setTo(alert))))
+                        self.event(.route(.alert(.setTo(.cameraPermissionError(
+                            action: { [weak self] in self?.event(.route(.alert(.reset))) }
+                        )))))
                     }
                     
                 case let payload as ModelAction.Media.GalleryPermission.Response:
@@ -788,6 +780,21 @@ private extension UserAccountViewModel {
 }
 
 private extension Alert.ViewModel {
+    
+    static func cameraPermissionError(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: "Нет доступа к камере",
+            primary: .init(
+                type: .default,
+                title: "Ok",
+                action: action
+            )
+        )
+    }
     
     static func galleryPermissionError(
         action: @escaping () -> Void
