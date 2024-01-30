@@ -189,7 +189,7 @@ private extension MainViewModel {
                     
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     
-                    // TODO: replace with injected factory
+                    #warning("replace with injected factory")
                     route.destination = .userAccount(.init(
                         model: model,
                         fastPaymentsFactory: fastPaymentsFactory,
