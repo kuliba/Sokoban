@@ -111,7 +111,7 @@ class UserAccountViewModel: ObservableObject {
 
 extension UserAccountViewModel {
     
-    func event(_ event: Event) {
+    func event(_ event: UserAccountEvent) {
         
         var route = route
         
@@ -127,7 +127,7 @@ extension UserAccountViewModel {
 private extension UserAccountViewModel {
     
     func handleRouteEvent(
-        _ routeEvent: Event.RouteEvent
+        _ routeEvent: UserAccountEvent.RouteEvent
     ) -> Route {
         
         var route = route
@@ -185,61 +185,6 @@ private extension UserAccountViewModel {
         }
         
         return route
-    }
-}
-
-extension UserAccountViewModel {
-    
-    enum Event {
-        
-        case route(RouteEvent)
-    }
-}
- 
-extension UserAccountViewModel.Event {
-    
-    enum RouteEvent {
-        
-        case alert(AlertEvent)
-        case bottomSheet(BottomSheetEvent)
-        case link(LinkEvent)
-        case spinner(SpinnerEvent)
-        case sheet(SheetEvent)
-        case textFieldAlert(TextFieldAlertEvent)
-        
-        enum AlertEvent {
-            
-            case reset
-            case setTo(Alert.ViewModel)
-        }
-        
-        enum BottomSheetEvent {
-            
-            case reset
-            case setTo(UserAccountViewModel.BottomSheet)
-        }
-        
-        enum LinkEvent {
-            
-            case reset
-            case setTo(UserAccountViewModel.Link)
-        }
-        
-        enum SpinnerEvent {
-            
-            case hide, show
-        }
-        
-        enum SheetEvent {
-            
-            case reset
-        }
-        
-        enum TextFieldAlertEvent {
-            
-            case reset
-            case setTo(AlertTextFieldView.ViewModel)
-        }
     }
 }
 
