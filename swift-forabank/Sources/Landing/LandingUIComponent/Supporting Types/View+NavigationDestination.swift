@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public extension View {
+extension View {
     
     func navigationDestination<Item: Identifiable, Content: View>(
         _ titleKey: LocalizedStringKey = "",

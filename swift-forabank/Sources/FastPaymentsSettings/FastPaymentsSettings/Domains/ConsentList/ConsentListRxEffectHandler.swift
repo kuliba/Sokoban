@@ -48,7 +48,7 @@ public extension ConsentListRxEffectHandler {
     // (h) changeClientConsentMe2MePull
     typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
     
-    enum ChangeConsentListResponse {
+    enum ChangeConsentListResponse: Equatable {
         
         case success
         case connectivityError

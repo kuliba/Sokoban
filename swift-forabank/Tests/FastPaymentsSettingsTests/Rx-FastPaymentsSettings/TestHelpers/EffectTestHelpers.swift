@@ -50,7 +50,7 @@ func fastPaymentsSettingsEffectTargetContract(
 }
 
 func makeCore(
-    _ details: UserPaymentSettings.ContractDetails,
+    _ details: UserPaymentSettings.Details,
     _ product: Product
 ) -> FastPaymentsSettingsEffect.ContractCore {
     

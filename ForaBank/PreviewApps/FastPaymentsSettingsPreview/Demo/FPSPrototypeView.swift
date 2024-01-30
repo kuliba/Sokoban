@@ -17,7 +17,7 @@ struct FPSPrototypeView: View {
         
         switcher()
             .fullScreenCover(
-                isPresented: $isShowingFlowStubOptions, 
+                isPresented: $isShowingFlowStubOptions,
                 content: fullScreenCover
             )
     }
@@ -60,14 +60,20 @@ struct FPSPrototypeView: View {
     
     private func fullScreenCover() -> some View {
         
-        FlowStubSettingsView(
-            flowStub: flowStub,
-            commit: {
-                
-                flowStub = $0
-                isShowingFlowStubOptions = false
-            }
-        )
+        NavigationView {
+            
+            FlowStubSettingsView(
+                flowStub: flowStub,
+                commit: commit
+            )
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    private func commit(flowStub: FlowStub) {
+        
+        self.flowStub = flowStub
+        isShowingFlowStubOptions = false
     }
 }
 

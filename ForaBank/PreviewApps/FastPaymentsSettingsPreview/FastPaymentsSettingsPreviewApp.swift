@@ -15,6 +15,7 @@ struct FastPaymentsSettingsPreviewApp: App {
         WindowGroup {
             
             ContentView()
+                .preferredColorScheme(.light)
         }
     }
 }

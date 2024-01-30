@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-public struct GetC2BSubResponse: Equatable {
+public struct GetC2BSubResponse: Equatable, Hashable {
     
     public let title: String
     public let explanation: [String]
@@ -24,7 +24,7 @@ public struct GetC2BSubResponse: Equatable {
 
 public extension GetC2BSubResponse {
     
-    enum Details: Equatable {
+    enum Details: Equatable, Hashable {
         
         case list([ProductSubscription])
         case empty
@@ -33,7 +33,7 @@ public extension GetC2BSubResponse {
 
 public extension GetC2BSubResponse.Details {
     
-    struct ProductSubscription: Equatable {
+    struct ProductSubscription: Equatable, Hashable {
         
         public let productID: String
         public let productType: ProductType
@@ -61,7 +61,7 @@ public extension GetC2BSubResponse.Details.ProductSubscription {
         case account, card
     }
     
-    struct Subscription: Equatable {
+    struct Subscription: Equatable, Hashable {
         
         public let subscriptionToken: String
         public let brandIcon: String

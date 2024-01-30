@@ -267,15 +267,22 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CarouselComponentTests",
-        "name" : "CarouselComponentTests"
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ProductProfileTests",
-        "name" : "ProductProfileTests"
+        "containerPath" : "container:",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
       }
     }
   ],
