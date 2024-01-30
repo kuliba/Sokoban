@@ -25,6 +25,8 @@ class UserAccountViewModel: ObservableObject {
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
     @Published private(set) var route: Route
     
+    private let routeSubject = PassthroughSubject<Route, Never>()
+    
     var appVersionFull: String? {
         
         model.authAppVersion.map { "Версия \($0)" }
@@ -94,6 +96,10 @@ class UserAccountViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$fpsCFLResponse)
         
+        routeSubject
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$route)
+        
         bind()
         
         if let action = action {
@@ -111,61 +117,74 @@ extension UserAccountViewModel {
         
         switch event {
         case let .route(routeEvent):
-            switch routeEvent {
-            case let .alert(alertEvent):
-                switch alertEvent {
-                case .reset:
-                    route.alert = nil
-                    
-                case let .setTo(alertViewModel):
-                    route.alert = alertViewModel
-                }
+            route = handleRouteEvent(routeEvent)
+        }
+        
+        routeSubject.send(route)
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    func handleRouteEvent(
+        _ routeEvent: Event.RouteEvent
+    ) -> Route {
+        
+        var route = route
+        
+        switch routeEvent {
+        case let .alert(alertEvent):
+            switch alertEvent {
+            case .reset:
+                route.alert = nil
                 
-            case let .bottomSheet(bottomSheetEvent):
-                switch bottomSheetEvent {
-                case .reset:
-                    route.bottomSheet = nil
-                case let .setTo(bottomSheet):
-                    route.bottomSheet = bottomSheet
-                }
+            case let .setTo(alertViewModel):
+                route.alert = alertViewModel
+            }
+            
+        case let .bottomSheet(bottomSheetEvent):
+            switch bottomSheetEvent {
+            case .reset:
+                route.bottomSheet = nil
+            case let .setTo(bottomSheet):
+                route.bottomSheet = bottomSheet
+            }
+            
+        case let .link(linkEvent):
+            switch linkEvent {
+            case .reset:
+                route.link = nil
                 
-            case let .link(linkEvent):
-                switch linkEvent {
-                case .reset:
-                    route.link = nil
-                    
-                case let .setTo(link):
-                    route.link = link
-                }
+            case let .setTo(link):
+                route.link = link
+            }
+            
+        case let .sheet(sheetEvent):
+            switch sheetEvent {
+            case .reset:
+                route.sheet = nil
+            }
+            
+        case let .spinner(spinnerEvent):
+            switch spinnerEvent {
+            case .hide:
+                route.spinner = nil
                 
-            case let .sheet(sheetEvent):
-                switch sheetEvent {
-                case .reset:
-                    route.sheet = nil
-                }
+            case .show:
+                route.spinner = .init()
+            }
+            
+        case let .textFieldAlert(textFieldAlertEvent):
+            switch textFieldAlertEvent {
+            case .reset:
+                route.textFieldAlert = nil
                 
-            case let .spinner(spinnerEvent):
-                switch spinnerEvent {
-                case .hide:
-                    route.spinner = nil
-                    
-                case .show:
-                    route.spinner = .init()
-                }
-                
-            case let .textFieldAlert(textFieldAlertEvent):
-                switch textFieldAlertEvent {
-                case .reset:
-                    route.textFieldAlert = nil
-                    
-                case let .setTo(alertViewModel):
-                    route.textFieldAlert = alertViewModel
-                }
+            case let .setTo(alertViewModel):
+                route.textFieldAlert = alertViewModel
             }
         }
         
-        #warning("TODO")
-        // routeSubject.send(route)
+        return route
     }
 }
 

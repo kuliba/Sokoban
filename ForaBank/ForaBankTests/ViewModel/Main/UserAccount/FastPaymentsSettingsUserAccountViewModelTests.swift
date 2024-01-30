@@ -136,12 +136,12 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnActiveFPSCFLResponseGetConsentAndDefaultFailure() throws {
         
         let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
-        let alertSpy = ValueSpy(sut.$route.map(\.alert?.view))
+        let alertSpy = ValueSpy(sut.$route.map(\.alert?.view).removeDuplicates())
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
         getConsentAndDefaultSpy.completeAndWait(with: .failure(anyError()))
-        
+
         try sut.tapPrimaryAlertButtonAndWait()
         
         XCTAssertNoDiff(alertSpy.values.map(\.?.message), [
@@ -154,7 +154,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldSetDestinationOnActiveFPSCFLResponseGetConsentAndDefaultSuccess() throws {
         
         let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
-        let destinationSpy = ValueSpy(sut.$route.map(\.link))
+        let destinationSpy = ValueSpy(sut.$route.map(\.link).removeDuplicates())
         findListSpy.emitAndWait(anyActive())
         
         try sut.tapFastPaymentsSettingsAndWait()
@@ -169,7 +169,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldSetAlertWithDissmissAlertPrimaryButtonOnInactiveFPSCFLResponseGetConsentAndDefaultFailure() throws {
         
         let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
-        let alertSpy = ValueSpy(sut.$route.map(\.alert?.view))
+        let alertSpy = ValueSpy(sut.$route.map(\.alert?.view).removeDuplicates())
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
@@ -187,7 +187,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldSetDestinationOnInactiveFPSCFLResponseGetConsentAndDefaultSuccess() throws {
         
         let (sut, findListSpy, _, getConsentAndDefaultSpy) = makeSUT()
-        let destinationSpy = ValueSpy(sut.$route.map(\.link))
+        let destinationSpy = ValueSpy(sut.$route.map(\.link).removeDuplicates())
         findListSpy.emitAndWait(anyInactive())
         
         try sut.tapFastPaymentsSettingsAndWait()
@@ -202,7 +202,7 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
     func test_tapFastPaymentsSettings_shouldSetDestinationOnMissingFPSCFLResponse() throws {
         
         let (sut, findListSpy, _,_) = makeSUT()
-        let destinationSpy = ValueSpy(sut.$route.map(\.link))
+        let destinationSpy = ValueSpy(sut.$route.map(\.link).removeDuplicates())
         findListSpy.emitAndWait(.noContract)
         
         #warning("long timeout")
