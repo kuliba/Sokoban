@@ -13,10 +13,3 @@ struct OperationDetailFactory {
       
     typealias MakeOperationDetailViewModel = (ProductStatementData, ProductData, Model) -> OperationDetailViewModel?
 }
-
-extension OperationDetailFactory {
-    
-    static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
-            .sampleComplete
-    })
-}
