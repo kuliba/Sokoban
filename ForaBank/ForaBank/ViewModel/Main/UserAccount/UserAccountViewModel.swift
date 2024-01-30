@@ -646,25 +646,14 @@ extension UserAccountViewModel {
                     ),
                     onDelete: { token, title in
                         
-#warning("extract to static helper func")
-                        let alert = Alert.ViewModel(
+                        self.event(.route(.alert(.setTo(.cancelC2BSub(
                             title: title,
-                            message: nil,
-                            primary: .init(
-                                type: .cancel,
-                                title: "Отмена",
-                                action: {}
-                            ),
-                            secondary: .init(
-                                type: .default,
-                                title: "Отключить",
-                                action: {
-                                    
-                                    self.model.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
-                                }
-                            ))
-                        
-                        self.event(.route(.alert(.setTo(alert))))
+                            action: {
+                                
+                                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                                self.model.action.send(action)
+                            }
+                        )))))
                     },
                     detailAction: { token in
                         
@@ -845,6 +834,27 @@ private extension Alert.ViewModel {
                 type: .cancel,
                 title: "Отмена",
                 action: {}
+            )
+        )
+    }
+    
+    static func cancelC2BSub(
+        title: String,
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: nil,
+            primary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            ),
+            secondary: .init(
+                type: .default,
+                title: "Отключить",
+                action: action
             )
         )
     }
