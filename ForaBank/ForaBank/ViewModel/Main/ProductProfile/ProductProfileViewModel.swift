@@ -349,7 +349,7 @@ private extension ProductProfileViewModel {
                 self.fullScreenCoverState = .changePin(.init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
-                    model: self.createPinCodeViewModel(displayNumber: payload.phone),
+                    model: self.createPinCodeViewModel(displayNumber: payload.phone), 
                     request: self.resendOtpForPin
                 ))
             }
