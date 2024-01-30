@@ -114,10 +114,10 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
         
         Group {
             
-            sberQRConfirmPaymentWrapperView(.fixedAmount(.preview))
+            sberQRConfirmPaymentWrapperView(.init(confirm: .fixedAmount(.preview)))
                 .previewDisplayName("SberQRConfirmPayment: Fixed")
             
-            sberQRConfirmPaymentWrapperView(.editableAmount(.preview))
+            sberQRConfirmPaymentWrapperView(.init(confirm: .editableAmount(.preview)))
                 .previewDisplayName("SberQRConfirmPayment: Editable")
         }
     }

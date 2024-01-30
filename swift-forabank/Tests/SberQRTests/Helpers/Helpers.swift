@@ -128,7 +128,7 @@ func makeEditableAmount(
     productSelect: ProductSelect = .compact(.test),
     amount: Decimal = 123.45,
     isEnabled: Bool = false
-) -> SberQRConfirmPaymentState.EditableAmount {
+) -> EditableAmount<GetSberQRDataResponse.Parameter.Info> {
     
     .init(
         header: .payQR,
@@ -146,7 +146,7 @@ func makeEditableAmount(
 func makeFixedAmount(
     brandName: String = UUID().uuidString,
     productSelect: ProductSelect = .compact(.test)
-) -> SberQRConfirmPaymentState.FixedAmount {
+) -> FixedAmount<GetSberQRDataResponse.Parameter.Info> {
     
     .init(
         header: .payQR,

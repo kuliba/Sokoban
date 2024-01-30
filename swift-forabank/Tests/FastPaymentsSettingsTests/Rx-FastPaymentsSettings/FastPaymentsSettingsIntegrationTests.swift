@@ -22,6 +22,8 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertEqual(updateProductSpy.callCount, 0)
     }
     
+#warning("add tests for bankDefault with non-nil limit")
+
     func test_flow_abc1d1_deactivationSuccessOfLoadedActiveContract() {
         
         let details = contractedState(.active).details
@@ -37,9 +39,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details.updated(
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details.updated(
                 paymentContract: newContract
             ))),
         ])
@@ -68,9 +70,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details), status: .serverError(message)),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -96,9 +98,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details), status: .connectivityError),
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details), status: .connectivityError),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -125,9 +127,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details.updated(
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details.updated(
                 paymentContract: newContract
             ))),
         ])
@@ -156,9 +158,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details), status: .serverError(message)),
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details), status: .serverError(message)),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -184,9 +186,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
-            .init(userPaymentSettings: .contracted(details), status: .inflight),
-            .init(userPaymentSettings: .contracted(details), status: .connectivityError),
+            .init(settingsResult: .contracted(details)),
+            .init(settingsResult: .contracted(details), status: .inflight),
+            .init(settingsResult: .contracted(details), status: .connectivityError),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -217,12 +219,12 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: missing),
-            .init(userPaymentSettings: missing, status: .inflight),
-            .init(userPaymentSettings: .contracted(.init(
+            .init(settingsResult: missing),
+            .init(settingsResult: missing, status: .inflight),
+            .init(settingsResult: .contracted(.init(
                 paymentContract: newContract,
                 consentList: consentList,
-                bankDefault: .offEnabled,
+                bankDefaultResponse: bankDefault(.offEnabled),
                 productSelector: .init(
                     selectedProduct: product2,
                     products: [product1, product2]
@@ -258,12 +260,12 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: missing),
-            .init(userPaymentSettings: missing, status: .inflight),
-            .init(userPaymentSettings: .contracted(.init(
+            .init(settingsResult: missing),
+            .init(settingsResult: missing, status: .inflight),
+            .init(settingsResult: .contracted(.init(
                 paymentContract: newContract,
                 consentList: consentList,
-                bankDefault: .offEnabled,
+                bankDefaultResponse: bankDefault(.offEnabled),
                 productSelector: .init(
                     selectedProduct: nil,
                     products: [product1]
@@ -291,9 +293,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: missing),
-            .init(userPaymentSettings: missing, status: .inflight),
-            .init(userPaymentSettings: missing, status: .serverError(message)),
+            .init(settingsResult: missing),
+            .init(settingsResult: missing, status: .inflight),
+            .init(settingsResult: missing, status: .serverError(message)),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -323,9 +325,9 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: missing),
-            .init(userPaymentSettings: missing, status: .inflight),
-            .init(userPaymentSettings: missing, status: .connectivityError),
+            .init(settingsResult: missing),
+            .init(settingsResult: missing, status: .inflight),
+            .init(settingsResult: missing, status: .connectivityError),
         ])
         
         XCTAssertNoDiff(stateSpy.values.map(\.settingsStatus), [
@@ -352,22 +354,22 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
+            .init(settingsResult: .contracted(details)),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     )
                 ))),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     ))),
                 status: .inflight
             ),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         selectedProduct: different,
                         status: .collapsed
@@ -393,22 +395,22 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
+            .init(settingsResult: .contracted(details)),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     )
                 ))),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     ))),
                 status: .inflight
             ),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .collapsed
                     ))),
@@ -432,22 +434,22 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [
             .init(),
             .init(status: .inflight),
-            .init(userPaymentSettings: .contracted(details)),
+            .init(settingsResult: .contracted(details)),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     )
                 ))),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .expanded
                     ))),
                 status: .inflight
             ),
             .init(
-                userPaymentSettings: .contracted(details.updated(
+                settingsResult: .contracted(details.updated(
                     productSelector: details.productSelector.updated(
                         status: .collapsed
                     ))),
@@ -470,7 +472,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
     private typealias GetC2BSubSpy = Spy<Void, EffectHandler.GetC2BSubResult>
-    private typealias GetSettingsSpy = Spy<Void, UserPaymentSettings>
+    private typealias GetSettingsSpy = ResultSpy<Void, UserPaymentSettings, ServiceFailure>
     private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
     private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, EffectHandler.PrepareSetBankDefaultResponse>
@@ -561,7 +563,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     private func makeActive() -> (
         different: Product,
         products: [Product],
-        details: UserPaymentSettings.ContractDetails
+        details: UserPaymentSettings.Details
     ) {
         let (selected, different) = (makeProduct(), makeProduct())
         let productSelector = makeProductSelector(
@@ -583,17 +585,17 @@ private extension FastPaymentsSettingsState {
     
     var settingsStatus: SettingsStatus? {
         
-        switch userPaymentSettings {
+        switch settingsResult {
         case .none:
             return nil
             
-        case let .contracted(details):
+        case let .success(.contracted(details)):
             switch details.paymentContract.contractStatus {
             case .active:   return .active
             case .inactive: return .inactive
             }
             
-        case .missingContract:
+        case .success(.missingContract):
             return .missingContract
             
         case .failure:

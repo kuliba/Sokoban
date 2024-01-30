@@ -10,7 +10,7 @@ import PaymentComponents
 
 public final class SberQRConfirmPaymentStateEditableAmountReducer {
     
-    public typealias State = SberQRConfirmPaymentState.EditableAmount
+    public typealias State = EditableAmount<GetSberQRDataResponse.Parameter.Info>
     public typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
     public typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect

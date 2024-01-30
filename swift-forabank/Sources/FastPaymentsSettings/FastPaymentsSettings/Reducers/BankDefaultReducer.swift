@@ -28,8 +28,8 @@ public extension BankDefaultReducer {
         case .setBankDefault:
             state = setBankDefault(state)
             
-        case let .setBankDefaultPrepared(failure):
-            state = update(state, with: failure)
+        case let .setBankDefaultResult(result):
+            state = update(state, with: result)
         }
         
         return (state, effect)
@@ -51,7 +51,8 @@ private extension BankDefaultReducer {
     ) -> (State, Effect?) {
         
         guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled,
+              details.bankDefaultResponse.bankDefault == .offEnabled,
+              details.bankDefaultResponse.requestLimitMessage == nil,
               state.status == .setBankDefault
         else { return (state, nil) }
         
@@ -66,7 +67,8 @@ private extension BankDefaultReducer {
     ) -> State {
         
         guard let details = state.activeDetails,
-              details.bankDefault == .offEnabled
+              details.bankDefaultResponse.bankDefault == .offEnabled,
+              details.bankDefaultResponse.requestLimitMessage == nil
         else { return state }
         
         var state = state
@@ -77,27 +79,32 @@ private extension BankDefaultReducer {
     
     func update(
         _ state: State,
-        with failure: ServiceFailure?
+        with result: BankDefaultEvent.SetBankDefaultResult
     ) -> State {
         
         guard let details = state.activeDetails
         else { return state }
         
-        switch failure {
-        case .none:
+        switch result {
+        case .success:
             var details = details
-            details.bankDefault = .onDisabled
+            details.bankDefaultResponse.bankDefault = .onDisabled
             return .init(
-                userPaymentSettings: .contracted(details),
+                settingsResult: .success(.contracted(details)),
                 status: .setBankDefaultSuccess
             )
             
-        case .connectivityError:
+        case let .incorrectOTP(message):
+            var state = state
+            state.status = .setBankDefaultFailure(message)
+            return state
+            
+        case .serviceFailure(.connectivityError):
             var state = state
             state.status = .connectivityError
             return state
             
-        case let .serverError(message):
+        case let .serviceFailure(.serverError(message)):
             var state = state
             state.status = .serverError(message)
             return state
@@ -109,9 +116,9 @@ private extension BankDefaultReducer {
 
 private extension FastPaymentsSettingsState {
     
-    var activeDetails: UserPaymentSettings.ContractDetails? {
+    var activeDetails: UserPaymentSettings.Details? {
         
-        guard case let .contracted(details) = userPaymentSettings,
+        guard case let .success(.contracted(details)) = settingsResult,
               details.isActive
         else { return nil }
         
@@ -119,7 +126,7 @@ private extension FastPaymentsSettingsState {
     }
 }
 
-private extension UserPaymentSettings.ContractDetails {
+private extension UserPaymentSettings.Details {
     
     var isActive: Bool {
         

@@ -21,7 +21,7 @@ public extension SberQRConfirmPaymentState {
     
     var productSelect: ProductSelect {
         
-        switch self {
+        switch confirm {
         case let .fixedAmount(fixedAmount):
             return fixedAmount.productSelect
             
@@ -46,7 +46,7 @@ public extension SberQRConfirmPaymentState {
     
     private var amount: CreateSberQRPaymentPayload.Amount? {
         
-        guard case let .editableAmount(editableAmount) = self
+        guard case let .editableAmount(editableAmount) = confirm
         else { return nil }
         
         return .init(

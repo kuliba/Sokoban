@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FixedAmountSberQRConfirmPaymentView: View {
     
-    typealias State = SberQRConfirmPaymentStateOf<Info>.FixedAmount
+    typealias State = FixedAmount<Info>
     typealias Event = SberQRConfirmPaymentEvent.FixedAmount
     
     let state: State
