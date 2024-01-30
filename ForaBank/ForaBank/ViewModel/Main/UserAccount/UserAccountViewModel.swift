@@ -257,95 +257,12 @@ private extension UserAccountViewModel {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in self?.handleModelAction(action) }
+            .sink { [weak self] in self?.handleModelAction($0) }
             .store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as PaymentsSuccessAction.Button.Close:
-                    self.action.send(PaymentsViewModelAction.Dismiss())
-                    
-                case _ as UserAccountViewModelAction.CloseLink:
-                    self.event(.route(.link(.reset)))
-                    
-                case _ as UserAccountViewModelAction.CloseFieldAlert:
-                    event(.route(.textFieldAlert(.reset)))
-                    
-                case _ as UserAccountViewModelAction.AvatarAction:
-                    var buttons: [ButtonIconTextView.ViewModel] = []
-                    
-                    if model.cameraIsAvailable {
-                        buttons.append(.init(icon: .init(image: .ic24Camera, style: .original, background: .circleSmall), title: .init(text: "Сделать фото", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.event(.route(.bottomSheet(.reset)))
-                            self?.model.action.send(ModelAction.Media.CameraPermission.Request())
-                        }))
-                    }
-                    
-                    if model.galleryIsAvailable {
-                        buttons.append(.init(icon: .init(image: .ic24Image, style: .original, background: .circleSmall), title: .init(text: "Выбрать из галереи", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.event(.route(.bottomSheet(.reset)))
-                            self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                        }))
-                    }
-                    
-                    if model.clientPhoto.value != nil {
-                        buttons.append(.init(icon: .init(image: .ic24Trash2, style: .original, background: .circleSmall), title: .init(text: "Удалить", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.event(.route(.bottomSheet(.reset)))
-                            self?.model.action.send(ModelAction.ClientPhoto.Delete())
-                        }))
-                    }
-                    
-                    self.event(.route(.bottomSheet(.setTo(.init(
-                        sheetType: .avatarOptions(.init(buttons: buttons)))
-                    ))))
-                    
-                case let payload as UserAccountViewModelAction.SaveAvatarImage:
-                    self.event(.route(.bottomSheet(.reset)))
-                    
-                    guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)),
-                          let photoData = ImageData(with: image)
-                    else { return }
-                    
-                    model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
-                    
-                case _ as UserAccountViewModelAction.ExitAction:
-                    let alert = Alert.ViewModel.exit {
-                        
-                        self.model.auth.value = .unlockRequiredManual
-                    }
-                    self.event(.route(.alert(.setTo(alert))))
-                    
-                case _ as UserAccountViewModelAction.DeleteAction:
-                    let alert = Alert.ViewModel.delete {
-                        
-                        self.model.action.send(ModelAction.ClientInfo.Delete.Request())
-                    }
-                    self.event(.route(.alert(.setTo(alert))))
-                    
-                case _ as UserAccountViewModelAction.DeleteInfoAction:
-                    self.event(.route(.bottomSheet(.setTo(.init(
-                        sheetType: .deleteInfo(.exitInfoViewModel))
-                    ))))
-                    
-                case let payload as UserAccountViewModelAction.OpenSbpPay:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
-                        
-                        withAnimation {
-                            
-                            self?.event(.route(.bottomSheet(.setTo(.init(
-                                sheetType: .sbpay(payload.sbpPay))
-                            ))))
-                        }
-                    }
-                    
-                default:
-                    break
-                    
-                }
-            }
+            .sink { [weak self] in self?.handleAction($0) }
             .store(in: &bindings)
     }
     
@@ -683,6 +600,91 @@ private extension UserAccountViewModel {
             event(.route(.link(.setTo(
                 .deleteUserInfo(.init(model: self.model))
             ))))
+            
+        default:
+            break
+        }
+    }
+    
+    func handleAction(
+        _ action: Action
+    ) {
+        switch action {
+        case _ as PaymentsSuccessAction.Button.Close:
+            self.action.send(PaymentsViewModelAction.Dismiss())
+            
+        case _ as UserAccountViewModelAction.CloseLink:
+            event(.route(.link(.reset)))
+            
+        case _ as UserAccountViewModelAction.CloseFieldAlert:
+            event(.route(.textFieldAlert(.reset)))
+            
+        case _ as UserAccountViewModelAction.AvatarAction:
+            var buttons: [ButtonIconTextView.ViewModel] = []
+            
+            if model.cameraIsAvailable {
+                buttons.append(.init(icon: .init(image: .ic24Camera, style: .original, background: .circleSmall), title: .init(text: "Сделать фото", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.model.action.send(ModelAction.Media.CameraPermission.Request())
+                }))
+            }
+            
+            if model.galleryIsAvailable {
+                buttons.append(.init(icon: .init(image: .ic24Image, style: .original, background: .circleSmall), title: .init(text: "Выбрать из галереи", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                }))
+            }
+            
+            if model.clientPhoto.value != nil {
+                buttons.append(.init(icon: .init(image: .ic24Trash2, style: .original, background: .circleSmall), title: .init(text: "Удалить", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.model.action.send(ModelAction.ClientPhoto.Delete())
+                }))
+            }
+            
+            event(.route(.bottomSheet(.setTo(.init(
+                sheetType: .avatarOptions(.init(buttons: buttons)))
+            ))))
+            
+        case let payload as UserAccountViewModelAction.SaveAvatarImage:
+            event(.route(.bottomSheet(.reset)))
+            
+            guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)),
+                  let photoData = ImageData(with: image)
+            else { return }
+            
+            model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
+            
+        case _ as UserAccountViewModelAction.ExitAction:
+            let alert = Alert.ViewModel.exit { [weak self] in
+                
+                self?.model.auth.value = .unlockRequiredManual
+            }
+            event(.route(.alert(.setTo(alert))))
+            
+        case _ as UserAccountViewModelAction.DeleteAction:
+            let alert = Alert.ViewModel.delete { [weak self] in
+                
+                self?.model.action.send(ModelAction.ClientInfo.Delete.Request())
+            }
+            event(.route(.alert(.setTo(alert))))
+            
+        case _ as UserAccountViewModelAction.DeleteInfoAction:
+            event(.route(.bottomSheet(.setTo(.init(
+                sheetType: .deleteInfo(.exitInfoViewModel))
+            ))))
+            
+        case let payload as UserAccountViewModelAction.OpenSbpPay:
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
+                
+                withAnimation {
+                    
+                    self?.event(.route(.bottomSheet(.setTo(.init(
+                        sheetType: .sbpay(payload.sbpPay))
+                    ))))
+                }
+            }
             
         default:
             break
