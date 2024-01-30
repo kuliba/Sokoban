@@ -25,7 +25,6 @@ public extension DynamicParams {
         
         public var balance: Decimal? {
             switch self {
-                
             case let .account(value):
                 return value.balance
             case let .card(value):
@@ -37,7 +36,6 @@ public extension DynamicParams {
         
         public var balanceRub: Decimal? {
             switch self {
-                
             case let .account(value):
                 return value.balanceRub
             case let .card(value):
@@ -49,7 +47,6 @@ public extension DynamicParams {
         
         public var customName: String? {
             switch self {
-                
             case let .account(value):
                 return value.customName
             case let .card(value):
@@ -61,7 +58,6 @@ public extension DynamicParams {
         
         public var statusCardValue: CardDynamicParams.StatusCard? {
             switch self {
-                
             case .account, .depositOrLoan:
                 return .none
             case let .card(value):
