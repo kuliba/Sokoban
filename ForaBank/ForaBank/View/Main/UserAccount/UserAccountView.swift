@@ -321,38 +321,6 @@ struct UserAccountView_Previews: PreviewProvider {
     }
 }
 
-extension UserAccountViewModel {
-    
-    static let sample = UserAccountViewModel(
-        navigationBar: .sample,
-        avatar: .init(
-            image: Image("imgMainBanner2"),
-            //image: nil,
-            action: {
-                //TODO: set action
-            }),
-        sections:
-            [UserAccountContactsView.ViewModel.contact,
-             UserAccountDocumentsView.ViewModel.documents,
-             UserAccountPaymentsView.ViewModel.payments,
-             UserAccountSecurityView.ViewModel.security
-            ],
-        exitButton: .init(
-            icon: .ic24LogOut,
-            content: "Выход из приложения",
-            action: {
-                //TODO: set action
-            }),
-        deleteAccountButton: .init(
-            icon: .ic24UserX, content: "Удалить учетную запись",
-            infoButton: .init(icon: .ic24Info, action: { }),
-            action: {}
-        ),
-        fastPaymentsFactory: .legacy,
-        fastPaymentsServices: .empty
-    )
-}
-
 extension FastPaymentsFactory {
     
     static let legacy: Self = .init(

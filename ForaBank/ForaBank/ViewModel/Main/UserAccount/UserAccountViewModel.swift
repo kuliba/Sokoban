@@ -38,7 +38,7 @@ class UserAccountViewModel: ObservableObject {
     private let fastPaymentsServices: FastPaymentsServices
     private var bindings = Set<AnyCancellable>()
     
-    init(
+    private init(
         route: UserAccountRoute = .init(),
         handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
         navigationBar: NavigationBarView.ViewModel,
@@ -983,4 +983,38 @@ enum UserAccountViewModelAction {
         let type: AccountCellSwitchView.ViewModel.Kind
         let value: Bool
     }
+}
+
+// MARK: - Preview Content
+
+extension UserAccountViewModel {
+    
+    static let sample = UserAccountViewModel(
+        navigationBar: .sample,
+        avatar: .init(
+            image: Image("imgMainBanner2"),
+            //image: nil,
+            action: {
+                //TODO: set action
+            }),
+        sections:
+            [UserAccountContactsView.ViewModel.contact,
+             UserAccountDocumentsView.ViewModel.documents,
+             UserAccountPaymentsView.ViewModel.payments,
+             UserAccountSecurityView.ViewModel.security
+            ],
+        exitButton: .init(
+            icon: .ic24LogOut,
+            content: "Выход из приложения",
+            action: {
+                //TODO: set action
+            }),
+        deleteAccountButton: .init(
+            icon: .ic24UserX, content: "Удалить учетную запись",
+            infoButton: .init(icon: .ic24Info, action: { }),
+            action: {}
+        ),
+        fastPaymentsFactory: .legacy,
+        fastPaymentsServices: .empty
+    )
 }
