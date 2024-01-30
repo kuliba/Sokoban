@@ -10,6 +10,7 @@ import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
+import UserAccountNavigationComponent
 
 class UserAccountViewModel: ObservableObject {
     

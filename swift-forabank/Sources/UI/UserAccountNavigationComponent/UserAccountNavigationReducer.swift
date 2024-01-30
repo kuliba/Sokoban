@@ -10,18 +10,15 @@ import UIPrimitives
 
 public final class UserAccountNavigationReducer {
     
-    private let demoReduce: DemoReduce
     private let fpsReduce: FPSReduce
     private let otpReduce: OTPReduce
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
-        demoReduce: @escaping DemoReduce,
         fpsReduce: @escaping FPSReduce,
         otpReduce: @escaping OTPReduce,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.demoReduce = demoReduce
         self.fpsReduce = fpsReduce
         self.otpReduce = otpReduce
         self.scheduler = scheduler
@@ -62,11 +59,6 @@ public extension UserAccountNavigationReducer {
         case .dismissRoute:
             state = .init()
             
-        case let .demo(demoEvent):
-            let (demoState, demoEffect) = demoReduce(state, demoEvent, inform)
-            state = demoState
-            effect = demoEffect.map(Effect.demo)
-            
         case let .fps(.updated(fpsState)):
             (state, effect) = fpsReduce(state, fpsState, inform)
             
@@ -81,8 +73,6 @@ public extension UserAccountNavigationReducer {
 public extension UserAccountNavigationReducer {
     
     typealias Inform = (String) -> Void
-    
-    typealias DemoReduce = (State, Event.Demo, @escaping Inform) -> (State, Effect.Demo?)
     
     typealias FPSReduce = (State, FastPaymentsSettingsState, @escaping Inform) -> (State, Effect?)
     
