@@ -109,7 +109,7 @@ class UserAccountViewModel: ObservableObject {
         
         bind()
         
-        if let action = action {
+        if let action {
             
             self.action.send(action)
         }
@@ -926,14 +926,17 @@ enum UserAccountViewModelAction {
     struct DeleteInfoAction: Action {}
     
     struct OpenDocument: Action {
+        
         let type: DocumentCellType
     }
     
     struct SaveAvatarImage: Action {
+        
         let image: UIImage?
     }
     
     struct OpenManagingSubscription: Action {}
+    
     struct OpenFastPayment: Action {}
     
     struct Switch: Action {
