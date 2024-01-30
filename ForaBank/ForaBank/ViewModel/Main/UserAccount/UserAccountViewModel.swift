@@ -14,6 +14,8 @@ import UserAccountNavigationComponent
 
 class UserAccountViewModel: ObservableObject {
     
+    typealias ReduceRouteEvent = (Route, UserAccountEvent.RouteEvent) -> Route
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -26,6 +28,7 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: Route
     
     private let routeSubject = PassthroughSubject<Route, Never>()
+    private let handleRouteEvent: ReduceRouteEvent
     
     var appVersionFull: String? {
         
@@ -39,6 +42,7 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: Route = .init(),
+        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -49,6 +53,7 @@ class UserAccountViewModel: ObservableObject {
         fastPaymentsServices: FastPaymentsServices
     ) {
         self.route = route
+        self.handleRouteEvent = handleRouteEvent
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -61,6 +66,7 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: Route = .init(),
+        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
@@ -69,6 +75,7 @@ class UserAccountViewModel: ObservableObject {
         action: Action? = nil
     ) {
         self.route = route
+        self.handleRouteEvent = handleRouteEvent
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -117,74 +124,10 @@ extension UserAccountViewModel {
         
         switch event {
         case let .route(routeEvent):
-            route = handleRouteEvent(routeEvent)
+            route = handleRouteEvent(route, routeEvent)
         }
         
         routeSubject.send(route)
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    func handleRouteEvent(
-        _ routeEvent: UserAccountEvent.RouteEvent
-    ) -> Route {
-        
-        var route = route
-        
-        switch routeEvent {
-        case let .alert(alertEvent):
-            switch alertEvent {
-            case .reset:
-                route.alert = nil
-                
-            case let .setTo(alertViewModel):
-                route.alert = alertViewModel
-            }
-            
-        case let .bottomSheet(bottomSheetEvent):
-            switch bottomSheetEvent {
-            case .reset:
-                route.bottomSheet = nil
-            case let .setTo(bottomSheet):
-                route.bottomSheet = bottomSheet
-            }
-            
-        case let .link(linkEvent):
-            switch linkEvent {
-            case .reset:
-                route.link = nil
-                
-            case let .setTo(link):
-                route.link = link
-            }
-            
-        case let .sheet(sheetEvent):
-            switch sheetEvent {
-            case .reset:
-                route.sheet = nil
-            }
-            
-        case let .spinner(spinnerEvent):
-            switch spinnerEvent {
-            case .hide:
-                route.spinner = nil
-                
-            case .show:
-                route.spinner = .init()
-            }
-            
-        case let .textFieldAlert(textFieldAlertEvent):
-            switch textFieldAlertEvent {
-            case .reset:
-                route.textFieldAlert = nil
-                
-            case let .setTo(alertViewModel):
-                route.textFieldAlert = alertViewModel
-            }
-        }
-        
-        return route
     }
 }
 
