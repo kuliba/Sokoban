@@ -144,7 +144,7 @@ private extension UserAccountViewModel {
         action.send(UserAccountViewModelAction.ExitAction())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
        
-        if let alert {
+        if let alert = route.alert {
             
             alert.primary.action()
         } else {

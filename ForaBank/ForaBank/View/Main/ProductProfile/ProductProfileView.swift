@@ -422,6 +422,7 @@ extension ProductProfileViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        operationDetailFactory: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -437,6 +438,7 @@ extension ProductProfileViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        operationDetailFactory: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
@@ -463,4 +465,11 @@ extension QRViewModel {
             qrResolve: QRViewModel.ScanResult.init
         )
     }
+}
+
+extension OperationDetailFactory {
+    
+    static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
+            .sampleComplete
+    })
 }

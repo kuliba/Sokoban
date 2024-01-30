@@ -51,6 +51,7 @@ class ProductProfileViewModel: ObservableObject {
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
+    private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -74,6 +75,7 @@ class ProductProfileViewModel: ObservableObject {
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
+         operationDetailFactory: OperationDetailFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -91,6 +93,7 @@ class ProductProfileViewModel: ObservableObject {
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
+        self.operationDetailFactory = operationDetailFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -110,6 +113,7 @@ class ProductProfileViewModel: ObservableObject {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
+        operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -140,6 +144,7 @@ class ProductProfileViewModel: ObservableObject {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
+            operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             rootView: rootView)
         
@@ -904,12 +909,15 @@ private extension ProductProfileViewModel {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
                     guard let storage = self.model.statements.value[self.product.activeProductId],
                           let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
-                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
-                        
-                        return
-                    }
+                          statementData.paymentDetailType != .notFinance,
+                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+                    else { return }
                     
+                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
+                        statementData,
+                        productData,
+                        self.model
+                    )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
                     if #unavailable(iOS 14.5) {
@@ -1501,7 +1509,8 @@ private extension ProductProfileViewModel {
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory, 
-            paymentsTransfersFactory: paymentsTransfersFactory,
+            paymentsTransfersFactory: paymentsTransfersFactory, 
+            operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
