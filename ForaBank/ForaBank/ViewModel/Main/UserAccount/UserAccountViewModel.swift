@@ -257,83 +257,7 @@ private extension UserAccountViewModel {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as ModelAction.C2B.CancelC2BSub.Response:
-                    let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
-                    
-                    self.event(.route(.link(.setTo(
-                        .successView(paymentSuccessViewModel)
-                    ))))
-                    
-                case let payload as ModelAction.C2B.GetC2BDetail.Response:
-                    self.event(.route(.link(.setTo(
-                        .successView(.init(
-                            paymentSuccess: .init(
-                                operation: nil,
-                                parameters: payload.params),
-                            model
-                        ))
-                    ))))
-                    
-                case let payload as ModelAction.Media.CameraPermission.Response:
-                    withAnimation {
-                        
-                        self.event(.route(.bottomSheet(.reset)))
-                    }
-                    
-                    if payload.result {
-                        self.event(.route(.bottomSheet(.setTo(.init(
-                            sheetType: .imageCapture(.init(
-                                closeAction: { [weak self] image in
-                                    
-                                    self?.event(.route(.bottomSheet(.reset)))
-                                    self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
-                                }
-                            ))
-                        )))))
-                        
-                    } else {
-                        
-                        self.event(.route(.alert(.setTo(.cameraPermissionError(
-                            action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                        )))))
-                    }
-                    
-                case let payload as ModelAction.Media.GalleryPermission.Response:
-                    withAnimation {
-                        
-                        self.event(.route(.bottomSheet(.reset)))
-                    }
-                    
-                    if payload.result {
-                        
-                        self.event(.route(.link(.setTo(
-                            .imagePicker(.init(
-                                closeAction: { [weak self] image in
-                                    
-                                    self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
-                                }
-                            ))
-                        ))))
-                        
-                    } else {
-                        
-                        self.event(.route(.alert(.setTo(.galleryPermissionError(
-                            action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                        )))))
-                    }
-                    
-                case _ as ModelAction.ClientInfo.Delete.Response:
-                    self.event(.route(.link(.setTo(
-                        .deleteUserInfo(.init(model: self.model))
-                    ))))
-                    
-                default:
-                    break
-                }
-            }
+            .sink { [weak self] action in self?.handleModelAction(action) }
             .store(in: &bindings)
         
         action
@@ -681,6 +605,88 @@ private extension UserAccountViewModel {
         }
         
         return products
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    func handleModelAction(
+        _ action: Action
+    ) {
+        switch action {
+        case let payload as ModelAction.C2B.CancelC2BSub.Response:
+            let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
+            
+            event(.route(.link(.setTo(
+                .successView(paymentSuccessViewModel)
+            ))))
+            
+        case let payload as ModelAction.C2B.GetC2BDetail.Response:
+            event(.route(.link(.setTo(
+                .successView(.init(
+                    paymentSuccess: .init(
+                        operation: nil,
+                        parameters: payload.params),
+                    model
+                ))
+            ))))
+            
+        case let payload as ModelAction.Media.CameraPermission.Response:
+            withAnimation {
+                
+                event(.route(.bottomSheet(.reset)))
+            }
+            
+            if payload.result {
+                event(.route(.bottomSheet(.setTo(.init(
+                    sheetType: .imageCapture(.init(
+                        closeAction: { [weak self] image in
+                            
+                            self?.event(.route(.bottomSheet(.reset)))
+                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
+                        }
+                    ))
+                )))))
+                
+            } else {
+                
+                event(.route(.alert(.setTo(.cameraPermissionError(
+                    action: { [weak self] in self?.event(.route(.alert(.reset))) }
+                )))))
+            }
+            
+        case let payload as ModelAction.Media.GalleryPermission.Response:
+            withAnimation {
+                
+                event(.route(.bottomSheet(.reset)))
+            }
+            
+            if payload.result {
+                
+                event(.route(.link(.setTo(
+                    .imagePicker(.init(
+                        closeAction: { [weak self] image in
+                            
+                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
+                        }
+                    ))
+                ))))
+                
+            } else {
+                
+                event(.route(.alert(.setTo(.galleryPermissionError(
+                    action: { [weak self] in self?.event(.route(.alert(.reset))) }
+                )))))
+            }
+            
+        case _ as ModelAction.ClientInfo.Delete.Response:
+            event(.route(.link(.setTo(
+                .deleteUserInfo(.init(model: self.model))
+            ))))
+            
+        default:
+            break
+        }
     }
 }
 
