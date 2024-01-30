@@ -590,7 +590,7 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Fast.All:
                     handleProductsUpdateFastAll()
-
+                    
                 case let payload as ModelAction.Products.Update.Fast.Single.Request:
                     handleProductsUpdateFastSingleRequest(payload)
                     

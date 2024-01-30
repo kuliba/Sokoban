@@ -223,7 +223,7 @@ final class RootViewModelTests: XCTestCase {
                 fastPaymentsFactory: .legacy,
                 fastPaymentsServices: .empty,
                 sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(), 
                 paymentsTransfersFactory: .preview
             ),
             chatViewModel: .init(),

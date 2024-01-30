@@ -80,7 +80,7 @@ extension PaymentsTransfersViewModel {
         fastPaymentsFactory: .legacy,
         fastPaymentsServices: .empty,
         sberQRServices: .empty(),
-        qrViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(), 
         paymentsTransfersFactory: .preview,
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})

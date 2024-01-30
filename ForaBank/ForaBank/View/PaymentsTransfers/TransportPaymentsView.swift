@@ -232,6 +232,7 @@ struct TransportPaymentsView_Previews: PreviewProvider {
         TransportPaymentsView(viewModel: viewModel) {
             
             Text("MosParkingView")
+            
         }
     }
 }
