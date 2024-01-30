@@ -14,8 +14,6 @@ import UserAccountNavigationComponent
 
 class UserAccountViewModel: ObservableObject {
     
-    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
-
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -228,11 +226,12 @@ extension UserAccountViewModel {
             .sink { [unowned self] info in
                 
                 guard let clientInfo = info.0 else { return }
+                
                 let clientNameData = info.1
                 sections = createSections(userData: clientInfo, customName: clientNameData?.name)
                 bind(sections)
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.clientPhoto
             .receive(on: DispatchQueue.main)
@@ -242,8 +241,8 @@ extension UserAccountViewModel {
                     image: clientPhotoData?.photo.image, action: { [weak self] in
                         self?.action.send(UserAccountViewModelAction.AvatarAction())
                     })
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -268,7 +267,6 @@ extension UserAccountViewModel {
                     ))))
                     
                 case let payload as ModelAction.Media.CameraPermission.Response:
-                    
                     withAnimation {
                         
                         self.event(.route(.bottomSheet(.reset)))
@@ -293,7 +291,6 @@ extension UserAccountViewModel {
                     }
                     
                 case let payload as ModelAction.Media.GalleryPermission.Response:
-                    
                     withAnimation {
                         
                         self.event(.route(.bottomSheet(.reset)))
@@ -318,7 +315,6 @@ extension UserAccountViewModel {
                     }
                     
                 case _ as ModelAction.ClientInfo.Delete.Response:
-                    
                     self.event(.route(.link(.setTo(
                         .deleteUserInfo(.init(model: self.model))
                     ))))
@@ -334,7 +330,6 @@ extension UserAccountViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
                 case _ as PaymentsSuccessAction.Button.Close:
                     self.action.send(PaymentsViewModelAction.Dismiss())
                     
@@ -345,7 +340,6 @@ extension UserAccountViewModel {
                     event(.route(.textFieldAlert(.reset)))
                     
                 case _ as UserAccountViewModelAction.AvatarAction:
-                    
                     var buttons: [ButtonIconTextView.ViewModel] = []
                     
                     if model.cameraIsAvailable {
@@ -374,7 +368,6 @@ extension UserAccountViewModel {
                     ))))
                     
                 case let payload as UserAccountViewModelAction.SaveAvatarImage:
-                    
                     self.event(.route(.bottomSheet(.reset)))
                     
                     guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)) else { return }
@@ -397,13 +390,11 @@ extension UserAccountViewModel {
                     self.event(.route(.alert(.setTo(alert))))
                     
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
-                    
                     self.event(.route(.bottomSheet(.setTo(.init(
                         sheetType: .deleteInfo(.exitInfoViewModel))
                     ))))
                     
                 case let payload as UserAccountViewModelAction.OpenSbpPay:
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
                         
                         withAnimation {
@@ -418,8 +409,8 @@ extension UserAccountViewModel {
                     break
                     
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ sections: [AccountSectionViewModel]) {
@@ -431,9 +422,7 @@ extension UserAccountViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                        
                     case _ as UserAccountViewModelAction.ChangeUserName:
-                        
                         event(.route(.textFieldAlert(.setTo(.name(
                             primaryAction: { [weak self] text in
                                 
@@ -448,7 +437,6 @@ extension UserAccountViewModel {
                         )))))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                        
                         let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
                         let reducer = TransformingReducer(
@@ -505,18 +493,18 @@ extension UserAccountViewModel {
                         
                     case let payload as UserAccountViewModelAction.Switch:
                         switch payload.type {
-                            
                         case .faceId:
                             //TODO: set action
                             break
                             
                         case .notification:
-                            
                             self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
                         }
                         
                     case let payload as UserAccountViewModelAction.OpenDocument:
-                        guard let clientInfo = model.clientInfo.value else { return }
+                        guard let clientInfo = model.clientInfo.value
+                        else { return }
+                        
                         switch payload.type {
                             
                         case .passport:
@@ -558,10 +546,9 @@ extension UserAccountViewModel {
                         
                     default:
                         break
-                        
                     }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
     }
     
@@ -591,9 +578,7 @@ extension UserAccountViewModel {
         
         var products: [SubscriptionsViewModel.Product] = []
         
-        guard let items else {
-            return []
-        }
+        guard let items else { return [] }
         
         for item in items {
             
@@ -613,7 +598,6 @@ extension UserAccountViewModel {
                     
                     image = .default(.ic24ShoppingCart)
                     model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
-                    
                 }
                 
                 return ManageSubscriptionsUI.SubscriptionViewModel(
@@ -641,7 +625,8 @@ extension UserAccountViewModel {
                     detailAction: { token in
                         
                         self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-                    })
+                    }
+                )
             })
             
             if let product,
@@ -741,9 +726,9 @@ private extension UserAccountViewModel {
             let alert = Alert.ViewModel.techError(
                 message: message
             ) { [weak self] in self?.dismissAlert() }
-
+            
             self.event(.route(.alert(.setTo(alert))))
-
+            
         case .none:
             let alert = Alert.ViewModel.techError(
                 message: "Превышено время ожидания.\nПопробуйте позже."
@@ -778,6 +763,8 @@ private extension UserAccountViewModel {
         }
     }
 }
+
+// MARK: - Helpers
 
 private extension Alert.ViewModel {
     
@@ -898,7 +885,11 @@ private extension AlertTextFieldView.ViewModel {
     }
 }
 
+// MARK: - Types
+
 extension UserAccountViewModel {
+    
+    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
     
     class AvatarViewModel: ObservableObject {
         
@@ -961,12 +952,12 @@ enum UserAccountViewModelAction {
     struct ChangeUserName: Action {}
     
     struct AvatarAction: Action {}
-
+    
     struct OpenSbpPay: Action {
         
         let sbpPay: SbpPayViewModel
     }
-
+    
     struct ExitAction: Action {}
     
     struct DeleteAction: Action {}
