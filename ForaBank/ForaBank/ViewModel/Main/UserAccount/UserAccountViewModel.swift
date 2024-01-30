@@ -450,19 +450,18 @@ extension UserAccountViewModel {
                         
                     case _ as UserAccountViewModelAction.ChangeUserName:
                         
-                        #warning("extract to static helper func")
-                        let textFieldAlert = AlertTextFieldView.ViewModel(
-                            title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов", maxLength: 15,
-                            primary: .init(type: .default, title: "ОК", action: { [weak self] text in
+                        event(.route(.textFieldAlert(.setTo(.name(
+                            primaryAction: { [weak self] text in
                                 
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
                                 self?.model.action.send(ModelAction.ClientName.Save(name: text))
                                 
-                            }),
-                            secondary: .init(type: .cancel, title: "Отмена", action: { [weak self] _ in
+                            },
+                            secondaryAction: { [weak self] _ in
+                                
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                            }))
-                        event(.route(.textFieldAlert(.setTo(textFieldAlert))))
+                            }
+                        )))))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
                         
@@ -855,6 +854,31 @@ private extension Alert.ViewModel {
                 type: .default,
                 title: "Отключить",
                 action: action
+            )
+        )
+    }
+}
+
+private extension AlertTextFieldView.ViewModel {
+    
+    static func name(
+        primaryAction: @escaping (String?) -> Void,
+        secondaryAction: @escaping (String?) -> Void
+    ) -> AlertTextFieldView.ViewModel {
+        
+        .init(
+            title: "Имя",
+            message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов",
+            maxLength: 15,
+            primary: .init(
+                type: .default,
+                title: "ОК",
+                action: primaryAction
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: secondaryAction
             )
         )
     }
