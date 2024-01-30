@@ -12,17 +12,18 @@ import CardStatementAPI
 extension Services {
     
     typealias GetProductDynamicParamsListPayload = CardStatementAPI.ProductDynamicParamsListPayload
-    typealias GetProductDynamicParamsListResult = Swift.Result<CardStatementAPI.DynamicParamsList, CardStatementAPI.MappingError>
-    typealias GetProductDynamicParamsListService = RemoteServiceOf<GetProductDynamicParamsListPayload, GetProductDynamicParamsListResult>
+    typealias GetProductDynamicParamsListService = MappingRemoteService<GetProductDynamicParamsListPayload, CardStatementAPI.DynamicParamsList, CardStatementAPI.MappingError>
     
     static func getProductDynamicParamsList(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        log: @escaping (String, StaticString, UInt) -> Void
     ) -> GetProductDynamicParamsListService {
         
-        return .init(
+        LoggingRemoteServiceDecorator(
             createRequest: RequestFactory.getProductDynamicParamsList,
             performRequest: httpClient.performRequest,
-            mapResponse: CardStatementAPI.ResponseMapper.mapGetProductDynamicParamsList
-        )
+            mapResponse: CardStatementAPI.ResponseMapper.mapGetProductDynamicParamsList,
+            log: log
+        ).remoteService
     }
 }

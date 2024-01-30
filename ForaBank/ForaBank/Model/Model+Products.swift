@@ -370,34 +370,27 @@ private extension ProductType {
 extension Model {
     
     func handleProductsUpdateFastAll() {
-        Task {
-            await handleProductsUpdateFastAllAsync()
-        }
+        Task { try? await handleProductsUpdateFastAllAsync() }
     }
     
-    func handleProductsUpdateFastAllAsync(file: StaticString = #file, line: UInt = #line) async {
+    func handleProductsUpdateFastAllAsync() async throws {
         
         let productsList = products.value.values.flatMap{ $0 }
         productsFastUpdating.value = Set(productsList.map{ $0.id })
         
         let payload: ProductDynamicParamsListPayload = .init(productList: productsList.map { .init(productId: .init($0.id), type: $0.productType.typeValueForRequest)})
         
-        do {
-            let params = try await Services.makeGetProductDynamicParamsList(httpClient: self.authenticatedHTTPClient(), payload: payload)
-            self.productsFastUpdating.value = []
-            let updatedProducts = Self.reduce(products: self.products.value, with: params)
-            self.products.value = updatedProducts
-            
-            // cache products
-            do {
-                
-                try self.productsCacheStore(productsData: updatedProducts)
-            } catch {
-                LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: GetProductDynamicParamsList caching error: \(error.localizedDescription)", file: file, line: line)
-            }
-        } catch {
-            LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: GetProductDynamicParamsList  error: \(error.localizedDescription)", file: file, line: line)
-        }
+        let params = try await Services.makeGetProductDynamicParamsList(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: payload
+        )
+        self.productsFastUpdating.value = []
+        let updatedProducts = Self.reduce(products: self.products.value, with: params)
+        self.products.value = updatedProducts
+        
+        // cache products
+        try self.productsCacheStore(productsData: updatedProducts)
     }
     
     func handleProductsUpdateFastSingleRequest(_ payload: ModelAction.Products.Update.Fast.Single.Request) {

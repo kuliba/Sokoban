@@ -15,20 +15,28 @@ extension Services {
     
     static func makeGetProductDynamicParamsList(
         httpClient: HTTPClient,
+        logger: LoggerAgentProtocol,
         payload: ProductDynamicParamsListPayload
-    ) async throws-> CardStatementAPI.DynamicParamsList {
+    ) async throws -> CardStatementAPI.DynamicParamsList {
         
-        let data = try await getProductDynamicParamsList(httpClient: httpClient).process(payload).get()
+        let networkLog = { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
+     
+        let data = try await getProductDynamicParamsList(
+            httpClient: httpClient,
+            log: { networkLog(.info, $0, $1, $2) }
+        ).process(payload)
         
         return data
     }
     
     private func getProductDynamicParamsList(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        log: @escaping (String, StaticString, UInt) -> Void
     ) -> Services.GetProductDynamicParamsListService {
         
         Services.getProductDynamicParamsList(
-            httpClient: httpClient
+            httpClient: httpClient,
+            log: log
         )
     }
 }
