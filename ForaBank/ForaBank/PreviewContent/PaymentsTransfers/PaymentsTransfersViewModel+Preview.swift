@@ -79,7 +79,7 @@ extension PaymentsTransfersViewModel {
         model: .emptyMock,
         fastPaymentsFactory: .legacy,
         fastPaymentsServices: .empty,
-        sberQRServices: .empty(),
+        sberQRServices: .empty(), 
         qrViewModelFactory: .preview(), 
         paymentsTransfersFactory: .preview,
         navButtonsRight: [

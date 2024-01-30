@@ -1500,7 +1500,7 @@ private extension ProductProfileViewModel {
             fastPaymentsFactory: fastPaymentsFactory,
             fastPaymentsServices: fastPaymentsServices,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory, 
             paymentsTransfersFactory: paymentsTransfersFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,

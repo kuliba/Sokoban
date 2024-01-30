@@ -331,7 +331,7 @@ class MyProductsViewModel: ObservableObject {
                             self.link = .openCard(authProductsViewModel)
                         }
                         
-                    default:
+                    default: 
                         bottomSheet = nil
                         
                         openOrderSticker()
