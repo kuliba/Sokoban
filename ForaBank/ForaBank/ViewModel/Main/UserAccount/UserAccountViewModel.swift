@@ -320,17 +320,9 @@ extension UserAccountViewModel {
                         
                     } else {
                         
-#warning("extract to static helper func")
-                        let alert = Alert.ViewModel(
-                            title: "Ошибка",
-                            message: "Нет доступа к галереи",
-                            primary: .init(
-                                type: .default,
-                                title: "Ok",
-                                action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                            ))
-                        
-                        self.event(.route(.alert(.setTo(alert))))
+                        self.event(.route(.alert(.setTo(.galleryPermissionError(
+                            action: { [weak self] in self?.event(.route(.alert(.reset))) }
+                        )))))
                     }
                     
                 case _ as ModelAction.ClientInfo.Delete.Response:
@@ -796,6 +788,21 @@ private extension UserAccountViewModel {
 }
 
 private extension Alert.ViewModel {
+    
+    static func galleryPermissionError(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: "Нет доступа к галереи",
+            primary: .init(
+                type: .default,
+                title: "Ok",
+                action: action
+            )
+        )
+    }
     
     static func exit(
         action: @escaping () -> Void
