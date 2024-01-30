@@ -155,12 +155,12 @@ extension UserAccountViewModel {
         
         event(.route(.textFieldAlert(.reset)))
     }
-
+    
     func dismissDestination() {
         
         action.send(UserAccountViewModelAction.CloseLink())
     }
-
+    
     func showSpinner() {
         
         DispatchQueue.main.async { [weak self] in
@@ -211,22 +211,23 @@ private extension UserAccountViewModel {
                         }
                         
                         UIPasteboard.general.string = "Адрес: \(address)"
+                        
                     case .adress:
                         guard let addressResidential = clientInfo?.addressResidential else {
                             return
                         }
                         
                         UIPasteboard.general.string = "Адрес проживания: \(addressResidential)"
+                        
                     default:
                         break
                     }
                     
-                    
                 default:
                     break
-                    
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func bind() {
@@ -272,138 +273,7 @@ private extension UserAccountViewModel {
             
             section.action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as UserAccountViewModelAction.ChangeUserName:
-                        event(.route(.textFieldAlert(.setTo(.name(
-                            primaryAction: { [weak self] text in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                                self?.model.action.send(ModelAction.ClientName.Save(name: text))
-                                
-                            },
-                            secondaryAction: { [weak self] _ in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                            }
-                        )))))
-                        
-                    case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                        let products = self.getSubscriptions(with: model.subscriptions.value?.list)
-                        
-                        let reducer = TransformingReducer(
-                            placeholderText: "Поиск",
-                            transform: {
-                                .init(
-                                    $0.text,
-                                    cursorPosition: $0.cursorPosition
-                                )
-                            }
-                        )
-                        
-                        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-                        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-                        let titleCondition = (products.count == 0)
-                        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-                            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-                            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
-                        )
-                        
-                        self.event(.route(.link(.setTo(
-                            .managingSubscription(.init(
-                                products: products,
-                                searchViewModel: .init(
-                                    initialState: .placeholder("Поиск"),
-                                    reducer: reducer,
-                                    keyboardType: .default
-                                ),
-                                emptyViewModel: emptyViewModel,
-                                configurator: .init(
-                                    backgroundColor: .mainColorsGrayLightest
-                                )
-                            ))
-                        ))))
-                        
-                    case _ as UserAccountViewModelAction.OpenFastPayment:
-                        switch fastPaymentsFactory.fastPaymentsViewModel {
-                        case let .legacy(makeLegacy):
-                            let data = model.fastPaymentContractFullInfo.value
-                                .map { $0.getFastPaymentContractFindListDatum() }
-                            
-                            self.event(.route(.link(.setTo(
-                                .fastPaymentSettings(.legacy(
-                                    makeLegacy(
-                                        data,
-                                        { [weak self] in self?.dismissDestination() }
-                                    )
-                                ))
-                            ))))
-                            
-                        case let .new(makeNew):
-                            openNewFastPaymentsSettings(makeNew)
-                        }
-                        
-                    case let payload as UserAccountViewModelAction.Switch:
-                        switch payload.type {
-                        case .faceId:
-                            //TODO: set action
-                            break
-                            
-                        case .notification:
-                            self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
-                        }
-                        
-                    case let payload as UserAccountViewModelAction.OpenDocument:
-                        guard let clientInfo = model.clientInfo.value
-                        else { return }
-                        
-                        switch payload.type {
-                            
-                        case .passport:
-                            self.event(.route(.link(.setTo(
-                                .userDocument(.init(
-                                    clientInfo: clientInfo,
-                                    itemType: .passport,
-                                    dismissAction: { [weak self] in
-                                        
-                                        self?.action.send(UserAccountViewModelAction.CloseLink())
-                                    }
-                                ))
-                            ))))
-                            
-                        case .inn:
-                            guard let inn = clientInfo.inn else { return }
-                            
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
-                            self.event(.route(.bottomSheet(.setTo(.init(
-                                sheetType: .inn(documentInfoViewModel))
-                            ))))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                            
-                        case .adressPass:
-                            let address = clientInfo.address
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
-                            self.event(.route(.bottomSheet(.setTo(.init(
-                                sheetType: .inn(documentInfoViewModel))
-                            ))))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                            
-                        case .adress:
-                            guard let addressResidential = clientInfo.addressResidential 
-                            else { return }
-                            
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
-                            self.event(.route(.bottomSheet(.setTo(.init(
-                                sheetType: .inn(documentInfoViewModel))
-                            ))))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                        }
-                        
-                    default:
-                        break
-                    }
-                }
+                .sink { [weak self] in self?.handleSectionAction($0) }
                 .store(in: &bindings)
         }
     }
@@ -684,6 +554,140 @@ private extension UserAccountViewModel {
                         sheetType: .sbpay(payload.sbpPay))
                     ))))
                 }
+            }
+            
+        default:
+            break
+        }
+    }
+    
+    func handleSectionAction(
+        _ action: Action
+    ) {
+        switch action {
+        case _ as UserAccountViewModelAction.ChangeUserName:
+            event(.route(.textFieldAlert(.setTo(.name(
+                primaryAction: { [weak self] text in
+                    
+                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                    self?.model.action.send(ModelAction.ClientName.Save(name: text))
+                    
+                },
+                secondaryAction: { [weak self] _ in
+                    
+                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                }
+            )))))
+            
+        case _ as UserAccountViewModelAction.OpenManagingSubscription:
+            let products = self.getSubscriptions(with: model.subscriptions.value?.list)
+            
+            let reducer = TransformingReducer(
+                placeholderText: "Поиск",
+                transform: {
+                    .init(
+                        $0.text,
+                        cursorPosition: $0.cursorPosition
+                    )
+                }
+            )
+            
+            let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+            let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
+            let titleCondition = (products.count == 0)
+            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+                icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
+                title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
+            )
+            
+            self.event(.route(.link(.setTo(
+                .managingSubscription(.init(
+                    products: products,
+                    searchViewModel: .init(
+                        initialState: .placeholder("Поиск"),
+                        reducer: reducer,
+                        keyboardType: .default
+                    ),
+                    emptyViewModel: emptyViewModel,
+                    configurator: .init(
+                        backgroundColor: .mainColorsGrayLightest
+                    )
+                ))
+            ))))
+            
+        case _ as UserAccountViewModelAction.OpenFastPayment:
+            switch fastPaymentsFactory.fastPaymentsViewModel {
+            case let .legacy(makeLegacy):
+                let data = model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() }
+                
+                self.event(.route(.link(.setTo(
+                    .fastPaymentSettings(.legacy(
+                        makeLegacy(
+                            data,
+                            { [weak self] in self?.dismissDestination() }
+                        )
+                    ))
+                ))))
+                
+            case let .new(makeNew):
+                openNewFastPaymentsSettings(makeNew)
+            }
+            
+        case let payload as UserAccountViewModelAction.Switch:
+            switch payload.type {
+            case .faceId:
+                //TODO: set action
+                break
+                
+            case .notification:
+                self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
+            }
+            
+        case let payload as UserAccountViewModelAction.OpenDocument:
+            guard let clientInfo = model.clientInfo.value
+            else { return }
+            
+            switch payload.type {
+                
+            case .passport:
+                self.event(.route(.link(.setTo(
+                    .userDocument(.init(
+                        clientInfo: clientInfo,
+                        itemType: .passport,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(UserAccountViewModelAction.CloseLink())
+                        }
+                    ))
+                ))))
+                
+            case .inn:
+                guard let inn = clientInfo.inn else { return }
+                
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
+                self.event(.route(.bottomSheet(.setTo(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                ))))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
+                
+            case .adressPass:
+                let address = clientInfo.address
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
+                self.event(.route(.bottomSheet(.setTo(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                ))))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
+                
+            case .adress:
+                guard let addressResidential = clientInfo.addressResidential
+                else { return }
+                
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
+                self.event(.route(.bottomSheet(.setTo(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                ))))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
             }
             
         default:
