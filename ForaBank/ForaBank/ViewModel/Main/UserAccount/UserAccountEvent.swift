@@ -32,13 +32,13 @@ extension UserAccountEvent {
         enum BottomSheetEvent {
             
             case reset
-            case setTo(UserAccountViewModel.BottomSheet)
+            case setTo(UserAccountRoute.BottomSheet)
         }
         
         enum LinkEvent {
             
             case reset
-            case setTo(UserAccountViewModel.Link)
+            case setTo(UserAccountRoute.Link)
         }
         
         enum SpinnerEvent {

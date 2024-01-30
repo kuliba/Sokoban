@@ -14,7 +14,7 @@ import UserAccountNavigationComponent
 
 class UserAccountViewModel: ObservableObject {
     
-    typealias ReduceRouteEvent = (Route, UserAccountEvent.RouteEvent) -> Route
+    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -25,9 +25,9 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
-    @Published private(set) var route: Route
+    @Published private(set) var route: UserAccountRoute
     
-    private let routeSubject = PassthroughSubject<Route, Never>()
+    private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
     private let handleRouteEvent: ReduceRouteEvent
     
     var appVersionFull: String? {
@@ -41,7 +41,7 @@ class UserAccountViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     
     init(
-        route: Route = .init(),
+        route: UserAccountRoute = .init(),
         handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
@@ -65,7 +65,7 @@ class UserAccountViewModel: ObservableObject {
     }
     
     init(
-        route: Route = .init(),
+        route: UserAccountRoute = .init(),
         handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -898,123 +898,6 @@ extension UserAccountViewModel {
             case .payments: return "Платежи и переводы"
             case .security: return "Безопасность"
             }
-        }
-    }
-    
-    struct Route {
-        
-        var alert: Alert.ViewModel?
-        var link: Link?
-        var bottomSheet: BottomSheet?
-        var sheet: Sheet?
-        var spinner: SpinnerView.ViewModel?
-        var textFieldAlert: AlertTextFieldView.ViewModel?
-    }
-    
-    enum Link: Hashable, Identifiable {
-        
-        case userDocument(UserDocumentViewModel)
-        case fastPaymentSettings(FastPaymentSettings)
-        case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
-        case imagePicker(ImagePickerViewModel)
-        case managingSubscription(SubscriptionsViewModel)
-        case successView(PaymentsSuccessViewModel)
-        
-        enum FastPaymentSettings {
-            
-            case legacy(MeToMeSettingView.ViewModel)
-            case new(FastPaymentsSettingsViewModel)
-            
-            var id: ID {
-                switch self {
-                case .legacy: return .legacy
-                case .new:    return .new
-                }
-            }
-            
-            enum ID {
-                
-                case legacy, new
-            }
-        }
-        
-        static func == (lhs: Link, rhs: Link) -> Bool {
-            
-            lhs.id == rhs.id
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            
-            hasher.combine(id.hashValue)
-        }
-        
-        var id: Case {
-            
-            switch self {
-            case .userDocument:
-                return .userDocument
-                
-            case let .fastPaymentSettings(fastPaymentSettings):
-                switch fastPaymentSettings {
-                case .legacy:
-                    return .fastPaymentSettings(.legacy)
-                    
-                case .new:
-                    return .fastPaymentSettings(.new)
-                }
-                
-            case .deleteUserInfo:
-                return .deleteUserInfo
-                
-            case .imagePicker:
-                return .imagePicker
-                
-            case .managingSubscription:
-                return .managingSubscription
-                
-            case .successView:
-                return .successView
-            }
-        }
-        
-        enum Case: Hashable {
-            
-            case userDocument
-            case fastPaymentSettings(FastPaymentSettings)
-            case deleteUserInfo
-            case imagePicker
-            case managingSubscription
-            case successView
-            
-            enum FastPaymentSettings {
-                
-                case legacy, new
-            }
-        }
-    }
-    
-    struct Sheet: Identifiable {
-        
-        let id = UUID()
-        let sheetType: SheetType
-        
-        enum SheetType {
-            case userDocument(UserDocumentViewModel)
-        }
-    }
-    
-    struct BottomSheet: BottomSheetCustomizable {
-        
-        let id = UUID()
-        let sheetType: SheetType
-        
-        enum SheetType {
-            case deleteInfo(UserAccountExitInfoView.ViewModel)
-            case inn(UserAccountDocumentInfoView.ViewModel)
-            case camera(UserAccountPhotoSourceView.ViewModel)
-            case avatarOptions(OptionsButtonsViewComponent.ViewModel)
-            case imageCapture(ImageCaptureViewModel)
-            case sbpay(SbpPayViewModel)
         }
     }
 }

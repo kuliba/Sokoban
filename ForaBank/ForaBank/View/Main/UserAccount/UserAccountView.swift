@@ -183,7 +183,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func destinationView(
-        link: UserAccountViewModel.Link
+        link: UserAccountRoute.Link
     ) -> some View {
         
         switch link {
@@ -237,7 +237,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func sheetView(
-        sheet: UserAccountViewModel.Sheet
+        sheet: UserAccountRoute.Sheet
     ) -> some View {
         
         switch sheet.sheetType {
@@ -249,7 +249,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func bottomSheetView(
-        sheet: UserAccountViewModel.BottomSheet
+        sheet: UserAccountRoute.BottomSheet
     ) -> some View { 
         
         switch sheet.sheetType {

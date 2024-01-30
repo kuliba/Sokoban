@@ -10,9 +10,9 @@ enum UserAccountRouteEventReducer {}
 extension UserAccountRouteEventReducer {
     
     static func reduce(
-        _ route: UserAccountViewModel.Route,
+        _ route: UserAccountRoute,
         _ routeEvent: UserAccountEvent.RouteEvent
-    ) -> UserAccountViewModel.Route {
+    ) -> UserAccountRoute {
         
         var route = route
         
