@@ -82,7 +82,7 @@ final class Model_AntifraudDataTests: XCTestCase {
         let antifraudData: Payments.AntifraudData? = .init(
             payeeName: "Иванов",
             phone: "+7 963 000-00-00",
-            amount: "- 1231 P"
+            amount: "- 1231 ₽"
         )
         
         XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
@@ -100,7 +100,7 @@ final class Model_AntifraudDataTests: XCTestCase {
     
     let paramAmount = Payments.ParameterMock(
         id: .amountParameterId,
-        value: "1231 P")
+        value: "1231")
     
     let paramPhone = Payments.ParameterMock(
         id: .phoneParameterId,
