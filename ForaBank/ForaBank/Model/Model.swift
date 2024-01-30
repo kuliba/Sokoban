@@ -592,11 +592,9 @@ class Model {
                     
                     Task { [weak self] in
                         
-                        guard let self else { return }
-                        
-                        await handleProductsUpdateFastAll()
+                        await self?.handleProductsUpdateFastAll()
                     }
-                    
+
                 case let payload as ModelAction.Products.Update.Fast.Single.Request:
                     handleProductsUpdateFastSingleRequest(payload)
                     
