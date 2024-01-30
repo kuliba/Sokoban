@@ -210,7 +210,8 @@ final class FastPaymentsSettingsUserAccountViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(destinationSpy.values.map(\.?.id), [
             nil,
-            .fastPaymentSettings(.new)
+            .fastPaymentSettings(.new),
+            nil
         ])
     }
     
