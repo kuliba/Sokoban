@@ -369,7 +369,13 @@ private extension ProductType {
 
 extension Model {
     
-    func handleProductsUpdateFastAll(file: StaticString = #file, line: UInt = #line) async {
+    func handleProductsUpdateFastAll() {
+        Task {
+            await handleProductsUpdateFastAllAsync()
+        }
+    }
+    
+    func handleProductsUpdateFastAllAsync(file: StaticString = #file, line: UInt = #line) async {
         
         let productsList = products.value.values.flatMap{ $0 }
         productsFastUpdating.value = Set(productsList.map{ $0.id })
