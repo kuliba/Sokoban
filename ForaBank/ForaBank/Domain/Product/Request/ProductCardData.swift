@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CardStatementAPI
 
 class ProductCardData: ProductData {
 
@@ -258,20 +257,11 @@ extension ProductCardData {
 
         return true
     }
+  
+    
+    var isCanBeUnblocked: Bool {
 
-    var isCanBeBlocked: Bool {
-
-        return productType == .card && statusCard == .active
-    }
-
-    var isBeUnblockedAvailable: Bool {
-
-        return productType == .card && statusCard == .blockedUlockAvailable
-    }
-
-    var isBeUnblockedNotAvailable: Bool {
-
-        return productType == .card && statusCard == .blockedUlockNotAvailable
+        return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
     }
     
     var isCreditCard: Bool {

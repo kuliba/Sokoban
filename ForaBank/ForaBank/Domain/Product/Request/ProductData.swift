@@ -11,20 +11,6 @@ import CardStatementAPI
 
 class ProductData: Identifiable, Codable {
     
-#warning("remove after refactoring getProductListByType!!!")
-    private struct StatusCardValue {
-        static var _property: CardStatementAPI.CardDynamicParams.StatusCard?
-    }
-    
-    var statusCard: CardStatementAPI.CardDynamicParams.StatusCard? {
-        get {
-            return StatusCardValue._property
-        }
-        set(newValue) {
-            StatusCardValue._property = newValue
-        }
-    }
-    
     let id: Int
     
     let productType: ProductType
@@ -201,7 +187,6 @@ extension ProductData {
         self.balance = params.variableParams.balance?.doubleValue
         self.customName = params.variableParams.customName
         self.balanceRub = params.variableParams.balanceRub?.doubleValue
-        self.statusCard = params.variableParams.statusCardValue
     }
 }
 
