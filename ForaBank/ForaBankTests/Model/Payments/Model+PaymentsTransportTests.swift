@@ -283,7 +283,8 @@ extension TransferAnywayResponseData {
             infoMessage: infoMessage,
             needSum: needSum,
             printFormType: printFormType,
-            parameterListForNextStep: parameterListForNextStep
+            parameterListForNextStep: parameterListForNextStep,
+            scenario: .ok
         )
     }
 }
@@ -364,7 +365,8 @@ extension TransferResponseData {
             needOTP: needOTP,
             payeeName: payeeName,
             documentStatus: documentStatus,
-            paymentOperationDetailId: paymentOperationDetailId
+            paymentOperationDetailId: paymentOperationDetailId,
+            scenario: .ok
         )
     }
 }

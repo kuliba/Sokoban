@@ -1517,7 +1517,7 @@ extension Model {
                 return nil
             }
             
-            guard antifraudParameter.value == "F" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" ||  antifraudParameter.value == nil else {
+            guard antifraudParameter.value == "F" || antifraudParameter.value == "G1" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" ||  antifraudParameter.value == nil else {
                 return nil
             }
             
