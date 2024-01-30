@@ -155,27 +155,38 @@ extension UserAccountViewModel {
         
         event(.route(.textFieldAlert(.reset)))
     }
-}
 
-private extension UserAccountViewModel {
-    
+    func dismissDestination() {
+        
+        action.send(UserAccountViewModelAction.CloseLink())
+    }
+
     func showSpinner() {
         
-        DispatchQueue.main.async { [weak self] in self?.event(.route(.spinner(.show))) }
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.event(.route(.spinner(.show)))
+        }
     }
     
     func hideSpinner() {
         
-        DispatchQueue.main.async { [weak self] in self?.event(.route(.spinner(.hide))) }
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.event(.route(.spinner(.hide)))
+        }
     }
     
     func dismissAlert() {
         
-        DispatchQueue.main.async { [weak self] in self?.event(.route(.alert(.reset))) }
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.event(.route(.alert(.reset)))
+        }
     }
 }
 
-extension UserAccountViewModel {
+private extension UserAccountViewModel {
     
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
         
@@ -370,8 +381,9 @@ extension UserAccountViewModel {
                 case let payload as UserAccountViewModelAction.SaveAvatarImage:
                     self.event(.route(.bottomSheet(.reset)))
                     
-                    guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)) else { return }
-                    guard let photoData = ImageData(with: image) else { return }
+                    guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)),
+                          let photoData = ImageData(with: image)
+                    else { return }
                     
                     model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
                     
@@ -413,7 +425,7 @@ extension UserAccountViewModel {
             .store(in: &bindings)
     }
     
-    private func bind(_ sections: [AccountSectionViewModel]) {
+    func bind(_ sections: [AccountSectionViewModel]) {
         
         for section in sections {
             
@@ -521,6 +533,7 @@ extension UserAccountViewModel {
                             
                         case .inn:
                             guard let inn = clientInfo.inn else { return }
+                            
                             let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
                             self.event(.route(.bottomSheet(.setTo(.init(
                                 sheetType: .inn(documentInfoViewModel))
@@ -536,7 +549,9 @@ extension UserAccountViewModel {
                             self.bind(documentInfoViewModel: documentInfoViewModel)
                             
                         case .adress:
-                            guard let addressResidential = clientInfo.addressResidential else { return }
+                            guard let addressResidential = clientInfo.addressResidential 
+                            else { return }
+                            
                             let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
                             self.event(.route(.bottomSheet(.setTo(.init(
                                 sheetType: .inn(documentInfoViewModel))
@@ -570,7 +585,6 @@ extension UserAccountViewModel {
         
         return sections
     }
-    
     
     func getSubscriptions(
         with items: [C2BSubscription.ProductSubscription]?
@@ -667,14 +681,6 @@ extension UserAccountViewModel {
         }
         
         return products
-    }
-}
-
-extension UserAccountViewModel {
-    
-    func dismissDestination() {
-        
-        action.send(UserAccountViewModelAction.CloseLink())
     }
 }
 
