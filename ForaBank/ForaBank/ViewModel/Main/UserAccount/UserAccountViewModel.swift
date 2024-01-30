@@ -40,7 +40,7 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
+        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -64,7 +64,7 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer.reduce(_:_:),
+        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,

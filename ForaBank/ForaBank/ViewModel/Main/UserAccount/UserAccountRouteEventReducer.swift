@@ -5,11 +5,13 @@
 //  Created by Igor Malyarov on 30.01.2024.
 //
 
-enum UserAccountRouteEventReducer {}
+final class UserAccountRouteEventReducer {
+    
+}
 
 extension UserAccountRouteEventReducer {
     
-    static func reduce(
+    func reduce(
         _ route: UserAccountRoute,
         _ routeEvent: UserAccountEvent.RouteEvent
     ) -> UserAccountRoute {
