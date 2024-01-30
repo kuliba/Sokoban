@@ -908,17 +908,16 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
                     guard let storage = self.model.statements.value[self.product.activeProductId],
-                          let statementData = storage.statements.first(where: { $0.id == payload.statementId }), statementData.paymentDetailType != .notFinance,
-                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                          let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                            statementData,
-                            productData,
-                            self.model
-                          ) else {
-                        
-                        return
-                    }
+                          let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
+                          statementData.paymentDetailType != .notFinance,
+                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+                    else { return }
                     
+                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
+                        statementData,
+                        productData,
+                        self.model
+                    )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
                     if #unavailable(iOS 14.5) {
