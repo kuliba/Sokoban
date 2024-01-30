@@ -18,25 +18,12 @@ public extension UserAccountNavigation {
         case dismissDestination
         case dismissRoute
         
-        case demo(Demo)
         case fps(FastPaymentsSettings)
         case otp(OTP)
     }
 }
 
 public extension UserAccountNavigation.Event {
-    
-    enum Demo: Equatable {
-        
-        case loaded(Show)
-        case show(Show)
-        
-        public enum Show: Equatable {
-            case alert
-            case informer
-            case loader
-        }
-    }
     
     enum FastPaymentsSettings: Equatable {
         

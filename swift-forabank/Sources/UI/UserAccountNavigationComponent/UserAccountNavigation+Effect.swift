@@ -11,20 +11,12 @@ public extension UserAccountNavigation {
     
     enum Effect: Equatable {
         
-        case demo(Demo)
         case fps(FastPaymentsSettingsEvent)
         case otp(OTP)
     }
 }
 
 public extension UserAccountNavigation.Effect {
-    
-    enum Demo: Equatable {
-        
-        case loadAlert
-        case loadInformer
-        case loader
-    }
     
     enum OTP: Equatable {
         

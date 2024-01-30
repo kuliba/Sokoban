@@ -21,26 +21,21 @@ struct UserAccountView: View {
             
             NavigationStack {
                 
-                VStack(spacing: 32) {
-                    
-                    openFastPaymentsSettingsButton()
-                    
-                    buttons()
-                }
-                .alert(
-                    item: .init(
-                        get: { viewModel.alert },
-                        set: { if $0 == nil { viewModel.event(.closeAlert) }}
-                    ),
-                    content: { .init(with: $0, event: viewModel.event) }
-                )
-                .navigationDestination(
-                    item: .init(
-                        get: { viewModel.state.destination },
-                        set: { if $0 == nil { viewModel.event(.dismissDestination) }}
-                    ),
-                    destination: destinationView
-                )
+                openFastPaymentsSettingsButton()
+                    .alert(
+                        item: .init(
+                            get: { viewModel.alert },
+                            set: { if $0 == nil { viewModel.event(.closeAlert) }}
+                        ),
+                        content: { .init(with: $0, event: viewModel.event) }
+                    )
+                    .navigationDestination(
+                        item: .init(
+                            get: { viewModel.state.destination },
+                            set: { if $0 == nil { viewModel.event(.dismissDestination) }}
+                        ),
+                        destination: destinationView
+                    )
             }
             
             InformerView(viewModel: viewModel.informer)
@@ -56,32 +51,6 @@ struct UserAccountView: View {
             action: viewModel.openFastPaymentsSettings
         )
         .buttonStyle(.borderedProminent)
-    }
-    
-    private func buttons() -> some View {
-        
-        HStack(spacing: 16) {
-            
-            showLoaderButton()
-            showAlertButton()
-            showInformerButton()
-        }
-        .buttonStyle(.bordered)
-    }
-    
-    private func showLoaderButton() -> some View {
-        
-        Button("loader", action: viewModel.showDemoLoader)
-    }
-    
-    private func showAlertButton() -> some View {
-        
-        Button("alert", action: viewModel.showDemoAlert)
-    }
-    
-    private func showInformerButton() -> some View {
-        
-        Button("informer", action: viewModel.showDemoInformer)
     }
     
     @ViewBuilder
@@ -178,26 +147,6 @@ struct OTPInputWrapperView: View {
         case .validOTP:
             EmptyView()
         }
-    }
-}
-
-// MARK: - Demo Functionality
-
-private extension UserAccountViewModel {
-    
-    func showDemoAlert() {
-        
-        event(.demo(.show(.alert)))
-    }
-    
-    func showDemoInformer() {
-        
-        event(.demo(.show(.informer)))
-    }
-    
-    func showDemoLoader() {
-        
-        event(.demo(.show(.loader)))
     }
 }
 
