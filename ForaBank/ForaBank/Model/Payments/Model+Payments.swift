@@ -1537,7 +1537,7 @@ extension Model {
             let product = self.allProducts.first(where: { $0.id == Int(productValue.id) })
             
             let formatPhone = PhoneNumberKitFormater().format(phoneValue.digits)
-            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue) \(product?.currency ?? "")")
+            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue) ₽")
             
         case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility, .internetTV:
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
@@ -1589,6 +1589,11 @@ extension Model {
                     id: Payments.Parameter.Identifier.p1.rawValue
                 )
                 
+                let currency = paymentsParameterValue(
+                    operation.parameters,
+                    id: Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
+                )
+
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
                 if let productValue = operation.parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct {
                     
@@ -1599,7 +1604,7 @@ extension Model {
                 }
                 let value = numberCard?.masked(mask: StringValueMask.card)
                 
-                return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+                return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(currency ?? "")")
 
                 
             case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
@@ -1653,7 +1658,7 @@ extension Model {
                     id: Payments.Parameter.Identifier.amount.rawValue
                 )
                 
-                return .init(payeeName: product?.numberMaskSuffix ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
+                return .init(payeeName: product?.numberMask ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
                 
             default:
                 let amount = paymentsParameterValue(
