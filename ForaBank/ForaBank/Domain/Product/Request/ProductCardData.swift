@@ -298,29 +298,3 @@ extension ProductCardData.LoanBaseParamInfoData {
     var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
     var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
 }
-
-private extension ProductCardData {
-    
-    enum StatusCard: String, Equatable, Decodable {
-        
-        case active = "ACTIVE"
-        case blockedUlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
-        case blockedUlockNotAvailable = "BLOCKED_UNLOCK_NOT_AVAILABLE"
-        case notActivated = "NOT_ACTIVE"
-        
-        var value: CardStatementAPI.CardDynamicParams.StatusCard {
-            
-            switch self {
-                
-            case .active:
-                return .active
-            case .blockedUlockAvailable:
-                return .blockedUlockAvailable
-            case .blockedUlockNotAvailable:
-                return .blockedUlockNotAvailable
-            case .notActivated:
-                return .notActivated
-            }
-        }
-    }
-}
