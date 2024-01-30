@@ -238,18 +238,18 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub()
         )
         
-        sut?.templateButton = templateButton
+        sut.templateButton = templateButton
         
-        if let templateButton = sut?.templateButton {
+        if let templateButton = sut.templateButton {
             
-            sut?.bindTemplateButton(with: templateButton)
+            sut.bindTemplateButton(with: templateButton)
             templateButton.action.send(TemplateButtonView.ViewModel.ButtonAction.tapAction)
             
             XCTWaiter().wait(for: [.init()], timeout: 1)
 
         }
 
-        XCTAssertEqual(sut?.templateButton?.state.testState, .idle)
+        XCTAssertEqual(sut.templateButton?.state.testState, .idle)
     }
     
     func test_templateButton_sendActionSaveTemplate_shouldCompleteState() throws {

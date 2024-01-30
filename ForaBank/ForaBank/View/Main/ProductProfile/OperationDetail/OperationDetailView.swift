@@ -274,15 +274,11 @@ struct OperationDetailView_Previews: PreviewProvider {
 extension OperationDetailViewModel {
     
     static let sampleComplete: OperationDetailViewModel = {
-        
-        let header = HeaderViewModel(logo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), status: .success, title: "Заголовок",  category: "Прочее")
-        
-        let operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("payeeFullName", "payeeAccountNumber"), amount: .init(amount: "30,5 $", payService: .applePay, colorHex: "1C1C1C"), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: "22.11.22")
-        
-        let actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
-        
-        let featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
-        
-        return OperationDetailViewModel(id: "1", header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, templateButton: .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub()), isLoading: false, updateFastAll: {})
-    }()
+                
+        let productStatementData = ProductStatementData(mcc: 3245, accountId: 10004111477, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: "4256901080508437", city: "string", comment: "Перевод денежных средств. НДС не облагается.", country: "string", currencyCodeNumeric: 810, date: Date(), deviceCode: "string", documentAmount: 144.21, documentId: 10230444722, fastPayment: .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"), groupName: "Прочие операции", isCancellation: false, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: "DBO MERCHANT FORA, Zubovskiy 2", merchantNameRus: "DBO MERCHANT FORA, Zubovskiy 2", opCode: 1, operationId: "909743", operationType: .debit, paymentDetailType: .betweenTheir, svgImage: .init(description: "string"), terminalCode: "41010601", tranDate: nil, type: OperationEnvironment.inside)
+
+        let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+
+        return .init(productStatement: productStatementData, product: product, updateFastAll: {}, model: .emptyMock)
+        }()
 }

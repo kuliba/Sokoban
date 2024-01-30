@@ -247,7 +247,11 @@ extension ProductProfileViewModel {
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
                 
-                .init(
+                guard productStatementData.paymentDetailType != .notFinance else {
+                    return .none
+                }
+
+                return .init(
                     productStatement: productStatementData,
                     product: productData,
                     updateFastAll: {

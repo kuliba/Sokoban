@@ -34,13 +34,13 @@ final class Model_OperationTests: XCTestCase {
             model: sut
         )
         
-        XCTAssertNoDiff(operationDetail?.isLoading, true)
+        XCTAssertNoDiff(operationDetail.isLoading, true)
         
         sut.sendDetailRequestAndWait()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.8)
         
-        XCTAssertNoDiff(operationDetail?.isLoading, false)
+        XCTAssertNoDiff(operationDetail.isLoading, false)
     }
     
     // MARK: - Helpers
