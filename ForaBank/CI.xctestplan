@@ -289,6 +289,13 @@
         "identifier" : "UserAccountNavigationComponentTests",
         "name" : "UserAccountNavigationComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BlockUnBlockCardNavigationComponentTests",
+        "name" : "BlockUnBlockCardNavigationComponentTests"
+      }
     }
   ],
   "version" : 1

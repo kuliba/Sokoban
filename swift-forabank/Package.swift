@@ -40,6 +40,7 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
+        .blockUnBlockCardNavigationComponent,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -127,6 +128,8 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
+        .blockUnBlockCardNavigationComponent,
+        .blockUnBlockCardNavigationComponentTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -265,6 +268,13 @@ private extension Product {
     
     // MARK: - UI
     
+    static let blockUnBlockCardNavigationComponent = library(
+        name: .blockUnBlockCardNavigationComponent,
+        targets: [
+            .blockUnBlockCardNavigationComponent
+        ]
+    )
+
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -963,6 +973,30 @@ private extension Target {
 
     // MARK: - UI
     
+    static let blockUnBlockCardNavigationComponent = target(
+        name: .blockUnBlockCardNavigationComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.blockUnBlockCardNavigationComponent)"
+    )
+    
+    static let blockUnBlockCardNavigationComponentTests = testTarget(
+        name: .blockUnBlockCardNavigationComponentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .blockUnBlockCardNavigationComponent,
+        ],
+        path: "Tests/UI/\(String.blockUnBlockCardNavigationComponentTests)"
+    )
+
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
         path: "Sources/UI/\(String.buttonWithSheet)"
@@ -1343,6 +1377,10 @@ private extension Target.Dependency {
     
     // MARK: - UI
     
+    static let blockUnBlockCardNavigationComponent = byName(
+        name: .blockUnBlockCardNavigationComponent
+    )
+    
     static let buttonWithSheet = byName(
         name: .buttonWithSheet
     )
@@ -1525,6 +1563,9 @@ private extension String {
     static let landingUIComponentTests = "LandingUIComponentTests"
     
     // MARK: - UI
+    
+    static let blockUnBlockCardNavigationComponent = "BlockUnBlockCardNavigationComponent"
+    static let blockUnBlockCardNavigationComponentTests = "BlockUnBlockCardNavigationComponentTests"
     
     static let buttonWithSheet = "ButtonWithSheet"
 

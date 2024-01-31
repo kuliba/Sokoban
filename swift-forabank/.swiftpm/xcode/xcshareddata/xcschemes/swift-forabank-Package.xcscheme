@@ -1202,6 +1202,16 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BlockUnBlockCardNavigationComponentTests"
+               BuildableName = "BlockUnBlockCardNavigationComponentTests"
+               BlueprintName = "BlockUnBlockCardNavigationComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
