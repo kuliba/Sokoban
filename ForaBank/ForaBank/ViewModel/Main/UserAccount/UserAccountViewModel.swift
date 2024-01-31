@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FastPaymentsSettings
 import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
@@ -26,7 +27,8 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    private let reduceRouteEvent: ReduceRouteEvent
+    private let reduce: Reduce
+    private let handleOTPEffect: HandleOTPEffect
     
     var appVersionFull: String? {
         
@@ -42,7 +44,8 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        reduceRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:_:),
+        reduce: @escaping Reduce = UserAccountReducer().reduce(_:_:_:),
+        handleOTPEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -54,7 +57,8 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.reduceRouteEvent = reduceRouteEvent
+        self.reduce = reduce
+        self.handleOTPEffect = handleOTPEffect
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -68,7 +72,8 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        reduceRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:_:),
+        reduce: @escaping Reduce = UserAccountReducer().reduce(_:_:_:),
+        handleEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
@@ -78,7 +83,8 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.reduceRouteEvent = reduceRouteEvent
+        self.reduce = reduce
+        self.handleOTPEffect = handleEffect
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -123,17 +129,46 @@ extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
         
-        var route = route
-        
-        switch event {
-        case let .route(routeEvent):
-            route = reduceRouteEvent(route, routeEvent) { [weak self] in
-                
-                self?.event(.route($0))
-            }
+        let (route, effect) = reduce(route, event) { [weak self] in
+            
+            self?.event(.route($0))
         }
         
         routeSubject.send(route)
+        
+        if let effect {
+            
+            handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+    
+    private func handleEffect(
+        _ effect: UserAccountEffect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        
+        switch effect {
+        case let .fps(fpsEvent):
+            fpsDispatch?(fpsEvent)
+            
+        case let .otp(otpEffect):
+            handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+        }
+    }
+    
+    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
+        
+        fpsViewModel?.event(_:)
+    }
+    
+    private var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        switch route.link {
+        case let .fastPaymentSettings(.new(route)):
+            return route.viewModel
+        default:
+            return nil
+        }
     }
 }
 
@@ -638,8 +673,20 @@ private extension UserAccountViewModel {
                     ))
                 ))))
                 
+#warning("move to reducer with event?")
             case let .new(makeNew):
-                openNewFastPaymentsSettings(makeNew)
+                let viewModel = makeNew(scheduler)
+                let cancellable = viewModel.$state
+                    .removeDuplicates()
+                    .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
+                    .receive(on: scheduler)
+                    .sink { [weak self] in self?.event(.fps($0)) }
+                
+                self.event(.route(.link(.setTo(
+                    .fastPaymentSettings(.new(
+                        .init(viewModel, cancellable)
+                    ))
+                ))))
             }
             
         case let payload as UserAccountViewModelAction.Switch:
@@ -700,92 +747,6 @@ private extension UserAccountViewModel {
             
         default:
             break
-        }
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    typealias MakeNewFastPaymentsViewModel = FastPaymentsFactory.FastPaymentsViewModel.MakeNewFastPaymentsViewModel
-    
-    func openNewFastPaymentsSettings(
-        _ makeNew: @escaping MakeNewFastPaymentsViewModel
-    ) {
-        switch fpsCFLResponse {
-        case let .contract(contract):
-            
-            showSpinner()
-            
-            fastPaymentsServices.getConsentAndDefault(
-                contract.phone
-            ) { [weak self] result in
-                
-                self?.hideSpinner()
-                
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + .microseconds(200)
-                ) { [weak self] in
-                    
-                    self?.handleGetConsentAndDefaultResult(result, contract, makeNew)
-                }
-            }
-            
-        case .noContract:
-            
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + .seconds(2)
-            ) { [weak self] in
-                
-                guard let self else { return }
-                
-                hideSpinner()
-                
-                let data = model.fastPaymentContractFullInfo.value
-                    .map { $0.getFastPaymentContractFindListDatum() }
-                
-                self.event(.route(.link(.setTo(
-                    .fastPaymentSettings(.new(makeNew(data)))
-                ))))
-            }
-            
-        case let .error(message):
-            let alert = Alert.ViewModel.techError(
-                message: message
-            ) { [weak self] in self?.dismissAlert() }
-            
-            self.event(.route(.alert(.setTo(alert))))
-            
-        case .none:
-            let alert = Alert.ViewModel.techError(
-                message: "Превышено время ожидания.\nПопробуйте позже."
-            ) { [weak self] in self?.dismissAlert() }
-            
-            self.event(.route(.alert(.setTo(alert))))
-        }
-    }
-    
-    func handleGetConsentAndDefaultResult(
-        _ result: FastPaymentsServices.GetConsentAndDefaultResult,
-        _ contract: FastPaymentsServices.FPSCFLResponse.Contract,
-        _ makeNew: MakeNewFastPaymentsViewModel
-    ) {
-        switch result {
-        case let .failure(error):
-            
-            let alert = Alert.ViewModel.techError(
-                message: "Превышено время ожидания.\nПопробуйте позже."
-            ) { [weak self] in self?.dismissAlert() }
-            
-            self.event(.route(.alert(.setTo(alert))))
-            
-            
-        case let .success(defaultForaBank):
-            let data = model.fastPaymentContractFullInfo.value
-                .map { $0.getFastPaymentContractFindListDatum() }
-            
-            self.event(.route(.link(.setTo(
-                .fastPaymentSettings(.new(makeNew(data)))
-            ))))
         }
     }
 }
@@ -915,8 +876,13 @@ private extension AlertTextFieldView.ViewModel {
 
 extension UserAccountViewModel {
     
-    typealias Dispatch = (UserAccountEvent.RouteEvent) -> Void
-    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent, @escaping Dispatch) -> UserAccountRoute
+    typealias Dispatch = (UserAccountEvent) -> Void
+    
+    typealias RouteDispatch = (UserAccountEvent.RouteEvent) -> Void
+    typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
+
+    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
+    typealias HandleOTPEffect = (UserAccountEffect.OTP, @escaping OTPDispatch) -> Void
     
     class AvatarViewModel: ObservableObject {
         

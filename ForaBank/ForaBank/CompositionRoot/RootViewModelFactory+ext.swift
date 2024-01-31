@@ -43,6 +43,7 @@ extension RootViewModelFactory {
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fastPaymentsFactory = makeFastPaymentsFactory(
+            httpClient: httpClient,
             model: model,
             fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
         )

@@ -15,7 +15,7 @@ import SearchBarComponent
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
-        
+    
     var body: some View {
         
         ZStack {
@@ -198,12 +198,15 @@ struct UserAccountView: View {
                     .navigationBarBackButtonHidden(false)
                     .navigationBarTitle("", displayMode: .inline)
                 
-            case let .new(fpsViewModel):
+            case let .new(route):
                 FastPaymentsSettingsWrapperView(
-                    viewModel: fpsViewModel,
-                    navigationBarViewModel: .fastPayments(action: viewModel.dismissDestination)
+                    viewModel: route.viewModel,
+                    config: .preview
                 )
-                .onAppear { fpsViewModel.event(.appear) }
+                .navigationBar(with: .fastPayments(
+                    action: viewModel.dismissDestination
+                ))
+                .onAppear { route.viewModel.event(.appear) }
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -250,7 +253,7 @@ struct UserAccountView: View {
     @ViewBuilder
     private func bottomSheetView(
         sheet: UserAccountRoute.BottomSheet
-    ) -> some View { 
+    ) -> some View {
         
         switch sheet.sheetType {
             
@@ -335,12 +338,14 @@ extension FastPaymentsFactory {
     )
     
     static let new: Self = .init(
-        fastPaymentsViewModel: .new({ _ in
+        fastPaymentsViewModel: .new({
             
-                .init(reduce: { state, event, completion in
-                
-                    completion(state)
-                })
+            .init(
+                initialState: .init(),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
         })
     )
 }

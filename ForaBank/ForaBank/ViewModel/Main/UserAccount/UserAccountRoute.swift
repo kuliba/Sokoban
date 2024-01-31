@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserAccountNavigationComponent
 
 struct UserAccountRoute {
     
@@ -31,7 +32,7 @@ extension UserAccountRoute {
         enum FastPaymentSettings {
             
             case legacy(MeToMeSettingView.ViewModel)
-            case new(FastPaymentsSettingsViewModel)
+            case new(FPSRoute)
             
             var id: ID {
                 switch self {
@@ -44,6 +45,8 @@ extension UserAccountRoute {
                 
                 case legacy, new
             }
+            
+            typealias FPSRoute = UserAccountNavigation.State.Destination.FPSRoute
         }
         
         static func == (lhs: Link, rhs: Link) -> Bool {

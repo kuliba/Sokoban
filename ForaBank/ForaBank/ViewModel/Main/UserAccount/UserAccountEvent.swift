@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import UserAccountNavigationComponent
 
 enum UserAccountEvent {
     
     case route(RouteEvent)
+    case fps(FastPaymentsSettings)
+    case otp(OTP)
 }
 
 extension UserAccountEvent {
@@ -57,4 +60,10 @@ extension UserAccountEvent {
             case setTo(AlertTextFieldView.ViewModel)
         }
     }
+}
+
+extension UserAccountEvent {
+    
+    typealias FastPaymentsSettings = UserAccountNavigation.Event.FastPaymentsSettings
+    typealias OTP = UserAccountNavigation.Event.OTP
 }
