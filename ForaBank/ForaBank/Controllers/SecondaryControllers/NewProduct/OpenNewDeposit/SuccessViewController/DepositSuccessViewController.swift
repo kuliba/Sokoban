@@ -94,7 +94,7 @@ class DepositSuccessViewController: UIViewController {
             depositLabel.text = "Операция временно приостановлена в целях безопасности"
             depositLabel.textColor = .systemRed
             incomeField.text = confurmVCModel?.summTransction ?? ""
-            descriptionLabel.text = "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
+            descriptionLabel.text = Payments.Success.antifraudSubtitle
             
             statusImage.image = UIImage(named: "waiting")
         }

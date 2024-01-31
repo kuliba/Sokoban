@@ -52,7 +52,7 @@ extension CurrencyExchangeSuccessView {
             var subtitle: String? {
                 switch self {
                 case .suspended:
-                    return "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
+                    return Payments.Success.antifraudSubtitle
                     
                 default:
                     return nil

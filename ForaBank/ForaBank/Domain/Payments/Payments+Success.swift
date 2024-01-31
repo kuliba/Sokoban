@@ -45,7 +45,7 @@ extension Payments.Success {
         
         if status == .suspended {
             
-            params.insert(Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."), at: 3)
+            params.insert(Payments.ParameterSuccessText.title(with: Payments.Success.antifraudSubtitle), at: 3)
             
         } else {
             
@@ -85,8 +85,7 @@ extension Payments.Success {
             
             if status == .suspended {
                 
-                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
-                )
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
                 
             } else {
                 
@@ -115,8 +114,7 @@ extension Payments.Success {
             
             if status == .suspended {
                 
-                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
-                )
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
                 
             } else {
                 
@@ -170,8 +168,7 @@ extension Payments.Success {
             
             if status == .suspended {
                 
-                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
-                )
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
                 
             } else {
                 
@@ -199,8 +196,7 @@ extension Payments.Success {
             
             if status == .suspended {
                 
-                params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
-                )
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
                 
             } else {
                 
@@ -347,7 +343,7 @@ extension Payments.Success {
                 Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: documentStatus),
                 Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
-                Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."),
+                Payments.ParameterSuccessText.title(with: Payments.Success.antifraudSubtitle),
                 Payments.ParameterSuccessText.amount(amount: amount),
                 Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
                 Payments.ParameterButton.actionButtonMain()
