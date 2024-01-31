@@ -21,11 +21,11 @@ public extension UserAccountNavigation {
         
         public init(
             destination: Destination? = nil,
-            modal: Alert? = nil,
+            alert: Alert? = nil,
             isLoading: Bool = false
         ) {
             self.destination = destination
-            self.alert = modal
+            self.alert = alert
             self.isLoading = isLoading
         }
     }
