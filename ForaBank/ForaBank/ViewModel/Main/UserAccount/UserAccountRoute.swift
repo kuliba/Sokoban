@@ -1,0 +1,128 @@
+//
+//  UserAccountRoute.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 30.01.2024.
+//
+
+import SwiftUI
+
+struct UserAccountRoute {
+    
+    var alert: Alert.ViewModel?
+    var link: Link?
+    var bottomSheet: BottomSheet?
+    var sheet: Sheet?
+    var spinner: SpinnerView.ViewModel?
+    var textFieldAlert: AlertTextFieldView.ViewModel?
+}
+
+extension UserAccountRoute {
+    
+    enum Link: Hashable, Identifiable {
+        
+        case userDocument(UserDocumentViewModel)
+        case fastPaymentSettings(FastPaymentSettings)
+        case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
+        case imagePicker(ImagePickerViewModel)
+        case managingSubscription(SubscriptionsViewModel)
+        case successView(PaymentsSuccessViewModel)
+        
+        enum FastPaymentSettings {
+            
+            case legacy(MeToMeSettingView.ViewModel)
+            case new(FastPaymentsSettingsViewModel)
+            
+            var id: ID {
+                switch self {
+                case .legacy: return .legacy
+                case .new:    return .new
+                }
+            }
+            
+            enum ID {
+                
+                case legacy, new
+            }
+        }
+        
+        static func == (lhs: Link, rhs: Link) -> Bool {
+            
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id.hashValue)
+        }
+        
+        var id: Case {
+            
+            switch self {
+            case .userDocument:
+                return .userDocument
+                
+            case let .fastPaymentSettings(fastPaymentSettings):
+                switch fastPaymentSettings {
+                case .legacy:
+                    return .fastPaymentSettings(.legacy)
+                    
+                case .new:
+                    return .fastPaymentSettings(.new)
+                }
+                
+            case .deleteUserInfo:
+                return .deleteUserInfo
+                
+            case .imagePicker:
+                return .imagePicker
+                
+            case .managingSubscription:
+                return .managingSubscription
+                
+            case .successView:
+                return .successView
+            }
+        }
+        
+        enum Case: Hashable {
+            
+            case userDocument
+            case fastPaymentSettings(FastPaymentSettings)
+            case deleteUserInfo
+            case imagePicker
+            case managingSubscription
+            case successView
+            
+            enum FastPaymentSettings {
+                
+                case legacy, new
+            }
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case userDocument(UserDocumentViewModel)
+        }
+    }
+    
+    struct BottomSheet: BottomSheetCustomizable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case deleteInfo(UserAccountExitInfoView.ViewModel)
+            case inn(UserAccountDocumentInfoView.ViewModel)
+            case camera(UserAccountPhotoSourceView.ViewModel)
+            case avatarOptions(OptionsButtonsViewComponent.ViewModel)
+            case imageCapture(ImageCaptureViewModel)
+            case sbpay(SbpPayViewModel)
+        }
+    }
+}

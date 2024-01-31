@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/Fetcher.xctestplan"
+            reference = "container:../ForaBank/TestPlans/Fetcher.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

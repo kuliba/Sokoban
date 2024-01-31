@@ -8,6 +8,8 @@
 import FastPaymentsSettings
 import OTPInputComponent
 import SwiftUI
+import UIPrimitives
+import UserAccountNavigationComponent
 
 struct UserAccountView: View {
     
@@ -19,26 +21,21 @@ struct UserAccountView: View {
             
             NavigationStack {
                 
-                VStack(spacing: 32) {
-                    
-                    openFastPaymentsSettingsButton()
-                    
-                    buttons()
-                }
-                .alert(
-                    item: .init(
-                        get: { viewModel.state.alert?.alert },
-                        set: { if $0 == nil { viewModel.event(.closeAlert) }}
-                    ),
-                    content: Alert.init(with:)
-                )
-                .navigationDestination(
-                    item: .init(
-                        get: { viewModel.state.destination },
-                        set: { if $0 == nil { viewModel.event(.dismissDestination) }}
-                    ),
-                    destination: destinationView
-                )
+                openFastPaymentsSettingsButton()
+                    .alert(
+                        item: .init(
+                            get: { viewModel.alert },
+                            set: { if $0 == nil { viewModel.event(.closeAlert) }}
+                        ),
+                        content: { .init(with: $0, event: viewModel.event) }
+                    )
+                    .navigationDestination(
+                        item: .init(
+                            get: { viewModel.state.destination },
+                            set: { if $0 == nil { viewModel.event(.dismissDestination) }}
+                        ),
+                        destination: destinationView
+                    )
             }
             
             InformerView(viewModel: viewModel.informer)
@@ -56,32 +53,6 @@ struct UserAccountView: View {
         .buttonStyle(.borderedProminent)
     }
     
-    private func buttons() -> some View {
-        
-        HStack(spacing: 16) {
-            
-            showLoaderButton()
-            showAlertButton()
-            showInformerButton()
-        }
-        .buttonStyle(.bordered)
-    }
-    
-    private func showLoaderButton() -> some View {
-        
-        Button("loader", action: viewModel.showDemoLoader)
-    }
-    
-    private func showAlertButton() -> some View {
-        
-        Button("alert", action: viewModel.showDemoAlert)
-    }
-    
-    private func showInformerButton() -> some View {
-        
-        Button("informer", action: viewModel.showDemoInformer)
-    }
-    
     @ViewBuilder
     private func loader() -> some View {
         
@@ -96,26 +67,27 @@ struct UserAccountView: View {
     }
     
     private func destinationView(
-        destination: UserAccountViewModel.Route.Destination
+        destination: UserAccountViewModel.State.Destination
     ) -> some View {
         
         switch destination {
-        case let .fastPaymentsSettings(fpsViewModel):
-            FastPaymentsSettingsView(
-                viewModel: fpsViewModel,
-                config: .default
+        case let .fastPaymentsSettings(fps):
+            FastPaymentsSettingsWrapperView(
+                viewModel: fps.viewModel,
+                config: .preview
             )
             .alert(
                 item: .init(
-                    get: { viewModel.state.alert?.fpsAlert },
+                    get: { viewModel.state.fpsRoute?.alert },
                     // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                    // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                     set: { _ in }
                 ),
-                content: Alert.init(with:)
+                content: { .init(with: $0, event: viewModel.event) }
             )
             .navigationDestination(
                 item: .init(
-                    get: { viewModel.state.fpsDestination },
+                    get: { viewModel.state.fpsRoute?.destination },
                     set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
                 ),
                 destination: fpsDestinationView
@@ -125,15 +97,27 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.Route.FPSDestination
+        fpsDestination: UserAccountViewModel.State.Destination.FPSDestination
     ) -> some View {
         
         switch fpsDestination {
-        case let .confirmSetBankDefault(timedOTPInputViewModel):
+        case let .confirmSetBankDefault(timedOTPInputViewModel, _):
             OTPInputWrapperView(viewModel: timedOTPInputViewModel)
             
-        case let .c2BSub(getC2BSubResponse):
+        case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
+        }
+    }
+}
+
+private extension UserAccountViewModel {
+    
+    var alert: AlertModelOf<Event>? {
+        
+        if case let .alert(alert) = state.alert {
+            return alert
+        } else {
+            return nil
         }
     }
 }
@@ -166,41 +150,12 @@ struct OTPInputWrapperView: View {
     }
 }
 
-// MARK: - Demo Functionality
-
-private extension UserAccountViewModel {
-    
-    func showDemoAlert() {
-        
-        event(.demo(.show(.alert)))
-    }
-    
-    func showDemoInformer() {
-        
-        event(.demo(.show(.informer)))
-    }
-    
-    func showDemoLoader() {
-        
-        event(.demo(.show(.loader)))
-    }
-}
-
-#warning("remove if unused")
-enum ConfirmWithOTPResult {
-    
-    case success
-    case incorrectCode
-    case serverError(String)
-    case connectivityError
-}
-
 struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         UserAccountView(viewModel: .preview(
-            route: .init(),
+            state: .init(),
             flowStub: .preview
         ))
     }

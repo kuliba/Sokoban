@@ -50,6 +50,8 @@ let package = Package(
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        .uiPrimitives,
+        .userAccountNavigationComponent,
         // UI Components
         .paymentComponents,
         .carouselComponent,
@@ -143,6 +145,9 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        .uiPrimitives,
+        .userAccountNavigationComponent,
+        .userAccountNavigationComponentTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -337,6 +342,19 @@ private extension Product {
         ]
     )
     
+    static let uiPrimitives = library(
+        name: .uiPrimitives,
+        targets: [
+            .uiPrimitives,
+        ]
+    )
+    static let userAccountNavigationComponent = library(
+        name: .userAccountNavigationComponent,
+        targets: [
+            .userAccountNavigationComponent,
+        ]
+    )
+    
     // MARK: - UI Components
     
     static let paymentComponents = library(
@@ -480,6 +498,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .paymentComponents,
             .rxViewModel,
         ]
     )
@@ -766,6 +785,7 @@ private extension Target {
         ],
         path: "Tests/\(String.cardStatementAPITests)",
         resources: [
+            .copy("Resources/GetProductDynamicParamsList.json"),
             .copy("Resources/StatementSample.json"),
         ]
     )
@@ -1089,6 +1109,37 @@ private extension Target {
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
+    static let uiPrimitives = target(
+        name: .uiPrimitives,
+        path: "Sources/UI/\(String.uiPrimitives)"
+    )
+    
+    static let userAccountNavigationComponent = target(
+        name: .userAccountNavigationComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .fastPaymentsSettings,
+            .otpInputComponent,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.userAccountNavigationComponent)"
+    )
+    
+    static let userAccountNavigationComponentTests = testTarget(
+        name: .userAccountNavigationComponentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .userAccountNavigationComponent,
+        ],
+        path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1324,6 +1375,14 @@ private extension Target.Dependency {
         name: .uiKitHelpers
     )
     
+    static let uiPrimitives = byName(
+        name: .uiPrimitives
+    )
+    
+    static let userAccountNavigationComponent = byName(
+        name: .userAccountNavigationComponent
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = byName(
@@ -1494,6 +1553,11 @@ private extension String {
     static let textFieldUITests = "TextFieldUITests"
     
     static let uiKitHelpers = "UIKitHelpers"
+    
+    static let uiPrimitives = "UIPrimitives"
+    
+    static let userAccountNavigationComponent = "UserAccountNavigationComponent"
+    static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
     // MARK: - UI Components
 

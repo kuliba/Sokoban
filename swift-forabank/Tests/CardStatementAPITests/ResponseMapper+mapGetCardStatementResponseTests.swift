@@ -11,12 +11,10 @@ import CardStatementAPI
 final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     
     func test_map_statusCodeNot200_FailureNotOk() {
-                
-        let errorMessage = errorMessageByCode(400)
-                
+                                
         XCTAssertNoDiff(
             map(statusCode: 400, data: Data("test".utf8)),
-            сardStatementError(errorMessage)
+            сardStatementError(.defaultErrorMessage)
         )
     }
     
@@ -32,7 +30,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
                 
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.error404.utf8)),
-            сardStatementError("404: Не найден запрос к серверу"))
+            сardStatementErrorNot200("404: Не найден запрос к серверу"))
     }
     
     func test_map_statusCode200_dataEmpty_FailureMapError() {

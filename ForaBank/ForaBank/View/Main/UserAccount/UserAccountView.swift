@@ -22,7 +22,7 @@ struct UserAccountView: View {
             
             scrollView
             
-            viewModel.spinner.map(SpinnerView.init(viewModel:))
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
         }
     }
     
@@ -41,14 +41,39 @@ struct UserAccountView: View {
                 appVersionFullView
             }
             .navigationDestination(
-                item: $viewModel.link,
+                item: .init(
+                    get: { viewModel.route.link },
+                    set: { if $0 == nil { viewModel.resetLink() }}),
                 content: destinationView(link:)
             )
         }
-        .sheet(item: $viewModel.sheet, content: sheetView)
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .textfieldAlert(alert: $viewModel.textFieldAlert)
+        .sheet(
+            item: .init(
+                get: { viewModel.route.sheet },
+                set: { if $0 == nil { viewModel.resetSheet() }}
+            ),
+            content: sheetView
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route.bottomSheet },
+                set: { if $0 == nil { viewModel.resetBottomSheet() }}
+            ),
+            content: bottomSheetView
+        )
+        .alert(
+            item: .init(
+                get: { viewModel.route.alert },
+                set: { if $0 == nil { viewModel.resetAlert() }}
+            ),
+            content: Alert.init(with:)
+        )
+        .textfieldAlert(
+            alert: .init(
+                get: { viewModel.route.textFieldAlert },
+                set: { if $0 == nil { viewModel.resetTextFieldAlert() }}
+            )
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
     }
@@ -158,7 +183,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func destinationView(
-        link: UserAccountViewModel.Link
+        link: UserAccountRoute.Link
     ) -> some View {
         
         switch link {
@@ -212,7 +237,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func sheetView(
-        sheet: UserAccountViewModel.Sheet
+        sheet: UserAccountRoute.Sheet
     ) -> some View {
         
         switch sheet.sheetType {
@@ -224,7 +249,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func bottomSheetView(
-        sheet: UserAccountViewModel.BottomSheet
+        sheet: UserAccountRoute.BottomSheet
     ) -> some View { 
         
         switch sheet.sheetType {
@@ -294,38 +319,6 @@ struct UserAccountView_Previews: PreviewProvider {
         
         UserAccountView(viewModel: .sample)
     }
-}
-
-extension UserAccountViewModel {
-    
-    static let sample = UserAccountViewModel(
-        navigationBar: .sample,
-        avatar: .init(
-            image: Image("imgMainBanner2"),
-            //image: nil,
-            action: {
-                //TODO: set action
-            }),
-        sections:
-            [UserAccountContactsView.ViewModel.contact,
-             UserAccountDocumentsView.ViewModel.documents,
-             UserAccountPaymentsView.ViewModel.payments,
-             UserAccountSecurityView.ViewModel.security
-            ],
-        exitButton: .init(
-            icon: .ic24LogOut,
-            content: "Выход из приложения",
-            action: {
-                //TODO: set action
-            }),
-        deleteAccountButton: .init(
-            icon: .ic24UserX, content: "Удалить учетную запись",
-            infoButton: .init(icon: .ic24Info, action: { }),
-            action: {}
-        ),
-        fastPaymentsFactory: .legacy,
-        fastPaymentsServices: .empty
-    )
 }
 
 extension FastPaymentsFactory {

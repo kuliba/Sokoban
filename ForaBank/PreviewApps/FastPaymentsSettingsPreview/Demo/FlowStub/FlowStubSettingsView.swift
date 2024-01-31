@@ -45,9 +45,7 @@ struct FlowStubSettingsView: View {
     
     var body: some View {
         
-        VStack(spacing: 16) {
-            
-            happyPathButton()
+        VStack {
             
             List {
                 
@@ -68,6 +66,7 @@ struct FlowStubSettingsView: View {
         }
         .navigationTitle("Select Results for Requests")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(content: happyPathButton)
     }
     
     private var flowStub: FlowStub? {
@@ -76,7 +75,7 @@ struct FlowStubSettingsView: View {
               let changeConsentList = changeConsentList?.response,
               let createContract = createContract?.response,
               let getC2BSub = getC2BSub?.settings,
-              let getSettings = getSettings?.settings,
+              let getSettings = getSettings?.settingsResult,
               let prepareSetBankDefault = prepareSetBankDefault?.prepareSetBankDefaultResponse,
               let updateContract = updateContract?.updateContractResponse,
               let updateProduct = updateProduct?.updateProductResponse,
@@ -132,6 +131,8 @@ struct FlowStubSettingsView: View {
             initiateOTP = .init(flowStub: .preview)
             submitOTP = .init(flowStub: .preview)
         }
+        .buttonStyle(.bordered)
+        .tint(.green)
     }
     
     private func applyButton() -> some View {
@@ -226,20 +227,32 @@ private extension FlowStubSettingsView {
     
     enum GetSettings: String, CaseIterable, Identifiable {
         
-        case active, inactive, missing, error_C, error_S
+        case active, limit, inactive, missing, error_C, error_S
         
         var id: Self { self }
         
-        var settings: UserPaymentSettings {
+        var settingsResult: UserPaymentSettingsResult {
             
             switch self {
             case .active:
-                return .contracted(.preview(paymentContract: .active))
+                return .success(.contracted(.preview(
+                    paymentContract: .active
+                )))
+                
+            case .limit:
+                return .success(.contracted(.preview(
+                    paymentContract: .active,
+                    bankDefaultResponse: .init(
+                        bankDefault: .offEnabled,
+                        requestLimitMessage: "Исчерпан лимит запросов.\nПовторите попытку через 24 часа."
+                    )
+                )))
                 
             case .inactive:
-                return .contracted(.preview(paymentContract: .inactive))
+                return .success(.contracted(.preview(paymentContract: .inactive)))
+                
             case .missing:
-                return .missingContract()
+                return .success(.missingContract())
                 
             case .error_C:
                 return .failure(.connectivityError)
@@ -317,7 +330,7 @@ private extension FlowStubSettingsView {
     
     enum SubmitOTP: String, CaseIterable, Identifiable {
         
-        case success, error_C, error_S
+        case success, error_C, incorrect, error_S
         
         var id: Self { self }
         
@@ -326,6 +339,7 @@ private extension FlowStubSettingsView {
             switch self {
             case .success: return .success(())
             case .error_C: return .failure(.connectivityError)
+            case .incorrect: return .failure(.serverError("Введен некорректный код. Попробуйте еще раз"))
             case .error_S: return .failure(.serverError("Server Error Failure Message (#8765)."))
             }
         }
@@ -432,16 +446,16 @@ private extension FlowStubSettingsView.GetSettings {
         case .none:
             return nil
             
-        case let .contracted(contractDetails):
+        case let .success(.contracted(contractDetails)):
             switch contractDetails.paymentContract.contractStatus {
             case .active:
-                self = .active
+                self = contractDetails.bankDefaultResponse.requestLimitMessage == nil ? .active : .limit
                 
             case .inactive:
                 self = .inactive
             }
             
-        case .missingContract:
+        case .success(.missingContract):
             self = .missing
             
         case let .failure(failure):
@@ -557,7 +571,7 @@ private extension FlowStubSettingsView.SubmitOTP {
     
     init?(flowStub: FlowStub?) {
         
-        switch flowStub?.initiateOTP {
+        switch flowStub?.submitOTP {
         case .none:
             return nil
             
@@ -569,8 +583,12 @@ private extension FlowStubSettingsView.SubmitOTP {
             case .connectivityError:
                 self = .error_C
                 
-            case .serverError:
-                self = .error_S
+            case let .serverError(message):
+                if message == "Введен некорректный код. Попробуйте еще раз" {
+                    self = .incorrect
+                } else {
+                    self = .error_S
+                }
             }
         }
     }
@@ -602,7 +620,7 @@ extension FlowStub {
         changeConsentList: .success,
         createContract:  .success(.active),
         getC2BSub: .success(.control),
-        getSettings: .contracted(.preview()),
+        getSettings: .success(.contracted(.preview())),
         prepareSetBankDefault: .success(()),
         updateContract: .success(.inactive),
         updateProduct: .success(()),
