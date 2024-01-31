@@ -71,7 +71,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         fastPaymentsServices: FastPaymentsServices,         
+         fastPaymentsServices: FastPaymentsServices,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,

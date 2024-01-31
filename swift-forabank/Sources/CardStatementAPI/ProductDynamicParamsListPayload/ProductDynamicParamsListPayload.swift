@@ -11,6 +11,10 @@ import Tagged
 public struct ProductDynamicParamsListPayload: Equatable {
     
     public let productList: [ListItem]
+    
+    public init(productList: [ListItem]) {
+        self.productList = productList
+    }
 }
 
 extension ProductDynamicParamsListPayload {
@@ -47,18 +51,18 @@ public extension ProductDynamicParamsListPayload {
         
         get throws {
             
-            let dict: [Any] = productList.map {
+            let dict: [[String: Any]] = productList.map {
                 [
                     "id": $0.productId.rawValue,
                     "type": $0.type.rawValue
                 ]
             }
-            let parameters: [String: Any] = [
+            let parameters: [String: [[String: Any]]] = [
                 "productList": dict
             ]
             
             return try JSONSerialization.data(
-                withJSONObject: parameters as [String: Any]
+                withJSONObject: parameters as [String: [[String: Any]]]
             )
         }
     }

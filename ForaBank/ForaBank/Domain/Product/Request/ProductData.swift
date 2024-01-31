@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CardStatementAPI
 
 class ProductData: Identifiable, Codable {
     
@@ -179,6 +180,13 @@ extension ProductData {
     func update(order: Int) {
         
         self.order = order
+    }
+    
+    func update(with params: CardStatementAPI.DynamicParams) {
+        
+        self.balance = params.variableParams.balance?.doubleValue
+        self.customName = params.variableParams.customName
+        self.balanceRub = params.variableParams.balanceRub?.doubleValue
     }
 }
 
