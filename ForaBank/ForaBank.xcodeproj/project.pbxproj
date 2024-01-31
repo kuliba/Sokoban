@@ -519,7 +519,6 @@
 		2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */; };
 		2A5457572A3B48F9007617C3 /* TransportPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */; };
 		2A5457592A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */; };
-		2A566EA32B67763700359E05 /* UserAccountNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A566EA22B67763700359E05 /* UserAccountNavigationStateManager.swift */; };
 		2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A566EA42B67830B00359E05 /* UserAccountNavigationComponent */; };
 		2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5762FA2AD805BA0026EBFE /* URLRequestFactory */; };
 		2A5871642A335E9E0059D4B6 /* AvtodorCrutchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */; };
@@ -583,7 +582,6 @@
 		2A6EAA802B50576F0093EE83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */; };
 		2A6EAA832B50576F0093EE83 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */; };
 		2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */; };
-		2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */; };
 		2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsWrapperView.swift */; };
 		2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */; };
 		2A6EAAA02B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */; };
@@ -2839,7 +2837,6 @@
 		2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModel.swift; sourceTree = "<group>"; };
 		2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TransportPaymentsView.swift; path = ForaBank/View/PaymentsTransfers/TransportPaymentsView.swift; sourceTree = SOURCE_ROOT; };
 		2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModelTests.swift; sourceTree = "<group>"; };
-		2A566EA22B67763700359E05 /* UserAccountNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationStateManager.swift; sourceTree = "<group>"; };
 		2A566EA72B6816BA00359E05 /* TextFieldComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldComponent.xctestplan; sourceTree = "<group>"; };
 		2A566EA82B6816BB00359E05 /* LandingMapping.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LandingMapping.xctestplan; sourceTree = "<group>"; };
 		2A566EA92B6816BB00359E05 /* LandingUIComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LandingUIComponent.xctestplan; sourceTree = "<group>"; };
@@ -2931,7 +2928,6 @@
 		2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A6EAA822B50576F0093EE83 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
-		2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsViewModel.swift; sourceTree = "<group>"; };
 		2A6EAA912B505DD60093EE83 /* FastPaymentsSettingsWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsWrapperView.swift; sourceTree = "<group>"; };
 		2A6EAA952B5060E20093EE83 /* UserAccountViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountViewModel+preview.swift"; sourceTree = "<group>"; };
 		2A6EAA9F2B506ED70093EE83 /* FastPaymentsSettingsViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsViewModel+preview.swift"; sourceTree = "<group>"; };
@@ -6549,7 +6545,6 @@
 			children = (
 				2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */,
 				2A6EAA892B5058EE0093EE83 /* UserAccountViewModel.swift */,
-				2A566EA22B67763700359E05 /* UserAccountNavigationStateManager.swift */,
 			);
 			path = UserAccount;
 			sourceTree = "<group>";
@@ -7127,7 +7122,6 @@
 			isa = PBXGroup;
 			children = (
 				2AA70FC52B52C0A20061F5DD /* ViewModel.swift */,
-				2A6EAA8F2B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift */,
 				2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */,
 				2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */,
 			);
@@ -13081,13 +13075,11 @@
 				2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */,
 				2A6EAA922B505DD60093EE83 /* FastPaymentsSettingsWrapperView.swift in Sources */,
 				2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */,
-				2A566EA32B67763700359E05 /* UserAccountNavigationStateManager.swift in Sources */,
 				2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */,
 				2A6EAA962B5060E20093EE83 /* UserAccountViewModel+preview.swift in Sources */,
 				2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */,
 				2AA70FC12B52BE1D0061F5DD /* ContentView.swift in Sources */,
 				2A40AF292B5901D2003B7D8A /* FastPaymentsSettingsEffectHandler+preview.swift in Sources */,
-				2A6EAA902B505DAA0093EE83 /* FastPaymentsSettingsViewModel.swift in Sources */,
 				2A3D6F202B62A16000D19379 /* GetC2BSubResponse+preview.swift in Sources */,
 				2A40AF2F2B591530003B7D8A /* FlowStubSettingsView.swift in Sources */,
 				2A6EAA8A2B5058EE0093EE83 /* UserAccountViewModel.swift in Sources */,
