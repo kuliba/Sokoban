@@ -1507,17 +1507,21 @@ extension Model {
             return nil
         }
     }
+     
+    func antifraudStatus() -> [String] {
+        ["F", "G1", "S", "SUSPECT"]
+    }
     
-    func paymentsAntifraudData(for operation: Payments.Operation) -> Payments.AntifraudData? {
+    func paymentsAntifraudData(
+        for operation: Payments.Operation
+    ) -> Payments.AntifraudData? {
         
         switch operation.service {
         case .sfp:
             let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
-            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
-                return nil
-            }
+            let antifraudParameter = paymentsParameterValue(operation.parameters, id: antifraudParameterId)
             
-            guard antifraudParameter.value == "F" || antifraudParameter.value == "G1" || antifraudParameter.value == "S" || antifraudParameter.value == "SUSPECT" ||  antifraudParameter.value == nil else {
+            guard antifraudStatus().contains(where: { $0 == antifraudParameter }) ||  antifraudParameter == nil else {
                 return nil
             }
             
@@ -1525,9 +1529,9 @@ extension Model {
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             
-            guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId })?.value,
-                  let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
-                  let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value
+            guard let recipientValue = paymentsParameterValue(operation.parameters, id: recipientParameterId),
+                  let phoneValue = paymentsParameterValue(operation.parameters, id: phoneParameterId),
+                  let amountValue = paymentsParameterValue(operation.parameters, id: amountParameterId)
             else {
                 return nil
             }
