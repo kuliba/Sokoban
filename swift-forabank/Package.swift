@@ -40,6 +40,7 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
+        .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -127,6 +128,8 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
+        .cardGuardianModule,
+        .cardGuardianModuleTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -269,6 +272,13 @@ private extension Product {
         name: .buttonWithSheet,
         targets: [
             .buttonWithSheet
+        ]
+    )
+    
+    static let cardGuardianModule = library(
+        name: .cardGuardianModule,
+        targets: [
+            .cardGuardianModule
         ]
     )
     
@@ -785,6 +795,7 @@ private extension Target {
         ],
         path: "Tests/\(String.cardStatementAPITests)",
         resources: [
+            .copy("Resources/GetProductDynamicParamsList.json"),
             .copy("Resources/StatementSample.json"),
         ]
     )
@@ -965,6 +976,30 @@ private extension Target {
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
         path: "Sources/UI/\(String.buttonWithSheet)"
+    )
+    
+    static let cardGuardianModule = target(
+        name: .cardGuardianModule,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.cardGuardianModule)"
+    )
+    
+    static let cardGuardianModuleTests = testTarget(
+        name: .cardGuardianModuleTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardGuardianModule,
+        ],
+        path: "Tests/UI/\(String.cardGuardianModuleTests)"
     )
     
     static let linkableText = target(
@@ -1346,6 +1381,10 @@ private extension Target.Dependency {
         name: .buttonWithSheet
     )
     
+    static let cardGuardianModule = byName(
+        name: .cardGuardianModule
+    )
+    
     static let linkableText = byName(
         name: .linkableText
     )
@@ -1527,6 +1566,9 @@ private extension String {
     
     static let buttonWithSheet = "ButtonWithSheet"
 
+    static let cardGuardianModule = "CardGuardianModule"
+    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
     

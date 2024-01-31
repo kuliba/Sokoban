@@ -35,6 +35,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let fastPaymentsServices: FastPaymentsServices
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
@@ -47,6 +48,7 @@ class MainViewModel: ObservableObject, Resetable {
         fastPaymentsServices: FastPaymentsServices,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
@@ -66,6 +68,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.fastPaymentsServices = fastPaymentsServices
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
         self.navButtonsRight = createNavButtonsRight()
@@ -381,8 +384,9 @@ private extension MainViewModel {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListViewModel = TemplatesListViewModel(
-                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
+                                let templatesListViewModel = paymentsTransfersFactory.makeTemplatesListViewModel (
+                                    { [weak self] in self?.action.send(MainViewModelAction.Close.Link())
+                                })
                                 bind(templatesListViewModel)
                                 route.destination = .templates(templatesListViewModel)
                                 

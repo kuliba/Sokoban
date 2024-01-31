@@ -14,46 +14,16 @@ public extension ResponseMapper {
         _ response: HTTPURLResponse
     ) -> Swift.Result<[ProductStatementData], MappingError> {
         
-        let statusCode = response.statusCode
-        
-        switch statusCode {
-        case statusCode200:
-            return handle200(with: data)
-            
-        default:
-            return errorByCode(statusCode)
-        }
+        map(data, response, mapOrThrow: map)
     }
     
-    private static func handle200(with data: Data) -> Swift.Result<[ProductStatementData], MappingError> {
+    private static func map(
+        _ data: _Data
+    ) throws -> [ProductStatementData] {
         
-        do {
-            
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .formatted(.iso8601)
-            
-            let response = try decoder.decode(GetCardStatementForPeriodResponse.self, from: data)
-            switch response.statusCode {
-                
-            default:
-                guard let data = response.data
-                else { return .failure(.mappingFailure(response.errorMessage ?? .defaultErrorMessage))}
-                return .success(data.map { .init(data: $0) })
-            }
-        } catch {
-            return .failure(.mappingFailure(.defaultErrorMessage))
-        }
-    }
-    
-    private static func errorByCode(
-        _ code: Int
-    ) -> Swift.Result<[ProductStatementData], MappingError> {
-        
-        .failure(.mappingFailure(HTTPURLResponse.localizedString(forStatusCode: code)))
+        data.map { .init(data: $0) }
     }
 }
-
-private let statusCode200 = 200
 
 private extension ResponseMapper {
     
@@ -261,7 +231,7 @@ private extension ProductStatementData {
     init(
         data: ResponseMapper._DTO
     ) {
-                
+        
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map {
             .init(data: $0)
         }
