@@ -53,7 +53,12 @@ class PaymentsViewModel: ObservableObject {
                 switch result {
                 case let .select(selectServiceParameter):
                     // multiple services for category
-                    let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model, closeAction: closeAction)
+                    let serviceViewModel = PaymentsServiceViewModel(
+                        category: category,
+                        parameters: [selectServiceParameter],
+                        model: model,
+                        closeAction: closeAction
+                    )
                     serviceViewModel.rootActions = rootActions
                     
                     await MainActor.run {
