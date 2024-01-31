@@ -64,6 +64,9 @@ struct PaymentsOperationView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
+                    case let .success(successViewModel):
+                        PaymentsSuccessView(viewModel: successViewModel)
+                        
                     case let .confirm(confirmViewModel):
                         PaymentsOperationView(viewModel: confirmViewModel)
                     }
