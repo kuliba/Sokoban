@@ -113,6 +113,35 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
                     bottomSheet = nil
      
+                case let payload as PaymentsConfirmViewModelAction.CancelOperation:
+                    
+                    switch payload.reason {
+                    case .cancel, .none:
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                        
+                    case .timeOut:
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                    }
+                    
                 default:
                     break
                 }
