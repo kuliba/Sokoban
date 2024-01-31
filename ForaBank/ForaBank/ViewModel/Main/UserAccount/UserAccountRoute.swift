@@ -46,7 +46,7 @@ extension UserAccountRoute {
                 case legacy, new
             }
             
-            typealias FPSRoute = UserAccountNavigation.State.Destination.FPSRoute
+            typealias FPSRoute = UserAccountNavigation.State.FPSRoute
         }
         
         static func == (lhs: Link, rhs: Link) -> Bool {

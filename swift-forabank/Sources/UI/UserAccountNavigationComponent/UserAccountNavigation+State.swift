@@ -15,13 +15,13 @@ public extension UserAccountNavigation {
     
     struct State: Equatable {
         
-        public var destination: Destination?
-        public var alert: Alert?
+        public var destination: FPSRoute?
+        public var alert: AlertModelOf<Event>?
         public var isLoading: Bool
         
         public init(
-            destination: Destination? = nil,
-            alert: Alert? = nil,
+            destination: FPSRoute? = nil,
+            alert: AlertModelOf<Event>? = nil,
             isLoading: Bool = false
         ) {
             self.destination = destination
@@ -35,22 +35,13 @@ public extension UserAccountNavigation.State {
     
     typealias Event = UserAccountNavigation.Event
     
-    enum Destination: Equatable {
-        
-        case fastPaymentsSettings(FPSRoute)
-    }
-    
-    enum Alert: Equatable {
-        
-        case alert(AlertModelOf<Event>)
-    }
-}
-
-public extension UserAccountNavigation.State.Destination {
-    
     typealias FastPaymentsSettingsViewModel = RxViewModel<FastPaymentsSettingsState, FastPaymentsSettingsEvent, FastPaymentsSettingsEffect>
     
-    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
+    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
+}
+
+public extension UserAccountNavigation.State {
+    
     
     enum FPSDestination: Equatable {
         
@@ -60,29 +51,7 @@ public extension UserAccountNavigation.State.Destination {
     }
 }
 
-// MARK: - Helpers
-
-public extension UserAccountNavigation.State {
-    
-    var fpsRoute: UserAccountNavigation.State.Destination.FPSRoute? {
-        
-        get {
-            guard case let .fastPaymentsSettings(fpsRoute) = destination
-            else { return nil }
-            
-            return fpsRoute
-        }
-        
-        set(newValue) {
-            guard case .fastPaymentsSettings = destination
-            else { return }
-            
-            self.destination = newValue.map(Destination.fastPaymentsSettings)
-        }
-    }
-}
-
-// MAKR: - Hashable Conformance
+// MARK: - Hashable Conformance
 
 extension AlertModel: Hashable
 where PrimaryEvent: Equatable,
@@ -97,25 +66,7 @@ where PrimaryEvent: Equatable,
     }
 }
 
-extension UserAccountNavigation.State.Destination: Hashable {
-    
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        
-        switch (lhs, rhs) {
-        case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
-            return lhs.hashValue == rhs.hashValue
-        }
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        switch self {
-        case let .fastPaymentsSettings(route):
-            hasher.combine(route.hashValue)
-        }
-    }
-}
-
-extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
+extension UserAccountNavigation.State.FPSDestination: Hashable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
         
