@@ -26,7 +26,7 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    private let handleRouteEvent: ReduceRouteEvent
+    private let reduceRouteEvent: ReduceRouteEvent
     
     var appVersionFull: String? {
         
@@ -42,7 +42,7 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:),
+        reduceRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -54,7 +54,7 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.handleRouteEvent = handleRouteEvent
+        self.reduceRouteEvent = reduceRouteEvent
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -68,7 +68,7 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        handleRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:),
+        reduceRouteEvent: @escaping ReduceRouteEvent = UserAccountRouteEventReducer().reduce(_:_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         fastPaymentsServices: FastPaymentsServices,
@@ -78,7 +78,7 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.handleRouteEvent = handleRouteEvent
+        self.reduceRouteEvent = reduceRouteEvent
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
         self.fastPaymentsServices = fastPaymentsServices
@@ -127,7 +127,10 @@ extension UserAccountViewModel {
         
         switch event {
         case let .route(routeEvent):
-            route = handleRouteEvent(route, routeEvent)
+            route = reduceRouteEvent(route, routeEvent) { [weak self] in
+                
+                self?.event(.route($0))
+            }
         }
         
         routeSubject.send(route)
@@ -912,7 +915,8 @@ private extension AlertTextFieldView.ViewModel {
 
 extension UserAccountViewModel {
     
-    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
+    typealias Dispatch = (UserAccountEvent.RouteEvent) -> Void
+    typealias ReduceRouteEvent = (UserAccountRoute, UserAccountEvent.RouteEvent, @escaping Dispatch) -> UserAccountRoute
     
     class AvatarViewModel: ObservableObject {
         

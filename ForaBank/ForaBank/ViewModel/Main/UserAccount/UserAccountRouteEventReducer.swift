@@ -13,7 +13,8 @@ extension UserAccountRouteEventReducer {
     
     func reduce(
         _ route: UserAccountRoute,
-        _ routeEvent: UserAccountEvent.RouteEvent
+        _ routeEvent: UserAccountEvent.RouteEvent,
+        _ dispatch: @escaping Dispatch
     ) -> UserAccountRoute {
         
         var route = route
@@ -32,6 +33,7 @@ extension UserAccountRouteEventReducer {
             switch bottomSheetEvent {
             case .reset:
                 route.bottomSheet = nil
+                
             case let .setTo(bottomSheet):
                 route.bottomSheet = bottomSheet
             }
@@ -72,4 +74,9 @@ extension UserAccountRouteEventReducer {
         
         return route
     }
+}
+
+extension UserAccountRouteEventReducer {
+    
+    typealias Dispatch = (UserAccountEvent.RouteEvent) -> Void
 }
