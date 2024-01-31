@@ -40,7 +40,7 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
-        .blockUnBlockCardNavigationComponent,
+        .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -128,8 +128,8 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
-        .blockUnBlockCardNavigationComponent,
-        .blockUnBlockCardNavigationComponentTests,
+        .cardGuardianModule,
+        .cardGuardianModuleTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -268,17 +268,17 @@ private extension Product {
     
     // MARK: - UI
     
-    static let blockUnBlockCardNavigationComponent = library(
-        name: .blockUnBlockCardNavigationComponent,
-        targets: [
-            .blockUnBlockCardNavigationComponent
-        ]
-    )
-
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
             .buttonWithSheet
+        ]
+    )
+    
+    static let cardGuardianModule = library(
+        name: .cardGuardianModule,
+        targets: [
+            .cardGuardianModule
         ]
     )
     
@@ -973,8 +973,13 @@ private extension Target {
 
     // MARK: - UI
     
-    static let blockUnBlockCardNavigationComponent = target(
-        name: .blockUnBlockCardNavigationComponent,
+    static let buttonWithSheet = target(
+        name: .buttonWithSheet,
+        path: "Sources/UI/\(String.buttonWithSheet)"
+    )
+    
+    static let cardGuardianModule = target(
+        name: .cardGuardianModule,
         dependencies: [
             // external packages
             .combineSchedulers,
@@ -983,23 +988,18 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.blockUnBlockCardNavigationComponent)"
+        path: "Sources/UI/\(String.cardGuardianModule)"
     )
     
-    static let blockUnBlockCardNavigationComponentTests = testTarget(
-        name: .blockUnBlockCardNavigationComponentTests,
+    static let cardGuardianModuleTests = testTarget(
+        name: .cardGuardianModuleTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .blockUnBlockCardNavigationComponent,
+            .cardGuardianModule,
         ],
-        path: "Tests/UI/\(String.blockUnBlockCardNavigationComponentTests)"
-    )
-
-    static let buttonWithSheet = target(
-        name: .buttonWithSheet,
-        path: "Sources/UI/\(String.buttonWithSheet)"
+        path: "Tests/UI/\(String.cardGuardianModuleTests)"
     )
     
     static let linkableText = target(
@@ -1377,12 +1377,12 @@ private extension Target.Dependency {
     
     // MARK: - UI
     
-    static let blockUnBlockCardNavigationComponent = byName(
-        name: .blockUnBlockCardNavigationComponent
-    )
-    
     static let buttonWithSheet = byName(
         name: .buttonWithSheet
+    )
+    
+    static let cardGuardianModule = byName(
+        name: .cardGuardianModule
     )
     
     static let linkableText = byName(
@@ -1564,11 +1564,11 @@ private extension String {
     
     // MARK: - UI
     
-    static let blockUnBlockCardNavigationComponent = "BlockUnBlockCardNavigationComponent"
-    static let blockUnBlockCardNavigationComponentTests = "BlockUnBlockCardNavigationComponentTests"
-    
     static let buttonWithSheet = "ButtonWithSheet"
 
+    static let cardGuardianModule = "CardGuardianModule"
+    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
     

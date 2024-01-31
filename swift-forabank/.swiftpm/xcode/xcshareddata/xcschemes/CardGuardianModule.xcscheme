@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BlockUnBlockCardNavigationComponent"
-               BuildableName = "BlockUnBlockCardNavigationComponent"
-               BlueprintName = "BlockUnBlockCardNavigationComponent"
+               BlueprintIdentifier = "CardGuardianModule"
+               BuildableName = "CardGuardianModule"
+               BlueprintName = "CardGuardianModule"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/BlockUnBlockCardNavigationComponent.xctestplan"
+            reference = "container:../ForaBank/TestPlans/CardGuardianModule.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -54,9 +54,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BlockUnBlockCardNavigationComponent"
-            BuildableName = "BlockUnBlockCardNavigationComponent"
-            BlueprintName = "BlockUnBlockCardNavigationComponent"
+            BlueprintIdentifier = "CardGuardianModule"
+            BuildableName = "CardGuardianModule"
+            BlueprintName = "CardGuardianModule"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

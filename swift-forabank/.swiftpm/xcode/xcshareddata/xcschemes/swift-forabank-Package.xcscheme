@@ -958,6 +958,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardGuardianModule"
+               BuildableName = "CardGuardianModule"
+               BlueprintName = "CardGuardianModule"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1209,6 +1223,16 @@
                BlueprintIdentifier = "BlockUnBlockCardNavigationComponentTests"
                BuildableName = "BlockUnBlockCardNavigationComponentTests"
                BlueprintName = "BlockUnBlockCardNavigationComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "cardGuardianModuleTests"
+               BuildableName = "cardGuardianModuleTests"
+               BlueprintName = "cardGuardianModuleTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

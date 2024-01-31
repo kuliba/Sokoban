@@ -293,8 +293,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "BlockUnBlockCardNavigationComponentTests",
-        "name" : "BlockUnBlockCardNavigationComponentTests"
+        "identifier" : "CardGuardianModuleTests",
+        "name" : "CardGuardianModuleTests"
       }
     }
   ],

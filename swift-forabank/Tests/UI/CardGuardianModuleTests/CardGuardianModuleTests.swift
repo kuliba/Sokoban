@@ -1,14 +1,14 @@
 //
-//  BlockUnBlockCardNavigationComponentTests.swift
-//  
+//  CardGuardianTests.swift
+//
 //
 //  Created by Andryusina Nataly on 31.01.2024.
 //
 
-import BlockUnBlockCardNavigationComponent
+import CardGuardianModule
 import XCTest
 
-final class BlockUnBlockCardNavigationComponentTests: XCTestCase {
+final class CardGuardianModuleTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
