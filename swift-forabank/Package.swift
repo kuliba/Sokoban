@@ -785,6 +785,7 @@ private extension Target {
         ],
         path: "Tests/\(String.cardStatementAPITests)",
         resources: [
+            .copy("Resources/GetProductDynamicParamsList.json"),
             .copy("Resources/StatementSample.json"),
         ]
     )

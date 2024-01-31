@@ -200,6 +200,7 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
+              updateFastAll: {},
               model: .emptyMock)
     }()
     
@@ -211,6 +212,7 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems2,
               deletePannel: nil,
+              updateFastAll: {},
               model: .emptyMock)
     }()
     
@@ -222,6 +224,7 @@ extension TemplatesListViewModel {
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems3,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
+              updateFastAll: {},
               model: .emptyMock)
     }()
 }

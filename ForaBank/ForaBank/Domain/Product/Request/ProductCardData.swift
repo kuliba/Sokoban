@@ -259,7 +259,7 @@ extension ProductCardData {
     }
   
     
-    var isCanBeUnblocked: Bool {
+    var canBeUnblocked: Bool {
 
         return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
     }

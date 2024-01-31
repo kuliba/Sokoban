@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapGetCardStatementResponseTests.swift
+//  ResponseMapper+mapGetProductDynamicParamsListTests.swift
 //
 //
 //  Created by Andryusina Nataly on 18.01.2024.
@@ -8,13 +8,13 @@
 import XCTest
 import CardStatementAPI
 
-final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
+final class ResponseMapper_mapGetProductDynamicParamsListTests: XCTestCase {
     
     func test_map_statusCodeNot200_FailureNotOk() {
                                 
         XCTAssertNoDiff(
             map(statusCode: 400, data: Data("test".utf8)),
-            сardStatementError(.defaultErrorMessage)
+            dynamicParamsError(.defaultErrorMessage)
         )
     }
     
@@ -22,7 +22,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data("test".utf8)),
-            сardStatementDefaultError()
+            dynamicParamsDefaultError()
         )
     }
     
@@ -30,29 +30,29 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
                 
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.error404.utf8)),
-            сardStatementErrorNot200("404: Не найден запрос к серверу"))
+            dynamicParamsErrorNot200("404: Не найден запрос к серверу"))
     }
     
     func test_map_statusCode200_dataEmpty_FailureMapError() {
                 
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.emptyData.utf8)),
-            сardStatementDefaultError())
+            dynamicParamsDefaultError())
     }
     
     func test_map_statusCode200_anyDataCodeWithOutMessage_FailureMapErrorDefaultMessage() {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.errorWithOutMessage.utf8)),
-            сardStatementDefaultError())
+            dynamicParamsDefaultError())
     }
     
     func test_map_statusCode200_Success() throws {
         
         let results = try XCTUnwrap(map(data: sampleJSON())).get()
-        var expectedResults: [ProductStatementData] = [.sample]
+        var expectedResults: [DynamicParamsList] = [.sample]
         
-        assert(results, equals: &expectedResults)
+        assert([results], equals: &expectedResults)
     }
 
     // MARK: - Helpers
@@ -60,9 +60,9 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     private func map(
         statusCode: Int = 200,
         data: Data
-    ) -> Result {
+    ) -> ResponseMapper.GetProductDynamicParamsListResult {
         
-        let result = ResponseMapper.mapGetCardStatementResponse(
+        let result = ResponseMapper.mapGetProductDynamicParamsList(
             data,
             anyHTTPURLResponse(statusCode: statusCode)
         )
@@ -81,7 +81,7 @@ final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
         try Data(contentsOf: XCTUnwrap(sampleURL))
     }
     
-    private let sampleURL = Bundle.module.url(forResource: "StatementSample", withExtension: "json")!
+    private let sampleURL = Bundle.module.url(forResource: "GetProductDynamicParamsList", withExtension: "json")!
 }
 
 private extension String {
@@ -118,11 +118,26 @@ private extension String {
 """
 }
 
-private extension ProductStatementData {
+private extension DynamicParamsList {
     
-    static let sample: Self = .init(
-
-        type: .inside, accountID: 10000872827, operationType: .debit, paymentDetailType: .c2b, amount: 10, documentAmount: 10, comment: "Перевод C2B СБП получателю ООО \"АГРОТОРГ\".", documentID: 20017126099, accountNumber: "30302810900060000006", currencyCodeNumeric: 810, merchantName: "34T4 Пятерочка", merchantNameRus: "34T4 Пятерочка", groupName: "Оплата по QR-коду", md5hash: "d46cb4ded97c143291ea3fab225b0e2f", svgImage: nil, fastPayment: .init(opkcid: "A3359170018807390000040011150101", foreignName: "ООО \"АГРОТОРГ\"", foreignPhoneNumber: "                                                  ", foreignBankBIC: "044525593", foreignBankID: "10000000818", foreignBankName: "АО \"АЛЬФА-БАНК\"", documentComment: "", operTypeFP: "CBPH", tradeName: "34T4 Пятерочка", guid: "640949825"), terminalCode: "", deviceCode: "", country: "", city: "", operationId: "a1cc1739-68cf-465e-b606-119f6dea3940", isCancellation: false, cardTranNumber: "4656260144403580", opCode: 1, date: Date(timeIntervalSince1970: 978307200), tranDate: nil, MCC: 0
-    )
+    static let sample: Self = .init(list: [
+        .init(id: 11, type: .card, dynamicParams: .init(variableParams: .card(.sample))),
+        .init(id: 12, type: .account, dynamicParams: .init(variableParams: .account(.sample))),
+        .init(id: 13, type: .deposit, dynamicParams: .init(variableParams: .depositOrLoan(.sample)))
+    ])
 }
 
+private extension AccountDynamicParams {
+    
+    static let sample: Self = .init(status: "Действует", balance: 5, balanceRub: 6, customName: "account")
+}
+
+private extension CardDynamicParams {
+    
+    static let sample: Self = .init(balance: 1, balanceRub: 1, customName: "card", availableExceedLimit: 2, status: "Действует", debtAmount: 3, totalDebtAmount: 4, statusPc: "0", statusCard: .active)
+}
+
+private extension DepositOrLoanDynamicParams {
+    
+    static let sample: Self = .init(balance: 7, balanceRub: 8, customName: "deposit")
+}
