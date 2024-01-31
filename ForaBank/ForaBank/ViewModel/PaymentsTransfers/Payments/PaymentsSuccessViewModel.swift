@@ -50,7 +50,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             bind(section: section)
         }
         
-        if let paymentOperationDetailID, documentStatus != .suspend {
+        if let paymentOperationDetailID, documentStatus != .suspended {
             
             adapter.requestOperationDetail(with: paymentOperationDetailID)
         }
@@ -97,7 +97,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if documentStatus != .suspend,
+                    if documentStatus != .suspended,
                         let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
@@ -131,7 +131,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if documentStatus != .suspend,
+                    if documentStatus != .suspended,
                        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
@@ -160,7 +160,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if documentStatus != .suspend,
+                    if documentStatus != .suspended,
                        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,

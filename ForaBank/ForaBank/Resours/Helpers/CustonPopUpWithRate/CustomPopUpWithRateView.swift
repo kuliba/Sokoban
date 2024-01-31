@@ -211,7 +211,7 @@ class CustomPopUpWithRateView: UIViewController {
                                 viewModel.comment = comment
                             }
                             
-                        } else if data.documentStatus == .suspend {
+                        } else if data.documentStatus == .suspended {
                             
                             viewModel.status = .antifraudCanceled
                             viewModel.summTransction = self.bottomView.amountTextField.text ?? ""
@@ -245,7 +245,7 @@ class CustomPopUpWithRateView: UIViewController {
                             
                             viewModel.cardFromRealm = self.cardFrom
                             
-                        } else if data.documentStatus == .suspend {
+                        } else if data.documentStatus == .suspended {
                             
                             viewModel.status = .antifraudCanceled
                             viewModel.summTransction = self.bottomView.amountTextField.text ?? ""

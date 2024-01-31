@@ -43,7 +43,7 @@ extension Payments.Success {
             Payments.ParameterButton.actionButtonMain()
         ]
         
-        if status == .suspend {
+        if status == .suspended {
             
             params.insert(Payments.ParameterSuccessText.title(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."), at: 3)
             
@@ -83,7 +83,7 @@ extension Payments.Success {
                 Payments.ParameterButton.actionButtonMain()
             ]
             
-            if status == .suspend {
+            if status == .suspended {
                 
                 params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
                 )
@@ -113,7 +113,7 @@ extension Payments.Success {
                 Payments.ParameterButton.actionButtonMain()
             ]
             
-            if status == .suspend {
+            if status == .suspended {
                 
                 params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
                 )
@@ -168,7 +168,7 @@ extension Payments.Success {
                 Payments.ParameterButton.actionButtonMain()
             ]
             
-            if status == .suspend {
+            if status == .suspended {
                 
                 params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
                 )
@@ -197,7 +197,7 @@ extension Payments.Success {
                 Payments.ParameterButton.actionButtonMain()
             ]
             
-            if status == .suspend {
+            if status == .suspended {
                 
                 params.append(Payments.ParameterSuccessText.subTitle(with: "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию.")
                 )
@@ -340,7 +340,7 @@ extension Payments.Success {
         amount: String?
     ) {
         
-        if documentStatus == .suspend {
+        if documentStatus == .suspended {
             
             let params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterSuccessMode(mode: mode),
@@ -484,7 +484,7 @@ extension Payments.Success {
             break
         }
         
-        if documentStatus != .suspend {
+        if documentStatus != .suspended {
          
             // options buttons
             let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
@@ -565,7 +565,7 @@ extension Payments.ParameterSuccessText {
             case .sberQR:
                 return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
-        case .suspend:
+        case .suspended:
             return .init(
                 id: paramId,
                 value: "Операция временно приостановлена в целях безопасности",
@@ -598,7 +598,7 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
-            case .suspend:
+            case .suspended:
                 return .init(
                     id: paramId,
                     value: "Операция временно приостановлена в целях безопасности",
@@ -623,7 +623,7 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
-            case .suspend:
+            case .suspended:
                 return .init(id: paramId, value: "Операция временно приостановлена в целях безопасности", style: .warning)
             }
         }
@@ -683,7 +683,7 @@ extension Payments.ParameterSuccessOptionButtons {
                 meToMePayment,
                 operation
             )
-        case .suspend:
+        case .suspended:
             return nil
         }
     }
@@ -838,7 +838,7 @@ extension Payments.ParameterButton {
         case .complete:
             return nil
             
-        case .inProgress, .suspend:
+        case .inProgress, .suspended:
             return nil
             
         case .rejected, .unknown:
@@ -908,8 +908,8 @@ extension Payments.ParameterSuccessStatus {
         case .accepted:
             return .inProgress
             
-        case .suspend:
-            return .suspend
+        case .suspended:
+            return .suspended
             
         case .error:
             return .rejected

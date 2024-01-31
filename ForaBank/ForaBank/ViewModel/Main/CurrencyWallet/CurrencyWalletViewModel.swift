@@ -987,8 +987,8 @@ extension CurrencyWalletViewModel {
         case .unknown:
             return .error
         
-        case  .suspend:
-            return .suspend
+        case .suspended:
+            return .suspended
             
         case .inProgress:
             return .wait

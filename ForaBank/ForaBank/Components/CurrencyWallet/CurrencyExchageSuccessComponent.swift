@@ -38,20 +38,20 @@ extension CurrencyExchangeSuccessView {
             case success
             case error
             case wait
-            case suspend
+            case suspended
                 
             var appearance: (icon: Image, text: String) {
                 switch self {
                 case .success: return (Image("Done"), "Успешный перевод")
                 case .error: return (Image("Denied"), "Операция неуспешна!")
-                case .suspend: return (Image("waiting"), "Операция временно приостановлена в целях безопасности!")
+                case .suspended: return (Image("waiting"), "Операция временно приостановлена в целях безопасности!")
                 case .wait: return (Image("waiting"), "Операция в обработке!")
                 }
             }
             
             var subtitle: String? {
                 switch self {
-                case .suspend:
+                case .suspended:
                     return "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
                     
                 default:
@@ -137,7 +137,7 @@ struct CurrencyExchangeSuccessView: View {
                 
                 Group {
                  
-                    if viewModel.state == .suspend {
+                    if viewModel.state == .suspended {
                         
                         Text(viewModel.title)
                             .font(.textH3Sb18240())
@@ -187,7 +187,7 @@ struct CurrencyExchangeSuccessView: View {
                                 .frame(height: 48)
                                 .padding(.horizontal, 20)
                         }
-                    } else if viewModel.state != .suspend {
+                    } else if viewModel.state != .suspended {
                         HStack(alignment: .center, spacing: 36) {
                             ButtonIconTextView(viewModel: viewModel.detailsButton)
                         }

@@ -148,7 +148,7 @@ extension ContactInputViewController {
                 case .some("REJECTED"):
                     status = .error
                     
-                case .some("SUSPEND"):
+                case .some("SUSPENDED"):
                     status = .antifraudCanceled
                                         
                 case .some(_):
