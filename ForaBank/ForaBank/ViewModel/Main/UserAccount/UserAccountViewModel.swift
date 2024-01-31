@@ -36,6 +36,8 @@ class UserAccountViewModel: ObservableObject {
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
     private let fastPaymentsServices: FastPaymentsServices
+
+    private let scheduler: AnySchedulerOfDispatchQueue
     private var bindings = Set<AnyCancellable>()
     
     private init(
@@ -48,7 +50,8 @@ class UserAccountViewModel: ObservableObject {
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
         model: Model = .emptyMock,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices
+        fastPaymentsServices: FastPaymentsServices,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
         self.handleRouteEvent = handleRouteEvent
@@ -60,6 +63,7 @@ class UserAccountViewModel: ObservableObject {
         self.sections = sections
         self.exitButton = exitButton
         self.deleteAccountButton = deleteAccountButton
+        self.scheduler = scheduler
     }
     
     init(
@@ -70,7 +74,8 @@ class UserAccountViewModel: ObservableObject {
         fastPaymentsServices: FastPaymentsServices,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
-        action: Action? = nil
+        action: Action? = nil,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
         self.handleRouteEvent = handleRouteEvent
@@ -81,7 +86,7 @@ class UserAccountViewModel: ObservableObject {
         self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
-        
+        self.scheduler = scheduler
         self.exitButton = .init(
             icon: .ic24LogOut, content: "Выход из приложения", action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.ExitAction())
@@ -98,11 +103,11 @@ class UserAccountViewModel: ObservableObject {
         
         fastPaymentsServices.getFastPaymentContractFindList()
             .map(Optional.some)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$fpsCFLResponse)
         
         routeSubject
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$route)
         
         bind()
@@ -191,7 +196,7 @@ private extension UserAccountViewModel {
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
         
         documentInfoViewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -234,7 +239,7 @@ private extension UserAccountViewModel {
         
         model.clientInfo
             .combineLatest(model.clientName)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] info in
                 
                 guard let clientInfo = info.0 else { return }
@@ -246,7 +251,7 @@ private extension UserAccountViewModel {
             .store(in: &bindings)
         
         model.clientPhoto
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] clientPhotoData in
                 
                 avatar = .init(
@@ -257,12 +262,12 @@ private extension UserAccountViewModel {
             .store(in: &bindings)
         
         model.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.handleModelAction($0) }
             .store(in: &bindings)
         
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.handleAction($0) }
             .store(in: &bindings)
     }
@@ -272,7 +277,7 @@ private extension UserAccountViewModel {
         for section in sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [weak self] in self?.handleSectionAction($0) }
                 .store(in: &bindings)
         }
@@ -1033,6 +1038,7 @@ extension UserAccountViewModel {
             action: {}
         ),
         fastPaymentsFactory: .legacy,
-        fastPaymentsServices: .empty
+        fastPaymentsServices: .empty,
+        scheduler: .main
     )
 }
