@@ -12,6 +12,7 @@ import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
 import UserAccountNavigationComponent
+import UIPrimitives
 
 class UserAccountViewModel: ObservableObject {
     
@@ -128,6 +129,27 @@ class UserAccountViewModel: ObservableObject {
 extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
+        
+        switch event {
+        case let .alertButtonTapped(alertButtonTapped):
+            switch alertButtonTapped {
+            case .closeAlert:
+                route.alert = nil
+                
+            case let .cancelC2BSub(token, title):
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                self.model.action.send(action)
+            }
+        
+        case let .route(routeEvent):
+            fatalError("redirect to reduce")
+        
+        case let .fps(fastPaymentsSettings):
+            fatalError("redirect to reduce")
+        
+        case let .otp(otpEvent):
+            fatalError("redirect to reduce")
+        }
         
         let (route, effect) = reduce(route, event) { [weak self] in
             
@@ -824,24 +846,27 @@ private extension Alert.ViewModel {
             )
         )
     }
+}
+    
+extension AlertModelOf<UserAccountEvent.AlertButtonTapped> {
     
     static func cancelC2BSub(
         title: String,
-        action: @escaping () -> Void
+        event: UserAccountEvent.AlertButtonTapped
     ) -> Self {
         
         .init(
             title: title,
             message: nil,
-            primary: .init(
+            primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                action: {}
+                event: .closeAlert
             ),
-            secondary: .init(
+            secondaryButton: .init(
                 type: .default,
                 title: "Отключить",
-                action: action
+                event: event
             )
         )
     }

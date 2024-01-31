@@ -6,16 +6,25 @@
 //
 
 import SwiftUI
+import ManageSubscriptionsUI
 import UserAccountNavigationComponent
+import UIPrimitives
 
 enum UserAccountEvent {
     
+    case alertButtonTapped(AlertButtonTapped)
     case route(RouteEvent)
     case fps(FastPaymentsSettings)
     case otp(OTP)
 }
 
 extension UserAccountEvent {
+    
+    enum AlertButtonTapped {
+        
+        case closeAlert
+        case cancelC2BSub(token: SubscriptionViewModel.Token, title: String)
+    }
     
     enum RouteEvent {
         
@@ -29,7 +38,7 @@ extension UserAccountEvent {
         enum AlertEvent {
             
             case reset
-            case setTo(Alert.ViewModel)
+            case setTo(AlertModelOf<AlertButtonTapped>)
         }
         
         enum BottomSheetEvent {
