@@ -162,9 +162,10 @@ class ProductModelTests: XCTestCase {
         
         // when
         let params: ProductsDynamicParams = .init(list: [
-            .init(id: productCard.id, type: .card, dynamicParams: .init(variableParams: .card(.init(balance: 200, balanceRub: 200, customName: "Custom Card", availableExceedLimit: nil, status: "", debtAmount: nil, totalDebtAmount: nil, statusPc: "", statusCard: .active)))),
-            .init(id: productDep.id, type: .deposit, dynamicParams: .init(variableParams: .depositOrLoan(.init(balance: 300, balanceRub: 300, customName: "Custom Dep"))))
+            makeProduct(id: productCard.id, type: .card, name: "Custom Card", balance: 200),
+            makeProduct(id: productDep.id, type: .deposit, name: "Custom Dep", balance: 300)
         ])
+
         let result = Model.reduce(products: existing, with: params)
         
         // then
@@ -201,9 +202,10 @@ class ProductModelTests: XCTestCase {
         
         // when
         let params: ProductsDynamicParams = .init(list: [
-            .init(id: 500, type: .card, dynamicParams: .init(variableParams: .card(.init(balance: 200, balanceRub: 200, customName: "Custom Card", availableExceedLimit: nil, status: "", debtAmount: nil, totalDebtAmount: nil, statusPc: "", statusCard: .active)))),
-            .init(id: 700, type: .deposit, dynamicParams: .init(variableParams: .depositOrLoan(.init(balance: 300, balanceRub: 300, customName: "Custom Dep"))))
+            makeProduct(id: 500, type: .card, name: "Custom Card", balance: 200),
+            makeProduct(id: 700, type: .deposit, name: "Custom Dep", balance: 300)
         ])
+        
         let result = Model.reduce(products: existing, with: params)
         
         // then
@@ -230,6 +232,39 @@ class ProductModelTests: XCTestCase {
         XCTAssertNil(result[.account])
         XCTAssertNil(result[.deposit])
         XCTAssertNil(result[.loan])
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeProduct(
+        id: Int,
+        type: DynamicParamsItem.ProductType,
+        name: String,
+        balance: Decimal
+    ) -> DynamicParamsItem {
+        
+        let variableParams = makeVariableParams(type: type, name: name, balance: balance)
+        return .init(id: id, type: type, dynamicParams: .init(variableParams: variableParams))
+    }
+    
+    private func makeVariableParams(
+        type: DynamicParamsItem.ProductType,
+        name: String,
+        balance: Decimal
+    ) -> DynamicParams.VariableParams {
+        
+        let variableParams: DynamicParams.VariableParams = {
+            switch type {
+            case .card:
+                return .card(.init(balance: balance, balanceRub: balance, customName: name, availableExceedLimit: nil, status: "", debtAmount: nil, totalDebtAmount: nil, statusPc: "", statusCard: .active))
+            case .account:
+                return .account(.init(status: "", balance: balance, balanceRub: balance, customName: name))
+            case .deposit, .loan:
+                return .depositOrLoan(.init(balance: balance, balanceRub: balance, customName: name))
+            }
+        }()
+        
+        return variableParams
     }
 }
 
