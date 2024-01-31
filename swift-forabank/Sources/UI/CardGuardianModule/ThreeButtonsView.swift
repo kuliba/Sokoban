@@ -27,23 +27,23 @@ struct ThreeButtonsView: View { // верстка
     
     private func buttonView(button: CardGuardianState._Button) -> some View {
         
-        HStack(alignment: .center, spacing: 20) {
-            HStack(alignment: .center, spacing: 0) {             Image(systemName: "staroflife.circle.fill")
-                    .frame(width: 24, height: 24)
-            }
-            .padding(8)
-            .frame(width: 40, height: 40, alignment: .center)
-            .background(Color(red: 0.96, green: 0.96, blue: 0.97))
-            .cornerRadius(90)
-            Button(action: {
-                event(button.event)})  {
+        Button(action: {
+            event(button.event)})  {
+                HStack(alignment: .center, spacing: 20) {
+                    HStack(alignment: .center, spacing: 0) {  
+                        Image(systemName: "staroflife.circle.fill")
+                            .frame(width: 24, height: 24)
+                    }
+                    .padding(8)
+                    .background(Color(red: 0.96, green: 0.96, blue: 0.97))
+                    .cornerRadius(90)
                     Text(button.title)
-                      Spacer()
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 40)
-                .background(Color.yellow)
-        }
+            }
+            .foregroundColor(Color.black)
+            .frame(maxWidth: .infinity)
+            .frame(height: 40)
     }
 }
 
