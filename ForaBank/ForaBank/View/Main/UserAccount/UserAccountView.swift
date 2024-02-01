@@ -477,6 +477,7 @@ extension NavigationStateManager {
         fpsReduce: { state, _ in (state, nil) },
         otpReduce: { state, _,_ in (state, nil) },
         routeEventReduce: { state, _ in state},
+        handleModelEffect: { _,_ in },
         handleOTPEffect: { _,_ in }
     )
 }

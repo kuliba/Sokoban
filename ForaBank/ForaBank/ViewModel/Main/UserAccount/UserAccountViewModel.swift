@@ -20,6 +20,7 @@ struct NavigationStateManager {
     let fpsReduce: FPSReduce
     let otpReduce: OTPReduce
     let routeEventReduce: RouteEventReduce
+    let handleModelEffect: HandleModelEffect
     let handleOTPEffect: HandleOTPEffect
 }
 
@@ -33,6 +34,9 @@ extension NavigationStateManager {
     typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
+    
+    typealias Dispatch = (UserAccountEvent) -> Void
+    typealias HandleModelEffect = (UserAccountEffect.ModelEffect, @escaping Dispatch) -> Void
     
     typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
 }
@@ -210,10 +214,7 @@ extension UserAccountViewModel {
     ) {
         switch effect {
         case let .model(modelEffect):
-#warning("inject")
-            let modelEffectHandler = UserAccountModelEffectHandler(model: model)
-            let handleModelEffect = modelEffectHandler.handleEffect(_:_:)
-            handleModelEffect(modelEffect, dispatch)
+            navigationStateManager.handleModelEffect(modelEffect, dispatch)
             
         case let .navigation(navigation):
             switch navigation {
