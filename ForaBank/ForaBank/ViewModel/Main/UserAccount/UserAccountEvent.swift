@@ -12,6 +12,12 @@ import UIPrimitives
 
 enum UserAccountEvent {
     
+    case closeAlert
+    case closeFPSAlert
+    case dismissDestination
+    case dismissFPSDestination
+    case dismissRoute
+    
     case alertButtonTapped(AlertButtonTap)
     case route(RouteEvent)
     case fps(FastPaymentsSettings)

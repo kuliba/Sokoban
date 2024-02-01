@@ -151,6 +151,23 @@ private extension UserAccountViewModel {
         var effect: Effect?
         
         switch event {
+        case .closeAlert:
+            route.alert = nil
+            
+        case .closeFPSAlert:
+            effect = .navigation(.fps(.resetStatus))
+            
+        case .dismissFPSDestination:
+            // route.fpsDestination = nil
+            effect = .navigation(.fps(.resetStatus))
+            
+        case .dismissDestination:
+            route.link = nil
+            effect = .navigation(.fps(.resetStatus))
+
+        case .dismissRoute:
+            route = .init()
+            
         case let .alertButtonTapped(alertButtonTapped):
             #warning("inject composed reducer")
             let alertButtonReducer = UserAccountAlertButtonTapReducer()

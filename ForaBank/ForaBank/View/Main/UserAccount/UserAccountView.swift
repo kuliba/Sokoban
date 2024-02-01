@@ -203,7 +203,7 @@ struct UserAccountView: View {
                     .navigationBarTitle("", displayMode: .inline)
                 
             case let .new(route):
-                fpsWrapper(route)
+                fpsWrapperView(route)
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -235,7 +235,7 @@ struct UserAccountView: View {
         }
     }
     
-    private func fpsWrapper(
+    private func fpsWrapperView(
         _ route: UserAccountNavigation.State.FPSRoute
     ) -> some View {
         
@@ -246,6 +246,15 @@ struct UserAccountView: View {
         .navigationBar(with: .fastPayments(
             action: viewModel.dismissDestination
         ))
+        .alert(
+            item: .init(
+                get: { viewModel.route.fpsAlert },
+                // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: { viewModel.event(.init(event: $0)) }) }
+        )
     }
     
     @ViewBuilder
@@ -261,7 +270,7 @@ struct UserAccountView: View {
             Text("TBD: \(String(describing: getC2BSubResponse))")
         }
     }
-
+    
     @ViewBuilder
     private func sheetView(
         sheet: UserAccountRoute.Sheet
@@ -300,6 +309,35 @@ struct UserAccountView: View {
             
         case let .sbpay(viewModel):
             SbpPayView(viewModel: viewModel)
+        }
+    }
+}
+
+private extension UserAccountEvent {
+    
+    init(event: UserAccountNavigation.Event) {
+        
+        switch event {
+        case .closeAlert:
+            self = .closeAlert
+            
+        case .closeFPSAlert:
+            self = .closeFPSAlert
+            
+        case .dismissDestination:
+            self = .dismissDestination
+            
+        case .dismissFPSDestination:
+            self = .dismissFPSDestination
+            
+        case .dismissRoute:
+            self = .dismissRoute
+            
+        case let .fps(fps):
+            self = .fps(fps)
+            
+        case let .otp(otp):
+            self = .otp(otp)
         }
     }
 }
