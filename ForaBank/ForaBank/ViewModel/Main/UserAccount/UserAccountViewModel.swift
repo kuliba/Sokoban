@@ -18,6 +18,7 @@ struct NavigationStateManager {
     
     let fpsReduce: FPSReduce
     let otpReduce: OTPReduce
+    let handleOTPEffect: HandleOTPEffect
 }
 
 extension NavigationStateManager {
@@ -26,6 +27,8 @@ extension NavigationStateManager {
     
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
     typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+    
+    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
 }
 
 class UserAccountViewModel: ObservableObject {
@@ -41,8 +44,6 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-#warning("move `HandleOTPEffect` to `NavigationStateManager`")
-    private let handleOTPEffect: HandleOTPEffect
     private let navigationStateManager: NavigationStateManager
     
     var appVersionFull: String? {
@@ -58,7 +59,6 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        handleOTPEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         navigationStateManager: NavigationStateManager,
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
@@ -70,7 +70,6 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.handleOTPEffect = handleOTPEffect
         self.navigationStateManager = navigationStateManager
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
@@ -84,7 +83,6 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        handleEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         navigationStateManager: NavigationStateManager,
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -94,7 +92,6 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.handleOTPEffect = handleEffect
         self.navigationStateManager = navigationStateManager
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
@@ -223,7 +220,7 @@ extension UserAccountViewModel {
                 fpsDispatch?(fpsEvent)
                 
             case let .otp(otpEffect):
-                handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+                navigationStateManager.handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
             }
         }
     }
@@ -944,9 +941,6 @@ extension UserAccountViewModel {
     
     typealias RouteDispatch = (UserAccountEvent.RouteEvent) -> Void
     typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
     
     class AvatarViewModel: ObservableObject {
         

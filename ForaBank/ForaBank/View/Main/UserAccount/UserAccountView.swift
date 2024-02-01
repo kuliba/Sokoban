@@ -474,6 +474,7 @@ extension NavigationStateManager {
     
     static let preview: Self = .init(
         fpsReduce: { state, _ in (state, nil) },
-        otpReduce: { state, _,_ in (state, nil) }
+        otpReduce: { state, _,_ in (state, nil) },
+        handleOTPEffect: { _,_ in }
     )
 }

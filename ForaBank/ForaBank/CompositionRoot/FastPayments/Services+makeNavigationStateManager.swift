@@ -55,9 +55,14 @@ extension Services {
             scheduler: .main
         )
         
+        let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
+            prepareSetBankDefault: otpServices.prepareSetBankDefault
+        )
+        
         return .init(
             fpsReducer: fpsReducer,
-            otpReducer: otpReducer
+            otpReducer: otpReducer,
+            otpEffectHandler: otpEffectHandler
         )
     }
 }
@@ -66,6 +71,7 @@ private struct FastPaymentsSettingsOTPServices {
     
     let initiateOTP: CountdownEffectHandler.InitiateOTP
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
+    let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault
 }
 
 // MARK: - Adapters
@@ -74,11 +80,13 @@ private extension NavigationStateManager {
     
     init(
         fpsReducer: UserAccountNavigationFPSReducer,
-        otpReducer: UserAccountNavigationOTPReducer
+        otpReducer: UserAccountNavigationOTPReducer,
+        otpEffectHandler: UserAccountNavigationOTPEffectHandler
     ) {
         self.init(
             fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:_:)
+            otpReduce: otpReducer.reduce(_:_:_:),
+            handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
     }
 }
@@ -120,7 +128,8 @@ private extension UserAccountNavigationFPSReducer {
         var effect: UserAccountEffect?
         
         switch (state.link, fpsEvent) {
-        case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
+        // case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
+        case let (.fastPaymentSettings(.new), .updated(settings)):
             
             let (fpsState, fpsEffect) = reduce(.init(state), settings, { _ in })
             state = state.updated(with: fpsState)
@@ -146,7 +155,8 @@ private extension UserAccountNavigationOTPReducer {
         var effect: UserAccountEffect?
         
         switch state.link {
-        case let .fastPaymentSettings(.new(fpsRoute)):
+        // case let .fastPaymentSettings(.new(fpsRoute)):
+        case .fastPaymentSettings(.new):
             
             let (fpsState, fpsEffect) = reduce(
                 .init(state),
@@ -167,7 +177,7 @@ private extension UserAccountNavigationOTPReducer {
 
 // MARK: - Helpers
 
-extension UserAccountRoute {
+private extension UserAccountRoute {
     
     func updated(with state: UserAccountNavigation.State) -> Self {
         
@@ -246,6 +256,13 @@ private extension FastPaymentsSettingsOTPServices {
             }
         },
         submitOTP: { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(.success(()))
+            }
+        },
+        prepareSetBankDefault: { completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
