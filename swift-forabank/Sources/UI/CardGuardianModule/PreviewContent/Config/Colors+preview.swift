@@ -9,5 +9,7 @@ import SwiftUI
 
 extension CardGuardian.Config.Colors {
     
-    static let preview: Self = .init(foreground: Color(red: 0.11, green: 0.11, blue: 0.11), subtitle: Color(red: 0.6, green: 0.6, blue: 0.6))
+    static let preview: Self = .init(
+        foreground: Color(red: 0.11, green: 0.11, blue: 0.11),
+        subtitle: Color(red: 0.6, green: 0.6, blue: 0.6))
 }

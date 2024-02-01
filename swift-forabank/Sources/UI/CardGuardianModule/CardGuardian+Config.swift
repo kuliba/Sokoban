@@ -17,6 +17,20 @@ public extension CardGuardian {
         let sizes: Sizes
         let colors: Colors
         let fonts: Fonts
+        
+        public init(
+            images: Images,
+            paddings: Paddings,
+            sizes: Sizes,
+            colors: Colors,
+            fonts: Fonts
+        ) {
+            self.images = images
+            self.paddings = paddings
+            self.sizes = sizes
+            self.colors = colors
+            self.fonts = fonts
+        }
     }
 }
 
@@ -28,11 +42,17 @@ public extension CardGuardian.Config {
         let changePin: Image
         let showOnMain: Image
         
+        public init(toggleLock: Image, changePin: Image, showOnMain: Image) {
+            self.toggleLock = toggleLock
+            self.changePin = changePin
+            self.showOnMain = showOnMain
+        }
+        
         func imageByType(
             _ type: IconType
         ) -> Image {
+            
             switch type {
-                
             case .toggleLock:
                 return toggleLock
             case .changePin:
@@ -61,6 +81,11 @@ public extension CardGuardian.Config {
         let buttonHeight: CGFloat
         let icon: CGFloat
         
+        public init(buttonHeight: CGFloat, icon: CGFloat) {
+            self.buttonHeight = buttonHeight
+            self.icon = icon
+        }
+        
         var cornerRadius:CGFloat { buttonHeight * 2 }
     }
 }
@@ -74,7 +99,12 @@ public extension CardGuardian.Config {
         let vertical: CGFloat // 8
         let subtitleLeading: CGFloat // 56
 
-        public init(leading: CGFloat, trailing: CGFloat, vertical: CGFloat, subtitleLeading: CGFloat) {
+        public init(
+            leading: CGFloat,
+            trailing: CGFloat,
+            vertical: CGFloat,
+            subtitleLeading: CGFloat
+        ) {
             self.leading = leading
             self.trailing = trailing
             self.vertical = vertical
@@ -88,6 +118,11 @@ public extension CardGuardian.Config {
     struct Colors {
         let foreground: Color // text/Secondary
         let subtitle: Color // Text/placeholder
+        
+        public init(foreground: Color, subtitle: Color) {
+            self.foreground = foreground
+            self.subtitle = subtitle
+        }
     }
 }
 
@@ -96,5 +131,10 @@ public extension CardGuardian.Config {
     struct Fonts {
         let title: Font // Font.custom("Inter", size: 16).weight(.medium)
         let subtitle: Font // Font.custom("Inter", size: 14)
+        
+        public init(title: Font, subtitle: Font) {
+            self.title = title
+            self.subtitle = subtitle
+        }
     }
 }

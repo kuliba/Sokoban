@@ -9,6 +9,7 @@ import SwiftUI
 
 extension CardGuardian.Config.Fonts {
     
-    static let preview: Self = .init(title: Font.custom("Inter", size: 16)
-        .weight(.medium), subtitle: Font.custom("Inter", size: 14))
+    static let preview: Self = .init(
+        title: Font.custom("Inter", size: 16).weight(.medium), 
+        subtitle: Font.custom("Inter", size: 14))
 }

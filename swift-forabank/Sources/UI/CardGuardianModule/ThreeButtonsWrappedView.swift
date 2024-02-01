@@ -9,14 +9,22 @@ import RxViewModel
 import SwiftUI
 import Tagged
 
-typealias CardGuardianViewModel =  RxViewModel<CardGuardianState, CardGuardian.ButtonTapped, Never>
+public typealias CardGuardianViewModel =  RxViewModel<CardGuardianState, CardGuardian.ButtonTapped, Never>
 
-struct ThreeButtonsWrappedView: View {
+public struct ThreeButtonsWrappedView: View {
     
     @ObservedObject var viewModel: CardGuardianViewModel
-    let config: CardGuardian.Config
+    public let config: CardGuardian.Config
+    
+    public init(
+        viewModel: CardGuardianViewModel,
+        config: CardGuardian.Config
+    ) {
+        self.viewModel = viewModel
+        self.config = config
+    }
 
-    var body: some View {
+    public var body: some View {
         
         ThreeButtonsView(
             buttons: viewModel.state.buttons,

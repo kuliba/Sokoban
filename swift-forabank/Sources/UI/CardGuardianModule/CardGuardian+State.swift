@@ -6,31 +6,34 @@
 //
 
 import Foundation
-import SwiftUI
-import Tagged
-import RxViewModel
 
-// optional
-public extension CardGuardian {
+public struct CardGuardianState: Equatable {
     
-    enum ButtonTapped: Equatable {
-        
-        case toggleLock
-        case changePin
-        case showOnMain
+    public let buttons: [_Button]
+    public var event: CardGuardian.ButtonTapped?
+    
+    public init(buttons: [_Button], event: CardGuardian.ButtonTapped? = nil) {
+        self.buttons = buttons
+        self.event = event
     }
-}
-
-struct CardGuardianState: Equatable {
     
-    let buttons: [_Button]
-    var event: CardGuardian.ButtonTapped?
-    
-    struct _Button: Hashable {
+    public struct _Button: Hashable {
         
-        let event: CardGuardian.ButtonTapped
-        let title: String
-        let iconType: CardGuardian.Config.IconType
-        let subtitle: String?
+        public let event: CardGuardian.ButtonTapped
+        public let title: String
+        public let iconType: CardGuardian.Config.IconType
+        public let subtitle: String?
+        
+        public init(
+            event: CardGuardian.ButtonTapped,
+            title: String,
+            iconType: CardGuardian.Config.IconType,
+            subtitle: String?
+        ) {
+            self.event = event
+            self.title = title
+            self.iconType = iconType
+            self.subtitle = subtitle
+        }
     }
 }
