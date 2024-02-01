@@ -111,7 +111,6 @@ class UserAccountViewModel: ObservableObject {
         
         routeSubject
             .receive(on: scheduler)
-            .handleEvents(receiveOutput: { print("### routeSubject: link: \($0.link.fastDump)") })
             .assign(to: &$route)
         
         bind()
@@ -123,28 +122,10 @@ class UserAccountViewModel: ObservableObject {
     }
 }
 
-extension UserAccountRoute.Link? {
-    
-    var fastDump: String {
-        
-        switch self {
-        case .fastPaymentSettings(.new):
-            return " new fastPaymentSettings"
-            
-        case .none:
-            return "nil"
-            
-        default:
-            return "other"
-        }
-    }
-}
-
 extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
         
-        print("### event:", event)
         let (route, effect) = reduce(route, event)
         routeSubject.send(route)
         
