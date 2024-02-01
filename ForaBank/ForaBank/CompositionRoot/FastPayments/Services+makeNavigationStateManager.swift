@@ -58,6 +58,8 @@ extension Services {
             scheduler: .main
         )
         
+        let routeEventReducer = UserAccountRouteEventReducer()
+        
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             prepareSetBankDefault: otpServices.prepareSetBankDefault
         )
@@ -66,6 +68,7 @@ extension Services {
             alertButtonReducer: alertButtonReducer,
             fpsReducer: fpsReducer,
             otpReducer: otpReducer,
+            routeEventReducer: routeEventReducer,
             otpEffectHandler: otpEffectHandler
         )
     }
@@ -86,12 +89,14 @@ private extension NavigationStateManager {
         alertButtonReducer: UserAccountAlertButtonTapReducer,
         fpsReducer: UserAccountNavigationFPSReducer,
         otpReducer: UserAccountNavigationOTPReducer,
+        routeEventReducer: UserAccountRouteEventReducer,
         otpEffectHandler: UserAccountNavigationOTPEffectHandler
     ) {
         self.init(
             alertReduce: alertButtonReducer.reduce(_:_:),
             fpsReduce: fpsReducer.reduce(_:_:),
             otpReduce: otpReducer.reduce(_:_:_:),
+            routeEventReduce: routeEventReducer.reduce(_:_:),
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
     }

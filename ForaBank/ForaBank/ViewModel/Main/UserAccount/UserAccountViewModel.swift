@@ -19,6 +19,7 @@ struct NavigationStateManager {
     let alertReduce: AlertReduce
     let fpsReduce: FPSReduce
     let otpReduce: OTPReduce
+    let routeEventReduce: RouteEventReduce
     let handleOTPEffect: HandleOTPEffect
 }
 
@@ -30,6 +31,8 @@ extension NavigationStateManager {
     
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
     typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+    
+    typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
     
     typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
 }
@@ -180,9 +183,7 @@ private extension UserAccountViewModel {
             (state, effect) = navigationStateManager.alertReduce(state, alertButtonTapped)
             
         case let .route(routeEvent):
-#warning("inject composed reducer")
-            let routeReduce = UserAccountRouteEventReducer().reduce(_:_:)
-            state = routeReduce(state, routeEvent)
+            state = navigationStateManager.routeEventReduce(state, routeEvent)
             
         case let .fps(fastPaymentsSettings):
             (state, effect) = navigationStateManager.fpsReduce(state, fastPaymentsSettings)
