@@ -9,5 +9,5 @@ import SwiftUI
 
 extension CardGuardian.Config.Paddings {
     
-    static let preview: Self = .init(leading: 20, trailing: 80, vertical: 8)
+    static let preview: Self = .init(leading: 20, trailing: 80, vertical: 8, subtitleLeading: 56)
 }

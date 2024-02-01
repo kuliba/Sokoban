@@ -22,27 +22,34 @@ struct ThreeButtonsView: View { // верстка
         .frame(maxWidth: .infinity)
         .padding(.leading, config.paddings.leading)
         .padding(.trailing, config.paddings.trailing)
-        .border(.green)
     }
     
     private func buttonView(button: CardGuardianState._Button) -> some View {
         
         Button(action: {
             event(button.event)})  {
-                HStack(spacing: config.paddings.leading) {
-                    iconView(button.iconType)
-                    VStack(alignment: .leading) {
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    
+                    HStack(spacing: config.paddings.leading) {
+                        
+                        iconView(button.iconType)
                         Text(button.title)
                             .font(config.fonts.title)
-                        button.subtitle.map {
-                            Text($0)
-                                .font(config.fonts.subtitle)
-                                .foregroundColor(config.colors.subtitle)
-                        }
+                        Spacer()
                     }
-                    Spacer()
+                    .frame(height: config.sizes.buttonHeight)
+                    button.subtitle.map {
+                        
+                        Text($0)
+                            .font(config.fonts.subtitle)
+                            .foregroundColor(config.colors.subtitle)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.5)
+                            .multilineTextAlignment(.leading)
+                            .padding(.leading, config.paddings.subtitleLeading)
+                    }
                 }
-                .frame(height: config.sizes.buttonHeight)
             }
             .foregroundColor(config.colors.foreground)
             .frame(maxWidth: .infinity)
@@ -50,6 +57,7 @@ struct ThreeButtonsView: View { // верстка
     
     private func iconView(_ type: CardGuardian.Config.IconType) -> some View {
         HStack {
+            
             config.images.imageByType(type)
                 .frame(width: config.sizes.icon, height: config.sizes.icon)
         }

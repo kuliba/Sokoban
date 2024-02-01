@@ -72,11 +72,13 @@ public extension CardGuardian.Config {
         let leading: CGFloat // 20
         let trailing: CGFloat // 80
         let vertical: CGFloat // 8
-        
-        public init(leading: CGFloat, trailing: CGFloat, vertical: CGFloat) {
+        let subtitleLeading: CGFloat // 56
+
+        public init(leading: CGFloat, trailing: CGFloat, vertical: CGFloat, subtitleLeading: CGFloat) {
             self.leading = leading
             self.trailing = trailing
             self.vertical = vertical
+            self.subtitleLeading = subtitleLeading
         }
     }
 }
