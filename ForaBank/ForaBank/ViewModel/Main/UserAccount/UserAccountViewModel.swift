@@ -14,13 +14,14 @@ import SwiftUI
 import UserAccountNavigationComponent
 import UIPrimitives
 
+struct NavigationStateManager {}
+
 class UserAccountViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
     
-    @Published private(set) var fpsCFLResponse: FastPaymentsServices.FPSCFLResponse?
     @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
@@ -28,7 +29,9 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
+    #warning("move `HandleOTPEffect` to `NavigationStateManager`")
     private let handleOTPEffect: HandleOTPEffect
+    private let navigationStateManager: NavigationStateManager
     
     var appVersionFull: String? {
         
@@ -37,7 +40,6 @@ class UserAccountViewModel: ObservableObject {
     
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let fastPaymentsServices: FastPaymentsServices
 
     private let scheduler: AnySchedulerOfDispatchQueue
     private var bindings = Set<AnyCancellable>()
@@ -45,6 +47,7 @@ class UserAccountViewModel: ObservableObject {
     private init(
         route: UserAccountRoute = .init(),
         handleOTPEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
+        navigationStateManager: NavigationStateManager,
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -52,14 +55,13 @@ class UserAccountViewModel: ObservableObject {
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
         model: Model = .emptyMock,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
         self.handleOTPEffect = handleOTPEffect
+        self.navigationStateManager = navigationStateManager
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -71,9 +73,9 @@ class UserAccountViewModel: ObservableObject {
     init(
         route: UserAccountRoute = .init(),
         handleEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
+        navigationStateManager: NavigationStateManager,
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil,
@@ -81,9 +83,9 @@ class UserAccountViewModel: ObservableObject {
     ) {
         self.route = route
         self.handleOTPEffect = handleEffect
+        self.navigationStateManager = navigationStateManager
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
         self.sections = []
         self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -102,13 +104,7 @@ class UserAccountViewModel: ObservableObject {
             action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
-        
-        #warning("remove pipeline along with `fpsCFLResponse`, `fastPaymentsFactory` and `fastPaymentsServices`")
-        fastPaymentsServices.getFastPaymentContractFindList()
-            .map(Optional.some)
-            .receive(on: scheduler)
-            .assign(to: &$fpsCFLResponse)
-        
+                
         routeSubject
             .receive(on: scheduler)
             .assign(to: &$route)
@@ -860,7 +856,7 @@ private extension UserAccountViewModel {
                     .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
                     .receive(on: scheduler)
                     .sink { [weak self] in self?.event(.fps($0)) }
-#warning("and change to effect (??) when moved to `reduce`")
+#warning("and change to effect (??) when moved to `reduce` (?)")
                 viewModel.event(.appear)
 
                 self.event(.route(.link(.setTo(
@@ -1165,6 +1161,7 @@ enum UserAccountViewModelAction {
 extension UserAccountViewModel {
     
     static let sample = UserAccountViewModel(
+        navigationStateManager: .preview,
         navigationBar: .sample,
         avatar: .init(
             image: Image("imgMainBanner2"),
@@ -1190,7 +1187,6 @@ extension UserAccountViewModel {
             action: {}
         ),
         fastPaymentsFactory: .legacy,
-        fastPaymentsServices: .empty,
         scheduler: .main
     )
 }

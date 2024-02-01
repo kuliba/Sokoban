@@ -470,13 +470,7 @@ extension FastPaymentsFactory {
     )
 }
 
-extension FastPaymentsServices {
+extension NavigationStateManager {
     
-    static let empty: Self = .init(
-        getFastPaymentContractFindList: {
-            
-            Empty().eraseToAnyPublisher()
-        },
-        getConsentAndDefault: { _,_ in }
-    )
+    static let preview: Self = .init()
 }
