@@ -15,8 +15,9 @@ private extension FastPaymentsSettingsServices {
     static func live(httpClient: HTTPClient) -> Self {
         
         .init(
-            handleConsentListEffect: unimplemented(),
-            handleContractEffect: unimplemented(),
+            changeConsentList: unimplemented(),
+            createContract: unimplemented(),
+            updateContract: unimplemented(),
             getC2BSub: unimplemented(),
             getSettings: unimplemented(),
             prepareSetBankDefault: unimplemented(),
@@ -66,6 +67,9 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> FastPaymentsSettingsViewModel {
         
+        
+        // let f = MicroServices.Factory
+        
         let reducer = FastPaymentsSettingsReducer.default(
             getProducts: /*isStub ? { .preview } :*/ model.getProducts
         )
@@ -108,9 +112,18 @@ private extension FastPaymentsSettingsEffectHandler {
     convenience init(
         services: FastPaymentsSettingsServices
     ) {
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: services.changeConsentList
+        )
+        
+        let contractEffectHandler = ContractEffectHandler(
+            createContract: services.createContract,
+            updateContract: services.updateContract
+        )
+        
         self.init(
-            handleConsentListEffect: services.handleConsentListEffect,
-            handleContractEffect: services.handleContractEffect,
+            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
+            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getC2BSub: services.getC2BSub,
             getSettings: services.getSettings,
             prepareSetBankDefault: services.prepareSetBankDefault,
@@ -121,8 +134,9 @@ private extension FastPaymentsSettingsEffectHandler {
 
 private struct FastPaymentsSettingsServices {
     
-    let handleConsentListEffect: FastPaymentsSettingsEffectHandler.HandleConsentListEffect
-    let handleContractEffect: FastPaymentsSettingsEffectHandler.HandleContractEffect
+    let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList
+    let createContract: ContractEffectHandler.CreateContract
+    let updateContract: ContractEffectHandler.UpdateContract
     let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub
     let getSettings: FastPaymentsSettingsEffectHandler.GetSettings
     let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
@@ -234,32 +248,29 @@ private extension FastPaymentsSettingsServices {
     
     static func stub() -> Self {
         
-        let consentListHandler = ConsentListRxEffectHandler(
-            changeConsentList: { _, completion in
+        let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(.success)
-                }
+                completion(.success)
             }
-        )
+        }
         
-        let contractEffectHandler = ContractEffectHandler(
-            createContract: { _, completion in
+        let createContract: ContractEffectHandler.CreateContract = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(.success(.stub))
-                }
-            },
-            updateContract: { _, completion in
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    completion(.success(.stub))
-                }
+                completion(.success(.stub))
             }
-        )
+        }
+        
+        let updateContract: ContractEffectHandler.UpdateContract = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(.success(.stub))
+            }
+        }
         
         let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub = { completion in
             
@@ -302,8 +313,9 @@ private extension FastPaymentsSettingsServices {
         }
         
         return .init(
-            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
-            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
+            changeConsentList: changeConsentList,
+            createContract: createContract,
+            updateContract: updateContract,
             getC2BSub: getC2BSub,
             getSettings: getSettings,
             prepareSetBankDefault: prepareSetBankDefault,
