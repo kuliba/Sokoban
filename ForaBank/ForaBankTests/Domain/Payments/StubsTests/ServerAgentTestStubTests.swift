@@ -175,7 +175,8 @@ extension TransferAnywayResponseData {
         infoMessage: String? = nil,
         needSum: Bool,
         printFormType: String? = nil,
-        parameterListForNextStep: [ParameterData] = []
+        parameterListForNextStep: [ParameterData] = [],
+        scenario: AntiFraudScenario = .ok
     ) -> TransferAnywayResponseData {
         
         .init(
@@ -198,7 +199,7 @@ extension TransferAnywayResponseData {
             needSum: needSum,
             printFormType: printFormType,
             parameterListForNextStep: parameterListForNextStep,
-            scenario: .ok
+            scenario: scenario
         )
     }
 }
