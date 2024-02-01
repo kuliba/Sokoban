@@ -87,7 +87,6 @@ class DepositSuccessViewController: UIViewController {
         if confurmVCModel?.status == .antifraudCanceled {
             termField.isHidden = true
             closeField.isHidden = true
-            incomeField.isHidden = true
             cardFromField.isHidden = true
             
             optionsButtons.isHidden = true
