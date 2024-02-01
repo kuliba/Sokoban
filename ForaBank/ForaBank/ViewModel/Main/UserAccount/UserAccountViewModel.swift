@@ -14,33 +14,6 @@ import SwiftUI
 import UserAccountNavigationComponent
 import UIPrimitives
 
-struct NavigationStateManager {
-    
-    let alertReduce: AlertReduce
-    let fpsReduce: FPSReduce
-    let otpReduce: OTPReduce
-    let routeEventReduce: RouteEventReduce
-    let handleModelEffect: HandleModelEffect
-    let handleOTPEffect: HandleOTPEffect
-}
-
-extension NavigationStateManager {
-    
-    typealias AlertReduce = (UserAccountRoute, UserAccountEvent.AlertButtonTap) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
-    
-    typealias Dispatch = (UserAccountEvent) -> Void
-    typealias HandleModelEffect = (UserAccountEffect.ModelEffect, @escaping Dispatch) -> Void
-    
-    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
-}
-
 class UserAccountViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -54,7 +27,7 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    private let navigationStateManager: NavigationStateManager
+    private let navigationStateManager: UserAccountNavigationStateManager
     
     var appVersionFull: String? {
         
@@ -69,7 +42,7 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
@@ -93,7 +66,7 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         clientInfo: ClientInfoData,

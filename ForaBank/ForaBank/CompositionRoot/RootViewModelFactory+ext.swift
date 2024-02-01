@@ -214,7 +214,7 @@ extension ProductProfileViewModel {
     static func make(
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient
@@ -312,7 +312,7 @@ private extension RootViewModelFactory {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister

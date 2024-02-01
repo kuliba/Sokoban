@@ -27,7 +27,7 @@ class RootViewModel: ObservableObject, Resetable {
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let navigationStateManager: NavigationStateManager
+    private let navigationStateManager: UserAccountNavigationStateManager
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -36,7 +36,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,

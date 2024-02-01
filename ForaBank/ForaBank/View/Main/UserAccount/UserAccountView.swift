@@ -470,7 +470,7 @@ extension FastPaymentsFactory {
     )
 }
 
-extension NavigationStateManager {
+extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
         alertReduce: { state, _ in (state, nil) },

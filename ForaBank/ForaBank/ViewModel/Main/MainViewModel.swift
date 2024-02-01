@@ -32,7 +32,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let navigationStateManager: NavigationStateManager
+    private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
@@ -45,7 +45,7 @@ class MainViewModel: ObservableObject, Resetable {
         route: Route = .empty,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
-        navigationStateManager: NavigationStateManager,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,

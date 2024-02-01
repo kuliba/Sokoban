@@ -32,7 +32,7 @@ extension Services {
         duration: Int = 10,
         length: Int = 6,
         scheduler: AnySchedulerOfDispatchQueue = .main
-    ) -> NavigationStateManager {
+    ) -> UserAccountNavigationStateManager {
         
         let alertButtonReducer = UserAccountAlertButtonTapReducer()
         
@@ -88,7 +88,7 @@ private struct FastPaymentsSettingsOTPServices {
 
 // MARK: - Adapters
 
-private extension NavigationStateManager {
+private extension UserAccountNavigationStateManager {
     
     init(
         alertButtonReducer: UserAccountAlertButtonTapReducer,
