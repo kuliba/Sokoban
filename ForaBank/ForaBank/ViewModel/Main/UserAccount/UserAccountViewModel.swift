@@ -227,19 +227,17 @@ extension UserAccountViewModel {
         }
     }
     
-    var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
+    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
         
         fpsViewModel?.event(_:)
     }
     
-    var fpsViewModel: FastPaymentsSettingsViewModel? {
+    private var fpsViewModel: FastPaymentsSettingsViewModel? {
         
-        switch route.link {
-        case let .fastPaymentSettings(.new(route)):
-            return route.viewModel
-        default:
-            return nil
-        }
+        guard case let .fastPaymentSettings(.new(route)) = route.link
+        else { return nil }
+        
+        return route.viewModel
     }
 }
 

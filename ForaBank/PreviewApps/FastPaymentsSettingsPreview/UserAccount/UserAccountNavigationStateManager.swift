@@ -5,6 +5,9 @@
 //  Created by Igor Malyarov on 29.01.2024.
 //
 
+import FastPaymentsSettings
+import UserAccountNavigationComponent
+
 public struct UserAccountNavigationStateManager {
     
     public let reduce: Reduce
