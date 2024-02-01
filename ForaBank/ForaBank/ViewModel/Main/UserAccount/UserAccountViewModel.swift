@@ -16,10 +16,13 @@ import UIPrimitives
 
 struct NavigationStateManager {
     
+    let fpsReduce: FPSReduce
     let otpReduce: OTPReduce
 }
 
 extension NavigationStateManager {
+    
+    typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
     typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
@@ -38,7 +41,7 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    #warning("move `HandleOTPEffect` to `NavigationStateManager`")
+#warning("move `HandleOTPEffect` to `NavigationStateManager`")
     private let handleOTPEffect: HandleOTPEffect
     private let navigationStateManager: NavigationStateManager
     
@@ -49,7 +52,7 @@ class UserAccountViewModel: ObservableObject {
     
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-
+    
     private let scheduler: AnySchedulerOfDispatchQueue
     private var bindings = Set<AnyCancellable>()
     
@@ -113,7 +116,7 @@ class UserAccountViewModel: ObservableObject {
             action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
-                
+        
         routeSubject
             .receive(on: scheduler)
             .assign(to: &$route)
@@ -185,7 +188,7 @@ private extension UserAccountViewModel {
             state = routeReduce(state, routeEvent)
             
         case let .fps(fastPaymentsSettings):
-            (state, effect) = reduce(state, with: fastPaymentsSettings)
+            (state, effect) = navigationStateManager.fpsReduce(state, fastPaymentsSettings)
             
         case let .otp(otpEvent):
             (state, effect) = navigationStateManager.otpReduce(
@@ -197,64 +200,19 @@ private extension UserAccountViewModel {
         
         return (state, effect)
     }
-    
-    func reduce(
-        _ state: State,
-        with fpsEvent: Event.FastPaymentsSettings
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch (state.link, fpsEvent) {
-        case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
-#warning("inject composed reducer")
-            let reducer = UserAccountNavigationFPSReducer()
-#warning("ignoring alert state")
-            let fps = UserAccountNavigationFPSReducer.State(
-                destination: fpsRoute,
-                alert: nil,
-                isLoading: state.spinner != nil
-            )
-#warning("ignoring effect")
-            let (fpsState, _) = reducer.reduce(fps, settings, { _ in })
-            state = state.updated(with: fpsState)
-            
-        default:
-            break
-        }
-        
-        return (state, effect)
-    }
-}
-
-// MARK: - mapping
-
-private extension UserAccountNavigationFPSReducer.State.FPSRoute {
-    
-    init?(state: UserAccountRoute) {
-        
-        switch state.link {
-        case let .fastPaymentSettings(.new(fpsRoute)):
-            self = fpsRoute
-            
-        default:
-            return nil
-        }
-    }
 }
 
 // MARK: - Handle Effect
 
 extension UserAccountViewModel {
-
+    
     func handleEffect(
         _ effect: UserAccountEffect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
         case let .model(modelEffect):
-            #warning("inject")
+#warning("inject")
             let modelEffectHandler = UserAccountModelEffectHandler(model: model)
             let handleModelEffect = modelEffectHandler.handleEffect(_:_:)
             handleModelEffect(modelEffect, dispatch)
@@ -786,7 +744,7 @@ private extension UserAccountViewModel {
                     .sink { [weak self] in self?.event(.fps($0)) }
 #warning("and change to effect (??) when moved to `reduce` (?)")
                 viewModel.event(.appear)
-
+                
                 self.event(.route(.link(.setTo(
                     .fastPaymentSettings(.new(
                         .init(viewModel, cancellable)
@@ -915,7 +873,7 @@ extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
             )
         )
     }
-
+    
     static func exit(
         event: UserAccountEvent.AlertButtonTap
     ) -> Self {
@@ -986,7 +944,7 @@ extension UserAccountViewModel {
     
     typealias RouteDispatch = (UserAccountEvent.RouteEvent) -> Void
     typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
-
+    
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
     typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
     

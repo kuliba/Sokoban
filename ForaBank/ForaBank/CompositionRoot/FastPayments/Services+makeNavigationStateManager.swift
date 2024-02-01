@@ -33,6 +33,8 @@ extension Services {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> NavigationStateManager {
         
+        let fpsReducer = UserAccountNavigationFPSReducer()
+        
         let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient: httpClient)
         
         let otpReducer = UserAccountNavigationOTPReducer(
@@ -54,6 +56,7 @@ extension Services {
         )
         
         return .init(
+            fpsReducer: fpsReducer,
             otpReducer: otpReducer
         )
     }
@@ -65,14 +68,69 @@ private struct FastPaymentsSettingsOTPServices {
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
 }
 
-// MARK: - Adapter
+// MARK: - Adapters
 
 private extension NavigationStateManager {
     
     init(
+        fpsReducer: UserAccountNavigationFPSReducer,
         otpReducer: UserAccountNavigationOTPReducer
     ) {
-        self.init(otpReduce: otpReducer.reduce(_:_:_:))
+        self.init(
+            fpsReduce: fpsReducer.reduce(_:_:),
+            otpReduce: otpReducer.reduce(_:_:_:)
+        )
+    }
+}
+
+private extension UserAccountNavigation.State {
+    
+    init(_ route: UserAccountRoute) {
+        
+#warning("ignoring alert state")
+        self.init(
+            destination: route.fpsRoute,
+            alert: nil,
+            isLoading: route.spinner != nil
+        )
+    }
+}
+
+private extension UserAccountRoute {
+    
+    var fpsRoute: UserAccountNavigation.State.FPSRoute? {
+        
+        guard case let .fastPaymentSettings(.new(fpsRoute)) = link
+        else { return nil }
+        
+        return fpsRoute
+    }
+}
+
+#warning("both adapters for `UserAccountNavigationFPSReducer` and `UserAccountNavigationOTPReducer` below use the same adaptation pattern")
+
+private extension UserAccountNavigationFPSReducer {
+    
+    func reduce(
+        _ state: UserAccountRoute,
+        _ fpsEvent: UserAccountEvent.FastPaymentsSettings
+    ) -> (UserAccountRoute, UserAccountEffect?) {
+        
+        var state = state
+        var effect: UserAccountEffect?
+        
+        switch (state.link, fpsEvent) {
+        case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
+            
+            let (fpsState, fpsEffect) = reduce(.init(state), settings, { _ in })
+            state = state.updated(with: fpsState)
+            effect = fpsEffect.map(UserAccountEffect.navigation)
+
+        default:
+            break
+        }
+        
+        return (state, effect)
     }
 }
 
@@ -90,14 +148,8 @@ private extension UserAccountNavigationOTPReducer {
         switch state.link {
         case let .fastPaymentSettings(.new(fpsRoute)):
             
-#warning("ignoring alert state")
-            let fps = UserAccountNavigationFPSReducer.State(
-                destination: fpsRoute,
-                alert: nil,
-                isLoading: state.spinner != nil
-            )
             let (fpsState, fpsEffect) = reduce(
-                fps,
+                .init(state),
                 event,
                 { _ in },
                 { dispatch($0) }
