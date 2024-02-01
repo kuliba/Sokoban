@@ -21,6 +21,7 @@ public extension CardGuardian {
     }
 }
 
+
 struct CardGuardianState: Equatable {
     
     let buttons: [_Button]
@@ -30,7 +31,7 @@ struct CardGuardianState: Equatable {
         
         let event: CardGuardian.ButtonTapped
         let title: String
-        let icon: String
+        let iconType: CardGuardian.Config.IconType
         let subtitle: String?
     }
 }

@@ -18,10 +18,10 @@ struct ThreeButtonsView: View { // верстка
         VStack(alignment: .leading) {
             ForEach(buttons, id: \.self, content: buttonView)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, config.paddings.vertical)
         .frame(maxWidth: .infinity)
-        .padding(.leading, 20)
-        .padding(.trailing, 80)
+        .padding(.leading, config.paddings.leading)
+        .padding(.trailing, config.paddings.trailing)
         .border(.green)
     }
     
@@ -29,21 +29,33 @@ struct ThreeButtonsView: View { // верстка
         
         Button(action: {
             event(button.event)})  {
-                HStack(alignment: .center, spacing: 20) {
-                    HStack(alignment: .center, spacing: 0) {  
-                        Image(systemName: "staroflife.circle.fill")
-                            .frame(width: 24, height: 24)
+                HStack(spacing: config.paddings.leading) {
+                    iconView(button.iconType)
+                    VStack(alignment: .leading) {
+                        Text(button.title)
+                            .font(config.fonts.title)
+                        button.subtitle.map {
+                            Text($0)
+                                .font(config.fonts.subtitle)
+                                .foregroundColor(config.colors.subtitle)
+                        }
                     }
-                    .padding(8)
-                    .background(Color(red: 0.96, green: 0.96, blue: 0.97))
-                    .cornerRadius(90)
-                    Text(button.title)
                     Spacer()
                 }
+                .frame(height: config.sizes.buttonHeight)
             }
-            .foregroundColor(Color.black)
+            .foregroundColor(config.colors.foreground)
             .frame(maxWidth: .infinity)
-            .frame(height: 40)
+    }
+    
+    private func iconView(_ type: CardGuardian.Config.IconType) -> some View {
+        HStack {
+            config.images.imageByType(type)
+                .frame(width: config.sizes.icon, height: config.sizes.icon)
+        }
+        .padding(config.paddings.vertical)
+        .background(Color(red: 0.96, green: 0.96, blue: 0.97))
+        .cornerRadius(config.sizes.cornerRadius)
     }
 }
 
@@ -54,24 +66,7 @@ struct ThreeButtonsView_Previews: PreviewProvider {
         ThreeButtonsView(
             buttons: .preview,
             event: { _ in },
-            config: .default
+            config: .preview
         )
     }
-}
-
-private extension CardGuardian.Config {
-    
-    static let `default`: Self = .init()
-}
-
-private extension CardGuardianState._Button {
-    
-    static let one: Self = .init(event: .toggleLock, title: "One", icon: "", subtitle: "subtitle")
-    static let two: Self = .init(event: .toggleLock, title: "Two", icon: "", subtitle: "subtitle")
-    static let three: Self = .init(event: .toggleLock, title: "Three", icon: "", subtitle: "subtitle")
-}
-
-private extension Array where Element == CardGuardianState._Button {
-    
-    static let preview: Self = [.one, .two, .three]
 }
