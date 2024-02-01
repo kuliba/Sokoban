@@ -9,28 +9,46 @@ import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
 
+private extension Model {
+    
+#warning("add mapping and filtering products from model")
+    func getProducts() -> [Product] {
+        
+        unimplemented()
+    }
+}
+
+private extension FastPaymentsSettingsServices {
+    
+#warning("add live services")
+    static func live(httpClient: HTTPClient) -> Self {
+        
+        .init(
+            handleConsentListEffect: unimplemented(),
+            handleContractEffect: unimplemented(),
+            getC2BSub: unimplemented(),
+            getSettings: unimplemented(),
+            prepareSetBankDefault: unimplemented(),
+            updateProduct: unimplemented()
+        )
+    }
+}
+
 extension RootViewModelFactory {
     
     static func makeNewFastPaymentsViewModel(
+        useStub isStub: Bool = true,
         httpClient: HTTPClient,
         model: Model,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> FastPaymentsSettingsViewModel {
         
-        let getProducts: () -> [Product] = {
-            
-#warning("replace with mapping and filtering products from model")
-            return .preview
-        }
-        
         let reducer = FastPaymentsSettingsReducer.default(
-            getProducts: getProducts
+            getProducts: isStub ? { .preview } : model.getProducts
         )
         
-#warning("replace stubs with services")
-        let effectHandler = FastPaymentsSettingsEffectHandler.stub(
-            consentListHandler: .stub,
-            contractEffectHandler: .stub
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            services: isStub ? .stub() : .live(httpClient: httpClient)
         )
         
         return .init(
@@ -94,69 +112,64 @@ private extension FastPaymentsSettingsReducer {
     }
 }
 
-#warning("replace stubs with real")
-// MARK: - Stubs
-
-private extension UserPaymentSettings.PaymentContract {
-    
-    static let stub: Self = .init(
-        id: 10002076204,
-        productID: 10004203497,
-        contractStatus: .active,
-        phoneNumber: "79171044913",
-        phoneNumberMasked: "+7 ... ... 49 13"
-    )
-}
-
-extension ConsentListState {
-    
-    static let stub: Self = .success(.init(
-        banks: .preview,
-        consent: .preview,
-        mode: .collapsed,
-        searchText: ""
-    ))
-}
-
-private extension ConsentListRxEffectHandler {
-    
-    static let stub: ConsentListRxEffectHandler = .init(
-        changeConsentList: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success)
-            }
-        }
-    )
-}
-
-private extension ContractEffectHandler {
-    
-    static let stub: ContractEffectHandler = .init(
-        createContract: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.stub))
-            }
-        },
-        updateContract: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.stub))
-            }
-        }
-    )
-}
-
 private extension FastPaymentsSettingsEffectHandler {
     
-    static func stub(
-        consentListHandler: ConsentListRxEffectHandler,
-        contractEffectHandler: ContractEffectHandler
-    ) -> FastPaymentsSettingsEffectHandler {
+    convenience init(
+        services: FastPaymentsSettingsServices
+    ) {
+        self.init(
+            handleConsentListEffect: services.handleConsentListEffect,
+            handleContractEffect: services.handleContractEffect,
+            getC2BSub: services.getC2BSub,
+            getSettings: services.getSettings,
+            prepareSetBankDefault: services.prepareSetBankDefault,
+            updateProduct: services.updateProduct
+        )
+    }
+}
+
+private struct FastPaymentsSettingsServices {
+    
+    let handleConsentListEffect: FastPaymentsSettingsEffectHandler.HandleConsentListEffect
+    let handleContractEffect: FastPaymentsSettingsEffectHandler.HandleContractEffect
+    let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub
+    let getSettings: FastPaymentsSettingsEffectHandler.GetSettings
+    let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
+    let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct
+}
+
+// MARK: - Stubs
+
+private extension FastPaymentsSettingsServices {
+    
+    static func stub() -> Self {
+        
+        let consentListHandler = ConsentListRxEffectHandler(
+            changeConsentList: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.success)
+                }
+            }
+        )
+        
+        let contractEffectHandler = ContractEffectHandler(
+            createContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.success(.stub))
+                }
+            },
+            updateContract: { _, completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.success(.stub))
+                }
+            }
+        )
         
         let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub = { completion in
             
@@ -207,4 +220,25 @@ private extension FastPaymentsSettingsEffectHandler {
             updateProduct: updateProduct
         )
     }
+}
+
+private extension UserPaymentSettings.PaymentContract {
+    
+    static let stub: Self = .init(
+        id: 10002076204,
+        productID: 10004203497,
+        contractStatus: .active,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
+    )
+}
+
+extension ConsentListState {
+    
+    static let stub: Self = .success(.init(
+        banks: .preview,
+        consent: .preview,
+        mode: .collapsed,
+        searchText: ""
+    ))
 }
