@@ -5,13 +5,6 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
-public protocol StatusReporting<Status> {
-    
-    associatedtype Status
-    
-    var status: Status { get }
-}
-
 public typealias ContractStatus = UserPaymentSettings.PaymentContract.ContractStatus
 
 public extension MicroServices {
