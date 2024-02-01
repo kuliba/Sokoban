@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
-extension MicroServices {
+public extension MicroServices {
     
     final class Factory {
         
@@ -17,7 +17,7 @@ extension MicroServices {
         private let getProducts: GetProducts
         private let updateContract: UpdateContract
         
-        init(
+        public init(
             createContract: @escaping CreateContract,
             getBankDefault: @escaping GetBankDefault,
             getConsent: @escaping GetConsent,
@@ -37,7 +37,7 @@ extension MicroServices {
 
 extension UserPaymentSettings.PaymentContract: PhoneNumbered {}
 
-extension MicroServices.Factory {
+public extension MicroServices.Factory {
     
     typealias GetSettings = MicroServices.GetSettings<Contract, Consent, UserPaymentSettings>
     
@@ -65,7 +65,7 @@ extension UserPaymentSettings.PaymentContract: StatusReporting {
     }
 }
 
-extension MicroServices.Factory {
+public extension MicroServices.Factory {
     
     typealias ContractUpdater = MicroServices.ContractUpdater<Contract.ID, Product.ID, Contract>
     
@@ -78,7 +78,7 @@ extension MicroServices.Factory {
     }
 }
 
-extension MicroServices.Factory {
+public extension MicroServices.Factory {
     
     typealias ContractMaker = MicroServices.ContractMaker<Product.ID, Contract>
     
@@ -91,7 +91,7 @@ extension MicroServices.Factory {
     }
 }
 
-extension MicroServices.Factory {
+public extension MicroServices.Factory {
     
     typealias Contract = UserPaymentSettings.PaymentContract
     typealias Consent = ConsentListState
