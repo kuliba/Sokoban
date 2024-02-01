@@ -12,7 +12,7 @@ import UIPrimitives
 
 enum UserAccountEvent {
     
-    case alertButtonTapped(AlertButtonTapped)
+    case alertButtonTapped(AlertButtonTap)
     case route(RouteEvent)
     case fps(FastPaymentsSettings)
     case otp(OTP)
@@ -20,10 +20,12 @@ enum UserAccountEvent {
 
 extension UserAccountEvent {
     
-    enum AlertButtonTapped {
+    enum AlertButtonTap {
         
         case closeAlert
-        case cancelC2BSub(token: SubscriptionViewModel.Token, title: String)
+        case cancelC2BSub(SubscriptionViewModel.Token)
+        case delete
+        case exit
     }
     
     enum RouteEvent {
@@ -38,7 +40,7 @@ extension UserAccountEvent {
         enum AlertEvent {
             
             case reset
-            case setTo(AlertModelOf<AlertButtonTapped>)
+            case setTo(AlertModelOf<AlertButtonTap>)
         }
         
         enum BottomSheetEvent {

@@ -59,6 +59,10 @@ public extension UserAccountNavigationReducer {
         case .dismissRoute:
             state = .init()
             
+        case .fps(.dismissFPSDestination):
+            state.destination?.destination = nil
+            effect = .fps(.resetStatus)
+            
         case let .fps(.updated(fpsState)):
             (state, effect) = fpsReduce(state, fpsState, inform)
             

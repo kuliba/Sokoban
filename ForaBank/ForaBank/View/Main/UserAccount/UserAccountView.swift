@@ -7,10 +7,13 @@
 
 import Combine
 import LandingUIComponent
-import SwiftUI
+import OTPInputComponent
 import Presentation
 import ManageSubscriptionsUI
 import SearchBarComponent
+import SwiftUI
+import UserAccountNavigationComponent
+import UIPrimitives
 
 struct UserAccountView: View {
     
@@ -43,7 +46,8 @@ struct UserAccountView: View {
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.link },
-                    set: { if $0 == nil { viewModel.resetLink() }}),
+                    set: { if $0 == nil { viewModel.resetLink() }}
+                ),
                 content: destinationView(link:)
             )
         }
@@ -66,7 +70,7 @@ struct UserAccountView: View {
                 get: { viewModel.route.alert },
                 set: { if $0 == nil { viewModel.resetAlert() }}
             ),
-            content: Alert.init(with:)
+            content: { .init(with: $0, event: { viewModel.event(.alertButtonTapped($0)) }) }
         )
         .textfieldAlert(
             alert: .init(
@@ -199,14 +203,7 @@ struct UserAccountView: View {
                     .navigationBarTitle("", displayMode: .inline)
                 
             case let .new(route):
-                FastPaymentsSettingsWrapperView(
-                    viewModel: route.viewModel,
-                    config: .preview
-                )
-                .navigationBar(with: .fastPayments(
-                    action: viewModel.dismissDestination
-                ))
-                .onAppear { route.viewModel.event(.appear) }
+                fpsWrapper(route)
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -238,6 +235,33 @@ struct UserAccountView: View {
         }
     }
     
+    private func fpsWrapper(
+        _ route: UserAccountNavigation.State.FPSRoute
+    ) -> some View {
+        
+        FastPaymentsSettingsWrapperView(
+            viewModel: route.viewModel,
+            config: .preview
+        )
+        .navigationBar(with: .fastPayments(
+            action: viewModel.dismissDestination
+        ))
+    }
+    
+    @ViewBuilder
+    private func fpsDestinationView(
+        fpsDestination: UserAccountNavigation.State.FPSDestination
+    ) -> some View {
+        
+        switch fpsDestination {
+        case let .confirmSetBankDefault(timedOTPInputViewModel, _):
+            OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+            
+        case let .c2BSub(getC2BSubResponse, _):
+            Text("TBD: \(String(describing: getC2BSubResponse))")
+        }
+    }
+
     @ViewBuilder
     private func sheetView(
         sheet: UserAccountRoute.Sheet
@@ -276,6 +300,58 @@ struct UserAccountView: View {
             
         case let .sbpay(viewModel):
             SbpPayView(viewModel: viewModel)
+        }
+    }
+}
+
+private extension UserAccountRoute {
+    
+    var fpsAlert: AlertModelOf<UserAccountNavigation.Event>? {
+        
+        fpsRoute?.alert
+    }
+    
+    var fpsDestination: UserAccountNavigation.State.FPSDestination? {
+        
+        fpsRoute?.destination
+    }
+    
+    private var fpsRoute: UserAccountNavigation.State.FPSRoute? {
+        
+        switch link {
+        case let .fastPaymentSettings(.new(fpsRoute)):
+            return fpsRoute
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private struct OTPInputWrapperView: View {
+    
+    @ObservedObject private var viewModel: TimedOTPInputViewModel
+    
+    init(viewModel: TimedOTPInputViewModel) {
+        
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+        
+        switch viewModel.state {
+        case .failure:
+            EmptyView()
+            
+        case let .input(input):
+            OTPInputView(
+                state: input,
+                phoneNumber: "TBD: hardcoded phone number",
+                event: viewModel.event(_:)
+            )
+            
+        case .validOTP:
+            EmptyView()
         }
     }
 }

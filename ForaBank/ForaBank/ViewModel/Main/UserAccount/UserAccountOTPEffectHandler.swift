@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 31.01.2024.
 //
 
-final class UserAccountOTPEffectHandler {
-    
-}
+import UserAccountNavigationComponent
+
+final class UserAccountOTPEffectHandler {}
 
 extension UserAccountOTPEffectHandler {
     
@@ -24,5 +24,5 @@ extension UserAccountOTPEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UserAccountEvent.OTP
-    typealias Effect = UserAccountEffect.OTP
+    typealias Effect = UserAccountNavigation.Effect.OTP
 }

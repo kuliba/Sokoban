@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import UIPrimitives
 import UserAccountNavigationComponent
 
 struct UserAccountRoute {
     
-    var alert: Alert.ViewModel?
+    var alert: AlertModelOf<UserAccountEvent.AlertButtonTap>?
     var link: Link?
     var bottomSheet: BottomSheet?
     var sheet: Sheet?

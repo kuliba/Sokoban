@@ -25,16 +25,16 @@ struct FastPaymentsSettingsWrapperView: View {
     }
 }
 
-//struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
-//    
-//    static var previews: some View {
-//        
-//        FastPaymentsSettingsWrapperView(
-//            viewModel: .init(reduce: { state, event, completion in
-//                
-//                completion(state)
-//            }), 
-//            navigationBarViewModel: .init(action: {})
-//        )
-//    }
-//}
+struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        FastPaymentsSettingsWrapperView(
+            viewModel: .init(
+                initialState: .init(),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in }),
+            config: .preview
+        )
+    }
+}

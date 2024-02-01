@@ -28,7 +28,6 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    private let reduce: Reduce
     private let handleOTPEffect: HandleOTPEffect
     
     var appVersionFull: String? {
@@ -45,7 +44,6 @@ class UserAccountViewModel: ObservableObject {
     
     private init(
         route: UserAccountRoute = .init(),
-        reduce: @escaping Reduce = UserAccountReducer().reduce(_:_:_:),
         handleOTPEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
@@ -58,7 +56,6 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.reduce = reduce
         self.handleOTPEffect = handleOTPEffect
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
@@ -73,7 +70,6 @@ class UserAccountViewModel: ObservableObject {
     
     init(
         route: UserAccountRoute = .init(),
-        reduce: @escaping Reduce = UserAccountReducer().reduce(_:_:_:),
         handleEffect: @escaping HandleOTPEffect = UserAccountOTPEffectHandler().handleEffect(_:_:),
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -84,7 +80,6 @@ class UserAccountViewModel: ObservableObject {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
-        self.reduce = reduce
         self.handleOTPEffect = handleEffect
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
@@ -108,6 +103,7 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
+        #warning("remove pipeline along with `fpsCFLResponse`, `fastPaymentsFactory` and `fastPaymentsServices`")
         fastPaymentsServices.getFastPaymentContractFindList()
             .map(Optional.some)
             .receive(on: scheduler)
@@ -115,6 +111,7 @@ class UserAccountViewModel: ObservableObject {
         
         routeSubject
             .receive(on: scheduler)
+            .handleEvents(receiveOutput: { print("### routeSubject: link: \($0.link.fastDump)") })
             .assign(to: &$route)
         
         bind()
@@ -126,36 +123,29 @@ class UserAccountViewModel: ObservableObject {
     }
 }
 
+extension UserAccountRoute.Link? {
+    
+    var fastDump: String {
+        
+        switch self {
+        case .fastPaymentSettings(.new):
+            return " new fastPaymentSettings"
+            
+        case .none:
+            return "nil"
+            
+        default:
+            return "other"
+        }
+    }
+}
+
 extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
         
-        switch event {
-        case let .alertButtonTapped(alertButtonTapped):
-            switch alertButtonTapped {
-            case .closeAlert:
-                route.alert = nil
-                
-            case let .cancelC2BSub(token, title):
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                self.model.action.send(action)
-            }
-        
-        case let .route(routeEvent):
-            fatalError("redirect to reduce")
-        
-        case let .fps(fastPaymentsSettings):
-            fatalError("redirect to reduce")
-        
-        case let .otp(otpEvent):
-            fatalError("redirect to reduce")
-        }
-        
-        let (route, effect) = reduce(route, event) { [weak self] in
-            
-            self?.event(.route($0))
-        }
-        
+        print("### event:", event)
+        let (route, effect) = reduce(route, event)
         routeSubject.send(route)
         
         if let effect {
@@ -163,27 +153,144 @@ extension UserAccountViewModel {
             handleEffect(effect) { [weak self] in self?.event($0) }
         }
     }
+}
+
+private extension UserAccountViewModel {
     
-    private func handleEffect(
+    typealias State = UserAccountRoute
+    typealias Event = UserAccountEvent
+    typealias Effect = UserAccountEffect
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .alertButtonTapped(alertButtonTapped):
+            #warning("inject composed reducer")
+            let alertButtonReducer = UserAccountAlertButtonTapReducer()
+            let reduce = alertButtonReducer.reduce(_:_:)
+            (state, effect) = reduce(state, alertButtonTapped)
+            
+        case let .route(routeEvent):
+            #warning("inject composed reducer")
+            let routeReduce = UserAccountRouteEventReducer().reduce(_:_:)
+            state = routeReduce(state, routeEvent)
+            
+        case let .fps(fastPaymentsSettings):
+            (state, effect) = reduce(state, with: fastPaymentsSettings)
+            
+        case let .otp(otpEvent):
+            (state, effect) = reduce(state, with: otpEvent)
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        with fpsEvent: Event.FastPaymentsSettings
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch (state.link, fpsEvent) {
+        case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
+#warning("inject composed reducer")
+            let reducer = UserAccountNavigationFPSReducer()
+#warning("ignoring alert state")
+            let fps = UserAccountNavigationFPSReducer.State(
+                destination: fpsRoute,
+                alert: nil,
+                isLoading: state.spinner != nil
+            )
+#warning("ignoring effect")
+            let (fpsState, _) = reducer.reduce(fps, settings, { _ in })
+            
+            state.link = .init(fpsState)
+            state.spinner = fpsState.isLoading ? .init() : nil
+            
+        default:
+            break
+        }
+    
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        with otpEvent: Event.OTP
+    ) -> (State, Effect?) {
+        
+        fatalError()
+    }
+}
+
+private extension UserAccountNavigationFPSReducer.State.FPSRoute {
+    
+    init?(state: UserAccountRoute) {
+        
+        switch state.link {
+        case let .fastPaymentSettings(.new(fpsRoute)):
+            self = fpsRoute
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private extension UserAccountViewModel.State.Link {
+    
+    init?(_ state: UserAccountNavigation.State) {
+        
+        switch state.destination {
+        case let .some(fpsRoute):
+            self = .fastPaymentSettings(.new(fpsRoute))
+            
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: - Handle Effect
+
+extension UserAccountViewModel {
+
+    func handleEffect(
         _ effect: UserAccountEffect,
         _ dispatch: @escaping Dispatch
     ) {
-        
         switch effect {
-        case let .fps(fpsEvent):
-            fpsDispatch?(fpsEvent)
+        case let .model(modelEffect):
+            #warning("inject")
+            let modelEffectHandler = UserAccountModelEffectHandler(model: model)
+            let handleModelEffect = modelEffectHandler.handleEffect(_:_:)
+            handleModelEffect(modelEffect, dispatch)
             
-        case let .otp(otpEffect):
-            handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+        case let .navigation(navigation):
+            switch navigation {
+            case let .fps(fpsEvent):
+                fpsDispatch?(fpsEvent)
+                
+            case let .otp(otpEffect):
+                handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
+            }
         }
     }
     
-    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
+    var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
         
         fpsViewModel?.event(_:)
     }
     
-    private var fpsViewModel: FastPaymentsSettingsViewModel? {
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
         
         switch route.link {
         case let .fastPaymentSettings(.new(route)):
@@ -405,11 +512,7 @@ private extension UserAccountViewModel {
                         
                         self.event(.route(.alert(.setTo(.cancelC2BSub(
                             title: title,
-                            action: {
-                                
-                                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                                self.model.action.send(action)
-                            }
+                            event: .cancelC2BSub(token)
                         )))))
                     },
                     detailAction: { token in
@@ -502,9 +605,9 @@ private extension UserAccountViewModel {
                 
             } else {
                 
-                event(.route(.alert(.setTo(.cameraPermissionError(
-                    action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                )))))
+                event(.route(.alert(.setTo(
+                    .cameraPermissionError(event: .closeAlert)
+                ))))
             }
             
         case let payload as ModelAction.Media.GalleryPermission.Response:
@@ -526,9 +629,9 @@ private extension UserAccountViewModel {
                 
             } else {
                 
-                event(.route(.alert(.setTo(.galleryPermissionError(
-                    action: { [weak self] in self?.event(.route(.alert(.reset))) }
-                )))))
+                event(.route(.alert(.setTo(
+                    .galleryPermissionError(event: .closeAlert)
+                ))))
             }
             
         case _ as ModelAction.ClientInfo.Delete.Response:
@@ -592,18 +695,10 @@ private extension UserAccountViewModel {
             model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
             
         case _ as UserAccountViewModelAction.ExitAction:
-            let alert = Alert.ViewModel.exit { [weak self] in
-                
-                self?.model.auth.value = .unlockRequiredManual
-            }
-            event(.route(.alert(.setTo(alert))))
+            event(.route(.alert(.setTo(.exit(event: .exit)))))
             
         case _ as UserAccountViewModelAction.DeleteAction:
-            let alert = Alert.ViewModel.delete { [weak self] in
-                
-                self?.model.action.send(ModelAction.ClientInfo.Delete.Request())
-            }
-            event(.route(.alert(.setTo(alert))))
+            event(.route(.alert(.setTo(.delete(event: .delete)))))
             
         case _ as UserAccountViewModelAction.DeleteInfoAction:
             event(.route(.bottomSheet(.setTo(.init(
@@ -699,11 +794,14 @@ private extension UserAccountViewModel {
             case let .new(makeNew):
                 let viewModel = makeNew(scheduler)
                 let cancellable = viewModel.$state
+                    .dropFirst()
                     .removeDuplicates()
                     .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
                     .receive(on: scheduler)
                     .sink { [weak self] in self?.event(.fps($0)) }
-                
+#warning("and change to effect (??) when moved to `reduce`")
+                viewModel.event(.appear)
+
                 self.event(.route(.link(.setTo(
                     .fastPaymentSettings(.new(
                         .init(viewModel, cancellable)
@@ -775,84 +873,26 @@ private extension UserAccountViewModel {
 
 // MARK: - Helpers
 
-private extension Alert.ViewModel {
+extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
     
     static func cameraPermissionError(
-        action: @escaping () -> Void
+        event: UserAccountEvent.AlertButtonTap
     ) -> Self {
         
         .init(
             title: "Ошибка",
             message: "Нет доступа к камере",
-            primary: .init(
+            primaryButton: .init(
                 type: .default,
                 title: "Ok",
-                action: action
+                event: event
             )
         )
     }
-    
-    static func galleryPermissionError(
-        action: @escaping () -> Void
-    ) -> Self {
-        
-        .init(
-            title: "Ошибка",
-            message: "Нет доступа к галереи",
-            primary: .init(
-                type: .default,
-                title: "Ok",
-                action: action
-            )
-        )
-    }
-    
-    static func exit(
-        action: @escaping () -> Void
-    ) -> Self {
-        
-        .init(
-            title: "Выход",
-            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
-            primary: .init(
-                type: .default,
-                title: "Выход",
-                action: action
-            ),
-            secondary: .init(
-                type: .cancel,
-                title: "Отмена",
-                action: {}
-            )
-        )
-    }
-    
-    static func delete(
-        action: @escaping () -> Void
-    ) -> Self {
-        
-        .init(
-            title: "Удалить учетную запись?",
-            message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
-            primary: .init(
-                type: .default,
-                title: "ОК",
-                action: action
-            ),
-            secondary: .init(
-                type: .cancel,
-                title: "Отмена",
-                action: {}
-            )
-        )
-    }
-}
-    
-extension AlertModelOf<UserAccountEvent.AlertButtonTapped> {
     
     static func cancelC2BSub(
         title: String,
-        event: UserAccountEvent.AlertButtonTapped
+        event: UserAccountEvent.AlertButtonTap
     ) -> Self {
         
         .init(
@@ -870,6 +910,62 @@ extension AlertModelOf<UserAccountEvent.AlertButtonTapped> {
             )
         )
     }
+    
+    static func delete(
+        event: UserAccountEvent.AlertButtonTap
+    ) -> Self {
+        
+        .init(
+            title: "Удалить учетную запись?",
+            message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
+            primaryButton: .init(
+                type: .default,
+                title: "ОК",
+                event: event
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .closeAlert
+            )
+        )
+    }
+
+    static func exit(
+        event: UserAccountEvent.AlertButtonTap
+    ) -> Self {
+        
+        .init(
+            title: "Выход",
+            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
+            primaryButton: .init(
+                type: .default,
+                title: "Выход",
+                event: event
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .closeAlert
+            )
+        )
+    }
+    
+    static func galleryPermissionError(
+        event: UserAccountEvent.AlertButtonTap
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: "Нет доступа к галереи",
+            primaryButton: .init(
+                type: .default,
+                title: "Ok",
+                event: event
+            )
+        )
+    }
+    
 }
 
 private extension AlertTextFieldView.ViewModel {
@@ -907,7 +1003,7 @@ extension UserAccountViewModel {
     typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
 
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias HandleOTPEffect = (UserAccountEffect.OTP, @escaping OTPDispatch) -> Void
+    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
     
     class AvatarViewModel: ObservableObject {
         
