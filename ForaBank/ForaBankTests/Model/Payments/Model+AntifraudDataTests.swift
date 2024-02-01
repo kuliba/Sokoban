@@ -90,7 +90,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1231 ₽"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     func test_paymentAntifraudData_serviceRequisites_shouldReturnAntifraudData() {
@@ -113,7 +113,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1234"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     func test_paymentAntifraudData_serviceRequisites_withCompany_shouldReturnAntifraudData() {
@@ -136,7 +136,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1234"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     
@@ -164,7 +164,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1 234 ₽"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     //MARK: Mobile
@@ -188,7 +188,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1234"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     //MARK: Utility
@@ -212,7 +212,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1234 ₽"
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     //MARK: To Another Card
@@ -237,7 +237,7 @@ final class Model_AntifraudDataTests: XCTestCase {
             amount: "- 1234 "
         )
         
-        XCTAssertNoDiff(result?.equatable, antifraudData?.equatable)
+        try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
     }
     
     // MARK: - Helpers
