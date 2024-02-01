@@ -203,7 +203,11 @@ struct UserAccountView: View {
                     .navigationBarTitle("", displayMode: .inline)
                 
             case let .new(route):
-                fpsWrapperView(route)
+                ZStack {
+                    
+                    fpsWrapperView(route)
+                    viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+                }
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -269,12 +273,17 @@ struct UserAccountView: View {
         fpsDestination: UserAccountNavigation.State.FPSDestination
     ) -> some View {
         
-        switch fpsDestination {
-        case let .confirmSetBankDefault(timedOTPInputViewModel, _):
-            OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+        ZStack {
             
-        case let .c2BSub(getC2BSubResponse, _):
-            Text("TBD: \(String(describing: getC2BSubResponse))")
+            switch fpsDestination {
+            case let .confirmSetBankDefault(timedOTPInputViewModel, _):
+                OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+                
+            case let .c2BSub(getC2BSubResponse, _):
+                Text("TBD: \(String(describing: getC2BSubResponse))")
+            }
+            
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
         }
     }
     
