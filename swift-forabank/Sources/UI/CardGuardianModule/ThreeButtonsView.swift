@@ -34,11 +34,13 @@ struct ThreeButtonsView: View { // верстка
                     HStack(spacing: config.paddings.leading) {
                         
                         iconView(button.iconType)
+                        
                         Text(button.title)
                             .font(config.fonts.title)
-                        Spacer()
                     }
                     .frame(height: config.sizes.buttonHeight)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
                     button.subtitle.map {
                         
                         Text($0)
@@ -56,14 +58,12 @@ struct ThreeButtonsView: View { // верстка
     }
     
     private func iconView(_ type: CardGuardian.Config.IconType) -> some View {
-        HStack {
-            
-            config.images.imageByType(type)
-                .frame(width: config.sizes.icon, height: config.sizes.icon)
-        }
-        .padding(config.paddings.vertical)
-        .background(Color(red: 0.96, green: 0.96, blue: 0.97))
-        .cornerRadius(config.sizes.cornerRadius)
+        
+        config.images.imageByType(type)
+            .frame(width: config.sizes.icon, height: config.sizes.icon)
+            .padding(config.paddings.vertical)
+            .background(Color(red: 0.96, green: 0.96, blue: 0.97))
+            .cornerRadius(config.sizes.cornerRadius)
     }
 }
 

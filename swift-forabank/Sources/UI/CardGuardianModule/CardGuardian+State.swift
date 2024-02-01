@@ -21,7 +21,6 @@ public extension CardGuardian {
     }
 }
 
-
 struct CardGuardianState: Equatable {
     
     let buttons: [_Button]
@@ -35,4 +34,3 @@ struct CardGuardianState: Equatable {
         let subtitle: String?
     }
 }
-
