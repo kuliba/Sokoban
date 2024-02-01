@@ -94,10 +94,10 @@ public extension CardGuardian.Config {
     
     struct Paddings {
         
-        let leading: CGFloat // 20
-        let trailing: CGFloat // 80
-        let vertical: CGFloat // 8
-        let subtitleLeading: CGFloat // 56
+        let leading: CGFloat
+        let trailing: CGFloat
+        let vertical: CGFloat
+        let subtitleLeading: CGFloat
 
         public init(
             leading: CGFloat,
@@ -116,8 +116,8 @@ public extension CardGuardian.Config {
 public extension CardGuardian.Config {
     
     struct Colors {
-        let foreground: Color // text/Secondary
-        let subtitle: Color // Text/placeholder
+        let foreground: Color
+        let subtitle: Color
         
         public init(foreground: Color, subtitle: Color) {
             self.foreground = foreground
@@ -129,8 +129,8 @@ public extension CardGuardian.Config {
 public extension CardGuardian.Config {
     
     struct Fonts {
-        let title: Font // Font.custom("Inter", size: 16).weight(.medium)
-        let subtitle: Font // Font.custom("Inter", size: 14)
+        let title: Font
+        let subtitle: Font
         
         public init(title: Font, subtitle: Font) {
             self.title = title
