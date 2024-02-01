@@ -16,12 +16,15 @@ import UIPrimitives
 
 struct NavigationStateManager {
     
+    let alertReduce: AlertReduce
     let fpsReduce: FPSReduce
     let otpReduce: OTPReduce
     let handleOTPEffect: HandleOTPEffect
 }
 
 extension NavigationStateManager {
+    
+    typealias AlertReduce = (UserAccountRoute, UserAccountEvent.AlertButtonTap) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
     
@@ -174,10 +177,7 @@ private extension UserAccountViewModel {
             route = .init()
             
         case let .alertButtonTapped(alertButtonTapped):
-#warning("inject composed reducer")
-            let alertButtonReducer = UserAccountAlertButtonTapReducer()
-            let reduce = alertButtonReducer.reduce(_:_:)
-            (state, effect) = reduce(state, alertButtonTapped)
+            (state, effect) = navigationStateManager.alertReduce(state, alertButtonTapped)
             
         case let .route(routeEvent):
 #warning("inject composed reducer")

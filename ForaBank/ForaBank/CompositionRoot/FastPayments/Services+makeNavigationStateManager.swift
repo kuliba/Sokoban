@@ -34,6 +34,8 @@ extension Services {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> NavigationStateManager {
         
+        let alertButtonReducer = UserAccountAlertButtonTapReducer()
+        
         let fpsReducer = UserAccountNavigationFPSReducer()
         
         let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient: httpClient)
@@ -61,6 +63,7 @@ extension Services {
         )
         
         return .init(
+            alertButtonReducer: alertButtonReducer,
             fpsReducer: fpsReducer,
             otpReducer: otpReducer,
             otpEffectHandler: otpEffectHandler
@@ -80,11 +83,13 @@ private struct FastPaymentsSettingsOTPServices {
 private extension NavigationStateManager {
     
     init(
+        alertButtonReducer: UserAccountAlertButtonTapReducer,
         fpsReducer: UserAccountNavigationFPSReducer,
         otpReducer: UserAccountNavigationOTPReducer,
         otpEffectHandler: UserAccountNavigationOTPEffectHandler
     ) {
         self.init(
+            alertReduce: alertButtonReducer.reduce(_:_:),
             fpsReduce: fpsReducer.reduce(_:_:),
             otpReduce: otpReducer.reduce(_:_:_:),
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
