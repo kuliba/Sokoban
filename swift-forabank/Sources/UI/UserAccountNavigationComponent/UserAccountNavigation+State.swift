@@ -43,11 +43,28 @@ public extension UserAccountNavigation.State {
 public extension UserAccountNavigation.State {
     
     
-    enum FPSDestination: Equatable {
+    enum FPSDestination: Equatable, Identifiable {
         
-        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
 #warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
         case c2BSub(GetC2BSubResponse, AnyCancellable?)
+        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
+        
+        public var id: Case {
+            
+            switch self {
+            case .c2BSub: 
+                return .c2BSub
+                
+            case .confirmSetBankDefault:
+                return .confirmSetBankDefault
+            }
+        }
+        
+        public enum Case {
+            
+            case c2BSub
+            case confirmSetBankDefault
+        }
     }
 }
 

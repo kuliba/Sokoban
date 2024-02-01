@@ -255,6 +255,13 @@ struct UserAccountView: View {
             ),
             content: { .init(with: $0, event: { viewModel.event(.init(event: $0)) }) }
         )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.fpsDestination },
+                set: { _ in }//{ if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+            ),
+            content: fpsDestinationView
+        )
     }
     
     @ViewBuilder
@@ -277,7 +284,6 @@ struct UserAccountView: View {
     ) -> some View {
         
         switch sheet.sheetType {
-            
         case let .userDocument(userDocumentViewModel):
             UserDocumentView(viewModel: userDocumentViewModel)
         }
