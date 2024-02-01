@@ -23,16 +23,8 @@ extension RootViewModelFactory {
             return .preview
         }
         
-        let bankDefaultReducer = BankDefaultReducer()
-        let consentListReducer = ConsentListRxReducer()
-        let contractReducer = ContractReducer(getProducts: getProducts)
-        let productsReducer = ProductsReducer(getProducts: getProducts)
-        
-        let reducer = FastPaymentsSettingsReducer(
-            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
-            consentListReduce: consentListReducer.reduce(_:_:),
-            contractReduce: contractReducer.reduce(_:_:),
-            productsReduce: productsReducer.reduce(_:_:)
+        let reducer = FastPaymentsSettingsReducer.default(
+            getProducts: getProducts
         )
         
 #warning("replace stubs with services")
@@ -79,6 +71,26 @@ extension RootViewModelFactory {
                 })
             )
         }
+    }
+}
+
+private extension FastPaymentsSettingsReducer {
+    
+    static func `default`(
+        getProducts: @escaping () -> [Product]
+    ) -> FastPaymentsSettingsReducer {
+        
+        let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
+        let contractReducer = ContractReducer(getProducts: getProducts)
+        let productsReducer = ProductsReducer(getProducts: getProducts)
+        
+        return .init(
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
+        )
     }
 }
 
