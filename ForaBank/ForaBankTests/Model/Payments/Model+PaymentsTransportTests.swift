@@ -349,7 +349,8 @@ extension TransferResponseData {
         needOTP: Bool? = nil,
         payeeName: String? = nil,
         documentStatus: TransferResponseBaseData.DocumentStatus? = nil,
-        paymentOperationDetailId: Int = 1
+        paymentOperationDetailId: Int = 1,
+        scenario: AntiFraudScenario = .ok
     ) -> TransferResponseData {
         
         TransferResponseData(
@@ -366,7 +367,7 @@ extension TransferResponseData {
             payeeName: payeeName,
             documentStatus: documentStatus,
             paymentOperationDetailId: paymentOperationDetailId,
-            scenario: .ok
+            scenario: scenario
         )
     }
 }
