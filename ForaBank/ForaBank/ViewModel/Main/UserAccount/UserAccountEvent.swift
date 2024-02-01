@@ -12,6 +12,7 @@ import UIPrimitives
 
 enum UserAccountEvent {
     
+    #warning("suboptimal event structure, needs cleaning")
     case closeAlert
     case closeFPSAlert
     case dismissDestination
@@ -28,7 +29,16 @@ extension UserAccountEvent {
     
     enum AlertButtonTap {
         
+        #warning("suboptimal event structure, needs cleaning")
         case closeAlert
+        case closeFPSAlert
+        case dismissDestination
+        case dismissFPSDestination
+        case dismissRoute
+
+        case fps(FastPaymentsSettings)
+        case otp(OTP)
+        
         case cancelC2BSub(SubscriptionViewModel.Token)
         case delete
         case exit

@@ -31,6 +31,10 @@ extension UserAccountAlertButtonTapReducer {
             
         case .exit:
             effect = .model(.exit)
+            
+            #warning("cases not handled")
+        default:
+            break
         }
         
         return (state, effect)

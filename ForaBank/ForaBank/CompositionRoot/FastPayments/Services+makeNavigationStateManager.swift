@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import OTPInputComponent
 import Tagged
+import UIPrimitives
 import UserAccountNavigationComponent
 
 private extension FastPaymentsSettingsOTPServices {
@@ -128,13 +129,13 @@ private extension UserAccountNavigationFPSReducer {
         var effect: UserAccountEffect?
         
         switch (state.link, fpsEvent) {
-        // case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
+            // case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
         case let (.fastPaymentSettings(.new), .updated(settings)):
             
             let (fpsState, fpsEffect) = reduce(.init(state), settings, { _ in })
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
-
+            
         default:
             break
         }
@@ -155,7 +156,7 @@ private extension UserAccountNavigationOTPReducer {
         var effect: UserAccountEffect?
         
         switch state.link {
-        // case let .fastPaymentSettings(.new(fpsRoute)):
+            // case let .fastPaymentSettings(.new(fpsRoute)):
         case .fastPaymentSettings(.new):
             
             let (fpsState, fpsEffect) = reduce(
@@ -175,7 +176,7 @@ private extension UserAccountNavigationOTPReducer {
     }
 }
 
-// MARK: - Helpers
+// MARK: - Adapters
 
 private extension UserAccountRoute {
     
@@ -183,7 +184,7 @@ private extension UserAccountRoute {
         
         var route = self
         route.link = .init(state)
-#warning("ignoring alert state!!!!!!!")
+        route.alert = state.alert?.routeAlert
         route.spinner = state.isLoading ? .init() : nil
         
         return route
@@ -203,6 +204,98 @@ private extension UserAccountRoute.Link {
         }
     }
 }
+
+private extension AlertModelOf<UserAccountNavigation.Event> {
+    
+    var routeAlert: AlertModelOf<UserAccountEvent.AlertButtonTap> {
+        
+        .init(
+            id: id,
+            title: title,
+            message: message,
+            primaryButton: primaryButton.routeButton,
+            secondaryButton: secondaryButton?.routeButton
+        )
+    }
+}
+
+private extension ButtonViewModel<UserAccountNavigation.Event> {
+    
+    var routeButton: ButtonViewModel<UserAccountEvent.AlertButtonTap> {
+        
+        .init(
+            type: type.routeButtonType,
+            title: title,
+            event: event.routeAlert
+        )
+    }
+}
+
+private extension UserAccountNavigation.Event {
+    
+    var routeAlert: UserAccountEvent.AlertButtonTap {
+        
+        switch self {
+        case .closeAlert:
+            return .closeAlert
+        case .closeFPSAlert:
+            return .closeFPSAlert
+        case .dismissFPSDestination:
+            return .dismissFPSDestination
+        case .dismissDestination:
+            return .dismissDestination
+        case .dismissRoute:
+            return .dismissRoute
+        case let .fps(fps):
+            return .fps(fps)
+        case let .otp(otp):
+            return .otp(otp)
+        }
+    }
+}
+
+private extension UserAccountNavigation.Event {
+    
+    var _routeAlert: UserAccountEvent {
+        
+        switch self {
+        case .closeAlert:
+            return .closeAlert
+            
+        case .closeFPSAlert:
+            return .closeFPSAlert
+            
+        case .dismissFPSDestination:
+            return .dismissFPSDestination
+            
+        case .dismissDestination:
+            return .dismissDestination
+            
+        case .dismissRoute:
+            return .dismissRoute
+            
+        case let .fps(fps):
+            return .fps(fps)
+            
+        case let .otp(otp):
+            return .otp(otp)
+        }
+    }
+}
+
+private extension ButtonViewModel<UserAccountNavigation.Event>.ButtonType {
+    
+    var routeButtonType: ButtonViewModel<UserAccountEvent.AlertButtonTap>.ButtonType {
+        
+        switch self {
+        case .default:     return .default
+        case .destructive: return .destructive
+        case .cancel:      return .cancel
+        }
+    }
+}
+
+// MARK: - Helpers
 
 extension Array where Element == FastPaymentContractFullInfoType {
     
