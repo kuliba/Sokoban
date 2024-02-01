@@ -36,29 +36,6 @@ private extension FastPaymentsSettingsServices {
 
 extension RootViewModelFactory {
     
-    static func makeNewFastPaymentsViewModel(
-        useStub isStub: Bool = true,
-        httpClient: HTTPClient,
-        model: Model,
-        scheduler: AnySchedulerOfDispatchQueue = .main
-    ) -> FastPaymentsSettingsViewModel {
-        
-        let reducer = FastPaymentsSettingsReducer.default(
-            getProducts: isStub ? { .preview } : model.getProducts
-        )
-        
-        let effectHandler = FastPaymentsSettingsEffectHandler(
-            services: isStub ? .stub() : .live(httpClient: httpClient)
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
-        )
-    }
-    
     // TODO: Remove legacy after new one is released
     static func makeFastPaymentsFactory(
         httpClient: HTTPClient,
@@ -89,6 +66,29 @@ extension RootViewModelFactory {
                 })
             )
         }
+    }
+    
+    static func makeNewFastPaymentsViewModel(
+        useStub isStub: Bool = true,
+        httpClient: HTTPClient,
+        model: Model,
+        scheduler: AnySchedulerOfDispatchQueue = .main
+    ) -> FastPaymentsSettingsViewModel {
+        
+        let reducer = FastPaymentsSettingsReducer.default(
+            getProducts: isStub ? { .preview } : model.getProducts
+        )
+        
+        let effectHandler = FastPaymentsSettingsEffectHandler(
+            services: isStub ? .stub() : .live(httpClient: httpClient)
+        )
+        
+        return .init(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
     }
 }
 

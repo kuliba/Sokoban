@@ -472,5 +472,7 @@ extension FastPaymentsFactory {
 
 extension NavigationStateManager {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(
+        otpReduce: { state, _,_ in (state, nil) }
+    )
 }

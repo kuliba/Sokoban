@@ -7,17 +7,138 @@
 
 import Combine
 import Foundation
+import OTPInputComponent
 import Tagged
+import UserAccountNavigationComponent
+
+private extension FastPaymentsSettingsOTPServices {
+    
+#warning("add live services")
+    static func live(httpClient: HTTPClient) -> Self {
+        
+        unimplemented()
+    }
+}
 
 extension Services {
     
+#warning("remove model if unused")
     static func makeNavigationStateManager(
+        useStub isStub: Bool = true,
         httpClient: HTTPClient,
         model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping (String, StaticString, UInt) -> Void,
+        duration: Int = 10,
+        length: Int = 6,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> NavigationStateManager {
         
-        .init()
+        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient: httpClient)
+        
+        let otpReducer = UserAccountNavigationOTPReducer(
+            makeTimedOTPInputViewModel: {
+                
+                .init(
+                    viewModel: .default(
+                        initialState: nil,
+                        duration: duration,
+                        length: length,
+                        initiateOTP: otpServices.initiateOTP,
+                        submitOTP: otpServices.submitOTP,
+                        scheduler: $0
+                    ),
+                    scheduler: $0
+                )
+            },
+            scheduler: .main
+        )
+        
+        return .init(
+            otpReducer: otpReducer
+        )
+    }
+}
+
+private struct FastPaymentsSettingsOTPServices {
+    
+    let initiateOTP: CountdownEffectHandler.InitiateOTP
+    let submitOTP: OTPFieldEffectHandler.SubmitOTP
+}
+
+// MARK: - Adapter
+
+private extension NavigationStateManager {
+    
+    init(
+        otpReducer: UserAccountNavigationOTPReducer
+    ) {
+        self.init(otpReduce: otpReducer.reduce(_:_:_:))
+    }
+}
+
+private extension UserAccountNavigationOTPReducer {
+    
+    func reduce(
+        _ state: UserAccountRoute,
+        _ event: UserAccountEvent.OTP,
+        _ dispatch: @escaping (UserAccountEvent.OTP) -> Void
+    ) -> (UserAccountRoute, UserAccountEffect?) {
+        
+        var state = state
+        var effect: UserAccountEffect?
+        
+        switch state.link {
+        case let .fastPaymentSettings(.new(fpsRoute)):
+            
+#warning("ignoring alert state")
+            let fps = UserAccountNavigationFPSReducer.State(
+                destination: fpsRoute,
+                alert: nil,
+                isLoading: state.spinner != nil
+            )
+            let (fpsState, fpsEffect) = reduce(
+                fps,
+                event,
+                { _ in },
+                { dispatch($0) }
+            )
+            state = state.updated(with: fpsState)
+            effect = fpsEffect.map(UserAccountEffect.navigation)
+            
+        default:
+            break
+        }
+        
+        return (state, effect)
+    }
+}
+
+// MARK: - Helpers
+
+extension UserAccountRoute {
+    
+    func updated(with state: UserAccountNavigation.State) -> Self {
+        
+        var route = self
+        route.link = .init(state)
+#warning("ignoring alert state!!!!!!!")
+        route.spinner = state.isLoading ? .init() : nil
+        
+        return route
+    }
+}
+
+private extension UserAccountRoute.Link {
+    
+    init?(_ state: UserAccountNavigation.State) {
+        
+        switch state.destination {
+        case let .some(fpsRoute):
+            self = .fastPaymentSettings(.new(fpsRoute))
+            
+        default:
+            return nil
+        }
     }
 }
 
@@ -58,4 +179,26 @@ private extension FastPaymentContractFullInfoType {
         && contractAttributeList.flagClientAgreementIn == .no
         && contractAttributeList.flagClientAgreementOut == .no
     }
+}
+
+// MARK: - Stubs
+
+private extension FastPaymentsSettingsOTPServices {
+    
+    static let stub: Self = .init(
+        initiateOTP: { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(.success(()))
+            }
+        },
+        submitOTP: { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(.success(()))
+            }
+        }
+    )
 }

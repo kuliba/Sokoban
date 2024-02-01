@@ -14,7 +14,16 @@ import SwiftUI
 import UserAccountNavigationComponent
 import UIPrimitives
 
-struct NavigationStateManager {}
+struct NavigationStateManager {
+    
+    let otpReduce: OTPReduce
+}
+
+extension NavigationStateManager {
+    
+    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
+    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+}
 
 class UserAccountViewModel: ObservableObject {
     
@@ -160,18 +169,18 @@ private extension UserAccountViewModel {
         case .dismissDestination:
             route.link = nil
             effect = .navigation(.fps(.resetStatus))
-
+            
         case .dismissRoute:
             route = .init()
             
         case let .alertButtonTapped(alertButtonTapped):
-            #warning("inject composed reducer")
+#warning("inject composed reducer")
             let alertButtonReducer = UserAccountAlertButtonTapReducer()
             let reduce = alertButtonReducer.reduce(_:_:)
             (state, effect) = reduce(state, alertButtonTapped)
             
         case let .route(routeEvent):
-            #warning("inject composed reducer")
+#warning("inject composed reducer")
             let routeReduce = UserAccountRouteEventReducer().reduce(_:_:)
             state = routeReduce(state, routeEvent)
             
@@ -179,7 +188,11 @@ private extension UserAccountViewModel {
             (state, effect) = reduce(state, with: fastPaymentsSettings)
             
         case let .otp(otpEvent):
-            (state, effect) = reduce(state, with: otpEvent)
+            (state, effect) = navigationStateManager.otpReduce(
+                state,
+                otpEvent,
+                { [weak self] in self?.event(.otp($0)) }
+            )
         }
         
         return (state, effect)
@@ -210,77 +223,6 @@ private extension UserAccountViewModel {
         default:
             break
         }
-    
-        return (state, effect)
-    }
-    
-    func reduce(
-        _ state: State,
-        with otpEvent: Event.OTP
-    ) -> (State, Effect?) {
-        
-        #warning("INJECT!!!")
-        let otpReducer = UserAccountNavigationOTPReducer(
-            makeTimedOTPInputViewModel: unimplemented(),
-            scheduler: scheduler
-        )
-        return otpReducer.reduce( state, otpEvent) { [weak self] in
-            
-            self?.event(.otp($0))
-        }
-    }
-}
-
-// MARK: - Helpers
-
-private extension UserAccountRoute {
-    
-    func updated(with state: UserAccountNavigation.State) -> Self {
-        
-        var route = self
-        route.link = .init(state)
-        #warning("ignoring alert state!!!!!!!")
-        route.spinner = state.isLoading ? .init() : nil
-        
-        return route
-    }
-}
-
-// MARK: - Adapter
-
-private extension UserAccountNavigationOTPReducer {
-    
-    func reduce(
-        _ state: UserAccountRoute,
-        _ event: UserAccountEvent.OTP,
-        _ dispatch: @escaping (UserAccountEvent.OTP) -> Void
-    ) -> (UserAccountRoute, UserAccountEffect?) {
-        
-        var state = state
-        var effect: UserAccountEffect?
-        
-        switch state.link {
-            
-        case let .fastPaymentSettings(.new(fpsRoute)):
-                        
-#warning("ignoring alert state")
-            let fps = UserAccountNavigationFPSReducer.State(
-                destination: fpsRoute,
-                alert: nil,
-                isLoading: state.spinner != nil
-            )
-            let (fpsState, fpsEffect) = reduce(
-                fps,
-                event,
-                { _ in },
-                { dispatch($0) }
-            )
-            state = state.updated(with: fpsState)
-            effect = fpsEffect.map(UserAccountEffect.navigation)
-            
-        default:
-            break
-        }
         
         return (state, effect)
     }
@@ -295,20 +237,6 @@ private extension UserAccountNavigationFPSReducer.State.FPSRoute {
         switch state.link {
         case let .fastPaymentSettings(.new(fpsRoute)):
             self = fpsRoute
-            
-        default:
-            return nil
-        }
-    }
-}
-
-private extension UserAccountViewModel.State.Link {
-    
-    init?(_ state: UserAccountNavigation.State) {
-        
-        switch state.destination {
-        case let .some(fpsRoute):
-            self = .fastPaymentSettings(.new(fpsRoute))
             
         default:
             return nil
