@@ -209,9 +209,7 @@ private extension UserAccountViewModel {
             )
 #warning("ignoring effect")
             let (fpsState, _) = reducer.reduce(fps, settings, { _ in })
-            
-            state.link = .init(fpsState)
-            state.spinner = fpsState.isLoading ? .init() : nil
+            state = state.updated(with: fpsState)
             
         default:
             break
@@ -225,9 +223,74 @@ private extension UserAccountViewModel {
         with otpEvent: Event.OTP
     ) -> (State, Effect?) {
         
-        fatalError()
+        #warning("INJECT!!!")
+        let otpReducer = UserAccountNavigationOTPReducer(
+            makeTimedOTPInputViewModel: unimplemented(),
+            scheduler: scheduler
+        )
+        return otpReducer.reduce( state, otpEvent) { [weak self] in
+            
+            self?.event(.otp($0))
+        }
     }
 }
+
+// MARK: - Helpers
+
+private extension UserAccountRoute {
+    
+    func updated(with state: UserAccountNavigation.State) -> Self {
+        
+        var route = self
+        route.link = .init(state)
+        #warning("ignoring alert state!!!!!!!")
+        route.spinner = state.isLoading ? .init() : nil
+        
+        return route
+    }
+}
+
+// MARK: - Adapter
+
+private extension UserAccountNavigationOTPReducer {
+    
+    func reduce(
+        _ state: UserAccountRoute,
+        _ event: UserAccountEvent.OTP,
+        _ dispatch: @escaping (UserAccountEvent.OTP) -> Void
+    ) -> (UserAccountRoute, UserAccountEffect?) {
+        
+        var state = state
+        var effect: UserAccountEffect?
+        
+        switch state.link {
+            
+        case let .fastPaymentSettings(.new(fpsRoute)):
+                        
+#warning("ignoring alert state")
+            let fps = UserAccountNavigationFPSReducer.State(
+                destination: fpsRoute,
+                alert: nil,
+                isLoading: state.spinner != nil
+            )
+            let (fpsState, fpsEffect) = reduce(
+                fps,
+                event,
+                { _ in },
+                { dispatch($0) }
+            )
+            state = state.updated(with: fpsState)
+            effect = fpsEffect.map(UserAccountEffect.navigation)
+            
+        default:
+            break
+        }
+        
+        return (state, effect)
+    }
+}
+
+// MARK: - mapping
 
 private extension UserAccountNavigationFPSReducer.State.FPSRoute {
     
