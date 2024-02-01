@@ -9,7 +9,7 @@ import SwiftUI
 
 extension CardGuardian.Config {
     
-    public static let preview: Self = .init(
+    static let preview: Self = .init(
         images: .preview,
         paddings: .preview,
         sizes: .preview,
