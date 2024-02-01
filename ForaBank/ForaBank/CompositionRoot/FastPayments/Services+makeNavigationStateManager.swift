@@ -60,19 +60,23 @@ extension Services {
         
         let routeEventReducer = UserAccountRouteEventReducer()
         
+        let userAccountReducer = UserAccountReducer(
+            alertReduce: alertButtonReducer.reduce(_:_:),
+            fpsReduce: fpsReducer.reduce(_:_:),
+            otpReduce: otpReducer.reduce(_:_:_:),
+            routeEventReduce: routeEventReducer.reduce(_:_:)
+        )
+        
         let modelEffectHandler = UserAccountModelEffectHandler(
             model: model
         )
-
+        
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             prepareSetBankDefault: otpServices.prepareSetBankDefault
         )
         
         return .init(
-            alertButtonReducer: alertButtonReducer,
-            fpsReducer: fpsReducer,
-            otpReducer: otpReducer,
-            routeEventReducer: routeEventReducer,
+            userAccountReducer: userAccountReducer,
             modelEffectHandler: modelEffectHandler,
             otpEffectHandler: otpEffectHandler
         )
@@ -91,18 +95,12 @@ private struct FastPaymentsSettingsOTPServices {
 private extension UserAccountNavigationStateManager {
     
     init(
-        alertButtonReducer: UserAccountAlertButtonTapReducer,
-        fpsReducer: UserAccountNavigationFPSReducer,
-        otpReducer: UserAccountNavigationOTPReducer,
-        routeEventReducer: UserAccountRouteEventReducer,
+        userAccountReducer: UserAccountReducer,
         modelEffectHandler: UserAccountModelEffectHandler,
         otpEffectHandler: UserAccountNavigationOTPEffectHandler
     ) {
         self.init(
-            alertReduce: alertButtonReducer.reduce(_:_:),
-            fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:_:),
-            routeEventReduce: routeEventReducer.reduce(_:_:),
+            userAccountReduce: userAccountReducer.reduce(_:_:_:),
             handleModelEffect: modelEffectHandler.handleEffect(_:_:),
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )

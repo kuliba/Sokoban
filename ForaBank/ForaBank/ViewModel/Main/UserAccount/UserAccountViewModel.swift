@@ -113,67 +113,14 @@ class UserAccountViewModel: ObservableObject {
 extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
-        
-        let (route, effect) = reduce(route, event)
+
+        let (route, effect) = navigationStateManager.userAccountReduce(route, event) { [weak self] in self?.event(.otp($0)) }
         routeSubject.send(route)
         
         if let effect {
             
             handleEffect(effect) { [weak self] in self?.event($0) }
         }
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    typealias State = UserAccountRoute
-    typealias Event = UserAccountEvent
-    typealias Effect = UserAccountEffect
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case .closeAlert:
-            route.alert = nil
-            
-        case .closeFPSAlert:
-            effect = .navigation(.fps(.resetStatus))
-            
-        case .dismissFPSDestination:
-            // route.fpsDestination = nil
-            effect = .navigation(.fps(.resetStatus))
-            
-        case .dismissDestination:
-            route.link = nil
-            effect = .navigation(.fps(.resetStatus))
-            
-        case .dismissRoute:
-            route = .init()
-            
-        case let .alertButtonTapped(alertButtonTapped):
-            (state, effect) = navigationStateManager.alertReduce(state, alertButtonTapped)
-            
-        case let .route(routeEvent):
-            state = navigationStateManager.routeEventReduce(state, routeEvent)
-            
-        case let .fps(fastPaymentsSettings):
-            (state, effect) = navigationStateManager.fpsReduce(state, fastPaymentsSettings)
-            
-        case let .otp(otpEvent):
-            (state, effect) = navigationStateManager.otpReduce(
-                state,
-                otpEvent,
-                { [weak self] in self?.event(.otp($0)) }
-            )
-        }
-        
-        return (state, effect)
     }
 }
 

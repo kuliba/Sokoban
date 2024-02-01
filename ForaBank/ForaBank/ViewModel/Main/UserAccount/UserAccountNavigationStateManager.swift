@@ -10,24 +10,15 @@ import UserAccountNavigationComponent
 
 struct UserAccountNavigationStateManager {
     
-    let alertReduce: AlertReduce
-    let fpsReduce: FPSReduce
-    let otpReduce: OTPReduce
-    let routeEventReduce: RouteEventReduce
+    let userAccountReduce: UserAccountReduce
     let handleModelEffect: HandleModelEffect
     let handleOTPEffect: HandleOTPEffect
 }
 
 extension UserAccountNavigationStateManager {
     
-    typealias AlertReduce = (UserAccountRoute, UserAccountEvent.AlertButtonTap) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
-    
     typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
+    typealias UserAccountReduce = (UserAccountRoute, UserAccountEvent, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias Dispatch = (UserAccountEvent) -> Void
     typealias HandleModelEffect = (UserAccountEffect.ModelEffect, @escaping Dispatch) -> Void
