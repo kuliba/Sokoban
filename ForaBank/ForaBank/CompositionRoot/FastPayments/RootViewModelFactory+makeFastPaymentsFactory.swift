@@ -9,15 +9,6 @@ import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
 
-private extension Model {
-    
-#warning("add mapping and filtering products from model")
-    func getProducts() -> [Product] {
-        
-        unimplemented()
-    }
-}
-
 private extension FastPaymentsSettingsServices {
     
 #warning("add live services")
@@ -76,7 +67,7 @@ extension RootViewModelFactory {
     ) -> FastPaymentsSettingsViewModel {
         
         let reducer = FastPaymentsSettingsReducer.default(
-            getProducts: isStub ? { .preview } : model.getProducts
+            getProducts: /*isStub ? { .preview } :*/ model.getProducts
         )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
@@ -136,6 +127,105 @@ private struct FastPaymentsSettingsServices {
     let getSettings: FastPaymentsSettingsEffectHandler.GetSettings
     let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
     let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct
+}
+
+// MARK: - Live
+
+private extension Model {
+    
+#warning("getProducts should employ this requirements for products attributes https://shorturl.at/jtxzS")
+#warning("getProducts is expected to sort products in order that would taking first that is `active` and `main`")
+    // https://shorturl.at/yTW35
+    func getProducts() -> [Product] {
+        
+        let formatBalance = { [weak self] in
+            
+            self?.formattedBalance(of: $0) ?? ""
+        }
+        
+        return allProducts.compactMap {
+            $0.fastPaymentsProduct(formatBalance: formatBalance)
+        }
+    }
+}
+
+private extension ProductData {
+    
+    func fastPaymentsProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> FastPaymentsSettings.Product? {
+        
+        switch productType {
+        case .account:
+            guard let account = self as? ProductAccountData,
+                  account.status == .active,
+                  account.currency == rub
+            else { return nil }
+            
+            return account.fpsProduct(formatBalance: formatBalance)
+            
+        case .card:
+            guard let card = self as? ProductCardData,
+                  (card.isMain ?? false),
+                  card.status == .active,
+                  card.statusPc == .active,
+                  card.currency == rub
+            else { return nil }
+            
+            return card.fpsProduct(formatBalance: formatBalance)
+            
+        default:
+            return nil
+        }
+    }
+    
+    private var rub: String { "RUB" }
+}
+
+private extension ProductAccountData {
+    
+    func fpsProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> FastPaymentsSettings.Product {
+        
+        .init(
+            id: .init(id),
+            type: .account,
+            header: "Счет списания",
+            title: displayName,
+            number: displayNumber ?? "",
+            amountFormatted: formatBalance(self),
+            balance: .init(balanceValue),
+            look: .init(
+                background: .svg(largeDesign.description),
+                color: backgroundColor.description,
+                icon: .svg(smallDesign.description)
+            )
+        )
+    }
+}
+
+private extension ProductCardData {
+    
+    func fpsProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> FastPaymentsSettings.Product {
+        
+        .init(
+            id: .init(id),
+            type: .card,
+            header: "Счет списания",
+            title: displayName,
+            number: displayNumber ?? "",
+            amountFormatted: formatBalance(self),
+            balance: .init(balanceValue),
+            look: .init(
+                background: .svg(largeDesign.description),
+                color: backgroundColor.description,
+                icon: .svg(smallDesign.description)
+            )
+        )
+    }
 }
 
 // MARK: - Stubs

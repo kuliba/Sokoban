@@ -8527,11 +8527,11 @@
 			isa = PBXGroup;
 			children = (
 				774A8B192865FBFF00B81140 /* UserAccountViewModel.swift */,
-				2AB352E12B6BC7D5000EADC2 /* UserAccountReducer.swift */,
 				2AB352DF2B6BC626000EADC2 /* UserAccountNavigationStateManager.swift */,
 				2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */,
 				2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */,
 				2A4C35BA2B6A2B2500694861 /* UserAccountEffect.swift */,
+				2AB352E12B6BC7D5000EADC2 /* UserAccountReducer.swift */,
 				2AF0B0D42B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift */,
 				2AF0B0D62B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift */,
 				2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */,
