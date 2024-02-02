@@ -66,6 +66,7 @@ extension Services {
             case createCommissionProductTransfer
             case createStickerPayment
             case createSberQRPayment
+            case fastPaymentContractFindList
             case formSessionKey
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
@@ -173,6 +174,12 @@ extension Services.Endpoint {
         pathPrefix: .binding,
         version: .v1,
         serviceName: .createSberQRPayment
+    )
+    
+    static let fastPaymentContractFindList: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .fastPaymentContractFindList
     )
     
     static let formSessionKey: Self = .init(
