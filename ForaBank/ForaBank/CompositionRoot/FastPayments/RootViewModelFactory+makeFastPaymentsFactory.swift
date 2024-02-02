@@ -32,8 +32,11 @@ extension RootViewModelFactory {
     static func makeFastPaymentsFactory(
         httpClient: HTTPClient,
         model: Model,
+        logger: LoggerAgentProtocol,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
     ) -> FastPaymentsFactory {
+        
+        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         switch fastPaymentsSettingsFlag.rawValue {
         case .active:
@@ -42,6 +45,7 @@ extension RootViewModelFactory {
                 makeNewFastPaymentsViewModel(
                     httpClient: httpClient,
                     model: model,
+                    log: infoNetworkLog,
                     scheduler: $0
                 )
             }))
@@ -64,10 +68,11 @@ extension RootViewModelFactory {
         useStub isStub: Bool = true,
         httpClient: HTTPClient,
         model: Model,
+        log: @escaping (String, StaticString, UInt) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> FastPaymentsSettingsViewModel {
         
-        
+        Services.makeFPSServices(httpClient: httpClient, log: log)
         // let f = MicroServices.Factory
         
         let reducer = FastPaymentsSettingsReducer.default(
@@ -144,6 +149,16 @@ private struct FastPaymentsSettingsServices {
 }
 
 // MARK: - Live
+
+private extension Services {
+    
+    static func makeFPSServices(
+        httpClient: HTTPClient,
+        log: @escaping (String, StaticString, UInt) -> Void
+    ) {
+        
+    }
+}
 
 private extension Model {
     
