@@ -1726,6 +1726,10 @@
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
 		833325412B5AE955001920EB /* CardStatementAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 833325402B5AE955001920EB /* CardStatementAPI */; };
 		83339E2D2A80F0620017C777 /* GetProductListByTypeResponseOnlyDeposits.json in Resources */ = {isa = PBXBuildFile; fileRef = 83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */; };
+		83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */; };
+		83361EB62B6CF89A00F58C10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83361EB12B6CF89900F58C10 /* Assets.xcassets */; };
+		83361EB72B6CF89A00F58C10 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83361EB32B6CF89900F58C10 /* Preview Assets.xcassets */; };
+		83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83361EB42B6CF89900F58C10 /* ContentView.swift */; };
 		833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */; };
 		833764FD2A385DF700F7C1AB /* CardViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */; };
 		833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */; };
@@ -1753,6 +1757,7 @@
 		8357E3312B6809540065E581 /* OperationDetailFactoryl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */; };
 		8357E3352B6BBBFB0065E581 /* CardGuardianModule in Frameworks */ = {isa = PBXBuildFile; productRef = 8357E3342B6BBBFB0065E581 /* CardGuardianModule */; };
 		8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */; };
+		8357E34E2B6CF7C20065E581 /* CardGuardianModule in Frameworks */ = {isa = PBXBuildFile; productRef = 8357E34D2B6CF7C20065E581 /* CardGuardianModule */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
 		8362FAFF29DEDCB70094457E /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */; };
 		8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */; };
@@ -4049,6 +4054,10 @@
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
 		83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductListByTypeResponseOnlyDeposits.json; sourceTree = "<group>"; };
+		83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardGuardianPreviewApp.swift; sourceTree = "<group>"; };
+		83361EB12B6CF89900F58C10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		83361EB32B6CF89900F58C10 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		83361EB42B6CF89900F58C10 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingSelectorView.swift; sourceTree = "<group>"; };
 		833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewComponentTests.swift; sourceTree = "<group>"; };
 		833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingSessionCodeData.swift; sourceTree = "<group>"; };
@@ -4077,6 +4086,7 @@
 		8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailFactoryl.swift; sourceTree = "<group>"; };
 		8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianModule.xctestplan; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
+		8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardGuardianPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
 		8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesOperatorsView.swift; sourceTree = "<group>"; };
@@ -4651,6 +4661,14 @@
 			files = (
 				8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */,
 				83D6447F2AA0E0C0002D5301 /* LandingMapping in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8357E33A2B6CF77B0065E581 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8357E34E2B6CF7C20065E581 /* CardGuardianModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7222,6 +7240,7 @@
 		2AE5972529F9182B0083F138 /* PreviewApps */ = {
 			isa = PBXGroup;
 			children = (
+				83361EAF2B6CF89900F58C10 /* CardGuardianPreview */,
 				2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA7A2B50576D0093EE83 /* FastPaymentsSettingsPreview */,
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
@@ -9947,6 +9966,25 @@
 			path = Taxes;
 			sourceTree = "<group>";
 		};
+		83361EAF2B6CF89900F58C10 /* CardGuardianPreview */ = {
+			isa = PBXGroup;
+			children = (
+				83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */,
+				83361EB12B6CF89900F58C10 /* Assets.xcassets */,
+				83361EB22B6CF89900F58C10 /* Preview Content */,
+				83361EB42B6CF89900F58C10 /* ContentView.swift */,
+			);
+			path = CardGuardianPreview;
+			sourceTree = "<group>";
+		};
+		83361EB22B6CF89900F58C10 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				83361EB32B6CF89900F58C10 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		833764FB2A385DF700F7C1AB /* ProductView */ = {
 			isa = PBXGroup;
 			children = (
@@ -11338,6 +11376,7 @@
 				2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */,
 				2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */,
 				2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */,
+				8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -12305,6 +12344,26 @@
 			productReference = 83378AB52AA0DFE10087F8B1 /* LandingPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8357E33C2B6CF77B0065E581 /* CardGuardianPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8357E34C2B6CF77E0065E581 /* Build configuration list for PBXNativeTarget "CardGuardianPreview" */;
+			buildPhases = (
+				8357E3392B6CF77B0065E581 /* Sources */,
+				8357E33A2B6CF77B0065E581 /* Frameworks */,
+				8357E33B2B6CF77B0065E581 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CardGuardianPreview;
+			packageProductDependencies = (
+				8357E34D2B6CF7C20065E581 /* CardGuardianModule */,
+			);
+			productName = CardGuardianPreview;
+			productReference = 8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		A515682B2821B927000D4455 /* ForaPushServiceExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A51568372821B927000D4455 /* Build configuration list for PBXNativeTarget "ForaPushServiceExtension" */;
@@ -12516,7 +12575,7 @@
 		EDB14375265FDA410028EF5A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1510;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					2A14A8512A2750440018511E = {
@@ -12539,6 +12598,9 @@
 					};
 					83378AB42AA0DFE10087F8B1 = {
 						CreatedOnToolsVersion = 14.3.1;
+					};
+					8357E33C2B6CF77B0065E581 = {
+						CreatedOnToolsVersion = 15.2;
 					};
 					A515682B2821B927000D4455 = {
 						CreatedOnToolsVersion = 13.3.1;
@@ -12616,6 +12678,7 @@
 				2A95CB9F2B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */,
 				2A783A802B5A87CE0035CEAB /* OTPInputComponentPreview */,
+				8357E33C2B6CF77B0065E581 /* CardGuardianPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -12681,6 +12744,15 @@
 			files = (
 				83378ABF2AA0DFE20087F8B1 /* Preview Assets.xcassets in Resources */,
 				83378ABC2AA0DFE20087F8B1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8357E33B2B6CF77B0065E581 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83361EB72B6CF89A00F58C10 /* Preview Assets.xcassets in Resources */,
+				83361EB62B6CF89A00F58C10 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -13180,6 +13252,15 @@
 				83378ABA2AA0DFE10087F8B1 /* ContentView.swift in Sources */,
 				83378AB82AA0DFE10087F8B1 /* LandingPreviewApp.swift in Sources */,
 				83D644832AA0F0AC002D5301 /* JsonView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8357E3392B6CF77B0065E581 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */,
+				83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -16147,6 +16228,147 @@
 			};
 			name = Preprod;
 		};
+		8357E3482B6CF77E0065E581 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CardGuardianPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8357E3492B6CF77E0065E581 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CardGuardianPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		8357E34A2B6CF77E0065E581 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CardGuardianPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8357E34B2B6CF77E0065E581 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CardGuardianPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		A51568352821B927000D4455 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -17065,6 +17287,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		8357E34C2B6CF77E0065E581 /* Build configuration list for PBXNativeTarget "CardGuardianPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8357E3482B6CF77E0065E581 /* Debug */,
+				8357E3492B6CF77E0065E581 /* Mock */,
+				8357E34A2B6CF77E0065E581 /* Release */,
+				8357E34B2B6CF77E0065E581 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		A51568372821B927000D4455 /* Build configuration list for PBXNativeTarget "ForaPushServiceExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -17573,6 +17806,10 @@
 			productName = CardStatementAPI;
 		};
 		8357E3342B6BBBFB0065E581 /* CardGuardianModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CardGuardianModule;
+		};
+		8357E34D2B6CF7C20065E581 /* CardGuardianModule */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CardGuardianModule;
 		};

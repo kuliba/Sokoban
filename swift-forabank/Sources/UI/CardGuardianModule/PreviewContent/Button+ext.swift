@@ -28,5 +28,5 @@ extension CardGuardianState._Button {
 
 extension Array where Element == CardGuardianState._Button {
     
-    static let preview: Self = [.one, .two, .three]
+    public static let preview: Self = [.one, .two, .three]
 }
