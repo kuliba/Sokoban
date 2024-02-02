@@ -11,11 +11,18 @@ import CardGuardianModule
 struct ContentView: View {
     
     var body: some View {
-        CardGuardianModule.ThreeButtonsWrappedView(viewModel: .init(initialState: .init(buttons: .preview), reduce: {_,_ in
-            (CardGuardianState.init(buttons: .preview), .none)
-        }, handleEffect: {_,_ in }), config: .preview)
-        .padding(.top, 26)
-        .padding(.bottom, 72)        .padding()
+        
+        ProductProfileView(viewModel: .init(navigationStateManager: .init(makeCardGuardianViewModel: { _ in
+            
+                .init(
+                    initialState: .init(buttons: .preview),
+                    reduce: { _,_ in
+                        (CardGuardianState.init(buttons: .preview), .none)
+                    },
+                    handleEffect: { _,_ in }
+                )
+        })))
+        .padding()
     }
 }
 

@@ -33,5 +33,3 @@ public struct ThreeButtonsWrappedView: View {
         )
     }
 }
-
-

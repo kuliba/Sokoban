@@ -1724,6 +1724,10 @@
 		831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */; };
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
 		833325412B5AE955001920EB /* CardStatementAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 833325402B5AE955001920EB /* CardStatementAPI */; };
+		833370BE2B6D2EDB00B424E8 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 833370BD2B6D2EDB00B424E8 /* UIPrimitives */; };
+		833370C12B6D36CF00B424E8 /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833370BB2B6D2DDD00B424E8 /* AnySchedulerOfDispatchQueue.swift */; };
+		833370C22B6D36D400B424E8 /* ProductProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833370B82B6D2BE200B424E8 /* ProductProfileViewModel.swift */; };
+		833370C32B6D36D800B424E8 /* ProductProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833370BF2B6D369800B424E8 /* ProductProfileView.swift */; };
 		83339E2D2A80F0620017C777 /* GetProductListByTypeResponseOnlyDeposits.json in Resources */ = {isa = PBXBuildFile; fileRef = 83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */; };
 		83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */; };
 		83361EB62B6CF89A00F58C10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83361EB12B6CF89900F58C10 /* Assets.xcassets */; };
@@ -4051,6 +4055,9 @@
 		831161332A02751800908A1F /* ProductFrontViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFrontViewComponent.swift; sourceTree = "<group>"; };
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
+		833370B82B6D2BE200B424E8 /* ProductProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileViewModel.swift; sourceTree = "<group>"; };
+		833370BB2B6D2DDD00B424E8 /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
+		833370BF2B6D369800B424E8 /* ProductProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileView.swift; sourceTree = "<group>"; };
 		83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductListByTypeResponseOnlyDeposits.json; sourceTree = "<group>"; };
 		83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardGuardianPreviewApp.swift; sourceTree = "<group>"; };
 		83361EB12B6CF89900F58C10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -4666,6 +4673,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				833370BE2B6D2EDB00B424E8 /* UIPrimitives in Frameworks */,
 				8357E34E2B6CF7C20065E581 /* CardGuardianModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9962,9 +9970,28 @@
 			path = Taxes;
 			sourceTree = "<group>";
 		};
+		833370B72B6D2BC600B424E8 /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				833370B82B6D2BE200B424E8 /* ProductProfileViewModel.swift */,
+				833370BF2B6D369800B424E8 /* ProductProfileView.swift */,
+			);
+			path = ProductProfile;
+			sourceTree = "<group>";
+		};
+		833370BA2B6D2DDD00B424E8 /* ThirdPartyDependencies */ = {
+			isa = PBXGroup;
+			children = (
+				833370BB2B6D2DDD00B424E8 /* AnySchedulerOfDispatchQueue.swift */,
+			);
+			path = ThirdPartyDependencies;
+			sourceTree = "<group>";
+		};
 		83361EAF2B6CF89900F58C10 /* CardGuardianPreview */ = {
 			isa = PBXGroup;
 			children = (
+				833370BA2B6D2DDD00B424E8 /* ThirdPartyDependencies */,
+				833370B72B6D2BC600B424E8 /* ProductProfile */,
 				83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */,
 				83361EB12B6CF89900F58C10 /* Assets.xcassets */,
 				83361EB22B6CF89900F58C10 /* Preview Content */,
@@ -12356,6 +12383,7 @@
 			name = CardGuardianPreview;
 			packageProductDependencies = (
 				8357E34D2B6CF7C20065E581 /* CardGuardianModule */,
+				833370BD2B6D2EDB00B424E8 /* UIPrimitives */,
 			);
 			productName = CardGuardianPreview;
 			productReference = 8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */;
@@ -13257,6 +13285,9 @@
 			files = (
 				83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */,
 				83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */,
+				833370C12B6D36CF00B424E8 /* AnySchedulerOfDispatchQueue.swift in Sources */,
+				833370C22B6D36D400B424E8 /* ProductProfileViewModel.swift in Sources */,
+				833370C32B6D36D800B424E8 /* ProductProfileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17800,6 +17831,10 @@
 		833325402B5AE955001920EB /* CardStatementAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CardStatementAPI;
+		};
+		833370BD2B6D2EDB00B424E8 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		8357E3342B6BBBFB0065E581 /* CardGuardianModule */ = {
 			isa = XCSwiftPackageProductDependency;
