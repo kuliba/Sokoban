@@ -1516,14 +1516,20 @@ extension Model {
         for operation: Payments.Operation
     ) -> Payments.AntifraudData? {
         
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        let antifraudParameter = paymentsParameterValue(
+            operation.parameters, id: antifraudParameterId
+        )
+        
+        guard antifraudStatus().contains(where: { $0 == antifraudParameter }) || (operation.service == .sfp && antifraudParameter == nil) else {
+            return nil
+        }
+        
+        var name: String?
+        var phone: String?
+        
         switch operation.service {
         case .sfp:
-            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
-            let antifraudParameter = paymentsParameterValue(operation.parameters, id: antifraudParameterId)
-            
-            guard antifraudStatus().contains(where: { $0 == antifraudParameter }) ||  antifraudParameter == nil else {
-                return nil
-            }
             
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
@@ -1537,137 +1543,155 @@ extension Model {
             }
             
             let formatPhone = PhoneNumberKitFormater().format(phoneValue.digits)
-            return .init(payeeName: recipientValue, phone: formatPhone, amount: "- \(amountValue) ₽")
+            return .init(
+                payeeName: recipientValue,
+                phone: formatPhone,
+                amount: "- \(amountValue) ₽"
+            )
             
-        case .requisites, .avtodor, .abroad, .fms, .fns, .fssp, .gibdd, .mobileConnection, .toAnotherCard, .transport, .utility, .internetTV:
-            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
-            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId }) else {
-                return nil
+        case .requisites:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsName.rawValue
+            ) {
+                name = newName
+            } else if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+            ) {
+                name = newName
             }
             
-            guard antifraudParameter.value == "SUSPECT" else { return nil }
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+            )
             
-            var name: String?
-            var phone: String?
+            return .init(
+                payeeName: name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amount ?? "")"
+            )
             
-            switch operation.service {
-            case .requisites:
-                if let newName = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.requisitsName.rawValue
-                ) {
-                    name = newName
-                } else if let newName = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.requisitsCompanyName.rawValue
-                ) {
-                    name = newName
-                }
-                
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.requisitsAmount.rawValue
-                )
-                
-                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
-
-            case .abroad:
-                if let newName = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.countryPayee.rawValue
-                ) {
-                    name = newName
-                }
-                
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.amount.rawValue
-                )
-                
-                let numberCard = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.p1.rawValue
-                )
-                
-                let currency = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
-                )
-
-                let productParameterId = Payments.Parameter.Identifier.product.rawValue
-                if let productValue = operation.parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct {
-                    
-                    let product = self.allProducts.first(where: { $0.id == Int(productValue.id) })
-                    let value = numberCard?.masked(mask: StringValueMask.card)
-                    
-                    return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
-                }
-                let value = numberCard?.masked(mask: StringValueMask.card)
-                
-                return .init(payeeName: value ?? name ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(currency ?? "")")
-
-                
-            case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
-                
-                if let newName = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue }) as? Payments.ParameterHeader {
-                    name = newName.title
-                }
-        
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.amount.rawValue
-                )
-                
-                let paymentsServiceAmount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
-                )
-                
-                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? paymentsServiceAmount ?? "") ₽")
-
-            case .mobileConnection:
-                if let newPhone = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
-                ) {
-                    phone = newPhone
-                }
-                
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.mobileConnectionAmount.rawValue
-                )
-                
-                let formatPhone = PhoneNumberKitFormater().format(phone?.digits.addCodeRuIfNeeded() ?? "")
-                return .init(payeeName: name ?? "", phone: formatPhone, amount: "- \(amount ?? "")")
-
-            case .toAnotherCard:
-                if let newName = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.productTemplate.rawValue
-                ) {
-                    name = newName
-                }
-                
-                let productID = Int(name?.dropFirst(2) ?? "")
-                
-                let product = self.productTemplates.value.first(where: { $0.id == productID })
-                
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.amount.rawValue
-                )
-                
-                return .init(payeeName: product?.numberMask ?? "", phone: phone ?? "", amount: "- \(amount ?? "") \(product?.currency ?? "")")
-                
-            default:
-                let amount = paymentsParameterValue(
-                    operation.parameters,
-                    id: Payments.Parameter.Identifier.requisitsAmount.rawValue
-                )
-                return .init(payeeName: name ?? "", phone: phone ?? "", amount: "- \(amount ?? "")")
+        case .abroad:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.countryPayee.rawValue
+            ) {
+                name = newName
             }
-        
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
+            
+            let numberCard = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.p1.rawValue
+            )
+            
+            let currency = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
+            )
+            
+            let value = numberCard?.masked(mask: StringValueMask.card)
+            
+            if let amount = Double(amount ?? "0") {
+             
+                let amountFormatted = amountFormatted(
+                    amount: amount,
+                    currencyCode: currency,
+                    style: .clipped
+                )
+                
+                return .init(
+                    payeeName: value ?? name ?? "",
+                    phone: phone ?? "",
+                    amount: "- \(amountFormatted ?? "")"
+                )
+            }
+            
+            return .init(
+                payeeName: value ?? name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amount ?? "") \(currency ?? "")"
+            )
+            
+        case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
+            
+            if let newName = operation.parameters.first(
+                where: { $0.id == Payments.Parameter.Identifier.header.rawValue
+                }) as? Payments.ParameterHeader {
+                name = newName.title
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
+            
+            let paymentsServiceAmount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
+            )
+            
+            return .init(
+                payeeName: name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amount ?? paymentsServiceAmount ?? "") ₽"
+            )
+            
+        case .mobileConnection:
+            if let newPhone = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
+            ) {
+                phone = newPhone
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.mobileConnectionAmount.rawValue
+            )
+            
+            let formatPhone = PhoneNumberKitFormater().format(phone?.digits.addCodeRuIfNeeded() ?? "")
+            return .init(
+                payeeName: name ?? "",
+                phone: formatPhone,
+                amount: "- \(amount ?? "")"
+            )
+            
+        case .toAnotherCard:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.productTemplate.rawValue
+            ) {
+                name = newName
+            }
+            
+            let product = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.product.rawValue
+            )
+            
+            let currency = self.allProducts.first(where: { $0.id == product?.id })?.currency
+            
+            let productNumberMask = name?.dropFirst(2) ?? ""
+            let maskCardNumber = String(productNumberMask.prefix(4)) + " **** **** " + String(productNumberMask.suffix(4))
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
+            
+            return .init(
+                payeeName: maskCardNumber,
+                phone: phone ?? "",
+                amount: "- \(amount ?? "") \(currency ?? "")"
+            )
+            
         default:
             return nil
         }

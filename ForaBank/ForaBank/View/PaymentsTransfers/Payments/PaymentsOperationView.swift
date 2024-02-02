@@ -66,6 +66,7 @@ struct PaymentsOperationView: View {
                     switch link {
                     case let .success(successViewModel):
                         PaymentsSuccessView(viewModel: successViewModel)
+                            .navigationBarBackButtonHidden()
                         
                     case let .confirm(confirmViewModel):
                         PaymentsOperationView(viewModel: confirmViewModel)

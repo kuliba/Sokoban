@@ -144,3 +144,12 @@ extension TransferResponseData {
         )
     }
 }
+
+extension TransferResponseData {
+    
+    enum AntiFraudScenario: String, Codable {
+        
+        case suspect = "SCOR_SUSPECT_FRAUD"
+        case ok = "OK"
+    }
+}
