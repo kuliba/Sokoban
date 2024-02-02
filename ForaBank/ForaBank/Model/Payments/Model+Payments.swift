@@ -1591,32 +1591,17 @@ extension Model {
                 id: Payments.Parameter.Identifier.p1.rawValue
             )
             
-            let currency = paymentsParameterValue(
-                operation.parameters,
-                id: Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
-            )
-            
             let value = numberCard?.masked(mask: StringValueMask.card)
             
-            if let amount = Double(amount ?? "0") {
-             
-                let amountFormatted = amountFormatted(
-                    amount: amount,
-                    currencyCode: currency,
-                    style: .clipped
-                )
-                
-                return .init(
-                    payeeName: value ?? name ?? "",
-                    phone: phone ?? "",
-                    amount: "- \(amountFormatted ?? "")"
-                )
-            }
+            let amountFormatted = amountWithParameterProductCurrency(
+                operation: operation,
+                amount: amount
+            )
             
             return .init(
                 payeeName: value ?? name ?? "",
                 phone: phone ?? "",
-                amount: "- \(amount ?? "") \(currency ?? "")"
+                amount: "- \(amountFormatted ?? amount ?? "")"
             )
             
         case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
@@ -1670,14 +1655,7 @@ extension Model {
             ) {
                 name = newName
             }
-            
-            let product = paymentsParameterValue(
-                operation.parameters,
-                id: Payments.Parameter.Identifier.product.rawValue
-            )
-            
-            let currency = self.allProducts.first(where: { $0.id == product?.id })?.currency
-            
+                    
             let productNumberMask = name?.dropFirst(2) ?? ""
             let maskCardNumber = String(productNumberMask.prefix(4)) + " **** **** " + String(productNumberMask.suffix(4))
             
@@ -1685,11 +1663,16 @@ extension Model {
                 operation.parameters,
                 id: Payments.Parameter.Identifier.amount.rawValue
             )
+
+            let amountFormatted = amountWithParameterProductCurrency(
+                operation: operation,
+                amount: amount
+            )
             
             return .init(
                 payeeName: maskCardNumber,
                 phone: phone ?? "",
-                amount: "- \(amount ?? "") \(currency ?? "")"
+                amount: "- \(amountFormatted ?? amount ?? "")"
             )
             
         default:
@@ -1697,6 +1680,29 @@ extension Model {
         }
     }
     
+    func amountWithParameterProductCurrency(
+        operation: Payments.Operation,
+        amount: String?
+    ) -> String? {
+        
+        if let product = paymentsParameterValue(
+            operation.parameters,
+            id: Payments.Parameter.Identifier.product.rawValue
+        ), let amount = Double(amount ?? "") {
+            
+            let currency = self.allProducts.first(where: { $0.id == Int(product) })?.currency
+            let amountFormatted = amountFormatted(
+                amount: amount,
+                currencyCode: currency,
+                style: .fraction
+            )
+            
+            return amountFormatted
+        }
+        
+        return nil
+    }
+        
     func isSingleService(_ puref: String) async throws -> Bool {
         
         LoggerAgent.shared.log(category: .model, message: "isSingleService")
