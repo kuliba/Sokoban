@@ -10,6 +10,7 @@ import UIKit
 class DepositSuccessViewController: UIViewController {
 
     @IBOutlet weak var depositLabel: UILabel!
+    @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var optionsButtons: UIStackView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var statusImage: UIImageView!
@@ -54,6 +55,7 @@ class DepositSuccessViewController: UIViewController {
         stackView.addArrangedSubview(incomeField)
         stackView.addArrangedSubview(cardFromField)
 
+        amountLabel.isHidden = true
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
@@ -88,11 +90,14 @@ class DepositSuccessViewController: UIViewController {
             termField.isHidden = true
             closeField.isHidden = true
             cardFromField.isHidden = true
+            incomeField.isHidden = true
             
             optionsButtons.isHidden = true
             depositLabel.text = "Операция временно приостановлена в целях безопасности"
             depositLabel.textColor = .systemRed
-            incomeField.text = confurmVCModel?.summTransction ?? ""
+            descriptionLabel.text = Payments.Success.antifraudSubtitle
+            amountLabel.text = confurmVCModel?.summTransction ?? ""
+            amountLabel.isHidden = false
             descriptionLabel.text = Payments.Success.antifraudSubtitle
             
             statusImage.image = UIImage(named: "waiting")

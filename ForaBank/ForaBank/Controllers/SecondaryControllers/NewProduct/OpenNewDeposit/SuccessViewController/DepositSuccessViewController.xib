@@ -17,6 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DepositSuccessViewController" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="amountLabel" destination="1vu-yo-IDf" id="fHC-2P-J3Q"/>
                 <outlet property="depositLabel" destination="yHp-QC-UKo" id="mIX-DA-tZi"/>
                 <outlet property="descriptionLabel" destination="qlI-0E-vQi" id="XcF-EN-t2o"/>
                 <outlet property="doneButton" destination="mUp-me-yrn" id="NEA-pO-PNJ"/>
@@ -51,6 +52,12 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qlI-0E-vQi">
                     <rect key="frame" x="20" y="238.5" width="374" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1vu-yo-IDf">
+                    <rect key="frame" x="20" y="258.5" width="374" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -156,8 +163,10 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="trailing" secondItem="qlI-0E-vQi" secondAttribute="trailing" id="05O-d9-rVg"/>
                 <constraint firstItem="mUp-me-yrn" firstAttribute="top" secondItem="B2M-S6-mKr" secondAttribute="bottom" constant="30" id="0uR-Dk-d9w"/>
                 <constraint firstItem="qlI-0E-vQi" firstAttribute="top" secondItem="yHp-QC-UKo" secondAttribute="bottom" constant="10" id="2oE-Ub-Xoz"/>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="leading" secondItem="qlI-0E-vQi" secondAttribute="leading" id="ATw-NN-Bx4"/>
                 <constraint firstItem="yHp-QC-UKo" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="DuZ-8b-Ol8"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kY8-pp-N2J" secondAttribute="trailing" constant="20" id="EXW-rE-Kg0"/>
                 <constraint firstItem="B2M-S6-mKr" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Izh-Qk-llK"/>
@@ -167,6 +176,7 @@
                 <constraint firstItem="fQs-lG-n2K" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="TZ0-vh-YSu"/>
                 <constraint firstItem="qlI-0E-vQi" firstAttribute="leading" secondItem="kY8-pp-N2J" secondAttribute="leading" id="WHf-I9-oJH"/>
                 <constraint firstItem="B2M-S6-mKr" firstAttribute="top" secondItem="kY8-pp-N2J" secondAttribute="bottom" constant="20" id="cRT-4Z-9Mw"/>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="top" secondItem="qlI-0E-vQi" secondAttribute="bottom" constant="20" id="g7F-AG-88V"/>
                 <constraint firstItem="kY8-pp-N2J" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="jlX-0U-Gub"/>
                 <constraint firstItem="kY8-pp-N2J" firstAttribute="top" secondItem="yHp-QC-UKo" secondAttribute="bottom" constant="20" id="qRD-E0-AdQ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mUp-me-yrn" secondAttribute="trailing" constant="20" id="rMv-eI-SS2"/>
