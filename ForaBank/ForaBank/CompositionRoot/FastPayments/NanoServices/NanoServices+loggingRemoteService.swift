@@ -14,14 +14,18 @@ extension NanoServices {
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MapResponseError>,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping (String, StaticString, UInt) -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> RemoteService<Input, Output, Error, Error, MapResponseError> {
         
         LoggingRemoteServiceDecorator(
             createRequest: createRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: mapResponse,
-            log: log
+            log: log,
+            file: file, 
+            line: line
         ).remoteService
     }
 }
