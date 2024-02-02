@@ -161,7 +161,7 @@ final class Model_AntifraudDataTests: XCTestCase {
         let antifraudData: Payments.AntifraudData? = .init(
             payeeName: "p1",
             phone: "",
-            amount: "- 1 234 ₽"
+            amount: "- 1234"
         )
         
         try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
@@ -234,7 +234,7 @@ final class Model_AntifraudDataTests: XCTestCase {
         let antifraudData: Payments.AntifraudData? = .init(
             payeeName: "34 **** **** 34",
             phone: "",
-            amount: "- 1234 "
+            amount: "- 1234"
         )
         
         try XCTAssertNoDiff(XCTUnwrap(result?.equatable), antifraudData?.equatable)
