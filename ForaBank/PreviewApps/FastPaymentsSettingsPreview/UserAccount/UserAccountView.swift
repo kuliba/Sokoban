@@ -24,7 +24,7 @@ struct UserAccountView: View {
                 openFastPaymentsSettingsButton()
                     .alert(
                         item: .init(
-                            get: { viewModel.alert },
+                            get: { viewModel.state.alert },
                             set: { if $0 == nil { viewModel.event(.closeAlert) }}
                         ),
                         content: { .init(with: $0, event: viewModel.event) }
@@ -103,18 +103,6 @@ struct UserAccountView: View {
             
         case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
-        }
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    var alert: AlertModelOf<Event>? {
-        
-        if let alert = state.alert {
-            return alert
-        } else {
-            return nil
         }
     }
 }
