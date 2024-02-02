@@ -64,6 +64,7 @@ extension Services {
             case bindPublicKeyWithEventId
             case changePIN
             case createCommissionProductTransfer
+            case createFastPaymentContract
             case createStickerPayment
             case createSberQRPayment
             case fastPaymentContractFindList
@@ -158,6 +159,12 @@ extension Services.Endpoint {
         pathPrefix: .transfer,
         version: nil,
         serviceName: .createCommissionProductTransfer
+    )
+    
+    static let createFastPaymentContract: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .createFastPaymentContract
     )
     
     static let createLandingRequest: Self = .init(
