@@ -70,6 +70,7 @@ extension Services {
             case formSessionKey
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
+            case getClientConsentMe2MePull
             case getJsonAbroad
             case getSberQRData
             case getOperationDetailByPaymentId
@@ -192,6 +193,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: nil,
         serviceName: .getCardStatementForPeriod_V3
+    )
+
+    static let getClientConsentMe2MePull: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getClientConsentMe2MePull
     )
 
     static let getImageList: Self = .init(
