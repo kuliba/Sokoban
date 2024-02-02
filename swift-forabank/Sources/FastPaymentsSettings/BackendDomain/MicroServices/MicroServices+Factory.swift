@@ -13,7 +13,7 @@ public extension MicroServices {
         
         private let createContract: CreateContract
 #warning("getBankDefault should be decorated with caching!")
-        private let getBankDefault: GetBankDefault
+        private let getBankDefault: GetBankDefaultResponse
         private let getConsent: GetConsent
         private let getContract: GetContract
         private let getProducts: GetProducts
@@ -22,7 +22,7 @@ public extension MicroServices {
         
         public init(
             createContract: @escaping CreateContract,
-            getBankDefault: @escaping GetBankDefault,
+            getBankDefault: @escaping GetBankDefaultResponse,
             getConsent: @escaping GetConsent,
             getContract: @escaping GetContract,
             getProducts: @escaping GetProducts,
@@ -109,7 +109,7 @@ public extension MicroServices.Facade {
     
     // getBankDefault
     typealias GetBankDefaultCompletion = (UserPaymentSettings.GetBankDefaultResponse) -> Void
-    typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
+    typealias GetBankDefaultResponse = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
     
     // getClientConsentMe2MePull
     typealias GetConsentCompletion = (Consent?) -> Void

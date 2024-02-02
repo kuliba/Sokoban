@@ -68,6 +68,7 @@ extension Services {
             case createSberQRPayment
             case fastPaymentContractFindList
             case formSessionKey
+            case getBankDefault
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
@@ -189,6 +190,12 @@ extension Services.Endpoint {
         serviceName: .formSessionKey
     )
     
+    static let getBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getBankDefault
+    )
+
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
         version: nil,

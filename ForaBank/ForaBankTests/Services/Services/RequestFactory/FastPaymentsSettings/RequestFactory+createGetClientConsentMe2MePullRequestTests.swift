@@ -33,6 +33,7 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
         
         XCTAssertNil(request.httpBody)
     }
+    
     // MARK: - Helpers
     
     private func createGetClientConsentMe2MePullRequest(

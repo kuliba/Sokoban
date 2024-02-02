@@ -33,6 +33,7 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
         
         XCTAssertNil(request.httpBody)
     }
+    
     // MARK: - Helpers
     
     private func createFastPaymentContractFindListRequest(

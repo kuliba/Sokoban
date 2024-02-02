@@ -26,11 +26,12 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetConsentListSuccess() {
         
         let product = makeProduct()
-        let loadedConsentList = consentListSuccess()
+        let consent: Consent = .preview
+        let loadedConsentList = consentListSuccess(FastPaymentsSettingsTests.consentList(consent: consent))
         
         let settings = map(
             getProductsStub: [product],
-            consentList: loadedConsentList
+            consent: consent
         )
         
         XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
@@ -39,11 +40,12 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetConsentListFailure() {
         
         let product = makeProduct()
-        let loadedConsentList = consentListFailure()
-        
+        let consent: Consent = .preview
+        let loadedConsentList = consentListSuccess(FastPaymentsSettingsTests.consentList(consent: consent))
+
         let settings = map(
             getProductsStub: [product],
-            consentList: loadedConsentList
+            consent: consent
         )
         
         XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
@@ -140,11 +142,15 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     
     private func makeSUT(
         getProductsStub: [Product],
+        getSelectableBanksStub: [ConsentList.SelectableBank] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getProducts: { getProductsStub })
+        let sut = SUT(
+            getProducts: { getProductsStub },
+            getSelectableBanks: { getSelectableBanksStub }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -154,7 +160,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     private func map(
         getProductsStub: [Product],
         paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
-        consentList: ConsentListState = consentListSuccess(),
+        consent: Consent = .preview,
         bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = bankDefault(),
         file: StaticString = #file,
         line: UInt = #line
@@ -164,7 +170,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         
         return sut.mapToSettings(
             paymentContract: paymentContract,
-            consentList: consentList,
+            consent: consent,
             bankDefaultResponse: bankDefaultResponse
         )
     }

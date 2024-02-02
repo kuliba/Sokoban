@@ -59,11 +59,12 @@ func consentError(
 }
 
 func consentList(
+    consent: Consent = .preview
 ) -> ConsentList {
     
     .init(
         banks: .preview,
-        consent: .preview,
+        consent: consent,
         mode: .collapsed,
         searchText: ""
     )
