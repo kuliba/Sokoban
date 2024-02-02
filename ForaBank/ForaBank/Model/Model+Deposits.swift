@@ -111,32 +111,54 @@ extension Model {
 
 extension Model {
     
+    func handleDepositsSerial() -> String? {
+        
+        if localAgent.load(type: [DepositProductData].self) != nil {
+            
+            return localAgent.serial(for: [DepositProductData].self)
+         
+        } else {
+            //try? localAgent.clear(type: [DepositProductData].self)
+            return nil
+        }
+    }
+    
     func handleDepositsListRequest() {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
-        let command = ServerCommands.DepositController.GetDepositProductList(token: token)
+    
+        let serial = handleDepositsSerial()
+        
+        let command = ServerCommands.DepositController.GetDepositProductList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
             case .success(let response):
                 switch response.statusCode {
-                case .ok:
                     
-                    guard let deposits = response.data else {
+                case .ok:
+                    //guard serial != response.data?.serial else { return }
+                    print("@@@ before data")
+                   
+                    guard
+                        let data = response.data,
+                        let deposits = data.list
+                    else {
                         self.action.send(ModelAction.Deposits.List.Response.failure(message: self.emptyDataErrorMessage))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
+                    print("@@@@@ data\(data)")
                     
                     self.deposits.value = deposits
                     self.action.send(ModelAction.Deposits.List.Response.success(data: deposits))
                     
                     do {
                         
-                        try self.localAgent.store(deposits, serial: nil)
+                        try self.localAgent.store(deposits, serial: data.serial)
                         
                     } catch(let error) {
                         
@@ -147,6 +169,7 @@ extension Model {
                     self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
             case .failure(let error):
                 self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
                 self.handleServerCommandError(error: error, command: command)
