@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
+import Tagged
+
 public extension MicroServices {
     
     final class Factory {
