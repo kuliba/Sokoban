@@ -27,6 +27,7 @@ public extension UserAccountNavigation.Event {
     
     enum FastPaymentsSettings: Equatable {
         
+        case dismissFPSDestination
         case updated(FastPaymentsSettingsState)
     }
     

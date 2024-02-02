@@ -8,4 +8,4 @@
 import FastPaymentsSettings
 import RxViewModel
 
-typealias FastPaymentsSettingsViewModel = RxViewModel<FastPaymentsSettingsState, FastPaymentsSettingsEvent, FastPaymentsSettingsEffect>
+public typealias FastPaymentsSettingsViewModel = RxViewModel<FastPaymentsSettingsState, FastPaymentsSettingsEvent, FastPaymentsSettingsEffect>

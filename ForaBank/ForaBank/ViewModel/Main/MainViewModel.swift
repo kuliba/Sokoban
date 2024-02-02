@@ -32,7 +32,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let fastPaymentsServices: FastPaymentsServices
+    private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
@@ -45,7 +45,7 @@ class MainViewModel: ObservableObject, Resetable {
         route: Route = .empty,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
@@ -65,7 +65,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
+        self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
@@ -191,9 +191,9 @@ private extension MainViewModel {
                     
                     #warning("replace with injected factory")
                     route.destination = .userAccount(.init(
+                        navigationStateManager: navigationStateManager,
                         model: model,
                         fastPaymentsFactory: fastPaymentsFactory,
-                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in self?.resetDestination() }
                     ))

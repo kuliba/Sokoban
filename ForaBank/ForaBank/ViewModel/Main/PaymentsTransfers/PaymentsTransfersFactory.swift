@@ -25,7 +25,7 @@ extension PaymentsTransfersFactory {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()

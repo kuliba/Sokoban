@@ -2,72 +2,80 @@
 //  UserAccountRouteEventReducer.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 30.01.2024.
+//  Created by Igor Malyarov on 31.01.2024.
 //
 
-enum UserAccountRouteEventReducer {}
+final class UserAccountRouteEventReducer {}
 
 extension UserAccountRouteEventReducer {
     
-    static func reduce(
-        _ route: UserAccountRoute,
-        _ routeEvent: UserAccountEvent.RouteEvent
+    func reduce(
+        _ state: State,
+        _ event: Event
     ) -> UserAccountRoute {
         
-        var route = route
+        var state = state
         
-        switch routeEvent {
+        switch event {
         case let .alert(alertEvent):
             switch alertEvent {
             case .reset:
-                route.alert = nil
+                state.alert = nil
                 
             case let .setTo(alertViewModel):
-                route.alert = alertViewModel
+                state.alert = alertViewModel
             }
             
         case let .bottomSheet(bottomSheetEvent):
             switch bottomSheetEvent {
             case .reset:
-                route.bottomSheet = nil
+                state.bottomSheet = nil
+                
             case let .setTo(bottomSheet):
-                route.bottomSheet = bottomSheet
+                state.bottomSheet = bottomSheet
             }
             
         case let .link(linkEvent):
             switch linkEvent {
             case .reset:
-                route.link = nil
+                state.link = nil
                 
             case let .setTo(link):
-                route.link = link
+                state.link = link
             }
             
         case let .sheet(sheetEvent):
             switch sheetEvent {
             case .reset:
-                route.sheet = nil
+                state.sheet = nil
             }
             
         case let .spinner(spinnerEvent):
             switch spinnerEvent {
             case .hide:
-                route.spinner = nil
+                state.spinner = nil
                 
             case .show:
-                route.spinner = .init()
+                state.spinner = .init()
             }
             
         case let .textFieldAlert(textFieldAlertEvent):
             switch textFieldAlertEvent {
             case .reset:
-                route.textFieldAlert = nil
+                state.textFieldAlert = nil
                 
             case let .setTo(alertViewModel):
-                route.textFieldAlert = alertViewModel
+                state.textFieldAlert = alertViewModel
             }
         }
         
-        return route
+        return state
     }
+    
+}
+
+extension UserAccountRouteEventReducer {
+    
+    typealias State = UserAccountRoute
+    typealias Event = UserAccountEvent.RouteEvent
 }

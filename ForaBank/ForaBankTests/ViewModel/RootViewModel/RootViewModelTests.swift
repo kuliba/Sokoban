@@ -207,12 +207,12 @@ final class RootViewModelTests: XCTestCase {
         }
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
                 fastPaymentsFactory: .legacy,
-                fastPaymentsServices: .empty,
+                navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
@@ -221,7 +221,7 @@ final class RootViewModelTests: XCTestCase {
             paymentsViewModel: .init(
                 model: model,
                 fastPaymentsFactory: .legacy,
-                fastPaymentsServices: .empty,
+                navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
                 paymentsTransfersFactory: .preview
