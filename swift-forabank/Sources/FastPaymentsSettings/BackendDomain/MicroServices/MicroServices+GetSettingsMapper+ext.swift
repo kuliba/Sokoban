@@ -7,24 +7,42 @@
 
 public extension MicroServices.GetSettings
 where Contract == UserPaymentSettings.PaymentContract,
-      Consent == ConsentListState,
+      Consent == FastPaymentsSettings.Consent?,
       Settings == UserPaymentSettings {
     
     typealias GetProducts = () -> [Product]
-    
+    typealias GetSelectableBanks = () -> [ConsentList.SelectableBank]
+
     convenience init(
         getContract: @escaping GetContract,
         getConsent: @escaping GetConsent,
         getBankDefault: @escaping GetBankDefault,
-        getProducts: @escaping GetProducts
+        getProducts: @escaping GetProducts,
+        getSelectableBanks: @escaping GetSelectableBanks
     ) {
-        let mapper = MicroServices.GetSettingsMapper(getProducts: getProducts)
+        let mapper = MicroServices.GetSettingsMapper(
+            getProducts: getProducts,
+            getSelectableBanks: getSelectableBanks
+        )
+        
+        let mapToMissing: MapToMissing = { consent in
+            
+            guard let consent
+            else { return .failure(.connectivityError) }
+            
+            return .success(.missingContract(consent: .success(.init(
+                banks: getSelectableBanks(),
+                consent: consent,
+                mode: .collapsed,
+                searchText: ""
+            ))))
+        }
         
         self.init(
             getContract: getContract,
             getConsent: getConsent,
             getBankDefault: getBankDefault,
-            mapToMissing: { .success(.missingContract($0)) },
+            mapToMissing: mapToMissing,
             mapToSettings: mapper.mapToSettings
         )
     }

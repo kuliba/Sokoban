@@ -17,6 +17,7 @@ public extension MicroServices {
         private let getConsent: GetConsent
         private let getContract: GetContract
         private let getProducts: GetProducts
+        private let getSelectableBanks: GetSelectableBanks
         private let updateContract: UpdateContract
         
         public init(
@@ -25,6 +26,7 @@ public extension MicroServices {
             getConsent: @escaping GetConsent,
             getContract: @escaping GetContract,
             getProducts: @escaping GetProducts,
+            getSelectableBanks: @escaping GetSelectableBanks,
             updateContract: @escaping UpdateContract
         ) {
             self.createContract = createContract
@@ -32,6 +34,7 @@ public extension MicroServices {
             self.getConsent = getConsent
             self.getContract = getContract
             self.getProducts = getProducts
+            self.getSelectableBanks = getSelectableBanks
             self.updateContract = updateContract
         }
     }
@@ -41,7 +44,7 @@ extension UserPaymentSettings.PaymentContract: PhoneNumbered {}
 
 public extension MicroServices.Facade {
     
-    typealias GetSettings = MicroServices.GetSettings<Contract, Consent, UserPaymentSettings>
+    typealias GetSettings = MicroServices.GetSettings<Contract, Consent?, UserPaymentSettings>
     
     /// `abc` flow
     func makeGetSettings() -> GetSettings {
@@ -50,7 +53,8 @@ public extension MicroServices.Facade {
             getContract: getContract,
             getConsent: getConsent,
             getBankDefault: getBankDefault,
-            getProducts: getProducts
+            getProducts: getProducts,
+            getSelectableBanks: getSelectableBanks
         )
     }
 }
@@ -96,7 +100,6 @@ public extension MicroServices.Facade {
 public extension MicroServices.Facade {
     
     typealias Contract = UserPaymentSettings.PaymentContract
-    typealias Consent = ConsentListState
     
     // createFastPaymentContract
     typealias CreateContractPayload = Product.ID
@@ -109,7 +112,7 @@ public extension MicroServices.Facade {
     typealias GetBankDefault = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
     
     // getClientConsentMe2MePull
-    typealias GetConsentCompletion = (Consent) -> Void
+    typealias GetConsentCompletion = (Consent?) -> Void
     typealias GetConsent = (@escaping GetConsentCompletion) -> Void
     
     // fastPaymentContractFindList
@@ -118,6 +121,7 @@ public extension MicroServices.Facade {
     typealias GetContract = (@escaping GetContractCompletion) -> Void
     
     typealias GetProducts = () -> [Product]
+    typealias GetSelectableBanks = () -> [ConsentList.SelectableBank]
     
     // updateFastPaymentContract
     typealias ContractUpdatePayload = ContractUpdater.Payload
