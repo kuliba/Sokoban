@@ -41,9 +41,9 @@ public extension MicroServices.ContractUpdater {
     
     struct Payload: Equatable {
         
-        let contractID: ContractID
-        let accountID: AccountID
-        let target: TargetStatus
+        public let contractID: ContractID
+        public let accountID: AccountID
+        public let target: TargetStatus
         
         public init(
             contractID: ContractID, 

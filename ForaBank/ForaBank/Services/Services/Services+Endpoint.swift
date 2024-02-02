@@ -86,6 +86,7 @@ extension Services {
             case makeTransfer
             case processPublicKeyAuthenticationRequest
             case showCVV
+            case updateFastPaymentContract
         }
     }
 }
@@ -285,5 +286,11 @@ extension Services.Endpoint {
         pathPrefix: .processing(.cardInfo),
         version: .v1,
         serviceName: .showCVV
+    )
+    
+    static let updateFastPaymentContract: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .updateFastPaymentContract
     )
 }
