@@ -481,7 +481,7 @@
                         case .some("REJECTED"):
                             status = .error
                             
-                        case .some("SUSPENDED"):
+                        case .some("SUSPEND"):
                             status = .antifraudCanceled
                             
                         case .some(_):
