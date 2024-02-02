@@ -12,7 +12,7 @@ extension Services {
     static func makeFPSFacade(
         httpClient: HTTPClient,
         log: @escaping (String, StaticString, UInt) -> Void
-    ) -> MicroServices.Factory {
+    ) -> MicroServices.Facade {
         
         let getContract = NanoServices.makeFPSGetContract(
             httpClient: httpClient,

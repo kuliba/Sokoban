@@ -1,5 +1,5 @@
 //
-//  MicroServices+Factory.swift
+//  MicroServices+Facade.swift
 //
 //
 //  Created by Igor Malyarov on 26.01.2024.
@@ -9,7 +9,7 @@ import Tagged
 
 public extension MicroServices {
     
-    final class Factory {
+    final class Facade {
         
         private let createContract: CreateContract
 #warning("getBankDefault should be decorated with caching!")
@@ -39,7 +39,7 @@ public extension MicroServices {
 
 extension UserPaymentSettings.PaymentContract: PhoneNumbered {}
 
-public extension MicroServices.Factory {
+public extension MicroServices.Facade {
     
     typealias GetSettings = MicroServices.GetSettings<Contract, Consent, UserPaymentSettings>
     
@@ -67,7 +67,7 @@ extension UserPaymentSettings.PaymentContract: StatusReporting {
     }
 }
 
-public extension MicroServices.Factory {
+public extension MicroServices.Facade {
     
     typealias ContractUpdater = MicroServices.ContractUpdater<Contract.ID, Product.ID, Contract>
     
@@ -80,7 +80,7 @@ public extension MicroServices.Factory {
     }
 }
 
-public extension MicroServices.Factory {
+public extension MicroServices.Facade {
     
     typealias ContractMaker = MicroServices.ContractMaker<Product.ID, Contract>
     
@@ -93,7 +93,7 @@ public extension MicroServices.Factory {
     }
 }
 
-public extension MicroServices.Factory {
+public extension MicroServices.Facade {
     
     typealias Contract = UserPaymentSettings.PaymentContract
     typealias Consent = ConsentListState
