@@ -1,22 +1,33 @@
 //
 //  UserAccountNavigationStateManager.swift
-//  FastPaymentsSettingsPreview
+//
 //
 //  Created by Igor Malyarov on 29.01.2024.
 //
 
+import FastPaymentsSettings
 import UserAccountNavigationComponent
 
-struct UserAccountNavigationStateManager {
+public struct UserAccountNavigationStateManager {
     
-    let reduce: Reduce
-    let handleOTPEffect: HandleOTPEffect
-    let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
+    public let reduce: Reduce
+    public let handleOTPEffect: HandleOTPEffect
+    public let makeFastPaymentsSettingsViewModel: MakeFastPaymentsSettingsViewModel
+    
+    public init(
+        reduce: @escaping Reduce,
+        handleOTPEffect: @escaping HandleOTPEffect,
+        makeFastPaymentsSettingsViewModel: @escaping MakeFastPaymentsSettingsViewModel
+    ) {
+        self.reduce = reduce
+        self.handleOTPEffect = handleOTPEffect
+        self.makeFastPaymentsSettingsViewModel = makeFastPaymentsSettingsViewModel
+    }
 }
 
 // MARK: - Types
 
-extension UserAccountNavigationStateManager {
+public extension UserAccountNavigationStateManager {
     
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event

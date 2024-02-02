@@ -10,12 +10,12 @@ import CardGuardianModule
 
 extension CardGuardian.Config {
     
-    static func defaultValue(
+    static func `default`(
         isLock: Bool,
         isOnMain: Bool
     ) -> Self {
         .init(
-            images: Images.defaultValue(isLock: isLock, isOnMain: isOnMain),
+            images: Images.default(isLock: isLock, isOnMain: isOnMain),
             paddings: .default,
             sizes: .default,
             colors: .default,
@@ -33,7 +33,7 @@ private extension CardGuardian.Config.Colors {
 
 private extension CardGuardian.Config.Images {
     
-    static func defaultValue(
+    static func `default`(
         isLock: Bool,
         isOnMain: Bool
     ) -> Self {

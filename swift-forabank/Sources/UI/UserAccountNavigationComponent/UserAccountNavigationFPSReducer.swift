@@ -32,14 +32,14 @@ public extension UserAccountNavigationFPSReducer {
         case let (.success(.contracted(contracted)), nil):
             state.isLoading = false
             let message = contracted.bankDefaultResponse.requestLimitMessage
-            state.fpsRoute?.alert = message.map { .error(
+            state.destination?.alert = message.map { .error(
                 message: $0,
                 event: .closeFPSAlert
             ) }
             
         case (.success(.missingContract), nil):
             state.isLoading = false
-            state.fpsRoute?.alert = .missingContract(event: .closeAlert)
+            state.destination?.alert = .missingContract(event: .closeAlert)
             
         case let (.success, .some(status)):
             state = update(state, with: status, inform)
@@ -50,13 +50,13 @@ public extension UserAccountNavigationFPSReducer {
             
             switch failure {
             case let .serverError(message):
-                state.fpsRoute?.alert = .error(
+                state.destination?.alert = .error(
                     message: message,
                     event: .dismissRoute
                 )
                 
             case .connectivityError:
-                state.fpsRoute?.alert = .tryAgainFPSAlert(.dismissRoute)
+                state.destination?.alert = .tryAgainFPSAlert(.dismissRoute)
             }
         }
         
@@ -89,25 +89,25 @@ private extension UserAccountNavigationFPSReducer {
             
         case let .getC2BSubResponse(getC2BSubResponse):
             state.isLoading = false
-            state.fpsRoute?.destination = .c2BSub(getC2BSubResponse, nil)
+            state.destination?.destination = .c2BSub(getC2BSubResponse, nil)
             
         case .connectivityError:
             state.isLoading = false
             // non-final => closeAlert
-            state.fpsRoute?.destination = nil
-            state.fpsRoute?.alert = .tryAgainFPSAlert(.closeAlert)
+            state.destination?.destination = nil
+            state.destination?.alert = .tryAgainFPSAlert(.closeAlert)
             
         case let .serverError(message):
             state.isLoading = false
             // non-final => closeAlert
-            state.fpsRoute?.alert = .error(
+            state.destination?.alert = .error(
                 message: message,
                 event: .closeAlert
             )
             
         case .missingProduct:
             state.isLoading = false
-            state.fpsRoute?.alert = .missingProduct(event: .dismissRoute)
+            state.destination?.alert = .missingProduct(event: .dismissRoute)
             
         case .confirmSetBankDefault:
             // state.fpsDestination = .confirmSetBankDefault
@@ -115,20 +115,20 @@ private extension UserAccountNavigationFPSReducer {
             fatalError("what should happen here?")
             
         case .setBankDefault:
-            state.fpsRoute?.alert = .setBankDefault(
+            state.destination?.alert = .setBankDefault(
                 event: .otp(.prepareSetBankDefault),
                 secondaryEvent: .closeAlert
             )
             
         case let .setBankDefaultFailure(message):
             state.isLoading = false
-            state.fpsRoute?.destination = nil
+            state.destination?.destination = nil
             inform(message)
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
-            state.fpsRoute?.destination = nil
+            state.destination?.destination = nil
             inform("Банк по умолчанию установлен.")
 #warning("effect = .fps(.resetStatus)")
             

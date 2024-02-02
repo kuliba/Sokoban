@@ -95,7 +95,7 @@ private extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
         state.isLoading = false
-        state.fpsRoute?.destination = nil
+        state.destination?.destination = nil
         switch failure {
         case .connectivityError:
             effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
@@ -121,8 +121,8 @@ private extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
 #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
-        if state.fpsRoute != nil,
-           state.fpsRoute?.destination == nil {
+        if state.destination != nil,
+           state.destination?.destination == nil {
             
             state.isLoading = true
             effect = .otp(.prepareSetBankDefault)
@@ -146,15 +146,15 @@ private extension UserAccountNavigationOTPReducer {
         
         switch response {
         case .success:
-            state.fpsRoute?.destination = makeDestination(dispatch)
+            state.destination?.destination = makeDestination(dispatch)
             
         case .connectivityError:
-            state.fpsRoute?.destination = nil
+            state.destination?.destination = nil
             inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             
         case let .serverError(message):
-            state.fpsRoute?.destination = nil
-            state.fpsRoute?.alert = .error(message: message, event: .closeAlert)
+            state.destination?.destination = nil
+            state.destination?.alert = .error(message: message, event: .closeAlert)
         }
         
         return (state, effect)
@@ -162,7 +162,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func makeDestination(
         _ dispatch: @escaping Dispatch
-    ) -> UserAccountNavigation.State.Destination.FPSDestination {
+    ) -> UserAccountNavigation.State.FPSDestination {
         
         let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
         let cancellable = otpInputViewModel.$state

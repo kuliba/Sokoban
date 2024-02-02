@@ -147,7 +147,7 @@ extension UserAccountViewModel {
         let userAccountNavigationReducer = UserAccountNavigationReducer(
             fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:_:),
             otpReduce: userAccountNavigationOTPReducer.reduce(_:_:_:_:),
-            scheduler: .makeMain()
+            scheduler: scheduler
         )
         
         let userAccountNavigationOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
