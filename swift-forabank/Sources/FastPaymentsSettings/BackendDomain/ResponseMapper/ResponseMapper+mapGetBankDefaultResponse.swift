@@ -15,7 +15,8 @@ public enum GetBankDefaultMappingError: Error, Equatable {
 }
 
 public extension ResponseMapper {
-    
+    #warning("mapping to `GetBankDefaultMappingError` should perforn upper level client")
+    // typealias GetBankDefaultResult = MappingResult<GetBankDefault>
     typealias GetBankDefaultResult = Result<GetBankDefault, GetBankDefaultMappingError>
     
     static func mapGetBankDefaultResponse(

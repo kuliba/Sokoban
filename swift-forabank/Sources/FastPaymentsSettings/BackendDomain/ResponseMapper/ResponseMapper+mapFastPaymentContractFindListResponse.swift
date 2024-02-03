@@ -9,7 +9,7 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias FastPaymentContractFindListResult = Result<FastPaymentContractFullInfo?, MappingError>
+    typealias FastPaymentContractFindListResult = MappingResult<FastPaymentContractFullInfo?>
     
     static func mapFastPaymentContractFindListResponse(
         _ data: Data,

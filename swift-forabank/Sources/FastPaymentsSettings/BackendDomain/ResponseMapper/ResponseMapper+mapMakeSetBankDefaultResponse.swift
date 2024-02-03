@@ -16,6 +16,8 @@ public enum MakeSetBankDefaultMappingError: Error, Equatable {
 
 public extension ResponseMapper {
     
+    #warning("mapping to `MakeSetBankDefaultMappingError` should perform upper level client")
+    // typealias MakeSetBankDefaultResponseResult = VoidMappingResult
     typealias MakeSetBankDefaultResponseResult = Result<Void, MakeSetBankDefaultMappingError>
     
     static func mapMakeSetBankDefaultResponseResponse(

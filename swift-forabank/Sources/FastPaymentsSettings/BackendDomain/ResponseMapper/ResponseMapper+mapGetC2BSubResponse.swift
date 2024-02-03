@@ -9,7 +9,7 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias GetC2BSubResponseResult = Result<GetC2BSubscription, MappingError>
+    typealias GetC2BSubResponseResult = MappingResult<GetC2BSubscription>
     
     static func mapGetC2BSubResponseResponse(
         _ data: Data,
