@@ -11,31 +11,25 @@ where Contract == UserPaymentSettings.PaymentContract,
       Settings == UserPaymentSettings {
     
     typealias GetProducts = () -> [Product]
-    typealias GetSelectableBanks = () -> [ConsentList.SelectableBank]
-
+    typealias GetBanks = () -> [Bank]
+    
     convenience init(
         getContract: @escaping GetContract,
         getConsent: @escaping GetConsent,
         getBankDefault: @escaping GetBankDefault,
         getProducts: @escaping GetProducts,
-        getSelectableBanks: @escaping GetSelectableBanks
+        getBanks: @escaping GetBanks
     ) {
         let mapper = MicroServices.GetSettingsMapper(
             getProducts: getProducts,
-            getSelectableBanks: getSelectableBanks
+            getBanks: getBanks
         )
         
         let mapToMissing: MapToMissing = { consent in
             
-            guard let consent
-            else { return .failure(.connectivityError) }
-            
-            return .success(.missingContract(consent: .success(.init(
-                banks: getSelectableBanks(),
-                consent: consent,
-                mode: .collapsed,
-                searchText: ""
-            ))))
+            ConsentListState(banks: getBanks(), consent: consent)
+                .map { .missingContract(consent: .success($0)) }
+                .mapError { _ in .connectivityError }
         }
         
         self.init(

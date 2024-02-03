@@ -10,14 +10,14 @@ public extension MicroServices {
     final class GetSettingsMapper {
         
         private let getProducts: GetProducts
-        private let getSelectableBanks: GetSelectableBanks
+        private let getBanks: GetBanks
         
         public init(
             getProducts: @escaping GetProducts,
-            getSelectableBanks: @escaping GetSelectableBanks
+            getBanks: @escaping GetBanks
         ) {
             self.getProducts = getProducts
-            self.getSelectableBanks = getSelectableBanks
+            self.getBanks = getBanks
         }
     }
 }
@@ -40,18 +40,7 @@ public extension MicroServices.GetSettingsMapper {
             status: .collapsed
         )
         
-        let consentListState: ConsentListState = {
-            
-            guard let consent
-            else { return .failure(.collapsedError) }
-            
-            return .success(.init(
-                banks: getSelectableBanks(),
-                consent: consent,
-                mode: .collapsed,
-                searchText: ""
-            ))
-        }()
+        let consentListState = ConsentListState(banks: getBanks(), consent: consent)
         
         let details = UserPaymentSettings.Details(
             paymentContract: paymentContract,
@@ -64,8 +53,20 @@ public extension MicroServices.GetSettingsMapper {
     }
 }
 
+extension ConsentListState {
+    
+    init(banks: [Bank], consent: Consent?) {
+        #warning("add tests")
+        if let consent {
+            self = .success(.init(banks, consent: consent))
+        } else {
+            self = .failure(.collapsedError)
+        }
+    }
+}
+
 public extension MicroServices.GetSettingsMapper {
     
     typealias GetProducts = () -> [Product]
-    typealias GetSelectableBanks = () -> [ConsentList.SelectableBank]
+    typealias GetBanks = () -> [Bank]
 }

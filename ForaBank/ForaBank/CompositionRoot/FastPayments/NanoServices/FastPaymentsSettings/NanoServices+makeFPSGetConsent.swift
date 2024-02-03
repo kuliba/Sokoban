@@ -13,8 +13,8 @@ import GenericRemoteService
 extension NanoServices {
     
     static func makeFPSGetConsent(
-        httpClient: HTTPClient,
-        log: @escaping (String, StaticString, UInt) -> Void
+        _ httpClient: HTTPClient,
+        _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetConsent {
         
         let getClientConsentMe2MePullService = loggingRemoteService(

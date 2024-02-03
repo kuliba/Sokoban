@@ -58,18 +58,6 @@ func consentError(
     .collapsedError
 }
 
-func consentList(
-    consent: Consent = .preview
-) -> ConsentList {
-    
-    .init(
-        banks: .preview,
-        consent: consent,
-        mode: .collapsed,
-        searchText: ""
-    )
-}
-
 func consentListFailure(
     _ error: ConsentListFailure = consentError()
 ) -> ConsentListState {
@@ -78,15 +66,16 @@ func consentListFailure(
 }
 
 func consentListSuccess(
-    _ consentList: ConsentList = consentList()
+    banks: [Bank] = .preview,
+    consent: Consent = .preview
 ) -> ConsentListState {
     
-    .success(consentList)
+    .success(.init(banks, consent: consent))
 }
 
 func contractDetails(
     paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
-    consentList: ConsentListState = .success(consentList()),
+    consentList: ConsentListState = consentListSuccess(),
     bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
     productSelector: UserPaymentSettings.ProductSelector = makeProductSelector()
 ) -> UserPaymentSettings.Details {
@@ -210,16 +199,16 @@ func missingConsentFailureSettings(
 func missingConsentSuccessSettings(
 ) -> UserPaymentSettingsResult {
     
-    .success(.missingContract(.success(consentList())))
+    .success(.missingContract(consentListSuccess()))
 }
 
 func missingConsentSuccessFPSState(
-    _ consentList: ConsentList = consentList(),
+    _ consentList: ConsentListState = consentListSuccess(),
     status: FastPaymentsSettingsState.Status? = nil
 ) -> FastPaymentsSettingsState {
     
     fastPaymentsSettingsState(
-        .success(.missingContract(.success(consentList))),
+        .success(.missingContract(consentList)),
         status: status
     )
 }

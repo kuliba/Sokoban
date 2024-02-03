@@ -87,7 +87,7 @@ final class MicroServices_GetSettingsMapperIntegrationTests: XCTestCase {
             getConsent: getConsentSpy.process(completion:),
             getBankDefault: getBankDefaultSpy.process(_:completion:),
             getProducts: { products },
-            getSelectableBanks: { [] }
+            getBanks: { [] }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

@@ -17,7 +17,7 @@ public extension MicroServices {
         private let getConsent: GetConsent
         private let getContract: GetContract
         private let getProducts: GetProducts
-        private let getSelectableBanks: GetSelectableBanks
+        private let getBanks: GetBanks
         private let updateContract: UpdateContract
         
         public init(
@@ -26,7 +26,7 @@ public extension MicroServices {
             getConsent: @escaping GetConsent,
             getContract: @escaping GetContract,
             getProducts: @escaping GetProducts,
-            getSelectableBanks: @escaping GetSelectableBanks,
+            getBanks: @escaping GetBanks,
             updateContract: @escaping UpdateContract
         ) {
             self.createContract = createContract
@@ -34,7 +34,7 @@ public extension MicroServices {
             self.getConsent = getConsent
             self.getContract = getContract
             self.getProducts = getProducts
-            self.getSelectableBanks = getSelectableBanks
+            self.getBanks = getBanks
             self.updateContract = updateContract
         }
     }
@@ -54,7 +54,7 @@ public extension MicroServices.Facade {
             getConsent: getConsent,
             getBankDefault: getBankDefault,
             getProducts: getProducts,
-            getSelectableBanks: getSelectableBanks
+            getBanks: getBanks
         )
     }
 }
@@ -121,7 +121,7 @@ public extension MicroServices.Facade {
     typealias GetContract = (@escaping GetContractCompletion) -> Void
     
     typealias GetProducts = () -> [Product]
-    typealias GetSelectableBanks = () -> [ConsentList.SelectableBank]
+    typealias GetBanks = () -> [Bank]
     
     // updateFastPaymentContract
     typealias ContractUpdatePayload = ContractUpdater.Payload

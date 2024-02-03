@@ -13,8 +13,8 @@ import GenericRemoteService
 extension NanoServices {
     
     static func makeFPSCreateContract(
-        httpClient: HTTPClient,
-        log: @escaping (String, StaticString, UInt) -> Void
+        _ httpClient: HTTPClient,
+        _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.CreateContract {
         
         let createFastPaymentContractService = loggingRemoteService(

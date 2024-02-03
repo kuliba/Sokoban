@@ -72,11 +72,18 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> FastPaymentsSettingsViewModel {
         
-        Services.makeFPSServices(httpClient: httpClient, log: log)
-        // let f = MicroServices.Factory
+        let getProducts = isStub ? { .preview } : model.getProducts
+        let getBanks = isStub ? { [] } : model.getBanks
+        
+        let facade = NanoServices.makeFPSFacade(
+            httpClient,
+            getProducts: getProducts,
+            getBanks: getBanks,
+            log: log
+        )
         
         let reducer = FastPaymentsSettingsReducer.default(
-            getProducts: /*isStub ? { .preview } :*/ model.getProducts
+            getProducts: getProducts
         )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
@@ -150,13 +157,21 @@ private struct FastPaymentsSettingsServices {
 
 // MARK: - Live
 
-private extension Services {
+private extension Model {
     
-    static func makeFPSServices(
-        httpClient: HTTPClient,
-        log: @escaping (String, StaticString, UInt) -> Void
-    ) {
+    func getBanks() -> [FastPaymentsSettings.Bank] {
         
+        bankListFullInfo.value.compactMap(FastPaymentsSettings.Bank.init(info:))
+    }
+}
+
+private extension FastPaymentsSettings.Bank {
+    
+    init?(info: BankFullInfoData) {
+        
+        guard let id = info.memberId else { return nil }
+        
+        self.init(id: .init(id), name: info.displayName)
     }
 }
 
@@ -350,7 +365,7 @@ private extension UserPaymentSettings.PaymentContract {
     )
 }
 
-extension ConsentListState {
+private extension ConsentListState {
     
     static let stub: Self = .success(.init(
         banks: .preview,

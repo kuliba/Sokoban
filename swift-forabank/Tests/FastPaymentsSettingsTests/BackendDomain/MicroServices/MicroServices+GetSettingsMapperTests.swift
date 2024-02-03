@@ -23,34 +23,6 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         XCTAssertNoDiff(contract(in: settings), loadedContract)
     }
     
-    func test_mapToSettings_shouldSetConsentListSuccess() {
-        
-        let product = makeProduct()
-        let consent: Consent = .preview
-        let loadedConsentList = consentListSuccess(FastPaymentsSettingsTests.consentList(consent: consent))
-        
-        let settings = map(
-            getProductsStub: [product],
-            consent: consent
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
-    }
-    
-    func test_mapToSettings_shouldSetConsentListFailure() {
-        
-        let product = makeProduct()
-        let consent: Consent = .preview
-        let loadedConsentList = consentListSuccess(FastPaymentsSettingsTests.consentList(consent: consent))
-
-        let settings = map(
-            getProductsStub: [product],
-            consent: consent
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
-    }
-    
     func test_mapToSettings_shouldSetBankDefault() {
         
         let product = makeProduct()
@@ -141,15 +113,15 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     private typealias SUT = MicroServices.GetSettingsMapper
     
     private func makeSUT(
-        getProductsStub: [Product],
-        getSelectableBanksStub: [ConsentList.SelectableBank] = [],
+        getProductsStub: [Product] = [],
+        getBanksStub: [Bank] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
         let sut = SUT(
             getProducts: { getProductsStub },
-            getSelectableBanks: { getSelectableBanksStub }
+            getBanks: { getBanksStub }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -158,7 +130,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     }
     
     private func map(
-        getProductsStub: [Product],
+        getProductsStub: [Product] = [],
         paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
         consent: Consent = .preview,
         bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = bankDefault(),

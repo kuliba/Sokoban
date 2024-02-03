@@ -13,8 +13,8 @@ import GenericRemoteService
 extension NanoServices {
     
     static func makeFPSGetContract(
-        httpClient: HTTPClient,
-        log: @escaping (String, StaticString, UInt) -> Void
+        _ httpClient: HTTPClient,
+        _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetContract {
         
         let fastPaymentContractFindListService = loggingRemoteService(
@@ -38,7 +38,7 @@ extension NanoServices {
 private extension Result<UserPaymentSettings.PaymentContract?, ServiceFailure> {
     
     init(result: Result<FastPaymentContractFullInfo?, RemoteServiceError<Error, Error, MappingError>>) {
-        
+        #warning("reuse init from NanoServices+makeFPSGetBankDefault.swift:49")
         switch result {
         case let .failure(failure):
             switch failure {
