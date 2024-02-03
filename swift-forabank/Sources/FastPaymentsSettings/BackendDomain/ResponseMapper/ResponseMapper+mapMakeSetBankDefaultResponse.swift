@@ -20,7 +20,7 @@ public extension ResponseMapper {
     // typealias MakeSetBankDefaultResponseResult = VoidMappingResult
     typealias MakeSetBankDefaultResponseResult = Result<Void, MakeSetBankDefaultMappingError>
     
-    static func mapMakeSetBankDefaultResponseResponse(
+    static func mapMakeSetBankDefaultResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MakeSetBankDefaultResponseResult {

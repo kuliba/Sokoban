@@ -8,7 +8,7 @@
 import FastPaymentsSettings
 import XCTest
 
-final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCase {
+final class ResponseMapper_mapMakeSetBankDefaultResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
@@ -93,7 +93,7 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> ResponseMapper.MakeSetBankDefaultResponseResult {
         
-        ResponseMapper.mapMakeSetBankDefaultResponseResponse(data, httpURLResponse)
+        ResponseMapper.mapMakeSetBankDefaultResponse(data, httpURLResponse)
     }
     
     private let retryErrorMessage = "Введен некорректный код. Попробуйте еще раз."
