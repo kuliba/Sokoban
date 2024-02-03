@@ -58,7 +58,7 @@ extension NanoServices {
         return adapted.fetch(_:completion:)
     }
     
-    private static func adaptedLoggingRemoteService<Input, Output>(
+    static func adaptedLoggingRemoteService<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
         mapResponse: @escaping MapResponse<Output>,

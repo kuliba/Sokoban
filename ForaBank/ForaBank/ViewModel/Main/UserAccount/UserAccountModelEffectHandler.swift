@@ -26,28 +26,6 @@ final class UserAccountModelEffectHandler {
 }
 
 extension UserAccountModelEffectHandler {
-    #warning("move to the composition root")
-    convenience init(model: Model) {
-        
-        self.init(
-            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
-            },
-            deleteRequest: {
-                
-                model.action.send(ModelAction.ClientInfo.Delete.Request())
-            },
-            exit: {
-                
-                model.auth.value = .unlockRequiredManual
-            }
-        )
-    }
-}
-
-extension UserAccountModelEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
