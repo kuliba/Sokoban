@@ -11,40 +11,43 @@ import GenericRemoteService
 
 extension MicroServices.Facade {
     
+    typealias NanoFetch<Payload, Success> = NanoServices.Fetch<Payload, Success>
+    typealias NanoVoidFetch<Success> = NanoServices.VoidFetch<Success>
+    
     typealias NanoFetcher<Payload, Success> = Fetcher<Payload, Success, ServiceFailure>
     
-    typealias CreateFastContractFetcher = any NanoFetcher<CreateFastContractPayload, Void>
-    typealias GetClientConsentFetcher = any NanoFetcher<Void, [ConsentMe2MePull]>
-    typealias GetFastContractFetcher = any NanoFetcher<Void, FastPaymentContractFullInfo?>
-    typealias UpdateFastContractFetcher = any NanoFetcher<ContractUpdatePayload, Void>
+    typealias CreateFastContractFetch = NanoFetch<CreateFastContractPayload, Void>
+    typealias GetClientConsentFetch = NanoVoidFetch<[ConsentMe2MePull]>
+    typealias GetFastContractFetch = NanoVoidFetch<FastPaymentContractFullInfo?>
+    typealias UpdateFastContractFetch = NanoFetch<ContractUpdatePayload, Void>
     
     convenience init(
-        createFastContractFetcher: CreateFastContractFetcher,
+        createFastContractFetch: @escaping CreateFastContractFetch,
         getBankDefaultResponse: @escaping GetBankDefaultResponse,
-        getClientConsentFetcher: GetClientConsentFetcher,
-        getFastContractFetcher: GetFastContractFetcher,
+        getClientConsentFetch: @escaping GetClientConsentFetch,
+        getFastContractFetch: @escaping GetFastContractFetch,
         getProducts: @escaping GetProducts,
         getBanks: @escaping GetBanks,
-        updateFastContractFetcher: UpdateFastContractFetcher
+        updateFastContractFetch: @escaping UpdateFastContractFetch
     ) {
         let getClientConsent: GetClientConsent = { completion in
             
-            getClientConsentFetcher.fetch { completion(.init(result: $0)) }
+            getClientConsentFetch { completion(.init(result: $0)) }
         }
             
         let getFastContract: GetFastContract = { completion in
             
-            getFastContractFetcher.fetch { completion(.init(result: $0)) }
+            getFastContractFetch { completion(.init(result: $0)) }
         }
         
         self.init(
-            createFastContract: createFastContractFetcher.fetch,
+            createFastContract: createFastContractFetch,
             getBankDefaultResponse: getBankDefaultResponse,
             getClientConsent: getClientConsent,
             getFastContract: getFastContract,
             getProducts: getProducts,
             getBanks: getBanks,
-            updateFastContract: updateFastContractFetcher.fetch
+            updateFastContract: updateFastContractFetch
         )
     }
 }

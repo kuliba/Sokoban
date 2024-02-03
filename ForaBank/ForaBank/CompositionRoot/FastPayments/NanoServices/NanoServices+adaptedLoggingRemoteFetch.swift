@@ -1,5 +1,5 @@
 //
-//  NanoServices+adaptedLoggingRemoteService.swift
+//  NanoServices+adaptedLoggingRemoteFetch.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 03.02.2024.
@@ -13,6 +13,28 @@ import FastPaymentsSettings
 extension NanoServices {
     
     typealias Fetch<Input, Output> = (Input, @escaping (Result<Output, ServiceFailure>) -> Void) -> Void
+    typealias VoidFetch<Output> = (@escaping (Result<Output, ServiceFailure>) -> Void) -> Void
+    
+    static func adaptedLoggingRemoteFetch<Output>(
+        createRequest: @escaping () throws -> URLRequest,
+        httpClient: HTTPClient,
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+        log: @escaping (String, StaticString, UInt) -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> VoidFetch<Output> {
+     
+        let adapted = adaptedLoggingRemoteService(
+            createRequest: createRequest,
+            httpClient: httpClient,
+            mapResponse: mapResponse,
+            log: log,
+            file: file,
+            line: line
+        )
+        
+        return adapted.fetch(completion:)
+    }
     
     static func adaptedLoggingRemoteFetch<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,

@@ -12,38 +12,20 @@ import GenericRemoteService
 
 extension NanoServices {
     
+    typealias GetConsentResult = Result<[ConsentMe2MePull], ServiceFailure>
+    typealias GetConsentCompletion = (GetConsentResult) -> Void
+    typealias GetConsent = (@escaping GetConsentCompletion) -> Void
+    
     static func makeFPSGetConsent(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> MicroServices.Facade.GetClientConsent {
+    ) -> GetConsent {
         
-        let getClientConsentMe2MePullService = loggingRemoteService(
+        adaptedLoggingRemoteFetch(
             createRequest: ForaBank.RequestFactory.createGetClientConsentMe2MePullRequest,
             httpClient: httpClient,
             mapResponse: FastPaymentsSettings.ResponseMapper.mapGetClientConsentMe2MePullResponse,
             log: log
         )
-        
-        return { completion in
-            
-            getClientConsentMe2MePullService.fetch {
-                
-                completion(.init(result: $0))
-            }
-        }
-    }
-}
-
-extension Consent {
-    
-    init?(result: Result<[ConsentMe2MePull], RemoteServiceError<Error, Error, MappingError>>) {
-        
-        switch result {
-        case .failure:
-            return nil
-            
-        case let .success(consents):
-            self = .init(consents.map(\.bankID).map { .init(rawValue: $0)} )
-        }
     }
 }

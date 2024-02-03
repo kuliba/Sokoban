@@ -652,7 +652,7 @@
 		2A80C6C92B6E236100293FE5 /* NanoServices+makeFPSChangeConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6C82B6E236100293FE5 /* NanoServices+makeFPSChangeConsent.swift */; };
 		2A80C6CB2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CA2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift */; };
 		2A80C6CD2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CC2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift */; };
-		2A80C6CF2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift */; };
+		2A80C6CF2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteFetch.swift */; };
 		2A80C6D12B6E403D00293FE5 /* MicroServices.Facade+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6D02B6E403D00293FE5 /* MicroServices.Facade+ext.swift */; };
 		2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */; };
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
@@ -3027,7 +3027,7 @@
 		2A80C6C82B6E236100293FE5 /* NanoServices+makeFPSChangeConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeFPSChangeConsent.swift"; sourceTree = "<group>"; };
 		2A80C6CA2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeClientConsentMe2MePullRequest.swift"; sourceTree = "<group>"; };
 		2A80C6CC2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift"; sourceTree = "<group>"; };
-		2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+adaptedLoggingRemoteService.swift"; sourceTree = "<group>"; };
+		2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+adaptedLoggingRemoteFetch.swift"; sourceTree = "<group>"; };
 		2A80C6D02B6E403D00293FE5 /* MicroServices.Facade+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+ext.swift"; sourceTree = "<group>"; };
 		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
@@ -6166,8 +6166,8 @@
 			isa = PBXGroup;
 			children = (
 				2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */,
+				2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteFetch.swift */,
 				2A3BD6062B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift */,
-				2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift */,
 				2A3BD6082B6CDED1009B16F7 /* FastPaymentsSettings */,
 			);
 			path = NanoServices;
@@ -13824,7 +13824,7 @@
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				5065D9CB28F2BC5000529884 /* PaymentsSuccessViewModel.swift in Sources */,
-				2A80C6CF2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift in Sources */,
+				2A80C6CF2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteFetch.swift in Sources */,
 				77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */,
