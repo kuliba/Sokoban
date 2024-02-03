@@ -85,6 +85,7 @@ extension Services {
             case getScenarioQRData
             case getStickerPayment
             case makeTransfer
+            case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
@@ -281,6 +282,12 @@ extension Services.Endpoint {
         pathPrefix: .transfer,
         version: nil,
         serviceName: .makeTransfer
+    )
+    
+    static let prepareSetBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .prepareSetBankDefault
     )
     
     static let processPublicKeyAuthenticationRequest: Self = .init(
