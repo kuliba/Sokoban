@@ -11,7 +11,7 @@ import Foundation
 extension RequestFactory {
     
     static func createGetBankDefaultRequest(
-        _ payload: FastPaymentsSettings.RequestFactory.PhoneNumber
+        _ payload: FastPaymentsSettings.PhoneNumber
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL

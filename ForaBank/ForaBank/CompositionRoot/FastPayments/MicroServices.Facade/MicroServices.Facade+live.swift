@@ -91,6 +91,8 @@ extension MicroServices.Facade {
     }
 }
 
+// MARK: - Adapters
+
 private extension FastPaymentsSettings.RequestFactory.CreateFastPaymentContractPayload {
     
     static func create(

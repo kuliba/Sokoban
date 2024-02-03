@@ -12,14 +12,14 @@ public extension ResponseMapper {
     static func mapGetBankDefaultResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<GetBankDefault> {
+    ) -> MappingResult<BankDefault> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: _Data
-    ) throws -> GetBankDefault {
+    ) throws -> BankDefault {
         
         .init(data.foraBank)
     }

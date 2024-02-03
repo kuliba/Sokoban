@@ -19,7 +19,12 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetBankDefaultResponse {
         
-        let getBankDefault = makeFPSGetBankDefault(httpClient: httpClient, log: log)
+        let getBankDefault = adaptedLoggingFetch(
+            createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastPaymentsSettings.ResponseMapper.mapGetBankDefaultResponse,
+            log: log
+        )
         
 #warning("add cache decorator")
         let decoratedGetBankDefault: MicroServices.Facade.GetBankDefaultResponse = { payload, completion in
@@ -55,7 +60,6 @@ extension NanoServices {
 
 // MARK: - Adapters
 
-#warning("remove if unused")
 private extension BankDefault {
     
     var settingsBankDefault: UserPaymentSettings.GetBankDefaultResponse.BankDefault {

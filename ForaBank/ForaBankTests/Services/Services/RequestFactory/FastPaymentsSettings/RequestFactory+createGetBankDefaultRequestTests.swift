@@ -47,7 +47,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func createGetBankDefaultRequest(
-        _ payload: FastPaymentsSettings.RequestFactory.PhoneNumber = anyPhoneNumber()
+        _ payload: FastPaymentsSettings.PhoneNumber = anyPhoneNumber()
     ) throws -> URLRequest {
         
         try RequestFactory.createGetBankDefaultRequest(payload)
@@ -61,7 +61,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
 
 private func anyPhoneNumber(
     _ rawValue: String = UUID().uuidString
-) -> FastPaymentsSettings.RequestFactory.PhoneNumber {
+) -> FastPaymentsSettings.PhoneNumber {
     
     .init(rawValue)
 }

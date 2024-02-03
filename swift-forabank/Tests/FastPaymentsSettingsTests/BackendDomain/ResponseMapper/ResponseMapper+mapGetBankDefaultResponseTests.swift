@@ -100,7 +100,7 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MappingResult<GetBankDefault> {
+    ) -> ResponseMapper.MappingResult<BankDefault> {
         
         ResponseMapper.mapGetBankDefaultResponse(data, httpURLResponse)
     }
@@ -108,7 +108,7 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
     private let limitErrorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
 }
 
-private extension GetBankDefault {
+private extension BankDefault {
     
     static let c1: Self = true
     static let c2: Self = false
