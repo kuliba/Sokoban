@@ -12,7 +12,7 @@ import UserAccountNavigationComponent
 private extension FastPaymentsSettingsServices {
     
 #warning("add live services")
-    static func live(httpClient: HTTPClient) -> Self {
+    static func live(_ httpClient: HTTPClient) -> Self {
         
         .init(
             changeConsentList: unimplemented(),
@@ -75,19 +75,14 @@ extension RootViewModelFactory {
         let getProducts = isStub ? { .preview } : model.getProducts
         let getBanks = isStub ? { [] } : model.getBanks
         
-        let facade = NanoServices.makeFPSFacade(
-            httpClient,
-            getProducts: getProducts,
-            getBanks: getBanks,
-            log: log
-        )
+        let facade: MicroServices.Facade = isStub
+        ? .stub(getProducts, getBanks)
+        : .live(httpClient, getProducts, getBanks, log)
         
-        let reducer = FastPaymentsSettingsReducer.default(
-            getProducts: getProducts
-        )
+        let reducer = FastPaymentsSettingsReducer.default(getProducts)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
-            services: isStub ? .stub() : .live(httpClient: httpClient)
+            services: isStub ? .stub() : .live(httpClient)
         )
         
         return .init(
@@ -102,7 +97,7 @@ extension RootViewModelFactory {
 private extension FastPaymentsSettingsReducer {
     
     static func `default`(
-        getProducts: @escaping () -> [Product]
+        _ getProducts: @escaping () -> [Product]
     ) -> FastPaymentsSettingsReducer {
         
         let bankDefaultReducer = BankDefaultReducer()
