@@ -7,8 +7,11 @@
 
 import Foundation
 
-public enum MappingError: Error, Equatable {
+public extension ResponseMapper {
     
-    case invalid(statusCode: Int, data: Data)
-    case server(statusCode: Int, errorMessage: String)
+    enum MappingError: Error, Equatable {
+        
+        case invalid(statusCode: Int, data: Data)
+        case server(statusCode: Int, errorMessage: String)
+    }
 }

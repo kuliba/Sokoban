@@ -14,11 +14,12 @@ extension NanoServices {
     
     typealias Fetch<Input, Output> = (Input, @escaping (Result<Output, ServiceFailure>) -> Void) -> Void
     typealias VoidFetch<Output> = (@escaping (Result<Output, ServiceFailure>) -> Void) -> Void
+    typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, FastPaymentsSettings.ResponseMapper.MappingError>
     
     static func adaptedLoggingFetch<Output>(
         createRequest: @escaping () throws -> URLRequest,
         httpClient: HTTPClient,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+        mapResponse: @escaping MapResponse<Output>,
         log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -39,7 +40,7 @@ extension NanoServices {
     static func adaptedLoggingFetch<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+        mapResponse: @escaping MapResponse<Output>,
         log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -60,7 +61,7 @@ extension NanoServices {
     private static func adaptedLoggingRemoteService<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+        mapResponse: @escaping MapResponse<Output>,
         log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -86,7 +87,7 @@ extension NanoServices {
 
 extension ServiceFailure {
     
-    init(error: RemoteServiceError<Error, Error, MappingError>) {
+    init(error: RemoteServiceError<Error, Error, FastPaymentsSettings.ResponseMapper.MappingError>) {
         
         switch error {
         case .createRequest, .performRequest:

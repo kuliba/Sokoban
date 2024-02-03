@@ -52,10 +52,11 @@ extension MicroServices.Facade {
         
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+        typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, FastResponseMapper.MappingError>
         
         func adaptedLoggingFetch<Output>(
             _ createRequest: @escaping () throws -> URLRequest,
-            _ mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+            _ mapResponse: @escaping MapResponse<Output>,
             file: StaticString = #file,
             line: UInt = #line
         ) -> NanoServices.VoidFetch<Output> {
@@ -73,7 +74,7 @@ extension MicroServices.Facade {
         func adaptedLoggingFetch<Payload, Input, Output>(
             mapPayload: @escaping (Payload) -> Input,
             _ createRequest: @escaping (Input) throws -> URLRequest,
-            _ mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+            _ mapResponse: @escaping MapResponse<Output>,
             file: StaticString = #file,
             line: UInt = #line
         ) -> NanoServices.Fetch<Payload, Output> {

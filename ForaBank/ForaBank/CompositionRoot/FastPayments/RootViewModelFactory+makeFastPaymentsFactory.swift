@@ -120,28 +120,6 @@ private extension FastPaymentsSettingsReducer {
 private extension FastPaymentsSettingsEffectHandler {
     
     convenience init(
-        facade: MicroServices.Facade
-    ) {
-        let consentListHandler = ConsentListRxEffectHandler(
-            changeConsentList: facade.
-        )
-        
-        let contractEffectHandler = ContractEffectHandler(
-            createContract: services.createContract,
-            updateContract: services.updateContract
-        )
-        
-        self.init(
-            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
-            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
-            getC2BSub: services.getC2BSub,
-            getSettings: services.getSettings,
-            prepareSetBankDefault: services.prepareSetBankDefault,
-            updateProduct: services.updateProduct
-        )
-    }
-    
-    convenience init(
         services: FastPaymentsSettingsServices
     ) {
         let consentListHandler = ConsentListRxEffectHandler(

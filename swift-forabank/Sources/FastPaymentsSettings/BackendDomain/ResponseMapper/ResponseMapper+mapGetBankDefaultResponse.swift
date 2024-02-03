@@ -46,7 +46,7 @@ private extension ResponseMapper {
 
 private extension GetBankDefaultMappingError {
     
-    init(error: MappingError) {
+    init(error: ResponseMapper.MappingError) {
         
         
         switch error {

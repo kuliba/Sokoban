@@ -16,7 +16,7 @@ public enum MakeSetBankDefaultMappingError: Error, Equatable {
 
 public extension ResponseMapper {
     
-    #warning("mapping to `MakeSetBankDefaultMappingError` should perform upper level client")
+#warning("mapping to `MakeSetBankDefaultMappingError` should perform upper level client")
     // typealias MakeSetBankDefaultResponseResult = VoidMappingResult
     typealias MakeSetBankDefaultResponseResult = Result<Void, MakeSetBankDefaultMappingError>
     
@@ -32,8 +32,7 @@ public extension ResponseMapper {
 
 private extension MakeSetBankDefaultMappingError {
     
-    init(error: MappingError) {
-        
+    init(error: ResponseMapper.MappingError) {
         
         switch error {
         case let .invalid(statusCode, data):
