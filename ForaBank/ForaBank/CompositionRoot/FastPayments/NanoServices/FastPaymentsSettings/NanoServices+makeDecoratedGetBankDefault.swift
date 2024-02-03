@@ -9,8 +9,13 @@ import FastPaymentsSettings
 
 extension NanoServices {
     
+    typealias BankDefaultCacheRead = () -> BankDefault?
+    typealias BankDefaultCacheWrite = (BankDefault) -> Void
+    
     static func makeDecoratedGetBankDefault(
         _ httpClient: HTTPClient,
+        bankDefaultCacheRead: @escaping BankDefaultCacheRead,
+        bankDefaultCacheWrite: @escaping BankDefaultCacheWrite,
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetBankDefaultResponse {
         
@@ -23,8 +28,7 @@ extension NanoServices {
                 
                 switch result {
                 case let .failure(failure):
-#warning("read cache, replace value with cached data")
-                    let cached: BankDefault? = false
+                    let cached = bankDefaultCacheRead()
                     let bankDefault: UserPaymentSettings.GetBankDefaultResponse.BankDefault = {
                         guard let cached else { return .offDisabled }
                         
@@ -37,7 +41,7 @@ extension NanoServices {
                     ))
                     
                 case let .success(bankDefault):
-#warning("add result caching")
+                    bankDefaultCacheWrite(bankDefault)
                     completion(.init(
                         bankDefault: bankDefault.settingsBankDefault
                     ))
@@ -49,6 +53,9 @@ extension NanoServices {
     }
 }
 
+// MARK: - Adapters
+
+#warning("remove if unused")
 private extension BankDefault {
     
     var settingsBankDefault: UserPaymentSettings.GetBankDefaultResponse.BankDefault {

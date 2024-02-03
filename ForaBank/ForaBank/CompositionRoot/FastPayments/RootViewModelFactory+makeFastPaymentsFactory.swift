@@ -75,9 +75,10 @@ extension RootViewModelFactory {
         let getProducts = isStub ? { .preview } : model.getProducts
         let getBanks = isStub ? { [] } : model.getBanks
         
+        #warning("add BankDefault caching")
         let facade: MicroServices.Facade = isStub
         ? .stub(getProducts, getBanks)
-        : .live(httpClient, getProducts, getBanks, log)
+        : .live(httpClient, getProducts, getBanks, { nil }, { _ in }, log)
         
         let reducer = FastPaymentsSettingsReducer.default(getProducts)
         

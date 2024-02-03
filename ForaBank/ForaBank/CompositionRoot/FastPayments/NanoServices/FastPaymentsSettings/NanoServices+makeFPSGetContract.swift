@@ -33,6 +33,7 @@ extension NanoServices {
     }
 }
 
+#warning("remove if unused")
 // MARK: - Adapters
 
 private extension Result<UserPaymentSettings.PaymentContract?, ServiceFailure> {

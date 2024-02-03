@@ -653,6 +653,7 @@
 		2A80C6CB2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CA2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift */; };
 		2A80C6CD2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CC2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift */; };
 		2A80C6CF2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift */; };
+		2A80C6D12B6E403D00293FE5 /* MicroServices.Facade+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6D02B6E403D00293FE5 /* MicroServices.Facade+ext.swift */; };
 		2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */; };
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
@@ -3027,6 +3028,7 @@
 		2A80C6CA2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeClientConsentMe2MePullRequest.swift"; sourceTree = "<group>"; };
 		2A80C6CC2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift"; sourceTree = "<group>"; };
 		2A80C6CE2B6E2D8600293FE5 /* NanoServices+adaptedLoggingRemoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+adaptedLoggingRemoteService.swift"; sourceTree = "<group>"; };
+		2A80C6D02B6E403D00293FE5 /* MicroServices.Facade+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+ext.swift"; sourceTree = "<group>"; };
 		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
 		2A84C4A42B25D90900F314BD /* sberQRProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sberQRProducts.swift; sourceTree = "<group>"; };
@@ -6175,9 +6177,9 @@
 			isa = PBXGroup;
 			children = (
 				2A3BD6012B6CD745009B16F7 /* NanoServices+makeFPSGetContract.swift */,
+				2A3BD6112B6CFEA0009B16F7 /* NanoServices+makeFPSGetBankDefault.swift */,
 				2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */,
 				2A3BD60B2B6CEB02009B16F7 /* NanoServices+makeFPSGetConsent.swift */,
-				2A3BD6112B6CFEA0009B16F7 /* NanoServices+makeFPSGetBankDefault.swift */,
 				2A3BD6172B6D23B0009B16F7 /* NanoServices+makeFPSCreateContract.swift */,
 				2A3BD61F2B6D3389009B16F7 /* NanoServices+makeFPSUpdateContract.swift */,
 				2A80C6C82B6E236100293FE5 /* NanoServices+makeFPSChangeConsent.swift */,
@@ -6861,6 +6863,7 @@
 		2A80C6C72B6E216E00293FE5 /* MicroServices.Facade */ = {
 			isa = PBXGroup;
 			children = (
+				2A80C6D02B6E403D00293FE5 /* MicroServices.Facade+ext.swift */,
 				2A80C6C32B6E209B00293FE5 /* MicroServices.Facade+live.swift */,
 				2A80C6C52B6E216400293FE5 /* MicroServices.Facade+stub.swift */,
 			);
@@ -13874,6 +13877,7 @@
 				50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */,
 				830AF2D52AB2E0FC00C2F29C /* AbroadType.swift in Sources */,
 				6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */,
+				2A80C6D12B6E403D00293FE5 /* MicroServices.Facade+ext.swift in Sources */,
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				68D06F2D26C405FB00F9BE4C /* ProductCell.swift in Sources */,
