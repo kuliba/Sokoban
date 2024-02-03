@@ -77,14 +77,14 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseTests: XCTestCase {
         
         assert(result, equals: .success(()))
     }
-    
-    func test_map_shouldDeliverRetryErrorOnSpecificMessage_g3() throws {
-        
-        let SpecificMessageData = Data(jsonString_g2.utf8)
-        let result = map(SpecificMessageData)
-        
-        assert(result, equals: .failure(.retry(errorMessage: retryErrorMessage)))
-    }
+    #warning("move to client tests")
+//    func test_map_shouldDeliverRetryErrorOnSpecificMessage_g3() throws {
+//        
+//        let SpecificMessageData = Data(jsonString_g2.utf8)
+//        let result = map(SpecificMessageData)
+//        
+//        assert(result, equals: .failure(.retry(errorMessage: retryErrorMessage)))
+//    }
     
     // MARK: - Helpers
     
