@@ -19,6 +19,7 @@ extension MicroServices.Facade {
     ) -> Self {
         
         let createContract = adaptedLoggingFetch(
+            mapPayload: { .create($0) },
             ForaRequestFactory.createCreateFastPaymentContractRequest,
             FastResponseMapper.mapCreateFastPaymentContractResponse
         )
@@ -34,18 +35,19 @@ extension MicroServices.Facade {
         )
         
         let updateContract = adaptedLoggingFetch(
+            mapPayload: { .create($0) },
             ForaRequestFactory.createUpdateFastPaymentContractRequest,
             FastResponseMapper.mapUpdateFastPaymentContractResponse
         )
         
         return .init(
-            createFastContractFetch: { createContract(.create($0), $1) },
+            createFastContractFetch: createContract,
             getBankDefaultResponse: getBankDefaultResponse,
             getClientConsentFetch: getConsent,
             getFastContractFetch: getContract,
             getProducts: getProducts,
             getBanks: getBanks,
-            updateFastContractFetch: { updateContract(.create($0), $1) }
+            updateFastContractFetch: updateContract
         )
         
         typealias ForaRequestFactory = ForaBank.RequestFactory
@@ -68,15 +70,16 @@ extension MicroServices.Facade {
             )
         }
         
-        func adaptedLoggingFetch<Input, Output>(
+        func adaptedLoggingFetch<Payload, Input, Output>(
+            mapPayload: @escaping (Payload) -> Input,
             _ createRequest: @escaping (Input) throws -> URLRequest,
             _ mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
             file: StaticString = #file,
             line: UInt = #line
-        ) -> NanoServices.Fetch<Input, Output> {
+        ) -> NanoServices.Fetch<Payload, Output> {
             
             NanoServices.adaptedLoggingFetch(
-                createRequest: createRequest,
+                createRequest: { try createRequest(mapPayload($0)) },
                 httpClient: httpClient,
                 mapResponse: mapResponse,
                 log: log,
