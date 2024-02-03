@@ -91,7 +91,7 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MakeSetBankDefaultResponseResult {
+    ) -> ResponseMapper.VoidMappingResult {
         
         ResponseMapper.mapMakeSetBankDefaultResponse(data, httpURLResponse)
     }

@@ -9,12 +9,10 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias GetClientConsentMe2MePullResult = MappingResult<[ConsentMe2MePull]>
-    
     static func mapGetClientConsentMe2MePullResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetClientConsentMe2MePullResult {
+    ) -> MappingResult<[ConsentMe2MePull]> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }

@@ -45,24 +45,87 @@ extension NanoServices {
 
 // MARK: - Adapters
 
+/*
+ public enum GetBankDefaultMappingError: Error, Equatable {
+     
+     case invalid(statusCode: Int, data: Data)
+     case limit(errorMessage: String)
+     case server(statusCode: Int, errorMessage: String)
+ }
+ 
+ private extension GetBankDefaultMappingError {
+     
+     init(error: ResponseMapper.MappingError) {
+         
+         switch error {
+         case let .invalid(statusCode, data):
+             self = .invalid(statusCode: statusCode, data: data)
+             
+         case .server(_, .limitErrorMessage):
+             self = .limit(errorMessage: .limitErrorMessage)
+             
+         case let .server(statusCode, errorMessage):
+             self = .server(statusCode: statusCode, errorMessage: errorMessage)
+         }
+     }
+ }
+
+ private extension String {
+     
+     static let limitErrorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
+ }
+
+ */
+
 private extension ServiceFailure {
     
-    init(error: RemoteServiceError<Error, Error, GetBankDefaultMappingError>) {
+//    init(error: RemoteServiceError<Error, Error, GetBankDefaultMappingError>) {
+//        
+//        switch error {
+//        case .createRequest, .performRequest:
+//            self = .connectivityError
+//            
+//        case let .mapResponse(mapResponseError):
+//            switch mapResponseError {
+//            case .invalid:
+//                self = .connectivityError
+//                
+//                #warning("limit is lost in this conversion - a better way would be to get `ServiceError` from `mapGetBankDefaultResponse` and map special limit case here with a special error type")
+//            case let .limit(errorMessage),
+//                let .server(_, errorMessage):
+//                self = .serverError(errorMessage)
+//            }
+//        }
+//    }
+}
+/*
+public enum GetBankDefaultMappingError: Error, Equatable {
+    
+    case invalid(statusCode: Int, data: Data)
+    case limit(errorMessage: String)
+    case server(statusCode: Int, errorMessage: String)
+}
+
+private extension GetBankDefaultMappingError {
+    
+    init(error: ResponseMapper.MappingError) {
+        
         
         switch error {
-        case .createRequest, .performRequest:
-            self = .connectivityError
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
             
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .invalid:
-                self = .connectivityError
-                
-                #warning("limit is lost in this conversion - a better way would be to get `ServiceError` from `mapGetBankDefaultResponse` and map special limit case here with a special error type")
-            case let .limit(errorMessage),
-                let .server(_, errorMessage):
-                self = .serverError(errorMessage)
-            }
+        case .server(_, .limitErrorMessage):
+            self = .limit(errorMessage: .limitErrorMessage)
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
         }
     }
 }
+
+private extension String {
+    
+    static let limitErrorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
+}
+*/
