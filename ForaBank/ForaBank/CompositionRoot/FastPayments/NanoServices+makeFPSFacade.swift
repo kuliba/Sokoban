@@ -25,13 +25,13 @@ extension NanoServices {
         let updateContract = makeFPSUpdateContract(httpClient, log)
 
         return .init(
-            createContract: createContract,
-            getBankDefault: getBankDefault,
-            getConsent: getConsent,
-            getContract: getContract,
+            createFastContract: createContract,
+            getBankDefaultResponse: getBankDefault,
+            getClientConsent: getConsent,
+            getFastContract: getContract,
             getProducts: getProducts,
             getBanks: getBanks,
-            updateContract: updateContract
+            updateFastContract: updateContract
         )
     }
 }

@@ -11,31 +11,31 @@ public extension MicroServices {
     
     final class Facade {
         
-        private let createContract: CreateContract
+        private let createFastContract: CreateFastContract
 #warning("getBankDefault should be decorated with caching!")
-        private let getBankDefault: GetBankDefaultResponse
-        private let getConsent: GetConsent
-        private let getContract: GetContract
+        private let getBankDefaultResponse: GetBankDefaultResponse
+        private let getClientConsent: GetClientConsent
+        private let getFastContract: GetFastContract
         private let getProducts: GetProducts
         private let getBanks: GetBanks
-        private let updateContract: UpdateContract
+        private let updateFastContract: UpdateFastContract
         
         public init(
-            createContract: @escaping CreateContract,
-            getBankDefault: @escaping GetBankDefaultResponse,
-            getConsent: @escaping GetConsent,
-            getContract: @escaping GetContract,
+            createFastContract: @escaping CreateFastContract,
+            getBankDefaultResponse: @escaping GetBankDefaultResponse,
+            getClientConsent: @escaping GetClientConsent,
+            getFastContract: @escaping GetFastContract,
             getProducts: @escaping GetProducts,
             getBanks: @escaping GetBanks,
-            updateContract: @escaping UpdateContract
+            updateFastContract: @escaping UpdateFastContract
         ) {
-            self.createContract = createContract
-            self.getBankDefault = getBankDefault
-            self.getConsent = getConsent
-            self.getContract = getContract
+            self.createFastContract = createFastContract
+            self.getBankDefaultResponse = getBankDefaultResponse
+            self.getClientConsent = getClientConsent
+            self.getFastContract = getFastContract
             self.getProducts = getProducts
             self.getBanks = getBanks
-            self.updateContract = updateContract
+            self.updateFastContract = updateFastContract
         }
     }
 }
@@ -50,9 +50,9 @@ public extension MicroServices.Facade {
     func makeGetSettings() -> GetSettings {
         
         .init(
-            getContract: getContract,
-            getConsent: getConsent,
-            getBankDefault: getBankDefault,
+            getContract: getFastContract,
+            getConsent: getClientConsent,
+            getBankDefault: getBankDefaultResponse,
             getProducts: getProducts,
             getBanks: getBanks
         )
@@ -78,8 +78,8 @@ public extension MicroServices.Facade {
     func makeContractUpdater() -> ContractUpdater {
         
         .init(
-            getContract: getContract,
-            updateContract: updateContract
+            getContract: getFastContract,
+            updateContract: updateFastContract
         )
     }
 }
@@ -91,8 +91,8 @@ public extension MicroServices.Facade {
     func makeContractMaker() -> ContractMaker {
         
         .init(
-            createContract: createContract,
-            getContract: getContract
+            createContract: createFastContract,
+            getContract: getFastContract
         )
     }
 }
@@ -102,30 +102,30 @@ public extension MicroServices.Facade {
     typealias Contract = UserPaymentSettings.PaymentContract
     
     // createFastPaymentContract
-    typealias CreateContractPayload = Product.ID
-    typealias CreateContractResponse = Result<Void, ServiceFailure>
-    typealias CreateContractCompletion = (CreateContractResponse) -> Void
-    typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
+    typealias CreateFastContractPayload = Product.ID
+    typealias CreateFastContractResponse = Result<Void, ServiceFailure>
+    typealias CreateFastContractCompletion = (CreateFastContractResponse) -> Void
+    typealias CreateFastContract = (CreateFastContractPayload, @escaping CreateFastContractCompletion) -> Void
     
     // getBankDefault
     typealias GetBankDefaultCompletion = (UserPaymentSettings.GetBankDefaultResponse) -> Void
     typealias GetBankDefaultResponse = (PhoneNumber, @escaping GetBankDefaultCompletion) -> Void
     
     // getClientConsentMe2MePull
-    typealias GetConsentCompletion = (Consent?) -> Void
-    typealias GetConsent = (@escaping GetConsentCompletion) -> Void
+    typealias GetClientConsentCompletion = (Consent?) -> Void
+    typealias GetClientConsent = (@escaping GetClientConsentCompletion) -> Void
     
     // fastPaymentContractFindList
-    typealias GetContractResult = Result<Contract?, ServiceFailure>
-    typealias GetContractCompletion = (GetContractResult) -> Void
-    typealias GetContract = (@escaping GetContractCompletion) -> Void
+    typealias GetFastContractResult = Result<Contract?, ServiceFailure>
+    typealias GetFastContractCompletion = (GetFastContractResult) -> Void
+    typealias GetFastContract = (@escaping GetFastContractCompletion) -> Void
     
     typealias GetProducts = () -> [Product]
     typealias GetBanks = () -> [Bank]
     
     // updateFastPaymentContract
     typealias ContractUpdatePayload = ContractUpdater.Payload
-    typealias UpdateContractResponse = Result<Void, ServiceFailure>
-    typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
-    typealias UpdateContract = (ContractUpdatePayload, @escaping UpdateContractCompletion) -> Void
+    typealias UpdateFastContractResponse = Result<Void, ServiceFailure>
+    typealias UpdateFastContractCompletion = (UpdateFastContractResponse) -> Void
+    typealias UpdateFastContract = (ContractUpdatePayload, @escaping UpdateFastContractCompletion) -> Void
 }

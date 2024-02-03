@@ -15,7 +15,7 @@ extension NanoServices {
     static func makeFPSGetConsent(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> MicroServices.Facade.GetConsent {
+    ) -> MicroServices.Facade.GetClientConsent {
         
         let getClientConsentMe2MePullService = loggingRemoteService(
             createRequest: ForaBank.RequestFactory.createGetClientConsentMe2MePullRequest,

@@ -15,7 +15,7 @@ extension NanoServices {
     static func makeFPSGetContract(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> MicroServices.Facade.GetContract {
+    ) -> MicroServices.Facade.GetFastContract {
         
         let fastPaymentContractFindListService = loggingRemoteService(
             createRequest: ForaBank.RequestFactory.createFastPaymentContractFindListRequest,
@@ -26,7 +26,7 @@ extension NanoServices {
         
         let adaptedFastPaymentContractFindListService = FetchAdapter(
             fetch: fastPaymentContractFindListService.fetch(_:completion:),
-            mapResult: MicroServices.Facade.GetContractResult.init(result:)
+            mapResult: MicroServices.Facade.GetFastContractResult.init(result:)
         )
         
         return adaptedFastPaymentContractFindListService.fetch(completion:)

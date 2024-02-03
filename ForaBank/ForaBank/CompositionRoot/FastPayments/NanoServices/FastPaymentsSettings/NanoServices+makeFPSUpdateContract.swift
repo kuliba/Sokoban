@@ -15,7 +15,7 @@ extension NanoServices {
     static func makeFPSUpdateContract(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> MicroServices.Facade.UpdateContract {
+    ) -> MicroServices.Facade.UpdateFastContract {
         
         let updateFastPaymentContractService = loggingRemoteService(
             createRequest: ForaBank.RequestFactory.createUpdateFastPaymentContractRequest,
