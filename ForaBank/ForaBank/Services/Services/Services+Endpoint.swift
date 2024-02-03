@@ -75,6 +75,7 @@ extension Services {
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getJsonAbroad
+            case makeSetBankDefault
             case getSberQRData
             case getOperationDetailByPaymentId
             case getPINConfirmationCode
@@ -276,6 +277,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let makeSetBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .makeSetBankDefault
     )
     
     static let makeTransfer: Self = .init(
