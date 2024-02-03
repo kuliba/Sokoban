@@ -1,5 +1,5 @@
 //
-//  NanoServices+adaptedLoggingRemoteFetch.swift
+//  NanoServices+adaptedLoggingFetch.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 03.02.2024.
@@ -15,7 +15,7 @@ extension NanoServices {
     typealias Fetch<Input, Output> = (Input, @escaping (Result<Output, ServiceFailure>) -> Void) -> Void
     typealias VoidFetch<Output> = (@escaping (Result<Output, ServiceFailure>) -> Void) -> Void
     
-    static func adaptedLoggingRemoteFetch<Output>(
+    static func adaptedLoggingFetch<Output>(
         createRequest: @escaping () throws -> URLRequest,
         httpClient: HTTPClient,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
@@ -23,7 +23,7 @@ extension NanoServices {
         file: StaticString = #file,
         line: UInt = #line
     ) -> VoidFetch<Output> {
-     
+        
         let adapted = adaptedLoggingRemoteService(
             createRequest: createRequest,
             httpClient: httpClient,
@@ -36,7 +36,7 @@ extension NanoServices {
         return adapted.fetch(completion:)
     }
     
-    static func adaptedLoggingRemoteFetch<Input, Output>(
+    static func adaptedLoggingFetch<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
@@ -44,7 +44,7 @@ extension NanoServices {
         file: StaticString = #file,
         line: UInt = #line
     ) -> Fetch<Input, Output> {
-     
+        
         let adapted = adaptedLoggingRemoteService(
             createRequest: createRequest,
             httpClient: httpClient,
@@ -79,7 +79,7 @@ extension NanoServices {
             fetch: loggingRemoteService.fetch(_:completion:),
             mapError: ServiceFailure.init(error:)
         )
-
+        
         return adapted
     }
 }
