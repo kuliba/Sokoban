@@ -26,9 +26,9 @@ extension NanoServices {
         
         return { completion in
             
-            getClientConsentMe2MePullService.fetch { //result in
+            getClientConsentMe2MePullService.fetch {
                 
-                completion(Consent.init(result: $0))
+                completion(.init(result: $0))
             }
         }
     }

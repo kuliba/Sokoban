@@ -17,26 +17,14 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.UpdateFastContract {
         
-        let updateFastPaymentContractService = loggingRemoteService(
+        let adapted = adaptedLoggingRemoteService(
             createRequest: ForaBank.RequestFactory.createUpdateFastPaymentContractRequest,
             httpClient: httpClient,
             mapResponse: FastPaymentsSettings.ResponseMapper.mapUpdateFastPaymentContractResponse,
             log: log
         )
         
-#warning("add helper to adapt MappingError to ServiceError")
-        let adaptedUpdateFastPaymentContractService = FetchAdapter(
-            fetch: updateFastPaymentContractService.fetch(_:completion:),
-            mapError: ServiceFailure.init(error:)
-        )
-
-        return { payload, completion in
-            
-            adaptedUpdateFastPaymentContractService.fetch(
-                .create(payload),
-                completion: completion
-            )
-        }
+        return { adapted.fetch(.create($0), completion: $1) }
     }
 }
 

@@ -33,6 +33,7 @@ extension NanoServices {
             
             getBankDefaultService.fetch(.init(payload.rawValue)) {
                 
+#warning("limit is lost her - a better way would be to get `ServiceError` from `mapGetBankDefaultResponse` and map special limit case here with a special error type instead of `ServiceFailure`")
                 completion($0
                     .map { .init($0.rawValue) }
                     .mapError(ServiceFailure.init(error:))
@@ -57,6 +58,7 @@ private extension ServiceFailure {
             case .invalid:
                 self = .connectivityError
                 
+                #warning("limit is lost in this conversion - a better way would be to get `ServiceError` from `mapGetBankDefaultResponse` and map special limit case here with a special error type")
             case let .limit(errorMessage),
                 let .server(_, errorMessage):
                 self = .serverError(errorMessage)

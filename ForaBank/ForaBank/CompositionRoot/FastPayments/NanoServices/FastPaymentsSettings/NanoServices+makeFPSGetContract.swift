@@ -38,22 +38,10 @@ extension NanoServices {
 private extension Result<UserPaymentSettings.PaymentContract?, ServiceFailure> {
     
     init(result: Result<FastPaymentContractFullInfo?, RemoteServiceError<Error, Error, MappingError>>) {
-        #warning("reuse init from NanoServices+makeFPSGetBankDefault.swift:49")
+        
         switch result {
         case let .failure(failure):
-            switch failure {
-            case .createRequest, .performRequest:
-                self = .failure(.connectivityError)
-                
-            case let .mapResponse(mapResponseError):
-                switch mapResponseError {
-                case .invalid:
-                    self = .failure(.connectivityError)
-                    
-                case let .server(_, errorMessage):
-                    self = .failure(.serverError(errorMessage))
-                }
-            }
+            self = .failure(.init(error: failure))
             
         case .success(.none):
             self = .failure(.connectivityError)

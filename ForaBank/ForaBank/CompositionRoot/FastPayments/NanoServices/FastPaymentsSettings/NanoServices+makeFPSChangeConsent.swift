@@ -15,20 +15,14 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> ChangeConsent {
         
-        let changeClientConsentMe2MePullService = loggingRemoteService(
+        let adapted = adaptedLoggingRemoteService(
             createRequest: ForaBank.RequestFactory.createChangeClientConsentMe2MePullRequest,
             httpClient: httpClient,
             mapResponse: FastPaymentsSettings.ResponseMapper.mapChangeClientConsentMe2MePullResponse,
             log: log
         )
-
-        #warning("add helper to adapt MappingError to ServiceError")
-        let adaptedChangeClientConsentMe2MePullService = FetchAdapter(
-            fetch: changeClientConsentMe2MePullService.fetch(_:completion:),
-            mapError: ServiceFailure.init(error:)
-        )
-
-        return adaptedChangeClientConsentMe2MePullService.fetch(_:completion:)
+        
+        return adapted.fetch(_:completion:)
     }
 }
 
