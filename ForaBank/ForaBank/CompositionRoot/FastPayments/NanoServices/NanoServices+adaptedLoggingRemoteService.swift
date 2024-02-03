@@ -12,7 +12,30 @@ import FastPaymentsSettings
 
 extension NanoServices {
     
-    static func adaptedLoggingRemoteService<Input, Output>(
+    typealias Fetch<Input, Output> = (Input, @escaping (Result<Output, ServiceFailure>) -> Void) -> Void
+    
+    static func adaptedLoggingRemoteFetch<Input, Output>(
+        createRequest: @escaping (Input) throws -> URLRequest,
+        httpClient: HTTPClient,
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,
+        log: @escaping (String, StaticString, UInt) -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Fetch<Input, Output> {
+     
+        let adapted = adaptedLoggingRemoteService(
+            createRequest: createRequest,
+            httpClient: httpClient,
+            mapResponse: mapResponse,
+            log: log,
+            file: file,
+            line: line
+        )
+        
+        return adapted.fetch(_:completion:)
+    }
+    
+    private static func adaptedLoggingRemoteService<Input, Output>(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Output, MappingError>,

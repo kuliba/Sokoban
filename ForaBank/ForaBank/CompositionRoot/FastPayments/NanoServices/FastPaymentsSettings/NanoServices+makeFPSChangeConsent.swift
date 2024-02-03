@@ -15,14 +15,12 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> ChangeConsent {
         
-        let adapted = adaptedLoggingRemoteService(
+        adaptedLoggingRemoteFetch(
             createRequest: ForaBank.RequestFactory.createChangeClientConsentMe2MePullRequest,
             httpClient: httpClient,
             mapResponse: FastPaymentsSettings.ResponseMapper.mapChangeClientConsentMe2MePullResponse,
             log: log
         )
-        
-        return adapted.fetch(_:completion:)
     }
 }
 
