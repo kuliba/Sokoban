@@ -44,18 +44,21 @@ extension UserPaymentSettings.PaymentContract: PhoneNumbered {}
 
 public extension MicroServices.Facade {
     
-    typealias GetSettings = MicroServices.GetSettings<Contract, Consent?, UserPaymentSettings>
+    typealias SettingsGetter = MicroServices.SettingsGetter<Contract, Consent?, UserPaymentSettings>
+    typealias GetSettings = (@escaping SettingsGetter.ProcessCompletion) -> Void
     
     /// `abc` flow
-    func makeGetSettings() -> GetSettings {
+    func getSettings() -> GetSettings {
         
-        .init(
+        let settingsGetter = SettingsGetter(
             getContract: getFastContract,
             getConsent: getClientConsent,
             getBankDefault: getBankDefaultResponse,
             getProducts: getProducts,
             getBanks: getBanks
         )
+        
+        return settingsGetter.process(completion:)
     }
 }
 

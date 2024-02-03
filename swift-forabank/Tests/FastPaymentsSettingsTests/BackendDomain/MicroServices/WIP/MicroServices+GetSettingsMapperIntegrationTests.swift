@@ -62,7 +62,7 @@ final class MicroServices_GetSettingsMapperIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = MicroServices.GetSettings<UserPaymentSettings.PaymentContract, Consent?, UserPaymentSettings>
+    private typealias SUT = MicroServices.SettingsGetter<UserPaymentSettings.PaymentContract, Consent?, UserPaymentSettings>
     
     private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
     private typealias GetConsentSpy = Spy<Void, Consent>

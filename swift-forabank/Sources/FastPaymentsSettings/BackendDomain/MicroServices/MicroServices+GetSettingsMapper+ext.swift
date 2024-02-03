@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
-public extension MicroServices.GetSettings
+public extension MicroServices.SettingsGetter
 where Contract == UserPaymentSettings.PaymentContract,
       Consent == FastPaymentsSettings.Consent?,
       Settings == UserPaymentSettings {
