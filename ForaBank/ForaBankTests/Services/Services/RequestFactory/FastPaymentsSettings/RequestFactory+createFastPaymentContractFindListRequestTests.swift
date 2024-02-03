@@ -14,7 +14,7 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
         
         let request = createFastPaymentContractFindListRequest()
         
-        XCTAssertEqual(
+        XCTAssertNoDiff(
             request.url?.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/rest/fastPaymentContractFindList"
         )

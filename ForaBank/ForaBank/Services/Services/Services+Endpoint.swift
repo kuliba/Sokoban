@@ -62,6 +62,7 @@ extension Services {
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case changeClientConsentMe2MePull
             case changePIN
             case createCommissionProductTransfer
             case createFastPaymentContract
@@ -148,6 +149,12 @@ extension Services.Endpoint {
         pathPrefix: .processing(.registration),
         version: .v1,
         serviceName: .bindPublicKeyWithEventId
+    )
+    
+    static let changeClientConsentMe2MePull: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .changeClientConsentMe2MePull
     )
     
     static let changePIN: Self = .init(

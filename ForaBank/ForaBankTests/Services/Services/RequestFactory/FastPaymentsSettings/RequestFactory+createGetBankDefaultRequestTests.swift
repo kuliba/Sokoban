@@ -21,7 +21,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
         
         let request = try createGetBankDefaultRequest()
         
-        XCTAssertEqual(
+        XCTAssertNoDiff(
             request.url?.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/rest/getBankDefault"
         )

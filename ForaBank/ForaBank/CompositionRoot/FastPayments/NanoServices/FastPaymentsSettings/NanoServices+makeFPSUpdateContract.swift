@@ -24,6 +24,7 @@ extension NanoServices {
             log: log
         )
         
+#warning("add helper to adapt MappingError to ServiceError")
         let adaptedUpdateFastPaymentContractService = FetchAdapter(
             fetch: updateFastPaymentContractService.fetch(_:completion:),
             mapError: ServiceFailure.init(error:)

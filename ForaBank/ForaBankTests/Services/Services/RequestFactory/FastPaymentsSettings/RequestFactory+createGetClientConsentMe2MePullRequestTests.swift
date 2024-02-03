@@ -14,7 +14,7 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
         
         let request = createGetClientConsentMe2MePullRequest()
         
-        XCTAssertEqual(
+        XCTAssertNoDiff(
             request.url?.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/rest/getClientConsentMe2MePull"
         )
