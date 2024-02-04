@@ -10,5 +10,7 @@ import FastPaymentsSettings
 extension NanoServices {
     
    typealias ForaRequestFactory = ForaBank.RequestFactory
-   typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+
+    typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+   typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
 }
