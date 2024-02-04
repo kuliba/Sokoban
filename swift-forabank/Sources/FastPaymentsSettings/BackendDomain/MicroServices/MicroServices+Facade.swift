@@ -12,7 +12,6 @@ public extension MicroServices {
     final class Facade {
         
         private let createFastContract: CreateFastContract
-#warning("getBankDefault should be decorated with caching!")
         private let getBankDefaultResponse: GetBankDefaultResponse
         private let getClientConsent: GetClientConsent
         private let getFastContract: GetFastContract

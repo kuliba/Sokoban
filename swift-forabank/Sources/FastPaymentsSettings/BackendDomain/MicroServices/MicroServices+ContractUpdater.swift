@@ -61,7 +61,7 @@ public extension MicroServices.ContractUpdater {
         }
     }
     
-    typealias ProcessResult = Result<Contract?, ServiceFailure>
+    typealias ProcessResult = Result<Contract, ServiceFailure>
     typealias Completion = (ProcessResult) -> Void
     
     // fastPaymentContractFindList
@@ -107,9 +107,9 @@ private extension MicroServices.ContractUpdater {
             case let .failure(serviceFailure):
                 completion(.failure(serviceFailure))
                 
-            case .success(nil):
-                completion(.success(nil))
-                
+            case .success(.none):
+                completion(.failure(.connectivityError))
+
             case let .success(.some(contract)):
                 switch (targetStatus, contract.status) {
                 case (.active, .active),
