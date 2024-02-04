@@ -9,34 +9,15 @@ import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
 
-private extension FastPaymentsSettingsServices {
-    
-#warning("add live services")
-    static func live(_ httpClient: HTTPClient) -> Self {
-        
-        .init(
-            changeConsentList: unimplemented(),
-            createContract: unimplemented(),
-            updateContract: unimplemented(),
-            getC2BSub: unimplemented(),
-            getSettings: unimplemented(),
-            prepareSetBankDefault: unimplemented(),
-            updateProduct: unimplemented()
-        )
-    }
-}
-
 extension RootViewModelFactory {
     
-    // TODO: Remove legacy after new one is released
+    // TODO: Remove after `legacy` case eliminated
     static func makeFastPaymentsFactory(
         httpClient: HTTPClient,
         model: Model,
-        logger: LoggerAgentProtocol,
+        log: @escaping (String, StaticString, UInt) -> Void,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
     ) -> FastPaymentsFactory {
-        
-        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         switch fastPaymentsSettingsFlag.rawValue {
         case .active:
@@ -45,7 +26,7 @@ extension RootViewModelFactory {
                 makeNewFastPaymentsViewModel(
                     httpClient: httpClient,
                     model: model,
-                    log: infoNetworkLog,
+                    log: log,
                     scheduler: $0
                 )
             }))
@@ -75,17 +56,29 @@ extension RootViewModelFactory {
         let getProducts = isStub ? { .preview } : model.getProducts
         let getBanks = isStub ? { [] } : model.getBanks
         
-        #warning("add BankDefault caching")
+#warning("add BankDefault caching")
         let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, { nil }, { _ in }, log)
         
         let facade: MicroServices.Facade = isStub
         ? .stub(getProducts, getBanks)
         : .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         
-        let reducer = FastPaymentsSettingsReducer.default(getProducts)
+        let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
+        let contractReducer = ContractReducer(getProducts: getProducts)
+        let productsReducer = ProductsReducer(getProducts: getProducts)
+        
+        let reducer = FastPaymentsSettingsReducer(
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
+        )
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
-            services: isStub ? .stub() : .live(httpClient)
+            facade: facade,
+            httpClient: httpClient,
+            log: log
         )
         
         return .init(
@@ -95,62 +88,6 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
     }
-}
-
-private extension FastPaymentsSettingsReducer {
-    
-    static func `default`(
-        _ getProducts: @escaping () -> [Product]
-    ) -> FastPaymentsSettingsReducer {
-        
-        let bankDefaultReducer = BankDefaultReducer()
-        let consentListReducer = ConsentListRxReducer()
-        let contractReducer = ContractReducer(getProducts: getProducts)
-        let productsReducer = ProductsReducer(getProducts: getProducts)
-        
-        return .init(
-            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
-            consentListReduce: consentListReducer.reduce(_:_:),
-            contractReduce: contractReducer.reduce(_:_:),
-            productsReduce: productsReducer.reduce(_:_:)
-        )
-    }
-}
-
-private extension FastPaymentsSettingsEffectHandler {
-    
-    convenience init(
-        services: FastPaymentsSettingsServices
-    ) {
-        let consentListHandler = ConsentListRxEffectHandler(
-            changeConsentList: services.changeConsentList
-        )
-        
-        let contractEffectHandler = ContractEffectHandler(
-            createContract: services.createContract,
-            updateContract: services.updateContract
-        )
-        
-        self.init(
-            handleConsentListEffect: consentListHandler.handleEffect(_:_:),
-            handleContractEffect: contractEffectHandler.handleEffect(_:_:),
-            getC2BSub: services.getC2BSub,
-            getSettings: services.getSettings,
-            prepareSetBankDefault: services.prepareSetBankDefault,
-            updateProduct: services.updateProduct
-        )
-    }
-}
-
-private struct FastPaymentsSettingsServices {
-    
-    let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList
-    let createContract: ContractEffectHandler.CreateContract
-    let updateContract: ContractEffectHandler.UpdateContract
-    let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub
-    let getSettings: FastPaymentsSettingsEffectHandler.GetSettings
-    let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
-    let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct
 }
 
 // MARK: - Live
@@ -268,107 +205,4 @@ private extension ProductCardData {
             )
         )
     }
-}
-
-// MARK: - Stubs
-
-private extension FastPaymentsSettingsServices {
-    
-    static func stub() -> Self {
-        
-        let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success)
-            }
-        }
-        
-        let createContract: ContractEffectHandler.CreateContract = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.stub))
-            }
-        }
-        
-        let updateContract: ContractEffectHandler.UpdateContract = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.stub))
-            }
-        }
-        
-        let getC2BSub: FastPaymentsSettingsEffectHandler.GetC2BSub = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.control))
-            }
-        }
-        
-        let getSettings: FastPaymentsSettingsEffectHandler.GetSettings = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(.contracted(.init(
-                    paymentContract: .stub,
-                    consentList: .stub,
-                    bankDefaultResponse: .init(bankDefault: .offEnabled),
-                    productSelector: .init(
-                        selectedProduct: .account,
-                        products: .preview
-                    )
-                ))))
-            }
-        }
-        
-        let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        }
-        
-        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        }
-        
-        return .init(
-            changeConsentList: changeConsentList,
-            createContract: createContract,
-            updateContract: updateContract,
-            getC2BSub: getC2BSub,
-            getSettings: getSettings,
-            prepareSetBankDefault: prepareSetBankDefault,
-            updateProduct: updateProduct
-        )
-    }
-}
-
-private extension UserPaymentSettings.PaymentContract {
-    
-    static let stub: Self = .init(
-        id: 10002076204,
-        productID: 10004203497,
-        contractStatus: .active,
-        phoneNumber: "79171044913",
-        phoneNumberMasked: "+7 ... ... 49 13"
-    )
-}
-
-private extension ConsentListState {
-    
-    static let stub: Self = .success(.init(
-        banks: .preview,
-        consent: .preview,
-        mode: .collapsed,
-        searchText: ""
-    ))
 }

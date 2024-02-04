@@ -45,7 +45,7 @@ extension RootViewModelFactory {
         let fastPaymentsFactory = makeFastPaymentsFactory(
             httpClient: httpClient,
             model: model,
-            logger: logger,
+            log: infoNetworkLog,
             fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
         )
         
