@@ -71,6 +71,7 @@ extension Services {
             case fastPaymentContractFindList
             case formSessionKey
             case getBankDefault
+            case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
@@ -211,6 +212,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: nil,
         serviceName: .getBankDefault
+    )
+
+    static let getC2BSub: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getC2BSub
     )
 
     static let getCardStatementForPeriod: Self = .init(
