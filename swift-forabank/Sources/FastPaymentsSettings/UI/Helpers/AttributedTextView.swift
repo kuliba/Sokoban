@@ -11,9 +11,15 @@ import SwiftUI
 struct AttributedTextView: View {
     
     let attributedString: NSAttributedString
-    var padding: CGFloat = 20
     
     var body: some View {
+        
+        attributedTextView()
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    private func attributedTextView() -> some View {
         
         if #available(iOS 15, *) {
             Text(AttributedString(attributedString))
@@ -22,11 +28,9 @@ struct AttributedTextView: View {
             GeometryReader { geometry in
                 
                 AttributedText(attributedString: attributedString)
-                    .frame(width: geometry.size.width - padding * 2)
+                    .frame(width: geometry.size.width)
             }
-            // .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
-            .border(.red)
         }
     }
 }

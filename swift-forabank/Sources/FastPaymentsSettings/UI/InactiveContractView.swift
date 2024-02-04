@@ -16,12 +16,11 @@ struct InactiveContractView: View {
         
         VStack {
             
-            Button("Включить переводы СБП", action: action)
-            
             HStack(spacing: 16) {
                 
-                Text("Переводы выключены")
-                    .font(.subheadline)
+                Button("Включить переводы СБП", action: action)
+                
+                Spacer()
                 
                 ToggleMockView(status: .inactive)
             }
