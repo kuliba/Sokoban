@@ -140,6 +140,9 @@ struct ConsentListView_Previews: PreviewProvider {
         
         Group {
             
+            consentListView(.collapsedError)
+            consentListView(.expandedError)
+
             VStack(spacing: 16) {
                 
                 consentListView(.collapsed(.empty))
@@ -150,8 +153,6 @@ struct ConsentListView_Previews: PreviewProvider {
             .previewDisplayName("Collapsed")
             
             consentListView(.expanded(.preview))
-            consentListView(.collapsedError)
-            consentListView(.expandedError)
         }
         .padding(.horizontal)
     }
