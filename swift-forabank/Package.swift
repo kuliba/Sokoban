@@ -1221,7 +1221,8 @@ private extension Target {
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .rxViewModel
         ],
         path: "Sources/UI/Components/\(String.carouselComponent)"
     )
