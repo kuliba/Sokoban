@@ -137,7 +137,7 @@ private extension ProductData {
         switch productType {
         case .account:
             guard let account = self as? ProductAccountData,
-                  account.status == .active,
+                  account.status == .notBlocked,
                   account.currency == rub
             else { return nil }
             
