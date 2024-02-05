@@ -53,7 +53,7 @@ extension MicroServices.Facade {
 }
 
 // MARK: - Adapters
-
+#warning("add tests; find a way to move into mapper")
 extension Consent {
     
     init?(result: Result<[ConsentMe2MePull], ServiceFailure>) {
@@ -89,8 +89,7 @@ private extension UserPaymentSettings.PaymentContract {
     
     init?(info: FastPaymentContractFullInfo) {
         
-        guard let contractStatus = UserPaymentSettings.PaymentContract.ContractStatus(info: info)
-        else { return nil }
+        guard let contractStatus = info.contractStatus else { return nil }
         
         self.init(
             id: .init(info.contract.fpcontractID),
@@ -102,27 +101,24 @@ private extension UserPaymentSettings.PaymentContract {
     }
 }
 
-private extension UserPaymentSettings.PaymentContract.ContractStatus {
+private extension FastPaymentContractFullInfo {
     
-    init?(info: FastPaymentContractFullInfo) {
+    var contractStatus: ContractStatus? {
         
-        if info.hasTripleYes { self = .active }
-        if info.hasTripleNo { self = .inactive }
+        if hasTripleYes { return .active }
+        if hasTripleNo { return .inactive }
         
         return nil
     }
-}
-
-private extension FastPaymentContractFullInfo {
     
-    var hasTripleYes: Bool {
+    private var hasTripleYes: Bool {
         
         account.flagPossibAddAccount == .yes
         && contract.flagClientAgreementIn == .yes
         && contract.flagClientAgreementOut == .yes
     }
     
-    var hasTripleNo: Bool {
+    private var hasTripleNo: Bool {
         
         account.flagPossibAddAccount == .no
         && contract.flagClientAgreementIn == .no
