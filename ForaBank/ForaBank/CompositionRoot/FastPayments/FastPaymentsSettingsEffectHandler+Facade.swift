@@ -50,11 +50,16 @@ extension FastPaymentsSettingsEffectHandler {
         
         let getC2BSub = NanoServices.makeGetC2BSub(httpClient, log)
         let prepareSetBankDefault = NanoServices.prepareSetBankDefault(httpClient, log)
-        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = {
+        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
             
             let updateProduct = NanoServices.updateFastPaymentContract(httpClient, log)
             
-            updateProduct($0.payload, $1)
+            updateProduct(payload.payload) {
+                
+                completion($0)
+                
+                _ = updateProduct
+            }
         }
         
         self.init(
