@@ -20,18 +20,19 @@ struct PaymentContractView: View {
             
             subtitleView()
         }
+        .foregroundColor(.secondary)
     }
 
     private func labeledToggle() -> some View {
         
-        HStack {
+        Button(action: action) {
             
-            Text(title)
-                .font(.headline)
-            
-            Spacer()
-            
-            Button(action: action) {
+            HStack {
+                
+                Text(title)
+                    .font(.headline)
+                
+                Spacer()
                 
                 ToggleMockView(status: status)
             }
@@ -49,11 +50,9 @@ struct PaymentContractView: View {
                 Text("Настройки для входящих и исходящих переводов СБП  ")
                 
             case .inactive:
-#warning("link inside!!!")
-                Text("Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь с условиями осуществления переводов СБП")
+                AttributedTextView(attributedString: .consent)
             }
         }
-        .foregroundColor(.secondary)
         .font(.subheadline)
     }
     
