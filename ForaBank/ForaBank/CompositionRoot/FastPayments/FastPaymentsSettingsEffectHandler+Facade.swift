@@ -32,6 +32,8 @@ extension FastPaymentsSettingsEffectHandler {
 #warning("success case could easily have associated value of consentList (derived from payload)")
                     completion(.success)
                 }
+                
+                _ = changeConsent
             }
         }
         let consentListHandler = ConsentListRxEffectHandler(

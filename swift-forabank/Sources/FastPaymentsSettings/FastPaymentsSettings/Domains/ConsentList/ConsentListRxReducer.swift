@@ -54,6 +54,7 @@ public extension ConsentListRxReducer {
     typealias Effect = ConsentListEffect
 }
 
+#warning("add tests!!")
 private extension ConsentListRxReducer {
     
     func updateStateForSearch(
@@ -90,8 +91,9 @@ private extension ConsentListRxReducer {
         else { return (state, nil) }
         
         consentList.status = .inflight
+        let consent = consentList.banks.filter(\.isSelected).map(\.id)
         
-        return (.success(consentList), .apply(.init(consentList.consent)))
+        return (.success(consentList), .apply(.init(consent)))
     }
     
     func handleConsentChange(

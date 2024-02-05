@@ -22,13 +22,15 @@ public extension Array where Element == ConsentList.SelectableBank {
         .init(bank: $0, isSelected: false)
     }
     
-    static var consented: Self {
+    static func consented(
+        _ consent: Consent = .preview
+    ) -> Self {
         
         Self.preview.map {
             
             .init(
                 bank: $0.bank,
-                isSelected: Consent.preview.contains($0.bank.id)
+                isSelected: consent.contains($0.bank.id)
             )
         }
     }
