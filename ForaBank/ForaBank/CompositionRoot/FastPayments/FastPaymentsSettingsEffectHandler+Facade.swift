@@ -22,11 +22,8 @@ extension FastPaymentsSettingsEffectHandler {
             changeConsent(payload.map { .init($0.rawValue) }) { result in
                 
                 switch result {
-                case .failure(.connectivityError):
-                    completion(.connectivityError)
-                    
-                case let .failure(.serverError(message)):
-                    completion(.serverError(message))
+                case let .failure(failure):
+                    completion(.failure(failure))
                     
                 case .success(()):
 #warning("success case could easily have associated value of consentList (derived from payload)")

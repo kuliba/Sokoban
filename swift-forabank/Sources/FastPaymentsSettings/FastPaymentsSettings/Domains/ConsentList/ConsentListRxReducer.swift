@@ -112,7 +112,7 @@ private extension ConsentListRxReducer {
     }
     
     func handleConsentChangeFailure(
-        _ failure: ConsentListEvent.ConsentFailure,
+        _ failure: ServiceFailure,
         in state: State
     ) -> State {
         
@@ -124,15 +124,8 @@ private extension ConsentListRxReducer {
         consentList.mode = .collapsed
         consentList.searchText = ""
 
-        switch failure {
-        case .connectivityError:
-            consentList.status = .failure(.connectivityError)
-            return .success(consentList)
-            
-        case let .serverError(message):
-            consentList.status = .failure(.serverError(message))
-            return .success(consentList)
-        }
+        consentList.status = .failure(failure)
+        return .success(consentList)
     }
     
     func handleResetState(
