@@ -26,8 +26,10 @@ struct InactiveContractView: View {
             }
             
             AttributedTextView(attributedString: .consent)
+            
+            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 
