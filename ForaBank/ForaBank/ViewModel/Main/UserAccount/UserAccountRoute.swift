@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIPrimitives
+import UserAccountNavigationComponent
 
 struct UserAccountRoute {
     
-    var alert: Alert.ViewModel?
+    var alert: AlertModelOf<UserAccountEvent.AlertButtonTap>?
     var link: Link?
     var bottomSheet: BottomSheet?
     var sheet: Sheet?
@@ -31,7 +33,7 @@ extension UserAccountRoute {
         enum FastPaymentSettings {
             
             case legacy(MeToMeSettingView.ViewModel)
-            case new(FastPaymentsSettingsViewModel)
+            case new(FPSRoute)
             
             var id: ID {
                 switch self {
@@ -44,6 +46,8 @@ extension UserAccountRoute {
                 
                 case legacy, new
             }
+            
+            typealias FPSRoute = UserAccountNavigation.State.FPSRoute
         }
         
         static func == (lhs: Link, rhs: Link) -> Bool {

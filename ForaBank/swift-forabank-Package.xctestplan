@@ -284,6 +284,13 @@
         "identifier" : "CarouselComponentTests",
         "name" : "CarouselComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianModuleTests",
+        "name" : "CardGuardianModuleTests"
+      }
     }
   ],
   "version" : 1

@@ -6,13 +6,43 @@
 //
 
 import SwiftUI
+import ManageSubscriptionsUI
+import UserAccountNavigationComponent
+import UIPrimitives
 
 enum UserAccountEvent {
     
+    #warning("suboptimal event structure, needs cleaning")
+    case closeAlert
+    case closeFPSAlert
+    case dismissDestination
+    case dismissFPSDestination
+    case dismissRoute
+    
+    case alertButtonTapped(AlertButtonTap)
     case route(RouteEvent)
+    case fps(FastPaymentsSettings)
+    case otp(OTP)
 }
 
 extension UserAccountEvent {
+    
+    enum AlertButtonTap {
+        
+        #warning("suboptimal event structure, needs cleaning")
+        case closeAlert
+        case closeFPSAlert
+        case dismissDestination
+        case dismissFPSDestination
+        case dismissRoute
+
+        case fps(FastPaymentsSettings)
+        case otp(OTP)
+        
+        case cancelC2BSub(SubscriptionViewModel.Token)
+        case delete
+        case exit
+    }
     
     enum RouteEvent {
         
@@ -26,7 +56,7 @@ extension UserAccountEvent {
         enum AlertEvent {
             
             case reset
-            case setTo(Alert.ViewModel)
+            case setTo(AlertModelOf<AlertButtonTap>)
         }
         
         enum BottomSheetEvent {
@@ -57,4 +87,10 @@ extension UserAccountEvent {
             case setTo(AlertTextFieldView.ViewModel)
         }
     }
+}
+
+extension UserAccountEvent {
+    
+    typealias FastPaymentsSettings = UserAccountNavigation.Event.FastPaymentsSettings
+    typealias OTP = UserAccountNavigation.Event.OTP
 }

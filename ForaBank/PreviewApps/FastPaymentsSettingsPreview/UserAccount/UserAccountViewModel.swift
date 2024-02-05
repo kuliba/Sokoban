@@ -74,7 +74,7 @@ extension UserAccountViewModel {
     
     private var fpsViewModel: FastPaymentsSettingsViewModel? {
         
-        guard case let .fastPaymentsSettings(route) = state.destination
+        guard let route = state.destination
         else { return nil }
         
         return route.viewModel
@@ -95,7 +95,7 @@ extension UserAccountViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.fps($0)) }
         
-        state.destination = .fastPaymentsSettings(.init(fpsViewModel, cancellable))
+        state.destination = .init(fpsViewModel, cancellable)
 #warning("and change to effect (??) when moved to `reduce`")
         fpsViewModel.event(.appear)
     }
