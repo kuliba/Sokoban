@@ -225,6 +225,14 @@ extension Model {
                 icon: .image(.parameterDocument),
                 title: "Antifraud"
             ))
+            
+        } else if response.scenario == .ok {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "OK"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
         }
         
         if response.needOTP == true {

@@ -1425,7 +1425,10 @@ extension Model {
 
 extension Model {
     
-    func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
+    func paymentsParameterValue(
+        _ parameters: [PaymentsParameterRepresentable],
+        id: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.id == id })?.value
     }
@@ -1518,7 +1521,8 @@ extension Model {
         
         let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
         let antifraudParameter = paymentsParameterValue(
-            operation.parameters, id: antifraudParameterId
+            operation.parameters,
+            id: antifraudParameterId
         )
         
         guard antifraudStatus().contains(where: { $0 == antifraudParameter }) || (operation.service == .sfp && antifraudParameter == nil) else {
