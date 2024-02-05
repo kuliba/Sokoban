@@ -74,12 +74,9 @@ private extension ServiceFailure {
         
         let errorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
         
-        switch self {
-        case .serverError(errorMessage):
-            return errorMessage
-            
-        default:
-            return nil
-        }
+        guard case .serverError(errorMessage) = self
+        else { return nil }
+ 
+        return errorMessage
     }
 }
