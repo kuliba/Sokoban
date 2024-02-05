@@ -1744,6 +1744,7 @@
 		77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670827B85266009FEA09 /* AESEncryptionAgent.swift */; };
 		77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670A27BABCD9009FEA09 /* KeychainAgentProtocol.swift */; };
 		77FF670D27BABFD3009FEA09 /* ValetKeychainAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */; };
+		8300FB6A2B71581200BE62E5 /* ProductProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 8300FB692B71581200BE62E5 /* ProductProfile */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
 		8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */; };
 		8306C12D2B63A2E2007FDA89 /* Services+getProductDynamicParamsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */; };
@@ -4738,6 +4739,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				833370BE2B6D2EDB00B424E8 /* UIPrimitives in Frameworks */,
+				8300FB6A2B71581200BE62E5 /* ProductProfile in Frameworks */,
 				8357E34E2B6CF7C20065E581 /* CardGuardianModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12528,6 +12530,7 @@
 			packageProductDependencies = (
 				8357E34D2B6CF7C20065E581 /* CardGuardianModule */,
 				833370BD2B6D2EDB00B424E8 /* UIPrimitives */,
+				8300FB692B71581200BE62E5 /* ProductProfile */,
 			);
 			productName = CardGuardianPreview;
 			productReference = 8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */;
@@ -16451,7 +16454,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -16460,6 +16463,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16487,7 +16493,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -16496,6 +16502,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -16522,7 +16531,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -16531,6 +16540,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -16557,7 +16569,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -16566,6 +16578,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -17999,6 +18014,10 @@
 		77B243DB2A2F658500CDCEC6 /* UserModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserModel;
+		};
+		8300FB692B71581200BE62E5 /* ProductProfile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ProductProfile;
 		};
 		830C91BA2AAF9051005EC90C /* CodableLanding */ = {
 			isa = XCSwiftPackageProductDependency;

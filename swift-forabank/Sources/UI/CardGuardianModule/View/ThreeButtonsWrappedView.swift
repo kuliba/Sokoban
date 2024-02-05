@@ -9,7 +9,7 @@ import RxViewModel
 import SwiftUI
 import Tagged
 
-public typealias CardGuardianViewModel = RxViewModel<CardGuardianState, CardGuardian.ButtonTapped, Never>
+public typealias CardGuardianViewModel = RxViewModel<CardGuardianState, CardGuardianEvent, Never>
 
 public struct ThreeButtonsWrappedView: View {
     

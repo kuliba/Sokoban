@@ -14,5 +14,17 @@ public extension CardGuardian {
         case toggleLock
         case changePin
         case showOnMain
+        
+        var event: CardGuardianEvent {
+            
+            switch self {
+            case .toggleLock:
+                return .buttonTapped(.toggleLock)
+            case .changePin:
+                return .buttonTapped(.changePin)
+            case .showOnMain:
+                return .buttonTapped(.showOnMain)
+            }
+        }
     }
 }

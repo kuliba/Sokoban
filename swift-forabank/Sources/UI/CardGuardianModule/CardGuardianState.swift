@@ -10,9 +10,9 @@ import Foundation
 public struct CardGuardianState: Equatable {
     
     public let buttons: [_Button]
-    public var event: CardGuardian.ButtonTapped?
+    public var event: CardGuardianEvent?
     
-    public init(buttons: [_Button], event: CardGuardian.ButtonTapped? = nil) {
+    public init(buttons: [_Button], event: CardGuardianEvent? = nil) {
         self.buttons = buttons
         self.event = event
     }

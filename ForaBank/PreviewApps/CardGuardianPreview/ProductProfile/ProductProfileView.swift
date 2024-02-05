@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CardGuardianModule
+import ProductProfile
 
 struct ProductProfileView: View {
     
@@ -23,19 +24,33 @@ struct ProductProfileView: View {
         
         Button(
             "Card Guardian",
-            action: {
-                //viewModel.openCardGuardian
-                
-                self.showingDetail.toggle()
-            }
+            action: viewModel.openCardGuardian
         )
-        .sheet(isPresented: $showingDetail) {
-            CardGuardianModule.ThreeButtonsWrappedView(
-                viewModel: viewModel.openCardGuardian(),
-                config: .preview)
-            .padding(.top, 26)
-            .padding(.bottom, 72)
-        }
+        .alert(
+            item: .init(
+                get: { viewModel.state.alert },
+                set: { if $0 == nil { viewModel.event(.closeAlert) }}
+            ),
+            content: { .init(with: $0, event: viewModel.event) }
+        )
+        .sheet(
+            item: .init(
+                get: { viewModel.state.destination },
+                set: { if $0 == nil { viewModel.event(.dismissDestination) }}
+            ),
+            content: destinationView
+        )
+    }
+    
+    private func destinationView(
+        cgRoute: ProductProfileNavigation.State.ProductProfileRoute
+    ) -> some View {
+        
+        CardGuardianModule.ThreeButtonsWrappedView(
+            viewModel: cgRoute.viewModel,
+            config: .preview)
+        .padding(.top, 26)
+        .padding(.bottom, 72)
     }
 }
 
@@ -43,7 +58,9 @@ struct ProductProfileView: View {
 #Preview {
     ProductProfileView(
         viewModel: .init(
-            navigationStateManager: .init(makeCardGuardianViewModel: { _ in
+            initialState: .init(), navigationStateManager: .init(reduce: { _,_,_ in
+                (ProductProfileNavigation.State.init(), .none)
+            }, makeCardGuardianViewModel: { _ in
                 
                     .init(
                         initialState: .init(buttons: .preview),
