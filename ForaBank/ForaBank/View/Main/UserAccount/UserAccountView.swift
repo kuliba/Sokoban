@@ -21,7 +21,7 @@ struct UserAccountView: View {
     
     var body: some View {
         
-        ZStack {
+        ZStack(alignment: .top) {
             
             scrollView
             
@@ -203,11 +203,7 @@ struct UserAccountView: View {
                     .navigationBarTitle("", displayMode: .inline)
                 
             case let .new(route):
-                ZStack {
-                    
-                    fpsWrapperView(route)
-                    viewModel.route.spinner.map(SpinnerView.init(viewModel:))
-                }
+                fpsView(route)
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -236,6 +232,24 @@ struct UserAccountView: View {
             
         case let .successView(successViewModel):
             PaymentsSuccessView(viewModel: successViewModel)
+        }
+    }
+    
+    private func fpsView(
+        _ route: UserAccountNavigation.State.FPSRoute
+    ) -> some View {
+        
+        ZStack(alignment: .top) {
+            
+            fpsWrapperView(route)
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+            viewModel.route.informer.map {
+                InformerView(viewModel: .init(
+                    message: $0.message,
+                    icon: .init(systemName: "xmark")
+                ))
+                .padding(.top, 56)
+            }
         }
     }
     
