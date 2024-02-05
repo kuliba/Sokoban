@@ -21,4 +21,3 @@ extension RemoteService: Fetcher {
         process(payload, completion: completion)
     }
 }
-

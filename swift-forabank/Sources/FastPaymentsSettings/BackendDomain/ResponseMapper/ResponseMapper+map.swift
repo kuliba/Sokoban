@@ -9,12 +9,14 @@ import Foundation
 
 public extension ResponseMapper {
     
+    typealias MappingResult<T> = Result<T, MappingError>
+    
     /// Generic map.
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
         mapOrThrow: (D) throws -> T
-    ) -> Result<T, MappingError> {
+    ) -> MappingResult<T> {
         
         map(data, httpURLResponse) { (data: D?) in
             
@@ -29,7 +31,7 @@ public extension ResponseMapper {
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
         mapOrThrow: (D?) throws -> T
-    ) -> Result<T, MappingError> {
+    ) -> MappingResult<T> {
         
         do {
             

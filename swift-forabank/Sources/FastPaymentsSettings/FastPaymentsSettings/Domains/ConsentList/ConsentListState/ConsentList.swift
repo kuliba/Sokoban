@@ -52,7 +52,7 @@ extension ConsentList {
     }
     
     public enum Status: Equatable {
-        
+        #warning("replace with ServiceFailure?")
         case failure(Failure)
         case inflight
         

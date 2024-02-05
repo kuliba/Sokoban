@@ -6,24 +6,16 @@
 //
 
 import Combine
+import FastPaymentsSettings
 import Foundation
+import ManageSubscriptionsUI
 import OTPInputComponent
 import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
 
-private extension FastPaymentsSettingsOTPServices {
-    
-#warning("add live services")
-    static func live(httpClient: HTTPClient) -> Self {
-        
-        unimplemented()
-    }
-}
-
 extension Services {
     
-#warning("remove model if unused")
     static func makeNavigationStateManager(
         useStub isStub: Bool = true,
         httpClient: HTTPClient,
@@ -38,7 +30,7 @@ extension Services {
         
         let fpsReducer = UserAccountNavigationFPSReducer()
         
-        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient: httpClient)
+        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
         let otpReducer = UserAccountNavigationOTPReducer(
             makeTimedOTPInputViewModel: {
@@ -55,7 +47,7 @@ extension Services {
                     scheduler: $0
                 )
             },
-            scheduler: .main
+            scheduler: scheduler
         )
         
         let routeEventReducer = UserAccountRouteEventReducer()
@@ -88,6 +80,28 @@ private struct FastPaymentsSettingsOTPServices {
     let initiateOTP: CountdownEffectHandler.InitiateOTP
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
     let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault
+}
+
+extension UserAccountModelEffectHandler {
+    
+    convenience init(model: Model) {
+        
+        self.init(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            },
+            deleteRequest: {
+                
+                model.action.send(ModelAction.ClientInfo.Delete.Request())
+            },
+            exit: {
+                
+                model.auth.value = .unlockRequiredManual
+            }
+        )
+    }
 }
 
 // MARK: - Adapters
@@ -188,6 +202,76 @@ private extension UserAccountNavigationOTPReducer {
         }
         
         return (state, effect)
+    }
+}
+
+// MARK: - Live Service
+
+private extension FastPaymentsSettingsOTPServices {
+    
+    static func live(
+        _ httpClient: HTTPClient,
+        _ log: @escaping (String, StaticString, UInt) -> Void
+    ) -> Self {
+        
+#warning("add adapted helpers to simplify setup")
+        typealias ForaRequestFactory = ForaBank.RequestFactory
+        typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+        
+        let initiateOTPService = NanoServices.adaptedLoggingRemoteService(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            log: log
+        )
+        
+        let submitOTPService = NanoServices.adaptedLoggingRemoteService(
+            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
+            log: log
+        )
+        
+        #warning("same as initiateOTPService but without error mapping")
+        let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault = NanoServices.adaptedLoggingFetch(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            log: log
+        )
+        
+        return .init(
+            initiateOTP: { completion in
+                
+                initiateOTPService.fetch {
+                    
+                    completion($0.mapError(ServiceFailure.init(error:)))
+                }
+            },
+            submitOTP: { payload, completion in
+                
+                submitOTPService.fetch(.init(payload.rawValue)) {
+                    
+                    completion($0.mapError(ServiceFailure.init(error:)))
+                }
+            },
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+    }
+}
+
+// MARK: - Adapters
+
+private extension OTPInputComponent.ServiceFailure {
+    
+    init(error: FastPaymentsSettings.ServiceFailure) {
+        
+        switch error {
+        case .connectivityError:
+            self = .connectivityError
+        case let .serverError(message):
+            self = .serverError(message)
+        }
     }
 }
 
