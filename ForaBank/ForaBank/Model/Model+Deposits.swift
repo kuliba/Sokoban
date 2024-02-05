@@ -114,11 +114,9 @@ extension Model {
     func handleDepositsSerial() -> String? {
         
         if localAgent.load(type: [DepositProductData].self) != nil {
-            
             return localAgent.serial(for: [DepositProductData].self)
          
         } else {
-            //try? localAgent.clear(type: [DepositProductData].self)
             return nil
         }
     }
@@ -140,8 +138,8 @@ extension Model {
                 switch response.statusCode {
                     
                 case .ok:
-                    //guard serial != response.data?.serial else { return }
-                    print("@@@ before data")
+                    
+                    guard serial != response.data?.serial else { return }
                    
                     guard
                         let data = response.data,
@@ -151,7 +149,6 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
-                    print("@@@@@ data\(data)")
                     
                     self.deposits.value = deposits
                     self.action.send(ModelAction.Deposits.List.Response.success(data: deposits))
