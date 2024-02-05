@@ -23,7 +23,7 @@ public enum ServerAgentError: LocalizedError {
         
         switch self {
         case .requestCreationError(let error):
-            return "Server: request creation failed with error: \(error.localizedDescription))"
+            return "Server: request creation failed with error: \(error.localizedDescription)"
             
         case .sessionError(let error):
             return "\(error.localizedDescription)"

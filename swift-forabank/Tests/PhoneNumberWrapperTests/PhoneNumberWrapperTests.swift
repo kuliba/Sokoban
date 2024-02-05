@@ -14,9 +14,9 @@ final class PhoneNumberWrapperTests: XCTestCase {
     func test_isValidPhoneNumber_ru_notValid() {
          
         XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
-        XCTAssertFalse(isValid(.ru(.startsWithPlus8(.equals10Digits))))
+        XCTAssertFalse(isValid(.ru(.startsWithPlus8(.moreThen10Digits))))
         XCTAssertFalse(isValid(.ru(.startsWith8(.lessThen10Digits))))
-        XCTAssertFalse(isValid(.ru(.startsWith8(.moreThen10Digits))))
+        XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
     }
     
     //MARK: - test isValidPhoneNumber - valid
