@@ -17,6 +17,11 @@ public extension Array where Element == ConsentList.SelectableBank {
         )
     }
     
+    static let many: Self = [Bank].many.map {
+        
+        .init(bank: $0, isSelected: false)
+    }
+    
     static var consented: Self {
         
         Self.preview.map {
