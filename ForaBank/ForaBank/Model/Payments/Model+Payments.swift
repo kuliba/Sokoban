@@ -1546,7 +1546,7 @@ extension Model {
             return .init(
                 payeeName: recipientValue,
                 phone: formatPhone,
-                amount: "- \(amountValue) ₽"
+                amount: "- \(amountValue)"
             )
             
         case .requisites:
