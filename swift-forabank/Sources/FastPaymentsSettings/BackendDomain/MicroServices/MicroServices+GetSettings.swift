@@ -14,7 +14,7 @@ public protocol PhoneNumbered {
 
 public extension MicroServices {
     
-    final class GetSettings<Contract: PhoneNumbered, Consent, Settings> {
+    final class SettingsGetter<Contract: PhoneNumbered, Consent, Settings> {
         
         private let getContract: GetContract
         private let getConsent: GetConsent
@@ -39,7 +39,7 @@ public extension MicroServices {
     }
 }
 
-public extension MicroServices.GetSettings {
+public extension MicroServices.SettingsGetter {
     
     func process(
         completion: @escaping ProcessCompletion
@@ -48,7 +48,7 @@ public extension MicroServices.GetSettings {
     }
 }
 
-public extension MicroServices.GetSettings {
+public extension MicroServices.SettingsGetter {
     
     typealias ProcessResult = Result<Settings, ServiceFailure>
     typealias ProcessCompletion = (ProcessResult) -> Void
@@ -70,7 +70,7 @@ public extension MicroServices.GetSettings {
     typealias MapToSettings = (Contract, Consent, UserPaymentSettings.GetBankDefaultResponse) -> Settings
 }
 
-private extension MicroServices.GetSettings {
+private extension MicroServices.SettingsGetter {
     
     func getContract(
         _ completion: @escaping ProcessCompletion

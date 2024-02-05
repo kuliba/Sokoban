@@ -99,7 +99,7 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.FastPaymentContractFindListResult {
+    ) -> ResponseMapper.MappingResult<FastPaymentContractFullInfo?> {
         
         ResponseMapper.mapFastPaymentContractFindListResponse(data, httpURLResponse)
     }

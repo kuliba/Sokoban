@@ -17,3 +17,32 @@ public extension ConsentList {
         selectedBanks.map(\.name)
     }
 }
+
+public extension ConsentList {
+    #warning("add tests")
+    init(
+        _ banks: [Bank],
+        consent: Consent,
+        mode: Mode = .collapsed,
+        searchText: String = "",
+        status: Status? = nil
+    ) {
+        self.init(
+            banks: banks.select(consent: consent),
+            consent: consent,
+            mode: mode,
+            searchText: searchText,
+            status: status
+        )
+    }
+}
+
+private extension Array where Element == Bank {
+    
+    func select(
+        consent: Consent
+    ) -> [ConsentList.SelectableBank] {
+    
+        map { .init(bank: $0, isSelected: consent.contains($0.id)) }
+    }
+}

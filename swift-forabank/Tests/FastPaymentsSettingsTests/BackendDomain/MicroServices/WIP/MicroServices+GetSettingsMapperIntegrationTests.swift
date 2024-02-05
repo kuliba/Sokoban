@@ -62,10 +62,10 @@ final class MicroServices_GetSettingsMapperIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = MicroServices.GetSettings<UserPaymentSettings.PaymentContract, ConsentListState, UserPaymentSettings>
+    private typealias SUT = MicroServices.SettingsGetter<UserPaymentSettings.PaymentContract, Consent?, UserPaymentSettings>
     
     private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
-    private typealias GetConsentSpy = Spy<Void, ConsentListState>
+    private typealias GetConsentSpy = Spy<Void, Consent>
     private typealias GetBankDefaultSpy = Spy<PhoneNumber, UserPaymentSettings.GetBankDefaultResponse>
     
     private func makeSUT(
@@ -86,7 +86,8 @@ final class MicroServices_GetSettingsMapperIntegrationTests: XCTestCase {
             getContract: getContractSpy.process(completion:),
             getConsent: getConsentSpy.process(completion:),
             getBankDefault: getBankDefaultSpy.process(_:completion:),
-            getProducts: { products }
+            getProducts: { products },
+            getBanks: { [] }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
