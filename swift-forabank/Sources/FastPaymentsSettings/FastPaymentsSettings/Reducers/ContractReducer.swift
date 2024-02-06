@@ -85,7 +85,7 @@ private extension ContractReducer {
             
             state.status = .inflight
             
-            return (state, .createContract(.init(product.id.rawValue)))
+            return (state, .createContract(product))
             
         default:
             return (state, nil)
@@ -139,7 +139,7 @@ private extension ContractReducer {
             switch result {
             case let .success(contract):
                 let products = getProducts()
-                let product = products.first { $0.id == contract.productID }
+                let product = products.product(forAccountID: contract.accountID)
                 
                 return .init(settingsResult: .success(.contracted(
                     .init(
@@ -210,7 +210,8 @@ private extension UserPaymentSettings.Details {
         
         return .init(
             contractID: .init(paymentContract.id.rawValue),
-            productID: product.id
+            selectableProductID: product.id.selectableProductID
         )
     }
 }
+

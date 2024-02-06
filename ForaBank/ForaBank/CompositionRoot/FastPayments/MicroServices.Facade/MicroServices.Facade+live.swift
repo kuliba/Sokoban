@@ -100,7 +100,7 @@ private extension FastPaymentsSettings.RequestFactory.CreateFastPaymentContractP
     ) -> Self {
         
         .init(
-            accountID: productID.rawValue,
+            selectableProductID: productID.selectableProductID,
             flagBankDefault: .empty,
             flagClientAgreementIn: .yes,
             flagClientAgreementOut: .yes
@@ -118,7 +118,7 @@ private extension FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractP
         case .active:
             return .init(
                 contractID: payload.contractID.rawValue,
-                accountID: payload.accountID.rawValue,
+                selectableProductID: payload.selectableProductID,
                 flagBankDefault: .empty,
                 flagClientAgreementIn: .yes,
                 flagClientAgreementOut: .yes
@@ -127,7 +127,7 @@ private extension FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractP
         case .inactive:
             return .init(
                 contractID: payload.contractID.rawValue,
-                accountID: payload.accountID.rawValue,
+                selectableProductID: payload.selectableProductID,
                 flagBankDefault: .empty,
                 flagClientAgreementIn: .no,
                 flagClientAgreementOut: .no

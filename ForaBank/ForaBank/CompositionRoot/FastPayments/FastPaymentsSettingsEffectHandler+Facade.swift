@@ -41,7 +41,7 @@ extension FastPaymentsSettingsEffectHandler {
         let contractUpdater = facade.makeContractUpdater()
         
         let contractEffectHandler = ContractEffectHandler(
-            createContract: { contractMaker.process($0.fpsProductID, $1) },
+            createContract: { contractMaker.process($0.id, $1) },
             updateContract: { contractUpdater.process($0.updaterPayload, $1) }
         )
         
@@ -78,19 +78,11 @@ private extension FastPaymentsSettingsEffectHandler.UpdateProductPayload {
         
         .init(
             contractID: .init(contractID.rawValue),
-            accountID: .init(productID.rawValue),
+            selectableProductID: selectableProductID,
             flagBankDefault: .empty,
             flagClientAgreementIn: .yes,
             flagClientAgreementOut: .yes
         )
-    }
-}
-
-private extension ContractEffectHandler.CreateContractPayload {
-    
-    var fpsProductID: FastPaymentsSettings.Product.ID {
-        
-        .init(rawValue)
     }
 }
 
@@ -102,7 +94,7 @@ private extension ContractEffect.TargetContract {
         
         .init(
             contractID: .init(core.contractID.rawValue),
-            accountID: .init(core.productID.rawValue),
+            selectableProductID: core.selectableProductID,
             target: payloadTarget
         )
     }

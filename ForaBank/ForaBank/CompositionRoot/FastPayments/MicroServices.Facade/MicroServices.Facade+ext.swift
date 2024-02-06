@@ -93,7 +93,7 @@ private extension UserPaymentSettings.PaymentContract {
         
         self.init(
             id: .init(info.contract.fpcontractID),
-            productID: .init(info.account.accountID),
+            accountID: .init(info.account.accountID),
             contractStatus: contractStatus,
             phoneNumber: .init(info.contract.phoneNumber),
             phoneNumberMasked: info.contract.phoneNumberMask

@@ -15,10 +15,10 @@ func activateContract(
 }
 
 func createContract(
-    _ productID: Product.ID
+    _ product: Product
 ) -> FastPaymentsSettingsEffect {
     
-    .contract(.createContract(productID))
+    .contract(.createContract(product))
 }
 
 func deactivateContract(
@@ -37,7 +37,7 @@ func fastPaymentsSettingsEffectTargetContract(
     .init(
         core: .init(
             contractID: contractID,
-            productID: product.id
+            selectableProductID: product.selectableProductID
         ),
         targetStatus: targetStatus)
 }
@@ -49,7 +49,7 @@ func makeCore(
     
     .init(
         contractID: .init(details.paymentContract.id.rawValue),
-        productID: product.id
+        selectableProductID: product.selectableProductID
     )
 }
 
@@ -60,6 +60,6 @@ func updateProductPayload(
     
     .init(
         contractID: .init(contractIDRawValue),
-        productID: product.id
+        selectableProductID: product.selectableProductID
     )
 }

@@ -61,7 +61,7 @@ private extension UserPaymentSettings.PaymentContract {
     
     static let stub: Self = .init(
         id: 10002076204,
-        productID: 10004203497,
+        accountID: 10004203497,
         contractStatus: .active,
         phoneNumber: "79171044913",
         phoneNumberMasked: "+7 ... ... 49 13"

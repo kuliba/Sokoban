@@ -12,20 +12,20 @@ public extension RequestFactory {
     struct UpdateFastPaymentContractPayload: Equatable {
         
         let contractID: Int
-        let accountID: Int
+        let selectableProductID: SelectableProductID
         let flagBankDefault: Flag
         let flagClientAgreementIn: Flag
         let flagClientAgreementOut: Flag
         
         public init(
             contractID: Int, 
-            accountID: Int,
+            selectableProductID: SelectableProductID,
             flagBankDefault: Flag,
             flagClientAgreementIn: Flag,
             flagClientAgreementOut: Flag
         ) {
             self.contractID = contractID
-            self.accountID = accountID
+            self.selectableProductID = selectableProductID
             self.flagBankDefault = flagBankDefault
             self.flagClientAgreementIn = flagClientAgreementIn
             self.flagClientAgreementOut = flagClientAgreementOut
@@ -53,14 +53,26 @@ private extension RequestFactory.UpdateFastPaymentContractPayload {
     var httpBody: Data {
         
         get throws {
-        
-            try JSONSerialization.data(withJSONObject: [
-                "contractId" : contractID,
-                "accountId" : accountID,
-                "flagBankDefault" : flagBankDefault.rawValue,
-                "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
-                "flagClientAgreementOut" : flagClientAgreementOut.rawValue
-            ] as [String: Any])
+            
+            switch selectableProductID {
+            case let .account(accountID):
+                return try JSONSerialization.data(withJSONObject: [
+                    "contractId" : contractID,
+                    "accountId" : accountID.rawValue,
+                    "flagBankDefault" : flagBankDefault.rawValue,
+                    "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
+                    "flagClientAgreementOut" : flagClientAgreementOut.rawValue
+                ] as [String: Any])
+                
+            case let .card(cardID):
+                return try JSONSerialization.data(withJSONObject: [
+                    "contractId" : contractID,
+                    "cardId" : cardID.rawValue,
+                    "flagBankDefault" : flagBankDefault.rawValue,
+                    "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
+                    "flagClientAgreementOut" : flagClientAgreementOut.rawValue
+                ] as [String: Any])
+            }
         }
     }
 }

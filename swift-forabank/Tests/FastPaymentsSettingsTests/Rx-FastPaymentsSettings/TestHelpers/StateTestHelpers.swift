@@ -214,8 +214,8 @@ func missingConsentSuccessFPSState(
 }
 
 func paymentContract(
-    _ contractID: UserPaymentSettings.PaymentContract.ContractID = .init(generateRandom11DigitNumber()),
-    productID: Product.ID = .init(generateRandom11DigitNumber()),
+    _ contractID: UserPaymentSettings.PaymentContract.ID = .init(generateRandom11DigitNumber()),
+    accountID: Product.AccountID = .init(generateRandom11DigitNumber()),
     contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active,
     phoneNumber: PhoneNumber = anyPhoneNumber(),
     phoneNumberMasked: String = anyMessage()
@@ -223,7 +223,7 @@ func paymentContract(
     
     .init(
         id: contractID,
-        productID: productID,
+        accountID: accountID,
         contractStatus: contractStatus,
         phoneNumber: phoneNumber,
         phoneNumberMasked: phoneNumberMasked

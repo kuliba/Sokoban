@@ -52,36 +52,49 @@ public extension ProductsReducer {
 
 private extension UserPaymentSettings.ProductSelector {
     
-    func isSelected(_ productID: Product.ID) -> Bool {
+    func isSelected(
+        _ selectableProductID: SelectableProductID
+    ) -> Bool {
         
-        selectedProduct?.id == productID
+        selectedProduct?.selectableProductID == selectableProductID
     }
 }
 
 private extension ProductsReducer {
     
-    func canSelect(_ productID: Product.ID) -> Bool {
+    func canSelect(
+        _ selectableProductID: SelectableProductID
+    ) -> Bool {
         
-        let productIDs = getProducts().map(\.id)
-        return productIDs.contains(productID)
+        let selectableProductIDs = getProducts().map(\.selectableProductID)
+        return selectableProductIDs.contains(selectableProductID)
     }
     
-    func product(forID id: Product.ID) -> Product? {
+    func product(
+        forID id: Product.ID
+    ) -> Product? {
         
         getProducts().first(where: { $0.id == id })
     }
     
+    func product(
+        forSelectableProductID selectableProductID: SelectableProductID
+    ) -> Product? {
+        
+        getProducts().first(where: { $0.selectableProductID == selectableProductID })
+    }
+    
     func selectProduct(
         _ state: State,
-        _ productID: Product.ID
+        _ selectableProductID: SelectableProductID
     ) -> (State, Effect?) {
         
         guard let details = state.activeDetails,
               details.productSelector.isExpanded
         else { return (state, nil) }
         
-        guard !details.productSelector.isSelected(productID),
-              canSelect(productID)
+        guard !details.productSelector.isSelected(selectableProductID),
+              canSelect(selectableProductID)
         else {
             var state = state
             state = .init(
@@ -99,7 +112,9 @@ private extension ProductsReducer {
         var state = state
         state.status = .inflight
         
-        return (state, .updateProduct(details, productID))
+        let product = product(forSelectableProductID: selectableProductID)
+        
+        return (state, product.map { .updateProduct(details, $0) })
     }
     
     func toggleProducts(
@@ -140,16 +155,16 @@ private extension ProductsReducer {
     
     func update(
         _ state: State,
-        with productUpdate: ProductUpdateResult
+        with productUpdate: ProductsEvent.ProductUpdateResult
     ) -> State {
         
         guard let details = state.activeDetails
         else { return state }
         
         switch productUpdate {
-        case let .success(productID):
+        case let .success(selectableProductID):
             var details = details
-            let product = product(forID: productID)
+            let product = product(forSelectableProductID: selectableProductID)
             details = details.updated(
                 productSelector: details.productSelector.updated(
                     selectedProduct: product,
@@ -190,12 +205,12 @@ private extension FastPaymentsSettingsEffect {
     
     static func updateProduct(
         _ details: UserPaymentSettings.Details,
-        _ productID: Product.ID
+        _ product: Product
     ) -> Self {
         
         .updateProduct(.init(
             contractID: .init(details.paymentContract.id.rawValue),
-            productID: productID
+            selectableProductID: product.selectableProductID
         ))
     }
 }

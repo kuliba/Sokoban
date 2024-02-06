@@ -17,12 +17,11 @@ func anyProductID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> Product.ID {
     
-    .init(rawValue)
+    .account(.init(rawValue))
 }
 
 func makeProduct(
     _ id: Product.ID = anyProductID(),
-    type: Product.ProductType = .account,
     header: String = "Header",
     title: String = "title",
     number: String = "number",
@@ -37,7 +36,6 @@ func makeProduct(
     
     .init(
         id: id,
-        type: type,
         header: header,
         title: title,
         number: number,

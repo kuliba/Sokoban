@@ -145,13 +145,17 @@ private extension ProductData {
             
         case .card:
             guard let card = self as? ProductCardData,
+                  let accountID = card.accountId,
                   (card.isMain ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub
             else { return nil }
             
-            return card.fpsProduct(formatBalance: formatBalance)
+            return card.fpsProduct(
+                accountID: accountID,
+                formatBalance: formatBalance
+            )
             
         default:
             return nil
@@ -168,8 +172,7 @@ private extension ProductAccountData {
     ) -> FastPaymentsSettings.Product {
         
         .init(
-            id: .init(id),
-            type: .account,
+            id: .account(.init(id)),
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",
@@ -187,12 +190,12 @@ private extension ProductAccountData {
 private extension ProductCardData {
     
     func fpsProduct(
+        accountID: Int,
         formatBalance: @escaping (ProductData) -> String
     ) -> FastPaymentsSettings.Product {
         
         .init(
-            id: .init(id),
-            type: .card,
+            id: .card(.init(id), accountID: .init(accountID)),
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",

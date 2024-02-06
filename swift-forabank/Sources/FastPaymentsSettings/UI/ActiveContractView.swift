@@ -67,8 +67,8 @@ private extension Product {
     var product: ProductSelect.Product {
         
         .init(
-            id: .init(id.rawValue),
-            type: type.productSelectProductType,
+            id: productSelectProductID,
+            type: productSelectProductType,
             header: header,
             title: title,
             footer: number,
@@ -76,6 +76,28 @@ private extension Product {
             balance: balance,
             look: look.productSelectProductLook
         )
+    }
+    
+    private var productSelectProductID: ProductSelect.Product.ID {
+        
+        switch id {
+        case let .account(accountID):
+            return .init(accountID.rawValue)
+            
+        case let .card(cardID, _):
+            return .init(cardID.rawValue)
+        }
+    }
+    
+    private var productSelectProductType: ProductSelect.Product.ProductType {
+        
+        switch id {
+        case .account:
+            return .account
+            
+        case .card:
+            return .card
+        }
     }
 }
 
@@ -97,17 +119,6 @@ private extension Product.Look.Icon {
         
         switch self {
         case let .svg(svg): return .svg(svg)
-        }
-    }
-}
-
-private extension Product.ProductType {
-    
-    var productSelectProductType: ProductSelect.Product.ProductType {
-        
-        switch self {
-        case .account: return  .account
-        case .card:    return  .card
         }
     }
 }
@@ -151,7 +162,21 @@ private extension ProductSelectEvent {
             return .toggleProducts
             
         case let .select(product):
-            return .selectProduct(.init(product.id.rawValue))
+            return .selectProduct(product.productID)
+        }
+    }
+}
+
+private extension ProductSelect.Product {
+    
+    var productID: SelectableProductID {
+        
+        switch type {
+        case .account:
+            return .account(.init(id.rawValue))
+            
+        case .card:
+            return .card(.init(id.rawValue))
         }
     }
 }

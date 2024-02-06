@@ -211,13 +211,13 @@ final class MicroServices_ContractUpdaterTests: XCTestCase {
     
     private func makePayload(
         contractID: String = UUID().uuidString,
-        accountID: UUID = .init(),
+        selectableProductID: SelectableProductID = .account(.init(generateRandom11DigitNumber())),
         _ target: SUT.Payload.TargetStatus
     ) -> SUT.Payload {
         
         .init(
             contractID: contractID,
-            accountID: accountID,
+            selectableProductID: selectableProductID,
             target: target
         )
     }
