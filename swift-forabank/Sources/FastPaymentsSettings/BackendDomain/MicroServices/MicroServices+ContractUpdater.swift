@@ -5,13 +5,6 @@
 //  Created by Igor Malyarov on 26.01.2024.
 //
 
-public protocol StatusReporting<Status> {
-    
-    associatedtype Status
-    
-    var status: Status { get }
-}
-
 public typealias ContractStatus = UserPaymentSettings.PaymentContract.ContractStatus
 
 public extension MicroServices {
@@ -48,9 +41,9 @@ public extension MicroServices.ContractUpdater {
     
     struct Payload: Equatable {
         
-        let contractID: ContractID
-        let accountID: AccountID
-        let target: TargetStatus
+        public let contractID: ContractID
+        public let accountID: AccountID
+        public let target: TargetStatus
         
         public init(
             contractID: ContractID, 
@@ -68,7 +61,7 @@ public extension MicroServices.ContractUpdater {
         }
     }
     
-    typealias ProcessResult = Result<Contract?, ServiceFailure>
+    typealias ProcessResult = Result<Contract, ServiceFailure>
     typealias Completion = (ProcessResult) -> Void
     
     // fastPaymentContractFindList
@@ -114,9 +107,9 @@ private extension MicroServices.ContractUpdater {
             case let .failure(serviceFailure):
                 completion(.failure(serviceFailure))
                 
-            case .success(nil):
-                completion(.success(nil))
-                
+            case .success(.none):
+                completion(.failure(.connectivityError))
+
             case let .success(.some(contract)):
                 switch (targetStatus, contract.status) {
                 case (.active, .active),

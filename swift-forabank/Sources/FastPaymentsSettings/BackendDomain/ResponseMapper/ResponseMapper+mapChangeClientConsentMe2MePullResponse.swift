@@ -9,12 +9,10 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias ChangeClientConsentMe2MePullResult = VoidMappingResult
-    
     static func mapChangeClientConsentMe2MePullResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> ChangeClientConsentMe2MePullResult {
+    ) -> VoidMappingResult {
         
         mapToVoid(data, httpURLResponse)
     }

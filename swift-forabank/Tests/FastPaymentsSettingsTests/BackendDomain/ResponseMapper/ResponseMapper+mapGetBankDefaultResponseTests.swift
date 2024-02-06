@@ -86,20 +86,21 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
         assert(result, equals: .success(.c2))
     }
     
-    func test_map_shouldDeliverLimitErrorOnSpecificMessage_c3() throws {
-        
-        let specificMessageData = Data(jsonString_c3.utf8)
-        let result = map(specificMessageData)
-        
-        assert(result, equals: .failure(.limit(errorMessage: limitErrorMessage)))
-    }
+    #warning("move to client test")
+//    func test_map_shouldDeliverLimitErrorOnSpecificMessage_c3() throws {
+//        
+//        let specificMessageData = Data(jsonString_c3.utf8)
+//        let result = map(specificMessageData)
+//        
+//        assert(result, equals: .failure(.limit(errorMessage: limitErrorMessage)))
+//    }
     
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.GetBankDefaultResult {
+    ) -> ResponseMapper.MappingResult<BankDefault> {
         
         ResponseMapper.mapGetBankDefaultResponse(data, httpURLResponse)
     }
@@ -107,7 +108,7 @@ final class ResponseMapper_mapGetBankDefaultResponseTests: XCTestCase {
     private let limitErrorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
 }
 
-private extension GetBankDefault {
+private extension BankDefault {
     
     static let c1: Self = true
     static let c2: Self = false

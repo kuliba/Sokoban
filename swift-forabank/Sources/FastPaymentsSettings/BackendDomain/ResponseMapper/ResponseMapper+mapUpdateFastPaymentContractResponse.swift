@@ -9,12 +9,10 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias UpdateFastPaymentContractResult = VoidMappingResult
-    
     static func mapUpdateFastPaymentContractResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> UpdateFastPaymentContractResult {
+    ) -> VoidMappingResult {
         
         mapToVoid(data, httpURLResponse)
     }

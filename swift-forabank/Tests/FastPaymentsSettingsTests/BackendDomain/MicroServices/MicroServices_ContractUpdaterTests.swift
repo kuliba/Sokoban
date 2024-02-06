@@ -124,11 +124,11 @@ final class MicroServices_ContractUpdaterTests: XCTestCase {
         })
     }
     
-    func test_process_shouldDeliverNilContractOn_getContractSuccessNil() {
+    func test_process_shouldDeliverConnectivityErrorOn_getContractSuccessNil() {
         
         let (sut, getContractSpy, updateContractSpy) = makeSUT()
         
-        expect(sut, with: makePayload(.active), toDeliver: .success(nil), on: {
+        expect(sut, with: makePayload(.active), toDeliver: .failure(.connectivityError), on: {
             
             updateContractSpy.complete(with: .success(()))
             getContractSpy.complete(with: .success(nil))

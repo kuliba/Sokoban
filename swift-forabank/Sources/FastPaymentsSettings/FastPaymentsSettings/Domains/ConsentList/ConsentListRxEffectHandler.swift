@@ -51,6 +51,7 @@ public extension ConsentListRxEffectHandler {
     enum ChangeConsentListResponse: Equatable {
         
         case success
+        #warning("change to case with ServiceFailure")
         case connectivityError
         case serverError(String)
     }
