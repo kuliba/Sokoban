@@ -12,9 +12,7 @@ import ProductProfile
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
-    
-    @State var showingDetail = false
-    
+        
     var body: some View {
         
         openCardGuardinaButton()

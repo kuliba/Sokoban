@@ -47,7 +47,6 @@ public extension ProductProfileNavigation.State {
     }
 }
 
-
 // MARK: - Hashable Conformance
 
 extension AlertModel: Hashable
