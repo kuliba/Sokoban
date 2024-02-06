@@ -1,8 +1,8 @@
 //
 //  ProductProfileViewModel.swift
-//  ForaBank
+//  
 //
-//  Created by Andryusina Nataly on 02.02.2024.
+//  Created by Andryusina Nataly on 06.02.2024.
 //
 
 import Foundation
@@ -10,11 +10,10 @@ import Combine
 import CombineSchedulers
 import UIPrimitives
 import CardGuardianModule
-import ProductProfile
 
-final class ProductProfileViewModel: ObservableObject {
+public final class ProductProfileViewModel: ObservableObject {
     
-    @Published private(set) var state: ProductProfileNavigation.State
+    @Published public private(set) var state: ProductProfileNavigation.State
     
     private let product: Product
     private let navigationStateManager: ProductProfileNavigationStateManager
@@ -22,11 +21,12 @@ final class ProductProfileViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<ProductProfileNavigation.State, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     
-    var needBlockConfig: Bool {
+    #warning("need remove/refactoring after add business logic")
+    public var needBlockConfig: Bool {
         product.isUnBlock
     }
     
-    init(
+    public init(
         product: Product,
         initialState: ProductProfileNavigation.State,
         navigationStateManager: ProductProfileNavigationStateManager,
@@ -44,15 +44,20 @@ final class ProductProfileViewModel: ObservableObject {
     }
 }
 
-extension ProductProfileViewModel {
+public extension ProductProfileViewModel {
     
     struct Product {
         let isUnBlock: Bool
         let isShowOnMain: Bool
+        
+        public init(isUnBlock: Bool, isShowOnMain: Bool) {
+            self.isUnBlock = isUnBlock
+            self.isShowOnMain = isShowOnMain
+        }
     }
 }
 
-extension ProductProfileViewModel {
+public extension ProductProfileViewModel {
     
     enum State: Equatable {
         
@@ -64,12 +69,12 @@ extension ProductProfileViewModel {
     }
 }
 
-struct ProductProfileNavigationStateManager {
+public struct ProductProfileNavigationStateManager {
     
     let reduce: ProductProfileReducer.Reduce
     let makeCardGuardianViewModel: MakeCardGuardianViewModel
     
-    init(
+    public init(
         reduce: @escaping ProductProfileReducer.Reduce,
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel
     ) {
@@ -80,7 +85,7 @@ struct ProductProfileNavigationStateManager {
 
 // MARK: - CardGuardian
 
-extension ProductProfileViewModel {
+public extension ProductProfileViewModel {
     
     func openCardGuardian(){
         
@@ -179,14 +184,14 @@ extension ProductProfileViewModel {
 
 // MARK: - Types
 
-extension ProductProfileNavigationStateManager {
+public extension ProductProfileNavigationStateManager {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
 }
 
 extension ProductProfileViewModel {
     
-    func event(_ event: ProductProfileNavigation.Event) {
+    public func event(_ event: ProductProfileNavigation.Event) {
         
         let (state, effect) = navigationStateManager.reduce(state, event)
         stateSubject.send(state)
