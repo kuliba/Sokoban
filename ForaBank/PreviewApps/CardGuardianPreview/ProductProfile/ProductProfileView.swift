@@ -15,10 +15,10 @@ struct ProductProfileView: View {
         
     var body: some View {
         
-        openCardGuardinaButton()
+        openCardGuardianButton()
     }
     
-    private func openCardGuardinaButton() -> some View {
+    private func openCardGuardianButton() -> some View {
         
         Button(
             "Управление",
@@ -53,22 +53,7 @@ struct ProductProfileView: View {
     }
 }
 
-
 #Preview {
-    ProductProfileView(
-        viewModel: .init(
-            product: .init(isUnBlock: true, isShowOnMain: true),
-            initialState: .init(), navigationStateManager: .init(reduce: { _,_ in
-                (ProductProfileNavigation.State.init(), .none)
-            }, makeCardGuardianViewModel: { _ in
-                
-                    .init(
-                        initialState: .init(buttons: .preview),
-                        reduce: {_,_ in
-                            (CardGuardianState.init(buttons: .preview), .none)
-                        },
-                        handleEffect: {_,_ in }
-                    )
-            })))
+    ProductProfileView.cardBlockedHideOnMain
 }
 
