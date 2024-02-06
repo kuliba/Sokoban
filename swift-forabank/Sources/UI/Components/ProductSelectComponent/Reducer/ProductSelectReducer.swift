@@ -32,8 +32,8 @@ public extension ProductSelectReducer {
         var newState = state
         
         switch event {
-        case let .select(id):
-            guard let product = getProducts()[id] else { break }
+        case let .select(product):
+            guard let product = getProducts()[product.id] else { break }
             
             newState = .init(selected: product)
             

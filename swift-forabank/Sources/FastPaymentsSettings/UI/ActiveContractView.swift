@@ -150,8 +150,8 @@ private extension ProductSelectEvent {
         case .toggleProductSelect:
             return .toggleProducts
             
-        case let .select(id):
-            return .selectProduct(.init(id.rawValue))
+        case let .select(product):
+            return .selectProduct(.init(product.id.rawValue))
         }
     }
 }

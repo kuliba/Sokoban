@@ -137,7 +137,7 @@ public struct ProductSelectView<ProductView: View>: View {
     ) -> some View {
         
         productView(product)
-            .onTapGesture { event(.select(product.id)) }
+            .onTapGesture { event(.select(product)) }
     }
     
     private func chevron() -> some View {
