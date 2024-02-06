@@ -10,11 +10,6 @@ import SberQR
 import PaymentSticker
 import SwiftUI
 
-extension FastPaymentsSettingsFlag {
-    
-    var useStub: Bool { false }
-}
-
 extension RootViewModelFactory {
     
     typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
@@ -55,7 +50,7 @@ extension RootViewModelFactory {
         )
         
         let navigationStateManager = Services.makeNavigationStateManager(
-            useStub: fastPaymentsSettingsFlag.useStub,
+            useStub: fastPaymentsSettingsFlag.isStub,
             httpClient: httpClient,
             model: model,
             log: infoNetworkLog

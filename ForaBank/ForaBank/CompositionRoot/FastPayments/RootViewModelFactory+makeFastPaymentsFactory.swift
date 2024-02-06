@@ -24,7 +24,7 @@ extension RootViewModelFactory {
             return .init(fastPaymentsViewModel: .new({
                 
                 makeNewFastPaymentsViewModel(
-                    useStub: fastPaymentsSettingsFlag.useStub,
+                    useStub: fastPaymentsSettingsFlag.isStub,
                     httpClient: httpClient,
                     model: model,
                     log: log,
