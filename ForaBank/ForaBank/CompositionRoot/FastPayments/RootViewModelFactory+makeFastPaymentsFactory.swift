@@ -24,6 +24,7 @@ extension RootViewModelFactory {
             return .init(fastPaymentsViewModel: .new({
                 
                 makeNewFastPaymentsViewModel(
+                    useStub: fastPaymentsSettingsFlag.useStub,
                     httpClient: httpClient,
                     model: model,
                     log: log,
@@ -46,7 +47,7 @@ extension RootViewModelFactory {
     }
     
     static func makeNewFastPaymentsViewModel(
-        useStub isStub: Bool = true,
+        useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
