@@ -12,32 +12,14 @@ import ProductProfile
 struct ContentView: View {
     
     var body: some View {
+        
         TabView {
             
             ProductProfileView(viewModel: .init(
-                product: .init(isUnBlock: true, isShowOnMain: true),
+                product: .cardUnblokedOnMain,
                 initialState: .init(),
                 navigationStateManager: .init(
-                    reduce: { state, event, _ in
-                        
-                        var state = state
-                        
-                        switch event {
-                        case .closeAlert:
-                            state.alert = nil
-                        case .openCardGuardianPanel:
-                            print("navigation openCardGuardianPanel")
-                        case .dismissDestination:
-                            state.destination = nil
-                        case .dismissDestinationAndShowAlertChangePin:
-                            state.destination = nil
-                            return (state, .showAlertChangePin)
-                        case .dismissDestinationAndShowAlertCardGuardian:
-                            state.destination = nil
-                            return (state, .showAlertCardGuardian)
-                        }
-                        return (state, .none)
-                    },
+                    reduce: ProductProfileReducer().reduce(_:_:),
                     makeCardGuardianViewModel: { _ in
                         
                             .init(
@@ -101,29 +83,10 @@ struct ContentView: View {
             }
             
             ProductProfileView(viewModel: .init(
-                product: .init(isUnBlock: false, isShowOnMain: false),
+                product: .cardBlockedHideOnMain,
                 initialState: .init(),
                 navigationStateManager: .init(
-                    reduce: { state, event, _ in
-                        
-                        var state = state
-                        
-                        switch event {
-                        case .closeAlert:
-                            state.alert = nil
-                        case .openCardGuardianPanel:
-                            print("navigation openCardGuardianPanel")
-                        case .dismissDestination:
-                            state.destination = nil
-                        case .dismissDestinationAndShowAlertChangePin:
-                            state.destination = nil
-                            return (state, .showAlertChangePin)
-                        case .dismissDestinationAndShowAlertCardGuardian:
-                            state.destination = nil
-                            return (state, .showAlertCardGuardian)
-                        }
-                        return (state, .none)
-                    },
+                    reduce: ProductProfileReducer().reduce(_:_:),
                     makeCardGuardianViewModel: { _ in
                         
                             .init(
@@ -191,4 +154,11 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+private extension ProductProfileViewModel.Product {
+    
+    static let cardUnblokedOnMain: Self = .init(isUnBlock: true, isShowOnMain: true)
+    
+    static let cardBlockedHideOnMain: Self = .init(isUnBlock: false, isShowOnMain: false)
 }

@@ -58,7 +58,7 @@ struct ProductProfileView: View {
     ProductProfileView(
         viewModel: .init(
             product: .init(isUnBlock: true, isShowOnMain: true),
-            initialState: .init(), navigationStateManager: .init(reduce: { _,_,_ in
+            initialState: .init(), navigationStateManager: .init(reduce: { _,_ in
                 (ProductProfileNavigation.State.init(), .none)
             }, makeCardGuardianViewModel: { _ in
                 

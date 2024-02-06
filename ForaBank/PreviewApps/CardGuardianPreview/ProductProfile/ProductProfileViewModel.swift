@@ -66,15 +66,11 @@ extension ProductProfileViewModel {
 
 struct ProductProfileNavigationStateManager {
     
-    typealias Dispatch = (ProductProfileNavigation.Event) -> Void
-
-    typealias Reduce = (ProductProfileNavigation.State, ProductProfileNavigation.Event, @escaping Dispatch) -> (ProductProfileNavigation.State, ProductProfileNavigation.Effect?)
-
-    let reduce: Reduce
+    let reduce: ProductProfileReducer.Reduce
     let makeCardGuardianViewModel: MakeCardGuardianViewModel
     
     init(
-        reduce: @escaping Reduce,
+        reduce: @escaping ProductProfileReducer.Reduce,
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel
     ) {
         self.reduce = reduce
@@ -192,7 +188,7 @@ extension ProductProfileViewModel {
     
     func event(_ event: ProductProfileNavigation.Event) {
         
-        let (state, effect) = navigationStateManager.reduce(state, event, self.event(_:))
+        let (state, effect) = navigationStateManager.reduce(state, event)
         stateSubject.send(state)
         
         if let effect {
@@ -204,26 +200,10 @@ extension ProductProfileViewModel {
     private func handleEffect(_ effect: ProductProfileNavigation.Effect) {
         
         switch effect {
-        case let .cardGuardian(event):
-            cardGuardianDispatch?(event)
         case .showAlertChangePin:
             showAlertChangePin()
         case .showAlertCardGuardian:
             showAlertCardGuardian()
         }
     }
-    
-    private var cardGuardianDispatch: ((CardGuardianEvent) -> Void)? {
-        
-        cardGuardianViewModel?.event(_:)
-    }
-    
-    private var cardGuardianViewModel: CardGuardianViewModel? {
-        
-        guard let route = state.destination
-        else { return nil }
-        
-        return route.viewModel
-    }
 }
-
