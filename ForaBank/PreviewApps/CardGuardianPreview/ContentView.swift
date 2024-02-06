@@ -16,17 +16,19 @@ struct ContentView: View {
         ProductProfileView(viewModel: .init(initialState: .init(), navigationStateManager: .init(
             reduce: { _, event, _ in
                 
-                /*switch event {
+                    /* switch event {
                     
                 case .dismissDestination:
                     return                 (ProductProfileNavigation.State.init(
                         destination: .none,
-                        alert: .init(title: "Alert", message: "test", primaryButton: .init(type: .cancel, title: "Ок", event: .dismissDestination)),
-                        isLoading: true), .none)
+                        alert: .init(title: "Alert", message: "test", primaryButton: .init(type: .cancel, title: "Ок", event: .dismissDestination))), .none)
                     
-                default:*/
-                    return (ProductProfileNavigation.State.init(), .none)
-                //}
+                case .closeAlert:
+                    <#code#>
+                case .openCardGuardianPanel:
+                    <#code#>
+                }*/
+                (ProductProfileNavigation.State.init(), .none)
                 
             },
             makeCardGuardianViewModel: { _ in
