@@ -49,20 +49,6 @@ public extension ProductProfileNavigation.State {
 
 // MARK: - Hashable Conformance
 
-extension AlertModel: Hashable
-where PrimaryEvent: Equatable,
-      SecondaryEvent: Equatable {
-    
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
-#warning("delete?")
 extension ProductProfileNavigation.State.CGDestination: Hashable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -70,7 +56,6 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch (lhs, rhs) {
         case let (.showPanel(lhs, _), .showPanel(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
-                        
         }
     }
     
@@ -79,7 +64,6 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch self {
         case let .showPanel(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
-            
         }
     }
 }

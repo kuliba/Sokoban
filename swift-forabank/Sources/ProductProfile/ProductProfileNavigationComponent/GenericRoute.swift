@@ -46,17 +46,3 @@ where Destination: Equatable,
         && lhs.alert == rhs.alert
     }
 }
-
-extension GenericRoute: Hashable
-where Destination: Hashable,
-      Modal: Hashable,
-      Alert: Hashable {
-    
-    public func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(ObjectIdentifier(viewModel))
-        hasher.combine(destination)
-        hasher.combine(modal)
-        hasher.combine(alert)
-    }
-}
