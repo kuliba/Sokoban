@@ -13,7 +13,8 @@ public final class ProductProfileReducer {
 }
 
 public extension ProductProfileReducer {
-    
+
+#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
