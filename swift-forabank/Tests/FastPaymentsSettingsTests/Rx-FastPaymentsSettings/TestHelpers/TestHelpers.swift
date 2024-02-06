@@ -13,8 +13,15 @@ func anyMessage() -> String {
     UUID().uuidString
 }
 
+func anyProductID(
+    _ rawValue: Int = generateRandom11DigitNumber()
+) -> Product.ID {
+    
+    .init(rawValue)
+}
+
 func makeProduct(
-    _ id: Product.ID = .init(generateRandom11DigitNumber()),
+    _ id: Product.ID = anyProductID(),
     type: Product.ProductType = .account,
     header: String = "Header",
     title: String = "title",

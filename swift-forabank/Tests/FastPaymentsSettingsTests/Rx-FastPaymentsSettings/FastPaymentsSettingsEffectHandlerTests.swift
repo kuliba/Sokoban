@@ -76,7 +76,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldPassPayload() {
         
-        let productID = anyEffectProductID()
+        let productID = anyProductID()
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
         sut.handleEffect(createContract(productID)) { _ in }
@@ -86,7 +86,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldDeliverContractOnSuccess() {
         
-        let productID = anyEffectProductID()
+        let productID = anyProductID()
         let activatedContract = paymentContract(contractStatus: .active)
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
@@ -98,7 +98,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
         
-        let productID = anyEffectProductID()
+        let productID = anyProductID()
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
         expect(sut, with: createContract(productID), toDeliver: updateContractConnectivityError(), on: {
@@ -109,7 +109,7 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
         
-        let productID = anyEffectProductID()
+        let productID = anyProductID()
         let message = UUID().uuidString
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         

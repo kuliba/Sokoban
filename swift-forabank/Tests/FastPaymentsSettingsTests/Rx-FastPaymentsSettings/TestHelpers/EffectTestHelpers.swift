@@ -7,13 +7,6 @@
 
 import FastPaymentsSettings
 
-func anyEffectProductID(
-    _ rawValue: Int = generateRandom11DigitNumber()
-) -> ContractEffect.ProductID {
-    
-    .init(rawValue)
-}
-
 func activateContract(
     _ contract: ContractEffect.TargetContract
 ) -> FastPaymentsSettingsEffect {
@@ -22,7 +15,7 @@ func activateContract(
 }
 
 func createContract(
-    _ productID: ContractEffect.ProductID
+    _ productID: Product.ID
 ) -> FastPaymentsSettingsEffect {
     
     .contract(.createContract(productID))

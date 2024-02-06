@@ -10,7 +10,7 @@ import Tagged
 public enum ContractEffect: Equatable {
     
     case activateContract(TargetContract)
-    case createContract(ProductID)
+    case createContract(Product.ID)
     case deactivateContract(TargetContract)
 }
 
@@ -51,7 +51,4 @@ public extension ContractEffect {
         public typealias ContractID = Tagged<_ContractID, Int>
         public enum _ContractID {}
     }
-    
-    typealias ProductID = Tagged<_ProductID, Int>
-    enum _ProductID {}
 }

@@ -42,7 +42,7 @@ public extension ContractEffectHandler {
 // micro-service `ea`
 public extension ContractEffectHandler {
     
-    typealias CreateContractPayload = ContractEffect.ProductID
+    typealias CreateContractPayload = Product.ID
 #warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
     typealias CreateContractResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
     typealias CreateContractCompletion = (CreateContractResult) -> Void
