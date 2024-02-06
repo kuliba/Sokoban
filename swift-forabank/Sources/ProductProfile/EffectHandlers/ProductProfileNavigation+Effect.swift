@@ -12,5 +12,7 @@ public extension ProductProfileNavigation {
     enum Effect: Equatable {
         
         case cardGuardian(CardGuardianEvent)
+        case showAlertChangePin
+        case showAlertCardGuardian
     }
 }

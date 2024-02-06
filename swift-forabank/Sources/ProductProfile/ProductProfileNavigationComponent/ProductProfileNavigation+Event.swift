@@ -12,6 +12,8 @@ public extension ProductProfileNavigation {
         case closeAlert
         case openCardGuardianPanel
         case dismissDestination
+        case dismissDestinationAndShowAlertChangePin
+        case dismissDestinationAndShowAlertCardGuardian
     }
 }
 

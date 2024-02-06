@@ -46,7 +46,7 @@ struct ProductProfileView: View {
         
         CardGuardianModule.ThreeButtonsWrappedView(
             viewModel: cgRoute.viewModel,
-            config: .preview)
+            config: viewModel.needBlockConfig ? .previewBlockHide : .preview)
         .padding(.top, 26)
         .padding(.bottom, 72)
         .presentationDetents([.height(300)])
@@ -57,6 +57,7 @@ struct ProductProfileView: View {
 #Preview {
     ProductProfileView(
         viewModel: .init(
+            product: .init(isUnBlock: true, isShowOnMain: true),
             initialState: .init(), navigationStateManager: .init(reduce: { _,_,_ in
                 (ProductProfileNavigation.State.init(), .none)
             }, makeCardGuardianViewModel: { _ in

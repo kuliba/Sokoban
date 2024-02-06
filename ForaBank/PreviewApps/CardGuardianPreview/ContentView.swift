@@ -12,36 +12,180 @@ import ProductProfile
 struct ContentView: View {
     
     var body: some View {
-        
-        ProductProfileView(viewModel: .init(initialState: .init(), navigationStateManager: .init(
-            reduce: { _, event, _ in
-                
-                    /* switch event {
-                    
-                case .dismissDestination:
-                    return                 (ProductProfileNavigation.State.init(
-                        destination: .none,
-                        alert: .init(title: "Alert", message: "test", primaryButton: .init(type: .cancel, title: "Ок", event: .dismissDestination))), .none)
-                    
-                case .closeAlert:
-                    <#code#>
-                case .openCardGuardianPanel:
-                    <#code#>
-                }*/
-                (ProductProfileNavigation.State.init(), .none)
-                
-            },
-            makeCardGuardianViewModel: { _ in
+        TabView {
             
-                .init(
-                    initialState: .init(buttons: .preview),
-                    reduce: { _,_ in
-                        (CardGuardianState.init(buttons: .preview), .none)
+            ProductProfileView(viewModel: .init(
+                product: .init(isUnBlock: true, isShowOnMain: true),
+                initialState: .init(),
+                navigationStateManager: .init(
+                    reduce: { state, event, _ in
+                        
+                        var state = state
+                        
+                        switch event {
+                        case .closeAlert:
+                            state.alert = nil
+                        case .openCardGuardianPanel:
+                            print("navigation openCardGuardianPanel")
+                        case .dismissDestination:
+                            state.destination = nil
+                        case .dismissDestinationAndShowAlertChangePin:
+                            state.destination = nil
+                            return (state, .showAlertChangePin)
+                        case .dismissDestinationAndShowAlertCardGuardian:
+                            state.destination = nil
+                            return (state, .showAlertCardGuardian)
+                        }
+                        return (state, .none)
                     },
-                    handleEffect: { _,_ in }
-                )
-        })))
-        .padding()
+                    makeCardGuardianViewModel: { _ in
+                        
+                            .init(
+                                initialState: .init(buttons: .preview),
+                                reduce: { state, event in
+                                    
+                                    var state = state
+                                    
+                                    switch event {
+                                        
+                                    case .appear:
+                                        state.updateEvent(.appear)
+                                        
+                                    case let .buttonTapped(tap):
+                                        switch tap {
+                                            
+                                        case .toggleLock:
+                                            state.updateEvent(.buttonTapped(.toggleLock))
+                                            
+                                        case .changePin:
+                                            state.updateEvent(.buttonTapped(.changePin))
+                                            
+                                        case .showOnMain:
+                                            state.updateEvent(.buttonTapped(.showOnMain))
+                                        }
+                                    }
+#warning("delete!!! only for tests")
+                                    switch state.event {
+                                        
+                                    case .none:
+                                        print("none")
+                                        
+                                    case let .some(event):
+                                        switch event {
+                                            
+                                        case .appear:
+                                            print("appear")
+                                            
+                                        case let .buttonTapped(tap):
+                                            switch tap {
+                                                
+                                            case .toggleLock:
+                                                print("toggleLock")
+                                                
+                                            case .changePin:
+                                                print("changePin")
+                                                
+                                            case .showOnMain:
+                                                print("showOnMain")
+                                            }
+                                        }
+                                    }
+                                    
+                                    return (state, .none)
+                                },
+                                handleEffect: { _,_ in }
+                            )
+                    })))
+            .tabItem {
+                Label("1", systemImage: "lock.open")
+            }
+            
+            ProductProfileView(viewModel: .init(
+                product: .init(isUnBlock: false, isShowOnMain: false),
+                initialState: .init(),
+                navigationStateManager: .init(
+                    reduce: { state, event, _ in
+                        
+                        var state = state
+                        
+                        switch event {
+                        case .closeAlert:
+                            state.alert = nil
+                        case .openCardGuardianPanel:
+                            print("navigation openCardGuardianPanel")
+                        case .dismissDestination:
+                            state.destination = nil
+                        case .dismissDestinationAndShowAlertChangePin:
+                            state.destination = nil
+                            return (state, .showAlertChangePin)
+                        case .dismissDestinationAndShowAlertCardGuardian:
+                            state.destination = nil
+                            return (state, .showAlertCardGuardian)
+                        }
+                        return (state, .none)
+                    },
+                    makeCardGuardianViewModel: { _ in
+                        
+                            .init(
+                                initialState: .init(buttons: .previewBlockHide),
+                                reduce: { state, event in
+                                    
+                                    var state = state
+                                    
+                                    switch event {
+                                        
+                                    case .appear:
+                                        state.updateEvent(.appear)
+                                        
+                                    case let .buttonTapped(tap):
+                                        switch tap {
+                                            
+                                        case .toggleLock:
+                                            state.updateEvent(.buttonTapped(.toggleLock))
+                                            
+                                        case .changePin:
+                                            state.updateEvent(.buttonTapped(.changePin))
+                                            
+                                        case .showOnMain:
+                                            state.updateEvent(.buttonTapped(.showOnMain))
+                                        }
+                                    }
+#warning("delete!!! only for tests")
+                                    switch state.event {
+                                        
+                                    case .none:
+                                        print("none")
+                                        
+                                    case let .some(event):
+                                        switch event {
+                                            
+                                        case .appear:
+                                            print("appear")
+                                            
+                                        case let .buttonTapped(tap):
+                                            switch tap {
+                                                
+                                            case .toggleLock:
+                                                print("toggleLock")
+                                                
+                                            case .changePin:
+                                                print("changePin")
+                                                
+                                            case .showOnMain:
+                                                print("showOnMain")
+                                            }
+                                        }
+                                    }
+                                    
+                                    return (state, .none)
+                                },
+                                handleEffect: { _,_ in }
+                            )
+                    })))
+            .tabItem {
+                Label("2", systemImage: "lock")
+            }
+        }
     }
 }
 

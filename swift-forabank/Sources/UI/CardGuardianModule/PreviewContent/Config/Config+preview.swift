@@ -16,4 +16,12 @@ extension CardGuardian.Config {
         colors: .preview,
         fonts: .preview
     )
+    
+    public static let previewBlockHide: Self = .init(
+        images: .previewBlockHide,
+        paddings: .preview,
+        sizes: .preview,
+        colors: .preview,
+        fonts: .preview
+    )
 }

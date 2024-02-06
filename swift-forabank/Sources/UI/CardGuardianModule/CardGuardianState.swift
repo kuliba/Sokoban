@@ -36,4 +36,10 @@ public struct CardGuardianState: Equatable {
             self.subtitle = subtitle
         }
     }
+    
+    public mutating func updateEvent(
+        _ newEvent: CardGuardianEvent?
+    ) {
+        self.event = newEvent
+    }
 }
