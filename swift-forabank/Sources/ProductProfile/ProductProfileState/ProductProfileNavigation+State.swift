@@ -13,14 +13,14 @@ public extension ProductProfileNavigation {
     
     struct State: Equatable {
         
-        public var destination: ProductProfileRoute?
+        public var modal: ProductProfileRoute?
         public var alert: AlertModelOf<Event>?
         
         public init(
-            destination: ProductProfileRoute? = nil,
+            modal: ProductProfileRoute? = nil,
             alert: AlertModelOf<Event>? = nil
         ) {
-            self.destination = destination
+            self.modal = modal
             self.alert = alert
         }
     }

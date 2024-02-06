@@ -5,15 +5,18 @@
 //  Created by Andryusina Nataly on 05.02.2024.
 //
 
+import UIPrimitives
+
 public extension ProductProfileNavigation {
     
-    enum Event: Equatable {
+    indirect enum Event: Equatable {
         
         case closeAlert
         case openCardGuardianPanel
         case dismissDestination
-        case dismissDestinationAndShowAlertChangePin
-        case dismissDestinationAndShowAlertCardGuardian
+        case showAlertChangePin
+        case showAlertCardGuardian
+        case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
     }
 }
 

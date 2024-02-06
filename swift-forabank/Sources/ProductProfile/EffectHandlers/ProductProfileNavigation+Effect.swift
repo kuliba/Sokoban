@@ -6,12 +6,12 @@
 //
 
 import CardGuardianModule
+import UIPrimitives
 
 public extension ProductProfileNavigation {
     
     enum Effect: Equatable {
         
-        case showAlertChangePin
-        case showAlertCardGuardian
+        case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
     }
 }

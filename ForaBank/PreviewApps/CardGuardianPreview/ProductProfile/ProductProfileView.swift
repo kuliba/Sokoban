@@ -33,7 +33,7 @@ struct ProductProfileView: View {
         )
         .sheet(
             item: .init(
-                get: { viewModel.state.destination },
+                get: { viewModel.state.modal },
                 set: { if $0 == nil { viewModel.event(.dismissDestination) }}
             ),
             content: destinationView

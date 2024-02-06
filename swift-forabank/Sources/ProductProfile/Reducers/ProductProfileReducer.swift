@@ -13,7 +13,7 @@ public final class ProductProfileReducer {
 }
 
 public extension ProductProfileReducer {
-
+    
 #warning("add tests")
     func reduce(
         _ state: State,
@@ -29,13 +29,20 @@ public extension ProductProfileReducer {
         case .openCardGuardianPanel:
             print("navigation openCardGuardianPanel")
         case .dismissDestination:
-            state.destination = nil
-        case .dismissDestinationAndShowAlertChangePin:
-            state.destination = nil
-            effect = .showAlertChangePin
-        case .dismissDestinationAndShowAlertCardGuardian:
-            state.destination = nil
-            effect = .showAlertCardGuardian
+            state.modal = nil
+        case .showAlertChangePin:
+            state.modal = nil
+        case .showAlertCardGuardian:
+            state.modal = nil
+            effect = .delayAlert(.init(
+                title: "showAlertCardGuardian",
+                message: "",
+                primaryButton: .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: .closeAlert)))
+        case let .showAlert(alert):
+            state.alert = alert
         }
         return (state, effect)
     }

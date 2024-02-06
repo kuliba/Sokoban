@@ -71,16 +71,26 @@ public extension ProductProfileViewModel {
 
 public struct ProductProfileNavigationStateManager {
     
-    let reduce: ProductProfileReducer.Reduce
+    let reduce: Reduce
+   ///let handlerEffect: ....
     let makeCardGuardianViewModel: MakeCardGuardianViewModel
     
     public init(
-        reduce: @escaping ProductProfileReducer.Reduce,
+        reduce: @escaping Reduce,
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel
     ) {
         self.reduce = reduce
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
     }
+}
+
+public extension ProductProfileNavigationStateManager {
+    
+    typealias State = ProductProfileNavigation.State
+    typealias Event = ProductProfileNavigation.Event
+    typealias Effect = ProductProfileNavigation.Effect
+    
+    typealias Reduce = (State, Event) -> (State, Effect?)
 }
 
 // MARK: - CardGuardian
@@ -91,42 +101,40 @@ public extension ProductProfileViewModel {
         
         let cardGuardianViewModel = navigationStateManager.makeCardGuardianViewModel(scheduler)
         let cancellable = cardGuardianViewModel.$state
+            .map(\.event)
             .removeDuplicates()
             .receive(on: scheduler)
-            .sink { [weak self] state in
-                
-                switch state.event {
+            .sink { [weak self] event in
+                // self?.event(.cardCuardian(event))
+                switch event { // убрать
                     
                 case .none:
-                    print("sink none")
-                case let .some(event):
-                    switch event {
+                    self?.event(.dismissDestination)
+                    
+                case .appear:
+                    self?.event(.openCardGuardianPanel)
+                    
+                case let .buttonTapped(tap):
+                    switch tap {
                         
-                    case .appear:
-                        self?.event(.openCardGuardianPanel)
-
-                    case let .buttonTapped(tap):
-                        switch tap {
-                            
-                        case .toggleLock:
-                            self?.event(.dismissDestinationAndShowAlertCardGuardian)
-
-                        case .changePin:
-                            self?.event(.dismissDestinationAndShowAlertChangePin)
-
-                        case .showOnMain:
-                            self?.event(.dismissDestination)
-                        }
+                    case .toggleLock:
+                        self?.event(.showAlertCardGuardian)
+                        
+                    case .changePin:
+                        self?.event(.showAlertChangePin)
+                        
+                    case .showOnMain:
+                        self?.event(.dismissDestination)
                     }
                 }
             }
         
-        state.destination = .init(cardGuardianViewModel, cancellable)
+        state.modal = .init(cardGuardianViewModel, cancellable)
         cardGuardianViewModel.event(.appear)
     }
     
     func showAlertChangePin(){
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+       /* DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             
             self?.state.alert = .init(
                 title: "Активируйте сертификат",
@@ -140,12 +148,12 @@ public extension ProductProfileViewModel {
                     title: "Активировать",
                     event: .closeAlert)
             )
-        }
+        }*/
     }
     
     func showAlertCardGuardian(){
         
-        let title = titleForAlertCardGuardian
+       /* let title = titleForAlertCardGuardian
         let message = messageForAlertCardGuardian
         let titleSecondaryButton = titleSecondaryButtonForAlertCardGuardian
 
@@ -163,7 +171,7 @@ public extension ProductProfileViewModel {
                     title: titleSecondaryButton,
                     event: .closeAlert)
             )
-        }
+        }*/
     }
     
     private var titleForAlertCardGuardian: String {
@@ -191,24 +199,32 @@ public extension ProductProfileNavigationStateManager {
 
 extension ProductProfileViewModel {
     
-    public func event(_ event: ProductProfileNavigation.Event) {
+    public func event(
+        _ event: ProductProfileNavigation.Event
+    ) {
         
         let (state, effect) = navigationStateManager.reduce(state, event)
         stateSubject.send(state)
         
         if let effect {
             
-            handleEffect(effect)
+            handleEffect(effect) { [weak self] in
+                self?.event($0)
+            }
         }
     }
     
-    private func handleEffect(_ effect: ProductProfileNavigation.Effect) {
+    private func handleEffect(
+        _ effect: ProductProfileNavigation.Effect,
+        _ dispact: @escaping (ProductProfileNavigation.Event) -> Void
+    ) {
         
         switch effect {
-        case .showAlertChangePin:
-            showAlertChangePin()
-        case .showAlertCardGuardian:
-            showAlertCardGuardian()
+        case let .delayAlert(alert):
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                dispact(.showAlert(alert))
+            }
         }
     }
 }
