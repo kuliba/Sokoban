@@ -23,7 +23,7 @@ struct ProductProfileView: View {
     private func openCardGuardinaButton() -> some View {
         
         Button(
-            "Card Guardian",
+            "Управление",
             action: viewModel.openCardGuardian
         )
         .alert(
@@ -51,6 +51,7 @@ struct ProductProfileView: View {
             config: .preview)
         .padding(.top, 26)
         .padding(.bottom, 72)
+        .presentationDetents([.height(300)])
     }
 }
 
