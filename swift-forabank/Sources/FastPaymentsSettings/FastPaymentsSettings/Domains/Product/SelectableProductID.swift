@@ -17,7 +17,7 @@ public extension Product.ID {
         
         switch self {
         case let .account(accountID): return .account(accountID)
-        case let .card(_, accountID): return .account(accountID)
+        case let .card(cardID, _): return .card(cardID)
         }
     }
 }
