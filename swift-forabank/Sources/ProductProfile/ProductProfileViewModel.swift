@@ -80,36 +80,37 @@ public extension ProductProfileViewModel {
         
         let cardGuardianViewModel = navigationStateManager.makeCardGuardianViewModel(scheduler)
         let cancellable = cardGuardianViewModel.$state
-            .map(\.event)
+            .compactMap(\.event)
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] event in
-                // self?.event(.cardCuardian(event))
-                switch event { // убрать
-                    
-                case .none:
-                    self?.event(.dismissDestination)
-                    
-                case .appear:
-                    self?.event(.openCardGuardianPanel)
-                    
-                case let .buttonTapped(tap):
-                    switch tap {
-                        
-                    case let .toggleLock(status):
-                        self?.event(.showAlertCardGuardian(status))
-                        
-                    case .changePin:
-                        self?.event(.showAlertChangePin)
-                        
-                    case .showOnMain:
-                        self?.event(.dismissDestination)
-                    }
-                }
+                 self?.event(event)
             }
         
         state.modal = .init(cardGuardianViewModel, cancellable)
         cardGuardianViewModel.event(.appear)
+    }
+    
+    private func event(
+        _ event: CardGuardianEvent
+    ) {
+        switch event {
+        case .appear:
+            self.event(.openCardGuardianPanel)
+            
+        case let .buttonTapped(tap):
+            switch tap {
+                
+            case let .toggleLock(status):
+                self.event(.showAlertCardGuardian(status))
+                
+            case .changePin:
+                self.event(.showAlertChangePin)
+                
+            case .showOnMain:
+                self.event(.dismissDestination)
+            }
+        }
     }
 }
 
@@ -139,14 +140,14 @@ extension ProductProfileViewModel {
     
     private func handleEffect(
         _ effect: ProductProfileNavigation.Effect,
-        _ dispact: @escaping (ProductProfileNavigation.Event) -> Void
+        _ dispatch: @escaping (ProductProfileNavigation.Event) -> Void
     ) {
         
         switch effect {
         case let .delayAlert(alert):
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                dispact(.showAlert(alert))
+                dispatch(.showAlert(alert))
             }
         }
     }

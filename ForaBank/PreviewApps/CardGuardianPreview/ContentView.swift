@@ -14,7 +14,9 @@ struct ContentView: View {
     var body: some View {
         
         NavigationView {
+            
             NavigationLink(destination: destination()) {
+                
                 Image(systemName: "person.text.rectangle.fill")
                     .renderingMode(.original)
                     .foregroundColor(Color(.systemMint))
@@ -25,7 +27,6 @@ struct ContentView: View {
     
     private func destination() -> some View {
         
-        
         VStack(alignment: .leading) {
             
             HStack {
@@ -34,12 +35,14 @@ struct ContentView: View {
                 Spacer()
                 ProductProfileView.cardUnblokedOnMain
             }
+            
             HStack {
                 Text("Заблокирована (можно разблокировать)")
                     .lineLimit(2)
                 Spacer()
                 ProductProfileView.cardBlockedHideOnMain
             }
+            
             HStack {
                 Text("Заблокирована (нельзя разблокировать)")
                     .lineLimit(2)
