@@ -12,14 +12,20 @@ import UserAccountNavigationComponent
 struct UserAccountRoute {
     
     var alert: AlertModelOf<UserAccountEvent.AlertButtonTap>?
-    var link: Link?
     var bottomSheet: BottomSheet?
+    var informer: Informer?
+    var link: Link?
     var sheet: Sheet?
     var spinner: SpinnerView.ViewModel?
     var textFieldAlert: AlertTextFieldView.ViewModel?
 }
 
 extension UserAccountRoute {
+    
+    struct Informer {
+        
+        let message: String
+    }
     
     enum Link: Hashable, Identifiable {
         

@@ -16,18 +16,23 @@ struct InactiveContractView: View {
         
         VStack {
             
-            HStack(spacing: 16) {
+            Button(action: action) {
                 
-                Button("Включить переводы СБП", action: action)
-                
-                Spacer()
-                
-                ToggleMockView(status: .inactive)
+                HStack(spacing: 16) {
+                    
+                    Text("Включить переводы СБП")
+                    
+                    Spacer()
+                    
+                    ToggleMockView(status: .inactive)
+                }
             }
             
             AttributedTextView(attributedString: .consent)
+            
+            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 

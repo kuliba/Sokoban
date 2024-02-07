@@ -158,7 +158,7 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.products(.updateProduct(.success(payload.productID))))
+                dispatch(.products(.updateProduct(.success(payload.selectableProductID))))
                 
             case .failure(.connectivityError):
                 dispatch(.products(.updateProduct(.failure(.connectivityError))))

@@ -31,7 +31,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     func test_createCreateFastPaymentContractRequest_shouldSetRequestBody() throws {
         
         let payload = anyPayload(
-            accountID: 98765432,
+            selectableProductID: .account(98765432),
             flagBankDefault: .no,
             flagClientAgreementIn: .yes,
             flagClientAgreementOut: .empty
@@ -51,7 +51,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     func test_createCreateFastPaymentContractRequest_shouldSetRequestBody_2() throws {
         
         let payload = anyPayload(
-            accountID: 98765432,
+            selectableProductID: .account(98765432),
             flagBankDefault: .yes,
             flagClientAgreementIn: .empty,
             flagClientAgreementOut: .no
@@ -89,14 +89,14 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
 private typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
 
 private func anyPayload(
-    accountID: Int = generateRandom11DigitNumber(),
+    selectableProductID: SelectableProductID = .account(.init(generateRandom11DigitNumber())),
     flagBankDefault: FastRequestFactory.CreateFastPaymentContractPayload.Flag = .empty,
     flagClientAgreementIn: FastRequestFactory.CreateFastPaymentContractPayload.Flag = .empty,
     flagClientAgreementOut: FastRequestFactory.CreateFastPaymentContractPayload.Flag = .empty
 ) -> FastRequestFactory.CreateFastPaymentContractPayload {
     
     .init(
-        accountID: accountID,
+        selectableProductID: selectableProductID,
         flagBankDefault: flagBankDefault,
         flagClientAgreementIn: flagClientAgreementIn,
         flagClientAgreementOut: flagClientAgreementOut

@@ -23,6 +23,7 @@ class ProductCardData: ProductData {
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
     private(set) var statusPc: StatusPC?
+    #warning("NOT OPTIONAL!")
     let isMain: Bool?
     let externalId: Int?
     

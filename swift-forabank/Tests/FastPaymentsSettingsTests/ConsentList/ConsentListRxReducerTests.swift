@@ -445,14 +445,16 @@ final class ConsentListRxReducerTests: XCTestCase {
     func test_applyConsent_shouldDeliverApplyEffectWithConsentOnExpandedConsentList() {
         
         let consent: Consent = ["открытие", "сургутнефтегазбанк"]
+        let newConsent: Consent = ["втб", "тинькофф банк"]
         let expanded: State = .success(expandedConsentList(
+            banks: .consented(newConsent),
             consent: consent
         ))
         let sut = makeSUT()
         
         XCTAssertNoDiff(
             reduce(sut, expanded, .applyConsent).effect,
-            .apply(.init(consent))
+            .apply(.init(newConsent))
         )
     }
     
@@ -683,7 +685,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
             .success(.init(
-                banks: .consented,
+                banks: .consented(),
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: "",
@@ -704,7 +706,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
             .success(.init(
-                banks: .consented,
+                banks: .consented(),
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: "",
@@ -724,7 +726,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.connectivityError)).state,
             .success(.init(
-                banks: .consented,
+                banks: .consented(),
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: "",
@@ -745,7 +747,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsentFailure(.serverError(message))).state,
             .success(.init(
-                banks: .consented,
+                banks: .consented(),
                 consent: consentList.consent,
                 mode: .collapsed,
                 searchText: "",

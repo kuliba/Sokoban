@@ -12,15 +12,6 @@ public enum ConsentListEvent: Equatable {
     case tapBank(Bank.ID)
     case applyConsent
     case changeConsent(Consent)
-    case changeConsentFailure(ConsentFailure)
+    case changeConsentFailure(ServiceFailure)
     case resetStatus
-}
-
-public extension ConsentListEvent {
-    
-    enum ConsentFailure: Equatable {
-        
-        case connectivityError
-        case serverError(String)
-    }
 }

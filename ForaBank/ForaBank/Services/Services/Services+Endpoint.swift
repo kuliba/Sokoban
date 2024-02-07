@@ -210,7 +210,7 @@ extension Services.Endpoint {
     
     static let getBankDefault: Self = .init(
         pathPrefix: .rest,
-        version: nil,
+        version: .none,
         serviceName: .getBankDefault
     )
 

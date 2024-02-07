@@ -54,6 +54,7 @@ public extension ConsentListRxReducer {
     typealias Effect = ConsentListEffect
 }
 
+#warning("add tests!!")
 private extension ConsentListRxReducer {
     
     func updateStateForSearch(
@@ -90,8 +91,9 @@ private extension ConsentListRxReducer {
         else { return (state, nil) }
         
         consentList.status = .inflight
+        let consent = consentList.banks.filter(\.isSelected).map(\.id)
         
-        return (.success(consentList), .apply(.init(consentList.consent)))
+        return (.success(consentList), .apply(.init(consent)))
     }
     
     func handleConsentChange(
@@ -110,7 +112,7 @@ private extension ConsentListRxReducer {
     }
     
     func handleConsentChangeFailure(
-        _ failure: ConsentListEvent.ConsentFailure,
+        _ failure: ServiceFailure,
         in state: State
     ) -> State {
         
@@ -122,15 +124,8 @@ private extension ConsentListRxReducer {
         consentList.mode = .collapsed
         consentList.searchText = ""
 
-        switch failure {
-        case .connectivityError:
-            consentList.status = .failure(.connectivityError)
-            return .success(consentList)
-            
-        case let .serverError(message):
-            consentList.status = .failure(.serverError(message))
-            return .success(consentList)
-        }
+        consentList.status = .failure(failure)
+        return .success(consentList)
     }
     
     func handleResetState(
