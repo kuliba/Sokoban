@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ButtonSimpleView.swift
 //  
 //
 //  Created by Дмитрий Савушкин on 07.02.2024.
@@ -18,7 +18,11 @@ extension ButtonSimpleView {
         @Published var style: ButtonStyle
         let action: () -> Void
 
-        internal init(title: String, style: ButtonStyle, action: @escaping () -> Void) {
+        internal init(
+            title: String,
+            style: ButtonStyle,
+            action: @escaping () -> Void
+        ) {
 
             self.title = title
             self.action = action
@@ -29,7 +33,6 @@ extension ButtonSimpleView {
             
             case red
             case gray
-            //FIXME: refactor into isEnabled published property
             case inactive
             
             var backgroundColor: Color {
