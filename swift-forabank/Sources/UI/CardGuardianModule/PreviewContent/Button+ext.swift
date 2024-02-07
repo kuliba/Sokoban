@@ -30,6 +30,13 @@ extension CardGuardianState._Button {
         title: "Разблокировать",
         iconType: .toggleLock,
         subtitle: nil)
+    
+    static let cardBlockedUnlockNotAvailable: Self = .init(
+        event: .toggleLock(.blockedUnlockNotAvailable),
+        title: "Разблокировать",
+        iconType: .toggleLock,
+        subtitle: nil)
+
     static let cardHidden: Self = .init(
         event: .showOnMain,
         title: "Вернуть на главный",
@@ -41,4 +48,5 @@ extension Array where Element == CardGuardianState._Button {
     
     public static let preview: Self = [.one, .two, .three]
     public static let previewBlockHide: Self = [.cardBlocked, .two, .cardHidden]
+    public static let previewBlockUnlockNotAvailable: Self = [.cardBlockedUnlockNotAvailable, .two, .cardHidden]
 }

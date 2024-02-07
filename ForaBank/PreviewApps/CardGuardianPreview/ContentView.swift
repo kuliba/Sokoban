@@ -13,18 +13,41 @@ struct ContentView: View {
     
     var body: some View {
         
-        TabView {
-            
-            ProductProfileView.cardUnblokedOnMain
-                .tabItem {
-                    Label("1", systemImage: "lock.open")
-                }
-            
-            ProductProfileView.cardBlockedHideOnMain
-                .tabItem {
-                    Label("2", systemImage: "lock")
-                }
+        NavigationView {
+            NavigationLink(destination: destination()) {
+                Image(systemName: "person.text.rectangle.fill")
+                    .renderingMode(.original)
+                    .foregroundColor(Color(.systemMint))
+                    .font(.system(size: 120))
+            }
         }
+    }
+    
+    private func destination() -> some View {
+        
+        
+        VStack(alignment: .leading) {
+            
+            HStack {
+                Text("Aктивна, на главном")
+                    .lineLimit(2)
+                Spacer()
+                ProductProfileView.cardUnblokedOnMain
+            }
+            HStack {
+                Text("Заблокирована (можно разблокировать)")
+                    .lineLimit(2)
+                Spacer()
+                ProductProfileView.cardBlockedHideOnMain
+            }
+            HStack {
+                Text("Заблокирована (нельзя разблокировать)")
+                    .lineLimit(2)
+                Spacer()
+                ProductProfileView.cardBlockedUnlockNotAvailable
+            }
+        }
+        .padding()
     }
 }
 

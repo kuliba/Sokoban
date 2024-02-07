@@ -38,4 +38,19 @@ extension ProductProfileView {
                             handleEffect: { _,_ in }
                         )
                 })))
+    
+    static let cardBlockedUnlockNotAvailable : Self = .init(
+        viewModel: .init(
+            initialState: .init(),
+            navigationStateManager: .init(
+                reduce: ProductProfileReducer().reduce(_:_:),
+                makeCardGuardianViewModel: { _ in
+                    
+                        .init(
+                            initialState: .init(buttons: .previewBlockUnlockNotAvailable),
+                            reduce: CardGuardianReducer().reduce(_:_:),
+                            handleEffect: { _,_ in }
+                        )
+                })))
+
 }

@@ -24,6 +24,8 @@ struct ProductProfileView: View {
             "Управление",
             action: viewModel.openCardGuardian
         )
+        .buttonStyle(.bordered)
+        .controlSize(.large)
         .alert(
             item: .init(
                 get: { viewModel.state.alert },
