@@ -24,12 +24,13 @@ extension ProductProfileViewModel {
         
         typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
         
-        let makeCardGuardianViewModel: MakeCardGuardianViewModel =  { _ in
+        let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
                 .init(
                     initialState: .init(buttons: buttons),
                     reduce: cardGuardianReduce,
-                    handleEffect: { _,_ in }
+                    handleEffect: { _,_ in },
+                    scheduler: $0
                 )
         }
         
