@@ -88,9 +88,7 @@ public extension ProductProfileViewModel {
             .compactMap(\.event)
             .removeDuplicates()
             .receive(on: scheduler)
-            .sink { [weak self] event in
-                 self?.event(event)
-            }
+            .sink { [weak self] event in self?.event(event) }
         
         state.modal = .init(cardGuardianViewModel, cancellable)
         cardGuardianViewModel.event(.appear)
