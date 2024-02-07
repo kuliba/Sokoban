@@ -139,6 +139,7 @@ private extension UserAccountNavigationOTPReducer {
         case .connectivityError:
             state.destination?.destination = nil
             state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
+            effect = .dismissInformer
             
         case let .serverError(message):
             state.destination?.destination = nil

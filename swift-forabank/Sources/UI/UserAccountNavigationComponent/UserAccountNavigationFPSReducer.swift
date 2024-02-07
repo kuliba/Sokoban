@@ -20,6 +20,7 @@ public extension UserAccountNavigationFPSReducer {
     ) -> (State, Effect?) {
         
         var state = state
+        var effect: Effect?
         
         switch (settings.settingsResult, settings.status) {
         case (_, .inflight):
@@ -41,7 +42,7 @@ public extension UserAccountNavigationFPSReducer {
             state.destination?.alert = .missingContract(event: .closeAlert)
             
         case let (.success, .some(status)):
-            state = update(state, with: status)
+            (state, effect) = update(state, with: status)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -59,7 +60,7 @@ public extension UserAccountNavigationFPSReducer {
             }
         }
         
-        return (state, nil)
+        return (state, effect)
     }
 }
 
@@ -77,9 +78,10 @@ private extension UserAccountNavigationFPSReducer {
     func update(
         _ state: State,
         with status: FastPaymentsSettingsState.Status
-    ) -> State {
+    ) -> (State, Effect?) {
         
         var state = state
+        var effect: Effect?
         
         switch status {
         case .inflight:
@@ -122,20 +124,23 @@ private extension UserAccountNavigationFPSReducer {
             state.isLoading = false
             state.destination?.destination = nil
             state.informer = message
+            effect = .dismissInformer
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
             state.destination?.destination = nil
             state.informer = "Банк по умолчанию установлен."
+            effect = .dismissInformer
 #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
+            // state = .init()
             state.isLoading = false
             state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
-            state = .init()
+            effect = .dismissInformer
         }
         
-        return state
+        return (state, effect)
     }
 }

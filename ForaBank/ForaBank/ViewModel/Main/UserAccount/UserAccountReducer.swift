@@ -40,6 +40,7 @@ extension UserAccountReducer {
         var effect: Effect?
         
         switch event {
+            #warning("it looks like all `close` and `dismiss` events should be processed with effects to destinations; and the real dismiss should be encapsulated into state change in reaction to destination state change")
         case .closeAlert:
             state.alert = nil
             effect = .navigation(.fps(.resetStatus))
@@ -53,6 +54,10 @@ extension UserAccountReducer {
             
         case .dismissDestination:
             state.link = nil
+            effect = .navigation(.fps(.resetStatus))
+            
+        case .dismissInformer:
+            state.informer = nil
             effect = .navigation(.fps(.resetStatus))
             
         case .dismissRoute:

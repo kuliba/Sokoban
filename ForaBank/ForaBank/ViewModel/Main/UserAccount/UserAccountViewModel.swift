@@ -128,6 +128,7 @@ extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
+    #warning("move to `navigationStateManager`")
     func handleEffect(
         _ effect: UserAccountEffect,
         _ dispatch: @escaping Dispatch
@@ -138,6 +139,12 @@ extension UserAccountViewModel {
             
         case let .navigation(navigation):
             switch navigation {
+            case .dismissInformer:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    
+                    dispatch(.dismissInformer)
+                }
+                
             case let .fps(fpsEvent):
                 fpsDispatch?(fpsEvent)
                 
