@@ -50,6 +50,7 @@ extension RootViewModelFactory {
         )
         
         let navigationStateManager = Services.makeNavigationStateManager(
+            useStub: fastPaymentsSettingsFlag.isStub,
             httpClient: httpClient,
             model: model,
             log: infoNetworkLog

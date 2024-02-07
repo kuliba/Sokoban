@@ -37,8 +37,23 @@ public struct ProductSelectView<ProductView: View>: View {
             
             switch (state.selected, state.products) {
             case (.none, .none):
-                Text("No products avail")
-                    .foregroundColor(.red.opacity(0.5))
+                HStack {
+                    Image(systemName: "creditcard")
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text("Счёт списания и зачисления")
+                            .font(.footnote)
+                        
+                        Text("Данные счёта")
+                            .font(.headline)
+                    }
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Image(systemName: "chevron.down")
+                        .onTapGesture { event(.toggleProductSelect) }
+                }
                 
             case let (.none, .some(products)):
                 productsView(products: products)
@@ -122,7 +137,7 @@ public struct ProductSelectView<ProductView: View>: View {
     ) -> some View {
         
         productView(product)
-            .onTapGesture { event(.select(product.id)) }
+            .onTapGesture { event(.select(product)) }
     }
     
     private func chevron() -> some View {
@@ -148,7 +163,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            ProductSelectView_Demo(.emptySelected())
+            ProductSelectView_Demo(.emptySelectedEmptyProducts())
             ProductSelectView_Demo(.emptySelectedNonEmptyProducts())
             ProductSelectView_Demo(.compact())
             ProductSelectView_Demo(.expanded())
@@ -188,7 +203,7 @@ struct ProductSelectView_Previews: PreviewProvider {
 
 private extension ProductSelect {
     
-    static func emptySelected() -> Self {
+    static func emptySelectedEmptyProducts() -> Self {
         
         .init(selected: nil)
     }

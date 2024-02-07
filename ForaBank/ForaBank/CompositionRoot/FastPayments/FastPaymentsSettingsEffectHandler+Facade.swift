@@ -22,16 +22,15 @@ extension FastPaymentsSettingsEffectHandler {
             changeConsent(payload.map { .init($0.rawValue) }) { result in
                 
                 switch result {
-                case .failure(.connectivityError):
-                    completion(.connectivityError)
-                    
-                case let .failure(.serverError(message)):
-                    completion(.serverError(message))
+                case let .failure(failure):
+                    completion(.failure(failure))
                     
                 case .success(()):
 #warning("success case could easily have associated value of consentList (derived from payload)")
                     completion(.success)
                 }
+                
+                _ = changeConsent
             }
         }
         let consentListHandler = ConsentListRxEffectHandler(
@@ -42,17 +41,22 @@ extension FastPaymentsSettingsEffectHandler {
         let contractUpdater = facade.makeContractUpdater()
         
         let contractEffectHandler = ContractEffectHandler(
-            createContract: { contractMaker.process($0.fpsProductID, $1) },
+            createContract: { contractMaker.process($0.id, $1) },
             updateContract: { contractUpdater.process($0.updaterPayload, $1) }
         )
         
         let getC2BSub = NanoServices.makeGetC2BSub(httpClient, log)
         let prepareSetBankDefault = NanoServices.prepareSetBankDefault(httpClient, log)
-        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = {
+        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
             
             let updateProduct = NanoServices.updateFastPaymentContract(httpClient, log)
             
-            updateProduct($0.payload, $1)
+            updateProduct(payload.payload) {
+                
+                completion($0)
+                
+                _ = updateProduct
+            }
         }
         
         self.init(
@@ -74,19 +78,11 @@ private extension FastPaymentsSettingsEffectHandler.UpdateProductPayload {
         
         .init(
             contractID: .init(contractID.rawValue),
-            accountID: .init(productID.rawValue),
+            selectableProductID: selectableProductID,
             flagBankDefault: .empty,
             flagClientAgreementIn: .yes,
             flagClientAgreementOut: .yes
         )
-    }
-}
-
-private extension ContractEffectHandler.CreateContractPayload {
-    
-    var fpsProductID: FastPaymentsSettings.Product.ID {
-        
-        .init(rawValue)
     }
 }
 
@@ -98,7 +94,7 @@ private extension ContractEffect.TargetContract {
         
         .init(
             contractID: .init(core.contractID.rawValue),
-            accountID: .init(core.productID.rawValue),
+            selectableProductID: core.selectableProductID,
             target: payloadTarget
         )
     }

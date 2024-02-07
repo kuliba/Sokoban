@@ -43,6 +43,7 @@ extension UserAccountReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
+            effect = .navigation(.fps(.resetStatus))
             
         case .closeFPSAlert:
             effect = .navigation(.fps(.resetStatus))

@@ -24,6 +24,7 @@ extension RootViewModelFactory {
             return .init(fastPaymentsViewModel: .new({
                 
                 makeNewFastPaymentsViewModel(
+                    useStub: fastPaymentsSettingsFlag.isStub,
                     httpClient: httpClient,
                     model: model,
                     log: log,
@@ -46,7 +47,7 @@ extension RootViewModelFactory {
     }
     
     static func makeNewFastPaymentsViewModel(
-        useStub isStub: Bool = true,
+        useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -137,7 +138,7 @@ private extension ProductData {
         switch productType {
         case .account:
             guard let account = self as? ProductAccountData,
-                  account.status == .active,
+                  account.status == .notBlocked,
                   account.currency == rub
             else { return nil }
             
@@ -145,13 +146,17 @@ private extension ProductData {
             
         case .card:
             guard let card = self as? ProductCardData,
+                  let accountID = card.accountId,
                   (card.isMain ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub
             else { return nil }
             
-            return card.fpsProduct(formatBalance: formatBalance)
+            return card.fpsProduct(
+                accountID: accountID,
+                formatBalance: formatBalance
+            )
             
         default:
             return nil
@@ -168,8 +173,7 @@ private extension ProductAccountData {
     ) -> FastPaymentsSettings.Product {
         
         .init(
-            id: .init(id),
-            type: .account,
+            id: .account(.init(id)),
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",
@@ -187,12 +191,12 @@ private extension ProductAccountData {
 private extension ProductCardData {
     
     func fpsProduct(
+        accountID: Int,
         formatBalance: @escaping (ProductData) -> String
     ) -> FastPaymentsSettings.Product {
         
         .init(
-            id: .init(id),
-            type: .card,
+            id: .card(.init(id), accountID: .init(accountID)),
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",

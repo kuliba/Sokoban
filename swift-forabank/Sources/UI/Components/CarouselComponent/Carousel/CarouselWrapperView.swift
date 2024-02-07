@@ -1,22 +1,24 @@
 //
-//  WrapperView.swift
-//  
+//  CarouselWrapperView.swift
+//
 //
 //  Created by Disman Dmitry on 22.01.2024.
 //
 
 import SwiftUI
 
-struct WrapperView: View {
+public struct CarouselWrapperView: View {
     
-    @StateObject var viewModel: CarouselComponentViewModel
+    @StateObject var viewModel: CarouselViewModel
     
-    init(viewModel: CarouselComponentViewModel) {
+    public init(
+        viewModel: CarouselViewModel
+    ) {
         
         self._viewModel = .init(wrappedValue: viewModel)
     }
     
-    var body: some View {
+    public var body: some View {
         
         CarouselView(
             state: viewModel.state,

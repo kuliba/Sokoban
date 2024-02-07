@@ -16,7 +16,7 @@ final class ProductSelectReducerTests: XCTestCase {
         let missingProduct: ProductSelect.Product = .missing
         let state: ProductSelect = .expanded(.test2, [.test, .test2])
         
-        let newState = sut.reduce(state, .select(missingProduct.id))
+        let newState = sut.reduce(state, .select(missingProduct))
         
         XCTAssertNoDiff(newState, state)
     }
@@ -27,7 +27,7 @@ final class ProductSelectReducerTests: XCTestCase {
         let existingProduct: ProductSelect.Product = .test2
         let state: ProductSelect = .expanded(.test, [.test, .test2])
         
-        let newState = sut.reduce(state, .select(existingProduct.id))
+        let newState = sut.reduce(state, .select(existingProduct))
         
         XCTAssertNoDiff(newState, .compact(existingProduct))
     }

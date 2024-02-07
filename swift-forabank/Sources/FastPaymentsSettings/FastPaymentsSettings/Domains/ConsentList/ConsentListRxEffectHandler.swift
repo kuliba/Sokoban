@@ -28,14 +28,11 @@ public extension ConsentListRxEffectHandler {
             changeConsentList(consent) { result in
                 
                 switch result {
+                case let .failure(serviceFailure):
+                    dispatch(.changeConsentFailure(serviceFailure))
+                    
                 case .success:
                     dispatch(.changeConsent(consent))
-                    
-                case let .serverError(message):
-                    dispatch(.changeConsentFailure(.serverError(message)))
-
-                case .connectivityError:
-                    dispatch(.changeConsentFailure(.connectivityError))
                 }
             }
         }
@@ -50,10 +47,8 @@ public extension ConsentListRxEffectHandler {
     
     enum ChangeConsentListResponse: Equatable {
         
+        case failure(ServiceFailure)
         case success
-        #warning("change to case with ServiceFailure")
-        case connectivityError
-        case serverError(String)
     }
 }
 
