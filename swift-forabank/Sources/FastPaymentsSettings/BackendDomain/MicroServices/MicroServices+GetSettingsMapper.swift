@@ -30,9 +30,10 @@ public extension MicroServices.GetSettingsMapper {
         bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse
     ) -> UserPaymentSettings {
         
-        let accountID = paymentContract.productID
         let products = getProducts()
-        let selectedProduct = products.first { $0.id == accountID }
+        let selectedProduct = products.product(
+            forAccountID: paymentContract.accountID
+        )
         
         let productSelector = UserPaymentSettings.ProductSelector(
             selectedProduct: selectedProduct,

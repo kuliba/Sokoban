@@ -17,7 +17,7 @@ import UserAccountNavigationComponent
 extension Services {
     
     static func makeNavigationStateManager(
-        useStub isStub: Bool = true,
+        useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -246,6 +246,7 @@ private extension FastPaymentsSettingsOTPServices {
                 initiateOTPService.fetch {
                     
                     completion($0.mapError(ServiceFailure.init(error:)))
+                    _ = initiateOTPService
                 }
             },
             submitOTP: { payload, completion in
@@ -253,6 +254,7 @@ private extension FastPaymentsSettingsOTPServices {
                 submitOTPService.fetch(.init(payload.rawValue)) {
                     
                     completion($0.mapError(ServiceFailure.init(error:)))
+                    _ = submitOTPService
                 }
             },
             prepareSetBankDefault: prepareSetBankDefault

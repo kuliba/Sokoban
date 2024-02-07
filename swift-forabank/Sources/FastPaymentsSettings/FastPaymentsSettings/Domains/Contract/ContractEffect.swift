@@ -10,7 +10,7 @@ import Tagged
 public enum ContractEffect: Equatable {
     
     case activateContract(TargetContract)
-    case createContract(ProductID)
+    case createContract(Product)
     case deactivateContract(TargetContract)
 }
 
@@ -38,20 +38,17 @@ public extension ContractEffect {
     struct ContractCore: Equatable {
         
         public let contractID: ContractID
-        public let productID: Product.ID
+        public let selectableProductID: SelectableProductID
         
         public init(
             contractID: ContractID,
-            productID: Product.ID
+            selectableProductID: SelectableProductID
         ) {
             self.contractID = contractID
-            self.productID = productID
+            self.selectableProductID = selectableProductID
         }
         
         public typealias ContractID = Tagged<_ContractID, Int>
         public enum _ContractID {}
     }
-    
-    typealias ProductID = Tagged<_ProductID, Int>
-    enum _ProductID {}
 }

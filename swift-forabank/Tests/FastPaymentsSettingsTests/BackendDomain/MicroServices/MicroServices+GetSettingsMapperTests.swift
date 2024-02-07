@@ -13,7 +13,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetContract() {
         
         let product = makeProduct()
-        let loadedContract = paymentContract(productID: product.id)
+        let loadedContract = paymentContract(accountID: product.accountID)
         
         let settings = map(
             getProductsStub: [product],
@@ -71,7 +71,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductOnMatch() {
         
         let products = [makeProduct(), makeProduct()]
-        let contract = paymentContract(productID: products[1].id)
+        let contract = paymentContract(accountID: products[1].accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -85,7 +85,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         
         let products = [makeProduct(), makeProduct()]
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -98,7 +98,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductNilOnEmptyProducts() {
         
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: [],

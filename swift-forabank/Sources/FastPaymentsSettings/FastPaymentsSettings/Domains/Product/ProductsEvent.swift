@@ -5,11 +5,15 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-public typealias ProductUpdateResult = Result<Product.ID, ServiceFailure>
-
 public enum ProductsEvent: Equatable {
     
-    case selectProduct(Product.ID)
+    case selectProduct(SelectableProductID)
     case toggleProducts
     case updateProduct(ProductUpdateResult)
+}
+
+public extension ProductsEvent {
+    
+    typealias ProductUpdateResult = Result<SelectableProductID, ServiceFailure>
+    
 }

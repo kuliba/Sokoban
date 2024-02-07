@@ -32,7 +32,7 @@ final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCa
         
         let payload = anyPayload(
             contractID: 123456789,
-            accountID: 98765432,
+            selectableProductID: .account(98765432),
             flagBankDefault: .no,
             flagClientAgreementIn: .yes,
             flagClientAgreementOut: .empty
@@ -54,7 +54,7 @@ final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCa
         
         let payload = anyPayload(
             contractID: 123456789,
-            accountID: 98765432,
+            selectableProductID: .account(98765432),
             flagBankDefault: .yes,
             flagClientAgreementIn: .empty,
             flagClientAgreementOut: .no
@@ -95,7 +95,7 @@ private typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
 
 private func anyPayload(
     contractID: Int = generateRandom11DigitNumber(),
-    accountID: Int = generateRandom11DigitNumber(),
+    selectableProductID: SelectableProductID = .account(.init(generateRandom11DigitNumber())),
     flagBankDefault: FastRequestFactory.UpdateFastPaymentContractPayload.Flag = .empty,
     flagClientAgreementIn: FastRequestFactory.UpdateFastPaymentContractPayload.Flag = .empty,
     flagClientAgreementOut: FastRequestFactory.UpdateFastPaymentContractPayload.Flag = .empty
@@ -103,7 +103,7 @@ private func anyPayload(
     
     .init(
         contractID: contractID,
-        accountID: accountID,
+        selectableProductID: selectableProductID,
         flagBankDefault: flagBankDefault,
         flagClientAgreementIn: flagClientAgreementIn,
         flagClientAgreementOut: flagClientAgreementOut

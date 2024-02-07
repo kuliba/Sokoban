@@ -32,8 +32,9 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
         VStack {
             
             header()
-            
+            #warning("replace hardcoded height")
             bankList()
+                .frame(maxHeight: 350)
                 .matchedGeometryEffect(
                     id: Match.toggle,
                     in: namespace,
@@ -103,6 +104,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             bankIcon(bank)
             
             Text(bank.name)
+                .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .animation(.easeInOut(duration: 0.2), value: bank.isSelected)

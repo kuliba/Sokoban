@@ -42,16 +42,16 @@ public extension MicroServices.ContractUpdater {
     struct Payload: Equatable {
         
         public let contractID: ContractID
-        public let accountID: AccountID
+        public let selectableProductID: SelectableProductID
         public let target: TargetStatus
         
         public init(
             contractID: ContractID, 
-            accountID: AccountID,
+            selectableProductID: SelectableProductID,
             target: TargetStatus
         ) {
             self.contractID = contractID
-            self.accountID = accountID
+            self.selectableProductID = selectableProductID
             self.target = target
         }
         

@@ -205,7 +205,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let consentList = consentListFailure()
         let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: product2.id)
+        let newContract = paymentContract(accountID: product2.accountID)
         let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product1, product2]
         )
@@ -246,7 +246,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         let consentList = consentListFailure()
         let missing = missingContract(consentList)
         let (product1, product2) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: product2.id)
+        let newContract = paymentContract(accountID: product2.accountID)
         let (sut, stateSpy, _, getSettingsSpy, _, _, createContractSpy, _) = makeSUT(
             products: [product1]
         )
@@ -348,7 +348,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         getSettingsSpy.complete(with: .contracted(details))
         
         sut.event(.products(.toggleProducts))
-        sut.event(.products(.selectProduct(different.id)))
+        sut.event(.products(.selectProduct(different.selectableProductID)))
         updateProductSpy.complete(with: .success(()))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -389,7 +389,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         getSettingsSpy.complete(with: .contracted(details))
         
         sut.event(.products(.toggleProducts))
-        sut.event(.products(.selectProduct(different.id)))
+        sut.event(.products(.selectProduct(different.selectableProductID)))
         updateProductSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(stateSpy.values, [
@@ -428,7 +428,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
         getSettingsSpy.complete(with: .contracted(details))
         
         sut.event(.products(.toggleProducts))
-        sut.event(.products(.selectProduct(different.id)))
+        sut.event(.products(.selectProduct(different.selectableProductID)))
         updateProductSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(stateSpy.values, [
