@@ -860,7 +860,6 @@
 		2AF9ACDC2AE6AFEB00AAB1DB /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */; };
 		2AF9ACDE2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF9ACDD2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift */; };
 		2AFA4BD52A9F546000D8CBA9 /* Model+AbroadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */; };
-		2AFD59D92B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59D82B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift */; };
 		2AFD59DB2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */; };
 		2AFD59DD2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */; };
 		2AFD59DF2B6F717100C86FBF /* NanoServices+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */; };
@@ -3223,7 +3222,6 @@
 		2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		2AF9ACDD2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecorator.swift; sourceTree = "<group>"; };
 		2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+AbroadTests.swift"; sourceTree = "<group>"; };
-		2AFD59D82B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetC2BSub.swift"; sourceTree = "<group>"; };
 		2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequest.swift"; sourceTree = "<group>"; };
 		2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequestTests.swift"; sourceTree = "<group>"; };
 		2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+ext.swift"; sourceTree = "<group>"; };
@@ -6192,7 +6190,6 @@
 			isa = PBXGroup;
 			children = (
 				2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */,
-				2AFD59D82B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift */,
 				2AFD59E02B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift */,
 				2AFD59E22B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift */,
 				2AFD59E42B6F8F9C00C86FBF /* NanoServices+updateFastPaymentContract.swift */,
@@ -14499,7 +14496,6 @@
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
-				2AFD59D92B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift in Sources */,
 				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,
 				C139D9122AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift in Sources */,
 				C154986E2907DB6900D00670 /* ContactsListSectionViewModel.swift in Sources */,

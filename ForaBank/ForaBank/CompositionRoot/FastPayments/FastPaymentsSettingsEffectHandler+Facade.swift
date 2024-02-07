@@ -45,7 +45,14 @@ extension FastPaymentsSettingsEffectHandler {
             updateContract: { contractUpdater.process($0.updaterPayload, $1) }
         )
         
-        let getC2BSub = NanoServices.makeGetC2BSub(httpClient, log)
+        let getC2BSub = NanoServices.adaptedLoggingFetch(
+            createRequest: NanoServices.ForaRequestFactory.createGetC2BSubRequest,
+            httpClient: httpClient,
+            mapResponse: NanoServices.FastResponseMapper.mapGetC2BSubResponseResponse,
+            mapOutput: \.getC2BSubResponse,
+            mapError: ServiceFailure.init(error:),
+            log: log
+        )
         let prepareSetBankDefault = NanoServices.prepareSetBankDefault(httpClient, log)
         let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
             
@@ -105,5 +112,59 @@ private extension ContractEffect.TargetContract {
         case .active: return .active
         case .inactive: return .inactive
         }
+    }
+}
+
+#warning("remove mapping after changing return type of `static ResponseMapper.mapGetC2BSubResponseResponse(_:_:)` to `GetC2BSubResponse`")
+// MARK: - Adapters
+
+private extension GetC2BSubscription {
+    
+    var getC2BSubResponse: GetC2BSubResponse {
+        
+        .init(
+            title: title,
+            explanation: emptyList ?? [],
+            details: {
+                switch list {
+                case .none:
+                    return .empty
+                case let .some(list):
+                    return .list(list.map(\.getC2BProductSub))
+                }
+            }()
+        )
+    }
+}
+
+private extension GetC2BSubscription.ProductSubscription {
+    
+    var getC2BProductSub: GetC2BSubResponse.Details.ProductSubscription {
+        
+        .init(
+            productID: productId,
+            productType: {
+                switch productType {
+                case .account: return .account
+                case .card: return .card
+                }
+            }(),
+            productTitle: productTitle,
+            subscriptions: subscription.map(\.sub)
+        )
+    }
+}
+
+private extension GetC2BSubscription.ProductSubscription.Subscription {
+    
+    var sub: GetC2BSubResponse.Details.ProductSubscription.Subscription {
+ 
+        .init(
+            subscriptionToken: subscriptionToken,
+            brandIcon: brandIcon,
+            brandName: brandName,
+            subscriptionPurpose: subscriptionPurpose,
+            cancelAlert: cancelAlert
+        )
     }
 }
