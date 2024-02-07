@@ -77,7 +77,7 @@ private extension Result<UserPaymentSettings.PaymentContract?, ServiceFailure> {
             self = .failure(failure)
             
         case .success(.none):
-            self = .failure(.connectivityError)
+            self = .success(.none)
             
         case let .success(.some(info)):
             self = .success(.init(info: info))
