@@ -77,13 +77,10 @@ extension UserAccountReducer {
 
 extension UserAccountReducer {
     
-    typealias AlertReduce = (UserAccountRoute, UserAccountEvent.AlertButtonTap) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
+    typealias AlertReduce = (State, Event.AlertButtonTap) -> (State, Effect?)
+    typealias FPSReduce = (State, Event.FastPaymentsSettings) -> (State, Effect?)
+    typealias OTPReduce = (State, Event.OTP) -> (State, Effect?)
+    typealias RouteEventReduce = (State, Event.RouteEvent) -> State
     
     typealias State = UserAccountRoute
     typealias Event = UserAccountEvent

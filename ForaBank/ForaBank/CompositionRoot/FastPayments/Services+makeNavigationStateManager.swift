@@ -28,13 +28,8 @@ extension Services {
     ) -> UserAccountNavigationStateManager {
         
         let alertButtonReducer = UserAccountAlertButtonTapReducer()
-        
         let fpsReducer = UserAccountNavigationFPSReducer()
-        
-        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
-        
         let otpReducer = UserAccountNavigationOTPReducer()
-        
         let routeEventReducer = UserAccountRouteEventReducer()
         
         let userAccountReducer = UserAccountReducer(
@@ -47,6 +42,8 @@ extension Services {
         let modelEffectHandler = UserAccountModelEffectHandler(
             model: model
         )
+        
+        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             makeTimedOTPInputViewModel: {
