@@ -693,7 +693,7 @@ private extension UserAccountViewModel {
 
 // MARK: - Helpers
 
-extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
+private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
     
     static func cameraPermissionError(
         event: UserAccountEvent.AlertButtonTap
