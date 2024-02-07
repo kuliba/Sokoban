@@ -16,8 +16,7 @@ public extension UserAccountNavigationFPSReducer {
     
     func reduce(
         _ state: State,
-        _ settings: FastPaymentsSettingsState,
-        _ inform: @escaping Inform
+        _ settings: FastPaymentsSettingsState
     ) -> (State, Effect?) {
         
         var state = state
@@ -42,7 +41,7 @@ public extension UserAccountNavigationFPSReducer {
             state.destination?.alert = .missingContract(event: .closeAlert)
             
         case let (.success, .some(status)):
-            state = update(state, with: status, inform)
+            state = update(state, with: status)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -77,8 +76,7 @@ private extension UserAccountNavigationFPSReducer {
     
     func update(
         _ state: State,
-        with status: FastPaymentsSettingsState.Status,
-        _ inform: @escaping Inform
+        with status: FastPaymentsSettingsState.Status
     ) -> State {
         
         var state = state
@@ -123,18 +121,18 @@ private extension UserAccountNavigationFPSReducer {
         case let .setBankDefaultFailure(message):
             state.isLoading = false
             state.destination?.destination = nil
-            inform(message)
+            state.informer = message
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
             state.destination?.destination = nil
-            inform("Банк по умолчанию установлен.")
+            state.informer = "Банк по умолчанию установлен."
 #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
             state.isLoading = false
-            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
             state = .init()
         }
         

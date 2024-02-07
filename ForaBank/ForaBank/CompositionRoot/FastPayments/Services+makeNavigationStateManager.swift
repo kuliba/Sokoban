@@ -158,7 +158,7 @@ private extension UserAccountNavigationFPSReducer {
             // case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
         case let (.fastPaymentSettings(.new), .updated(settings)):
             
-            let (fpsState, fpsEffect) = reduce(.init(state), settings, { _ in })
+            let (fpsState, fpsEffect) = reduce(.init(state), settings)
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
             
@@ -184,11 +184,7 @@ private extension UserAccountNavigationOTPReducer {
             // case let .fastPaymentSettings(.new(fpsRoute)):
         case .fastPaymentSettings(.new):
             
-            let (fpsState, fpsEffect) = reduce(
-                .init(state),
-                event,
-                { _ in }
-            )
+            let (fpsState, fpsEffect) = reduce(.init(state), event)
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
             
@@ -311,6 +307,7 @@ private extension UserAccountRoute {
         route.link = .init(state)
         route.alert = state.alert?.routeAlert
         route.spinner = state.isLoading ? .init() : nil
+        route.informer = state.informer.map { .init(message: $0) }
         
         return route
     }

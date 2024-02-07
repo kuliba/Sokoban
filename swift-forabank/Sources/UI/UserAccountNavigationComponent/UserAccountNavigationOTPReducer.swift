@@ -17,8 +17,7 @@ public extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ inform: @escaping Inform
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
@@ -35,7 +34,7 @@ public extension UserAccountNavigationOTPReducer {
             (state, effect) = prepareSetBankDefault(state)
             
         case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response, inform)
+            (state, effect) = update(state, with: response)
         }
         
         return (state, effect)
@@ -124,8 +123,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func update(
         _ state: State,
-        with response: Event.PrepareSetBankDefaultResponse,
-        _ inform: @escaping Inform
+        with response: Event.PrepareSetBankDefaultResponse
     ) -> (State, Effect?) {
         
         var state = state
@@ -140,7 +138,7 @@ private extension UserAccountNavigationOTPReducer {
             
         case .connectivityError:
             state.destination?.destination = nil
-            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
             
         case let .serverError(message):
             state.destination?.destination = nil
