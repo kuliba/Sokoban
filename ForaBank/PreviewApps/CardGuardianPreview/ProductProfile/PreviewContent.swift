@@ -16,6 +16,7 @@ extension ProductProfileView {
             initialState: .init(),
             navigationStateManager: .init(
                 reduce: ProductProfileReducer().reduce(_:_:),
+                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
                 makeCardGuardianViewModel: { _ in
                     
                         .init(
@@ -30,6 +31,7 @@ extension ProductProfileView {
             initialState: .init(),
             navigationStateManager: .init(
                 reduce: ProductProfileReducer().reduce(_:_:),
+                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
                 makeCardGuardianViewModel: { _ in
                     
                         .init(
@@ -44,6 +46,7 @@ extension ProductProfileView {
             initialState: .init(),
             navigationStateManager: .init(
                 reduce: ProductProfileReducer().reduce(_:_:),
+                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
                 makeCardGuardianViewModel: { _ in
                     
                         .init(
