@@ -175,10 +175,10 @@ extension ServerCommands {
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
-                let data: DepositProductListDto?
+                let data: DepositProductList?
                 let errorMessage: String?
                 
-                struct DepositProductListDto: Decodable, Equatable {
+                struct DepositProductList: Decodable, Equatable {
                     
                     let list: [DepositProductData]?
                     let serial: String
