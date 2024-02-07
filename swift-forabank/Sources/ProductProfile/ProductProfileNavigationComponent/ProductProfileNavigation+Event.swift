@@ -6,6 +6,7 @@
 //
 
 import UIPrimitives
+import CardGuardianModule
 
 public extension ProductProfileNavigation {
     
@@ -15,8 +16,7 @@ public extension ProductProfileNavigation {
         case openCardGuardianPanel
         case dismissDestination
         case showAlertChangePin
-        case showAlertCardGuardian
+        case showAlertCardGuardian(CardGuardian.CardGuardianStatus)
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
     }
 }
-

@@ -10,7 +10,7 @@ import Foundation
 extension CardGuardianState._Button {
     
     static let one: Self = .init(
-        event: .toggleLock,
+        event: .toggleLock(.active),
         title: "Блокировать",
         iconType: .toggleLock,
         subtitle: nil)
@@ -26,7 +26,7 @@ extension CardGuardianState._Button {
         subtitle: "Карта не будет отображаться на главном экране")
     
     static let cardBlocked: Self = .init(
-        event: .toggleLock,
+        event: .toggleLock(.blockedUnlockAvailable),
         title: "Разблокировать",
         iconType: .toggleLock,
         subtitle: nil)

@@ -9,18 +9,10 @@ import Foundation
 import CardGuardianModule
 import ProductProfile
 
-extension ProductProfileViewModel.Product {
-    
-    static let cardUnblokedOnMain: Self = .init(isUnBlock: true, isShowOnMain: true)
-    
-    static let cardBlockedHideOnMain: Self = .init(isUnBlock: false, isShowOnMain: false)
-}
-
 extension ProductProfileView {
     
     static let cardUnblokedOnMain: Self = .init(
         viewModel: .init(
-            product: .cardUnblokedOnMain,
             initialState: .init(),
             navigationStateManager: .init(
                 reduce: ProductProfileReducer().reduce(_:_:),
@@ -35,7 +27,6 @@ extension ProductProfileView {
     
     static let cardBlockedHideOnMain : Self = .init(
         viewModel: .init(
-            product: .cardBlockedHideOnMain,
             initialState: .init(),
             navigationStateManager: .init(
                 reduce: ProductProfileReducer().reduce(_:_:),

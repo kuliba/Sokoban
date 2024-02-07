@@ -9,17 +9,17 @@ import Foundation
 
 public extension CardGuardian {
     
-    enum ButtonTapped: Equatable {
+    enum ButtonTapped: Equatable, Hashable {
         
-        case toggleLock
+        case toggleLock(CardGuardianStatus)
         case changePin
         case showOnMain
         
         var event: CardGuardianEvent {
             
             switch self {
-            case .toggleLock:
-                return .buttonTapped(.toggleLock)
+            case let .toggleLock(status):
+                return .buttonTapped(.toggleLock(status))
             case .changePin:
                 return .buttonTapped(.changePin)
             case .showOnMain:

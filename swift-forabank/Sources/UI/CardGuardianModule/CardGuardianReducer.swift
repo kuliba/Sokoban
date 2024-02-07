@@ -30,8 +30,8 @@ public extension CardGuardianReducer {
         case let .buttonTapped(tap):
             switch tap {
                 
-            case .toggleLock:
-                state.updateEvent(.buttonTapped(.toggleLock))
+            case let .toggleLock(status):
+                state.updateEvent(.buttonTapped(.toggleLock(status)))
                 
             case .changePin:
                 state.updateEvent(.buttonTapped(.changePin))

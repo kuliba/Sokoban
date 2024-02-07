@@ -15,24 +15,16 @@ public final class ProductProfileViewModel: ObservableObject {
     
     @Published public private(set) var state: ProductProfileNavigation.State
     
-    private let product: Product
     private let navigationStateManager: ProductProfileNavigationStateManager
     
     private let stateSubject = PassthroughSubject<ProductProfileNavigation.State, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
-    
-    #warning("need remove/refactoring after add business logic")
-    public var needBlockConfig: Bool {
-        product.isUnBlock
-    }
-    
+        
     public init(
-        product: Product,
         initialState: ProductProfileNavigation.State,
         navigationStateManager: ProductProfileNavigationStateManager,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.product = product
         self.state = initialState
         self.navigationStateManager = navigationStateManager
         self.scheduler = scheduler
@@ -41,19 +33,6 @@ public final class ProductProfileViewModel: ObservableObject {
             .removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$state)
-    }
-}
-
-public extension ProductProfileViewModel {
-    
-    struct Product {
-        let isUnBlock: Bool
-        let isShowOnMain: Bool
-        
-        public init(isUnBlock: Bool, isShowOnMain: Bool) {
-            self.isUnBlock = isUnBlock
-            self.isShowOnMain = isShowOnMain
-        }
     }
 }
 
@@ -117,8 +96,8 @@ public extension ProductProfileViewModel {
                 case let .buttonTapped(tap):
                     switch tap {
                         
-                    case .toggleLock:
-                        self?.event(.showAlertCardGuardian)
+                    case let .toggleLock(status):
+                        self?.event(.showAlertCardGuardian(status))
                         
                     case .changePin:
                         self?.event(.showAlertChangePin)
@@ -131,62 +110,6 @@ public extension ProductProfileViewModel {
         
         state.modal = .init(cardGuardianViewModel, cancellable)
         cardGuardianViewModel.event(.appear)
-    }
-    
-    func showAlertChangePin(){
-       /* DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            
-            self?.state.alert = .init(
-                title: "Активируйте сертификат",
-                message: "\nСертификат позволяет просматривать CVV по картам и изменять PIN-код\nв течение 6 месяцев\n\nЭто мера предосторожности во избежание мошеннических операций",
-                primaryButton: .init(
-                    type: .cancel,
-                    title: "Отмена",
-                    event: .closeAlert),
-                secondaryButton: .init(
-                    type: .default,
-                    title: "Активировать",
-                    event: .closeAlert)
-            )
-        }*/
-    }
-    
-    func showAlertCardGuardian(){
-        
-       /* let title = titleForAlertCardGuardian
-        let message = messageForAlertCardGuardian
-        let titleSecondaryButton = titleSecondaryButtonForAlertCardGuardian
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            
-            self?.state.alert = .init(
-                title: title,
-                message: message,
-                primaryButton: .init(
-                    type: .cancel,
-                    title: "Отмена",
-                    event: .closeAlert),
-                secondaryButton: .init(
-                    type: .default,
-                    title: titleSecondaryButton,
-                    event: .closeAlert)
-            )
-        }*/
-    }
-    
-    private var titleForAlertCardGuardian: String {
-        
-        self.product.isUnBlock ? "Заблокировать карту?" : "Разблокировать карту?"
-    }
-    
-    private var messageForAlertCardGuardian: String? {
-        
-        self.product.isUnBlock ? "Карту можно будет разблокировать в приложении или в колл-центре" : nil
-    }
-    
-    private var titleSecondaryButtonForAlertCardGuardian: String {
-        
-        self.product.isUnBlock ? "ОК" : "Да"
     }
 }
 
