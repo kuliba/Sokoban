@@ -17,11 +17,11 @@ struct UserAccountNavigationStateManager {
 
 extension UserAccountNavigationStateManager {
     
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias UserAccountReduce = (UserAccountRoute, UserAccountEvent, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+    typealias UserAccountReduce = (UserAccountRoute, UserAccountEvent) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias Dispatch = (UserAccountEvent) -> Void
     typealias HandleModelEffect = (UserAccountEffect.ModelEffect, @escaping Dispatch) -> Void
     
+    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
     typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
 }

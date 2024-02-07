@@ -20,6 +20,7 @@ public extension UserAccountNavigation.Effect {
     
     enum OTP: Equatable {
         
+        case create
         case prepareSetBankDefault
     }
 }

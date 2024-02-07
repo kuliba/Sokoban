@@ -496,7 +496,7 @@ extension FastPaymentsFactory {
 extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
-        userAccountReduce: { state,_,_ in (state, nil) },
+        userAccountReduce: { state,_ in (state, nil) },
         handleModelEffect: { _,_ in },
         handleOTPEffect: { _,_ in }
     )

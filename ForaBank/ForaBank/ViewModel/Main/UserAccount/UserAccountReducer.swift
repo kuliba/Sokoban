@@ -33,8 +33,7 @@ extension UserAccountReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ otpDispatch: @escaping OTPDispatch
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
@@ -66,11 +65,7 @@ extension UserAccountReducer {
             (state, effect) = fpsReduce(state, fastPaymentsSettings)
             
         case let .otp(otpEvent):
-            (state, effect) = otpReduce(
-                state,
-                otpEvent,
-                otpDispatch
-            )
+            (state, effect) = otpReduce(state, otpEvent)
             
         case let .route(routeEvent):
             state = routeEventReduce(state, routeEvent)
@@ -86,8 +81,7 @@ extension UserAccountReducer {
     
     typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
     
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP) -> (UserAccountRoute, UserAccountEffect?)
     
     typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
     

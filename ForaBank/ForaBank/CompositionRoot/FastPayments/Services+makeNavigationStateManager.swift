@@ -33,7 +33,22 @@ extension Services {
         
         let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
-        let otpReducer = UserAccountNavigationOTPReducer(
+        let otpReducer = UserAccountNavigationOTPReducer()
+        
+        let routeEventReducer = UserAccountRouteEventReducer()
+        
+        let userAccountReducer = UserAccountReducer(
+            alertReduce: alertButtonReducer.reduce(_:_:),
+            fpsReduce: fpsReducer.reduce(_:_:),
+            otpReduce: otpReducer.reduce(_:_:),
+            routeEventReduce: routeEventReducer.reduce(_:_:)
+        )
+        
+        let modelEffectHandler = UserAccountModelEffectHandler(
+            model: model
+        )
+        
+        let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             makeTimedOTPInputViewModel: {
                 
                 .init(
@@ -48,24 +63,8 @@ extension Services {
                     scheduler: $0
                 )
             },
+            prepareSetBankDefault: otpServices.prepareSetBankDefault,
             scheduler: scheduler
-        )
-        
-        let routeEventReducer = UserAccountRouteEventReducer()
-        
-        let userAccountReducer = UserAccountReducer(
-            alertReduce: alertButtonReducer.reduce(_:_:),
-            fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:_:),
-            routeEventReduce: routeEventReducer.reduce(_:_:)
-        )
-        
-        let modelEffectHandler = UserAccountModelEffectHandler(
-            model: model
-        )
-        
-        let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
-            prepareSetBankDefault: otpServices.prepareSetBankDefault
         )
         
         return .init(
@@ -115,7 +114,7 @@ private extension UserAccountNavigationStateManager {
         otpEffectHandler: UserAccountNavigationOTPEffectHandler
     ) {
         self.init(
-            userAccountReduce: userAccountReducer.reduce(_:_:_:),
+            userAccountReduce: userAccountReducer.reduce(_:_:),
             handleModelEffect: modelEffectHandler.handleEffect(_:_:),
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
@@ -178,8 +177,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: UserAccountRoute,
-        _ event: UserAccountEvent.OTP,
-        _ dispatch: @escaping (UserAccountEvent.OTP) -> Void
+        _ event: UserAccountEvent.OTP
     ) -> (UserAccountRoute, UserAccountEffect?) {
         
         var state = state
@@ -192,8 +190,7 @@ private extension UserAccountNavigationOTPReducer {
             let (fpsState, fpsEffect) = reduce(
                 .init(state),
                 event,
-                { _ in },
-                { dispatch($0) }
+                { _ in }
             )
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
