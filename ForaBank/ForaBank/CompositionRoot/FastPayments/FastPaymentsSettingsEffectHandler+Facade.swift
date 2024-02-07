@@ -29,7 +29,7 @@ extension FastPaymentsSettingsEffectHandler {
             mapError: ServiceFailure.init(error:),
             log: log
         )
-
+        
         let consentListHandler = ConsentListRxEffectHandler(
             changeConsentList: changeConsentList
         )
@@ -59,17 +59,16 @@ extension FastPaymentsSettingsEffectHandler {
             log: log
         )
         
-        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
-            
-            let updateProduct = NanoServices.updateFastPaymentContract(httpClient, log)
-            
-            updateProduct(payload.payload) {
+        let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = NanoServices.adaptedLoggingFetch(
+            createRequest: {
                 
-                completion($0)
-                
-                _ = updateProduct
-            }
-        }
+                try ForaRequestFactory.createUpdateFastPaymentContractRequest($0.payload)
+            },
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapUpdateFastPaymentContractResponse,
+            mapError: ServiceFailure.init(error:),
+            log: log
+        )
         
         self.init(
             handleConsentListEffect: consentListHandler.handleEffect(_:_:),
@@ -163,7 +162,7 @@ private extension GetC2BSubscription.ProductSubscription {
 private extension GetC2BSubscription.ProductSubscription.Subscription {
     
     var sub: GetC2BSubResponse.Details.ProductSubscription.Subscription {
- 
+        
         .init(
             subscriptionToken: subscriptionToken,
             brandIcon: brandIcon,
