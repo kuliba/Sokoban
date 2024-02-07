@@ -29,8 +29,7 @@ public extension UserAccountNavigationReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ inform: @escaping Inform
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
@@ -62,10 +61,10 @@ public extension UserAccountNavigationReducer {
             state.destination?.viewModel.event(.resetStatus)
             
         case let .fps(.updated(fpsState)):
-            (state, effect) = fpsReduce(state, fpsState, inform)
+            (state, effect) = fpsReduce(state, fpsState)
             
         case let .otp(otpEvent):
-            (state, effect) = otpReduce(state, otpEvent, inform)
+            (state, effect) = otpReduce(state, otpEvent)
         }
         
         return (state, effect)
@@ -74,11 +73,8 @@ public extension UserAccountNavigationReducer {
 
 public extension UserAccountNavigationReducer {
     
-    typealias Inform = (String) -> Void
-    
-    typealias FPSReduce = (State, FastPaymentsSettingsState, @escaping Inform) -> (State, Effect?)
-    
-    typealias OTPReduce = (State, Event.OTP, @escaping Inform) -> (State, Effect?)
+    typealias FPSReduce = (State, FastPaymentsSettingsState) -> (State, Effect?)
+    typealias OTPReduce = (State, Event.OTP) -> (State, Effect?)
 
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
