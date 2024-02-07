@@ -42,7 +42,7 @@ public extension UserAccountNavigationReducer {
             
         case .closeFPSAlert:
            // state.alert = nil
-            // state.fpsRoute?.alert = nil
+            state.destination?.alert = nil
             state.destination?.viewModel.event(.resetStatus)
             
         case .dismissFPSDestination:
