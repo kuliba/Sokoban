@@ -117,7 +117,7 @@ private extension UserAccountNavigationFPSReducer {
         case .setBankDefault:
             state.destination?.alert = .setBankDefault(
                 event: .otp(.prepareSetBankDefault),
-                secondaryEvent: .closeAlert
+                secondaryEvent: .closeFPSAlert
             )
             
         case let .setBankDefaultFailure(message):

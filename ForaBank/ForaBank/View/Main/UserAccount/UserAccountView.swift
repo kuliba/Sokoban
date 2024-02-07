@@ -276,7 +276,7 @@ struct UserAccountView: View {
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.fpsDestination },
-                set: { _ in }//{ if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+                set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
             ),
             content: fpsDestinationView
         )
