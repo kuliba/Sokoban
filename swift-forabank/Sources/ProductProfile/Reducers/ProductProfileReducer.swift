@@ -29,13 +29,12 @@ public extension ProductProfileReducer {
         case .closeAlert:
             state.alert = nil
         case .openCardGuardianPanel:
-            print("navigation openCardGuardianPanel")
+            break
         case .dismissDestination:
             state.modal = nil
         case .showAlertChangePin:
             state.modal = nil
             effect = .delayAlert(Alerts.alertChangePin())
-
         case let .showAlertCardGuardian(status):
             state.modal = nil
             effect = .delayAlert(Alerts.alertBlockCard(status))

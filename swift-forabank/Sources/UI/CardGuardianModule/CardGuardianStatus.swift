@@ -7,13 +7,8 @@
 
 public extension CardGuardian {
     
-    enum CardGuardianStatus: Equatable, Hashable, Identifiable {
+    enum CardGuardianStatus {
         
-        public var id: Self {
-
-            return self
-        }
-
         case active
         case blockedUnlockAvailable
         case blockedUnlockNotAvailable

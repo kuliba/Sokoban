@@ -23,7 +23,6 @@ public extension CardGuardianReducer {
         var state = state
         
         switch event {
-            
         case .appear:
             state.updateEvent(.appear)
             
@@ -40,33 +39,6 @@ public extension CardGuardianReducer {
                 state.updateEvent(.buttonTapped(.showOnMain))
             }
         }
-#warning("delete!!! only for tests")
-        switch state.event {
-            
-        case .none:
-            print("none")
-            
-        case let .some(event):
-            switch event {
-                
-            case .appear:
-                print("appear")
-                
-            case let .buttonTapped(tap):
-                switch tap {
-                    
-                case .toggleLock:
-                    print("toggleLock")
-                    
-                case .changePin:
-                    print("changePin")
-                    
-                case .showOnMain:
-                    print("showOnMain")
-                }
-            }
-        }
-        
         return (state, .none)
     }
 }
