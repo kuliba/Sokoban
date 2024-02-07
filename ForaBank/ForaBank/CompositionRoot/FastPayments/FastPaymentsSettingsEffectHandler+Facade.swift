@@ -51,7 +51,14 @@ extension FastPaymentsSettingsEffectHandler {
             log: log
         )
         
-        let prepareSetBankDefault = NanoServices.prepareSetBankDefault(httpClient, log)
+        let prepareSetBankDefault = NanoServices.adaptedLoggingFetch(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
+            log: log
+        )
+        
         let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
             
             let updateProduct = NanoServices.updateFastPaymentContract(httpClient, log)

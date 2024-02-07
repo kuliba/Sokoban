@@ -863,8 +863,6 @@
 		2AFD59DB2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */; };
 		2AFD59DD2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */; };
 		2AFD59DF2B6F717100C86FBF /* NanoServices+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */; };
-		2AFD59E12B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59E02B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift */; };
-		2AFD59E32B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59E22B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift */; };
 		2AFD59E52B6F8F9C00C86FBF /* NanoServices+updateFastPaymentContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59E42B6F8F9C00C86FBF /* NanoServices+updateFastPaymentContract.swift */; };
 		2AFD59E92B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59E82B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift */; };
 		2AFD59EC2B6F990F00C86FBF /* Services+loggingLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */; };
@@ -3225,8 +3223,6 @@
 		2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequest.swift"; sourceTree = "<group>"; };
 		2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequestTests.swift"; sourceTree = "<group>"; };
 		2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+ext.swift"; sourceTree = "<group>"; };
-		2AFD59E02B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeChangeClientConsentMe2MePull.swift"; sourceTree = "<group>"; };
-		2AFD59E22B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+prepareSetBankDefault.swift"; sourceTree = "<group>"; };
 		2AFD59E42B6F8F9C00C86FBF /* NanoServices+updateFastPaymentContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+updateFastPaymentContract.swift"; sourceTree = "<group>"; };
 		2AFD59E82B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsEffectHandler+Facade.swift"; sourceTree = "<group>"; };
 		2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+loggingLoader.swift"; sourceTree = "<group>"; };
@@ -6190,8 +6186,6 @@
 			isa = PBXGroup;
 			children = (
 				2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */,
-				2AFD59E02B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift */,
-				2AFD59E22B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift */,
 				2AFD59E42B6F8F9C00C86FBF /* NanoServices+updateFastPaymentContract.swift */,
 			);
 			path = NanoServices;
@@ -13808,7 +13802,6 @@
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				77333DA3283F75EF00C3036F /* Model+ClientInfo.swift in Sources */,
 				777460F52922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift in Sources */,
-				2AFD59E32B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
 				68821585283C026500B27D54 /* InfoProductView.swift in Sources */,
 				2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */,
@@ -14731,7 +14724,6 @@
 				774E318B27A050DB005A067B /* Model+Preview.swift in Sources */,
 				68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */,
 				0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */,
-				2AFD59E12B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift in Sources */,
 				2A1A8E582B271802008B896D /* RootViewModelFactory+makeQRViewModelFactory.swift in Sources */,
 				68821588283C029000B27D54 /* InfoProductViewModel.swift in Sources */,
 				C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */,
