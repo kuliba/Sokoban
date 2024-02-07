@@ -9,30 +9,27 @@ import FastPaymentsSettings
 
 extension FastPaymentsSettingsEffectHandler {
     
+    typealias ForaRequestFactory = ForaBank.RequestFactory
+    
+    typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+    typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
+    
     convenience init(
         facade: MicroServices.Facade,
         httpClient: HTTPClient,
         log: @escaping (String, StaticString, UInt) -> Void
     ) {
-        let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = { payload, completion in
-            
-#warning("move mapping to `Facade`?")
-            let changeConsent = NanoServices.makeChangeClientConsentMe2MePull(httpClient, log)
-            
-            changeConsent(payload.map { .init($0.rawValue) }) { result in
-                
-                switch result {
-                case let .failure(failure):
-                    completion(.failure(failure))
-                    
-                case .success(()):
-#warning("success case could easily have associated value of consentList (derived from payload)")
-                    completion(.success)
-                }
-                
-                _ = changeConsent
-            }
-        }
+        let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = NanoServices.adaptedLoggingFetch(
+            createRequest: {
+                try ForaRequestFactory.createChangeClientConsentMe2MePullRequest($0.map { .init($0.rawValue) })
+            },
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapChangeClientConsentMe2MePullResponse,
+            mapOutput: { () in ConsentListRxEffectHandler.OK() },
+            mapError: ServiceFailure.init(error:),
+            log: log
+        )
+
         let consentListHandler = ConsentListRxEffectHandler(
             changeConsentList: changeConsentList
         )
@@ -53,6 +50,7 @@ extension FastPaymentsSettingsEffectHandler {
             mapError: ServiceFailure.init(error:),
             log: log
         )
+        
         let prepareSetBankDefault = NanoServices.prepareSetBankDefault(httpClient, log)
         let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = { payload, completion in
             
