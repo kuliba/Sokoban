@@ -27,12 +27,10 @@ public final class UserAccountNavigationReducer {
 
 public extension UserAccountNavigationReducer {
     
-    /// `dispatch` is used in `sink`
     func reduce(
         _ state: State,
         _ event: Event,
-        _ inform: @escaping Inform,
-        _ dispatch: @escaping Dispatch
+        _ inform: @escaping Inform
     ) -> (State, Effect?) {
         
         var state = state
@@ -67,7 +65,7 @@ public extension UserAccountNavigationReducer {
             (state, effect) = fpsReduce(state, fpsState, inform)
             
         case let .otp(otpEvent):
-            (state, effect) = otpReduce(state, otpEvent, inform) { dispatch(.otp($0)) }
+            (state, effect) = otpReduce(state, otpEvent, inform)
         }
         
         return (state, effect)
@@ -80,11 +78,8 @@ public extension UserAccountNavigationReducer {
     
     typealias FPSReduce = (State, FastPaymentsSettingsState, @escaping Inform) -> (State, Effect?)
     
-    typealias OTPDispatch = (Event.OTP) -> Void
-    typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
+    typealias OTPReduce = (State, Event.OTP, @escaping Inform) -> (State, Effect?)
 
-    typealias Dispatch = (Event) -> Void
-    
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect
