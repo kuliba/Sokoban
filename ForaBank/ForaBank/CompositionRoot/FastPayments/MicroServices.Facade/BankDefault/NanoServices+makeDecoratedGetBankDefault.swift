@@ -23,6 +23,7 @@ extension NanoServices {
             createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
             httpClient: httpClient,
             mapResponse: FastPaymentsSettings.ResponseMapper.mapGetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
             log: log
         )
         

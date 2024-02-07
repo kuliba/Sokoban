@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import Foundation
+import GenericRemoteService
 
 extension MicroServices.Facade {
     
@@ -54,35 +55,37 @@ extension MicroServices.Facade {
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
         typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, FastResponseMapper.MappingError>
         
-        func adaptedLoggingFetch<Output>(
-            _ createRequest: @escaping () throws -> URLRequest,
-            _ mapResponse: @escaping MapResponse<Output>,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) -> NanoServices.VoidFetch<Output> {
-            
-            NanoServices.adaptedLoggingFetch(
-                createRequest: createRequest,
-                httpClient: httpClient,
-                mapResponse: mapResponse,
-                log: log,
-                file: file,
-                line: line
-            )
-        }
-        
         func adaptedLoggingFetch<Payload, Input, Output>(
             mapPayload: @escaping (Payload) -> Input,
             _ createRequest: @escaping (Input) throws -> URLRequest,
             _ mapResponse: @escaping MapResponse<Output>,
             file: StaticString = #file,
             line: UInt = #line
-        ) -> NanoServices.Fetch<Payload, Output> {
+        ) -> NanoServices.Fetch<Payload, Output, ServiceFailure> {
             
             NanoServices.adaptedLoggingFetch(
                 createRequest: { try createRequest(mapPayload($0)) },
                 httpClient: httpClient,
                 mapResponse: mapResponse,
+                mapError: ServiceFailure.init(error:),
+                log: log,
+                file: file,
+                line: line
+            )
+        }
+        
+        func adaptedLoggingFetch<Output>(
+            _ createRequest: @escaping () throws -> URLRequest,
+            _ mapResponse: @escaping MapResponse<Output>,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) -> NanoServices.VoidFetch<Output, ServiceFailure> {
+            
+            NanoServices.adaptedLoggingFetch(
+                createRequest: createRequest,
+                httpClient: httpClient,
+                mapResponse: mapResponse,
+                mapError: ServiceFailure.init(error:),
                 log: log,
                 file: file,
                 line: line
@@ -132,6 +135,27 @@ private extension FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractP
                 flagClientAgreementIn: .no,
                 flagClientAgreementOut: .no
             )
+        }
+    }
+}
+
+extension ServiceFailure {
+    
+    init(
+        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+    ) {
+        switch error {
+        case .createRequest, .performRequest:
+            self = .connectivityError
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = .connectivityError
+                
+            case let .server(_, errorMessage):
+                self = .serverError(errorMessage)
+            }
         }
     }
 }

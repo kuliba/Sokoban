@@ -214,49 +214,42 @@ private extension FastPaymentsSettingsOTPServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> Self {
         
-#warning("add adapted helpers to simplify setup")
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
         
-        let initiateOTPService = NanoServices.adaptedLoggingRemoteService(
+        let initiateOTP: CountdownEffectHandler.InitiateOTP = NanoServices.adaptedLoggingFetch(
             createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
             log: log
         )
-        
-        let submitOTPService = NanoServices.adaptedLoggingRemoteService(
-            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
+
+        let submitOTP: OTPFieldEffectHandler.SubmitOTP = NanoServices.adaptedLoggingFetch(
+            createRequest: {
+             
+                try ForaRequestFactory.createMakeSetBankDefaultRequest(
+                    payload: .init($0.rawValue)
+                )
+            },
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
             log: log
         )
         
-        #warning("same as initiateOTPService but without error mapping")
-        let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault = NanoServices.adaptedLoggingFetch(
+        
+        let prepareSetBankDefault: FastPaymentsSettingsEffectHandler.PrepareSetBankDefault = NanoServices.adaptedLoggingFetch(
             createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
             log: log
         )
         
         return .init(
-            initiateOTP: { completion in
-                
-                initiateOTPService.fetch {
-                    
-                    completion($0.mapError(ServiceFailure.init(error:)))
-                    _ = initiateOTPService
-                }
-            },
-            submitOTP: { payload, completion in
-                
-                submitOTPService.fetch(.init(payload.rawValue)) {
-                    
-                    completion($0.mapError(ServiceFailure.init(error:)))
-                    _ = submitOTPService
-                }
-            },
+            initiateOTP: initiateOTP,
+            submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault
         )
     }
@@ -266,13 +259,21 @@ private extension FastPaymentsSettingsOTPServices {
 
 private extension OTPInputComponent.ServiceFailure {
     
-    init(error: FastPaymentsSettings.ServiceFailure) {
-        
+    init(
+        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+    ) {
         switch error {
-        case .connectivityError:
+        case .createRequest, .performRequest:
             self = .connectivityError
-        case let .serverError(message):
-            self = .serverError(message)
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = .connectivityError
+                
+            case let .server(_, errorMessage):
+                self = .serverError(errorMessage)
+            }
         }
     }
 }

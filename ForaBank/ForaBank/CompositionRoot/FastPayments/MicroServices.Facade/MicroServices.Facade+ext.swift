@@ -11,8 +11,8 @@ import GenericRemoteService
 
 extension MicroServices.Facade {
     
-    typealias NanoFetch<Payload, Success> = NanoServices.Fetch<Payload, Success>
-    typealias NanoVoidFetch<Success> = NanoServices.VoidFetch<Success>
+    typealias NanoFetch<Payload, Success> = NanoServices.Fetch<Payload, Success, ServiceFailure>
+    typealias NanoVoidFetch<Success> = NanoServices.VoidFetch<Success, ServiceFailure>
     
     typealias NanoFetcher<Payload, Success> = Fetcher<Payload, Success, ServiceFailure>
     

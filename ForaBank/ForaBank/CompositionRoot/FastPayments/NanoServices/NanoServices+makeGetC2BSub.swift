@@ -12,12 +12,13 @@ extension NanoServices {
     static func makeGetC2BSub(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> VoidFetch<GetC2BSubResponse> {
-        
+    ) -> VoidFetch<GetC2BSubResponse, ServiceFailure> {
+#warning("move to the call site")
         let fetch = adaptedLoggingFetch(
             createRequest: ForaRequestFactory.createGetC2BSubRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapGetC2BSubResponseResponse,
+            mapError: ServiceFailure.init(error:),
             log: log
         )
         
