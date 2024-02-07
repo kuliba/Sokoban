@@ -9,51 +9,53 @@ import Foundation
 import CardGuardianModule
 import ProductProfile
 
+extension ProductProfileViewModel {
+    
+    static func preview(
+        initialState: ProductProfileNavigation.State = .init(),
+        buttons: [CardGuardianState._Button],
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> ProductProfileViewModel {
+        
+        let productProfileReducer = ProductProfileReducer().reduce(_:_:)
+        let productProfileEffectHandler = ProductProfileEffectHandler().handleEffect(_:_:)
+        
+        let cardGuardianReducer = CardGuardianReducer().reduce(_:_:)
+        
+        typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+        
+        let makeCardGuardianViewModel: MakeCardGuardianViewModel =  { _ in
+            
+                .init(
+                    initialState: .init(buttons: buttons),
+                    reduce: cardGuardianReducer,
+                    handleEffect: { _,_ in }
+                )
+        }
+        
+        let navigationStateManager: ProductProfileNavigationStateManager = .init(
+            reduce: productProfileReducer,
+            handleEffect: productProfileEffectHandler,
+            makeCardGuardianViewModel: makeCardGuardianViewModel)
+        
+        return .init(
+            initialState: initialState,
+            navigationStateManager: navigationStateManager,
+            scheduler: scheduler)
+    }
+}
+
 extension ProductProfileView {
     
     static let cardUnblokedOnMain: Self = .init(
-        viewModel: .init(
-            initialState: .init(),
-            navigationStateManager: .init(
-                reduce: ProductProfileReducer().reduce(_:_:),
-                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
-                makeCardGuardianViewModel: { _ in
-                    
-                        .init(
-                            initialState: .init(buttons: .preview),
-                            reduce: CardGuardianReducer().reduce(_:_:),
-                            handleEffect: { _,_ in }
-                        )
-                })))
+        viewModel: .preview(buttons: .preview)
+    )
     
     static let cardBlockedHideOnMain : Self = .init(
-        viewModel: .init(
-            initialState: .init(),
-            navigationStateManager: .init(
-                reduce: ProductProfileReducer().reduce(_:_:),
-                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
-                makeCardGuardianViewModel: { _ in
-                    
-                        .init(
-                            initialState: .init(buttons: .previewBlockHide),
-                            reduce: CardGuardianReducer().reduce(_:_:),
-                            handleEffect: { _,_ in }
-                        )
-                })))
+        viewModel: .preview(buttons: .previewBlockHide)
+    )
     
     static let cardBlockedUnlockNotAvailable : Self = .init(
-        viewModel: .init(
-            initialState: .init(),
-            navigationStateManager: .init(
-                reduce: ProductProfileReducer().reduce(_:_:),
-                handleEffect: ProductProfileEffectHandler().handleEffect(_:_:),
-                makeCardGuardianViewModel: { _ in
-                    
-                        .init(
-                            initialState: .init(buttons: .previewBlockUnlockNotAvailable),
-                            reduce: CardGuardianReducer().reduce(_:_:),
-                            handleEffect: { _,_ in }
-                        )
-                })))
-
+        viewModel: .preview(buttons: .previewBlockUnlockNotAvailable)
+    )
 }

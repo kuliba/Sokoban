@@ -123,7 +123,7 @@ public extension ProductProfileViewModel {
 
 public extension ProductProfileNavigationStateManager {
     
-    typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
 }
 
 extension ProductProfileViewModel {
