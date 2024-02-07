@@ -43,9 +43,9 @@ extension FastPaymentsSettingsEffectHandler {
         )
         
         let getC2BSub = NanoServices.adaptedLoggingFetch(
-            createRequest: NanoServices.ForaRequestFactory.createGetC2BSubRequest,
+            createRequest: ForaRequestFactory.createGetC2BSubRequest,
             httpClient: httpClient,
-            mapResponse: NanoServices.FastResponseMapper.mapGetC2BSubResponseResponse,
+            mapResponse: FastResponseMapper.mapGetC2BSubResponseResponse,
             mapOutput: \.getC2BSubResponse,
             mapError: ServiceFailure.init(error:),
             log: log
