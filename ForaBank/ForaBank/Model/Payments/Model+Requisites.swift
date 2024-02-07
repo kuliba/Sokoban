@@ -235,7 +235,17 @@ extension Model {
                         return .init(id: kpp, name: kpp, subname: company.name)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
+                    let kppParameter = Payments.ParameterInput(
+                        .init(
+                            id: kppParameterId,
+                            value: options.first?.id
+                        ),
+                        icon: ImageData(named: "ic24FileHash") ?? .parameterDocument,
+                        title: "КПП получателя",
+                        validator: kppParameterValidator,
+                        limitator: .init(limit: 9),
+                        inputType: .number
+                    )
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
