@@ -75,7 +75,10 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
         
         ScrollView(showsIndicators: false) {
             
-            ForEach(expanded.banks, content: bankView)
+            LazyVStack {
+     
+                ForEach(expanded.banks, content: bankView)
+            }
         }
     }
     
