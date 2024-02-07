@@ -114,12 +114,12 @@ extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
 
-        let (route, effect) = navigationStateManager.userAccountReduce(route, event)
+        let (route, effect) = navigationStateManager.reduce(route, event)
         routeSubject.send(route)
         
         if let effect {
             
-            navigationStateManager.userAccountHandleEffect(effect) { [weak self] in self?.event($0) }
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
         }
     }
 }

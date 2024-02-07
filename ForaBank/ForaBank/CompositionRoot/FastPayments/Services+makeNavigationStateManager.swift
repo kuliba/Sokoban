@@ -114,8 +114,8 @@ private extension UserAccountNavigationStateManager {
         userAccountEffectHandler: UserAccountEffectHandler
     ) {
         self.init(
-            userAccountReduce: userAccountReducer.reduce(_:_:),
-            userAccountHandleEffect: userAccountEffectHandler.handleEffect(_:_:)
+            reduce: userAccountReducer.reduce(_:_:),
+            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
     }
 }

@@ -10,14 +10,18 @@ import UserAccountNavigationComponent
 
 struct UserAccountNavigationStateManager {
     
-    let userAccountReduce: UserAccountReduce
-    let userAccountHandleEffect: UserAccountHandleEffect
+    let reduce: Reduce
+    let handleEffect: HandleEffect
 }
 
 extension UserAccountNavigationStateManager {
     
-    typealias UserAccountReduce = (UserAccountRoute, UserAccountEvent) -> (UserAccountRoute, UserAccountEffect?)
+    typealias Reduce = (State, Event) -> (State, Effect?)
     
-    typealias Dispatch = (UserAccountEvent) -> Void
-    typealias UserAccountHandleEffect = (UserAccountEffect, @escaping Dispatch) -> Void
+    typealias Dispatch = (Event) -> Void
+    typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
+    
+    typealias State = UserAccountRoute
+    typealias Effect = UserAccountEffect
+    typealias Event = UserAccountEvent
 }
