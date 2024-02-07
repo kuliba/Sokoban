@@ -24,7 +24,7 @@ public struct PhoneNumberWrapper {
         self.phoneNumberKit = phoneNumberKit
     }
     
-    public func format(_ value: String) -> String {
+    public func format(_ value: String, blockedCountryCodes: [UInt64] = [98]) -> String {
         
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
         let countryCode = phoneNumberKit.codeBy(phoneNumber)
@@ -39,7 +39,7 @@ public struct PhoneNumberWrapper {
                     phoneNumberKit.parse(
                         phoneNumber,
                         ignoreType: true),
-              phoneNumberParsed.countryCode != 98 // Library Bug, uses Iran Code/number 898 and blocks MTS
+              !blockedCountryCodes.contains(phoneNumberParsed.countryCode ) // Library Bug, uses Iran Code/number 898 and blocks MTS
                
         else { return phoneNumber.applyPatternOnPhoneNumber(mask: mask) }
      
