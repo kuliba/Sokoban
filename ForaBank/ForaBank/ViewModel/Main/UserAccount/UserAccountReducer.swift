@@ -40,25 +40,25 @@ extension UserAccountReducer {
         var effect: Effect?
         
         switch event {
-            #warning("it looks like all `close` and `dismiss` events should be processed with effects to destinations; and the real dismiss should be encapsulated into state change in reaction to destination state change")
+#warning("it looks like all `close` and `dismiss` events should be processed with events (effects??) to destinations; and the real dismiss should be encapsulated into state change in reaction to destination state change")
         case .closeAlert:
             state.alert = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .closeFPSAlert:
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissFPSDestination:
             // state.fpsDestination = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissDestination:
             state.link = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissInformer:
             state.informer = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissRoute:
             state = .init()
@@ -90,4 +90,15 @@ extension UserAccountReducer {
     typealias State = UserAccountRoute
     typealias Event = UserAccountEvent
     typealias Effect = UserAccountEffect
+}
+
+private extension UserAccountReducer.State {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        guard case let .fastPaymentSettings(.new(fpsRoute)) = link
+        else { return nil }
+        
+        return fpsRoute.viewModel
+    }
 }

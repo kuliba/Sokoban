@@ -39,27 +39,27 @@ public extension UserAccountNavigationReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-           // effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .closeFPSAlert:
            // state.alert = nil
             // state.fpsRoute?.alert = nil
-            effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissFPSDestination:
             state.destination?.destination = nil
-            effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissDestination:
             state.destination = nil
-            effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissRoute:
             state = .init()
             
         case .fps(.dismissFPSDestination):
             state.destination?.destination = nil
-            effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case let .fps(.updated(fpsState)):
             (state, effect) = fpsReduce(state, fpsState, inform)

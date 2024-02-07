@@ -119,54 +119,12 @@ extension UserAccountViewModel {
         
         if let effect {
             
-            handleEffect(effect) { [weak self] in self?.event($0) }
+            navigationStateManager.userAccountHandleEffect(effect) { [weak self] in self?.event($0) }
         }
     }
 }
 
-// MARK: - Handle Effect
-
-extension UserAccountViewModel {
-    
-    #warning("move to `navigationStateManager`")
-    func handleEffect(
-        _ effect: UserAccountEffect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .model(modelEffect):
-            navigationStateManager.handleModelEffect(modelEffect, dispatch)
-            
-        case let .navigation(navigation):
-            switch navigation {
-            case .dismissInformer:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    
-                    dispatch(.dismissInformer)
-                }
-                
-            case let .fps(fpsEvent):
-                fpsDispatch?(fpsEvent)
-                
-            case let .otp(otpEffect):
-                navigationStateManager.handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
-            }
-        }
-    }
-    
-    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
-        
-        fpsViewModel?.event(_:)
-    }
-    
-    private var fpsViewModel: FastPaymentsSettingsViewModel? {
-        
-        guard case let .fastPaymentSettings(.new(route)) = route.link
-        else { return nil }
-        
-        return route.viewModel
-    }
-}
+// MARK: - Convenience Methods
 
 extension UserAccountViewModel {
     

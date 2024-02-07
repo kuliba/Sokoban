@@ -51,6 +51,14 @@ public extension UserAccountNavigationOTPReducer {
     typealias Effect = UserAccountNavigation.Effect
 }
 
+private extension UserAccountNavigation.State {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        destination?.viewModel
+    }
+}
+
 private extension UserAccountNavigationOTPReducer {
     
     func reduce(
@@ -70,7 +78,7 @@ private extension UserAccountNavigationOTPReducer {
             
         case .validOTP:
             state.isLoading = false
-            effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
+            state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.success)))
         }
         
         return (state, effect)
@@ -88,15 +96,15 @@ private extension UserAccountNavigationOTPReducer {
         state.destination?.destination = nil
         switch failure {
         case .connectivityError:
-            effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
+            state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
             
         case let .serverError(message):
             let tryAgain = "Введен некорректный код. Попробуйте еще раз"
             if message == tryAgain {
-                effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
                 
             } else {
-                effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
+                state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
             }
         }
         
@@ -130,7 +138,7 @@ private extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
         state.isLoading = false
-        effect = .fps(.resetStatus)
+        state.destination?.viewModel.event(.resetStatus)
         
         switch response {
         case .success:

@@ -497,7 +497,6 @@ extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
         userAccountReduce: { state,_ in (state, nil) },
-        handleModelEffect: { _,_ in },
-        handleOTPEffect: { _,_ in }
+        userAccountHandleEffect: { _,_ in }
     )
 }

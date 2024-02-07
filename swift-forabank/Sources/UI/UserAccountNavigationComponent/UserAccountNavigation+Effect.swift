@@ -12,7 +12,7 @@ public extension UserAccountNavigation {
     enum Effect: Equatable {
         
         case dismissInformer
-        case fps(FastPaymentsSettingsEvent)
+//        case fps(FastPaymentsSettingsEvent)
         case otp(OTP)
     }
 }

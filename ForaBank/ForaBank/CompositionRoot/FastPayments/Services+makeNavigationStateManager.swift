@@ -64,10 +64,14 @@ extension Services {
             scheduler: scheduler
         )
         
+        let userAccountEffectHandler = UserAccountEffectHandler(
+            handleModelEffect: modelEffectHandler.handleEffect(_:_:),
+            handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
+        )
+        
         return .init(
             userAccountReducer: userAccountReducer,
-            modelEffectHandler: modelEffectHandler,
-            otpEffectHandler: otpEffectHandler
+            userAccountEffectHandler: userAccountEffectHandler
         )
     }
 }
@@ -107,13 +111,11 @@ private extension UserAccountNavigationStateManager {
     
     init(
         userAccountReducer: UserAccountReducer,
-        modelEffectHandler: UserAccountModelEffectHandler,
-        otpEffectHandler: UserAccountNavigationOTPEffectHandler
+        userAccountEffectHandler: UserAccountEffectHandler
     ) {
         self.init(
             userAccountReduce: userAccountReducer.reduce(_:_:),
-            handleModelEffect: modelEffectHandler.handleEffect(_:_:),
-            handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
+            userAccountHandleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
     }
 }
