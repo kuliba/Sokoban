@@ -23,8 +23,8 @@ public extension CardGuardianReducer {
         var state = state
         
         switch event {
-        case .appear:
-            state.updateEvent(.appear)
+        case let .appear(model, cancellable):
+            state.updateEvent(.appear(model, cancellable))
             
         case let .buttonTapped(tap):
             switch tap {
