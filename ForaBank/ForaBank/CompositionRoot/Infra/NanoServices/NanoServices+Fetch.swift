@@ -7,12 +7,9 @@
 
 import Fetcher
 import Foundation
-import GenericRemoteService
-
-typealias RemoteServiceErrorOf<MappingError: Error> = RemoteServiceError<Error, Error, MappingError>
 
 extension NanoServices {
-    #warning("move to shared scope - out of FastPayments")
+    
     typealias MapResponse<T, Failure: Error> = (Data, HTTPURLResponse) -> Result<T, Failure>
     typealias MapError<MappingError: Error, Failure: Error> = (RemoteServiceErrorOf<MappingError>) -> Failure
     typealias Fetch<Input, Output, Failure: Error> = (Input, @escaping (Result<Output, Failure>) -> Void) -> Void

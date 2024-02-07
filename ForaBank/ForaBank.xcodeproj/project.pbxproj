@@ -684,6 +684,7 @@
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
 		2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */; };
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
+		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -3067,6 +3068,7 @@
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedFeatureFlag.swift; sourceTree = "<group>"; };
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
+		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -6189,10 +6191,7 @@
 		2A3BD6032B6CDD2C009B16F7 /* NanoServices */ = {
 			isa = PBXGroup;
 			children = (
-				2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */,
 				2AFD59DE2B6F717100C86FBF /* NanoServices+ext.swift */,
-				2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */,
-				2A3BD6062B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift */,
 				2AFD59D82B6F6EAF00C86FBF /* NanoServices+makeGetC2BSub.swift */,
 				2AFD59E02B6F853800C86FBF /* NanoServices+makeChangeClientConsentMe2MePull.swift */,
 				2AFD59E22B6F8E9B00C86FBF /* NanoServices+prepareSetBankDefault.swift */,
@@ -6995,6 +6994,16 @@
 			path = ReducerTextFieldViewModel;
 			sourceTree = "<group>";
 		};
+		2A94991E2B7362A700C67F05 /* NanoServices */ = {
+			isa = PBXGroup;
+			children = (
+				2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */,
+				2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */,
+				2A3BD6062B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift */,
+			);
+			path = NanoServices;
+			sourceTree = "<group>";
+		};
 		2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -7496,6 +7505,8 @@
 				2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */,
 				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
 				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
+				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
+				2A94991E2B7362A700C67F05 /* NanoServices */,
 			);
 			path = Infra;
 			sourceTree = "<group>";
@@ -14298,6 +14309,7 @@
 				68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */,
 				8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */,
 				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
+				2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
