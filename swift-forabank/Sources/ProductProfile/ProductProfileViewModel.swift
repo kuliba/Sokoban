@@ -90,22 +90,17 @@ public extension ProductProfileViewModel {
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] event in self?.event(event) }
-
-        let cgViewModel = CGViewModel(
-            viewModel: cardGuardianViewModel,
-            cancellable: cancellable,
-            scheduler: scheduler
-        )
         
-        cgViewModel.event(.appear(cardGuardianViewModel, cancellable))
+        state.modal = .init(cardGuardianViewModel, cancellable)
+        cardGuardianViewModel.event(.appear)
     }
     
     private func event(
         _ event: CardGuardianEvent
     ) {
         switch event {
-        case let .appear(model, cancellable):
-            self.event(.openCardGuardianPanel(model, cancellable))
+        case .appear:
+            self.event(.openCardGuardianPanel)
             
         case let .buttonTapped(tap):
             switch tap {

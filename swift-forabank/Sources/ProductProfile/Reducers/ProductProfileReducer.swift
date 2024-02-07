@@ -28,8 +28,8 @@ public extension ProductProfileReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-        case let .openCardGuardianPanel(model, cancellable):
-            state.modal = .init(model, cancellable)
+        case .openCardGuardianPanel:
+            break
         case .dismissDestination:
             state.modal = nil
         case .showAlertChangePin:
