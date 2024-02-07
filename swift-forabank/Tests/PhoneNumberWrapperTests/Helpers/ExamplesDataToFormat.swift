@@ -54,9 +54,9 @@ extension ExamplesDataToFormat {
         case startsWithZero(StartsWithZero)
         
         enum StartsWith8: String {
-            case equals10Digits = "8963000000"
-            case lessThen10Digits = "896300000"
-            case moreThen10Digits = "89630000000"
+            case equals10Digits = "89630000000"
+            case lessThen10Digits = "8963000000"
+            case moreThen10Digits = "896300000000"
         }
         
         enum StartsWithPlus8: String {
