@@ -21,6 +21,7 @@ extension Services {
         useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
         log: @escaping (String, StaticString, UInt) -> Void,
         duration: Int = 10,
         length: Int = 6,
@@ -70,6 +71,7 @@ extension Services {
         )
         
         return .init(
+            fastPaymentsFactory: fastPaymentsFactory,
             userAccountReducer: userAccountReducer,
             userAccountEffectHandler: userAccountEffectHandler
         )
@@ -110,10 +112,12 @@ extension UserAccountModelEffectHandler {
 private extension UserAccountNavigationStateManager {
     
     init(
+        fastPaymentsFactory: FastPaymentsFactory,
         userAccountReducer: UserAccountReducer,
         userAccountEffectHandler: UserAccountEffectHandler
     ) {
         self.init(
+            fastPaymentsFactory: fastPaymentsFactory,
             reduce: userAccountReducer.reduce(_:_:),
             handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )

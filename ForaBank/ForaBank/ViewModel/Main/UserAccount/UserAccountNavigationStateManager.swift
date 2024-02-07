@@ -10,6 +10,7 @@ import UserAccountNavigationComponent
 
 struct UserAccountNavigationStateManager {
     
+    let fastPaymentsFactory: FastPaymentsFactory
     let reduce: Reduce
     let handleEffect: HandleEffect
 }
