@@ -56,6 +56,7 @@ let package = Package(
         // UI Components
         .paymentComponents,
         .carouselComponent,
+        .operatorsListComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -161,6 +162,7 @@ let package = Package(
         .sharedConfigs,
         .carouselComponent,
         .carouselComponentTests,
+        .operatorsListComponents,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -300,6 +302,13 @@ private extension Product {
         name: .otpInputComponent,
         targets: [
             .otpInputComponent,
+        ]
+    )
+    
+    static let operatorsListComponents = library(
+        name: .operatorsListComponents,
+        targets: [
+            .operatorsListComponents
         ]
     )
     
@@ -635,6 +644,7 @@ private extension Target {
             .sharedConfigs,
         ]
     )
+    
     static let sberQRTests = testTarget(
         name: .sberQRTests,
         dependencies: [
@@ -1235,6 +1245,20 @@ private extension Target {
         path: "Tests/UI/Components/\(String.carouselComponentTests)"
     )
     
+    static let operatorsListComponents = target(
+        name: .operatorsListComponents,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .amountComponent,
+            .buttonComponent,
+            .paymentComponents,
+            .productSelectComponent,
+        ]
+    )
+    
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
@@ -1618,6 +1642,8 @@ private extension String {
     
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
+    
+    static let operatorsListComponents = "OperatorsListComponents"
     
     // MARK: - Infra
     
