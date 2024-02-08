@@ -42,14 +42,34 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
-        let fastPaymentsFactory = makeFastPaymentsFactory(
-            httpClient: httpClient,
-            model: model,
-            log: infoNetworkLog,
-            fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
-        )
+        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
+        ? HTTPClientStub.fastPaymentsSettings(delay: 1)
+        : httpClient
         
-        let otpServices: FastPaymentsSettingsOTPServices = fastPaymentsSettingsFlag.isStub ? .stub : .live(httpClient, infoNetworkLog)
+        // TODO: Remove after `legacy` case eliminated
+        let fastPaymentsFactory: FastPaymentsFactory = {
+            
+            switch fastPaymentsSettingsFlag.rawValue {
+            case .active:
+                return .init(fastPaymentsViewModel: .new({
+                    
+                    makeNewFastPaymentsViewModel(
+                        httpClient: fpsHTTPClient,
+                        model: model,
+                        log: infoNetworkLog,
+                        scheduler: $0
+                    )
+                }))
+                
+            case .inactive:
+                return .init(fastPaymentsViewModel: .legacy({
+                    
+                    .init(model: $0,newModel: model,closeAction: $1)
+                }))
+            }
+        }()
+        
+        let otpServices: FastPaymentsSettingsOTPServices = .live(fpsHTTPClient, infoNetworkLog)
         
         let navigationStateManager = makeNavigationStateManager(
             otpServices: otpServices,

@@ -11,43 +11,7 @@ import UserAccountNavigationComponent
 
 extension RootViewModelFactory {
     
-    // TODO: Remove after `legacy` case eliminated
-    static func makeFastPaymentsFactory(
-        httpClient: HTTPClient,
-        model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
-    ) -> FastPaymentsFactory {
-        
-        switch fastPaymentsSettingsFlag.rawValue {
-        case .active:
-            return .init(fastPaymentsViewModel: .new({
-                
-                makeNewFastPaymentsViewModel(
-                    useStub: fastPaymentsSettingsFlag.isStub,
-                    httpClient: httpClient,
-                    model: model,
-                    log: log,
-                    scheduler: $0
-                )
-            }))
-            
-        case .inactive:
-            return .init(
-                fastPaymentsViewModel: .legacy({
-                    
-                    MeToMeSettingView.ViewModel(
-                        model: $0,
-                        newModel: model,
-                        closeAction: $1
-                    )
-                })
-            )
-        }
-    }
-    
     static func makeNewFastPaymentsViewModel(
-        useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -71,10 +35,6 @@ extension RootViewModelFactory {
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
-        
-        let httpClient = isStub
-        ? HTTPClientStub.fastPaymentsSettings(delay: 0)
-        : httpClient
         
         let facade: MicroServices.Facade = .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         

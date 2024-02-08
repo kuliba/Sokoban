@@ -10,7 +10,8 @@ import Foundation
 import GenericRemoteService
 
 extension MicroServices.Facade {
-    
+
+#warning("`live` could be renamed - there is no `stub` anymore`")
     static func live(
         _ httpClient: HTTPClient,
         _ getProducts: @escaping GetProducts,

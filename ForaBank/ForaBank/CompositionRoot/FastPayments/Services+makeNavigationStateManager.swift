@@ -202,7 +202,7 @@ private extension UserAccountNavigationOTPReducer {
 // MARK: - Live Service
 
 /*private*/ extension FastPaymentsSettingsOTPServices {
-    
+    #warning("`live` could be renamed - there is no `stub` anymore`")
     static func live(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
@@ -459,33 +459,4 @@ private extension FastPaymentContractFullInfoType {
         && contractAttributeList.flagClientAgreementIn == .no
         && contractAttributeList.flagClientAgreementOut == .no
     }
-}
-
-// MARK: - Stubs
-
-/*private*/ extension FastPaymentsSettingsOTPServices {
-    
-    static let stub: Self = .init(
-        initiateOTP: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        },
-        submitOTP: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        },
-        prepareSetBankDefault: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        }
-    )
 }
