@@ -29,12 +29,10 @@ extension RootViewModelFactory {
         
         let fpsReducer = UserAccountNavigationFPSReducer()
         let otpReducer = UserAccountNavigationOTPReducer()
-        let routeEventReducer = UserAccountRouteEventReducer()
         
         let userAccountReducer = UserAccountReducer(
             fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:),
-            routeEventReduce: routeEventReducer.reduce(_:_:)
+            otpReduce: otpReducer.reduce(_:_:)
         )
         
         let modelEffectHandler = UserAccountModelEffectHandler(

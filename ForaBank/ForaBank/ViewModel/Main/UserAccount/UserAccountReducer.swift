@@ -13,16 +13,13 @@ final class UserAccountReducer {
     
     private let fpsReduce: FPSReduce
     private let otpReduce: OTPReduce
-    private let routeEventReduce: RouteEventReduce
     
     init(
         fpsReduce: @escaping FPSReduce,
-        otpReduce: @escaping OTPReduce,
-        routeEventReduce: @escaping RouteEventReduce
+        otpReduce: @escaping OTPReduce
     ) {
         self.fpsReduce = fpsReduce
         self.otpReduce = otpReduce
-        self.routeEventReduce = routeEventReduce
     }
 }
 
@@ -44,7 +41,7 @@ extension UserAccountReducer {
             state = reduce(state, dismiss)
             
         case let .navigate(navigateEvent):
-            state = routeEventReduce(state, navigateEvent)
+            state = reduce(state, navigateEvent)
             
         case let .cancelC2BSub(token):
             effect = .model(.cancelC2BSub(token))
@@ -70,7 +67,6 @@ extension UserAccountReducer {
     
     typealias FPSReduce = (State, Event.FastPaymentsSettings) -> (State, Effect?)
     typealias OTPReduce = (State, Event.OTPEvent) -> (State, Effect?)
-    typealias RouteEventReduce = (State, Event.NavigateEvent) -> State
     
     typealias State = UserAccountRoute
     typealias Event = UserAccountEvent
@@ -103,7 +99,7 @@ private extension UserAccountReducer {
         case .destination:
             state.link = nil
             state.fpsViewModel?.event(.resetStatus)
-
+            
         case .fpsAlert:
             state.alert = nil
             state.fpsViewModel?.event(.resetStatus)
@@ -128,6 +124,33 @@ private extension UserAccountReducer {
             
         case .textFieldAlert:
             state.textFieldAlert = nil
+        }
+        
+        return state
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.NavigateEvent
+    ) -> State {
+        
+        var state = state
+        
+        switch event {
+        case let .alert(alertViewModel):
+            state.alert = alertViewModel
+            
+        case let .bottomSheet(bottomSheet):
+            state.bottomSheet = bottomSheet
+            
+        case let .link(link):
+            state.link = link
+            
+        case .spinner:
+            state.spinner = .init()
+            
+        case let .textFieldAlert(textFieldAlert):
+            state.textFieldAlert = textFieldAlert
         }
         
         return state
