@@ -16,11 +16,11 @@ public extension UserAccountNavigationFPSReducer {
     
     func reduce(
         _ state: State,
-        _ settings: FastPaymentsSettingsState,
-        _ inform: @escaping Inform
+        _ settings: FastPaymentsSettingsState
     ) -> (State, Effect?) {
         
         var state = state
+        var effect: Effect?
         
         switch (settings.settingsResult, settings.status) {
         case (_, .inflight):
@@ -42,7 +42,7 @@ public extension UserAccountNavigationFPSReducer {
             state.destination?.alert = .missingContract(event: .closeAlert)
             
         case let (.success, .some(status)):
-            state = update(state, with: status, inform)
+            (state, effect) = update(state, with: status)
             
         case let (.failure(failure), _):
             // final => dismissRoute
@@ -60,7 +60,7 @@ public extension UserAccountNavigationFPSReducer {
             }
         }
         
-        return (state, nil)
+        return (state, effect)
     }
 }
 
@@ -77,11 +77,11 @@ private extension UserAccountNavigationFPSReducer {
     
     func update(
         _ state: State,
-        with status: FastPaymentsSettingsState.Status,
-        _ inform: @escaping Inform
-    ) -> State {
+        with status: FastPaymentsSettingsState.Status
+    ) -> (State, Effect?) {
         
         var state = state
+        var effect: Effect?
         
         switch status {
         case .inflight:
@@ -117,27 +117,30 @@ private extension UserAccountNavigationFPSReducer {
         case .setBankDefault:
             state.destination?.alert = .setBankDefault(
                 event: .otp(.prepareSetBankDefault),
-                secondaryEvent: .closeAlert
+                secondaryEvent: .closeFPSAlert
             )
             
         case let .setBankDefaultFailure(message):
             state.isLoading = false
             state.destination?.destination = nil
-            inform(message)
+            state.informer = message
+            effect = .dismissInformer
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.isLoading = false
             state.destination?.destination = nil
-            inform("Банк по умолчанию установлен.")
+            state.informer = "Банк по умолчанию установлен."
+            effect = .dismissInformer
 #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
+            // state = .init()
             state.isLoading = false
-            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            state = .init()
+            state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
+            effect = .dismissInformer
         }
         
-        return state
+        return (state, effect)
     }
 }

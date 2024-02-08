@@ -18,15 +18,18 @@ public extension UserAccountNavigation {
         public var destination: FPSRoute?
         public var alert: AlertModelOf<Event>?
         public var isLoading: Bool
+        public var informer: String?
         
         public init(
             destination: FPSRoute? = nil,
             alert: AlertModelOf<Event>? = nil,
-            isLoading: Bool = false
+            isLoading: Bool = false,
+            informer: String? = nil
         ) {
             self.destination = destination
             self.alert = alert
             self.isLoading = isLoading
+            self.informer = informer
         }
     }
 }

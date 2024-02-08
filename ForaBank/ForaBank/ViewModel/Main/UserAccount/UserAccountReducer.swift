@@ -33,28 +33,32 @@ extension UserAccountReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ otpDispatch: @escaping OTPDispatch
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
         
         switch event {
+#warning("it looks like all `close` and `dismiss` events should be processed with events (effects??) to destinations; and the real dismiss should be encapsulated into state change in reaction to destination state change")
         case .closeAlert:
             state.alert = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .closeFPSAlert:
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissFPSDestination:
             // state.fpsDestination = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissDestination:
             state.link = nil
-            effect = .navigation(.fps(.resetStatus))
+            state.fpsViewModel?.event(.resetStatus)
+            
+        case .dismissInformer:
+            state.informer = nil
+            state.fpsViewModel?.event(.resetStatus)
             
         case .dismissRoute:
             state = .init()
@@ -66,11 +70,7 @@ extension UserAccountReducer {
             (state, effect) = fpsReduce(state, fastPaymentsSettings)
             
         case let .otp(otpEvent):
-            (state, effect) = otpReduce(
-                state,
-                otpEvent,
-                otpDispatch
-            )
+            (state, effect) = otpReduce(state, otpEvent)
             
         case let .route(routeEvent):
             state = routeEventReduce(state, routeEvent)
@@ -82,16 +82,23 @@ extension UserAccountReducer {
 
 extension UserAccountReducer {
     
-    typealias AlertReduce = (UserAccountRoute, UserAccountEvent.AlertButtonTap) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias FPSReduce = (UserAccountRoute, UserAccountEvent.FastPaymentsSettings) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias OTPReduce = (UserAccountRoute, UserAccountEvent.OTP, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
-    
-    typealias RouteEventReduce = (UserAccountRoute, UserAccountEvent.RouteEvent) -> UserAccountRoute
+    typealias AlertReduce = (State, Event.AlertButtonTap) -> (State, Effect?)
+    typealias FPSReduce = (State, Event.FastPaymentsSettings) -> (State, Effect?)
+    typealias OTPReduce = (State, Event.OTP) -> (State, Effect?)
+    typealias RouteEventReduce = (State, Event.RouteEvent) -> State
     
     typealias State = UserAccountRoute
     typealias Event = UserAccountEvent
     typealias Effect = UserAccountEffect
+}
+
+private extension UserAccountReducer.State {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        guard case let .fastPaymentSettings(.new(fpsRoute)) = link
+        else { return nil }
+        
+        return fpsRoute.viewModel
+    }
 }
