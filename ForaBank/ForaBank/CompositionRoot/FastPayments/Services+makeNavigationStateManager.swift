@@ -69,8 +69,8 @@ extension RootViewModelFactory {
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
-            userAccountReducer: userAccountReducer,
-            userAccountEffectHandler: userAccountEffectHandler
+            reduce: userAccountReducer.reduce(_:_:),
+            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
     }
 }
@@ -105,21 +105,6 @@ extension UserAccountModelEffectHandler {
 }
 
 // MARK: - Adapters
-
-private extension UserAccountNavigationStateManager {
-    
-    init(
-        fastPaymentsFactory: FastPaymentsFactory,
-        userAccountReducer: UserAccountReducer,
-        userAccountEffectHandler: UserAccountEffectHandler
-    ) {
-        self.init(
-            fastPaymentsFactory: fastPaymentsFactory,
-            reduce: userAccountReducer.reduce(_:_:),
-            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
-        )
-    }
-}
 
 private extension UserAccountNavigation.State {
     
