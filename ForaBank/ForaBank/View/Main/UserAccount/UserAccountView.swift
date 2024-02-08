@@ -46,7 +46,7 @@ struct UserAccountView: View {
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.link },
-                    set: { if $0 == nil { viewModel.resetLink() }}
+                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) }}
                 ),
                 content: destinationView(link:)
             )
@@ -54,28 +54,28 @@ struct UserAccountView: View {
         .sheet(
             item: .init(
                 get: { viewModel.route.sheet },
-                set: { if $0 == nil { viewModel.resetSheet() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.sheet)) }}
             ),
             content: sheetView
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.bottomSheet },
-                set: { if $0 == nil { viewModel.resetBottomSheet() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.bottomSheet)) }}
             ),
             content: bottomSheetView
         )
         .alert(
             item: .init(
                 get: { viewModel.route.alert },
-                set: { if $0 == nil { viewModel.resetAlert() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.alert)) }}
             ),
             content: { .init(with: $0, event: { viewModel.event(.alertButtonTapped($0)) }) }
         )
         .textfieldAlert(
             alert: .init(
                 get: { viewModel.route.textFieldAlert },
-                set: { if $0 == nil { viewModel.resetTextFieldAlert() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.textFieldAlert)) }}
             )
         )
         .navigationBarTitle("", displayMode: .inline)
@@ -262,7 +262,7 @@ struct UserAccountView: View {
             config: .preview
         )
         .navigationBar(with: .fastPayments(
-            action: viewModel.dismissDestination
+            action: { viewModel.event(.dismiss(.destination)) }
         ))
         .alert(
             item: .init(
@@ -276,7 +276,7 @@ struct UserAccountView: View {
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.fpsDestination },
-                set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.fpsDestination)) }}
             ),
             content: fpsDestinationView
         )
@@ -348,19 +348,19 @@ private extension UserAccountEvent {
         
         switch event {
         case .closeAlert:
-            self = .closeAlert
+            self = .dismiss(.alert)
             
         case .closeFPSAlert:
-            self = .closeFPSAlert
+            self = .dismiss(.fpsAlert)
             
         case .dismissDestination:
-            self = .dismissDestination
+            self = .dismiss(.destination)
             
         case .dismissFPSDestination:
-            self = .dismissFPSDestination
+            self = .dismiss(.fpsDestination)
             
         case .dismissRoute:
-            self = .dismissRoute
+            self = .dismiss(.route)
             
         case let .fps(fps):
             self = .fps(fps)

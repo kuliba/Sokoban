@@ -162,7 +162,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: UserAccountRoute,
-        _ event: UserAccountEvent.OTP
+        _ event: UserAccountEvent.OTPEvent
     ) -> (UserAccountRoute, UserAccountEffect?) {
         
         var state = state
@@ -316,7 +316,7 @@ private extension UserAccountRoute.Link {
 
 private extension AlertModelOf<UserAccountNavigation.Event> {
     
-    var routeAlert: AlertModelOf<UserAccountEvent.AlertButtonTap> {
+    var routeAlert: AlertModelOf<UserAccountEvent> {
         
         .init(
             id: id,
@@ -330,7 +330,7 @@ private extension AlertModelOf<UserAccountNavigation.Event> {
 
 private extension ButtonViewModel<UserAccountNavigation.Event> {
     
-    var routeButton: ButtonViewModel<UserAccountEvent.AlertButtonTap> {
+    var routeButton: ButtonViewModel<UserAccountEvent> {
         
         .init(
             type: type.routeButtonType,
@@ -342,19 +342,19 @@ private extension ButtonViewModel<UserAccountNavigation.Event> {
 
 private extension UserAccountNavigation.Event {
     
-    var routeAlert: UserAccountEvent.AlertButtonTap {
+    var routeAlert: UserAccountEvent {
         
         switch self {
         case .closeAlert:
-            return .closeAlert
+            return .dismiss(.alert)
         case .closeFPSAlert:
-            return .closeFPSAlert
+            return .dismiss(.fpsAlert)
         case .dismissFPSDestination:
-            return .dismissFPSDestination
+            return .dismiss(.fpsDestination)
         case .dismissDestination:
-            return .dismissDestination
+            return .dismiss(.destination)
         case .dismissRoute:
-            return .dismissRoute
+            return .dismiss(.route)
         case let .fps(fps):
             return .fps(fps)
         case let .otp(otp):
@@ -369,19 +369,19 @@ private extension UserAccountNavigation.Event {
         
         switch self {
         case .closeAlert:
-            return .closeAlert
+            return .dismiss(.alert)
             
         case .closeFPSAlert:
-            return .closeFPSAlert
+            return .dismiss(.fpsAlert)
             
         case .dismissFPSDestination:
-            return .dismissFPSDestination
+            return .dismiss(.fpsDestination)
             
         case .dismissDestination:
-            return .dismissDestination
+            return .dismiss(.destination)
             
         case .dismissRoute:
-            return .dismissRoute
+            return .dismiss(.route)
             
         case let .fps(fps):
             return .fps(fps)
@@ -394,7 +394,7 @@ private extension UserAccountNavigation.Event {
 
 private extension ButtonViewModel<UserAccountNavigation.Event>.ButtonType {
     
-    var routeButtonType: ButtonViewModel<UserAccountEvent.AlertButtonTap>.ButtonType {
+    var routeButtonType: ButtonViewModel<UserAccountEvent>.ButtonType {
         
         switch self {
         case .default:     return .default

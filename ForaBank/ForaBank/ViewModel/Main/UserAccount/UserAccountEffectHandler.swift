@@ -37,7 +37,7 @@ extension UserAccountEffectHandler {
             case .dismissInformer:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     
-                    dispatch(.dismissInformer)
+                    dispatch(.dismiss(.informer))
                 }
                 
             case let .otp(otpEffect):
@@ -55,7 +55,7 @@ extension UserAccountEffectHandler {
     typealias Dispatch = (Event) -> Void
     typealias HandleModelEffect = (Effect.ModelEffect, @escaping Dispatch) -> Void
     
-    typealias OTPDispatch = (Event.OTP) -> Void
+    typealias OTPDispatch = (Event.OTPEvent) -> Void
     typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
     
     typealias Effect = UserAccountEffect

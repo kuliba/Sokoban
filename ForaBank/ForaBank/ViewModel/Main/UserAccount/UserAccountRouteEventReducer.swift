@@ -13,60 +13,24 @@ extension UserAccountRouteEventReducer {
         _ state: State,
         _ event: Event
     ) -> UserAccountRoute {
-        
+        #warning("supershort - could be handled inside parent reducer")
         var state = state
         
         switch event {
-        case let .alert(alertEvent):
-            switch alertEvent {
-            case .reset:
-                state.alert = nil
-                
-            case let .setTo(alertViewModel):
-                state.alert = alertViewModel
-            }
+        case let .alert(alertViewModel):
+            state.alert = alertViewModel
             
-        case let .bottomSheet(bottomSheetEvent):
-            switch bottomSheetEvent {
-            case .reset:
-                state.bottomSheet = nil
-                
-            case let .setTo(bottomSheet):
-                state.bottomSheet = bottomSheet
-            }
+        case let .bottomSheet(bottomSheet):
+            state.bottomSheet = bottomSheet
             
-        case let .link(linkEvent):
-            switch linkEvent {
-            case .reset:
-                state.link = nil
-                
-            case let .setTo(link):
-                state.link = link
-            }
+        case let .link(link):
+            state.link = link
             
-        case let .sheet(sheetEvent):
-            switch sheetEvent {
-            case .reset:
-                state.sheet = nil
-            }
+        case .spinner:
+            state.spinner = .init()
             
-        case let .spinner(spinnerEvent):
-            switch spinnerEvent {
-            case .hide:
-                state.spinner = nil
-                
-            case .show:
-                state.spinner = .init()
-            }
-            
-        case let .textFieldAlert(textFieldAlertEvent):
-            switch textFieldAlertEvent {
-            case .reset:
-                state.textFieldAlert = nil
-                
-            case let .setTo(alertViewModel):
-                state.textFieldAlert = alertViewModel
-            }
+        case let .textFieldAlert(textFieldAlert):
+            state.textFieldAlert = textFieldAlert
         }
         
         return state
@@ -77,5 +41,5 @@ extension UserAccountRouteEventReducer {
 extension UserAccountRouteEventReducer {
     
     typealias State = UserAccountRoute
-    typealias Event = UserAccountEvent.RouteEvent
+    typealias Event = UserAccountEvent.NavigateEvent
 }

@@ -18,24 +18,25 @@ extension UserAccountAlertButtonTapReducer {
         
         var state = state
         var effect: Effect?
-        
-        switch event {
-        case .closeAlert:
-            state.alert = nil
-            
-        case let .cancelC2BSub(token):
-            effect = .model(.cancelC2BSub(token))
-            
-        case .delete:
-            effect = .model(.deleteRequest)
-            
-        case .exit:
-            effect = .model(.exit)
-            
-            #warning("cases not handled")
-        default:
-            break
-        }
+#warning("looks like no need in `alertReduce`")
+
+//        switch event {
+//        case .closeAlert:
+//            state.alert = nil
+//            
+//        case let .cancelC2BSub(token):
+//            effect = .model(.cancelC2BSub(token))
+//            
+//        case .delete:
+//            effect = .model(.deleteRequest)
+//            
+//        case .exit:
+//            effect = .model(.exit)
+//            
+//            #warning("cases not handled")
+//        default:
+//            break
+//        }
         
         return (state, effect)
     }
@@ -44,6 +45,6 @@ extension UserAccountAlertButtonTapReducer {
 extension UserAccountAlertButtonTapReducer {
     
     typealias State = UserAccountRoute
-    typealias Event = UserAccountEvent.AlertButtonTap
+    typealias Event = UserAccountEvent
     typealias Effect = UserAccountEffect
 }
