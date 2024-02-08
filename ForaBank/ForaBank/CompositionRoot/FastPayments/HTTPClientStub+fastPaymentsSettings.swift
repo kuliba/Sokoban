@@ -14,8 +14,12 @@ extension FPSEndpointStub {
     static let `default`: Self = .init(
         fastPaymentContractFindList: .a1,
         getClientConsentMe2MePull: .b1,
-        getBankDefault: .c1,
-        updateFastPaymentContract: .d1
+        getBankDefault: .c2,
+        updateFastPaymentContract: .d1,
+        prepareSetBankDefault: .f1,
+        makeSetBankDefault: .g1,
+        changeClientConsentMe2MePull: .h1,
+        getC2BSub: .j1
     )
 }
 
@@ -48,6 +52,10 @@ struct FPSEndpointStub {
     let getClientConsentMe2MePull: FPSEndpoint.GetClientConsentMe2MePull
     let getBankDefault: FPSEndpoint.GetBankDefault
     let updateFastPaymentContract: FPSEndpoint.UpdateFastPaymentContract
+    let prepareSetBankDefault: FPSEndpoint.PrepareSetBankDefault
+    let makeSetBankDefault: FPSEndpoint.MakeSetBankDefault
+    let changeClientConsentMe2MePull: FPSEndpoint.ChangeClientConsentMe2MePull
+    let getC2BSub: FPSEndpoint.GetC2BSub
     
     var httpClientStub: [URLPath: Data] {
         
@@ -56,6 +64,9 @@ struct FPSEndpointStub {
             (getClientConsentMe2MePull.urlPath, getClientConsentMe2MePull.filename),
             (getBankDefault.urlPath, getBankDefault.filename),
             (updateFastPaymentContract.urlPath, updateFastPaymentContract.filename),
+            (prepareSetBankDefault.urlPath, prepareSetBankDefault.filename),
+            (changeClientConsentMe2MePull.urlPath, changeClientConsentMe2MePull.filename),
+            (getC2BSub.urlPath, getC2BSub.filename),
         ]
         let mapped = pairs.map { ($0.0, Data.json($0.1)) }
         
@@ -107,6 +118,34 @@ enum FPSEndpoint {
         case d1, d2, d3
         
         var endpoint: Services.Endpoint { .updateFastPaymentContract }
+    }
+    
+    enum PrepareSetBankDefault: String, Endpointed {
+        
+        case f1, f2, f3
+        
+        var endpoint: Services.Endpoint { .prepareSetBankDefault }
+    }
+    
+    enum MakeSetBankDefault: String, Endpointed {
+        
+        case g1, g2, g3, g4
+        
+        var endpoint: Services.Endpoint { .makeSetBankDefault }
+    }
+    
+    enum ChangeClientConsentMe2MePull: String, Endpointed {
+        
+        case h1, h2, h3
+        
+        var endpoint: Services.Endpoint { .changeClientConsentMe2MePull }
+    }
+    
+    enum GetC2BSub: String, Endpointed {
+        
+        case j1, j2, j3, j4
+        
+        var endpoint: Services.Endpoint { .getC2BSub }
     }
 }
 
