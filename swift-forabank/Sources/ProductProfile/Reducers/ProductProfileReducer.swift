@@ -33,18 +33,12 @@ public extension ProductProfileReducer {
             effect = .create
         case .dismissDestination:
             state.modal = nil
-        case .showAlertChangePin:
-            state.modal = nil
-            effect = .delayAlert(Alerts.alertChangePin())
-        case let .showAlertCardGuardian(status):
-            state.modal = nil
-            effect = .delayAlert(Alerts.alertBlockCard(status))
         case let .showAlert(alert):
             state.alert = alert
         case let .open(modal):
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
-            (state, effect) = reduce(state, cardGuardianInput)
+            (state, effect) = reduce(state, cardGuardianInput)            
         }
         return (state, effect)
     }

@@ -82,28 +82,6 @@ public extension ProductProfileViewModel {
         
         self.event(.create)
     }
-    
-    private func event(
-        _ event: CardGuardianEvent
-    ) {
-        switch event {
-        case .appear:
-            break
-            
-        case let .buttonTapped(tap):
-            switch tap {
-                
-            case let .toggleLock(status):
-                self.event(.showAlertCardGuardian(status))
-                
-            case .changePin:
-                self.event(.showAlertChangePin)
-                
-            case .showOnMain:
-                self.event(.dismissDestination)
-            }
-        }
-    }
 }
 
 // MARK: - Types

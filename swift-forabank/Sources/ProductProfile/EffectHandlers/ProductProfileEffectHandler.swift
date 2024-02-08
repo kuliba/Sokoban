@@ -52,6 +52,7 @@ private extension ProductProfileEffectHandler {
         
         let cardGuardianViewModel = makeCardGuardianViewModel(scheduler)
         let cancellable = cardGuardianViewModel.$state
+            .dropFirst()
             .compactMap(\.projection)
             .removeDuplicates()
             .map(Event.cardGuardianInput)

@@ -17,8 +17,6 @@ public extension ProductProfileNavigation {
         case open(CardGuardianRoute)
         case cardGuardianInput(CardGuardianStateProjection)
         case dismissDestination
-        case showAlertChangePin
-        case showAlertCardGuardian(CardGuardian.CardGuardianStatus)
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
         public typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
