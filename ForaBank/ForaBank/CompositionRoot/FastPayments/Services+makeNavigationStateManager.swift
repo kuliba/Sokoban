@@ -15,11 +15,10 @@ import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
 
-extension Services {
+extension RootViewModelFactory {
     
     static func makeNavigationStateManager(
-        useStub isStub: Bool,
-        httpClient: HTTPClient,
+        otpServices: FastPaymentsSettingsOTPServices,
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -43,8 +42,6 @@ extension Services {
         let modelEffectHandler = UserAccountModelEffectHandler(
             model: model
         )
-        
-        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             makeTimedOTPInputViewModel: {
@@ -78,7 +75,7 @@ extension Services {
     }
 }
 
-private struct FastPaymentsSettingsOTPServices {
+struct FastPaymentsSettingsOTPServices {
     
     let initiateOTP: CountdownEffectHandler.InitiateOTP
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
@@ -204,7 +201,7 @@ private extension UserAccountNavigationOTPReducer {
 
 // MARK: - Live Service
 
-private extension FastPaymentsSettingsOTPServices {
+/*private*/ extension FastPaymentsSettingsOTPServices {
     
     static func live(
         _ httpClient: HTTPClient,
@@ -466,7 +463,7 @@ private extension FastPaymentContractFullInfoType {
 
 // MARK: - Stubs
 
-private extension FastPaymentsSettingsOTPServices {
+/*private*/ extension FastPaymentsSettingsOTPServices {
     
     static let stub: Self = .init(
         initiateOTP: { completion in

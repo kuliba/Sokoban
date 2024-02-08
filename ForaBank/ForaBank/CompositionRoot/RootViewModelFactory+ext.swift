@@ -49,9 +49,10 @@ extension RootViewModelFactory {
             fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
         )
         
-        let navigationStateManager = Services.makeNavigationStateManager(
-            useStub: fastPaymentsSettingsFlag.isStub,
-            httpClient: httpClient,
+        let otpServices: FastPaymentsSettingsOTPServices = fastPaymentsSettingsFlag.isStub ? .stub : .live(httpClient, infoNetworkLog)
+        
+        let navigationStateManager = makeNavigationStateManager(
+            otpServices: otpServices,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
             log: infoNetworkLog
