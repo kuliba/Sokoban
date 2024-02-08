@@ -36,7 +36,7 @@ extension RootViewModelFactory {
             productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let facade: MicroServices.Facade = .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
+        let facade = MicroServices.Facade(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
             facade: facade,

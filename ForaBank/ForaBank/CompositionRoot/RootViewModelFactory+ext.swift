@@ -69,7 +69,7 @@ extension RootViewModelFactory {
             }
         }()
         
-        let otpServices: FastPaymentsSettingsOTPServices = .live(fpsHTTPClient, infoNetworkLog)
+        let otpServices = FastPaymentsSettingsOTPServices(fpsHTTPClient, infoNetworkLog)
         
         let navigationStateManager = makeNavigationStateManager(
             otpServices: otpServices,

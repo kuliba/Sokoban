@@ -202,12 +202,11 @@ private extension UserAccountNavigationOTPReducer {
 // MARK: - Live Service
 
 /*private*/ extension FastPaymentsSettingsOTPServices {
-    #warning("`live` could be renamed - there is no `stub` anymore`")
-    static func live(
+    
+    init(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> Self {
-        
+    ) {
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
         
@@ -230,7 +229,7 @@ private extension UserAccountNavigationOTPReducer {
             mapError: FastPaymentsSettings.ServiceFailure.init(error:)
         )
         
-        return .init(
+        self.init(
             initiateOTP: initiateOTP,
             submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault

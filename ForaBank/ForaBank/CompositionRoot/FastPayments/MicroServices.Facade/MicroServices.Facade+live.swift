@@ -10,16 +10,14 @@ import Foundation
 import GenericRemoteService
 
 extension MicroServices.Facade {
-
-#warning("`live` could be renamed - there is no `stub` anymore`")
-    static func live(
+    
+    convenience init(
         _ httpClient: HTTPClient,
         _ getProducts: @escaping GetProducts,
         _ getBanks: @escaping GetBanks,
         _ getBankDefaultResponse: @escaping GetBankDefaultResponse,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> Self {
-        
+    ) {
         let createContract = adaptedLoggingFetch(
             mapPayload: { .create($0) },
             ForaRequestFactory.createCreateFastPaymentContractRequest,
@@ -42,7 +40,7 @@ extension MicroServices.Facade {
             FastResponseMapper.mapUpdateFastPaymentContractResponse
         )
         
-        return .init(
+        self.init(
             createFastContractFetch: createContract,
             getBankDefaultResponse: getBankDefaultResponse,
             getClientConsentFetch: getConsent,
