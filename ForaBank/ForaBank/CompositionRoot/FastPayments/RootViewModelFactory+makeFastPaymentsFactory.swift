@@ -55,14 +55,10 @@ extension RootViewModelFactory {
     ) -> FastPaymentsSettingsViewModel {
         
         let getProducts = isStub ? { .preview } : model.getProducts
-        let getBanks = isStub ? { [] } : model.getBanks
+        let getBanks = /*isStub ? { [] } :*/ model.getBanks
         
 #warning("add BankDefault caching")
         let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, { nil }, { _ in }, log)
-        
-        let facade: MicroServices.Facade = isStub
-        ? .stub(getProducts, getBanks)
-        : .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         
         let bankDefaultReducer = BankDefaultReducer()
         let consentListReducer = ConsentListRxReducer()
@@ -75,6 +71,9 @@ extension RootViewModelFactory {
             contractReduce: contractReducer.reduce(_:_:),
             productsReduce: productsReducer.reduce(_:_:)
         )
+        
+        let httpClient = isStub ? HTTPClientStub.fastPaymentsSettings : httpClient
+        let facade: MicroServices.Facade = .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
             facade: facade,
