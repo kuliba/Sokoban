@@ -54,7 +54,7 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> FastPaymentsSettingsViewModel {
         
-        let getProducts = isStub ? { .preview } : model.getProducts
+        let getProducts = /*isStub ? { .preview } :*/ model.getProducts
         let getBanks = /*isStub ? { [] } :*/ model.getBanks
         
 #warning("add BankDefault caching")
@@ -72,7 +72,10 @@ extension RootViewModelFactory {
             productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let httpClient = isStub ? HTTPClientStub.fastPaymentsSettings : httpClient
+        let httpClient = isStub
+        ? HTTPClientStub.fastPaymentsSettings(delay: 0)
+        : httpClient
+        
         let facade: MicroServices.Facade = .live(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(

@@ -14,41 +14,42 @@ enum _URLPath {}
 final class HTTPClientStub: HTTPClient {
     
     private let stub: Stub
+    private let delay: TimeInterval
     
-    init(stub: Stub) {
-        
+    init(
+        stub: Stub,
+        delay: TimeInterval = 1
+    ) {
         self.stub = stub
+        self.delay = delay
     }
     
     func performRequest(
         _ request: Request,
         completion: @escaping Completion
     ) {
-        guard let path = request.urlPath
-        else {
-            completion(.failure(HTTPError.badURL))
-            return
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            
+            guard let self else { return }
+            
+            guard let path = request.urlPath
+            else {
+                fatalError("Bad URL in URLRequest")
+            }
+            
+            guard let result = stub[path]
+            else {
+                fatalError("No stub for \"\(path.rawValue)\"")
+            }
+            
+            completion(.success(result))
         }
-        
-        guard let result = stub[path]
-        else {
-            completion(.failure(HTTPError.badServerResponse))
-            return
-        }
-        
-        completion(.success(result))
     }
 }
 
 extension HTTPClientStub {
     
     typealias Stub = [URLPath: HTTPClient.Response]
-    
-    enum HTTPError: Error {
-        
-        case badURL
-        case badServerResponse
-    }
 }
 
 private extension URLRequest {

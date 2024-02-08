@@ -8,87 +8,106 @@
 import FastPaymentsSettings
 import Foundation
 
+extension FPSEndpointStub {
+    
+    /// Change this stub with feature flag set to `.active(.stub)` to test.
+    static let `default`: Self = .init(
+        fastPaymentContractFindList: .a1,
+        getClientConsentMe2MePull: .b1,
+        getBankDefault: .c1,
+        updateFastPaymentContract: .d1
+    )
+}
+
 extension HTTPClientStub {
     
-    static let fastPaymentsSettings: HTTPClientStub = .init([
-        .fastPaymentContractFindList: .fastPaymentContractFindList(.a1),
-        .getClientConsentMe2MePull: .getClientConsentMe2MePull(.b2),
-        .getBankDefault: .getBankDefault(.c1),
-    ])
-    
-    private convenience init(
-        _ stub: [URLPath: Filename]
-    ) {
-        self.init(stub: stub.mapValues {
-            
-            $0.data.response(statusCode: 200)
-        })
+    static func fastPaymentsSettings(
+        _ stub: FPSEndpointStub = .default,
+        delay: TimeInterval = 1
+    ) -> HTTPClientStub {
+        
+        let stub = stub.httpClientStub.mapValues { $0.response(statusCode: 200) }
+        
+        return .init(stub: stub, delay: delay)
     }
     
     private convenience init(
-        _ stub: [URLPath: (statusCode: Int, data: Data)]
+        _ stub: [URLPath: (statusCode: Int, data: Data)],
+        delay: TimeInterval = 1
     ) {
-        self.init(stub: stub.mapValues {
-            
-            $0.data.response(statusCode: $0.statusCode)
-        })
+        self.init(
+            stub: stub.mapValues { $0.data.response(statusCode: $0.statusCode) },
+            delay: delay
+        )
     }
 }
 
-private extension URLPath {
+struct FPSEndpointStub {
     
-    static let fastPaymentContractFindList: Self = "/rest/fastPaymentContractFindList"
-    static let getClientConsentMe2MePull: Self = "/rest/getClientConsentMe2MePull"
-    static let getBankDefault: Self = "/rest/getBankDefault"
+    let fastPaymentContractFindList: FPSEndpoint.FastPaymentContractFindList
+    let getClientConsentMe2MePull: FPSEndpoint.GetClientConsentMe2MePull
+    let getBankDefault: FPSEndpoint.GetBankDefault
+    let updateFastPaymentContract: FPSEndpoint.UpdateFastPaymentContract
+    
+    var httpClientStub: [URLPath: Data] {
+        
+        let pairs: [(URLPath, String)] = [
+            (fastPaymentContractFindList.urlPath, fastPaymentContractFindList.filename),
+            (getClientConsentMe2MePull.urlPath, getClientConsentMe2MePull.filename),
+            (getBankDefault.urlPath, getBankDefault.filename),
+            (updateFastPaymentContract.urlPath, updateFastPaymentContract.filename),
+        ]
+        let mapped = pairs.map { ($0.0, Data.json($0.1)) }
+        
+        return .init(uniqueKeysWithValues: mapped)
+    }
 }
 
-private protocol Filenamed {
+private protocol Endpointed {
     
-    var filename: String { get }
+    var endpoint: Services.Endpoint { get }
 }
 
-private enum Filename {
+extension RawRepresentable where RawValue == String, Self: Endpointed {
+    
+    var filename: String { "\(endpoint.serviceName.rawValue)\(rawValue.uppercased())" }
+    var urlPath: URLPath { .init(endpoint.path) }
+}
+
+enum FPSEndpoint {
     
     case fastPaymentContractFindList(FastPaymentContractFindList)
     case getClientConsentMe2MePull(GetClientConsentMe2MePull)
     case getBankDefault(GetBankDefault)
+    case updateFastPaymentContract(UpdateFastPaymentContract)
     
-    enum FastPaymentContractFindList: String, Filenamed {
+    enum FastPaymentContractFindList: String, Endpointed {
         
         case a1, a2, a3, a4, a5
         
-        var filename: String { "fastPaymentContractFindList\(rawValue.uppercased())" }
+        var endpoint: Services.Endpoint { .fastPaymentContractFindList }
     }
     
-    enum GetClientConsentMe2MePull: String, Filenamed {
+    enum GetClientConsentMe2MePull: String, Endpointed {
         
         case b1, b2, b3, b4
         
-        var filename: String { "getClientConsentMe2MePull\(rawValue.uppercased())" }
+        var endpoint: Services.Endpoint { .getClientConsentMe2MePull }
     }
     
-    enum GetBankDefault: String, Filenamed {
+    enum GetBankDefault: String, Endpointed {
         
         case c1, c2, c3, c4, c5
         
-        var filename: String { "getBankDefault\(rawValue.uppercased())" }
+        var endpoint: Services.Endpoint { .getBankDefault }
     }
     
-    var filename: String {
+    enum UpdateFastPaymentContract: String, Endpointed {
         
-        switch self {
-        case let .fastPaymentContractFindList(fastPaymentContractFindList):
-            return fastPaymentContractFindList.filename
+        case d1, d2, d3
         
-        case let .getClientConsentMe2MePull(getClientConsentMe2MePull):
-            return getClientConsentMe2MePull.filename
-        
-        case let .getBankDefault(getBankDefault):
-            return getBankDefault.filename
-        }
+        var endpoint: Services.Endpoint { .updateFastPaymentContract }
     }
-    
-    var data: Data { .json(self.filename)  }
 }
 
 private extension Data {
@@ -118,7 +137,7 @@ private extension Data {
         else {
             fatalError("Failed to get data from file \"\(filename).\(ext)\" in the bundle.")
         }
-
+        
         return data
     }
     
@@ -150,21 +169,4 @@ private extension String {
     "data": null
 }
 """
-    
-    static let fastPaymentContractFindList_a1 = "fastPaymentContractFindListA1"
-    static let fastPaymentContractFindList_a2 = "fastPaymentContractFindListA2"
-    static let fastPaymentContractFindList_a3 = "fastPaymentContractFindListA3"
-    static let fastPaymentContractFindList_a4 = "fastPaymentContractFindListA4"
-    static let fastPaymentContractFindList_a5 = "fastPaymentContractFindListA5"
-    
-    static let getClientConsentMe2MePull_b1 = "getClientConsentMe2MePullB1"
-    static let getClientConsentMe2MePull_b2 = "getClientConsentMe2MePullB2"
-    static let getClientConsentMe2MePull_b3 = "getClientConsentMe2MePullB3"
-    static let getClientConsentMe2MePull_b4 = "getClientConsentMe2MePullB4"
-
-    static let getBankDefault_c1 = "getBankDefaultC1"
-    static let getBankDefault_c2 = "getBankDefaultC2"
-    static let getBankDefault_c3 = "getBankDefaultC3"
-    static let getBankDefault_c4 = "getBankDefaultC4"
-    static let getBankDefault_c5 = "getBankDefaultC5"
 }

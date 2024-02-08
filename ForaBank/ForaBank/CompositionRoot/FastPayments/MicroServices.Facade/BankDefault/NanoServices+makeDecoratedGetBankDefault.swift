@@ -52,7 +52,11 @@ extension NanoServices {
                         bankDefault: bankDefault.settingsBankDefault
                     ))
                 }
+                
+                _ = getBankDefault
             }
+            
+            _ = getBankDefault
         }
         
         return decoratedGetBankDefault
