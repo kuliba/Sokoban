@@ -28,8 +28,9 @@ public extension ProductProfileReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-        case .openCardGuardianPanel:
-            break
+        case .create:
+            state.modal = nil
+            effect = .create
         case .dismissDestination:
             state.modal = nil
         case .showAlertChangePin:
@@ -40,6 +41,10 @@ public extension ProductProfileReducer {
             effect = .delayAlert(Alerts.alertBlockCard(status))
         case let .showAlert(alert):
             state.alert = alert
+        case let .open(modal):
+            state.modal = .init(modal.viewModel, modal.cancellable)
+        case let .cardGuardianInput(cardGuardianInput):
+            (state, effect) = reduce(state, cardGuardianInput)
         }
         return (state, effect)
     }
@@ -52,4 +57,37 @@ public extension ProductProfileReducer {
     typealias Effect = ProductProfileNavigation.Effect
     
     typealias Reduce = (State, Event) -> (State, Effect?)
+}
+
+private extension ProductProfileReducer {
+    
+    func reduce(
+        _ state: State,
+        _ cardGuardianInput: CardGuardianStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch cardGuardianInput {
+        
+        case .appear:
+            break
+        case let .buttonTapped(tap):
+            switch tap {
+                
+            case let .toggleLock(status):
+                state.modal = nil
+                effect = .delayAlert(Alerts.alertBlockCard(status))
+            case .changePin:
+                state.modal = nil
+                effect = .delayAlert(Alerts.alertChangePin())
+
+            case .showOnMain:
+                state.modal = nil
+            }
+        }
+        
+        return (state, effect)
+    }
 }

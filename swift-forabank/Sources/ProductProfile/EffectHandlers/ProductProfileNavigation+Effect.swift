@@ -12,6 +12,9 @@ public extension ProductProfileNavigation {
     
     enum Effect: Equatable {
         
+        public typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
+
+        case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
     }
 }

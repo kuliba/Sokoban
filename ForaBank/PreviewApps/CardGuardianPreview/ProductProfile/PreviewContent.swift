@@ -18,9 +18,9 @@ extension ProductProfileViewModel {
     ) -> ProductProfileViewModel {
         
         let productProfileReduce = ProductProfileReducer().reduce(_:_:)
-        let handleEffect = ProductProfileEffectHandler().handleEffect(_:_:)
         
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
+
         
         typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
         
@@ -33,11 +33,16 @@ extension ProductProfileViewModel {
                     scheduler: $0
                 )
         }
+
+        let handleEffect = ProductProfileEffectHandler(
+            makeCardGuardianViewModel: makeCardGuardianViewModel,
+            scheduler: scheduler
+        )
+            .handleEffect(_:_:)
         
         let navigationStateManager: ProductProfileNavigationStateManager = .init(
             reduce: productProfileReduce,
-            handleEffect: handleEffect,
-            makeCardGuardianViewModel: makeCardGuardianViewModel)
+            handleEffect: handleEffect)
         
         return .init(
             initialState: initialState,

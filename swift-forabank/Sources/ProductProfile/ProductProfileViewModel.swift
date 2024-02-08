@@ -52,16 +52,13 @@ public struct ProductProfileNavigationStateManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
-    let makeCardGuardianViewModel: MakeCardGuardianViewModel
     
     public init(
         reduce: @escaping Reduce,
-        handleEffect: @escaping HandleEffect,
-        makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel
+        handleEffect: @escaping HandleEffect
     ) {
         self.reduce = reduce
         self.handleEffect = handleEffect
-        self.makeCardGuardianViewModel = makeCardGuardianViewModel
     }
 }
 
@@ -83,16 +80,7 @@ public extension ProductProfileViewModel {
     
     func openCardGuardian(){
         
-        let cardGuardianViewModel = navigationStateManager.makeCardGuardianViewModel(scheduler)
-
-        let cancellable = cardGuardianViewModel.$state
-            .compactMap(\.event)
-            .removeDuplicates()
-            .receive(on: scheduler)
-            .sink { [weak self] event in self?.event(event) }
-        
-        state.modal = .init(cardGuardianViewModel, cancellable)
-        cardGuardianViewModel.event(.appear)
+        self.event(.create)
     }
     
     private func event(
@@ -100,7 +88,7 @@ public extension ProductProfileViewModel {
     ) {
         switch event {
         case .appear:
-            self.event(.openCardGuardianPanel)
+            break
             
         case let .buttonTapped(tap):
             switch tap {
