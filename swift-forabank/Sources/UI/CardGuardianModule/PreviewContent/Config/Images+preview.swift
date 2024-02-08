@@ -14,4 +14,10 @@ extension CardGuardian.Config.Images {
         changePin: Image(systemName: "asterisk"),
         showOnMain: Image(systemName: "eye")
     )
+    
+    static let previewBlockHide: Self = .init(
+        toggleLock: Image(systemName: "lock.open"),
+        changePin: Image(systemName: "asterisk"),
+        showOnMain: Image(systemName: "eye.slash")
+    )
 }

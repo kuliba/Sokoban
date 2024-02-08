@@ -11,6 +11,6 @@ public extension CardGuardian {
     
     enum State: Equatable {
         
-        case buttonTapped(CardGuardian.ButtonTapped)
+        case buttonTapped(ButtonTapped, CardGuardianStatus)
     }
 }
