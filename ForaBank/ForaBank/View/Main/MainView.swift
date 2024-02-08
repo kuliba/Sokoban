@@ -443,7 +443,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
-        fastPaymentsFactory: .legacy,
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
@@ -461,7 +460,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
-        fastPaymentsFactory: .legacy,
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
@@ -479,7 +477,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         ),
-        fastPaymentsFactory: .legacy,
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),

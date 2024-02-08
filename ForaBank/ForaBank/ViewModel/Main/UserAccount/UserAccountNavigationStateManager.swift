@@ -10,18 +10,19 @@ import UserAccountNavigationComponent
 
 struct UserAccountNavigationStateManager {
     
-    let userAccountReduce: UserAccountReduce
-    let handleModelEffect: HandleModelEffect
-    let handleOTPEffect: HandleOTPEffect
+    let fastPaymentsFactory: FastPaymentsFactory
+    let reduce: Reduce
+    let handleEffect: HandleEffect
 }
 
 extension UserAccountNavigationStateManager {
     
-    typealias OTPDispatch = (UserAccountEvent.OTP) -> Void
-    typealias UserAccountReduce = (UserAccountRoute, UserAccountEvent, @escaping OTPDispatch) -> (UserAccountRoute, UserAccountEffect?)
+    typealias Reduce = (State, Event) -> (State, Effect?)
     
-    typealias Dispatch = (UserAccountEvent) -> Void
-    typealias HandleModelEffect = (UserAccountEffect.ModelEffect, @escaping Dispatch) -> Void
+    typealias Dispatch = (Event) -> Void
+    typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
-    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
+    typealias State = UserAccountRoute
+    typealias Effect = UserAccountEffect
+    typealias Event = UserAccountEvent
 }

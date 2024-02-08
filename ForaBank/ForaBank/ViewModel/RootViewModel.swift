@@ -188,7 +188,6 @@ class RootViewModel: ObservableObject, Resetable {
                     link = .userAccount(.init(
                         navigationStateManager: navigationStateManager,
                         model: model,
-                        fastPaymentsFactory: fastPaymentsFactory,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             

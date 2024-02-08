@@ -13,10 +13,12 @@ public extension ProductProfileNavigation {
     indirect enum Event: Equatable {
         
         case closeAlert
-        case openCardGuardianPanel
+        case create
+        case open(CardGuardianRoute)
+        case cardGuardianInput(CardGuardianStateProjection)
         case dismissDestination
-        case showAlertChangePin
-        case showAlertCardGuardian(CardGuardian.CardGuardianStatus)
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
+        
+        public typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
     }
 }
