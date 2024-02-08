@@ -276,7 +276,7 @@ struct UserAccountView: View {
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.fpsDestination },
-                set: { _ in }//{ if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+                set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
             ),
             content: fpsDestinationView
         )
@@ -496,8 +496,8 @@ extension FastPaymentsFactory {
 extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
-        userAccountReduce: { state,_,_ in (state, nil) },
-        handleModelEffect: { _,_ in },
-        handleOTPEffect: { _,_ in }
+        fastPaymentsFactory: .new,
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }

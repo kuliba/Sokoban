@@ -48,7 +48,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsent(consent), on: {
             
-            spy.complete(with: .success)
+            spy.complete(with: .success(.init()))
         })
     }
     
@@ -60,7 +60,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsent(consent), on: {
             
-            spy.complete(with: .success)
+            spy.complete(with: .success(.init()))
         })
     }
     

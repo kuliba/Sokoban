@@ -8,6 +8,7 @@
 import Combine
 import FastPaymentsSettings
 import Foundation
+import GenericRemoteService
 import ManageSubscriptionsUI
 import OTPInputComponent
 import Tagged
@@ -20,6 +21,7 @@ extension Services {
         useStub isStub: Bool,
         httpClient: HTTPClient,
         model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
         log: @escaping (String, StaticString, UInt) -> Void,
         duration: Int = 10,
         length: Int = 6,
@@ -27,12 +29,24 @@ extension Services {
     ) -> UserAccountNavigationStateManager {
         
         let alertButtonReducer = UserAccountAlertButtonTapReducer()
-        
         let fpsReducer = UserAccountNavigationFPSReducer()
+        let otpReducer = UserAccountNavigationOTPReducer()
+        let routeEventReducer = UserAccountRouteEventReducer()
+        
+        let userAccountReducer = UserAccountReducer(
+            alertReduce: alertButtonReducer.reduce(_:_:),
+            fpsReduce: fpsReducer.reduce(_:_:),
+            otpReduce: otpReducer.reduce(_:_:),
+            routeEventReduce: routeEventReducer.reduce(_:_:)
+        )
+        
+        let modelEffectHandler = UserAccountModelEffectHandler(
+            model: model
+        )
         
         let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
-        let otpReducer = UserAccountNavigationOTPReducer(
+        let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             makeTimedOTPInputViewModel: {
                 
                 .init(
@@ -47,30 +61,19 @@ extension Services {
                     scheduler: $0
                 )
             },
+            prepareSetBankDefault: otpServices.prepareSetBankDefault,
             scheduler: scheduler
         )
         
-        let routeEventReducer = UserAccountRouteEventReducer()
-        
-        let userAccountReducer = UserAccountReducer(
-            alertReduce: alertButtonReducer.reduce(_:_:),
-            fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:_:),
-            routeEventReduce: routeEventReducer.reduce(_:_:)
-        )
-        
-        let modelEffectHandler = UserAccountModelEffectHandler(
-            model: model
-        )
-        
-        let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
-            prepareSetBankDefault: otpServices.prepareSetBankDefault
+        let userAccountEffectHandler = UserAccountEffectHandler(
+            handleModelEffect: modelEffectHandler.handleEffect(_:_:),
+            handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
         
         return .init(
+            fastPaymentsFactory: fastPaymentsFactory,
             userAccountReducer: userAccountReducer,
-            modelEffectHandler: modelEffectHandler,
-            otpEffectHandler: otpEffectHandler
+            userAccountEffectHandler: userAccountEffectHandler
         )
     }
 }
@@ -109,14 +112,14 @@ extension UserAccountModelEffectHandler {
 private extension UserAccountNavigationStateManager {
     
     init(
+        fastPaymentsFactory: FastPaymentsFactory,
         userAccountReducer: UserAccountReducer,
-        modelEffectHandler: UserAccountModelEffectHandler,
-        otpEffectHandler: UserAccountNavigationOTPEffectHandler
+        userAccountEffectHandler: UserAccountEffectHandler
     ) {
         self.init(
-            userAccountReduce: userAccountReducer.reduce(_:_:_:),
-            handleModelEffect: modelEffectHandler.handleEffect(_:_:),
-            handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
+            fastPaymentsFactory: fastPaymentsFactory,
+            reduce: userAccountReducer.reduce(_:_:),
+            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
     }
 }
@@ -161,7 +164,7 @@ private extension UserAccountNavigationFPSReducer {
             // case let (.fastPaymentSettings(.new(fpsRoute)), .updated(settings)):
         case let (.fastPaymentSettings(.new), .updated(settings)):
             
-            let (fpsState, fpsEffect) = reduce(.init(state), settings, { _ in })
+            let (fpsState, fpsEffect) = reduce(.init(state), settings)
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
             
@@ -177,8 +180,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: UserAccountRoute,
-        _ event: UserAccountEvent.OTP,
-        _ dispatch: @escaping (UserAccountEvent.OTP) -> Void
+        _ event: UserAccountEvent.OTP
     ) -> (UserAccountRoute, UserAccountEffect?) {
         
         var state = state
@@ -188,12 +190,7 @@ private extension UserAccountNavigationOTPReducer {
             // case let .fastPaymentSettings(.new(fpsRoute)):
         case .fastPaymentSettings(.new):
             
-            let (fpsState, fpsEffect) = reduce(
-                .init(state),
-                event,
-                { _ in },
-                { dispatch($0) }
-            )
+            let (fpsState, fpsEffect) = reduce(.init(state), event)
             state = state.updated(with: fpsState)
             effect = fpsEffect.map(UserAccountEffect.navigation)
             
@@ -214,51 +211,72 @@ private extension FastPaymentsSettingsOTPServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> Self {
         
-#warning("add adapted helpers to simplify setup")
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
         
-        let initiateOTPService = NanoServices.adaptedLoggingRemoteService(
-            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
-            httpClient: httpClient,
-            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
-            log: log
+        let initiateOTP = adaptedLoggingFetch(
+            ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: OTPInputComponent.ServiceFailure.init(error:)
         )
         
-        let submitOTPService = NanoServices.adaptedLoggingRemoteService(
-            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
-            httpClient: httpClient,
-            mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
-            log: log
+        let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
+            mapPayload: { .init($0.rawValue) },
+            ForaRequestFactory.createMakeSetBankDefaultRequest,
+            FastResponseMapper.mapMakeSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:)
         )
         
-        #warning("same as initiateOTPService but without error mapping")
-        let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault = NanoServices.adaptedLoggingFetch(
-            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
-            httpClient: httpClient,
-            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
-            log: log
+        let prepareSetBankDefault = adaptedLoggingFetch(
+            ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: FastPaymentsSettings.ServiceFailure.init(error:)
         )
         
         return .init(
-            initiateOTP: { completion in
-                
-                initiateOTPService.fetch {
-                    
-                    completion($0.mapError(ServiceFailure.init(error:)))
-                    _ = initiateOTPService
-                }
-            },
-            submitOTP: { payload, completion in
-                
-                submitOTPService.fetch(.init(payload.rawValue)) {
-                    
-                    completion($0.mapError(ServiceFailure.init(error:)))
-                    _ = submitOTPService
-                }
-            },
+            initiateOTP: initiateOTP,
+            submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault
         )
+        
+        func adaptedLoggingFetch<Output, MappingError: Error, Failure: Error>(
+            _ createRequest: @escaping () throws -> URLRequest,
+            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
+            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) -> NanoServices.VoidFetch<Output, Failure> {
+            
+            NanoServices.adaptedLoggingFetch(
+                createRequest: createRequest,
+                httpClient: httpClient,
+                mapResponse: mapResponse,
+                mapError: mapError,
+                log: log,
+                file: file,
+                line: line
+            )
+        }
+        
+        func adaptedLoggingFetch<Payload, Input, Output, MappingError: Error, Failure: Error>(
+            mapPayload: @escaping (Payload) -> Input,
+            _ createRequest: @escaping (Input) throws -> URLRequest,
+            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
+            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) -> NanoServices.Fetch<Payload, Output, Failure> {
+            
+            NanoServices.adaptedLoggingFetch(
+                createRequest: { try createRequest(mapPayload($0)) },
+                httpClient: httpClient,
+                mapResponse: mapResponse,
+                mapError: mapError,
+                log: log,
+                file: file,
+                line: line
+            )
+        }
     }
 }
 
@@ -266,13 +284,21 @@ private extension FastPaymentsSettingsOTPServices {
 
 private extension OTPInputComponent.ServiceFailure {
     
-    init(error: FastPaymentsSettings.ServiceFailure) {
-        
+    init(
+        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+    ) {
         switch error {
-        case .connectivityError:
+        case .createRequest, .performRequest:
             self = .connectivityError
-        case let .serverError(message):
-            self = .serverError(message)
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = .connectivityError
+                
+            case let .server(_, errorMessage):
+                self = .serverError(errorMessage)
+            }
         }
     }
 }
@@ -287,6 +313,7 @@ private extension UserAccountRoute {
         route.link = .init(state)
         route.alert = state.alert?.routeAlert
         route.spinner = state.isLoading ? .init() : nil
+        route.informer = state.informer.map { .init(message: $0) }
         
         return route
     }

@@ -35,7 +35,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -44,7 +43,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -61,7 +59,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         ]
         self.mode = mode
         self.model = model
-        self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -78,7 +75,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -91,7 +87,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -166,7 +161,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     route.destination = .userAccount(.init(
                         navigationStateManager: navigationStateManager,
                         model: model,
-                        fastPaymentsFactory: fastPaymentsFactory,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             
