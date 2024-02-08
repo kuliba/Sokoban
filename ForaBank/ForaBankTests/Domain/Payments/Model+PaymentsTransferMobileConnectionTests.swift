@@ -133,7 +133,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldThrow_onEmptyParameters() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         XCTAssertThrowsError(
@@ -148,7 +148,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldThrow_onMissingParameterProduct() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = makeParameterAmount()
         let payload: [DaDataPhoneData] = [.iFora4285]
         
@@ -164,7 +164,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldThrow_onMissingParameterAmount() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = makeParameterProduct()
         let payload: [DaDataPhoneData] = [.iFora4285]
         
@@ -180,7 +180,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldThrow_onEmptyPayload() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let amount = makeParameterAmount()
         let product = makeParameterProduct()
         
@@ -213,7 +213,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_9rub() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let amount = makeParameterAmount(sessionIDValue: 9.0)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4285]
@@ -243,7 +243,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_10rub() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let amount = makeParameterAmount(sessionIDValue: 10.0)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4285]
@@ -273,7 +273,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4286() throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let amount = makeParameterAmount(sessionIDValue: 1)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
         let payload: [DaDataPhoneData] = [.iFora4286]
@@ -310,7 +310,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_processLocalStep0_shouldReturnPayload_9039999999() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = try await sut.processLocalStep0(withPhone: "+7 903 999-99-99")
         
         let getPhoneInfo = try ServerCommands.DaDataController.getPhoneInfo(
@@ -325,7 +325,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_processLocalStep0_shouldReturnPayload_9191619658() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = try await sut.processLocalStep0(withPhone: "+7 919 161-96-58")
         
         let getPhoneInfo = try ServerCommands.DaDataController.getPhoneInfo(
@@ -340,7 +340,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_processLocalStep0_shouldFail_onDaData_1234567890() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = try await sut.processLocalStep0(withPhone: "+7 123 456-78-90")
         
         do {
@@ -367,7 +367,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_transfer_WIP() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         let parameters = makeStep0Parameters()
         let payload: [DaDataPhoneData] = [.iFora4285]
         
@@ -388,7 +388,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_paymentsTransferMobileConnectionProcess_shouldFail_onEmptyParameters() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
 
         do {
             let response = try await sut.paymentsTransferMobileConnectionProcess(
@@ -405,7 +405,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_paymentsTransferMobileConnectionProcess_shouldFailWithAlert_onBadPhoneNumber() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         
         do {
             let parameters = try await sut.processLocalStep0(withPhone: "1234567890")
@@ -424,7 +424,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_paymentsTransferMobileConnectionProcess_____on9039999999() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         
         do {
             let parameters = try await sut.processLocalStep0(withPhone: "+7 903 999-99-99")
@@ -443,7 +443,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_paymentsTransferMobileConnectionProcess_____on9191619658() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         
         do {
             let parameters = try await sut.processLocalStep0(withPhone: "+7 919 161-96-58")
@@ -464,7 +464,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     
     func test_paymentsProcessRemoteStep() async throws {
         
-        let sut = makeSUT()
+        let sut = reduce()
         
         let responseData: TransferAnywayResponseData = makeAnywayResponseData()
         let step = try await sut.paymentsProcessRemoteStep(response: responseData)

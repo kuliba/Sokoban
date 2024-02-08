@@ -8,75 +8,110 @@
 import XCTest
 import CardGuardianModule
 
-private typealias CardGuardianButton = CardGuardianState._Button
-
 final class CardGuardianReducerTests: XCTestCase {
     
     // MARK: - test reduce
     
     func test_reduce_appear_shouldSetAppearEffectNone() {
         
-        let sut = makeSUT(event: .appear)
+        let sut = makeSUT()
+        let event: Event = .appear
         
-        XCTAssertNoDiff(sut.0.event, .appear)
+        let result = reduce(sut, event: event)
         
-        XCTAssertNoDiff(sut.1, .none)
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
     
     func test_reduce_tapChangePin_shouldSetChangePinEffectNone() {
         
-        let sut = makeSUT(event: .buttonTapped(.changePin))
-                
-        XCTAssertNoDiff(sut.0.event, .buttonTapped(.changePin))
+        let sut = makeSUT()
+        let event: Event = .buttonTapped(.changePin)
         
-        XCTAssertNoDiff(sut.1, .none)
+        let result = reduce(sut, event: event)
+                
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
 
     func test_reduce_tapToggleLockActive_shouldSetToggleLockActiveEffectNone() {
         
-        let sut = makeSUT(event: .buttonTapped(.toggleLock(.active)))
-                
-        XCTAssertNoDiff(sut.0.event, .buttonTapped(.toggleLock(.active)))
+        let sut = makeSUT()
+        let event: Event = .buttonTapped(.toggleLock(.active))
         
-        XCTAssertNoDiff(sut.1, .none)
+        let result = reduce(sut, event: event)
+                
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
 
     func test_reduce_tapToggleLockBlockedUnlockAvailable_shouldSetToggleLockBlockedUnlockAvailableEffectNone() {
         
-        let sut = makeSUT(event: .buttonTapped(.toggleLock(.blockedUnlockAvailable)))
-                
-        XCTAssertNoDiff(sut.0.event, .buttonTapped(.toggleLock(.blockedUnlockAvailable)))
+        let sut = makeSUT()
+        let event: Event = .buttonTapped(.toggleLock(.blockedUnlockAvailable))
         
-        XCTAssertNoDiff(sut.1, .none)
+        let result = reduce(sut, event: event)
+                
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
 
     func test_reduce_tapToggleLockBlockedUnlockNotAvailable_shouldSetToggleLockBlockedUnlockNotAvailableEffectNone() {
         
-        let sut = makeSUT(event: .buttonTapped(.toggleLock(.blockedUnlockNotAvailable)))
-                
-        XCTAssertNoDiff(sut.0.event, .buttonTapped(.toggleLock(.blockedUnlockNotAvailable)))
+        let sut = makeSUT()
+        let event: Event = .buttonTapped(.toggleLock(.blockedUnlockNotAvailable))
         
-        XCTAssertNoDiff(sut.1, .none)
+        let result = reduce(sut, event: event)
+                
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
     
     func test_reduce_tapShowOnMain_shouldSetShowOnMainEffectNone() {
         
-        let sut = makeSUT(event: .buttonTapped(.showOnMain))
-                
-        XCTAssertNoDiff(sut.0.event, .buttonTapped(.showOnMain))
+        let sut = makeSUT()
+        let event: Event = .buttonTapped(.showOnMain)
         
-        XCTAssertNoDiff(sut.1, .none)
+        let result = reduce(sut, event: event)
+                
+        XCTAssertNoDiff(result.0.event, event)
+        
+        XCTAssertNoDiff(result.1, .none)
     }
 
     // MARK: - Helpers
-        
+    
+    private typealias SUT = CardGuardianReducer
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+       
     private func makeSUT(
-        event: CardGuardianEvent
-    ) -> (CardGuardianState, CardGuardianEffect?) {
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        let sut = SUT()
         
-        return CardGuardianReducer().reduce(.init(buttons: .default), event)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut)
+    }
+
+    private func reduce(
+        _ sut: SUT,
+        _ initialState: State = .init(buttons: .default),
+        event: Event
+    ) -> (State, Effect?) {
+        
+        return sut.reduce(initialState, event)
     }
 }
+
+private typealias CardGuardianButton = CardGuardianState._Button
 
 private extension CardGuardianButton {
     
