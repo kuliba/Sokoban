@@ -11,18 +11,15 @@ import UserAccountNavigationComponent
 
 final class UserAccountReducer {
     
-    private let alertReduce: AlertReduce
     private let fpsReduce: FPSReduce
     private let otpReduce: OTPReduce
     private let routeEventReduce: RouteEventReduce
     
     init(
-        alertReduce: @escaping AlertReduce,
         fpsReduce: @escaping FPSReduce,
         otpReduce: @escaping OTPReduce,
         routeEventReduce: @escaping RouteEventReduce
     ) {
-        self.alertReduce = alertReduce
         self.fpsReduce = fpsReduce
         self.otpReduce = otpReduce
         self.routeEventReduce = routeEventReduce
@@ -41,7 +38,6 @@ extension UserAccountReducer {
         
         switch event {
         case let .alertButtonTapped(alertButtonTapped):
-            #warning("looks like no need in `alertReduce`")
             (state, effect) = reduce(state, alertButtonTapped)
             
         case let .dismiss(dismiss):
@@ -72,7 +68,6 @@ extension UserAccountReducer {
 
 extension UserAccountReducer {
     
-    typealias AlertReduce = (State, Event) -> (State, Effect?)
     typealias FPSReduce = (State, Event.FastPaymentsSettings) -> (State, Effect?)
     typealias OTPReduce = (State, Event.OTPEvent) -> (State, Effect?)
     typealias RouteEventReduce = (State, Event.NavigateEvent) -> State
@@ -98,7 +93,6 @@ private extension UserAccountReducer {
         var state = state
         
         switch event {
-            #warning("extract to helper")
         case .alert:
             state.alert = nil
             state.fpsViewModel?.event(.resetStatus)

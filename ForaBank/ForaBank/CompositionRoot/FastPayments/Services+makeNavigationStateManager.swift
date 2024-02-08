@@ -27,13 +27,11 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> UserAccountNavigationStateManager {
         
-        let alertButtonReducer = UserAccountAlertButtonTapReducer()
         let fpsReducer = UserAccountNavigationFPSReducer()
         let otpReducer = UserAccountNavigationOTPReducer()
         let routeEventReducer = UserAccountRouteEventReducer()
         
         let userAccountReducer = UserAccountReducer(
-            alertReduce: alertButtonReducer.reduce(_:_:),
             fpsReduce: fpsReducer.reduce(_:_:),
             otpReduce: otpReducer.reduce(_:_:),
             routeEventReduce: routeEventReducer.reduce(_:_:)
