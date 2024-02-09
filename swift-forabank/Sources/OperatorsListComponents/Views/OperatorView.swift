@@ -9,31 +9,28 @@ import SwiftUI
 
 struct OperatorView: View {
     
-    let icon: Image
-    let title: String
-    let description: String?
-    let action: () -> Void
+    let operatorViewModel: OperatorViewModel
     
     let config: OperatorViewConfig
     
     var body: some View {
         
-        Button(action: action) {
+        Button(action: operatorViewModel.action) {
             
             HStack(spacing: 20) {
                 
-                icon
+                operatorViewModel.icon
                     .resizable()
                     .frame(width: 40, height: 40)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
-                    Text(title)
+                    Text(operatorViewModel.title)
                         .font(config.titleFont)
                         .foregroundColor(config.titleColor)
                         .multilineTextAlignment(.leading)
                     
-                    if let description = description {
+                    if let description = operatorViewModel.description {
                         
                         Text(description)
                             .font(config.descriptionFont)
@@ -62,10 +59,12 @@ struct OperatorView_Previews: PreviewProvider {
     static var previews: some View {
         
         OperatorView(
-            icon: .init(systemName: ""),
-            title: "ЖКУ Москвы (ЕИРЦ)",
-            description: "ИНН 7702070139",
-            action: {},
+            operatorViewModel: .init(
+                icon: Data(),
+                title: "ЖКУ Москвы (ЕИРЦ)",
+                description: "ИНН 7702070139",
+                action: {}
+            ),
             config: .init(
                 titleFont: .title3,
                 titleColor: .black,
