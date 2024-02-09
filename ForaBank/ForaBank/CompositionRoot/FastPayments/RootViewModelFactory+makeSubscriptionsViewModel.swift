@@ -71,15 +71,6 @@ extension RootViewModelFactory {
             
             let product = model.allProducts.first { $0.id.description == item.productId }
             
-            let subscriptions = item.subscriptions.map {
-                
-                $0.makeSubscriptionViewModel(
-                    model: model,
-                    onDelete: onDelete,
-                    detailAction: detailAction
-                )
-            }
-            
             guard let product,
                   let balance = model.amountFormatted(
                     amount: product.balanceValue,
@@ -88,6 +79,15 @@ extension RootViewModelFactory {
                   ),
                   let icon = product.smallDesign.image
             else { return nil }
+            
+            let subscriptions = item.subscriptions.map {
+                
+                $0.makeSubscriptionViewModel(
+                    model: model,
+                    onDelete: onDelete,
+                    detailAction: detailAction
+                )
+            }
             
             return .init(
                 image: icon,
