@@ -232,10 +232,20 @@ private extension UserAccountViewModel {
         return sections
     }
     
-    func makeSubscriptionsViewModel(
+    static func makeSubscriptionsViewModel(
+        model: Model,
+        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void
     ) -> SubscriptionsViewModel {
         
-        let products = self.getSubscriptions(with: model.subscriptions.value?.list ?? [])
+        let products = Self.getSubscriptions(
+            model: model, 
+            with: model.subscriptions.value?.list ?? [],
+            onDelete: onDelete,
+            detailAction: { token in
+                
+                model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+            }
+        )
         
         let reducer = TransformingReducer(
             placeholderText: "Поиск",
@@ -269,8 +279,11 @@ private extension UserAccountViewModel {
         )
     }
     
-    func getSubscriptions(
-        with items: [C2BSubscription.ProductSubscription]
+    static func getSubscriptions(
+        model: Model,
+        with items: [C2BSubscription.ProductSubscription],
+        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
+        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> [SubscriptionsViewModel.Product] {
         
         items.compactMap { item in
@@ -281,17 +294,8 @@ private extension UserAccountViewModel {
                 
                 $0.makeSubscriptionViewModel(
                     model: model,
-                    onDelete: { token, title in
-                        
-                        self.event(.navigate(.alert(.cancelC2BSub(
-                            title: title,
-                            event: .cancelC2BSub(token)
-                        ))))
-                    },
-                    detailAction: { token in
-                        
-                        self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-                    }
+                    onDelete: onDelete,
+                    detailAction: detailAction
                 )
             }
             
@@ -317,7 +321,6 @@ private extension UserAccountViewModel {
         }
     }
 }
-
 
 private extension C2BSubscription.ProductSubscription.Subscription {
     
@@ -546,7 +549,16 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            let viewModel = makeSubscriptionsViewModel()
+            let viewModel = Self.makeSubscriptionsViewModel(
+                model: model,
+                onDelete: { token, title in
+                    
+                    self.event(.navigate(.alert(.cancelC2BSub(
+                        title: title,
+                        event: .cancelC2BSub(token)
+                    ))))
+                }
+            )
             self.event(.navigate(.link(.managingSubscription(viewModel))))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
