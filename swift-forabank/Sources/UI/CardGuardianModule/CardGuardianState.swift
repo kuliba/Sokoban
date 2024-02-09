@@ -19,13 +19,13 @@ public struct CardGuardianState: Equatable {
     
     public struct _Button: Hashable {
         
-        public let event: CardGuardian.ButtonTapped
+        public let event: CardGuardian.ButtonEvent
         public let title: String
         public let iconType: CardGuardian.Config.IconType
         public let subtitle: String?
         
         public init(
-            event: CardGuardian.ButtonTapped,
+            event: CardGuardian.ButtonEvent,
             title: String,
             iconType: CardGuardian.Config.IconType,
             subtitle: String?

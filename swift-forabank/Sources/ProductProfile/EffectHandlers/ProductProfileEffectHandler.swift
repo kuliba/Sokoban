@@ -90,5 +90,5 @@ private extension CardGuardianState {
 
 public enum CardGuardianStateProjection: Equatable {
     case appear
-    case buttonTapped(CardGuardian.ButtonTapped)
+    case buttonTapped(CardGuardian.ButtonEvent)
 }
