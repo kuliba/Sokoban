@@ -233,44 +233,17 @@ private extension UserAccountViewModel {
     }
     
     func getSubscriptions(
-        with items: [C2BSubscription.ProductSubscription]?
+        with items: [C2BSubscription.ProductSubscription]
     ) -> [SubscriptionsViewModel.Product] {
         
-        var products: [SubscriptionsViewModel.Product] = []
-        
-        guard let items else { return [] }
-        
-        for item in items {
+        items.compactMap { item in
             
-            let product = model.allProducts.first(where: { $0.id.description == item.productId })
+            let product = model.allProducts.first { $0.id.description == item.productId }
             
-            let subscriptions = item.subscriptions.map({
+            let subscriptions = item.subscriptions.map {
                 
-                var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
-                
-                let brandIcon = $0.brandIcon
-                
-                if let icon = model.images.value[brandIcon]?.image {
-                    
-                    image = .image(icon)
-                    
-                } else {
-                    
-                    image = .default(.ic24ShoppingCart)
-                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
-                }
-                
-                return ManageSubscriptionsUI.SubscriptionViewModel(
-                    token: $0.subscriptionToken,
-                    name: $0.brandName,
-                    image: image,
-                    subtitle: $0.subscriptionPurpose,
-                    purposeTitle: $0.cancelAlert,
-                    trash: .ic24Trash2,
-                    config: .init(
-                        headerFont: .textH4M16240(),
-                        subtitle: .textBodySR12160()
-                    ),
+                $0.makeSubscriptionViewModel(
+                    model: model,
                     onDelete: { token, title in
                         
                         self.event(.navigate(.alert(.cancelC2BSub(
@@ -283,30 +256,69 @@ private extension UserAccountViewModel {
                         self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
                     }
                 )
-            })
-            
-            if let product,
-               let balance = model.amountFormatted(
-                amount: product.balanceValue,
-                currencyCode: product.currency,
-                style: .fraction
-               ),
-               let icon = product.smallDesign.image {
-                
-                products.append(.init(
-                    image: icon,
-                    title: item.productTitle,
-                    paymentSystemIcon: nil,
-                    name: product.displayName,
-                    balance: balance,
-                    descriptions: product.description,
-                    isLocked: product.isLocked,
-                    subscriptions: subscriptions
-                ))
             }
+            
+            guard let product,
+                  let balance = model.amountFormatted(
+                    amount: product.balanceValue,
+                    currencyCode: product.currency,
+                    style: .fraction
+                  ),
+                  let icon = product.smallDesign.image
+            else { return nil }
+            
+            return .init(
+                image: icon,
+                title: item.productTitle,
+                paymentSystemIcon: nil,
+                name: product.displayName,
+                balance: balance,
+                descriptions: product.description,
+                isLocked: product.isLocked,
+                subscriptions: subscriptions
+            )
+        }
+    }
+}
+
+
+private extension C2BSubscription.ProductSubscription.Subscription {
+    
+    func makeSubscriptionViewModel(
+        model: Model,
+        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
+        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
+    ) -> ManageSubscriptionsUI.SubscriptionViewModel {
+        
+        var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
+        
+        let brandIcon = brandIcon
+        
+        #warning("reuse ImageCache")
+        if let icon = model.images.value[brandIcon]?.image {
+            
+            image = .image(icon)
+            
+        } else {
+            
+            image = .default(.ic24ShoppingCart)
+            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
         }
         
-        return products
+        return .init(
+            token: subscriptionToken,
+            name: brandName,
+            image: image,
+            subtitle: subscriptionPurpose,
+            purposeTitle: cancelAlert,
+            trash: .ic24Trash2,
+            config: .init(
+                headerFont: .textH4M16240(),
+                subtitle: .textBodySR12160()
+            ),
+            onDelete: onDelete,
+            detailAction: detailAction
+        )
     }
 }
 
@@ -497,7 +509,8 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            let products = self.getSubscriptions(with: model.subscriptions.value?.list)
+            openManagingSubscription()
+            let products = self.getSubscriptions(with: model.subscriptions.value?.list ?? [])
             
             let reducer = TransformingReducer(
                 placeholderText: "Поиск",
