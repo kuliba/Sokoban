@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct OperatorView: View {
     
@@ -19,9 +20,12 @@ struct OperatorView: View {
             
             HStack(spacing: 20) {
                 
-                operatorViewModel.icon
-                    .resizable()
-                    .frame(width: 40, height: 40)
+                if let uiImage = UIImage(data: operatorViewModel.icon) {
+                 
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                }
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
