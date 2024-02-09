@@ -119,64 +119,7 @@ extension UserAccountViewModel {
     }
 }
 
-// MARK: - Convenience Methods
-
-extension UserAccountViewModel {
-    
-    func resetLink() {
-        
-        event(.route(.link(.reset)))
-    }
-    
-    func resetBottomSheet() {
-        
-        event(.route(.bottomSheet(.reset)))
-    }
-    
-    func resetSheet() {
-        
-        event(.route(.sheet(.reset)))
-    }
-    
-    func resetAlert() {
-        
-        event(.route(.alert(.reset)))
-    }
-    
-    func resetTextFieldAlert() {
-        
-        event(.route(.textFieldAlert(.reset)))
-    }
-    
-    func dismissDestination() {
-        
-        action.send(UserAccountViewModelAction.CloseLink())
-    }
-    
-    func showSpinner() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.event(.route(.spinner(.show)))
-        }
-    }
-    
-    func hideSpinner() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.event(.route(.spinner(.hide)))
-        }
-    }
-    
-    func dismissAlert() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.event(.route(.alert(.reset)))
-        }
-    }
-}
+// MARK: - Bindings
 
 private extension UserAccountViewModel {
     
@@ -330,10 +273,10 @@ private extension UserAccountViewModel {
                     ),
                     onDelete: { token, title in
                         
-                        self.event(.route(.alert(.setTo(.cancelC2BSub(
+                        self.event(.navigate(.alert(.cancelC2BSub(
                             title: title,
                             event: .cancelC2BSub(token)
-                        )))))
+                        ))))
                     },
                     detailAction: { token in
                         
@@ -392,72 +335,72 @@ private extension UserAccountViewModel {
         case let payload as ModelAction.C2B.CancelC2BSub.Response:
             let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
             
-            event(.route(.link(.setTo(
+            event(.navigate(.link(
                 .successView(paymentSuccessViewModel)
-            ))))
+            )))
             
         case let payload as ModelAction.C2B.GetC2BDetail.Response:
-            event(.route(.link(.setTo(
+            event(.navigate(.link(
                 .successView(.init(
                     paymentSuccess: .init(
                         operation: nil,
                         parameters: payload.params),
                     model
                 ))
-            ))))
+            )))
             
         case let payload as ModelAction.Media.CameraPermission.Response:
             withAnimation {
                 
-                event(.route(.bottomSheet(.reset)))
+                event(.dismiss(.bottomSheet))
             }
             
             if payload.result {
-                event(.route(.bottomSheet(.setTo(.init(
+                event(.navigate(.bottomSheet(.init(
                     sheetType: .imageCapture(.init(
                         closeAction: { [weak self] image in
                             
-                            self?.event(.route(.bottomSheet(.reset)))
+                            self?.event(.dismiss(.bottomSheet))
                             self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
                         }
                     ))
-                )))))
+                ))))
                 
             } else {
                 
-                event(.route(.alert(.setTo(
-                    .cameraPermissionError(event: .closeAlert)
-                ))))
+                event(.navigate(.alert(
+                    .cameraPermissionError(event: .dismiss(.alert))
+                )))
             }
             
         case let payload as ModelAction.Media.GalleryPermission.Response:
             withAnimation {
                 
-                event(.route(.bottomSheet(.reset)))
+                    event(.dismiss(.bottomSheet))
             }
             
             if payload.result {
                 
-                event(.route(.link(.setTo(
+                event(.navigate(.link(
                     .imagePicker(.init(
                         closeAction: { [weak self] image in
                             
                             self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
                         }
                     ))
-                ))))
+                )))
                 
             } else {
                 
-                event(.route(.alert(.setTo(
-                    .galleryPermissionError(event: .closeAlert)
-                ))))
+                event(.navigate(.alert(
+                    .galleryPermissionError(event: .dismiss(.alert))
+                )))
             }
             
         case _ as ModelAction.ClientInfo.Delete.Response:
-            event(.route(.link(.setTo(
+            event(.navigate(.link(
                 .deleteUserInfo(.init(model: self.model))
-            ))))
+            )))
             
         default:
             break
@@ -472,41 +415,41 @@ private extension UserAccountViewModel {
             self.action.send(PaymentsViewModelAction.Dismiss())
             
         case _ as UserAccountViewModelAction.CloseLink:
-            event(.route(.link(.reset)))
+            event(.dismiss(.destination))
             
         case _ as UserAccountViewModelAction.CloseFieldAlert:
-            event(.route(.textFieldAlert(.reset)))
+            event(.dismiss(.textFieldAlert))
             
         case _ as UserAccountViewModelAction.AvatarAction:
             var buttons: [ButtonIconTextView.ViewModel] = []
             
             if model.cameraIsAvailable {
                 buttons.append(.init(icon: .init(image: .ic24Camera, style: .original, background: .circleSmall), title: .init(text: "Сделать фото", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.event(.dismiss(.bottomSheet))
                     self?.model.action.send(ModelAction.Media.CameraPermission.Request())
                 }))
             }
             
             if model.galleryIsAvailable {
                 buttons.append(.init(icon: .init(image: .ic24Image, style: .original, background: .circleSmall), title: .init(text: "Выбрать из галереи", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.event(.dismiss(.bottomSheet))
                     self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
                 }))
             }
             
             if model.clientPhoto.value != nil {
                 buttons.append(.init(icon: .init(image: .ic24Trash2, style: .original, background: .circleSmall), title: .init(text: "Удалить", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                    self?.event(.route(.bottomSheet(.reset)))
+                    self?.event(.dismiss(.bottomSheet))
                     self?.model.action.send(ModelAction.ClientPhoto.Delete())
                 }))
             }
             
-            event(.route(.bottomSheet(.setTo(.init(
+            event(.navigate(.bottomSheet(.init(
                 sheetType: .avatarOptions(.init(buttons: buttons)))
-            ))))
+            )))
             
         case let payload as UserAccountViewModelAction.SaveAvatarImage:
-            event(.route(.bottomSheet(.reset)))
+                                        event(.dismiss(.bottomSheet))
             
             guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)),
                   let photoData = ImageData(with: image)
@@ -515,24 +458,24 @@ private extension UserAccountViewModel {
             model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
             
         case _ as UserAccountViewModelAction.ExitAction:
-            event(.route(.alert(.setTo(.exit(event: .exit)))))
+            event(.navigate(.alert(.exit(event: .exit))))
             
         case _ as UserAccountViewModelAction.DeleteAction:
-            event(.route(.alert(.setTo(.delete(event: .delete)))))
+            event(.navigate(.alert(.delete(event: .deleteRequest))))
             
         case _ as UserAccountViewModelAction.DeleteInfoAction:
-            event(.route(.bottomSheet(.setTo(.init(
+            event(.navigate(.bottomSheet(.init(
                 sheetType: .deleteInfo(.exitInfoViewModel))
-            ))))
+            )))
             
         case let payload as UserAccountViewModelAction.OpenSbpPay:
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
                 
                 withAnimation {
                     
-                    self?.event(.route(.bottomSheet(.setTo(.init(
+                    self?.event(.navigate(.bottomSheet(.init(
                         sheetType: .sbpay(payload.sbpPay))
-                    ))))
+                    )))
                 }
             }
             
@@ -546,18 +489,17 @@ private extension UserAccountViewModel {
     ) {
         switch action {
         case _ as UserAccountViewModelAction.ChangeUserName:
-            event(.route(.textFieldAlert(.setTo(.name(
+            event(.navigate(.textFieldAlert(.name(
                 primaryAction: { [weak self] text in
                     
                     self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
                     self?.model.action.send(ModelAction.ClientName.Save(name: text))
-                    
                 },
                 secondaryAction: { [weak self] _ in
                     
                     self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
                 }
-            )))))
+            ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
             let products = self.getSubscriptions(with: model.subscriptions.value?.list)
@@ -580,7 +522,7 @@ private extension UserAccountViewModel {
                 title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
             )
             
-            self.event(.route(.link(.setTo(
+            self.event(.navigate(.link(
                 .managingSubscription(.init(
                     products: products,
                     searchViewModel: .init(
@@ -593,7 +535,7 @@ private extension UserAccountViewModel {
                         backgroundColor: .mainColorsGrayLightest
                     )
                 ))
-            ))))
+            )))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
             switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {
@@ -601,14 +543,14 @@ private extension UserAccountViewModel {
                 let data = model.fastPaymentContractFullInfo.value
                     .map { $0.getFastPaymentContractFindListDatum() }
                 
-                self.event(.route(.link(.setTo(
+                self.event(.navigate(.link(
                     .fastPaymentSettings(.legacy(
                         makeLegacy(
                             data,
-                            { [weak self] in self?.dismissDestination() }
+                            { [weak self] in self?.event(.dismiss(.destination)) }
                         )
                     ))
-                ))))
+                )))
                 
 #warning("move to reducer with event?")
             case let .new(makeNew):
@@ -622,11 +564,11 @@ private extension UserAccountViewModel {
 #warning("and change to effect (??) when moved to `reduce` (?)")
                 viewModel.event(.appear)
                 
-                self.event(.route(.link(.setTo(
+                self.event(.navigate(.link(
                     .fastPaymentSettings(.new(
                         .init(viewModel, cancellable)
                     ))
-                ))))
+                )))
             }
             
         case let payload as UserAccountViewModelAction.Switch:
@@ -646,7 +588,7 @@ private extension UserAccountViewModel {
             switch payload.type {
                 
             case .passport:
-                self.event(.route(.link(.setTo(
+                self.event(.navigate(.link(
                     .userDocument(.init(
                         clientInfo: clientInfo,
                         itemType: .passport,
@@ -655,23 +597,23 @@ private extension UserAccountViewModel {
                             self?.action.send(UserAccountViewModelAction.CloseLink())
                         }
                     ))
-                ))))
+                )))
                 
             case .inn:
                 guard let inn = clientInfo.inn else { return }
                 
                 let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
-                self.event(.route(.bottomSheet(.setTo(.init(
+                self.event(.navigate(.bottomSheet(.init(
                     sheetType: .inn(documentInfoViewModel))
-                ))))
+                )))
                 self.bind(documentInfoViewModel: documentInfoViewModel)
                 
             case .adressPass:
                 let address = clientInfo.address
                 let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
-                self.event(.route(.bottomSheet(.setTo(.init(
+                self.event(.navigate(.bottomSheet(.init(
                     sheetType: .inn(documentInfoViewModel))
-                ))))
+                )))
                 self.bind(documentInfoViewModel: documentInfoViewModel)
                 
             case .adress:
@@ -679,9 +621,9 @@ private extension UserAccountViewModel {
                 else { return }
                 
                 let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
-                self.event(.route(.bottomSheet(.setTo(.init(
+                self.event(.navigate(.bottomSheet(.init(
                     sheetType: .inn(documentInfoViewModel))
-                ))))
+                )))
                 self.bind(documentInfoViewModel: documentInfoViewModel)
             }
             
@@ -693,10 +635,10 @@ private extension UserAccountViewModel {
 
 // MARK: - Helpers
 
-private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
+private extension AlertModelOf<UserAccountEvent> {
     
     static func cameraPermissionError(
-        event: UserAccountEvent.AlertButtonTap
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
@@ -712,7 +654,7 @@ private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
     
     static func cancelC2BSub(
         title: String,
-        event: UserAccountEvent.AlertButtonTap
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
@@ -721,7 +663,7 @@ private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: .closeAlert
+                event: .dismiss(.alert)
             ),
             secondaryButton: .init(
                 type: .default,
@@ -732,7 +674,7 @@ private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
     }
     
     static func delete(
-        event: UserAccountEvent.AlertButtonTap
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
@@ -746,13 +688,13 @@ private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
             secondaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: .closeAlert
+                event: .dismiss(.alert)
             )
         )
     }
     
     static func exit(
-        event: UserAccountEvent.AlertButtonTap
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
@@ -766,13 +708,13 @@ private extension AlertModelOf<UserAccountEvent.AlertButtonTap> {
             secondaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: .closeAlert
+                event: .dismiss(.alert)
             )
         )
     }
     
     static func galleryPermissionError(
-        event: UserAccountEvent.AlertButtonTap
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
@@ -819,7 +761,7 @@ extension UserAccountViewModel {
     
     typealias Dispatch = (UserAccountEvent) -> Void
     
-    typealias RouteDispatch = (UserAccountEvent.RouteEvent) -> Void
+    typealias RouteDispatch = (UserAccountEvent.NavigateEvent) -> Void
     typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
     
     class AvatarViewModel: ObservableObject {

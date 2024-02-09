@@ -11,7 +11,7 @@ import UserAccountNavigationComponent
 
 struct UserAccountRoute {
     
-    var alert: AlertModelOf<UserAccountEvent.AlertButtonTap>?
+    var alert: AlertModelOf<UserAccountEvent>?
     var bottomSheet: BottomSheet?
     var informer: Informer?
     var link: Link?

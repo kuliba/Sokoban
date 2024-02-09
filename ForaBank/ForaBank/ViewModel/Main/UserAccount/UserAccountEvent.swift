@@ -10,88 +10,47 @@ import ManageSubscriptionsUI
 import UserAccountNavigationComponent
 import UIPrimitives
 
-enum UserAccountEvent {
+indirect enum UserAccountEvent {
     
-    #warning("suboptimal event structure, needs cleaning")
-    case closeAlert
-    case closeFPSAlert
-    case dismissDestination
-    case dismissFPSDestination
-    case dismissInformer
-    case dismissRoute
+    case alertButtonTapped(UserAccountEvent)
+    case dismiss(DismissEvent)
+    case navigate(NavigateEvent)
     
-    case alertButtonTapped(AlertButtonTap)
-    case route(RouteEvent)
+    case cancelC2BSub(SubscriptionViewModel.Token)
+    case deleteRequest
+    case exit
+    
     case fps(FastPaymentsSettings)
-    case otp(OTP)
+    case otp(OTPEvent)
 }
 
 extension UserAccountEvent {
     
-    enum AlertButtonTap {
+    enum DismissEvent {
         
-        #warning("suboptimal event structure, needs cleaning")
-        case closeAlert
-        case closeFPSAlert
-        case dismissDestination
-        case dismissFPSDestination
-        case dismissRoute
-
-        case fps(FastPaymentsSettings)
-        case otp(OTP)
-        
-        case cancelC2BSub(SubscriptionViewModel.Token)
-        case delete
-        case exit
+        case alert
+        case bottomSheet
+        case destination
+        case fpsAlert
+        case fpsDestination
+        case informer
+        case route
+        case sheet
+        case textFieldAlert
     }
-    
-    enum RouteEvent {
         
-        case alert(AlertEvent)
-        case bottomSheet(BottomSheetEvent)
-        case link(LinkEvent)
-        case spinner(SpinnerEvent)
-        case sheet(SheetEvent)
-        case textFieldAlert(TextFieldAlertEvent)
+    enum NavigateEvent {
         
-        enum AlertEvent {
-            
-            case reset
-            case setTo(AlertModelOf<AlertButtonTap>)
-        }
-        
-        enum BottomSheetEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.BottomSheet)
-        }
-        
-        enum LinkEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.Link)
-        }
-        
-        enum SpinnerEvent {
-            
-            case hide, show
-        }
-        
-        enum SheetEvent {
-            
-            case reset
-        }
-        
-        enum TextFieldAlertEvent {
-            
-            case reset
-            case setTo(AlertTextFieldView.ViewModel)
-        }
+        case alert(AlertModelOf<UserAccountEvent>)
+        case bottomSheet(UserAccountRoute.BottomSheet)
+        case link(UserAccountRoute.Link)
+        case spinner
+        case textFieldAlert(AlertTextFieldView.ViewModel)
     }
 }
 
 extension UserAccountEvent {
     
     typealias FastPaymentsSettings = UserAccountNavigation.Event.FastPaymentsSettings
-    typealias OTP = UserAccountNavigation.Event.OTP
+    typealias OTPEvent = UserAccountNavigation.Event.OTP
 }

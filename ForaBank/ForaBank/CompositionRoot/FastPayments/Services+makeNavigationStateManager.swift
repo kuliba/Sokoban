@@ -15,11 +15,10 @@ import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
 
-extension Services {
+extension RootViewModelFactory {
     
     static func makeNavigationStateManager(
-        useStub isStub: Bool,
-        httpClient: HTTPClient,
+        otpServices: FastPaymentsSettingsOTPServices,
         model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -28,23 +27,17 @@ extension Services {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> UserAccountNavigationStateManager {
         
-        let alertButtonReducer = UserAccountAlertButtonTapReducer()
         let fpsReducer = UserAccountNavigationFPSReducer()
         let otpReducer = UserAccountNavigationOTPReducer()
-        let routeEventReducer = UserAccountRouteEventReducer()
         
         let userAccountReducer = UserAccountReducer(
-            alertReduce: alertButtonReducer.reduce(_:_:),
             fpsReduce: fpsReducer.reduce(_:_:),
-            otpReduce: otpReducer.reduce(_:_:),
-            routeEventReduce: routeEventReducer.reduce(_:_:)
+            otpReduce: otpReducer.reduce(_:_:)
         )
         
         let modelEffectHandler = UserAccountModelEffectHandler(
             model: model
         )
-        
-        let otpServices: FastPaymentsSettingsOTPServices = isStub ? .stub : .live(httpClient, log)
         
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
             makeTimedOTPInputViewModel: {
@@ -72,13 +65,13 @@ extension Services {
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
-            userAccountReducer: userAccountReducer,
-            userAccountEffectHandler: userAccountEffectHandler
+            reduce: userAccountReducer.reduce(_:_:),
+            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
     }
 }
 
-private struct FastPaymentsSettingsOTPServices {
+struct FastPaymentsSettingsOTPServices {
     
     let initiateOTP: CountdownEffectHandler.InitiateOTP
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
@@ -108,21 +101,6 @@ extension UserAccountModelEffectHandler {
 }
 
 // MARK: - Adapters
-
-private extension UserAccountNavigationStateManager {
-    
-    init(
-        fastPaymentsFactory: FastPaymentsFactory,
-        userAccountReducer: UserAccountReducer,
-        userAccountEffectHandler: UserAccountEffectHandler
-    ) {
-        self.init(
-            fastPaymentsFactory: fastPaymentsFactory,
-            reduce: userAccountReducer.reduce(_:_:),
-            handleEffect: userAccountEffectHandler.handleEffect(_:_:)
-        )
-    }
-}
 
 private extension UserAccountNavigation.State {
     
@@ -180,7 +158,7 @@ private extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: UserAccountRoute,
-        _ event: UserAccountEvent.OTP
+        _ event: UserAccountEvent.OTPEvent
     ) -> (UserAccountRoute, UserAccountEffect?) {
         
         var state = state
@@ -204,13 +182,12 @@ private extension UserAccountNavigationOTPReducer {
 
 // MARK: - Live Service
 
-private extension FastPaymentsSettingsOTPServices {
+/*private*/ extension FastPaymentsSettingsOTPServices {
     
-    static func live(
+    init(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
-    ) -> Self {
-        
+    ) {
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
         
@@ -233,7 +210,7 @@ private extension FastPaymentsSettingsOTPServices {
             mapError: FastPaymentsSettings.ServiceFailure.init(error:)
         )
         
-        return .init(
+        self.init(
             initiateOTP: initiateOTP,
             submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault
@@ -335,7 +312,7 @@ private extension UserAccountRoute.Link {
 
 private extension AlertModelOf<UserAccountNavigation.Event> {
     
-    var routeAlert: AlertModelOf<UserAccountEvent.AlertButtonTap> {
+    var routeAlert: AlertModelOf<UserAccountEvent> {
         
         .init(
             id: id,
@@ -349,7 +326,7 @@ private extension AlertModelOf<UserAccountNavigation.Event> {
 
 private extension ButtonViewModel<UserAccountNavigation.Event> {
     
-    var routeButton: ButtonViewModel<UserAccountEvent.AlertButtonTap> {
+    var routeButton: ButtonViewModel<UserAccountEvent> {
         
         .init(
             type: type.routeButtonType,
@@ -361,19 +338,19 @@ private extension ButtonViewModel<UserAccountNavigation.Event> {
 
 private extension UserAccountNavigation.Event {
     
-    var routeAlert: UserAccountEvent.AlertButtonTap {
+    var routeAlert: UserAccountEvent {
         
         switch self {
         case .closeAlert:
-            return .closeAlert
+            return .dismiss(.alert)
         case .closeFPSAlert:
-            return .closeFPSAlert
+            return .dismiss(.fpsAlert)
         case .dismissFPSDestination:
-            return .dismissFPSDestination
+            return .dismiss(.fpsDestination)
         case .dismissDestination:
-            return .dismissDestination
+            return .dismiss(.destination)
         case .dismissRoute:
-            return .dismissRoute
+            return .dismiss(.route)
         case let .fps(fps):
             return .fps(fps)
         case let .otp(otp):
@@ -388,19 +365,19 @@ private extension UserAccountNavigation.Event {
         
         switch self {
         case .closeAlert:
-            return .closeAlert
+            return .dismiss(.alert)
             
         case .closeFPSAlert:
-            return .closeFPSAlert
+            return .dismiss(.fpsAlert)
             
         case .dismissFPSDestination:
-            return .dismissFPSDestination
+            return .dismiss(.fpsDestination)
             
         case .dismissDestination:
-            return .dismissDestination
+            return .dismiss(.destination)
             
         case .dismissRoute:
-            return .dismissRoute
+            return .dismiss(.route)
             
         case let .fps(fps):
             return .fps(fps)
@@ -413,7 +390,7 @@ private extension UserAccountNavigation.Event {
 
 private extension ButtonViewModel<UserAccountNavigation.Event>.ButtonType {
     
-    var routeButtonType: ButtonViewModel<UserAccountEvent.AlertButtonTap>.ButtonType {
+    var routeButtonType: ButtonViewModel<UserAccountEvent>.ButtonType {
         
         switch self {
         case .default:     return .default
@@ -462,33 +439,4 @@ private extension FastPaymentContractFullInfoType {
         && contractAttributeList.flagClientAgreementIn == .no
         && contractAttributeList.flagClientAgreementOut == .no
     }
-}
-
-// MARK: - Stubs
-
-private extension FastPaymentsSettingsOTPServices {
-    
-    static let stub: Self = .init(
-        initiateOTP: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        },
-        submitOTP: { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        },
-        prepareSetBankDefault: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(.success(()))
-            }
-        }
-    )
 }
