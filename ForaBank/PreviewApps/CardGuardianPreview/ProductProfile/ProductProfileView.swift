@@ -29,7 +29,7 @@ struct ProductProfileView: View {
         .alert(
             item: .init(
                 get: { viewModel.state.alert },
-                set: { if $0 == nil { viewModel.event(.closeAlert) }}
+                set: { if $0 == nil { viewModel.event(.closeAlert(.close)) }}
             ),
             content: { .init(with: $0, event: viewModel.event) }
         )
