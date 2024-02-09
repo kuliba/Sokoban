@@ -96,8 +96,10 @@ extension ProductSelectorView {
                 
                 self.init(model, productData: productData, context: context)
                 
-            } else {
+            } else if let productData = model.firstProduct(with: .generalFrom) {
+                self.init(model, productData: productData, context: context)
                 
+            } else {
                 self.init(model, context: context)
             }
         }

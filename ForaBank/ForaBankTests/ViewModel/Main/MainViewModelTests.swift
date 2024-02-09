@@ -105,10 +105,10 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
      
@@ -142,10 +142,10 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
 
@@ -196,10 +196,10 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
             onRegister: {}
         )
 

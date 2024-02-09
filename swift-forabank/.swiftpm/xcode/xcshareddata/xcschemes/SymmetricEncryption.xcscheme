@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/SymmetricEncryption.xctestplan"
+            reference = "container:../ForaBank/TestPlans/SymmetricEncryption.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

@@ -238,9 +238,58 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "ProductSelectComponentTests",
         "name" : "ProductSelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianModuleTests",
+        "name" : "CardGuardianModuleTests"
       }
     }
   ],

@@ -17,6 +17,7 @@ let package = Package(
         .sberQR,
         .sharedAPIInfra,
         .textFieldModel,
+        .productProfile,
         // Landing
         .codableLanding,
         .landingMapping,
@@ -25,6 +26,7 @@ let package = Package(
         .fetcher,
         .keyChainStore,
         // Services
+        .cardStatementAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -38,16 +40,22 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
+        .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
+        .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
+        .rxViewModel,
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        .uiPrimitives,
+        .userAccountNavigationComponent,
         // UI Components
         .paymentComponents,
+        .carouselComponent,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -72,6 +80,8 @@ let package = Package(
         .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
+        .productProfile,
+        .productProfileTests,
         .sberQR,
         .sberQRTests,
         .sharedAPIInfra,
@@ -92,6 +102,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Services
+        .cardStatementAPI,
+        .cardStatementAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -116,20 +128,29 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
+        .cardGuardianModule,
+        .cardGuardianModuleTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
+        .otpInputComponent,
+        .otpInputComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
         .pinCodeUITests,
         .productUI,
+        .rxViewModel,
+        .rxViewModelTests,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        .uiPrimitives,
+        .userAccountNavigationComponent,
+        .userAccountNavigationComponentTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -138,6 +159,8 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .carouselComponent,
+        .carouselComponentTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -182,6 +205,13 @@ private extension Product {
         name: .phoneNumberWrapper,
         targets: [
             .phoneNumberWrapper,
+        ]
+    )
+    
+    static let productProfile = library(
+        name: .productProfile,
+        targets: [
+            .productProfile,
         ]
     )
     
@@ -245,6 +275,13 @@ private extension Product {
         ]
     )
     
+    static let cardGuardianModule = library(
+        name: .cardGuardianModule,
+        targets: [
+            .cardGuardianModule
+        ]
+    )
+    
     static let linkableText = library(
         name: .linkableText,
         targets: [
@@ -256,6 +293,13 @@ private extension Product {
         name: .manageSubscriptionsUI,
         targets: [
             .manageSubscriptionsUI,
+        ]
+    )
+    
+    static let otpInputComponent = library(
+        name: .otpInputComponent,
+        targets: [
+            .otpInputComponent,
         ]
     )
     
@@ -280,6 +324,13 @@ private extension Product {
         ]
     )
     
+    static let rxViewModel = library(
+        name: .rxViewModel,
+        targets: [
+            .rxViewModel,
+        ]
+    )
+    
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
@@ -301,6 +352,19 @@ private extension Product {
         ]
     )
     
+    static let uiPrimitives = library(
+        name: .uiPrimitives,
+        targets: [
+            .uiPrimitives,
+        ]
+    )
+    static let userAccountNavigationComponent = library(
+        name: .userAccountNavigationComponent,
+        targets: [
+            .userAccountNavigationComponent,
+        ]
+    )
+    
     // MARK: - UI Components
     
     static let paymentComponents = library(
@@ -312,6 +376,13 @@ private extension Product {
             .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
+        ]
+    )
+    
+    static let carouselComponent = library(
+        name: .carouselComponent,
+        targets: [
+            .carouselComponent
         ]
     )
     
@@ -333,6 +404,13 @@ private extension Product {
     
     // MARK: - Services
     
+    static let cardStatementAPI = library(
+        name: .cardStatementAPI,
+        targets: [
+            .cardStatementAPI,
+        ]
+    )
+
     static let cryptoSwaddler = library(
         name: .cryptoSwaddler,
         targets: [
@@ -429,6 +507,9 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .tagged,
+            // internal modules
+            .paymentComponents,
+            .rxViewModel,
         ]
     )
     static let fastPaymentsSettingsTests = testTarget(
@@ -440,6 +521,7 @@ private extension Target {
             .tagged,
             // internal modules
             .fastPaymentsSettings,
+            .rxViewModel,
         ]
     )
     
@@ -514,6 +596,31 @@ private extension Target {
         ]
     )
     
+    static let productProfile = target(
+        name: .productProfile,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .cardGuardianModule,
+            .uiPrimitives
+        ]
+    )
+    static let productProfileTests = testTarget(
+        name: .productProfileTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .productProfile,
+            .rxViewModel,
+        ]
+    )
+
     static let sberQR = target(
         name: .sberQR,
         dependencies: [
@@ -671,6 +778,30 @@ private extension Target {
     
     // MARK: - Services
     
+    static let cardStatementAPI = target(
+        name: .cardStatementAPI,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/\(String.cardStatementAPI)"
+    )
+    static let cardStatementAPITests = testTarget(
+        name: .cardStatementAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .cardStatementAPI,
+        ],
+        path: "Tests/\(String.cardStatementAPITests)",
+        resources: [
+            .copy("Resources/GetProductDynamicParamsList.json"),
+            .copy("Resources/StatementSample.json"),
+        ]
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -849,6 +980,30 @@ private extension Target {
         path: "Sources/UI/\(String.buttonWithSheet)"
     )
     
+    static let cardGuardianModule = target(
+        name: .cardGuardianModule,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.cardGuardianModule)"
+    )
+    
+    static let cardGuardianModuleTests = testTarget(
+        name: .cardGuardianModuleTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardGuardianModule,
+        ],
+        path: "Tests/UI/\(String.cardGuardianModuleTests)"
+    )
+    
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -867,6 +1022,31 @@ private extension Target {
     
     static let manageSubscriptionsUI = target(
         name: .manageSubscriptionsUI
+    )
+    
+    static let otpInputComponent = target(
+        name: .otpInputComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Sources/UI/\(String.otpInputComponent)"
+    )
+    
+    static let otpInputComponentTests = testTarget(
+        name: .otpInputComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .otpInputComponent,
+        ],
+        path: "Tests/UI/\(String.otpInputComponentTests)"
     )
     
     static let pickerWithPreviewComponent = target(
@@ -898,6 +1078,28 @@ private extension Target {
     static let productUI = target(
         name: .productUI
     )
+
+    static let rxViewModel = target(
+        name: .rxViewModel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ],
+        path: "Sources/UI/\(String.rxViewModel)"
+    )
+    
+    static let rxViewModelTests = testTarget(
+        name: .rxViewModelTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Tests/UI/\(String.rxViewModelTests)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -943,6 +1145,37 @@ private extension Target {
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
+    static let uiPrimitives = target(
+        name: .uiPrimitives,
+        path: "Sources/UI/\(String.uiPrimitives)"
+    )
+    
+    static let userAccountNavigationComponent = target(
+        name: .userAccountNavigationComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .fastPaymentsSettings,
+            .otpInputComponent,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.userAccountNavigationComponent)"
+    )
+    
+    static let userAccountNavigationComponentTests = testTarget(
+        name: .userAccountNavigationComponentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .userAccountNavigationComponent,
+        ],
+        path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -985,6 +1218,23 @@ private extension Target {
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
+    )
+    
+    static let carouselComponent = target(
+        name: .carouselComponent,
+        dependencies: [
+            .sharedConfigs,
+            .rxViewModel
+        ],
+        path: "Sources/UI/Components/\(String.carouselComponent)"
+    )
+    
+    static let carouselComponentTests = testTarget(
+        name: .carouselComponentTests,
+        dependencies: [
+            .carouselComponent
+        ],
+        path: "Tests/UI/Components/\(String.carouselComponentTests)"
     )
     
     static let productSelectComponent = target(
@@ -1084,6 +1334,10 @@ private extension Target.Dependency {
         name: .phoneNumberWrapper
     )
     
+    static let productProfile = byName(
+        name: .productProfile
+    )
+
     static let sberQR = byName(
         name: .sberQR
     )
@@ -1130,8 +1384,16 @@ private extension Target.Dependency {
         name: .buttonWithSheet
     )
     
+    static let cardGuardianModule = byName(
+        name: .cardGuardianModule
+    )
+    
     static let linkableText = byName(
         name: .linkableText
+    )
+    
+    static let otpInputComponent = byName(
+        name: .otpInputComponent
     )
     
     static let pickerWithPreviewComponent = byName(
@@ -1142,12 +1404,24 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
     
+    static let rxViewModel = byName(
+        name: .rxViewModel
+    )
+    
     static let textFieldUI = byName(
         name: .textFieldUI
     )
     
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
+    )
+    
+    static let uiPrimitives = byName(
+        name: .uiPrimitives
+    )
+    
+    static let userAccountNavigationComponent = byName(
+        name: .userAccountNavigationComponent
     )
     
     // MARK: - UI Components
@@ -1176,6 +1450,10 @@ private extension Target.Dependency {
         name: .sharedConfigs
     )
     
+    static let carouselComponent = byName(
+        name: .carouselComponent
+    )
+    
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1188,6 +1466,10 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
+    static let cardStatementAPI = byName(
+        name: .cardStatementAPI
+    )
+
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -1252,6 +1534,9 @@ private extension String {
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
     
+    static let productProfile = "ProductProfile"
+    static let productProfileTests = "ProductProfileTests"
+    
     static let sberQR = "SberQR"
     static let sberQRTests = "SberQRTests"
     
@@ -1284,10 +1569,16 @@ private extension String {
     
     static let buttonWithSheet = "ButtonWithSheet"
 
+    static let cardGuardianModule = "CardGuardianModule"
+    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
+    
+    static let otpInputComponent = "OTPInputComponent"
+    static let otpInputComponentTests = "OTPInputComponentTests"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
@@ -1297,12 +1588,20 @@ private extension String {
     
     static let productUI = "ProductUI"
     
+    static let rxViewModel = "RxViewModel"
+    static let rxViewModelTests = "RxViewModelTests"
+    
     static let searchBarComponent = "SearchBarComponent"
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     
     static let uiKitHelpers = "UIKitHelpers"
+    
+    static let uiPrimitives = "UIPrimitives"
+    
+    static let userAccountNavigationComponent = "UserAccountNavigationComponent"
+    static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
     // MARK: - UI Components
 
@@ -1319,6 +1618,9 @@ private extension String {
 
     static let sharedConfigs = "SharedConfigs"
     
+    static let carouselComponent = "CarouselComponent"
+    static let carouselComponentTests = "CarouselComponentTests"
+    
     // MARK: - Infra
     
     static let fetcher = "Fetcher"
@@ -1329,6 +1631,9 @@ private extension String {
     
     // MARK: - Services
     
+    static let cardStatementAPI = "CardStatementAPI"
+    static let cardStatementAPITests = "CardStatementAPITests"
+
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     

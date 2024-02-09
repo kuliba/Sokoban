@@ -42,14 +42,39 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
-        let fastPaymentsFactory = makeFastPaymentsFactory(
-            model: model,
-            fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
-        )
+        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
+        ? HTTPClientStub.fastPaymentsSettings(delay: 1)
+        : httpClient
         
-        let fastPaymentsServices = Services.makeFastPaymentsServices(
-            httpClient: httpClient,
+        // TODO: Remove after `legacy` case eliminated
+        let fastPaymentsFactory: FastPaymentsFactory = {
+            
+            switch fastPaymentsSettingsFlag.rawValue {
+            case .active:
+                return .init(fastPaymentsViewModel: .new({
+                    
+                    makeNewFastPaymentsViewModel(
+                        httpClient: fpsHTTPClient,
+                        model: model,
+                        log: infoNetworkLog,
+                        scheduler: $0
+                    )
+                }))
+                
+            case .inactive:
+                return .init(fastPaymentsViewModel: .legacy({
+                    
+                    .init(model: $0,newModel: model,closeAction: $1)
+                }))
+            }
+        }()
+        
+        let otpServices = FastPaymentsSettingsOTPServices(fpsHTTPClient, infoNetworkLog)
+        
+        let navigationStateManager = makeNavigationStateManager(
+            otpServices: otpServices,
             model: model,
+            fastPaymentsFactory: fastPaymentsFactory,
             log: infoNetworkLog
         )
         
@@ -67,7 +92,7 @@ extension RootViewModelFactory {
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient
@@ -77,7 +102,7 @@ extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
@@ -213,7 +238,7 @@ extension ProductProfileViewModel {
     static func make(
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient
@@ -221,17 +246,59 @@ extension ProductProfileViewModel {
         
         return { product, rootView, dismissAction in
             
+            let makeProductProfileViewModel = ProductProfileViewModel.make(
+                with: model,
+                fastPaymentsFactory: fastPaymentsFactory,
+                navigationStateManager: navigationStateManager,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                cvvPINServicesClient: cvvPINServicesClient
+            )
+            
+            let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+                
                 .init(
                     model,
-                    fastPaymentsFactory: fastPaymentsFactory,
-                    fastPaymentsServices: fastPaymentsServices,
-                    sberQRServices: sberQRServices,
-                    qrViewModelFactory: qrViewModelFactory,
-                    cvvPINServicesClient: cvvPINServicesClient,
-                    product: product,
-                    rootView: rootView,
-                    dismissAction: dismissAction
+                    dismissAction: $0,
+                    updateFastAll: {
+                        model.action.send(ModelAction.Products.Update.Fast.All())
+                    })
+            }
+            
+            let paymentsTransfersFactory = PaymentsTransfersFactory(
+                makeProductProfileViewModel: makeProductProfileViewModel, 
+                makeTemplatesListViewModel: makeTemplatesListViewModel
+            )
+            
+            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
+                
+                return .init(
+                    productStatement: productStatementData,
+                    product: productData,
+                    updateFastAll: {
+                        model.action.send(ModelAction.Products.Update.Fast.All())
+                    },
+                    model: model
                 )
+            }
+
+            let operationDetailFactory = OperationDetailFactory(
+                makeOperationDetailViewModel: makeOperationDetailViewModel
+            )
+            
+            return .init(
+                model,
+                fastPaymentsFactory: fastPaymentsFactory,
+                navigationStateManager: navigationStateManager,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                paymentsTransfersFactory: paymentsTransfersFactory, 
+                operationDetailFactory: operationDetailFactory,
+                cvvPINServicesClient: cvvPINServicesClient,
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
         }
     }
 }
@@ -269,29 +336,42 @@ private extension RootViewModelFactory {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
+        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+            
+            .init(
+                model,
+                dismissAction: $0,
+                updateFastAll: {
+                    model.action.send(ModelAction.Products.Update.Fast.All())
+                })
+        }
+        
+        let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeProductProfileViewModel: makeProductProfileViewModel, makeTemplatesListViewModel: makeTemplatesListViewModel
+        )
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: paymentsTransfersFactory,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
-            fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory
+            qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: paymentsTransfersFactory
         )
         
         let chatViewModel = ChatViewModel()
@@ -313,7 +393,7 @@ private extension RootViewModelFactory {
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,

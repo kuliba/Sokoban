@@ -83,7 +83,7 @@ final class ResponseMapper_mapCreateFastPaymentContractResponseTests: XCTestCase
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.CreateFastPaymentContractResult {
+    ) -> ResponseMapper.VoidMappingResult {
         
         ResponseMapper.mapCreateFastPaymentContractResponse(data, httpURLResponse)
     }

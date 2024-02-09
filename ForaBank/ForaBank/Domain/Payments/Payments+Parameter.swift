@@ -1345,6 +1345,9 @@ extension Payments {
 
             case .inProgress:
                 self.init(status: .accepted)
+            
+            case .suspended:
+                self.init(status: .suspended)
 
             case .rejected, .unknown:
                 self.init(status: .error)
@@ -1373,6 +1376,9 @@ extension Payments {
                 
             case .rejected:
                 self.init(status: .error)
+            
+            case .suspended:
+                self.init(status: .suspended)
                 
             default:
                 self.init(status: .accepted)
@@ -1384,6 +1390,7 @@ extension Payments {
             case success
             case accepted
             case transfer
+            case suspended
             case error
         }
     }

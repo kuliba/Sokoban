@@ -79,7 +79,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
     private typealias SUT = RemoteServiceDecorator<Input, Response, ProcessError>
     private typealias Input = UUID
     private typealias Result = Swift.Result<SUT.Output, SUT.ProcessError>
-    private typealias DecoratorSpy = Spy<Input, Response, ProcessError>
+    private typealias DecoratorSpy = SpyOf<Input, Response, ProcessError>
     private typealias DecorationSpy = _DecorationSpy<Swift.Result<Response, ProcessError>>
     
     private func makeSUT(
@@ -93,7 +93,7 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         let decoratorSpy = DecoratorSpy()
         let decorationSpy = DecorationSpy()
         let sut = SUT(
-            decoratee: decoratorSpy,
+            decoratee: SpyAdapter(spy: decoratorSpy),
             decoration: decorationSpy.process
         )
         
@@ -168,8 +168,6 @@ final class RemoteServiceDecoratorTests: XCTestCase {
         typealias Message = (value: Value, completion: () -> Void)
     }
 }
-
-extension Spy: RemoteServiceInterface {}
 
 private func makeInput(
     _ value: UUID = .init()

@@ -9,46 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var demo: Demo = .consent
-    
     var body: some View {
         
-        ZStack {
-            
-            Color.clear
-            
-            Group {
-                
-                switch demo {
-                case .consent:
-                    ConsentListPrototypeView()
-                    
-                case .fps:
-                    FPSPrototypeView()
-                }
-            }
-        }
-        .overlay(alignment: .bottomLeading, content: picker)
-    }
-    
-    private func picker() -> some View {
-        
-        Picker("Select Demo", selection: $demo) {
-            
-            ForEach(Demo.allCases, id: \.self) {
-                
-                Text($0.rawValue).tag($0)
-            }
-        }
-        .pickerStyle(.menu)
-    }
-}
-
-private extension ContentView {
-    
-    enum Demo: String, CaseIterable {
-        
-        case consent, fps
+        FPSPrototypeView()
     }
 }
 

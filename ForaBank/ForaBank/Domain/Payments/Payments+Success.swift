@@ -32,23 +32,31 @@ extension Payments.Success {
         
         let amountFormatted = amountFormatter(amount, productId, .normal)
         
-        let params: [PaymentsParameterRepresentable?] = [
+        var params: [PaymentsParameterRepresentable?] = [
             Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
             Payments.ParameterSuccessStatus(with: status),
             Payments.ParameterSuccessText.title(operation, documentStatus: status),
             Payments.ParameterSuccessLogo.logo(with: logoImage),
             Payments.ParameterSuccessText.amount(amount: amountFormatted),
             Payments.ParameterSuccessLogo.sfpLogo(with: operation),
-            Payments.ParameterSuccessOptionButtons.buttons(
+            Payments.ParameterButton.repeatButton(.normal, documentStatus: status),
+            Payments.ParameterButton.actionButtonMain()
+        ]
+        
+        if status == .suspended {
+            
+            params.insert(Payments.ParameterSuccessText.title(with: Payments.Success.antifraudSubtitle), at: 3)
+            
+        } else {
+            
+            params.append(Payments.ParameterSuccessOptionButtons.buttons(
                 with: .normal,
                 documentStatus: status,
                 operationDetail: nil,
                 operation: operation,
                 meToMePayment: nil
-            ),
-            Payments.ParameterButton.repeatButton(.normal, documentStatus: status),
-            Payments.ParameterButton.actionButtonMain()
-        ]
+            ))
+        }
         
         self.init(
             operation: operation,
@@ -68,18 +76,27 @@ extension Payments.Success {
         
         if let title {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(with: title),
-                Payments.ParameterSuccessOptionButtons.buttons(
-                    with: .normal,
-                    documentStatus: status,
-                    operation: operation,
-                    meToMePayment: nil
-                ),
                 Payments.ParameterButton.actionButtonMain()
             ]
+            
+            if status == .suspended {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
+                    with: .normal,
+                    documentStatus: status,
+                    operationDetail: nil,
+                    operation: operation,
+                    meToMePayment: nil
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -88,19 +105,27 @@ extension Payments.Success {
             
         } else {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(.normal, documentStatus: status),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspended {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: .normal,
                     documentStatus: status,
                     operationDetail: nil,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -134,18 +159,26 @@ extension Payments.Success {
         
         if let title {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(with: title),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspended {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: mode,
                     documentStatus: status,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -154,19 +187,27 @@ extension Payments.Success {
             
         } else {
             
-            let params: [PaymentsParameterRepresentable?] = [
+            var params: [PaymentsParameterRepresentable?] = [
                 Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: status),
                 Payments.ParameterSuccessText.title(.normal, documentStatus: status),
-                Payments.ParameterSuccessOptionButtons.buttons(
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            if status == .suspended {
+                
+                params.append(Payments.ParameterSuccessText.subTitle(with: Payments.Success.antifraudSubtitle))
+                
+            } else {
+                
+                params.append(Payments.ParameterSuccessOptionButtons.buttons(
                     with: mode,
                     documentStatus: status,
                     operationDetail: nil,
                     operation: operation,
                     meToMePayment: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]
+                ))
+            }
             
             self.init(
                 operation: operation,
@@ -295,26 +336,47 @@ extension Payments.Success {
         amount: String?
     ) {
         
-        let params: [PaymentsParameterRepresentable?] = [
-            Payments.ParameterSuccessMode(mode: mode),
-            Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
-            Payments.ParameterSuccessStatus(with: documentStatus),
-            Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
-            Payments.ParameterSuccessText.amount(amount: amount),
-            Payments.ParameterSuccessOptionButtons.buttons(
-                with: mode,
-                documentStatus: documentStatus,
+        if documentStatus == .suspended {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterSuccessMode(mode: mode),
+                Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: documentStatus),
+                Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
+                Payments.ParameterSuccessText.title(with: Payments.Success.antifraudSubtitle),
+                Payments.ParameterSuccessText.amount(amount: amount),
+                Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
                 operation: nil,
-                meToMePayment: .init(mode: mode)
-            ),
-            Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
-            Payments.ParameterButton.actionButtonMain()
-        ]
-        
-        self.init(
-            operation: nil,
-            parameters: params.compactMap { $0 }
-        )
+                parameters: params.compactMap { $0 }
+            )
+            
+        } else {
+                        
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterSuccessMode(mode: mode),
+                Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: documentStatus),
+                Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
+                Payments.ParameterSuccessText.amount(amount: amount),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: documentStatus,
+                    operation: nil,
+                    meToMePayment: .init(mode: mode)
+                ),
+                Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: nil,
+                parameters: params.compactMap { $0 }
+            )
+        }
     }
 }
 
@@ -418,15 +480,18 @@ extension Payments.Success {
             break
         }
         
-        // options buttons
-        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
-            with: mode,
-            documentStatus: documentStatus,
-            operationDetail: operationDetail,
-            operation: operation,
-            meToMePayment: nil
-        )
-        parameters.append(optionButtonsParam)
+        if documentStatus != .suspended {
+         
+            // options buttons
+            let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                with: mode,
+                documentStatus: documentStatus,
+                operationDetail: operationDetail,
+                operation: operation,
+                meToMePayment: nil
+            )
+            parameters.append(optionButtonsParam)
+        }
         
         return (parameters.compactMap { $0 }, transferType)
     }
@@ -496,10 +561,19 @@ extension Payments.ParameterSuccessText {
             case .sberQR:
                 return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
+        case .suspended:
+            return .init(
+                id: paramId,
+                value: "Операция временно приостановлена в целях безопасности",
+                style: .warning
+            )
         }
     }
     
-    static func title(_ operation: Payments.Operation, documentStatus: TransferResponseBaseData.DocumentStatus) -> Payments.ParameterSuccessText? {
+    static func title(
+        _ operation: Payments.Operation,
+        documentStatus: TransferResponseBaseData.DocumentStatus
+    ) -> Payments.ParameterSuccessText? {
         
         let paramId = Payments.Parameter.Identifier.successTitle.rawValue
         
@@ -520,6 +594,12 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
+            case .suspended:
+                return .init(
+                    id: paramId,
+                    value: "Операция временно приостановлена в целях безопасности",
+                    style: .warning
+                )
             }
             
         } else {
@@ -539,6 +619,8 @@ extension Payments.ParameterSuccessText {
                 default:
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
+            case .suspended:
+                return .init(id: paramId, value: "Операция временно приостановлена в целях безопасности", style: .warning)
             }
         }
     }
@@ -597,6 +679,8 @@ extension Payments.ParameterSuccessOptionButtons {
                 meToMePayment,
                 operation
             )
+        case .suspended:
+            return nil
         }
     }
     
@@ -750,7 +834,7 @@ extension Payments.ParameterButton {
         case .complete:
             return nil
             
-        case .inProgress:
+        case .inProgress, .suspended:
             return nil
             
         case .rejected, .unknown:
@@ -820,9 +904,12 @@ extension Payments.ParameterSuccessStatus {
         case .accepted:
             return .inProgress
             
+        case .suspended:
+            return .suspended
+            
         case .error:
             return .rejected
-            
+        
         case .transfer:
             return .unknown
         }

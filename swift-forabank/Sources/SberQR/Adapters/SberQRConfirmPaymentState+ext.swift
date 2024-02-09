@@ -12,14 +12,16 @@ public extension SberQRConfirmPaymentState {
     
     func makePayload(
         with url: URL
-    ) -> CreateSberQRPaymentPayload {
+    ) -> CreateSberQRPaymentPayload? {
         
-        .init(qrLink: url, product: product, amount: amount)
+        guard let product else { return nil }
+        
+        return .init(qrLink: url, product: product, amount: amount)
     }
     
     var productSelect: ProductSelect {
         
-        switch self {
+        switch confirm {
         case let .fixedAmount(fixedAmount):
             return fixedAmount.productSelect
             
@@ -28,9 +30,12 @@ public extension SberQRConfirmPaymentState {
         }
     }
     
-    private var product: CreateSberQRPaymentPayload.Product {
+    private var product: CreateSberQRPaymentPayload.Product? {
         
-        switch (productSelect.selected.type, productSelect.selected.id.rawValue) {
+        guard let selected = productSelect.selected
+        else { return nil }
+        
+        switch (selected.type, selected.id.rawValue) {
         case let (.account, id):
             return .account(.init(id))
             
@@ -41,7 +46,7 @@ public extension SberQRConfirmPaymentState {
     
     private var amount: CreateSberQRPaymentPayload.Amount? {
         
-        guard case let .editableAmount(editableAmount) = self
+        guard case let .editableAmount(editableAmount) = confirm
         else { return nil }
         
         return .init(

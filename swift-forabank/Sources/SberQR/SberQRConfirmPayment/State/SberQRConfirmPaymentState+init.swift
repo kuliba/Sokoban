@@ -11,27 +11,35 @@ public extension SberQRConfirmPaymentState {
     
     init(
         product: ProductSelect.Product,
-        response: GetSberQRDataResponse
+        response: GetSberQRDataResponse,
+        isInflight: Bool = false
     ) throws {
         
         if response.required.contains(.paymentAmount) {
             
-            self = try .editableAmount(.init(
-                product: product,
-                response: response
-            ))
+            try self.init(
+                confirm: .editableAmount(.init(
+                    product: product,
+                    response: response
+                )),
+                isInflight: isInflight
+            )
             
         } else {
             
-            self = try .fixedAmount(.init(
-                product: product,
-                response: response
-            ))
+            self = try .init(
+                confirm: .fixedAmount(.init(
+                    product: product,
+                    response: response
+                )
+                ),
+                isInflight: isInflight
+            )
         }
     }
 }
 
-private extension SberQRConfirmPaymentState.EditableAmount {
+private extension EditableAmount<GetSberQRDataResponse.Parameter.Info> {
     
     init(
         product: ProductSelect.Product,
@@ -49,7 +57,7 @@ private extension SberQRConfirmPaymentState.EditableAmount {
     }
 }
 
-private extension SberQRConfirmPaymentState.FixedAmount {
+private extension FixedAmount<GetSberQRDataResponse.Parameter.Info> {
     
     init(
         product: ProductSelect.Product,

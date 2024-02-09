@@ -6,111 +6,78 @@
 //
 
 import Combine
+import CombineSchedulers
+import FastPaymentsSettings
 import Foundation
+import OTPInputComponent
+import UIPrimitives
+import UserAccountNavigationComponent
 
 final class UserAccountViewModel: ObservableObject {
     
-    @Published private(set) var route: Route
+    @Published private(set) var state: State
     
+#warning("informer should be a part of the state, its auto-dismiss should be handled by effect")
     let informer: InformerViewModel
     
-    private let factory: Factory
-    private var cancellables = Set<AnyCancellable>()
+    private let navigationStateManager: UserAccountNavigationStateManager
+    
+    private let stateSubject = PassthroughSubject<State, Never>()
+    private let scheduler: AnySchedulerOfDispatchQueue
     
     init(
-        route: Route = .init(),
+        initialState: State = .init(),
         informer: InformerViewModel = .init(),
-        factory: Factory
+        navigationStateManager: UserAccountNavigationStateManager,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.route = route
+        self.state = initialState
         self.informer = informer
-        self.factory = factory
+        self.navigationStateManager = navigationStateManager
+        self.scheduler = scheduler
         
-        //        $route
-        //            .map(\.isLoading)
-        //            .sink { print($0) }
-        //            .store(in: &cancellables)
+        stateSubject
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$state)
     }
 }
-
-// MARK: - Demo Functionality
 
 extension UserAccountViewModel {
     
-    func showDemoLoader() {
+    func event(_ event: Event) {
         
-        route.isLoading = true
+        let (state, effect) = navigationStateManager.reduce(state, event, informer.set(text:), self.event(_:))
+        stateSubject.send(state)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        if let effect {
             
-            self?.route.isLoading = false
+            handleEffect(effect)
         }
     }
     
-    func showDemoAlert() {
+    private func handleEffect(_ effect: Effect) {
         
-        route.modal = .alert(.init(
-            title: "Test Alert",
-            message: "Long alert message here.",
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                action: dismissModal
-            )
-        ))
-    }
-    
-    func showDemoInformer() {
-        
-        informer.set(text: "Demo Informer Text.")
-    }
-}
-
-// MARK: - Confirm with OTP
-
-extension UserAccountViewModel {
-    
-    func handleOTPResult(
-        _ result: ConfirmWithOTPResult
-    ) {
-        dismissFPSDestination()
-        fpsViewModel?.event(.resetStatus)
-        
-        switch result {
-        case .success:
-            informer.set(text: "Банк по умолчанию установлен")
-            fpsViewModel?.event(.confirmSetBankDefault)
+        switch effect {
+        case let .fps(fpsEvent):
+            fpsDispatch?(fpsEvent)
             
-        case .incorrectCode:
-            informer.set(text: "Банк по умолчанию не установлен")
-            
-        case let .serverError(message):
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                
-                self?.route.modal = .fpsAlert(.ok(
-                    title: "Ошибка",
-                    message: message,
-                    primaryAction: { [weak self] in self?.dismissModal() }
-                ))
-            }
-            
-        case .connectivityError:
-            informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+        case let .otp(otpEffect):
+            navigationStateManager.handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
         }
     }
-}
-
-private extension UserAccountViewModel {
     
-    var fpsViewModel: FastPaymentsSettingsViewModel? {
+    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
         
-        switch route.destination {
-        case let .fastPaymentsSettings(fpsViewModel):
-            return fpsViewModel
-            
-        default:
-            return nil
-        }
+        fpsViewModel?.event(_:)
+    }
+    
+    private var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        guard let route = state.destination
+        else { return nil }
+        
+        return route.viewModel
     }
 }
 
@@ -118,317 +85,27 @@ private extension UserAccountViewModel {
 
 extension UserAccountViewModel {
     
+#warning("move to `reduce`")
     func openFastPaymentsSettings() {
         
-        let viewModel = factory.makeFastPaymentsSettingsViewModel()
-        bind(viewModel)
-        route.destination = .fastPaymentsSettings(viewModel)
-    }
-    
-    private func bind(_ viewModel: FastPaymentsSettingsViewModel) {
+        let fpsViewModel = navigationStateManager.makeFastPaymentsSettingsViewModel(scheduler)
+        let cancellable = fpsViewModel.$state
+            .removeDuplicates()
+            .map(Event.FastPaymentsSettings.updated)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.fps($0)) }
         
-#warning("combine multiple pipelines into one, extract composed sink into helpers")
-        
-        viewModel.$state
-            .compactMap(\.?.isInflight)
-            .sink { [weak self] in self?.route.isLoading = $0 }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.alertMessage)
-            .sink { [weak self] in
-                
-                self?.route.modal = .fpsAlert(.ok(
-                    message: $0,
-                    primaryAction: {
-                        
-                        self?.dismissModal()
-                        viewModel.event(.resetStatus)
-                    }
-                ))
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.finalAlertMessage)
-            .sink { [weak self] in
-                
-                self?.route.modal = .fpsAlert(.ok(
-                    message: $0,
-                    primaryAction: {
-                        
-                        self?.resetRoute()
-#warning("resetStatus is needed?")
-                        // viewModel.event(.resetStatus)
-                    }
-                ))
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.informer)
-            .sink { [weak self] informer in
-                
-                self?.informer.set(text: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
-#warning("resetStatus is needed?")
-                // viewModel.event(.resetStatus)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.missingProduct)
-            .sink { [weak self] in
-                
-                self?.route.modal = .fpsAlert(.ok(
-                    title: "Сервис не доступен",
-                    message: "Для подключения договора СБП у Вас должен быть подходящий продукт",
-                    primaryAction: {
-                        
-                        self?.resetRoute()
-                        viewModel.event(.resetStatus)
-                    }
-                ))
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.setBankDefault)
-            .sink { [weak self] in
-                
-                self?.route.modal = .fpsAlert(.init(
-                    title: "Внимание",
-                    message: "Фора-банк будет выбран банком по умолчанию",
-                    primaryButton: .init(
-                        type: .default,
-                        title: "OK",
-                        action: {
-                            
-                            self?.dismissModal()
-                            viewModel.event(.resetStatus)
-                            viewModel.event(.prepareSetBankDefault)
-                        }),
-                    secondaryButton: .init(
-                        type: .cancel,
-                        title: "Отмена",
-                        action: {
-                            
-                            self?.dismissModal()
-                            viewModel.event(.resetStatus)
-                        }
-                    )
-                ))
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$state
-            .compactMap(\.?.confirmSetBankDefault)
-            .sink { [weak self] in
-                
-                viewModel.event(.resetStatus)
-                self?.route.fpsDestination = .confirmSetBankDefault
-            }
-            .store(in: &cancellables)
+        state.destination = .init(fpsViewModel, cancellable)
+#warning("and change to effect (??) when moved to `reduce`")
+        fpsViewModel.event(.appear)
     }
 }
 
-private extension AlertViewModel {
-    
-    static func ok(
-        title: String = "",
-        message: String? = nil,
-        primaryAction: @escaping () -> Void
-    ) -> Self {
-        
-        self.init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                action: primaryAction
-            )
-        )
-    }
-}
-
-private extension FastPaymentsSettingsState {
-    
-    var alertMessage: String? {
-        
-        switch status {
-        case let .serverError(message):
-            return message
-            
-        case .connectivityError:
-            return "Превышено время ожидания. Попробуйте позже"
-            
-        default:
-            return nil
-        }
-    }
-    
-    var finalAlertMessage: String? {
-        
-        switch userPaymentSettings {
-        case let .failure(.serverError(message)):
-            return message
-            
-        case .failure(.connectivityError):
-            return "Превышено время ожидания. Попробуйте позже"
-            
-        default:
-            return nil
-        }
-    }
-    
-    var informer: Void? {
-        
-        switch status {
-        case .updateContractFailure:
-            return ()
-            
-        default:
-            return nil
-        }
-    }
-    
-    var missingProduct: Void? {
-        
-        switch status {
-        case .missingProduct:
-            return ()
-            
-        default:
-            return nil
-        }
-    }
-    
-    var setBankDefault: Void? {
-        
-        switch status {
-        case .setBankDefault:
-            return ()
-            
-        default:
-            return nil
-        }
-    }
-    
-    var confirmSetBankDefault: Void? {
-        
-        switch status {
-        case .confirmSetBankDefault:
-#warning("need `phoneNumberMask` from contract!")
-            return ()
-            
-        default:
-            return nil
-        }
-    }
-}
+// MARK: - Types
 
 extension UserAccountViewModel {
     
-    func resetRoute() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.route = .init()
-        }
-    }
-    
-    func dismissDestination() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.route.destination = nil
-        }
-    }
-    
-    func dismissFPSDestination() {
-        
-        //        DispatchQueue.main.async { [weak self] in
-        
-        /*self?.*/route.fpsDestination = nil
-        //        }
-    }
-    
-    func dismissModal() {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.route.modal = nil
-        }
-    }
-}
-
-extension UserAccountViewModel {
-    
-    struct Route: Equatable {
-        
-        var destination: Destination?
-        var fpsDestination: FPSDestination?
-        var modal: Modal?
-        var isLoading = false
-        
-        init(
-            destination: Destination? = nil,
-            modal: Modal? = nil
-        ) {
-            self.destination = destination
-            self.modal = modal
-        }
-        
-        enum Destination: Equatable {
-            
-            case fastPaymentsSettings(FastPaymentsSettingsViewModel)
-        }
-        
-        enum FPSDestination: Equatable {
-            
-            case confirmSetBankDefault//(phoneNumberMask: String)
-        }
-        
-        enum Modal: Equatable {
-            
-            case alert(AlertViewModel)
-            case fpsAlert(AlertViewModel)
-            
-            var alert: AlertViewModel? {
-                
-                if case let .alert(alert) = self {
-                    return alert
-                } else {
-                    return nil
-                }
-            }
-            
-            var fpsAlert: AlertViewModel? {
-                
-                if case let .fpsAlert(fpsAlert) = self {
-                    return fpsAlert
-                } else {
-                    return nil
-                }
-            }
-        }
-    }
-}
-
-extension UserAccountViewModel.Route.Destination: Hashable {
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        
-        switch (lhs, rhs) {
-        case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
-            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
-        }
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        switch self {
-        case let .fastPaymentsSettings(viewModel):
-            hasher.combine(ObjectIdentifier(viewModel))
-        }
-    }
+    typealias State = UserAccountNavigation.State
+    typealias Event = UserAccountNavigation.Event
+    typealias Effect = UserAccountNavigation.Effect
 }

@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/LandingMapping.xctestplan"
+            reference = "container:../ForaBank/TestPlans/LandingMapping.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

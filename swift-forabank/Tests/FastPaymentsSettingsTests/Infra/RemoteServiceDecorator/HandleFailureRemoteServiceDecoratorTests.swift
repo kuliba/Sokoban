@@ -78,7 +78,7 @@ final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
     private typealias SUT = RemoteServiceDecorator<Input, Response, ProcessError>
     private typealias Input = UUID
     private typealias Result = Swift.Result<SUT.Output, SUT.ProcessError>
-    private typealias DecoratorSpy = Spy<Input, Response, ProcessError>
+    private typealias DecoratorSpy = SpyOf<Input, Response, ProcessError>
     private typealias HandleFailureSpy = _DecorationSpy<ProcessError>
     
     private func makeSUT(
@@ -92,7 +92,7 @@ final class HandleFailureRemoteServiceDecoratorTests: XCTestCase {
         let decoratorSpy = DecoratorSpy()
         let handleFailureSpy = HandleFailureSpy()
         let sut = SUT(
-            decoratee: decoratorSpy,
+            decoratee: SpyAdapter(spy: decoratorSpy),
             handleFailure: handleFailureSpy.process
         )
         

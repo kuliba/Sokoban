@@ -52,7 +52,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
-                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {})
+                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {}, updateFastAll: {})
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)
@@ -68,7 +68,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
         case .transfers:
             if indexPath.row == 1 {
-                let model = ConfirmViewControllerModel(type: .card2card)
+                let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
                 popView.modalPresentationStyle = .custom

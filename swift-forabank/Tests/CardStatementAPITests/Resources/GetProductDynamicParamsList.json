@@ -1,0 +1,42 @@
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "dynamicProductParamsList": [
+      {
+        "id": 11,
+        "type": "CARD",
+        "dynamicParams": {
+          "customName": "card",
+          "balance": 1,
+          "balanceRUB": 1,
+          "status": "Действует",
+          "availableExceedLimit": 2,
+          "debtAmount": 3,
+          "totalDebtAmount": 4,
+          "statusPC": "0",
+          "statusCard": "ACTIVE"
+        }
+      },
+      {
+        "id": 12,
+        "type": "ACCOUNT",
+        "dynamicParams": {
+          "customName": "account",
+          "balance": 5,
+          "balanceRUB": 6,
+          "status": "Действует"
+        }
+      },
+      {
+        "id": 13,
+        "type": "DEPOSIT",
+        "dynamicParams": {
+          "customName": "deposit",
+          "balance": 7,
+          "balanceRUB": 8
+        }
+      }
+    ]
+  }
+}

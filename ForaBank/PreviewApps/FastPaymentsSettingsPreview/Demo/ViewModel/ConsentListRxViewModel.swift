@@ -5,6 +5,9 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
+import FastPaymentsSettings
+import RxViewModel
+
 typealias ConsentListRxViewModel = RxViewModel<ConsentListState, ConsentListEvent, ConsentListEffect>
 
 extension ConsentListRxViewModel {

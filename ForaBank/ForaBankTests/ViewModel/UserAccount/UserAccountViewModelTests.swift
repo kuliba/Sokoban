@@ -120,9 +120,8 @@ final class UserAccountViewModelTests: XCTestCase {
             settingsAgent: spy
         )
         let sut = SUT(
+            navigationStateManager: .preview,
             model: model,
-            fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
             clientInfo: .sample,
             dismissAction: {}
         )
@@ -144,9 +143,9 @@ private extension UserAccountViewModel {
         action.send(UserAccountViewModelAction.ExitAction())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
        
-        if let alert {
+        if let alert = route.alert {
             
-            alert.primary.action()
+            self.event(.alertButtonTapped(alert.primaryButton.event))
         } else {
             
             XCTFail("Expected none nil Alert")

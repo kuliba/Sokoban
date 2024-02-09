@@ -153,7 +153,11 @@ extension Model {
                 throw Payments.Error.action(.alert(title: "Сервис временно не доступен", message: "Приносим извинения за доставленные неудобства"))
                 
             case .other:
-                return .init(parameters: [innParameter, requisitesTypeParameter], front: .init(visible: [innNumberId], isCompleted: false), back: .init(stage: .local, required: [innParameter.id], processed: nil))
+                return .init(
+                    parameters: [innParameter, requisitesTypeParameter],
+                    front: .init(visible: [innNumberId], isCompleted: false),
+                    back: .init(stage: .local, required: [innParameter.id], processed: nil)
+                )
             }
             
         case 2:
@@ -161,7 +165,7 @@ extension Model {
                 throw Payments.Error.notAuthorized
             }
             
-            guard let innValue = operation.parameters.first(where: {$0.id == innNumberId})?.value else {
+            guard let innValue = operation.parameters.first(where: { $0.id == innNumberId })?.value else {
                 throw Payments.Error.missingParameter(innNumberId)
             }
             
@@ -228,15 +232,17 @@ extension Model {
                     //MARK: Kpp Parameter
                     let options: [Payments.ParameterSelect.Option] = suggestedCompanies.compactMap { company in
                         
-                        guard let kpp = company.kpp else {
-                            return nil
-                        }
+                        let kpp = company.kpp
                         
-                        return .init(id: kpp, name: kpp, subname: company.name)
+                        return .init(id: kpp ?? "", name: kpp ?? "", subname: company.name)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
-                    parameters.append(kppParameter)
+                    if innValue.count != 12 {
+                        
+                        let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
+                        
+                        parameters.append(kppParameter)
+                    }
                     
                     //MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
@@ -366,7 +372,10 @@ extension Model {
     }
     
     //MARK: process remote confirm step
-    func paymentsProcessRemoteStepRequisits(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepRequisits(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
 
         var parameters = [PaymentsParameterRepresentable]()
         
@@ -396,6 +405,15 @@ extension Model {
             
         parameters.append(Payments.ParameterCode.regular)
             
+        if response.scenario == .suspect {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
+        
         return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
     }
     

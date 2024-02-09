@@ -31,10 +31,10 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
-    private let fastPaymentsFactory: FastPaymentsFactory
-    private let fastPaymentsServices: FastPaymentsServices
+    private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
@@ -43,10 +43,10 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         route: Route = .empty,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
@@ -62,10 +62,10 @@ class MainViewModel: ObservableObject, Resetable {
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
+        self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
         self.navButtonsRight = createNavButtonsRight()
@@ -186,11 +186,10 @@ private extension MainViewModel {
                     
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     
-                    // TODO: replace with injected factory
+                    #warning("replace with injected factory")
                     route.destination = .userAccount(.init(
+                        navigationStateManager: navigationStateManager,
                         model: model,
-                        fastPaymentsFactory: fastPaymentsFactory,
-                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in self?.resetDestination() }
                     ))
@@ -288,26 +287,32 @@ private extension MainViewModel {
         model.products
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
+                guard let deposits = products[.deposit], !deposits.isEmpty else { return }
                 
-                guard let deposits = products[.deposit] else { return }
+                let filteredDeposits = deposits.filter { deposit in
+                    guard let deposit = deposit as? ProductDepositData else { return false }
+                    return !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)) && deposit.endDateNf
+                }
                 
-                for deposit in deposits {
+                var previousDepositData: (expired: Date?, id: Int?) = (nil, nil)
+                
+                filteredDeposits.forEach { deposit in
+                    guard let deposit = deposit as? ProductDepositData else { return }
                     
-                    if let deposit = deposit as? ProductDepositData {
-                        
-                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.endDateNf else {
-                            continue
-                        }
-                        
-                        self.route.modal = .alert(.init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
-                            
-                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: deposit.id))
-                        })))
-                        
-                        self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
-                        
-                        return
-                    }
+                    self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.depositId))
+                    previousDepositData = returnFirstExpiredDepositID(previousData: previousDepositData, newData: (deposit.endDate, deposit.depositId))
+                    
+                }
+                
+                if let productId = previousDepositData.id {
+                    self.route.modal = .alert(.init(
+                        title: "Срок действия вклада истек",
+                        message: "Переведите деньги со вклада на свою карту/счет в любое время",
+                        primary: .init(type: .default, title: "Отмена", action: {}),
+                        secondary: .init(type: .default, title: "Ok", action: {
+                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: productId))
+                        })
+                    ))
                 }
             }.store(in: &bindings)
         
@@ -381,8 +386,9 @@ private extension MainViewModel {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListViewModel = TemplatesListViewModel(
-                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
+                                let templatesListViewModel = paymentsTransfersFactory.makeTemplatesListViewModel (
+                                    { [weak self] in self?.action.send(MainViewModelAction.Close.Link())
+                                })
                                 bind(templatesListViewModel)
                                 route.destination = .templates(templatesListViewModel)
                                 
@@ -817,7 +823,8 @@ private extension MainViewModel {
             rootActions?.spinner.show()
             
             // TODO: move conversion to factory
-            let payload = state.makePayload(with: url)
+            guard let payload = state.makePayload(with: url)
+            else { return }
             
             sberQRServices.createSberQRPayment(payload) { [weak self] result in
                 
@@ -1066,6 +1073,28 @@ private extension MainViewModel {
             })
         
         route.destination = .openDepositsList(openDepositViewModel)
+    }
+    
+    private typealias DepositeID = Int
+    private func returnFirstExpiredDepositID(
+        previousData: (expired: Date?, DepositeID?),
+        newData: (Date?, DepositeID)
+    ) -> (Date?, DepositeID) {
+        
+        if previousData.1 == nil {
+            return (newData.0, newData.1)
+        }
+        
+        if let previousDate = previousData.0,
+           let newDate = newData.0,
+           let newID = previousData.1,
+           newDate < previousDate {
+            
+            return (newDate, newID)
+        } else {
+            
+            return (previousData.0, previousData.1 ?? 0)
+        }
     }
 }
 

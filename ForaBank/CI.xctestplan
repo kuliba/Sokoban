@@ -247,6 +247,55 @@
         "identifier" : "ForaToolsTests",
         "name" : "ForaToolsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UserAccountNavigationComponentTests",
+        "name" : "UserAccountNavigationComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CardGuardianModuleTests",
+        "name" : "CardGuardianModuleTests"
+      }
     }
   ],
   "version" : 1

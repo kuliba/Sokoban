@@ -18,10 +18,16 @@ public extension RequestFactory {
         payload: VerificationCode
     ) throws -> URLRequest {
         
+        guard !payload.isEmpty else {
+            throw EmptyVerificationCode()
+        }
+        
         var request = createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody
         return request
     }
+    
+    struct EmptyVerificationCode: Error {}
 }
 
 private extension RequestFactory.VerificationCode {

@@ -18,7 +18,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_editAmount_shouldChangeAmountOnEditAmount() {
+    func test_reduce_editAmount_shouldChangeAmountOnEditAmount() throws {
         
         let amount: Decimal = 12.66
         let brandName = "Some Brand Name"
@@ -35,10 +35,12 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
             amount: amount,
             isEnabled: true
         ))
-        XCTAssertGreaterThan(newState.productSelect.selected.balance, amount)
+        
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(balance, amount)
     }
     
-    func test_reduce_editAmount_shouldChangeAmountStateToDisabledOnEditAmount() {
+    func test_reduce_editAmount_shouldChangeAmountStateToDisabledOnEditAmount() throws {
         
         let amount: Decimal = 123.45
         let brandName = "Some Brand Name"
@@ -55,7 +57,8 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
             amount: amount,
             isEnabled: false
         ))
-        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(amount, balance)
     }
     
     func test_reduce_editAmount_shouldChangeStateOnEditAmount() {
@@ -76,7 +79,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         ))
     }
     
-    func test_reduce_editAmount_shouldChangeStateToDisabledOnAmountGreaterThanProductBalance() {
+    func test_reduce_editAmount_shouldChangeStateToDisabledOnAmountGreaterThanProductBalance() throws {
         
         let amount: Decimal = 123_457
         let brandName = "Some Brand Name"
@@ -96,19 +99,20 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
             amount: amount,
             isEnabled: false
         ))
-        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(amount, balance)
     }
     
     func test_reduce_productSelect_shouldCallProductSelectReduce() {
         
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, spy) = makeSUT()
         
         _ = sut.reduce(
             makeEditableAmount(productSelect: .compact(current)),
-            .productSelect(.select(selectedProduct.id))
+            .productSelect(.select(selectedProduct))
         )
         
         XCTAssertNoDiff(spy.states, [.compact(current)])
@@ -120,7 +124,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         let current = ProductSelect.Product.test2
         let productSelect: ProductSelect = .expanded(.test2, [.test, .test2])
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT(
             productSelectStub: productSelect
         )
@@ -133,12 +137,12 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(newState.productSelect, productSelect)
     }
     
-    func test_reduce_productSelect_shouldSetAmountToDisabledOnAmountGreaterThanBalanceOfSelectedProduct() {
+    func test_reduce_productSelect_shouldSetAmountToDisabledOnAmountGreaterThanBalanceOfSelectedProduct() throws {
         
         let amount: Decimal = 4.22
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT()
         
         let newState = sut.reduce(
@@ -150,15 +154,16 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         )
         
         XCTAssertFalse(newState.amount.button.isEnabled)
-        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThan(amount, balance)
     }
     
-    func test_reduce_productSelect_shouldSetAmountToEnabledOnAmountLesserThanBalanceOfSelectedProduct() {
+    func test_reduce_productSelect_shouldSetAmountToEnabledOnAmountLesserThanBalanceOfSelectedProduct() throws {
         
         let amount: Decimal = 4.21
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT()
         
         let newState = sut.reduce(
@@ -170,7 +175,8 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         )
         
         XCTAssert(newState.amount.button.isEnabled)
-        XCTAssertGreaterThanOrEqual(newState.productSelect.selected.balance, amount)
+        let balance = try XCTUnwrap(newState.productSelect.selected?.balance)
+        XCTAssertGreaterThanOrEqual(balance, amount)
     }
     
     // MARK: - Helpers

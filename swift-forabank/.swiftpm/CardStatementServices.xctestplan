@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "FC45501C-4613-473D-B657-EA2DBBF45645",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementServicesTests",
+        "name" : "CardStatementServicesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

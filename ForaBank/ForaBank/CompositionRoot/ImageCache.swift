@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 import Tagged
+import RxViewModel
 
 final class ImageCache {
     
@@ -24,16 +25,19 @@ final class ImageCache {
     private let imagesPublisher: ImagesPublisher
     private let fallback: Fallback
     
+    private let scheduler: AnySchedulerOfDispatchQueue
     private var cancellable: AnyCancellable?
     
     init(
         requestImages: @escaping RequestImages,
         imagesPublisher: ImagesPublisher,
-        fallback: @escaping Fallback
+        fallback: @escaping Fallback,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.requestImages = requestImages
         self.imagesPublisher = imagesPublisher
         self.fallback = fallback
+        self.scheduler = scheduler
     }
     
     func image(
@@ -62,6 +66,7 @@ final class ImageCache {
             // .handleEvents(receiveOutput: { print("### imagesPublisher filtered by \(imageID)", $0) })
                 .compactMap(\.image)
             // .handleEvents(receiveOutput: { print("### image for \(imageID)", $0) })
+                .receive(on: scheduler)
                 .sink(receiveValue: imageSubject.send)
             
             return imageSubject

@@ -35,10 +35,39 @@ public struct ProductSelectView<ProductView: View>: View {
         
         VStack(spacing: 10) {
             
-            selectedProductView(state.selected)
-                .padding(.default)
-            
-            state.products.map(productsView)
+            switch (state.selected, state.products) {
+            case (.none, .none):
+                HStack {
+                    Image(systemName: "creditcard")
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text("Счёт списания и зачисления")
+                            .font(.footnote)
+                        
+                        Text("Данные счёта")
+                            .font(.headline)
+                    }
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Image(systemName: "chevron.down")
+                        .onTapGesture { event(.toggleProductSelect) }
+                }
+                
+            case let (.none, .some(products)):
+                productsView(products: products)
+                
+            case let (.some(selected), .none):
+                selectedProductView(selected)
+                    .padding(.default)
+                
+            case let (.some(selected), .some(products)):
+                selectedProductView(selected)
+                    .padding(.default)
+                
+                productsView(products: products)
+            }
         }
         .animation(.easeInOut, value: state)
     }
@@ -108,7 +137,7 @@ public struct ProductSelectView<ProductView: View>: View {
     ) -> some View {
         
         productView(product)
-            .onTapGesture { event(.select(product.id)) }
+            .onTapGesture { event(.select(product)) }
     }
     
     private func chevron() -> some View {
@@ -134,6 +163,8 @@ struct ProductSelectView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
+            ProductSelectView_Demo(.emptySelectedEmptyProducts())
+            ProductSelectView_Demo(.emptySelectedNonEmptyProducts())
             ProductSelectView_Demo(.compact())
             ProductSelectView_Demo(.expanded())
         }
@@ -171,6 +202,16 @@ struct ProductSelectView_Previews: PreviewProvider {
 }
 
 private extension ProductSelect {
+    
+    static func emptySelectedEmptyProducts() -> Self {
+        
+        .init(selected: nil)
+    }
+    
+    static func emptySelectedNonEmptyProducts() -> Self {
+        
+        .init(selected: nil, products: .allProducts)
+    }
     
     static func compact(
         selected: ProductSelect.Product = .cardPreview

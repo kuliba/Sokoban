@@ -150,9 +150,11 @@ extension Model {
         
         switch product.productType {
         case .card:
-            let command = ServerCommands.CardController.GetCardStatementForPeriod(token: token, productId: product.id, period: period)
             
-            return try await cardStatementsFetch(command: command)
+            return try await Services.makeCardStatementForPeriod(
+                httpClient: self.authenticatedHTTPClient(), 
+                productId: product.id,
+                period: period)
             
         case .account:
             let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: product.id, period: period)
@@ -166,47 +168,6 @@ extension Model {
             
         case .loan:
             throw ModelStatementsError.unsupportedProductType(.loan)
-        }
-    }
-    
-    func cardStatementsFetch(command: ServerCommands.CardController.GetCardStatementForPeriod) async throws -> [ProductStatementData] {
-        
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                continuation.resume(with: Model.parserGetCardStatementForPeriod(result: result))
-            }
-        }
-    }
-    
-    // TODO: промежуточный вариант для переделки запроса getCardStatementForPeriod
-    
-    typealias ResultGetCardStatementForPeriod = Result<ServerCommands.CardController.GetCardStatementForPeriod.Response, ServerAgentError>
-    
-    typealias ResultParserGetCardStatementForPeriod = Result<[ProductStatementData], ModelProductsError>
-    
-    static func parserGetCardStatementForPeriod(
-        result: ResultGetCardStatementForPeriod
-    ) -> ResultParserGetCardStatementForPeriod {
-        
-        switch result {
-            
-        case .success(let response):
-            switch response.statusCode {
-            case .ok:
-                
-                guard let data = response.data else {
-                    return .failure(ModelProductsError.emptyData(message: response.errorMessage))
-                }
-                
-                return .success(data)
-
-            default:
-                return .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage))
-            }
-            
-        case .failure(let error):
-            return .failure(ModelProductsError.serverCommandError(error: error.localizedDescription))
         }
     }
     

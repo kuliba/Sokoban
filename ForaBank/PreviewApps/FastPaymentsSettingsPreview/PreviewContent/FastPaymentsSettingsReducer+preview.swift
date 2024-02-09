@@ -5,14 +5,22 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension FastPaymentsSettingsReducer {
     
-    static let preview: FastPaymentsSettingsReducer = .init(
+    static var preview: FastPaymentsSettingsReducer {
+ 
+        let bankDefaultReducer = BankDefaultReducer()
+        let consentListReducer = ConsentListRxReducer()
+        let contractReducer = ContractReducer(getProducts: { .preview })
+        let productsReducer = ProductsReducer(getProducts: { .preview })
         
-        getUserPaymentSettings: { $0(.active()) },
-        updateContract: { _, completion in completion(.success(.active)) },
-        getProduct: { .init(id: "1234567890") },
-        createContract: { _, completion in completion(.success(.active)) },
-        prepareSetBankDefault: { $0(.success) }
-    )
+        return .init(
+            bankDefaultReduce: bankDefaultReducer.reduce(_:_:),
+            consentListReduce: consentListReducer.reduce(_:_:),
+            contractReduce: contractReducer.reduce(_:_:),
+            productsReduce: productsReducer.reduce(_:_:)
+        )
+    }
 }

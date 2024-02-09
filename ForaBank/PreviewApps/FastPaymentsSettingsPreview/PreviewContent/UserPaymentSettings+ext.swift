@@ -5,73 +5,97 @@
 //  Created by Igor Malyarov on 11.01.2024.
 //
 
+import FastPaymentsSettings
+
 extension UserPaymentSettings {
     
     static func active(
-        _ consentResult: UserPaymentSettings.ConsentResult = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        _ consentList: ConsentListState = .success,
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .active,
-                consentResult: consentResult,
-                bankDefault: bankDefault
+                consentList: consentList,
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
     
     static func inactive(
-        _ consentResult: UserPaymentSettings.ConsentResult = .success,
-        _ bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        _ consentList: ConsentListState = .success,
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled)
     ) -> Self {
         
         .contracted(
             .preview(
                 paymentContract: .inactive,
-                consentResult: consentResult,
-                bankDefault: bankDefault
+                consentList: consentList,
+                bankDefaultResponse: bankDefaultResponse
             )
         )
     }
     
     static func missingContract(
-        consent: UserPaymentSettings.ConsentResult = .success
+        consent: ConsentListState = .success
     ) -> Self {
         
         .missingContract(consent)
     }
 }
 
-extension UserPaymentSettings.ContractDetails {
+extension UserPaymentSettings.Details {
     
     static func preview(
         paymentContract: UserPaymentSettings.PaymentContract = .active,
-        consentResult: UserPaymentSettings.ConsentResult = .success,
-        bankDefault: UserPaymentSettings.BankDefault = .offEnabled
+        consentList: ConsentListState = .success,
+        bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = .init(bankDefault: .offEnabled),
+        productSelector: UserPaymentSettings.ProductSelector = .init(
+            selectedProduct: .card,
+            products: .preview
+        )
     ) -> Self {
         
         .init(
             paymentContract: paymentContract,
-            consentResult: consentResult,
-            bankDefault: bankDefault
+            consentList: consentList,
+            bankDefaultResponse: bankDefaultResponse,
+            productSelector: productSelector
         )
     }
 }
 
 extension UserPaymentSettings.PaymentContract {
     
-    static let active: Self = .init(contractStatus: .active)
-    static let inactive: Self = .init(contractStatus: .inactive)
+    static let active: Self = .init(
+        id: .init(generateRandom11DigitNumber()),
+        productID: Product.card.id,
+        contractStatus: .active,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
+    )
+    
+    static let inactive: Self = .init(
+        id: .init(generateRandom11DigitNumber()),
+        productID: Product.account.id,
+        contractStatus: .inactive,
+        phoneNumber: "79171044913",
+        phoneNumberMasked: "+7 ... ... 49 13"
+    )
 }
 
-private extension UserPaymentSettings.ConsentResult {
+private extension ConsentListState {
     
     static let success: Self = .success(.preview)
-    static let failure: Self = .failure(.init())
 }
 
-private extension UserPaymentSettings.ConsentList {
+private extension ConsentList {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(
+        banks: .preview,
+        consent: .preview,
+        mode: .collapsed,
+        searchText: ""
+    )
 }

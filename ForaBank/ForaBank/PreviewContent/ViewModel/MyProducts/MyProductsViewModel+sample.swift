@@ -22,7 +22,7 @@ extension MyProductsViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
@@ -44,7 +44,7 @@ extension MyProductsViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
