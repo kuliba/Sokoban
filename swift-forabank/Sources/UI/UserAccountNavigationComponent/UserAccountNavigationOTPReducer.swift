@@ -123,6 +123,7 @@ private extension UserAccountNavigationOTPReducer {
            state.destination?.destination == nil {
             
             state.isLoading = true
+            state.destination?.viewModel.event(.resetStatus)
             effect = .otp(.prepareSetBankDefault)
         }
         
