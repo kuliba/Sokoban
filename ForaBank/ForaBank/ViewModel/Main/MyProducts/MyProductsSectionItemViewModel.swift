@@ -48,7 +48,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
 
         let icon = IconViewModel(with: productData, model: model)
         let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
-        let name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .navigationTitle)
+        let name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
         let descriptions = productData.description
         var orderModePadding: CGFloat = 0
