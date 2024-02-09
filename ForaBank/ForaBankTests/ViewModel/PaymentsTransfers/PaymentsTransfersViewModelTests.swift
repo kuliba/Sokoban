@@ -319,7 +319,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
 
         let sut = PaymentsTransfersViewModel(
             model: model,
-            fastPaymentsFactory: .legacy,
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

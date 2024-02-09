@@ -27,7 +27,6 @@ class UserAccountViewModel: ObservableObject {
     @Published private(set) var route: UserAccountRoute
     
     private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
-    private let navigationStateManager: UserAccountNavigationStateManager
     
     var appVersionFull: String? {
         
@@ -35,7 +34,7 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
-    private let fastPaymentsFactory: FastPaymentsFactory
+    private let navigationStateManager: UserAccountNavigationStateManager
     
     private let scheduler: AnySchedulerOfDispatchQueue
     private var bindings = Set<AnyCancellable>()
@@ -49,13 +48,11 @@ class UserAccountViewModel: ObservableObject {
         exitButton: AccountCellFullButtonView.ViewModel,
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
         model: Model = .emptyMock,
-        fastPaymentsFactory: FastPaymentsFactory,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.route = route
         self.navigationStateManager = navigationStateManager
         self.model = model
-        self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
@@ -68,7 +65,6 @@ class UserAccountViewModel: ObservableObject {
         route: UserAccountRoute = .init(),
         navigationStateManager: UserAccountNavigationStateManager,
         model: Model,
-        fastPaymentsFactory: FastPaymentsFactory,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
         action: Action? = nil,
@@ -77,7 +73,6 @@ class UserAccountViewModel: ObservableObject {
         self.route = route
         self.navigationStateManager = navigationStateManager
         self.model = model
-        self.fastPaymentsFactory = fastPaymentsFactory
         self.sections = []
         self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -114,52 +109,17 @@ extension UserAccountViewModel {
     
     func event(_ event: UserAccountEvent) {
 
-        let (route, effect) = navigationStateManager.userAccountReduce(route, event) { [weak self] in self?.event(.otp($0)) }
+        let (route, effect) = navigationStateManager.reduce(route, event)
         routeSubject.send(route)
         
         if let effect {
             
-            handleEffect(effect) { [weak self] in self?.event($0) }
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
         }
     }
 }
 
-// MARK: - Handle Effect
-
-extension UserAccountViewModel {
-    
-    func handleEffect(
-        _ effect: UserAccountEffect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .model(modelEffect):
-            navigationStateManager.handleModelEffect(modelEffect, dispatch)
-            
-        case let .navigation(navigation):
-            switch navigation {
-            case let .fps(fpsEvent):
-                fpsDispatch?(fpsEvent)
-                
-            case let .otp(otpEffect):
-                navigationStateManager.handleOTPEffect(otpEffect) { [weak self] in self?.event(.otp($0)) }
-            }
-        }
-    }
-    
-    private var fpsDispatch: ((FastPaymentsSettingsEvent) -> Void)? {
-        
-        fpsViewModel?.event(_:)
-    }
-    
-    private var fpsViewModel: FastPaymentsSettingsViewModel? {
-        
-        guard case let .fastPaymentSettings(.new(route)) = route.link
-        else { return nil }
-        
-        return route.viewModel
-    }
-}
+// MARK: - Convenience Methods
 
 extension UserAccountViewModel {
     
@@ -636,7 +596,7 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
-            switch fastPaymentsFactory.fastPaymentsViewModel {
+            switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {
             case let .legacy(makeLegacy):
                 let data = model.fastPaymentContractFullInfo.value
                     .map { $0.getFastPaymentContractFindListDatum() }
@@ -986,7 +946,6 @@ extension UserAccountViewModel {
             infoButton: .init(icon: .ic24Info, action: { }),
             action: {}
         ),
-        fastPaymentsFactory: .legacy,
         scheduler: .main
     )
 }

@@ -211,7 +211,6 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
@@ -220,7 +219,6 @@ final class RootViewModelTests: XCTestCase {
             ),
             paymentsViewModel: .init(
                 model: model,
-                fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 

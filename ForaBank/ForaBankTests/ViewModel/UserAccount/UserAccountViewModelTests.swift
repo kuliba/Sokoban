@@ -122,7 +122,6 @@ final class UserAccountViewModelTests: XCTestCase {
         let sut = SUT(
             navigationStateManager: .preview,
             model: model,
-            fastPaymentsFactory: .legacy,
             clientInfo: .sample,
             dismissAction: {}
         )
