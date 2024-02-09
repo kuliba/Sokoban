@@ -62,6 +62,7 @@ struct PaymentsSuccessTextView: View {
                 .font(.textH4M16240())
                 .foregroundColor(.systemColorError)
                 .padding(.horizontal, 20)
+                .multilineTextAlignment(.center)
                 .accessibilityIdentifier("SuccessPageWarning")
             
         case .message:

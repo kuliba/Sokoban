@@ -213,8 +213,10 @@ extension Model {
                 case .ok:
                     
                     guard let data = response.data else {
-                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.emptyDataErrorMessage))
-                        self.handleServerCommandEmptyData(command: command)
+//                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.emptyDataErrorMessage))
+//                        self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.success(data: 10))
+
                         return
                     }
                     

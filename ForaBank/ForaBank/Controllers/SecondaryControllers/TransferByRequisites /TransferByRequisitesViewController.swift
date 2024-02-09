@@ -20,7 +20,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     var byCompany = false
     var paymentTemplate: PaymentTemplateData? = nil
-    var viewModel = ConfirmViewControllerModel(type: .requisites)
+    var viewModel = ConfirmViewControllerModel(type: .requisites, status: .succses)
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else {
