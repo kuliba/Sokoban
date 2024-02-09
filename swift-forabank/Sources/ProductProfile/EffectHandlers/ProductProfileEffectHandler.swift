@@ -7,6 +7,7 @@
 
 import Foundation
 import CardGuardianModule
+import RxViewModel
 
 public final class ProductProfileEffectHandler {
     

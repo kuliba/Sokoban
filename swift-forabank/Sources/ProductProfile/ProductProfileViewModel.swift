@@ -10,6 +10,8 @@ import Combine
 import CombineSchedulers
 import UIPrimitives
 import CardGuardianModule
+import RxViewModel
+
 
 public final class ProductProfileViewModel: ObservableObject {
     
