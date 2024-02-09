@@ -283,7 +283,7 @@ extension ProductView {
                     case .cardTitle:
                         return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                         
-                    case .productView, .myProductsSectionItem:
+                    case .productView, .myProductsSectionItem: 
                         return cardProduct.displayName
                     }
                 }
