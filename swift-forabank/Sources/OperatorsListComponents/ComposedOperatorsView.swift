@@ -85,6 +85,18 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
    
     static var previews: some View {
         
-        ComposedOperatorsView(operators: [])
+        ComposedOperatorsView(
+            operators: [],
+            selectEvent: { _ in },
+            noCompaniesButtons: [],
+            configuration: .init(noCompanyListConfiguration: .init(
+                titleFont: .body,
+                titleColor: .red,
+                descriptionFont: .body,
+                descriptionColor: .black,
+                subtitleFont: .body,
+                subtitleColor: .blue
+            ))
+        )
     }
 }
