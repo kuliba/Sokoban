@@ -293,36 +293,31 @@ private extension UserAccountViewModel {
                ),
                let icon = product.smallDesign.image {
                 
-                if let product = product as? ProductCardData {
-                    
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: product.isBlocked,
-                        subscriptions: subscriptions
-                    ))
-                    
-                } else {
-                    
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: false,
-                        subscriptions: subscriptions
-                    ))
-                }
+                products.append(.init(
+                    image: icon,
+                    title: item.productTitle,
+                    paymentSystemIcon: nil,
+                    name: product.displayName,
+                    balance: balance,
+                    descriptions: product.description,
+                    isLocked: product.isLocked,
+                    subscriptions: subscriptions
+                ))
             }
         }
         
         return products
+    }
+}
+
+private extension ProductData {
+    
+    var isLocked: Bool {
+        
+        guard let card = self as? ProductCardData
+        else { return false }
+        
+        return card.isBlocked
     }
 }
 
