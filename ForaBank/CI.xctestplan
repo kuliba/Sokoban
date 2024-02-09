@@ -292,7 +292,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CardGuardianModuleTests",
         "name" : "CardGuardianModuleTests"
       }

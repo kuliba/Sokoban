@@ -17,6 +17,7 @@ enum UserAccountEvent {
     case closeFPSAlert
     case dismissDestination
     case dismissFPSDestination
+    case dismissInformer
     case dismissRoute
     
     case alertButtonTapped(AlertButtonTap)

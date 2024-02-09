@@ -1,6 +1,6 @@
 //
 //  UserAccountNavigationOTPReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 27.01.2024.
 //
@@ -10,31 +10,23 @@ import OTPInputComponent
 
 public final class UserAccountNavigationOTPReducer {
     
-    private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
-    private let scheduler: AnySchedulerOfDispatchQueue
-    
-    public init(
-        makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) {
-        self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
-        self.scheduler = scheduler
-    }
+    public init() {}
 }
 
 public extension UserAccountNavigationOTPReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ inform: @escaping Inform,
-        _ dispatch: @escaping Dispatch
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
         
         switch event {
+        case let .create(route):
+            state.destination?.destination = .confirmSetBankDefault(route.viewModel, route.cancellable)
+            
         case let .otpInput(otpInput):
             (state, effect) = reduce(state, otpInput)
             
@@ -42,7 +34,7 @@ public extension UserAccountNavigationOTPReducer {
             (state, effect) = prepareSetBankDefault(state)
             
         case let .prepareSetBankDefaultResponse(response):
-            (state, effect) = update(state, with: response, inform, dispatch)
+            (state, effect) = update(state, with: response)
         }
         
         return (state, effect)
@@ -54,11 +46,17 @@ public extension UserAccountNavigationOTPReducer {
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
     
-    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
-    
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event.OTP
     typealias Effect = UserAccountNavigation.Effect
+}
+
+private extension UserAccountNavigation.State {
+    
+    var fpsViewModel: FastPaymentsSettingsViewModel? {
+        
+        destination?.viewModel
+    }
 }
 
 private extension UserAccountNavigationOTPReducer {
@@ -80,7 +78,7 @@ private extension UserAccountNavigationOTPReducer {
             
         case .validOTP:
             state.isLoading = false
-            effect = .fps(.bankDefault(.setBankDefaultResult(.success)))
+            state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.success)))
         }
         
         return (state, effect)
@@ -98,15 +96,15 @@ private extension UserAccountNavigationOTPReducer {
         state.destination?.destination = nil
         switch failure {
         case .connectivityError:
-            effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
+            state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
             
         case let .serverError(message):
             let tryAgain = "Введен некорректный код. Попробуйте еще раз"
             if message == tryAgain {
-                effect = .fps(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
                 
             } else {
-                effect = .fps(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
+                state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
             }
         }
         
@@ -133,24 +131,23 @@ private extension UserAccountNavigationOTPReducer {
     
     func update(
         _ state: State,
-        with response: Event.PrepareSetBankDefaultResponse,
-        _ inform: @escaping Inform,
-        _ dispatch: @escaping Dispatch
+        with response: Event.PrepareSetBankDefaultResponse
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
         
         state.isLoading = false
-        effect = .fps(.resetStatus)
+        state.destination?.viewModel.event(.resetStatus)
         
         switch response {
         case .success:
-            state.destination?.destination = makeDestination(dispatch)
+            effect = .otp(.create)
             
         case .connectivityError:
             state.destination?.destination = nil
-            inform("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
+            effect = .dismissInformer
             
         case let .serverError(message):
             state.destination?.destination = nil
@@ -158,48 +155,5 @@ private extension UserAccountNavigationOTPReducer {
         }
         
         return (state, effect)
-    }
-    
-    func makeDestination(
-        _ dispatch: @escaping Dispatch
-    ) -> UserAccountNavigation.State.FPSDestination {
-        
-        let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
-        let cancellable = otpInputViewModel.$state
-            .compactMap(\.projection)
-            .removeDuplicates()
-            .map(Event.otpInput)
-            .receive(on: scheduler)
-            .sink { dispatch($0) }
-        
-        return .confirmSetBankDefault(otpInputViewModel, cancellable)
-    }
-}
-
-// MARK: - OTP for Fast Payments Settings
-
-private extension OTPInputState {
-    
-    var projection: OTPInputStateProjection? {
-        
-        switch self {
-        case let .failure(otpFieldFailure):
-            switch otpFieldFailure {
-            case .connectivityError:
-                return .failure(.connectivityError)
-                
-            case let .serverError(message):
-                return .failure(.serverError(message))
-            }
-            
-        case let .input(input):
-            guard input.otpField.status == .inflight
-            else { return nil }
-            
-            return .inflight
-            
-        case .validOTP:
-            return .validOTP
-        }
     }
 }

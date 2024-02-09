@@ -10,7 +10,7 @@ extension FastPaymentsSettingsEffectHandler {
     static var preview: FastPaymentsSettingsEffectHandler {
         
         let consentListEffectHandler = ConsentListRxEffectHandler(
-            changeConsentList: { _, completion in completion(.success) }
+            changeConsentList: { _, completion in completion(.success(.init())) }
         )
         let contractEffectHandler = ContractEffectHandler(
             createContract: { _, completion in completion(.success(.active)) },

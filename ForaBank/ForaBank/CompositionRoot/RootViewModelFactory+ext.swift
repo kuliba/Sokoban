@@ -53,6 +53,7 @@ extension RootViewModelFactory {
             useStub: fastPaymentsSettingsFlag.isStub,
             httpClient: httpClient,
             model: model,
+            fastPaymentsFactory: fastPaymentsFactory,
             log: infoNetworkLog
         )
         
@@ -337,7 +338,6 @@ private extension RootViewModelFactory {
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -347,7 +347,6 @@ private extension RootViewModelFactory {
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

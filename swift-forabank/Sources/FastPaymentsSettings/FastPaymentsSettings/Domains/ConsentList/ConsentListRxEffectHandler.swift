@@ -43,12 +43,12 @@ public extension ConsentListRxEffectHandler {
     
     typealias ChangeConsentListPayload = Set<Bank.ID>
     // (h) changeClientConsentMe2MePull
+    typealias ChangeConsentListResponse = Result<OK, ServiceFailure>
     typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
     
-    enum ChangeConsentListResponse: Equatable {
+    struct OK {
         
-        case failure(ServiceFailure)
-        case success
+        public init() {}
     }
 }
 

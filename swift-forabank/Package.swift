@@ -613,6 +613,8 @@ private extension Target {
             .tagged,
             // internal modules
             .rxViewModel,
+            .cardGuardianModule,
+            .uiPrimitives
         ]
     )
     static let productProfileTests = testTarget(
