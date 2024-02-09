@@ -868,8 +868,6 @@
 		2AEF68602AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF685F2AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift */; };
 		2AEF68652AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68642AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift */; };
 		2AEF68672AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */; };
-		2AF0B0D52B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF0B0D42B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift */; };
-		2AF0B0D72B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF0B0D62B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift */; };
 		2AF0B0D92B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */; };
 		2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */; };
 		2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */; };
@@ -3291,8 +3289,6 @@
 		2AEF685F2AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapChangePINResponse.swift"; sourceTree = "<group>"; };
 		2AEF68642AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeSecretRequest2.swift"; sourceTree = "<group>"; };
 		2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift"; sourceTree = "<group>"; };
-		2AF0B0D42B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountRouteEventReducer.swift; sourceTree = "<group>"; };
-		2AF0B0D62B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountAlertButtonTapReducer.swift; sourceTree = "<group>"; };
 		2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountModelEffectHandler.swift; sourceTree = "<group>"; };
 		2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyExchangeCryptographer+live.swift"; sourceTree = "<group>"; };
@@ -8871,8 +8867,6 @@
 				2A4C35BA2B6A2B2500694861 /* UserAccountEffect.swift */,
 				2AB352E12B6BC7D5000EADC2 /* UserAccountReducer.swift */,
 				2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */,
-				2AF0B0D42B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift */,
-				2AF0B0D62B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift */,
 				2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */,
 				2A09C2AE2B3C59510076DC93 /* FastPaymentsFactory.swift */,
 				774A8B1A2865FBFF00B81140 /* UserDocumentViewModel.swift */,
@@ -13947,7 +13941,6 @@
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
 				C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
-				2AF0B0D72B6AB98C00D34CA6 /* UserAccountAlertButtonTapReducer.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
@@ -14695,7 +14688,6 @@
 				77BE9A33290AC231006046B1 /* PaymentsSectionViewModel.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,
-				2AF0B0D52B6AA46800D34CA6 /* UserAccountRouteEventReducer.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				777460F92922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
