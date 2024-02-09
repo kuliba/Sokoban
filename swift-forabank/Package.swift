@@ -604,6 +604,8 @@ private extension Target {
             .tagged,
             // internal modules
             .rxViewModel,
+            .cardGuardianModule,
+            .uiPrimitives
         ]
     )
     static let productProfileTests = testTarget(
@@ -1221,7 +1223,8 @@ private extension Target {
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .rxViewModel
         ],
         path: "Sources/UI/Components/\(String.carouselComponent)"
     )

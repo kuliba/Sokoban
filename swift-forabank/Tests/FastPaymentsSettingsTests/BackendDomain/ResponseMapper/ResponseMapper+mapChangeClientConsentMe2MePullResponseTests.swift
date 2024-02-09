@@ -83,7 +83,7 @@ final class ResponseMapper_mapChangeClientConsentMe2MePullResponseTests: XCTestC
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.ChangeClientConsentMe2MePullResult {
+    ) -> ResponseMapper.VoidMappingResult {
         
         ResponseMapper.mapChangeClientConsentMe2MePullResponse(data, httpURLResponse)
     }

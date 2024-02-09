@@ -157,7 +157,11 @@ extension Model {
                 throw Payments.Error.action(.alert(title: "Сервис временно не доступен", message: "Приносим извинения за доставленные неудобства"))
                 
             case .other:
-                return .init(parameters: [innParameter, requisitesTypeParameter], front: .init(visible: [innNumberId], isCompleted: false), back: .init(stage: .local, required: [innParameter.id], processed: nil))
+                return .init(
+                    parameters: [innParameter, requisitesTypeParameter],
+                    front: .init(visible: [innNumberId], isCompleted: false),
+                    back: .init(stage: .local, required: [innParameter.id], processed: nil)
+                )
             }
             
         case 2:
@@ -165,7 +169,7 @@ extension Model {
                 throw Payments.Error.notAuthorized
             }
             
-            guard let innValue = operation.parameters.first(where: {$0.id == innNumberId})?.value else {
+            guard let innValue = operation.parameters.first(where: { $0.id == innNumberId })?.value else {
                 throw Payments.Error.missingParameter(innNumberId)
             }
             

@@ -27,7 +27,7 @@ class RootViewModel: ObservableObject, Resetable {
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let fastPaymentsServices: FastPaymentsServices
+    private let navigationStateManager: UserAccountNavigationStateManager
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -36,7 +36,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
@@ -46,7 +46,7 @@ class RootViewModel: ObservableObject, Resetable {
         showLoginAction: @escaping ShowLoginAction
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
+        self.navigationStateManager = navigationStateManager
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -186,9 +186,8 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     link = .userAccount(.init(
+                        navigationStateManager: navigationStateManager,
                         model: model,
-                        fastPaymentsFactory: fastPaymentsFactory,
-                        fastPaymentsServices: fastPaymentsServices,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             

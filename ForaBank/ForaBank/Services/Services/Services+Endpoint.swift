@@ -62,14 +62,21 @@ extension Services {
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case changeClientConsentMe2MePull
             case changePIN
             case createCommissionProductTransfer
+            case createFastPaymentContract
             case createStickerPayment
             case createSberQRPayment
+            case fastPaymentContractFindList
             case formSessionKey
+            case getBankDefault
+            case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
+            case getClientConsentMe2MePull
             case getJsonAbroad
+            case makeSetBankDefault
             case getSberQRData
             case getOperationDetailByPaymentId
             case getPINConfirmationCode
@@ -80,8 +87,10 @@ extension Services {
             case getScenarioQRData
             case getStickerPayment
             case makeTransfer
+            case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
             case showCVV
+            case updateFastPaymentContract
         }
     }
 }
@@ -145,6 +154,12 @@ extension Services.Endpoint {
         serviceName: .bindPublicKeyWithEventId
     )
     
+    static let changeClientConsentMe2MePull: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .changeClientConsentMe2MePull
+    )
+    
     static let changePIN: Self = .init(
         pathPrefix: .processing(.cardInfo),
         version: .v1,
@@ -155,6 +170,12 @@ extension Services.Endpoint {
         pathPrefix: .transfer,
         version: nil,
         serviceName: .createCommissionProductTransfer
+    )
+    
+    static let createFastPaymentContract: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .createFastPaymentContract
     )
     
     static let createLandingRequest: Self = .init(
@@ -175,16 +196,40 @@ extension Services.Endpoint {
         serviceName: .createSberQRPayment
     )
     
+    static let fastPaymentContractFindList: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .fastPaymentContractFindList
+    )
+    
     static let formSessionKey: Self = .init(
         pathPrefix: .processing(.registration),
         version: .v1,
         serviceName: .formSessionKey
     )
     
+    static let getBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getBankDefault
+    )
+
+    static let getC2BSub: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getC2BSub
+    )
+
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
         version: nil,
         serviceName: .getCardStatementForPeriod_V3
+    )
+
+    static let getClientConsentMe2MePull: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getClientConsentMe2MePull
     )
 
     static let getImageList: Self = .init(
@@ -241,10 +286,22 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let makeSetBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .makeSetBankDefault
+    )
+    
     static let makeTransfer: Self = .init(
         pathPrefix: .transfer,
         version: nil,
         serviceName: .makeTransfer
+    )
+    
+    static let prepareSetBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .prepareSetBankDefault
     )
     
     static let processPublicKeyAuthenticationRequest: Self = .init(
@@ -257,5 +314,11 @@ extension Services.Endpoint {
         pathPrefix: .processing(.cardInfo),
         version: .v1,
         serviceName: .showCVV
+    )
+    
+    static let updateFastPaymentContract: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .updateFastPaymentContract
     )
 }

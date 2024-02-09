@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
+import Combine
 import FastPaymentsSettings
 import OTPInputComponent
 
@@ -27,15 +28,19 @@ public extension UserAccountNavigation.Event {
     
     enum FastPaymentsSettings: Equatable {
         
+        case dismissFPSDestination
         case updated(FastPaymentsSettingsState)
     }
     
     enum OTP: Equatable {
         
+        case create(TimedOTPRoute)
         case otpInput(OTPInputStateProjection)
         case prepareSetBankDefault
         case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
         
+        public typealias TimedOTPRoute = GenericRoute<TimedOTPInputViewModel, Never, Never, Never>
+
         public enum PrepareSetBankDefaultResponse: Equatable {
             
             case success

@@ -91,7 +91,7 @@ final class ResponseMapper_mapGetClientConsentMe2MePullResponseTests: XCTestCase
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.GetClientConsentMe2MePullResult {
+    ) -> ResponseMapper.MappingResult<[ConsentMe2MePull]> {
         
         ResponseMapper.mapGetClientConsentMe2MePullResponse(data, httpURLResponse)
     }

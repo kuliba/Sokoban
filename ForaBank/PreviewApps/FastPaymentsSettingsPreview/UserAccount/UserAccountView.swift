@@ -24,7 +24,7 @@ struct UserAccountView: View {
                 openFastPaymentsSettingsButton()
                     .alert(
                         item: .init(
-                            get: { viewModel.alert },
+                            get: { viewModel.state.alert },
                             set: { if $0 == nil { viewModel.event(.closeAlert) }}
                         ),
                         content: { .init(with: $0, event: viewModel.event) }
@@ -67,37 +67,34 @@ struct UserAccountView: View {
     }
     
     private func destinationView(
-        destination: UserAccountViewModel.State.Destination
+        fpsRoute: UserAccountViewModel.State.FPSRoute
     ) -> some View {
         
-        switch destination {
-        case let .fastPaymentsSettings(fps):
-            FastPaymentsSettingsWrapperView(
-                viewModel: fps.viewModel,
-                config: .preview
-            )
-            .alert(
-                item: .init(
-                    get: { viewModel.state.fpsRoute?.alert },
-                    // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
-                    // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
-                    set: { _ in }
-                ),
-                content: { .init(with: $0, event: viewModel.event) }
-            )
-            .navigationDestination(
-                item: .init(
-                    get: { viewModel.state.fpsRoute?.destination },
-                    set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
-                ),
-                destination: fpsDestinationView
-            )
-        }
+        FastPaymentsSettingsWrapperView(
+            viewModel: fpsRoute.viewModel,
+            config: .preview
+        )
+        .alert(
+            item: .init(
+                get: { viewModel.state.destination?.alert },
+                // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: viewModel.event) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.state.destination?.destination },
+                set: { if $0 == nil { viewModel.event(.dismissFPSDestination) }}
+            ),
+            destination: fpsDestinationView
+        )
     }
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountViewModel.State.Destination.FPSDestination
+        fpsDestination: UserAccountViewModel.State.FPSDestination
     ) -> some View {
         
         switch fpsDestination {
@@ -106,18 +103,6 @@ struct UserAccountView: View {
             
         case let .c2BSub(getC2BSubResponse, _):
             Text("TBD: \(String(describing: getC2BSubResponse))")
-        }
-    }
-}
-
-private extension UserAccountViewModel {
-    
-    var alert: AlertModelOf<Event>? {
-        
-        if case let .alert(alert) = state.alert {
-            return alert
-        } else {
-            return nil
         }
     }
 }

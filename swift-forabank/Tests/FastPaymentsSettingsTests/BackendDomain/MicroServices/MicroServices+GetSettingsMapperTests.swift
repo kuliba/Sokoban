@@ -13,7 +13,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetContract() {
         
         let product = makeProduct()
-        let loadedContract = paymentContract(productID: product.id)
+        let loadedContract = paymentContract(accountID: product.accountID)
         
         let settings = map(
             getProductsStub: [product],
@@ -21,32 +21,6 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         )
         
         XCTAssertNoDiff(contract(in: settings), loadedContract)
-    }
-    
-    func test_mapToSettings_shouldSetConsentListSuccess() {
-        
-        let product = makeProduct()
-        let loadedConsentList = consentListSuccess()
-        
-        let settings = map(
-            getProductsStub: [product],
-            consentList: loadedConsentList
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
-    }
-    
-    func test_mapToSettings_shouldSetConsentListFailure() {
-        
-        let product = makeProduct()
-        let loadedConsentList = consentListFailure()
-        
-        let settings = map(
-            getProductsStub: [product],
-            consentList: loadedConsentList
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
     }
     
     func test_mapToSettings_shouldSetBankDefault() {
@@ -97,7 +71,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductOnMatch() {
         
         let products = [makeProduct(), makeProduct()]
-        let contract = paymentContract(productID: products[1].id)
+        let contract = paymentContract(accountID: products[1].accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -111,7 +85,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         
         let products = [makeProduct(), makeProduct()]
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -124,7 +98,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductNilOnEmptyProducts() {
         
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: [],
@@ -139,12 +113,16 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     private typealias SUT = MicroServices.GetSettingsMapper
     
     private func makeSUT(
-        getProductsStub: [Product],
+        getProductsStub: [Product] = [],
+        getBanksStub: [Bank] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getProducts: { getProductsStub })
+        let sut = SUT(
+            getProducts: { getProductsStub },
+            getBanks: { getBanksStub }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -152,9 +130,9 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     }
     
     private func map(
-        getProductsStub: [Product],
+        getProductsStub: [Product] = [],
         paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
-        consentList: ConsentListState = consentListSuccess(),
+        consent: Consent = .preview,
         bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = bankDefault(),
         file: StaticString = #file,
         line: UInt = #line
@@ -164,7 +142,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         
         return sut.mapToSettings(
             paymentContract: paymentContract,
-            consentList: consentList,
+            consent: consent,
             bankDefaultResponse: bankDefaultResponse
         )
     }

@@ -30,8 +30,8 @@ public extension ContractEffectHandler {
         case let .activateContract(contract):
             activateContract(contract, dispatch)
             
-        case let .createContract(productID):
-            createContract(productID, dispatch)
+        case let .createContract(product):
+            createContract(product, dispatch)
             
         case let .deactivateContract(contract):
             deactivateContract(contract, dispatch)
@@ -42,10 +42,10 @@ public extension ContractEffectHandler {
 // micro-service `ea`
 public extension ContractEffectHandler {
     
-    typealias CreateContractPayload = ContractEffect.ProductID
+    typealias CreateContractPayload = Product
 #warning("`UpdateContractResponse` success case could only be `active` contract - need to find a way to enforce this")
-    typealias CreateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
-    typealias CreateContractCompletion = (CreateContractResponse) -> Void
+    typealias CreateContractResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
+    typealias CreateContractCompletion = (CreateContractResult) -> Void
     typealias CreateContract = (CreateContractPayload, @escaping CreateContractCompletion) -> Void
 }
 
@@ -54,8 +54,8 @@ public extension ContractEffectHandler {
     
     typealias UpdateContractPayload = ContractEffect.TargetContract
 #warning("`UpdateContractResponse` success case could only be `inactive` contract - need to find a way to enforce this")
-    typealias UpdateContractResponse = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
-    typealias UpdateContractCompletion = (UpdateContractResponse) -> Void
+    typealias UpdateContractResult = Result<UserPaymentSettings.PaymentContract, ServiceFailure>
+    typealias UpdateContractCompletion = (UpdateContractResult) -> Void
     typealias UpdateContract = (UpdateContractPayload, @escaping UpdateContractCompletion) -> Void
 }
 

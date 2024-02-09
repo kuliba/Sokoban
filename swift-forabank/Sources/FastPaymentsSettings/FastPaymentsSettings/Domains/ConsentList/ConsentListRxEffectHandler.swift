@@ -28,14 +28,11 @@ public extension ConsentListRxEffectHandler {
             changeConsentList(consent) { result in
                 
                 switch result {
+                case let .failure(serviceFailure):
+                    dispatch(.changeConsentFailure(serviceFailure))
+                    
                 case .success:
                     dispatch(.changeConsent(consent))
-                    
-                case let .serverError(message):
-                    dispatch(.changeConsentFailure(.serverError(message)))
-
-                case .connectivityError:
-                    dispatch(.changeConsentFailure(.connectivityError))
                 }
             }
         }
@@ -46,13 +43,12 @@ public extension ConsentListRxEffectHandler {
     
     typealias ChangeConsentListPayload = Set<Bank.ID>
     // (h) changeClientConsentMe2MePull
+    typealias ChangeConsentListResponse = Result<OK, ServiceFailure>
     typealias ChangeConsentList = (ChangeConsentListPayload, @escaping (ChangeConsentListResponse) -> Void) -> Void
     
-    enum ChangeConsentListResponse: Equatable {
+    struct OK {
         
-        case success
-        case connectivityError
-        case serverError(String)
+        public init() {}
     }
 }
 

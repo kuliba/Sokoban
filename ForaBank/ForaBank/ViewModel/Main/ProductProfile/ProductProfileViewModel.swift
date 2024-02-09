@@ -47,7 +47,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let fastPaymentsServices: FastPaymentsServices
+    private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
@@ -71,7 +71,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         fastPaymentsServices: FastPaymentsServices,
+         navigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
@@ -89,7 +89,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.fastPaymentsServices = fastPaymentsServices
+        self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
@@ -109,7 +109,7 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        fastPaymentsServices: FastPaymentsServices,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
@@ -140,7 +140,7 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
@@ -371,8 +371,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    fastPaymentsFactory: fastPaymentsFactory,
-                    fastPaymentsServices: fastPaymentsServices,
+                    navigationStateManager: navigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     paymentsTransfersFactory: paymentsTransfersFactory,
@@ -1506,7 +1505,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            fastPaymentsServices: fastPaymentsServices,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory, 
             paymentsTransfersFactory: paymentsTransfersFactory, 

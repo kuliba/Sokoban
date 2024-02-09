@@ -58,7 +58,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: RequestFactory.PhoneNumber = .init(UUID().uuidString)
+        payload: PhoneNumber = .init(UUID().uuidString)
     ) throws -> URLRequest {
         
         try RequestFactory.createGetBankDefaultRequest(
@@ -69,7 +69,7 @@ final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {
     
     private func anyPayload(
         _ value: String = UUID().uuidString
-    ) -> RequestFactory.PhoneNumber {
+    ) -> PhoneNumber {
         
         .init(value)
     }

@@ -52,14 +52,8 @@ extension ConsentList {
     }
     
     public enum Status: Equatable {
-        
-        case failure(Failure)
+
+        case failure(ServiceFailure)
         case inflight
-        
-        public enum Failure: Equatable {
-            
-            case connectivityError
-            case serverError(String)
-        }
     }
 }

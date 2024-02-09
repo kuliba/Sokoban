@@ -11,7 +11,6 @@ import Tagged
 public struct Product: Equatable, Identifiable {
     
     public let id: ID
-    public let type: ProductType
     public let header: String
     public let title: String
     public let number: String
@@ -21,7 +20,6 @@ public struct Product: Equatable, Identifiable {
     
     public init(
         id: ID,
-        type: ProductType,
         header: String,
         title: String,
         number: String,
@@ -30,7 +28,6 @@ public struct Product: Equatable, Identifiable {
         look: Look
     ) {
         self.id = id
-        self.type = type
         self.header = header
         self.title = title
         self.number = number
@@ -42,13 +39,16 @@ public struct Product: Equatable, Identifiable {
 
 public extension Product {
     
-    typealias ID = Tagged<_ID, Int>
-    enum _ID {}
+    typealias ID = ProductID<AccountID, CardID>
     
-    enum ProductType: Equatable {
-        
-        case card, account
-    }
+    typealias AccountID = Tagged<_AccountID, Int>
+    enum _AccountID {}
+    
+    typealias CardID = Tagged<_CardID, Int>
+    enum _CardID {}
+}
+
+public extension Product {
     
     struct Look: Equatable {
         
