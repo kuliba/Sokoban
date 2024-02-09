@@ -9,10 +9,7 @@ import SwiftUI
 
 struct NoCompanyInListView: View {
     
-    let title: String
-    let description: String
-    let subtitle: String
-    let buttons: [ButtonSimpleView.ViewModel]
+    let noCompanyListViewModel: NoCompanyInListViewModel
     
     let config: NoCompanyInListViewConfig
     
@@ -22,11 +19,11 @@ struct NoCompanyInListView: View {
             
             VStack(spacing: 16) {
                 
-                Text(title)
+                Text(noCompanyListViewModel.title)
                     .font(config.titleFont)
                     .foregroundColor(config.titleColor)
                 
-                Text(description)
+                Text(noCompanyListViewModel.description)
                     .font(config.descriptionFont)
                     .foregroundColor(config.descriptionColor)
             }
@@ -36,7 +33,7 @@ struct NoCompanyInListView: View {
                 
                 VStack(spacing: 8) {
                     
-                    ForEach(buttons) { button in
+                    ForEach(noCompanyListViewModel.buttons) { button in
                         
                         ButtonSimpleView(viewModel: button)
                             .frame(height: 56)
@@ -44,7 +41,7 @@ struct NoCompanyInListView: View {
                     }
                 }
                 
-                Text(subtitle)
+                Text(noCompanyListViewModel.subtitle)
                     .font(config.subtitleFont)
                     .foregroundColor(config.subtitleColor)
                     .padding(.horizontal, 16)
@@ -77,27 +74,28 @@ struct NoCompanyInListView_Previews: PreviewProvider {
     static var previews: some View {
         
         NoCompanyInListView(
-            title: "Нет компании в списке?",
-            description: "Воспользуйтесь другими способами оплаты",
-            subtitle: "Сообщите нам, и мы подключим новую организацию",
-            buttons: [
-                .init(
-                    title: "Оплатить по реквизитам",
-                    buttonConfiguration: .init(
-                        titleFont: .body,
-                        titleForeground: .red
+            noCompanyListViewModel: .init(
+                title: "Нет компании в списке?",
+                description: "Воспользуйтесь другими способами оплаты",
+                subtitle: "Сообщите нам, и мы подключим новую организацию",
+                buttons: [
+                    .init(
+                        title: "Оплатить по реквизитам",
+                        buttonConfiguration: .init(
+                            titleFont: .body,
+                            titleForeground: .red
+                        ),
+                        action: {}
                     ),
-                    action: {}
-                ),
-                .init(
-                    title: "Добавить организацию",
-                    buttonConfiguration: .init(
-                        titleFont: .body,
-                        titleForeground: .blue
-                    ),
-                    action: {}
-                )
-            ],
+                    .init(
+                        title: "Добавить организацию",
+                        buttonConfiguration: .init(
+                            titleFont: .body,
+                            titleForeground: .blue
+                        ),
+                        action: {}
+                    )
+                ]),
             config: .init(
                 titleFont: .title3,
                 titleColor: .black,
