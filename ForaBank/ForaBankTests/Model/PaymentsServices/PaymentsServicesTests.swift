@@ -345,7 +345,7 @@ final class PaymentsServicesTests: XCTestCase {
         
         let excludingParameters = try sut.paymentsServicesStepExcludingParameters(response: transferAnywayResponse)
         
-        XCTAssertEqual(Set(excludingParameters), Set(["a3_NUMBER_1_21"]))
+        XCTAssertEqual(Set(excludingParameters), Set(["a3_NUMBER_1_21", "AFResponse"]))
     }
     
     func test_paymentsServicesStepRequired_notContainsRequiredParameters() async throws {
@@ -557,7 +557,7 @@ let parameterListForNextStep = [
     ParameterData.init(content: nil, dataType: "%String", id: "a3_NUMBER_1_21", isPrint: false, isRequired: false, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: nil, title: "Номер телефона", type: "INPUT", inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input),
 ]
 
-let transferAnywayResponse = TransferAnywayResponseData(amount: 100, creditAmount: 100, currencyAmount: Currency(description: "RUB"), currencyPayee: Currency(description: "RUB"), currencyPayer: Currency(description: "RUB"), currencyRate: 87.5, debitAmount: 100, fee: 5, needMake: true, needOTP: false, payeeName: "Иван Иванович", documentStatus: .complete, paymentOperationDetailId: 1, additionalList: [], finalStep: true, infoMessage: "string", needSum: false, printFormType: nil, parameterListForNextStep: parameterListForNextStep)
+let transferAnywayResponse = TransferAnywayResponseData(amount: 100, creditAmount: 100, currencyAmount: Currency(description: "RUB"), currencyPayee: Currency(description: "RUB"), currencyPayer: Currency(description: "RUB"), currencyRate: 87.5, debitAmount: 100, fee: 5, needMake: true, needOTP: false, payeeName: "Иван Иванович", documentStatus: .complete, paymentOperationDetailId: 1, additionalList: [], finalStep: true, infoMessage: "string", needSum: false, printFormType: nil, parameterListForNextStep: parameterListForNextStep, scenario: .ok)
 
 extension Model {
     

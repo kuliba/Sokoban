@@ -126,6 +126,7 @@ extension TransferAnywayResponseData {
                 svgImage: .init(description: "string"),
                 viewType: .input
             )
-        ]
+        ],
+        scenario: .ok
     )
 }

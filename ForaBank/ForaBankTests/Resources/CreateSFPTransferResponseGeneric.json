@@ -44,7 +44,8 @@
       }
     ],
     "payeeName": "Иван Иванович И.",
-    "paymentOperationDetailId": 1
+    "paymentOperationDetailId": 1,
+    "scenario": "OK"
   },
   "errorMessage": "string",
   "statusCode": 0

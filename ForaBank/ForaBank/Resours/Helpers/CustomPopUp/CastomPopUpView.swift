@@ -19,7 +19,7 @@ class MemeDetailVC: UIViewController {
     var anotherCardModel: AnotherCardViewModel?
     var paymentTemplate: PaymentTemplateData? = nil
     
-    var viewModel = ConfirmViewControllerModel(type: .card2card) {
+    var viewModel = ConfirmViewControllerModel(type: .card2card, status: .succses) {
         didSet {
             checkModel(with: viewModel)
         }
