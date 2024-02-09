@@ -15,7 +15,7 @@ final class CardGuardianConfigTests: XCTestCase {
     
     //MARK: - test init config
     
-    func test_init_config_shouldSetAllValue() {
+    func test_init_config_shouldSetAllValues() {
         
         let config: Config = .init(
             images: .init(
