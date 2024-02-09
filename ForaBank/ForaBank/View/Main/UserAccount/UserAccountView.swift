@@ -496,8 +496,19 @@ extension FastPaymentsFactory {
 extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
-        fastPaymentsFactory: .new,
+        fastPaymentsFactory: .new, 
+        makeSubscriptionsViewModel: { _ in .empty },
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
+    )
+}
+
+private extension SubscriptionsViewModel {
+    
+    static let empty = SubscriptionsViewModel(
+        products: [], 
+        searchViewModel: .bank(),
+        emptyViewModel: .init(icon: .checkImage, title: ""),
+        configurator: .init(backgroundColor: .red)
     )
 }

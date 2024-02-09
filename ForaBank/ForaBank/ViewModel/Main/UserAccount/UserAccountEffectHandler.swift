@@ -12,13 +12,16 @@ final class UserAccountEffectHandler {
     
     private let handleModelEffect: HandleModelEffect
     private let handleOTPEffect: HandleOTPEffect
+    private let informerLifespan: TimeInterval
     
     init(
         handleModelEffect: @escaping HandleModelEffect,
-        handleOTPEffect: @escaping HandleOTPEffect
+        handleOTPEffect: @escaping HandleOTPEffect,
+        informerLifespan: TimeInterval = 2
     ) {
         self.handleModelEffect = handleModelEffect
         self.handleOTPEffect = handleOTPEffect
+        self.informerLifespan = informerLifespan
     }
 }
 
@@ -35,8 +38,9 @@ extension UserAccountEffectHandler {
         case let .navigation(navigation):
             switch navigation {
             case .dismissInformer:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + informerLifespan
+                ) {
                     dispatch(.dismiss(.informer))
                 }
                 
