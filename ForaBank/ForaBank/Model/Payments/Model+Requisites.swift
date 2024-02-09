@@ -177,7 +177,7 @@ extension Model {
             //MARK: Kpp Parameter
             let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
             let kppParameterValidator: Payments.Validation.RulesSystem = validateKppParameter()
-            print("@@@ kppParameterId=\(kppParameterId)")
+            
             //MARK: Company Name Parameter
             let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
             let companyNameValidator: Payments.Validation.RulesSystem = validateCompanyNameParameter()
@@ -359,9 +359,6 @@ extension Model {
             return .init(id: kpp, name: kpp, subname: company.name)
         }
     }
-
-   
-    // MARK: - CASE 2 END
     
     func getCompanyNameParameter(
         _ operation: Payments.Operation,
