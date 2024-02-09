@@ -56,6 +56,10 @@ struct NoCompanyInListView: View {
 
 extension NoCompanyInListView {
     
+    static let title = "Нет компании в списке?"
+    static let description = "Воспользуйтесь другими способами оплаты"
+    static let subtitle = "Сообщите нам, и мы подключим новую организацию"
+    
     struct NoCompanyInListViewConfig {
         
         let titleFont: Font
@@ -77,8 +81,22 @@ struct NoCompanyInListView_Previews: PreviewProvider {
             description: "Воспользуйтесь другими способами оплаты",
             subtitle: "Сообщите нам, и мы подключим новую организацию",
             buttons: [
-                .init(title: "Оплатить по реквизитам", style: .gray, action: {}),
-                .init(title: "Добавить организацию", style: .gray, action: {})
+                .init(
+                    title: "Оплатить по реквизитам",
+                    buttonConfiguration: .init(
+                        titleFont: .body,
+                        titleForeground: .red
+                    ),
+                    action: {}
+                ),
+                .init(
+                    title: "Добавить организацию",
+                    buttonConfiguration: .init(
+                        titleFont: .body,
+                        titleForeground: .blue
+                    ),
+                    action: {}
+                )
             ],
             config: .init(
                 titleFont: .title3,
