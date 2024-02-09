@@ -50,6 +50,10 @@ extension UserAccountReducer {
             
         case .dismissFPSDestination:
             // state.fpsDestination = nil
+            if var fpsRoute = state.fpsRoute {
+                fpsRoute.destination = nil
+                state.link = .fastPaymentSettings(.new(fpsRoute))
+            }
             state.fpsViewModel?.event(.resetStatus)
             
         case .dismissDestination:
@@ -94,11 +98,16 @@ extension UserAccountReducer {
 
 private extension UserAccountReducer.State {
     
-    var fpsViewModel: FastPaymentsSettingsViewModel? {
+    var fpsViewModel: FastPaymentsSettingsViewModel? { fpsRoute?.viewModel }
+}
+
+private extension UserAccountReducer.State {
+    
+    var fpsRoute: UserAccountRoute.Link.FastPaymentSettings.FPSRoute? {
         
         guard case let .fastPaymentSettings(.new(fpsRoute)) = link
         else { return nil }
         
-        return fpsRoute.viewModel
+        return fpsRoute
     }
 }

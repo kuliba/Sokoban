@@ -483,6 +483,45 @@
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
 		2A3D6F202B62A16000D19379 /* GetC2BSubResponse+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */; };
+		2A3E03242B7499FB00A4494D /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3E03232B7499FB00A4494D /* HTTPClientStub.swift */; };
+		2A3E03262B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3E03252B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift */; };
+		2A3E039E2B74C6AF00A4494D /* getFullBankInfoListK2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03762B74C6AF00A4494D /* getFullBankInfoListK2.json */; };
+		2A3E039F2B74C6AF00A4494D /* getFullBankInfoListK3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03772B74C6AF00A4494D /* getFullBankInfoListK3.json */; };
+		2A3E03A02B74C6AF00A4494D /* getFullBankInfoListK1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03782B74C6AF00A4494D /* getFullBankInfoListK1.json */; };
+		2A3E03A12B74C6B000A4494D /* fastPaymentContractFindListA3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037A2B74C6AF00A4494D /* fastPaymentContractFindListA3.json */; };
+		2A3E03A22B74C6B000A4494D /* getClientConsentMe2MePullB3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037B2B74C6AF00A4494D /* getClientConsentMe2MePullB3.json */; };
+		2A3E03A32B74C6B000A4494D /* makeSetBankDefaultG1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037C2B74C6AF00A4494D /* makeSetBankDefaultG1.json */; };
+		2A3E03A42B74C6B000A4494D /* changeClientConsentMe2MePullH1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037D2B74C6AF00A4494D /* changeClientConsentMe2MePullH1.json */; };
+		2A3E03A52B74C6B000A4494D /* getClientConsentMe2MePullB2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037E2B74C6AF00A4494D /* getClientConsentMe2MePullB2.json */; };
+		2A3E03A62B74C6B000A4494D /* fastPaymentContractFindListA2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E037F2B74C6AF00A4494D /* fastPaymentContractFindListA2.json */; };
+		2A3E03A72B74C6B000A4494D /* createFastPaymentContractE3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03802B74C6AF00A4494D /* createFastPaymentContractE3.json */; };
+		2A3E03A82B74C6B000A4494D /* prepareSetBankDefaultF1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03812B74C6AF00A4494D /* prepareSetBankDefaultF1.json */; };
+		2A3E03A92B74C6B000A4494D /* fastPaymentContractFindListA5.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03822B74C6AF00A4494D /* fastPaymentContractFindListA5.json */; };
+		2A3E03AA2B74C6B000A4494D /* updateFastPaymentContractD3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03832B74C6AF00A4494D /* updateFastPaymentContractD3.json */; };
+		2A3E03AB2B74C6B000A4494D /* updateFastPaymentContractD2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03842B74C6AF00A4494D /* updateFastPaymentContractD2.json */; };
+		2A3E03AC2B74C6B000A4494D /* fastPaymentContractFindListA4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03852B74C6AF00A4494D /* fastPaymentContractFindListA4.json */; };
+		2A3E03AD2B74C6B000A4494D /* getBankDefaultC1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03862B74C6AF00A4494D /* getBankDefaultC1.json */; };
+		2A3E03AE2B74C6B000A4494D /* getC2BSubJ1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03892B74C6AF00A4494D /* getC2BSubJ1.json */; };
+		2A3E03AF2B74C6B000A4494D /* getC2BSubJ3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038A2B74C6AF00A4494D /* getC2BSubJ3.json */; };
+		2A3E03B02B74C6B000A4494D /* getC2BSubJ2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038B2B74C6AF00A4494D /* getC2BSubJ2.json */; };
+		2A3E03B12B74C6B000A4494D /* getC2BSubJ4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038C2B74C6AF00A4494D /* getC2BSubJ4.json */; };
+		2A3E03B22B74C6B000A4494D /* createFastPaymentContractE2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038D2B74C6AF00A4494D /* createFastPaymentContractE2.json */; };
+		2A3E03B32B74C6B000A4494D /* getClientConsentMe2MePullB4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038E2B74C6AF00A4494D /* getClientConsentMe2MePullB4.json */; };
+		2A3E03B42B74C6B000A4494D /* createFastPaymentContractE1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E038F2B74C6AF00A4494D /* createFastPaymentContractE1.json */; };
+		2A3E03B52B74C6B000A4494D /* updateFastPaymentContractD1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03902B74C6AF00A4494D /* updateFastPaymentContractD1.json */; };
+		2A3E03B62B74C6B000A4494D /* getBankDefaultC2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03912B74C6AF00A4494D /* getBankDefaultC2.json */; };
+		2A3E03B72B74C6B000A4494D /* prepareSetBankDefaultF3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03922B74C6AF00A4494D /* prepareSetBankDefaultF3.json */; };
+		2A3E03B82B74C6B000A4494D /* prepareSetBankDefaultF2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03932B74C6AF00A4494D /* prepareSetBankDefaultF2.json */; };
+		2A3E03B92B74C6B000A4494D /* getBankDefaultC3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03942B74C6AF00A4494D /* getBankDefaultC3.json */; };
+		2A3E03BA2B74C6B000A4494D /* makeSetBankDefaultG4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03952B74C6AF00A4494D /* makeSetBankDefaultG4.json */; };
+		2A3E03BB2B74C6B000A4494D /* fastPaymentContractFindListA1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03962B74C6AF00A4494D /* fastPaymentContractFindListA1.json */; };
+		2A3E03BC2B74C6B000A4494D /* getBankDefaultC4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03972B74C6AF00A4494D /* getBankDefaultC4.json */; };
+		2A3E03BD2B74C6B000A4494D /* changeClientConsentMe2MePullH3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03982B74C6AF00A4494D /* changeClientConsentMe2MePullH3.json */; };
+		2A3E03BE2B74C6B000A4494D /* makeSetBankDefaultG3.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E03992B74C6AF00A4494D /* makeSetBankDefaultG3.json */; };
+		2A3E03BF2B74C6B000A4494D /* getClientConsentMe2MePullB1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039A2B74C6AF00A4494D /* getClientConsentMe2MePullB1.json */; };
+		2A3E03C02B74C6B000A4494D /* makeSetBankDefaultG2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039B2B74C6AF00A4494D /* makeSetBankDefaultG2.json */; };
+		2A3E03C12B74C6B000A4494D /* changeClientConsentMe2MePullH2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039C2B74C6AF00A4494D /* changeClientConsentMe2MePullH2.json */; };
+		2A3E03C22B74C6B000A4494D /* getBankDefaultC5.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039D2B74C6AF00A4494D /* getBankDefaultC5.json */; };
 		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B152A47763000D8FE55 /* MosParkingView.swift */; };
@@ -2848,6 +2887,45 @@
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
+		2A3E03232B7499FB00A4494D /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
+		2A3E03252B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientStub+fastPaymentsSettings.swift"; sourceTree = "<group>"; };
+		2A3E03762B74C6AF00A4494D /* getFullBankInfoListK2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getFullBankInfoListK2.json; sourceTree = "<group>"; };
+		2A3E03772B74C6AF00A4494D /* getFullBankInfoListK3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getFullBankInfoListK3.json; sourceTree = "<group>"; };
+		2A3E03782B74C6AF00A4494D /* getFullBankInfoListK1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getFullBankInfoListK1.json; sourceTree = "<group>"; };
+		2A3E037A2B74C6AF00A4494D /* fastPaymentContractFindListA3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fastPaymentContractFindListA3.json; sourceTree = "<group>"; };
+		2A3E037B2B74C6AF00A4494D /* getClientConsentMe2MePullB3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getClientConsentMe2MePullB3.json; sourceTree = "<group>"; };
+		2A3E037C2B74C6AF00A4494D /* makeSetBankDefaultG1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = makeSetBankDefaultG1.json; sourceTree = "<group>"; };
+		2A3E037D2B74C6AF00A4494D /* changeClientConsentMe2MePullH1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = changeClientConsentMe2MePullH1.json; sourceTree = "<group>"; };
+		2A3E037E2B74C6AF00A4494D /* getClientConsentMe2MePullB2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getClientConsentMe2MePullB2.json; sourceTree = "<group>"; };
+		2A3E037F2B74C6AF00A4494D /* fastPaymentContractFindListA2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fastPaymentContractFindListA2.json; sourceTree = "<group>"; };
+		2A3E03802B74C6AF00A4494D /* createFastPaymentContractE3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = createFastPaymentContractE3.json; sourceTree = "<group>"; };
+		2A3E03812B74C6AF00A4494D /* prepareSetBankDefaultF1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = prepareSetBankDefaultF1.json; sourceTree = "<group>"; };
+		2A3E03822B74C6AF00A4494D /* fastPaymentContractFindListA5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fastPaymentContractFindListA5.json; sourceTree = "<group>"; };
+		2A3E03832B74C6AF00A4494D /* updateFastPaymentContractD3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = updateFastPaymentContractD3.json; sourceTree = "<group>"; };
+		2A3E03842B74C6AF00A4494D /* updateFastPaymentContractD2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = updateFastPaymentContractD2.json; sourceTree = "<group>"; };
+		2A3E03852B74C6AF00A4494D /* fastPaymentContractFindListA4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fastPaymentContractFindListA4.json; sourceTree = "<group>"; };
+		2A3E03862B74C6AF00A4494D /* getBankDefaultC1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getBankDefaultC1.json; sourceTree = "<group>"; };
+		2A3E03892B74C6AF00A4494D /* getC2BSubJ1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getC2BSubJ1.json; sourceTree = "<group>"; };
+		2A3E038A2B74C6AF00A4494D /* getC2BSubJ3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getC2BSubJ3.json; sourceTree = "<group>"; };
+		2A3E038B2B74C6AF00A4494D /* getC2BSubJ2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getC2BSubJ2.json; sourceTree = "<group>"; };
+		2A3E038C2B74C6AF00A4494D /* getC2BSubJ4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getC2BSubJ4.json; sourceTree = "<group>"; };
+		2A3E038D2B74C6AF00A4494D /* createFastPaymentContractE2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = createFastPaymentContractE2.json; sourceTree = "<group>"; };
+		2A3E038E2B74C6AF00A4494D /* getClientConsentMe2MePullB4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getClientConsentMe2MePullB4.json; sourceTree = "<group>"; };
+		2A3E038F2B74C6AF00A4494D /* createFastPaymentContractE1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = createFastPaymentContractE1.json; sourceTree = "<group>"; };
+		2A3E03902B74C6AF00A4494D /* updateFastPaymentContractD1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = updateFastPaymentContractD1.json; sourceTree = "<group>"; };
+		2A3E03912B74C6AF00A4494D /* getBankDefaultC2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getBankDefaultC2.json; sourceTree = "<group>"; };
+		2A3E03922B74C6AF00A4494D /* prepareSetBankDefaultF3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = prepareSetBankDefaultF3.json; sourceTree = "<group>"; };
+		2A3E03932B74C6AF00A4494D /* prepareSetBankDefaultF2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = prepareSetBankDefaultF2.json; sourceTree = "<group>"; };
+		2A3E03942B74C6AF00A4494D /* getBankDefaultC3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getBankDefaultC3.json; sourceTree = "<group>"; };
+		2A3E03952B74C6AF00A4494D /* makeSetBankDefaultG4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = makeSetBankDefaultG4.json; sourceTree = "<group>"; };
+		2A3E03962B74C6AF00A4494D /* fastPaymentContractFindListA1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fastPaymentContractFindListA1.json; sourceTree = "<group>"; };
+		2A3E03972B74C6AF00A4494D /* getBankDefaultC4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getBankDefaultC4.json; sourceTree = "<group>"; };
+		2A3E03982B74C6AF00A4494D /* changeClientConsentMe2MePullH3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = changeClientConsentMe2MePullH3.json; sourceTree = "<group>"; };
+		2A3E03992B74C6AF00A4494D /* makeSetBankDefaultG3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = makeSetBankDefaultG3.json; sourceTree = "<group>"; };
+		2A3E039A2B74C6AF00A4494D /* getClientConsentMe2MePullB1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getClientConsentMe2MePullB1.json; sourceTree = "<group>"; };
+		2A3E039B2B74C6AF00A4494D /* makeSetBankDefaultG2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = makeSetBankDefaultG2.json; sourceTree = "<group>"; };
+		2A3E039C2B74C6AF00A4494D /* changeClientConsentMe2MePullH2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = changeClientConsentMe2MePullH2.json; sourceTree = "<group>"; };
+		2A3E039D2B74C6AF00A4494D /* getBankDefaultC5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getBankDefaultC5.json; sourceTree = "<group>"; };
 		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2A3F1B152A47763000D8FE55 /* MosParkingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingView.swift; sourceTree = "<group>"; };
 		2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapperTests.swift; sourceTree = "<group>"; };
@@ -5744,6 +5822,7 @@
 				2A09C2B02B3C5CEC0076DC93 /* RootViewModelFactory+makeFastPaymentsFactory.swift */,
 				2AFD59E82B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift */,
 				2A9E054A2B3B6E7B00463CE8 /* Services+makeNavigationStateManager.swift */,
+				2A3E03252B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift */,
 				2A80C6C72B6E216E00293FE5 /* MicroServices.Facade */,
 				2A65FB402B4E85BD00A84F9E /* Reducer.swift */,
 				2A65FB422B4E85D400A84F9E /* MainQueueReducerDecorator.swift */,
@@ -5880,6 +5959,7 @@
 		2A1F086B2A7A2EC000C5B11B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2A3E03272B74BD2700A4494D /* FastPaymentsSettings */,
 				2A1F086C2A7A2EC800C5B11B /* PublicTransportKey */,
 			);
 			path = Resources;
@@ -6230,6 +6310,90 @@
 				2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */,
 			);
 			path = FastPaymentsSettings;
+			sourceTree = "<group>";
+		};
+		2A3E03272B74BD2700A4494D /* FastPaymentsSettings */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E03282B74BD3200A4494D /* JSON Responses */,
+			);
+			path = FastPaymentsSettings;
+			sourceTree = "<group>";
+		};
+		2A3E03282B74BD3200A4494D /* JSON Responses */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E03752B74C6AF00A4494D /* dict */,
+				2A3E03792B74C6AF00A4494D /* rest */,
+			);
+			path = "JSON Responses";
+			sourceTree = "<group>";
+		};
+		2A3E03752B74C6AF00A4494D /* dict */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E03762B74C6AF00A4494D /* getFullBankInfoListK2.json */,
+				2A3E03772B74C6AF00A4494D /* getFullBankInfoListK3.json */,
+				2A3E03782B74C6AF00A4494D /* getFullBankInfoListK1.json */,
+			);
+			path = dict;
+			sourceTree = "<group>";
+		};
+		2A3E03792B74C6AF00A4494D /* rest */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E037A2B74C6AF00A4494D /* fastPaymentContractFindListA3.json */,
+				2A3E037B2B74C6AF00A4494D /* getClientConsentMe2MePullB3.json */,
+				2A3E037C2B74C6AF00A4494D /* makeSetBankDefaultG1.json */,
+				2A3E037D2B74C6AF00A4494D /* changeClientConsentMe2MePullH1.json */,
+				2A3E037E2B74C6AF00A4494D /* getClientConsentMe2MePullB2.json */,
+				2A3E037F2B74C6AF00A4494D /* fastPaymentContractFindListA2.json */,
+				2A3E03802B74C6AF00A4494D /* createFastPaymentContractE3.json */,
+				2A3E03812B74C6AF00A4494D /* prepareSetBankDefaultF1.json */,
+				2A3E03822B74C6AF00A4494D /* fastPaymentContractFindListA5.json */,
+				2A3E03832B74C6AF00A4494D /* updateFastPaymentContractD3.json */,
+				2A3E03842B74C6AF00A4494D /* updateFastPaymentContractD2.json */,
+				2A3E03852B74C6AF00A4494D /* fastPaymentContractFindListA4.json */,
+				2A3E03862B74C6AF00A4494D /* getBankDefaultC1.json */,
+				2A3E03872B74C6AF00A4494D /* binding */,
+				2A3E038D2B74C6AF00A4494D /* createFastPaymentContractE2.json */,
+				2A3E038E2B74C6AF00A4494D /* getClientConsentMe2MePullB4.json */,
+				2A3E038F2B74C6AF00A4494D /* createFastPaymentContractE1.json */,
+				2A3E03902B74C6AF00A4494D /* updateFastPaymentContractD1.json */,
+				2A3E03912B74C6AF00A4494D /* getBankDefaultC2.json */,
+				2A3E03922B74C6AF00A4494D /* prepareSetBankDefaultF3.json */,
+				2A3E03932B74C6AF00A4494D /* prepareSetBankDefaultF2.json */,
+				2A3E03942B74C6AF00A4494D /* getBankDefaultC3.json */,
+				2A3E03952B74C6AF00A4494D /* makeSetBankDefaultG4.json */,
+				2A3E03962B74C6AF00A4494D /* fastPaymentContractFindListA1.json */,
+				2A3E03972B74C6AF00A4494D /* getBankDefaultC4.json */,
+				2A3E03982B74C6AF00A4494D /* changeClientConsentMe2MePullH3.json */,
+				2A3E03992B74C6AF00A4494D /* makeSetBankDefaultG3.json */,
+				2A3E039A2B74C6AF00A4494D /* getClientConsentMe2MePullB1.json */,
+				2A3E039B2B74C6AF00A4494D /* makeSetBankDefaultG2.json */,
+				2A3E039C2B74C6AF00A4494D /* changeClientConsentMe2MePullH2.json */,
+				2A3E039D2B74C6AF00A4494D /* getBankDefaultC5.json */,
+			);
+			path = rest;
+			sourceTree = "<group>";
+		};
+		2A3E03872B74C6AF00A4494D /* binding */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E03882B74C6AF00A4494D /* v1 */,
+			);
+			path = binding;
+			sourceTree = "<group>";
+		};
+		2A3E03882B74C6AF00A4494D /* v1 */ = {
+			isa = PBXGroup;
+			children = (
+				2A3E03892B74C6AF00A4494D /* getC2BSubJ1.json */,
+				2A3E038A2B74C6AF00A4494D /* getC2BSubJ3.json */,
+				2A3E038B2B74C6AF00A4494D /* getC2BSubJ2.json */,
+				2A3E038C2B74C6AF00A4494D /* getC2BSubJ4.json */,
+			);
+			path = v1;
 			sourceTree = "<group>";
 		};
 		2A3F1B192A4982EA00D8FE55 /* View */ = {
@@ -7507,6 +7671,7 @@
 			isa = PBXGroup;
 			children = (
 				2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */,
+				2A3E03232B7499FB00A4494D /* HTTPClientStub.swift */,
 				2A2ECBBA2AE51D6F00F3C946 /* GenericLoaderOf.swift */,
 				2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */,
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
@@ -12944,14 +13109,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A3E03C12B74C6B000A4494D /* changeClientConsentMe2MePullH2.json in Resources */,
 				ED9C1A0127567F6B00AF9DFF /* OpenNewDepositViewControllerCell.xib in Resources */,
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
 				0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
+				2A3E03BE2B74C6B000A4494D /* makeSetBankDefaultG3.json in Resources */,
 				503F075728252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				6833E0B72732B763004C070F /* DetailOperationTableViewCell.xib in Resources */,
 				68673B6126F4B87900F67A8C /* PayTableViewCell.xib in Resources */,
+				2A3E03A32B74C6B000A4494D /* makeSetBankDefaultG1.json in Resources */,
 				68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */,
 				509ADC2F2832C548002DC829 /* Inter-Medium.ttf in Resources */,
 				EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */,
@@ -12959,6 +13127,7 @@
 				0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */,
 				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				68D06F3526C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib in Resources */,
+				2A3E03B02B74C6B000A4494D /* getC2BSubJ2.json in Resources */,
 				7769F5BE27D7C9ED00F80607 /* ProductsListSample.json in Resources */,
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */,
@@ -12972,49 +13141,71 @@
 				0C95FBCF2A9033AF00015C96 /* AuthAbroadResponseMax.json in Resources */,
 				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
+				2A3E03B52B74C6B000A4494D /* updateFastPaymentContractD1.json in Resources */,
 				688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */,
+				2A3E03B12B74C6B000A4494D /* getC2BSubJ4.json in Resources */,
+				2A3E03A92B74C6B000A4494D /* fastPaymentContractFindListA5.json in Resources */,
 				ED0FE466281AD286000CF73F /* DetailCapitCollectionViewCell.xib in Resources */,
 				0BA4093628064484001326CE /* SettingPhotoCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				0C03FB52286A786500C2A100 /* BanksCollectionViewCell.xib in Resources */,
 				A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */,
+				2A3E03C02B74C6B000A4494D /* makeSetBankDefaultG2.json in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
+				2A3E03BD2B74C6B000A4494D /* changeClientConsentMe2MePullH3.json in Resources */,
 				509ADC2D2832C547002DC829 /* Inter-Regular.ttf in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				0BE6960B27F5C10A007F30D1 /* PlacesSampleData.json in Resources */,
 				68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */,
+				2A3E03A22B74C6B000A4494D /* getClientConsentMe2MePullB3.json in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
+				2A3E03AF2B74C6B000A4494D /* getC2BSubJ3.json in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
+				2A3E03BB2B74C6B000A4494D /* fastPaymentContractFindListA1.json in Resources */,
 				509ADC2C2832C547002DC829 /* Inter-Bold.ttf in Resources */,
 				EDFA7526277D181500EEB4AE /* TermsDepositTableViewCell.xib in Resources */,
 				2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
+				2A3E03A62B74C6B000A4494D /* fastPaymentContractFindListA2.json in Resources */,
 				0C276594290691C10007D31D /* MyProductsHide3x.mov in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				EDDFE3D6275EC34300F57C71 /* DepositSuccessViewController.xib in Resources */,
 				EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */,
+				2A3E03A42B74C6B000A4494D /* changeClientConsentMe2MePullH1.json in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
+				2A3E03B32B74C6B000A4494D /* getClientConsentMe2MePullB4.json in Resources */,
+				2A3E03A82B74C6B000A4494D /* prepareSetBankDefaultF1.json in Resources */,
+				2A3E03AB2B74C6B000A4494D /* updateFastPaymentContractD2.json in Resources */,
 				77448C0D2872F7E0009EEEA8 /* sample_pdf.pdf in Resources */,
+				2A3E03B92B74C6B000A4494D /* getBankDefaultC3.json in Resources */,
 				EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */,
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
 				68DF16CE2804F97E005D8D3E /* StatementSample.json in Resources */,
+				2A3E03B72B74C6B000A4494D /* prepareSetBankDefaultF3.json in Resources */,
+				2A3E03B42B74C6B000A4494D /* createFastPaymentContractE1.json in Resources */,
+				2A3E03BF2B74C6B000A4494D /* getClientConsentMe2MePullB1.json in Resources */,
 				EDDFE3A72756BEC600F57C71 /* DetailInformationViewCell.xib in Resources */,
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
 				EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */,
+				2A3E03B22B74C6B000A4494D /* createFastPaymentContractE2.json in Resources */,
 				A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
+				2A3E03B82B74C6B000A4494D /* prepareSetBankDefaultF2.json in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
+				2A3E03A72B74C6B000A4494D /* createFastPaymentContractE3.json in Resources */,
 				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
+				2A3E03A12B74C6B000A4494D /* fastPaymentContractFindListA3.json in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */,
+				2A3E03AA2B74C6B000A4494D /* updateFastPaymentContractD3.json in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
 				EDDFE3B62756D54800F57C71 /* CalculatorDepositCollectionViewCell.xib in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
@@ -13022,19 +13213,27 @@
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */,
 				F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */,
+				2A3E03A02B74C6AF00A4494D /* getFullBankInfoListK1.json in Resources */,
+				2A3E03AC2B74C6B000A4494D /* fastPaymentContractFindListA4.json in Resources */,
 				0CC8D4402A72F43C0068E650 /* AuthAbroadResponseMin.json in Resources */,
+				2A3E03AD2B74C6B000A4494D /* getBankDefaultC1.json in Resources */,
 				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
+				2A3E03C22B74C6B000A4494D /* getBankDefaultC5.json in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				0B8C1C5D273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
 				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
+				2A3E039E2B74C6AF00A4494D /* getFullBankInfoListK2.json in Resources */,
 				ED684CEF27638E6700AA7A33 /* DocDepositCollectionViewCell.xib in Resources */,
 				EDFA7522277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib in Resources */,
 				ED0FE469281AE385000CF73F /* DetailCapitView.xib in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
+				2A3E03A52B74C6B000A4494D /* getClientConsentMe2MePullB2.json in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
+				2A3E039F2B74C6AF00A4494D /* getFullBankInfoListK3.json in Resources */,
+				2A3E03B62B74C6B000A4494D /* getBankDefaultC2.json in Resources */,
 				6876D10427F53EC0000240CC /* MoreButtonCollectionViewCell.xib in Resources */,
 				ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
@@ -13042,10 +13241,13 @@
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 				503F075A28252E1B00E84A77 /* Inter-SemiBold.ttf in Resources */,
+				2A3E03BC2B74C6B000A4494D /* getBankDefaultC4.json in Resources */,
 				0C276593290691C10007D31D /* MyProductsOrdered3x.mov in Resources */,
+				2A3E03AE2B74C6B000A4494D /* getC2BSubJ1.json in Resources */,
 				F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */,
 				F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */,
 				F63D45E6DA7A3F76FDD0B282 /* C2BSuccess.xib in Resources */,
+				2A3E03BA2B74C6B000A4494D /* makeSetBankDefaultG4.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14382,6 +14584,7 @@
 				77F468B6284522EB008C9579 /* ChatView.swift in Sources */,
 				0BD8D56428AFDC17006DC9BA /* TransferLimitData.swift in Sources */,
 				776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */,
+				2A3E03262B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
@@ -14644,6 +14847,7 @@
 				0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */,
 				0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */,
 				0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */,
+				2A3E03242B7499FB00A4494D /* HTTPClientStub.swift in Sources */,
 				77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				774EECD829A6389000CCE94A /* PaymentsContactGroupView.swift in Sources */,
