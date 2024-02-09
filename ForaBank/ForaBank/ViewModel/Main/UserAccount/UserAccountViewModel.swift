@@ -232,6 +232,43 @@ private extension UserAccountViewModel {
         return sections
     }
     
+    func makeSubscriptionsViewModel(
+    ) -> SubscriptionsViewModel {
+        
+        let products = self.getSubscriptions(with: model.subscriptions.value?.list ?? [])
+        
+        let reducer = TransformingReducer(
+            placeholderText: "Поиск",
+            transform: {
+                .init(
+                    $0.text,
+                    cursorPosition: $0.cursorPosition
+                )
+            }
+        )
+        
+        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
+        let titleCondition = (products.count == 0)
+        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
+            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
+        )
+        
+        return .init(
+            products: products,
+            searchViewModel: .init(
+                initialState: .placeholder("Поиск"),
+                reducer: reducer,
+                keyboardType: .default
+            ),
+            emptyViewModel: emptyViewModel,
+            configurator: .init(
+                backgroundColor: .mainColorsGrayLightest
+            )
+        )
+    }
+    
     func getSubscriptions(
         with items: [C2BSubscription.ProductSubscription]
     ) -> [SubscriptionsViewModel.Product] {
@@ -509,41 +546,8 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            openManagingSubscription()
-            let products = self.getSubscriptions(with: model.subscriptions.value?.list ?? [])
-            
-            let reducer = TransformingReducer(
-                placeholderText: "Поиск",
-                transform: {
-                    .init(
-                        $0.text,
-                        cursorPosition: $0.cursorPosition
-                    )
-                }
-            )
-            
-            let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-            let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-            let titleCondition = (products.count == 0)
-            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-                icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-                title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
-            )
-            
-            self.event(.navigate(.link(
-                .managingSubscription(.init(
-                    products: products,
-                    searchViewModel: .init(
-                        initialState: .placeholder("Поиск"),
-                        reducer: reducer,
-                        keyboardType: .default
-                    ),
-                    emptyViewModel: emptyViewModel,
-                    configurator: .init(
-                        backgroundColor: .mainColorsGrayLightest
-                    )
-                ))
-            )))
+            let viewModel = makeSubscriptionsViewModel()
+            self.event(.navigate(.link(.managingSubscription(viewModel))))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
             switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {
