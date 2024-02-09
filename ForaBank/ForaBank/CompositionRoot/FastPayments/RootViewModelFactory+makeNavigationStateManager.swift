@@ -1,5 +1,5 @@
 //
-//  Services+makeNavigationStateManager.swift
+//  RootViewModelFactory+makeNavigationStateManager.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 26.12.2023.
@@ -64,7 +64,15 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsFactory: fastPaymentsFactory, 
+            makeSubscriptionsViewModel: {
+                
+                makeSubscriptionsViewModel(
+                    model: model, 
+                    onDelete: $0, 
+                    scheduler: scheduler
+                )
+            },
             reduce: userAccountReducer.reduce(_:_:),
             handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
