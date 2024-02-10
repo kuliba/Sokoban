@@ -19,7 +19,8 @@ extension RootViewModelFactory {
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
+        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -74,7 +75,8 @@ extension RootViewModelFactory {
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
-            log: infoNetworkLog
+            log: infoNetworkLog,
+            scheduler: scheduler
         )
         
         let sberQRServices = Services.makeSberQRServices(

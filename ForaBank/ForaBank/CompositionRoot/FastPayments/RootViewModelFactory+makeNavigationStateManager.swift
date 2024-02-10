@@ -24,7 +24,7 @@ extension RootViewModelFactory {
         duration: Int,
         length: Int = 6,
         log: @escaping (String, StaticString, UInt) -> Void,
-        scheduler: AnySchedulerOfDispatchQueue = .main
+        scheduler: AnySchedulerOfDispatchQueue
     ) -> UserAccountNavigationStateManager {
         
         let fpsReducer = UserAccountNavigationFPSReducer()

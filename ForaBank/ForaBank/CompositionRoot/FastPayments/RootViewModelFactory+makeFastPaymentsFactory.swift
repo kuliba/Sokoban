@@ -15,7 +15,7 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
-        scheduler: AnySchedulerOfDispatchQueue = .main
+        scheduler: AnySchedulerOfDispatchQueue
     ) -> FastPaymentsSettingsViewModel {
         
         let getProducts = /*isStub ? { .preview } :*/ model.getProducts
