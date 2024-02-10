@@ -12,19 +12,12 @@ import TextFieldModel
 extension RootViewModelFactory {
     
     static func makeSubscriptionsViewModel(
-        model: Model,
-        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        onDetail: @escaping (SubscriptionViewModel.Token) -> Void,
+        getProducts: @escaping () -> [SubscriptionsViewModel.Product],
         c2bSubscription: C2BSubscription?,
         scheduler: AnySchedulerOfDispatchQueue
     ) -> SubscriptionsViewModel {
         
-        let products = getSubscriptions(
-            model: model,
-            with: model.subscriptions.value?.list ?? [],
-            onDelete: onDelete,
-            onDetail: onDetail
-        )
+        let products = getProducts()
         
         let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
             isEmpty: products.count == 0,
@@ -47,46 +40,50 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
     }
-
-    private static func getSubscriptions(
+    
+    static func getSubscriptionProducts(
         model: Model,
-        with items: [C2BSubscription.ProductSubscription],
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
         onDetail: @escaping (SubscriptionViewModel.Token) -> Void
-    ) -> [SubscriptionsViewModel.Product] {
+    ) -> () -> [SubscriptionsViewModel.Product] {
         
-        items.compactMap { item in
+        let items = model.subscriptions.value?.list ?? []
+        
+        return {
             
-            let product = model.allProducts.first { $0.id.description == item.productId }
-            
-            guard let product,
-                  let balance = model.amountFormatted(
-                    amount: product.balanceValue,
-                    currencyCode: product.currency,
-                    style: .fraction
-                  ),
-                  let icon = product.smallDesign.image
-            else { return nil }
-            
-            let subscriptions = item.subscriptions.map {
+            items.compactMap { item in
                 
-                $0.makeSubscriptionViewModel(
-                    model: model,
-                    onDelete: onDelete,
-                    onDetail: onDetail
+                let product = model.allProducts.first { $0.id.description == item.productId }
+                
+                guard let product,
+                      let balance = model.amountFormatted(
+                        amount: product.balanceValue,
+                        currencyCode: product.currency,
+                        style: .fraction
+                      ),
+                      let icon = product.smallDesign.image
+                else { return nil }
+                
+                let subscriptions = item.subscriptions.map {
+                    
+                    $0.makeSubscriptionViewModel(
+                        model: model,
+                        onDelete: onDelete,
+                        onDetail: onDetail
+                    )
+                }
+                
+                return .init(
+                    image: icon,
+                    title: item.productTitle,
+                    paymentSystemIcon: nil,
+                    name: product.displayName,
+                    balance: balance,
+                    descriptions: product.description,
+                    isLocked: product.isLocked,
+                    subscriptions: subscriptions
                 )
             }
-            
-            return .init(
-                image: icon,
-                title: item.productTitle,
-                paymentSystemIcon: nil,
-                name: product.displayName,
-                balance: balance,
-                descriptions: product.description,
-                isLocked: product.isLocked,
-                subscriptions: subscriptions
-            )
         }
     }
 }
