@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import SberQR
+import ManageSubscriptionsUI
 import PaymentSticker
+import SberQR
 import SwiftUI
 
 extension RootViewModelFactory {
@@ -71,9 +72,14 @@ extension RootViewModelFactory {
         }()
         
         let navigationStateManager = makeNavigationStateManager(
-            model: model,
+            modelEffectHandler: .init(model: model),
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
             duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
             log: infoNetworkLog,
             scheduler: scheduler
@@ -404,3 +410,28 @@ private extension RootViewModelFactory {
         )
     }
 }
+
+// MARK: - Adapters
+
+private extension UserAccountModelEffectHandler {
+    
+    convenience init(model: Model) {
+        
+        self.init(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            },
+            deleteRequest: {
+                
+                model.action.send(ModelAction.ClientInfo.Delete.Request())
+            },
+            exit: {
+                
+                model.auth.value = .unlockRequiredManual
+            }
+        )
+    }
+}
+

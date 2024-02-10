@@ -11,93 +11,99 @@ import TextFieldModel
 
 extension RootViewModelFactory {
     
+    typealias GetSubscriptionProducts = (@escaping OnSubscriptionDelete, @escaping OnSubscriptionDetail) -> [SubscriptionsViewModel.Product]
+    typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
+    typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
+    
     static func makeSubscriptionsViewModel(
-        getProducts: @escaping () -> [SubscriptionsViewModel.Product],
+        getProducts: @escaping GetSubscriptionProducts,
         c2bSubscription: C2BSubscription?,
         scheduler: AnySchedulerOfDispatchQueue
-    ) -> SubscriptionsViewModel {
+    ) -> UserAccountNavigationStateManager.MakeSubscriptionsViewModel {
         
-        let products = getProducts()
-        
-        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-            isEmpty: products.count == 0,
-            c2bSubscription: c2bSubscription
-        )
-        
-        let reducer = TransformingReducer(placeholderText: "Поиск")
-        
-        return .init(
-            products: products,
-            searchViewModel: .init(
-                initialState: .placeholder("Поиск"),
-                reducer: reducer,
-                keyboardType: .default
-            ),
-            emptyViewModel: emptyViewModel,
-            configurator: .init(
-                backgroundColor: .mainColorsGrayLightest
-            ),
-            scheduler: scheduler
-        )
+        return { onDelete, onDetail in
+            
+            let products = getProducts(onDelete, onDetail)
+            
+            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+                isEmpty: products.count == 0,
+                c2bSubscription: c2bSubscription
+            )
+            
+            let reducer = TransformingReducer(placeholderText: "Поиск")
+            
+            return .init(
+                products: products,
+                searchViewModel: .init(
+                    initialState: .placeholder("Поиск"),
+                    reducer: reducer,
+                    keyboardType: .default
+                ),
+                emptyViewModel: emptyViewModel,
+                configurator: .init(
+                    backgroundColor: .mainColorsGrayLightest
+                ),
+                scheduler: scheduler
+            )
+        }
     }
     
     static func getSubscriptionProducts(
-        model: Model,
-        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
-    ) -> () -> [SubscriptionsViewModel.Product] {
+        model: Model
+    ) -> GetSubscriptionProducts {
         
-        getSubscriptionProducts(
-            items: model.subscriptions.value?.list ?? [],
-            getProduct: model.product(forID:),
-            formatBalance: model.formatBalanceFraction(product:),
-            makeSubscriptionViewModel: {
-                
+        return { onDelete, onDetail in
+            
+            getSubscriptionProducts(
+                items: model.subscriptions.value?.list ?? [],
+                getProduct: model.product(forID:),
+                formatBalance: model.formatBalanceFraction(product:),
+                makeSubscriptionViewModel: {
+                    
 #warning("reuse ImageCache")
-                return $0.makeSubscriptionViewModel(
-                    getImage: { model.images.value[$0]?.image },
-                    requestImage: {
-                        
-                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
-                    },
-                    onDelete: onDelete,
-                    onDetail: onDetail
-                )
-            }
-        )
+                    return $0.makeSubscriptionViewModel(
+                        getImage: { model.images.value[$0]?.image },
+                        requestImage: {
+                            
+                            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
+                        },
+                        onDelete: onDelete,
+                        onDetail: onDetail
+                    )
+                }
+            )
+        }
     }
     
     typealias ProductID = String
+    typealias MakeSubscriptionViewModel = (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
     
     static func getSubscriptionProducts(
         items: [C2BSubscription.ProductSubscription],
         getProduct: @escaping (ProductID) -> ProductData?,
         formatBalance: @escaping (ProductData) -> String?,
-        makeSubscriptionViewModel: @escaping (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
-    ) -> () -> [SubscriptionsViewModel.Product] {
+        makeSubscriptionViewModel: @escaping MakeSubscriptionViewModel
+    ) -> [SubscriptionsViewModel.Product] {
         
-        return {
+        items.compactMap { item in
             
-            items.compactMap { item in
-                
-                guard let product = getProduct(item.productId),
-                      let balance = formatBalance(product),
-                      let icon = product.smallDesign.image
-                else { return nil }
-                
-                let subscriptions = item.subscriptions.map(makeSubscriptionViewModel)
-                
-                return .init(
-                    image: icon,
-                    title: item.productTitle,
-                    paymentSystemIcon: nil,
-                    name: product.displayName,
-                    balance: balance,
-                    descriptions: product.description,
-                    isLocked: product.isLocked,
-                    subscriptions: subscriptions
-                )
-            }
+            guard let product = getProduct(item.productId),
+                  let balance = formatBalance(product),
+                  let icon = product.smallDesign.image
+            else { return nil }
+            
+            let subscriptions = item.subscriptions.map(makeSubscriptionViewModel)
+            
+            return .init(
+                image: icon,
+                title: item.productTitle,
+                paymentSystemIcon: nil,
+                name: product.displayName,
+                balance: balance,
+                descriptions: product.description,
+                isLocked: product.isLocked,
+                subscriptions: subscriptions
+            )
         }
     }
 }

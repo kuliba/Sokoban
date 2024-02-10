@@ -18,9 +18,10 @@ import UserAccountNavigationComponent
 extension RootViewModelFactory {
     
     static func makeNavigationStateManager(
-        model: Model,
+        modelEffectHandler: UserAccountModelEffectHandler,
         otpServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         duration: Int,
         length: Int = 6,
         log: @escaping (String, StaticString, UInt) -> Void,
@@ -33,10 +34,6 @@ extension RootViewModelFactory {
         let userAccountReducer = UserAccountReducer(
             fpsReduce: fpsReducer.reduce(_:_:),
             otpReduce: otpReducer.reduce(_:_:)
-        )
-        
-        let modelEffectHandler = UserAccountModelEffectHandler(
-            model: model
         )
         
         let otpEffectHandler = UserAccountNavigationOTPEffectHandler(
@@ -63,22 +60,9 @@ extension RootViewModelFactory {
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
         
-        let _makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel = {
-            
-            makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts(
-                    model: model,
-                    onDelete: $0,
-                    onDetail: $1
-                ),
-                c2bSubscription: model.subscriptions.value,
-                scheduler: scheduler
-            )
-        }
-        
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory, 
-            makeSubscriptionsViewModel: _makeSubscriptionsViewModel,
+            fastPaymentsFactory: fastPaymentsFactory,
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             reduce: userAccountReducer.reduce(_:_:),
             handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
@@ -90,28 +74,6 @@ struct FastPaymentsSettingsOTPServices {
     let initiateOTP: CountdownEffectHandler.InitiateOTP
     let submitOTP: OTPFieldEffectHandler.SubmitOTP
     let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault
-}
-
-private extension UserAccountModelEffectHandler {
-    
-    convenience init(model: Model) {
-        
-        self.init(
-            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
-            },
-            deleteRequest: {
-                
-                model.action.send(ModelAction.ClientInfo.Delete.Request())
-            },
-            exit: {
-                
-                model.auth.value = .unlockRequiredManual
-            }
-        )
-    }
 }
 
 // MARK: - Adapters
