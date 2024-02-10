@@ -27,15 +27,7 @@ extension RootViewModelFactory {
             }
         )
         
-        let reducer = TransformingReducer(
-            placeholderText: "Поиск",
-            transform: {
-                .init(
-                    $0.text,
-                    cursorPosition: $0.cursorPosition
-                )
-            }
-        )
+        let reducer = TransformingReducer(placeholderText: "Поиск")
         
         let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
         let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
