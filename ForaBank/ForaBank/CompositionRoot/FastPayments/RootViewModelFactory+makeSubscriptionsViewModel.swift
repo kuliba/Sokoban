@@ -68,6 +68,10 @@ extension RootViewModelFactory {
                     
                     $0.makeSubscriptionViewModel(
                         model: model,
+                        requestImage: {
+                            
+                            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
+                        },
                         onDelete: onDelete,
                         onDetail: onDetail
                     )
@@ -108,6 +112,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
     
     func makeSubscriptionViewModel(
         model: Model,
+        requestImage: @escaping (String) -> Void,
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
         onDetail: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> ManageSubscriptionsUI.SubscriptionViewModel {
@@ -124,7 +129,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
         } else {
             
             image = .default(.ic24ShoppingCart)
-            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
+            requestImage(brandIcon)
         }
         
         return .init(
