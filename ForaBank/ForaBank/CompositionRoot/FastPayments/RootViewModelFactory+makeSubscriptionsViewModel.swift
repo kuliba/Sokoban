@@ -14,6 +14,8 @@ extension RootViewModelFactory {
     static func makeSubscriptionsViewModel(
         model: Model,
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
+        onDetail: @escaping (SubscriptionViewModel.Token) -> Void,
+        c2bSubscription: C2BSubscription?,
         scheduler: AnySchedulerOfDispatchQueue
     ) -> SubscriptionsViewModel {
         
@@ -21,18 +23,15 @@ extension RootViewModelFactory {
             model: model,
             with: model.subscriptions.value?.list ?? [],
             onDelete: onDelete,
-            detailAction: { token in
-                
-                model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-            }
+            onDetail: onDetail
         )
-        
-        let reducer = TransformingReducer(placeholderText: "Поиск")
         
         let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
             isEmpty: products.count == 0,
-            c2bSubscription: model.subscriptions.value
+            c2bSubscription: c2bSubscription
         )
+        
+        let reducer = TransformingReducer(placeholderText: "Поиск")
         
         return .init(
             products: products,
@@ -53,7 +52,7 @@ extension RootViewModelFactory {
         model: Model,
         with items: [C2BSubscription.ProductSubscription],
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
+        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> [SubscriptionsViewModel.Product] {
         
         items.compactMap { item in
@@ -74,7 +73,7 @@ extension RootViewModelFactory {
                 $0.makeSubscriptionViewModel(
                     model: model,
                     onDelete: onDelete,
-                    detailAction: detailAction
+                    onDetail: onDetail
                 )
             }
             
@@ -113,7 +112,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
     func makeSubscriptionViewModel(
         model: Model,
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
+        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> ManageSubscriptionsUI.SubscriptionViewModel {
         
         let image: SubscriptionViewModel.Icon
@@ -143,7 +142,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
                 subtitle: .textBodySR12160()
             ),
             onDelete: onDelete,
-            detailAction: detailAction
+            onDetail: onDetail
         )
     }
 }
