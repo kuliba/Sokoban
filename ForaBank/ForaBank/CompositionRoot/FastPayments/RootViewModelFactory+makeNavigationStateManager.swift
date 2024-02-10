@@ -18,12 +18,12 @@ import UserAccountNavigationComponent
 extension RootViewModelFactory {
     
     static func makeNavigationStateManager(
-        otpServices: FastPaymentsSettingsOTPServices,
         model: Model,
+        otpServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
-        log: @escaping (String, StaticString, UInt) -> Void,
-        duration: Int = 10,
+        duration: Int,
         length: Int = 6,
+        log: @escaping (String, StaticString, UInt) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> UserAccountNavigationStateManager {
         

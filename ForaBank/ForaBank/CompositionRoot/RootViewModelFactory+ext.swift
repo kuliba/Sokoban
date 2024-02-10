@@ -70,9 +70,10 @@ extension RootViewModelFactory {
         }()
         
         let navigationStateManager = makeNavigationStateManager(
-            otpServices: .init(fpsHTTPClient, infoNetworkLog),
             model: model,
+            otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
+            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
             log: infoNetworkLog
         )
         
