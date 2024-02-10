@@ -497,7 +497,7 @@ extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
         fastPaymentsFactory: .new, 
-        makeSubscriptionsViewModel: { _ in .empty },
+        makeSubscriptionsViewModel: { _,_ in .empty },
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

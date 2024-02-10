@@ -71,10 +71,7 @@ extension RootViewModelFactory {
                     getProducts: getSubscriptionProducts(
                         model: model,
                         onDelete: $0,
-                        onDetail: {
-                            
-                            model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: $0))
-                        }
+                        onDetail: $1
                     ),
                     c2bSubscription: model.subscriptions.value,
                     scheduler: scheduler
