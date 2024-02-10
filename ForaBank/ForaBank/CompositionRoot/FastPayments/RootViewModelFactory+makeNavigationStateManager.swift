@@ -63,20 +63,22 @@ extension RootViewModelFactory {
             handleOTPEffect: otpEffectHandler.handleEffect(_:dispatch:)
         )
         
+        let _makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel = {
+            
+            makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(
+                    model: model,
+                    onDelete: $0,
+                    onDetail: $1
+                ),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            )
+        }
+        
         return .init(
             fastPaymentsFactory: fastPaymentsFactory, 
-            makeSubscriptionsViewModel: {
-                
-                makeSubscriptionsViewModel(
-                    getProducts: getSubscriptionProducts(
-                        model: model,
-                        onDelete: $0,
-                        onDetail: $1
-                    ),
-                    c2bSubscription: model.subscriptions.value,
-                    scheduler: scheduler
-                )
-            },
+            makeSubscriptionsViewModel: _makeSubscriptionsViewModel,
             reduce: userAccountReducer.reduce(_:_:),
             handleEffect: userAccountEffectHandler.handleEffect(_:_:)
         )
@@ -90,7 +92,7 @@ struct FastPaymentsSettingsOTPServices {
     let prepareSetBankDefault: UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault
 }
 
-extension UserAccountModelEffectHandler {
+private extension UserAccountModelEffectHandler {
     
     convenience init(model: Model) {
         

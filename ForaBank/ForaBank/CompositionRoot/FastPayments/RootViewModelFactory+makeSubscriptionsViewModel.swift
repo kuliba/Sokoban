@@ -11,57 +11,6 @@ import TextFieldModel
 
 extension RootViewModelFactory {
     
-    static func getSubscriptionProducts(
-        model: Model,
-        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
-    ) -> () -> [SubscriptionsViewModel.Product] {
-        
-        let items = model.subscriptions.value?.list ?? []
-        
-        return {
-            
-            items.compactMap { item in
-                
-                let product = model.allProducts.first { $0.id.description == item.productId }
-                
-                guard let product,
-                      let balance = model.amountFormatted(
-                        amount: product.balanceValue,
-                        currencyCode: product.currency,
-                        style: .fraction
-                      ),
-                      let icon = product.smallDesign.image
-                else { return nil }
-                
-#warning("reuse ImageCache")
-                let subscriptions = item.subscriptions.map {
-                    
-                    $0.makeSubscriptionViewModel(
-                        getImage: { model.images.value[$0]?.image },
-                        requestImage: {
-                            
-                            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
-                        },
-                        onDelete: onDelete,
-                        onDetail: onDetail
-                    )
-                }
-                
-                return .init(
-                    image: icon,
-                    title: item.productTitle,
-                    paymentSystemIcon: nil,
-                    name: product.displayName,
-                    balance: balance,
-                    descriptions: product.description,
-                    isLocked: product.isLocked,
-                    subscriptions: subscriptions
-                )
-            }
-        }
-    }
-    
     static func makeSubscriptionsViewModel(
         getProducts: @escaping () -> [SubscriptionsViewModel.Product],
         c2bSubscription: C2BSubscription?,
@@ -89,6 +38,83 @@ extension RootViewModelFactory {
                 backgroundColor: .mainColorsGrayLightest
             ),
             scheduler: scheduler
+        )
+    }
+    
+    static func getSubscriptionProducts(
+        model: Model,
+        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
+        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
+    ) -> () -> [SubscriptionsViewModel.Product] {
+        
+        getSubscriptionProducts(
+            items: model.subscriptions.value?.list ?? [],
+            getProduct: model.product(forID:),
+            formatBalance: model.formatBalanceFraction(product:),
+            makeSubscriptionViewModel: {
+                
+#warning("reuse ImageCache")
+                return $0.makeSubscriptionViewModel(
+                    getImage: { model.images.value[$0]?.image },
+                    requestImage: {
+                        
+                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
+                    },
+                    onDelete: onDelete,
+                    onDetail: onDetail
+                )
+            }
+        )
+    }
+    
+    typealias ProductID = String
+    
+    static func getSubscriptionProducts(
+        items: [C2BSubscription.ProductSubscription],
+        getProduct: @escaping (ProductID) -> ProductData?,
+        formatBalance: @escaping (ProductData) -> String?,
+        makeSubscriptionViewModel: @escaping (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
+    ) -> () -> [SubscriptionsViewModel.Product] {
+        
+        return {
+            
+            items.compactMap { item in
+                
+                guard let product = getProduct(item.productId),
+                      let balance = formatBalance(product),
+                      let icon = product.smallDesign.image
+                else { return nil }
+                
+                let subscriptions = item.subscriptions.map(makeSubscriptionViewModel)
+                
+                return .init(
+                    image: icon,
+                    title: item.productTitle,
+                    paymentSystemIcon: nil,
+                    name: product.displayName,
+                    balance: balance,
+                    descriptions: product.description,
+                    isLocked: product.isLocked,
+                    subscriptions: subscriptions
+                )
+            }
+        }
+    }
+}
+
+private extension Model {
+    
+    func product(forID productID: String) -> ProductData? {
+        
+        allProducts.first { $0.id.description == productID }
+    }
+    
+    func formatBalanceFraction(product: ProductData) -> String? {
+        
+        amountFormatted(
+            amount: product.balanceValue,
+            currencyCode: product.currency,
+            style: .fraction
         )
     }
 }
