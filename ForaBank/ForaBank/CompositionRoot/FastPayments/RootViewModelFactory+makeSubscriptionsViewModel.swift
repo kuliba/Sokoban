@@ -29,12 +29,9 @@ extension RootViewModelFactory {
         
         let reducer = TransformingReducer(placeholderText: "Поиск")
         
-        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-        let titleCondition = (products.count == 0)
         let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
+            isEmpty: products.count == 0,
+            c2bSubscription: model.subscriptions.value
         )
         
         return .init(
@@ -95,6 +92,22 @@ extension RootViewModelFactory {
     }
 }
 
+private extension SubscriptionsViewModel.EmptyViewModel {
+    
+    init(
+        isEmpty: Bool,
+        c2bSubscription: C2BSubscription?
+    ) {
+        let emptyTitle = c2bSubscription?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+        let title = isEmpty ? emptyTitle : c2bSubscription?.emptySearch
+        
+        self.init(
+            icon: isEmpty ? Image.ic24Trello : Image.ic24Search,
+            title: title ?? "Нет совпадений"
+        )
+    }
+}
+
 private extension C2BSubscription.ProductSubscription.Subscription {
     
     func makeSubscriptionViewModel(
@@ -103,7 +116,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
         detailAction: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> ManageSubscriptionsUI.SubscriptionViewModel {
         
-        var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
+        let image: SubscriptionViewModel.Icon
         
         let brandIcon = brandIcon
         
