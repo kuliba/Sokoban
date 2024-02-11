@@ -9,20 +9,17 @@ import C2BSubscriptionUI
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-            Text("Hello, world!")
-        }
-        .padding()
+        
+        C2BSubscriptionView_Demo(state: .control)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
- 
+        
         ContentView()
     }
 }

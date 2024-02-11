@@ -359,6 +359,7 @@
 		2A1408242B78C79F004219AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A1408232B78C79F004219AA /* Assets.xcassets */; };
 		2A1408272B78C79F004219AA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A1408262B78C79F004219AA /* Preview Assets.xcassets */; };
 		2A14082E2B78C808004219AA /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A14082D2B78C808004219AA /* C2BSubscriptionUI */; };
+		2A1408302B78CD74004219AA /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A14082F2B78CD74004219AA /* UIPrimitives */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
 		2A14A8592A2750460018511E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A8582A2750460018511E /* Assets.xcassets */; };
@@ -4754,6 +4755,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A1408302B78CD74004219AA /* UIPrimitives in Frameworks */,
 				2A14082E2B78C808004219AA /* C2BSubscriptionUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12566,6 +12568,7 @@
 			name = C2BSubscriptionUIPreview;
 			packageProductDependencies = (
 				2A14082D2B78C808004219AA /* C2BSubscriptionUI */,
+				2A14082F2B78CD74004219AA /* UIPrimitives */,
 			);
 			productName = C2BSubscriptionUIPreview;
 			productReference = 2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */;
@@ -18231,6 +18234,10 @@
 		2A14082D2B78C808004219AA /* C2BSubscriptionUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = C2BSubscriptionUI;
+		};
+		2A14082F2B78CD74004219AA /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2A14A8612A2751760018511E /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;

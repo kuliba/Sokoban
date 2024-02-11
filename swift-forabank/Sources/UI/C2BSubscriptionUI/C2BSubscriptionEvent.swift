@@ -9,10 +9,17 @@ import TextFieldDomain
 
 public enum C2BSubscriptionEvent {
     
-    case tap(Tap)
+    case alertTap(AlertEvent)
+    case subscriptionTap(SubscriptionTap)
     case textField(TextFieldAction)
     
-    public struct Tap {
+    public enum AlertEvent {
+        
+        case cancel
+        case delete(Subscription)
+    }
+    
+    public struct SubscriptionTap {
         
         public let subscription: Subscription
         public let event: TapEvent

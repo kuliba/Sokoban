@@ -8,6 +8,7 @@
 import SearchBarComponent
 import SwiftUI
 import TextFieldComponent
+import UIPrimitives
 
 public struct C2BSubscriptionView<Footer: View>: View {
     
@@ -130,12 +131,12 @@ public struct C2BSubscriptionView<Footer: View>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .contentShape(Rectangle())
-            .onTapGesture { event(.tap(.init(
+            .onTapGesture { event(.subscriptionTap(.init(
                 subscription: subscription,
                 event: .detail
             ))) }
             
-            Button(action: { event(.tap(.init(
+            Button(action: { event(.subscriptionTap(.init(
                 subscription: subscription,
                 event: .delete
             ))) }) {
@@ -176,6 +177,89 @@ extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiab
     public var id: String { subscriptionToken }
 }
 
+typealias TapAlert = AlertModelOf<C2BSubscriptionEvent.AlertEvent>
+
+public struct C2BSubscriptionView_Demo: View {
+    
+    @State var state: C2BSubscriptionState
+    @State private var tapAlert: TapAlert?
+    
+    public init(state: C2BSubscriptionState) {
+        
+        self._state = .init(initialValue: state)
+    }
+    
+    private let textFieldReducer = TransformingReducer(placeholderText: "Search")
+    
+    private func event(
+        _ event: C2BSubscriptionEvent
+    ) {
+        switch event {
+        case let .alertTap(alertEvent):
+            switch alertEvent {
+            case .cancel:
+                tapAlert = nil
+                
+            case let .delete(subscription):
+                print("Delete subscription \(subscription.brandName)")
+            }
+            
+        case let .subscriptionTap(tap):
+            switch tap.event {
+            case .delete:
+                tapAlert = .init(
+                    title: tap.subscription.cancelAlert,
+                    message: nil,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "Отключить",
+                        event: .delete(tap.subscription)
+                    ),
+                    secondaryButton: .init(
+                        type: .cancel,
+                        title: "Отмена",
+                        event: .cancel
+                    )
+                )
+                
+            case .detail:
+                print("Effect: Request details for subscription \(tap.subscription.brandName)")
+            }
+            
+        case let .textField(textFieldAction):
+            guard let textFieldState = try? textFieldReducer.reduce(state.textFieldState, with: textFieldAction)
+            else { return }
+            
+            state.textFieldState = textFieldState
+        }
+    }
+    
+    public var body: some View {
+        
+        NavigationView {
+            
+            C2BSubscriptionView(
+                state: state,
+                event: event,
+                footer: {
+                    Text("some footer with icon")
+                        .foregroundColor(.secondary)
+                },
+                textFieldConfig: .preview
+            )
+            .navigationTitle(state.getC2BSubResponse.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .alert(
+                item: .init(
+                    get: { tapAlert },
+                    set: { if $0 == nil { tapAlert = nil }}
+                ),
+                content: { .init(with: $0, event: { event(.alertTap($0))}) }
+            )
+        }
+    }
+}
+
 struct C2BSubscriptionView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -183,56 +267,9 @@ struct C2BSubscriptionView_Previews: PreviewProvider {
         C2BSubscriptionView_Demo(state: .control)
         C2BSubscriptionView_Demo(state: .empty)
     }
-    
-    struct C2BSubscriptionView_Demo: View {
-        
-        @State var state: C2BSubscriptionState
-        @State private var alert: Alert?
-        
-        private let reducer = TransformingReducer(placeholderText: "Search")
-        
-        private func event(
-            _ event: C2BSubscriptionEvent
-        ) {
-            switch event {
-            case let .tap(tap):
-                switch tap.event {
-                case .delete:
-                    alert = .init(title: Text(tap.subscription.cancelAlert))
-
-                case .detail:
-                    alert = .init(title: Text("Showing detail for \(tap.subscription.brandName)"))
-                }
-                
-            case let .textField(textFieldAction):
-                guard let textFieldState = try? reducer.reduce(state.textFieldState, with: textFieldAction)
-                else { return }
-                
-                state.textFieldState = textFieldState
-            }
-        }
-        
-        var body: some View {
-            
-            NavigationView {
-                
-                C2BSubscriptionView(
-                    state: state,
-                    event: event,
-                    footer: {
-                        Text("some footer with icon")
-                            .foregroundColor(.secondary)
-                    },
-                    textFieldConfig: .preview
-                )
-                .navigationTitle(state.getC2BSubResponse.title)
-                .navigationBarTitleDisplayMode(.inline)
-            }
-        }
-    }
 }
 
-extension C2BSubscriptionState {
+public extension C2BSubscriptionState {
     
     static let control: Self = .init(getC2BSubResponse: .control)
     static let empty: Self = .init(getC2BSubResponse: .empty)
