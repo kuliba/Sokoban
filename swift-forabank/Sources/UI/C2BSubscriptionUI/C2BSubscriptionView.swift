@@ -33,12 +33,12 @@ public struct C2BSubscriptionView<Footer: View>: View {
         
         VStack(spacing: 24) {
             
-            switch state.getC2BSubResponse.details {
-            case .empty:
+            switch state.filteredList {
+            case .none:
                 emptyView()
                 
-            case let .list(list):
-                listView(list)
+            case let .some(filteredList):
+                listView(filteredList)
             }
             
             footer()
@@ -145,6 +145,51 @@ public struct C2BSubscriptionView<Footer: View>: View {
             }
         }
         .padding(.horizontal)
+    }
+}
+
+private extension C2BSubscriptionState {
+    
+    var filteredList: [GetC2BSubResponse.Details.ProductSubscription]? {
+        
+        guard case let .list(list) = getC2BSubResponse.details
+        else { return nil }
+        
+        return list.compactMap { $0.filtered(searchText: searchTest) }
+    }
+    
+    private var searchTest: String {
+        
+        switch textFieldState {
+        case .placeholder:
+            return ""
+            
+        case let .noFocus(text):
+            return text
+            
+        case let .editing(textState):
+            return textState.text
+        }
+    }
+}
+
+private extension GetC2BSubResponse.Details.ProductSubscription {
+    
+    func filtered(searchText: String) -> Self? {
+        
+        let filteredSubscriptions = subscriptions.filtered(
+            with: searchText,
+            keyPath: \.brandName
+        )
+        
+        guard !filteredSubscriptions.isEmpty else { return nil }
+        
+        return .init(
+            productID: productID,
+            productType: productType,
+            productTitle: productTitle,
+            subscriptions: filteredSubscriptions
+        )
     }
 }
 
