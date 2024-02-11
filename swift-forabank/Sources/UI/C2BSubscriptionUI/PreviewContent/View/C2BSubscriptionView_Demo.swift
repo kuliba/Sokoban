@@ -96,13 +96,17 @@ public struct C2BSubscriptionView_Demo: View {
         )
     }
     
+    @ViewBuilder
     private func destinationView(
         _ destination: Destination
     ) -> some View {
         
         switch destination {
-        case .subscriptionCancelConfirm:
-            Text("TBD: subscriptionCancelConfirm")
+        case let .subscriptionCancelConfirm(confirm):
+            Text("TBD: subscriptionCancelConfirm: \(String(describing: confirm))")
+            
+        case let .subscriptionDetail(detail):
+            Text("TBD: subscriptionDetail: \(String(describing: detail))")
         }
     }
 }
@@ -115,6 +119,9 @@ private extension C2BSubscriptionState {
         case let .cancelled(confirmation):
             return .subscriptionCancelConfirm(confirmation)
             
+        case let .detail(detail):
+            return .subscriptionDetail(detail)
+            
         default:
             return nil
         }
@@ -124,6 +131,7 @@ private extension C2BSubscriptionState {
 private enum Destination {
     
     case subscriptionCancelConfirm(CancelC2BSubscriptionConfirmation)
+    case subscriptionDetail(C2BSubscriptionDetail)
     
 }
  
@@ -134,12 +142,16 @@ extension Destination: Identifiable {
         switch self {
         case .subscriptionCancelConfirm:
             return .subscriptionCancelConfirm
+        
+        case .subscriptionDetail:
+            return .subscriptionDetail
         }
     }
     
     enum ID {
         
         case subscriptionCancelConfirm
+        case subscriptionDetail
     }
 }
 
