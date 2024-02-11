@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TextFieldComponent
+import UIPrimitives
 
 public struct C2BSubscriptionView_Demo: View {
     
@@ -86,6 +87,59 @@ public struct C2BSubscriptionView_Demo: View {
             ),
             content: { .init(with: $0, event: { event(.alertTap($0))}) }
         )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.destination(.dismiss)) }}
+            ),
+            content: destinationView
+        )
+    }
+    
+    private func destinationView(
+        _ destination: Destination
+    ) -> some View {
+        
+        switch destination {
+        case .subscriptionCancelConfirm:
+            Text("TBD: subscriptionCancelConfirm")
+        }
+    }
+}
+
+private extension C2BSubscriptionState {
+    
+    var destination: Destination? {
+        
+        switch status {
+        case let .cancelled(confirmation):
+            return .subscriptionCancelConfirm(confirmation)
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private enum Destination {
+    
+    case subscriptionCancelConfirm(CancelC2BSubscriptionConfirmation)
+    
+}
+ 
+extension Destination: Identifiable {
+        
+    var id: ID {
+        
+        switch self {
+        case .subscriptionCancelConfirm:
+            return .subscriptionCancelConfirm
+        }
+    }
+    
+    enum ID {
+        
+        case subscriptionCancelConfirm
     }
 }
 

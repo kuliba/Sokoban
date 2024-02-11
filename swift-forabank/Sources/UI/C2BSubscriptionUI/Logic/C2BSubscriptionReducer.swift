@@ -32,6 +32,9 @@ public extension C2BSubscriptionReducer {
         case let .alertTap(alertEvent):
             (state, effect) = reduce(state, alertEvent)
             
+        case let .destination(destinationEvent):
+            (state, effect) = reduce(state, destinationEvent)
+            
         case let .subscription(subscriptionEvent):
             (state, effect) = reduce(state, subscriptionEvent)
             
@@ -75,6 +78,21 @@ private extension C2BSubscriptionReducer {
         }
         
         return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: C2BSubscriptionEvent.DestinationEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        
+        switch event {
+        case .dismiss:
+            state.status = nil
+        }
+        
+        return (state, nil)
     }
     
     func reduce(
