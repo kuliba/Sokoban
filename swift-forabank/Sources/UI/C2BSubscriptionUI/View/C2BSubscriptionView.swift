@@ -49,6 +49,20 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
             
             footerView()
         }
+        .alert(
+            item: .init(
+                get: { state.tapAlert },
+                set: { if $0 == nil { event(.alertTap(.cancel)) }}
+            ),
+            content: { .init(with: $0, event: { event(.alertTap($0))}) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.destination(.dismiss)) }}
+            ),
+            content: destinationView
+        )
     }
     
     private func emptyView() -> some View {
@@ -86,7 +100,7 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         VStack {
             
             ProductView(
-                product: productSubscription.product, 
+                product: productSubscription.product,
                 config: config.product
             )
             
@@ -128,6 +142,64 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         
         productSubscription.subscriptions.last?.token == subscription.token
     }
+    
+    @ViewBuilder
+    private func destinationView(
+        _ destination: Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .subscriptionCancelConfirm(confirm):
+            Text("TBD: subscriptionCancelConfirm: \(String(describing: confirm))")
+            
+        case let .subscriptionDetail(detail):
+            Text("TBD: subscriptionDetail: \(String(describing: detail))")
+        }
+    }
+}
+
+private extension C2BSubscriptionState {
+    
+    var destination: Destination? {
+        
+        switch status {
+        case let .cancelled(confirmation):
+            return .subscriptionCancelConfirm(confirmation)
+            
+        case let .detail(detail):
+            return .subscriptionDetail(detail)
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private enum Destination {
+    
+    case subscriptionCancelConfirm(CancelC2BSubscriptionConfirmation)
+    case subscriptionDetail(C2BSubscriptionDetail)
+    
+}
+
+extension Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .subscriptionCancelConfirm:
+            return .subscriptionCancelConfirm
+            
+        case .subscriptionDetail:
+            return .subscriptionDetail
+        }
+    }
+    
+    enum ID {
+        
+        case subscriptionCancelConfirm
+        case subscriptionDetail
+    }
 }
 
 private extension C2BSubscriptionState {
@@ -152,6 +224,14 @@ private extension C2BSubscriptionState {
         case let .editing(textState):
             return textState.text
         }
+    }
+    
+    var tapAlert: TapAlert? {
+        
+        guard case let .tapAlert(tapAlert) = status
+        else { return nil }
+        
+        return tapAlert
     }
 }
 
