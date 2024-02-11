@@ -97,50 +97,11 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         _ productSubscription: ProductSubscription
     ) -> some View {
         
-        VStack {
-            
-            ProductView(
-                product: productSubscription.product,
-                config: config.product
-            )
-            
-            Divider()
-            
-            ForEach(productSubscription.subscriptions) {
-                
-                subscriptionView(
-                    $0,
-                    isLast: isLast($0, in: productSubscription))
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.1))
+        ProductSubscriptionView(
+            productSubscription: productSubscription,
+            event: { event(.subscriptionTap($0)) },
+            config: config.product
         )
-        .padding(.horizontal)
-    }
-    
-    @ViewBuilder
-    private func subscriptionView(
-        _ subscription: ProductSubscription.Subscription,
-        isLast: Bool
-    ) -> some View {
-        
-        SubscriptionView(
-            subscription: subscription,
-            event: { event(.subscriptionTap($0)) }
-        )
-        
-        if !isLast { Divider() }
-    }
-    
-    private func isLast(
-        _ subscription: ProductSubscription.Subscription,
-        in productSubscription: ProductSubscription
-    ) -> Bool {
-        
-        productSubscription.subscriptions.last?.token == subscription.token
     }
     
     @ViewBuilder
