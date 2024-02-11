@@ -8,6 +8,7 @@
 import ForaTools
 import SwiftUI
 
+#warning("move to UIPrimitives")
 extension Icon {
     
     @ViewBuilder
