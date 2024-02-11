@@ -81,17 +81,10 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         
         VStack {
             
-            productView(productSubscription.productDetails)
+            ProductDetailsView(productDetails: productSubscription.productDetails)
             
             ForEach(productSubscription.subscriptions, content: subscriptionView)
         }
-    }
-    
-    private func productView(
-        _ productDetails: ProductSubscription.ProductDetails
-    ) -> some View {
-        
-        Text("TBD: ProductDetails")
     }
     
     private func subscriptionView(
@@ -156,7 +149,7 @@ extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     public var id: String { productID }
 }
 
-private extension GetC2BSubResponse.Details.ProductSubscription {
+extension GetC2BSubResponse.Details.ProductSubscription {
     
     var productDetails: ProductDetails {
         
