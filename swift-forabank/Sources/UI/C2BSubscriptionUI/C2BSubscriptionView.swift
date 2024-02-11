@@ -177,12 +177,9 @@ extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiab
     public var id: String { subscriptionToken }
 }
 
-typealias TapAlert = AlertModelOf<C2BSubscriptionEvent.AlertEvent>
-
 public struct C2BSubscriptionView_Demo: View {
     
     @State var state: C2BSubscriptionState
-    @State private var tapAlert: TapAlert?
     
     public init(state: C2BSubscriptionState) {
         
@@ -198,16 +195,17 @@ public struct C2BSubscriptionView_Demo: View {
         case let .alertTap(alertEvent):
             switch alertEvent {
             case .cancel:
-                tapAlert = nil
+                state.tapAlert = nil
                 
             case let .delete(subscription):
-                print("Delete subscription \(subscription.brandName)")
+                // effect!!
+                print("Effect: Delete subscription \(subscription.brandName)")
             }
             
         case let .subscriptionTap(tap):
             switch tap.event {
             case .delete:
-                tapAlert = .init(
+                state.tapAlert = .init(
                     title: tap.subscription.cancelAlert,
                     message: nil,
                     primaryButton: .init(
@@ -223,6 +221,7 @@ public struct C2BSubscriptionView_Demo: View {
                 )
                 
             case .detail:
+                // effect!!
                 print("Effect: Request details for subscription \(tap.subscription.brandName)")
             }
             
@@ -251,8 +250,8 @@ public struct C2BSubscriptionView_Demo: View {
             .navigationBarTitleDisplayMode(.inline)
             .alert(
                 item: .init(
-                    get: { tapAlert },
-                    set: { if $0 == nil { tapAlert = nil }}
+                    get: { state.tapAlert },
+                    set: { if $0 == nil { event(.alertTap(.cancel)) }}
                 ),
                 content: { .init(with: $0, event: { event(.alertTap($0))}) }
             )
