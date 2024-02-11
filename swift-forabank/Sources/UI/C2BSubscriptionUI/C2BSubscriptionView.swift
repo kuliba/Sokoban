@@ -9,14 +9,26 @@ import SearchBarComponent
 import SwiftUI
 import TextFieldComponent
 
-struct C2BSubscriptionView<Footer: View>: View {
+public struct C2BSubscriptionView<Footer: View>: View {
     
     let state: C2BSubscriptionState
     let event: (C2BSubscriptionEvent) -> Void
     let footer: () -> Footer
     let textFieldConfig: TextFieldView.TextFieldConfig
     
-    var body: some View {
+    public init(
+        state: C2BSubscriptionState, 
+        event: @escaping (C2BSubscriptionEvent) -> Void,
+        footer: @escaping () -> Footer,
+        textFieldConfig: TextFieldView.TextFieldConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.footer = footer
+        self.textFieldConfig = textFieldConfig
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 24) {
             

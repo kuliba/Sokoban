@@ -1,28 +1,36 @@
 //
 //  C2BSubscriptionEvent.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 11.02.2024.
 //
 
 import TextFieldDomain
 
-enum C2BSubscriptionEvent {
+public enum C2BSubscriptionEvent {
     
     case tap(Tap)
     case textField(TextFieldAction)
     
-    struct Tap {
+    public struct Tap {
         
-        let subscription: Subscription
-        let event: TapEvent
+        public let subscription: Subscription
+        public let event: TapEvent
         
-        enum TapEvent {
+        public init(
+            subscription: Subscription,
+            event: TapEvent
+        ) {
+            self.subscription = subscription
+            self.event = event
+        }
+        
+        public enum TapEvent {
             
             case detail
             case delete
         }
     }
-
-    typealias Subscription = GetC2BSubResponse.Details.ProductSubscription.Subscription
+    
+    public typealias Subscription = GetC2BSubResponse.Details.ProductSubscription.Subscription
 }

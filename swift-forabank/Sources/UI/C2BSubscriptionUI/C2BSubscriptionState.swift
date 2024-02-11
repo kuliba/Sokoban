@@ -7,12 +7,12 @@
 
 import TextFieldDomain
 
-struct C2BSubscriptionState {
+public struct C2BSubscriptionState {
     
-    let getC2BSubResponse: GetC2BSubResponse
-    var textFieldState: TextFieldState
+    public let getC2BSubResponse: GetC2BSubResponse
+    public var textFieldState: TextFieldState
     
-    init(
+    public init(
         getC2BSubResponse: GetC2BSubResponse,
         textFieldState: TextFieldState = .placeholder("Поиск")
     ) {
@@ -21,7 +21,7 @@ struct C2BSubscriptionState {
     }
 }
 
-extension C2BSubscriptionState {
+public extension C2BSubscriptionState {
     
     var filteredList: [GetC2BSubResponse.Details.ProductSubscription]? {
         
