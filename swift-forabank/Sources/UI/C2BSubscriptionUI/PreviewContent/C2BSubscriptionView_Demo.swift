@@ -68,26 +68,38 @@ public struct C2BSubscriptionView_Demo: View {
     
     public var body: some View {
         
-        NavigationView {
+        ZStack {
             
-            C2BSubscriptionView(
-                state: state,
-                event: event,
-                footer: {
-                    Text("some footer with icon")
-                        .foregroundColor(.secondary)
-                },
-                textFieldConfig: .preview
-            )
-            .navigationTitle(state.getC2BSubResponse.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .alert(
-                item: .init(
-                    get: { state.tapAlert },
-                    set: { if $0 == nil { event(.alertTap(.cancel)) }}
-                ),
-                content: { .init(with: $0, event: { event(.alertTap($0))}) }
-            )
+            NavigationView {
+                
+                C2BSubscriptionView(
+                    state: state,
+                    event: event,
+                    footer: {
+                        Text("some footer with icon")
+                            .foregroundColor(.secondary)
+                    },
+                    textFieldConfig: .preview
+                )
+                .navigationTitle(state.getC2BSubResponse.title)
+                .navigationBarTitleDisplayMode(.inline)
+                .alert(
+                    item: .init(
+                        get: { state.tapAlert },
+                        set: { if $0 == nil { event(.alertTap(.cancel)) }}
+                    ),
+                    content: { .init(with: $0, event: { event(.alertTap($0))}) }
+                )
+            }
+         
+            if state.status == .inflight {
+             
+                Color.gray
+                    .opacity(0.7)
+                    .ignoresSafeArea()
+                
+                ProgressView()
+            }
         }
     }
 }

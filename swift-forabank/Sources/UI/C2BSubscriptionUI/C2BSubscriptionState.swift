@@ -27,7 +27,7 @@ public struct C2BSubscriptionState {
 
 public extension C2BSubscriptionState {
     
-    enum Status {
+    enum Status: Equatable {
         
         case inflight
         case tapAlert(TapAlert)

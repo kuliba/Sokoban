@@ -13,7 +13,7 @@ public enum C2BSubscriptionEvent {
     case subscriptionTap(SubscriptionTap)
     case textField(TextFieldAction)
     
-    public enum AlertEvent {
+    public enum AlertEvent: Equatable {
         
         case cancel
         case delete(Subscription)
