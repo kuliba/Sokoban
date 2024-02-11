@@ -71,7 +71,7 @@ private extension C2BSubscriptionReducer {
             
         case let .delete(subscription):
             state.status = .inflight
-            effect = .delete(subscription)
+            effect = .subscription(.delete(subscription))
         }
         
         return (state, effect)
@@ -115,7 +115,7 @@ private extension C2BSubscriptionReducer {
             
         case .detail:
             state.status = .inflight
-            effect = .getDetails(tap.subscription)
+            effect = .subscription(.getDetails(tap.subscription))
         }
         
         return (state, effect)
