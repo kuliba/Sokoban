@@ -12,7 +12,7 @@ import TextFieldComponent
 struct C2BSubscriptionView<Footer: View>: View {
     
     let state: C2BSubscriptionState
-    let event: (TextFieldAction) -> Void
+    let event: (C2BSubscriptionEvent) -> Void
     let footer: () -> Footer
     let textFieldConfig: TextFieldView.TextFieldConfig
     
@@ -63,7 +63,7 @@ struct C2BSubscriptionView<Footer: View>: View {
         
         CancellableSearchView(
             state: state.textFieldState,
-            send: event,
+            send: { event(.textField($0)) },
             clearButtonLabel: PreviewClearButton.init,
             cancelButton: PreviewCancelButton.init,
             keyboardType: .default,
@@ -118,9 +118,15 @@ struct C2BSubscriptionView<Footer: View>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .contentShape(Rectangle())
-            .onTapGesture { fatalError() }
+            .onTapGesture { event(.tap(.init(
+                subscription: subscription,
+                event: .detail
+            ))) }
             
-            Button(action: { fatalError() }) {
+            Button(action: { event(.tap(.init(
+                subscription: subscription,
+                event: .delete
+            ))) }) {
                 
                 Image(systemName: "trash")
             }
@@ -169,16 +175,29 @@ struct C2BSubscriptionView_Previews: PreviewProvider {
     struct C2BSubscriptionView_Demo: View {
         
         @State var state: C2BSubscriptionState
+        @State private var alert: Alert?
         
         private let reducer = TransformingReducer(placeholderText: "Search")
         
         private func event(
-            _ textFieldAction: TextFieldAction
+            _ event: C2BSubscriptionEvent
         ) {
-            guard let textFieldState = try? reducer.reduce(state.textFieldState, with: textFieldAction)
-            else { return }
-            
-            state.textFieldState = textFieldState
+            switch event {
+            case let .tap(tap):
+                switch tap.event {
+                case .delete:
+                    alert = .init(title: Text(tap.subscription.cancelAlert))
+
+                case .detail:
+                    alert = .init(title: Text("Showing detail for \(tap.subscription.brandName)"))
+                }
+                
+            case let .textField(textFieldAction):
+                guard let textFieldState = try? reducer.reduce(state.textFieldState, with: textFieldAction)
+                else { return }
+                
+                state.textFieldState = textFieldState
+            }
         }
         
         var body: some View {
