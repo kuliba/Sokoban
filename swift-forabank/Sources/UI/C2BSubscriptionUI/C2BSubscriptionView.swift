@@ -7,12 +7,12 @@
 
 import SearchBarComponent
 import SwiftUI
-import TextFieldUI
+import TextFieldComponent
 
 struct C2BSubscriptionView<Footer: View>: View {
     
     let state: C2BSubscriptionState
-    let event: (String) -> Void
+    let event: (TextFieldAction) -> Void
     let footer: () -> Footer
     let textFieldConfig: TextFieldView.TextFieldConfig
     
@@ -46,26 +46,22 @@ struct C2BSubscriptionView<Footer: View>: View {
         VStack(spacing: 24) {
             
             searchView()
-            Text("TBD: Listview").frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            ScrollView(showsIndicators: false) {
+                
+                VStack(spacing: 32) {
+                    
+                    ForEach(list, content: productSubscriptionView)
+                }
+            }
         }
     }
-    #warning("looks like `searchTest` in state in not enough, need `TextFieldState` otherwise correct mapping is impossible")
+
     private func searchView() -> some View {
         
         CancellableSearchView(
-            state: .editing(.init(state.searchTest)),
-            send: {
-                switch $0 {
-                case .startEditing:
-                    break
-                case .finishEditing:
-                    break
-                case .changeText:
-                    break
-                case let .setTextTo(text):
-                    text.map(event)
-                }
-            },
+            state: state.textFieldState,
+            send: event,
             clearButtonLabel: PreviewClearButton.init,
             cancelButton: PreviewCancelButton.init,
             keyboardType: .default,
@@ -74,6 +70,18 @@ struct C2BSubscriptionView<Footer: View>: View {
         )
         .padding(.horizontal)
     }
+    
+    private func productSubscriptionView(
+        _ productSubscription: GetC2BSubResponse.Details.ProductSubscription
+    ) -> some View {
+        
+        Text("tbd")
+    }
+}
+
+extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
+    
+    public var id: String { productID }
 }
 
 struct C2BSubscriptionView_Previews: PreviewProvider {
@@ -88,13 +96,24 @@ struct C2BSubscriptionView_Previews: PreviewProvider {
         
         @State var state: C2BSubscriptionState
         
+        private let reducer = TransformingReducer(placeholderText: "Search")
+        
+        private func event(
+            _ textFieldAction: TextFieldAction
+        ) {
+            guard let textFieldState = try? reducer.reduce(state.textFieldState, with: textFieldAction)
+            else { return }
+            
+            state.textFieldState = textFieldState
+        }
+        
         var body: some View {
             
             NavigationView {
                 
                 C2BSubscriptionView(
                     state: state,
-                    event: { $state.wrappedValue.searchTest = $0 },
+                    event: event,
                     footer: {
                         Text("some footer with icon")
                             .foregroundColor(.secondary)

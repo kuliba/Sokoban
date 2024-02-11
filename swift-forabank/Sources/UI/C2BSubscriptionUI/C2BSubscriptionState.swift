@@ -5,17 +5,19 @@
 //  Created by Igor Malyarov on 11.02.2024.
 //
 
+import TextFieldDomain
+
 struct C2BSubscriptionState {
     
     let getC2BSubResponse: GetC2BSubResponse
-    var searchTest: String
+    var textFieldState: TextFieldState
     
     init(
         getC2BSubResponse: GetC2BSubResponse,
-        searchTest: String = ""
+        textFieldState: TextFieldState = .placeholder("Поиск")
     ) {
         self.getC2BSubResponse = getC2BSubResponse
-        self.searchTest = searchTest
+        self.textFieldState = textFieldState
     }
 }
 
@@ -27,6 +29,20 @@ extension C2BSubscriptionState {
         else { return nil }
         
         return list.compactMap { $0.filtered(searchText: searchTest) }
+    }
+    
+    private var searchTest: String {
+        
+        switch textFieldState {
+        case .placeholder:
+            return ""
+            
+        case let .noFocus(text):
+            return text
+            
+        case let .editing(textState):
+            return textState.text
+        }
     }
 }
 
