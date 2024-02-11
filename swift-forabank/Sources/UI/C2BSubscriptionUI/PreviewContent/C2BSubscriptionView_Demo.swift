@@ -17,52 +17,18 @@ public struct C2BSubscriptionView_Demo: View {
         self._state = .init(initialValue: state)
     }
     
-    private let textFieldReducer = TransformingReducer(placeholderText: "Search")
+    private let c2bSubscriptionReducer = C2BSubscriptionReducer()
+    private let c2bSubscriptionEffectHandler: C2BSubscriptionEffectHandler = .preview
     
     private func event(
         _ event: C2BSubscriptionEvent
     ) {
-        switch event {
-        case let .alertTap(alertEvent):
-            switch alertEvent {
-            case .cancel:
-                state.status = nil
-                
-            case let .delete(subscription):
-                // effect!!
-                state.status = .inflight
-                print("Effect: Delete subscription \(subscription.brandName)")
-            }
+        let (state, effect) = c2bSubscriptionReducer.reduce(state, event)
+        self.state = state
+        
+        if let effect {
             
-        case let .subscriptionTap(tap):
-            switch tap.event {
-            case .delete:
-                state.status = .tapAlert(.init(
-                    title: tap.subscription.cancelAlert,
-                    message: nil,
-                    primaryButton: .init(
-                        type: .default,
-                        title: "Отключить",
-                        event: .delete(tap.subscription)
-                    ),
-                    secondaryButton: .init(
-                        type: .cancel,
-                        title: "Отмена",
-                        event: .cancel
-                    )
-                ))
-                
-            case .detail:
-                state.status = .inflight
-                // effect!!
-                print("Effect: Request details for subscription \(tap.subscription.brandName)")
-            }
-            
-        case let .textField(textFieldAction):
-            guard let textFieldState = try? textFieldReducer.reduce(state.textFieldState, with: textFieldAction)
-            else { return }
-            
-            state.textFieldState = textFieldState
+            c2bSubscriptionEffectHandler.handleEffect(effect, self.event(_:))
         }
     }
     

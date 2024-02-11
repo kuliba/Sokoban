@@ -10,16 +10,28 @@ import TextFieldDomain
 public enum C2BSubscriptionEvent {
     
     case alertTap(AlertEvent)
+    case subscription(SubscriptionEvent)
     case subscriptionTap(SubscriptionTap)
     case textField(TextFieldAction)
+}
+
+public extension C2BSubscriptionEvent {
     
-    public enum AlertEvent: Equatable {
+    enum AlertEvent: Equatable {
         
         case cancel
         case delete(Subscription)
     }
     
-    public struct SubscriptionTap {
+    enum SubscriptionEvent {
+        
+        case cancelled(CancelC2BSubscriptionConfirmation)
+        case cancelFailure(ServiceFailure)
+        case detailReceived(C2BSubscriptionDetail)
+        case detailFailure(ServiceFailure)
+    }
+    
+    struct SubscriptionTap {
         
         public let subscription: Subscription
         public let event: TapEvent
@@ -39,5 +51,5 @@ public enum C2BSubscriptionEvent {
         }
     }
     
-    public typealias Subscription = GetC2BSubResponse.Details.ProductSubscription.Subscription
+    typealias Subscription = GetC2BSubResponse.Details.ProductSubscription.Subscription
 }

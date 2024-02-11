@@ -29,8 +29,11 @@ public extension C2BSubscriptionState {
     
     enum Status: Equatable {
         
+        case failure(ServiceFailure)
         case inflight
         case tapAlert(TapAlert)
+        case cancelled(CancelC2BSubscriptionConfirmation)
+        case detail(C2BSubscriptionDetail)
     }
     
     typealias TapAlert = AlertModelOf<C2BSubscriptionEvent.AlertEvent>
