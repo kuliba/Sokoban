@@ -40,6 +40,7 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
+        .c2bSubscriptionUI,
         .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
@@ -128,6 +129,7 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
+        .c2bSubscriptionUI,
         .cardGuardianModule,
         .cardGuardianModuleTests,
         .linkableText,
@@ -272,6 +274,13 @@ private extension Product {
         name: .buttonWithSheet,
         targets: [
             .buttonWithSheet
+        ]
+    )
+    
+    static let c2bSubscriptionUI = library(
+        name: .c2bSubscriptionUI,
+        targets: [
+            .c2bSubscriptionUI
         ]
     )
     
@@ -980,6 +989,11 @@ private extension Target {
         path: "Sources/UI/\(String.buttonWithSheet)"
     )
     
+    static let c2bSubscriptionUI = target(
+        name: .c2bSubscriptionUI,
+        path: "Sources/UI/\(String.c2bSubscriptionUI)"
+    )
+    
     static let cardGuardianModule = target(
         name: .cardGuardianModule,
         dependencies: [
@@ -1384,6 +1398,10 @@ private extension Target.Dependency {
         name: .buttonWithSheet
     )
     
+    static let c2bSubscriptionUI = byName(
+        name: .c2bSubscriptionUI
+    )
+    
     static let cardGuardianModule = byName(
         name: .cardGuardianModule
     )
@@ -1568,6 +1586,8 @@ private extension String {
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
+    
+    static let c2bSubscriptionUI = "C2BSubscriptionUI"
 
     static let cardGuardianModule = "CardGuardianModule"
     static let cardGuardianModuleTests = "CardGuardianModuleTests"
