@@ -39,8 +39,10 @@ struct C2BSubscriptionView<Footer: View>: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
+    private typealias ProductSubscription = GetC2BSubResponse.Details.ProductSubscription
+    
     private func listView(
-        _ list: [GetC2BSubResponse.Details.ProductSubscription]
+        _ list: [ProductSubscription]
     ) -> some View {
         
         VStack(spacing: 24) {
@@ -72,16 +74,88 @@ struct C2BSubscriptionView<Footer: View>: View {
     }
     
     private func productSubscriptionView(
-        _ productSubscription: GetC2BSubResponse.Details.ProductSubscription
+        _ productSubscription: ProductSubscription
     ) -> some View {
         
-        Text("tbd")
+        VStack {
+            
+            productView(productSubscription.productDetails)
+            
+            ForEach(productSubscription.subscriptions, content: subscriptionView)
+        }
+    }
+    
+    private func productView(
+        _ productDetails: ProductSubscription.ProductDetails
+    ) -> some View {
+        
+        Text("TBD: ProductDetails")
+    }
+    
+    private func subscriptionView(
+        _ subscription: ProductSubscription.Subscription
+    ) -> some View {
+        
+        HStack {
+            
+            HStack {
+                
+#warning("add icon fallback")
+                // Image(subscription.brandIcon)
+                Image(systemName: "tortoise.circle")
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                
+                VStack(alignment: .leading) {
+                    
+                    Text(subscription.brandName)
+                        .font(.headline)
+                    
+                    Text(subscription.subscriptionPurpose)
+                        .foregroundColor(.secondary)
+                        .font(.footnote)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { fatalError() }
+            
+            Button(action: { fatalError() }) {
+                
+                Image(systemName: "trash")
+            }
+        }
+        .padding(.horizontal)
     }
 }
 
 extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     
     public var id: String { productID }
+}
+ 
+private extension GetC2BSubResponse.Details.ProductSubscription {
+    
+    var productDetails: ProductDetails {
+        
+        .init(
+            productID: productID,
+            productType: productType,
+            productTitle: productTitle
+        )
+    }
+    
+    struct ProductDetails {
+        
+        let productID: String
+        let productType: ProductType
+        let productTitle: String
+    }
+}
+
+extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiable {
+    
+    public var id: String { subscriptionToken }
 }
 
 struct C2BSubscriptionView_Previews: PreviewProvider {
