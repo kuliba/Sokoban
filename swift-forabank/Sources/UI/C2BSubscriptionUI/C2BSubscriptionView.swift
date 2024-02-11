@@ -18,7 +18,7 @@ public struct C2BSubscriptionView<Footer: View>: View {
     let textFieldConfig: TextFieldView.TextFieldConfig
     
     public init(
-        state: C2BSubscriptionState, 
+        state: C2BSubscriptionState,
         event: @escaping (C2BSubscriptionEvent) -> Void,
         footer: @escaping () -> Footer,
         textFieldConfig: TextFieldView.TextFieldConfig
@@ -71,7 +71,7 @@ public struct C2BSubscriptionView<Footer: View>: View {
             }
         }
     }
-
+    
     private func searchView() -> some View {
         
         CancellableSearchView(
@@ -197,7 +197,7 @@ extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     
     public var id: String { productID }
 }
- 
+
 private extension GetC2BSubResponse.Details.ProductSubscription {
     
     var productDetails: ProductDetails {
@@ -222,88 +222,6 @@ extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiab
     public var id: String { subscriptionToken }
 }
 
-public struct C2BSubscriptionView_Demo: View {
-    
-    @State var state: C2BSubscriptionState
-    
-    public init(state: C2BSubscriptionState) {
-        
-        self._state = .init(initialValue: state)
-    }
-    
-    private let textFieldReducer = TransformingReducer(placeholderText: "Search")
-    
-    private func event(
-        _ event: C2BSubscriptionEvent
-    ) {
-        switch event {
-        case let .alertTap(alertEvent):
-            switch alertEvent {
-            case .cancel:
-                state.tapAlert = nil
-                
-            case let .delete(subscription):
-                // effect!!
-                print("Effect: Delete subscription \(subscription.brandName)")
-            }
-            
-        case let .subscriptionTap(tap):
-            switch tap.event {
-            case .delete:
-                state.tapAlert = .init(
-                    title: tap.subscription.cancelAlert,
-                    message: nil,
-                    primaryButton: .init(
-                        type: .default,
-                        title: "Отключить",
-                        event: .delete(tap.subscription)
-                    ),
-                    secondaryButton: .init(
-                        type: .cancel,
-                        title: "Отмена",
-                        event: .cancel
-                    )
-                )
-                
-            case .detail:
-                // effect!!
-                print("Effect: Request details for subscription \(tap.subscription.brandName)")
-            }
-            
-        case let .textField(textFieldAction):
-            guard let textFieldState = try? textFieldReducer.reduce(state.textFieldState, with: textFieldAction)
-            else { return }
-            
-            state.textFieldState = textFieldState
-        }
-    }
-    
-    public var body: some View {
-        
-        NavigationView {
-            
-            C2BSubscriptionView(
-                state: state,
-                event: event,
-                footer: {
-                    Text("some footer with icon")
-                        .foregroundColor(.secondary)
-                },
-                textFieldConfig: .preview
-            )
-            .navigationTitle(state.getC2BSubResponse.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .alert(
-                item: .init(
-                    get: { state.tapAlert },
-                    set: { if $0 == nil { event(.alertTap(.cancel)) }}
-                ),
-                content: { .init(with: $0, event: { event(.alertTap($0))}) }
-            )
-        }
-    }
-}
-
 struct C2BSubscriptionView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -311,10 +229,4 @@ struct C2BSubscriptionView_Previews: PreviewProvider {
         C2BSubscriptionView_Demo(state: .control)
         C2BSubscriptionView_Demo(state: .empty)
     }
-}
-
-public extension C2BSubscriptionState {
-    
-    static let control: Self = .init(getC2BSubResponse: .control)
-    static let empty: Self = .init(getC2BSubResponse: .empty)
 }
