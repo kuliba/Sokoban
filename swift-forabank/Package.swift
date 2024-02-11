@@ -995,6 +995,7 @@ private extension Target {
         dependencies: [
             .searchBarComponent,
             .textFieldComponent,
+            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.c2bSubscriptionUI)"
     )

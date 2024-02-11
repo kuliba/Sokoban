@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 11.02.2024.
 //
 
-import Foundation
-
 public final class C2BSubscriptionEffectHandler {
     
     private let cancelSubscription: CancelSubscription
