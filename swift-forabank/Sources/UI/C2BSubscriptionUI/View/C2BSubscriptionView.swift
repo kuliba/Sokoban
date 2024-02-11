@@ -78,7 +78,10 @@ public struct C2BSubscriptionView<Footer: View>: View {
             state: state.textFieldState,
             send: { event(.textField($0)) },
             clearButtonLabel: PreviewClearButton.init,
-            cancelButton: PreviewCancelButton.init,
+            cancelButton: { PreviewCancelButton {
+                
+                event(.textField(.setTextTo(nil)))
+            }},
             keyboardType: .default,
             toolbar: nil,
             textFieldConfig: textFieldConfig

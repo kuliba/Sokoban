@@ -38,24 +38,7 @@ public struct C2BSubscriptionView_Demo: View {
             
             NavigationView {
                 
-                C2BSubscriptionView(
-                    state: state,
-                    event: event,
-                    footer: {
-                        Text("some footer with icon")
-                            .foregroundColor(.secondary)
-                    },
-                    textFieldConfig: .preview
-                )
-                .navigationTitle(state.getC2BSubResponse.title)
-                .navigationBarTitleDisplayMode(.inline)
-                .alert(
-                    item: .init(
-                        get: { state.tapAlert },
-                        set: { if $0 == nil { event(.alertTap(.cancel)) }}
-                    ),
-                    content: { .init(with: $0, event: { event(.alertTap($0))}) }
-                )
+                c2bSubscriptionView()
             }
          
             if state.status == .inflight {
@@ -67,6 +50,28 @@ public struct C2BSubscriptionView_Demo: View {
                 ProgressView()
             }
         }
+    }
+    
+    private func c2bSubscriptionView() -> some View {
+        
+        C2BSubscriptionView(
+            state: state,
+            event: event,
+            footer: {
+                Text("some footer with icon")
+                    .foregroundColor(.secondary)
+            },
+            textFieldConfig: .preview
+        )
+        .navigationTitle(state.getC2BSubResponse.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(
+            item: .init(
+                get: { state.tapAlert },
+                set: { if $0 == nil { event(.alertTap(.cancel)) }}
+            ),
+            content: { .init(with: $0, event: { event(.alertTap($0))}) }
+        )
     }
 }
 
