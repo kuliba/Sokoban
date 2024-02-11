@@ -12,7 +12,7 @@ struct ProductDetailsView: View {
     
     typealias ProductDetails = GetC2BSubResponse.Details.ProductSubscription.ProductDetails
     
-    let productDetails: ProductDetails
+    let product: ProductDetails
     
     var body: some View {
         
@@ -23,7 +23,7 @@ struct ProductDetailsView: View {
             VStack(alignment: .leading) {
                 
                 productTitle()
-                product()
+                productView()
                 productNumber()
             }
         }
@@ -39,12 +39,12 @@ struct ProductDetailsView: View {
     
     private func productTitle() -> some View {
         
-        Text(productDetails.productTitle)
+        Text(product.productTitle)
             .foregroundColor(.secondary)
             .font(.footnote)
     }
     
-    private func product() -> some View {
+    private func productView() -> some View {
         
         HStack {
             
@@ -77,6 +77,6 @@ struct ProductDetailsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ProductDetailsView(productDetails: .preview)
+        ProductDetailsView(product: .preview)
     }
 }

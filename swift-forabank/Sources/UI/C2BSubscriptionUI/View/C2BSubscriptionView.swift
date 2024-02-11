@@ -81,7 +81,7 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         
         VStack {
             
-            ProductDetailsView(productDetails: productSubscription.productDetails)
+            ProductDetailsView(product: productSubscription.productDetails)
             
             ForEach(productSubscription.subscriptions, content: subscriptionView)
         }
