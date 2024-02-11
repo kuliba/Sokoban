@@ -354,6 +354,11 @@
 		2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */; };
 		2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */; };
 		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
+		2A1408202B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14081F2B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift */; };
+		2A1408222B78C79E004219AA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1408212B78C79E004219AA /* ContentView.swift */; };
+		2A1408242B78C79F004219AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A1408232B78C79F004219AA /* Assets.xcassets */; };
+		2A1408272B78C79F004219AA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A1408262B78C79F004219AA /* Preview Assets.xcassets */; };
+		2A14082E2B78C808004219AA /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A14082D2B78C808004219AA /* C2BSubscriptionUI */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
 		2A14A8592A2750460018511E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A8582A2750460018511E /* Assets.xcassets */; };
@@ -2765,6 +2770,11 @@
 		2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINFunctionalityActivationService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINServiceTests.swift"; sourceTree = "<group>"; };
 		2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINHelpers.swift; sourceTree = "<group>"; };
+		2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = C2BSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A14081F2B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BSubscriptionUIPreviewApp.swift; sourceTree = "<group>"; };
+		2A1408212B78C79E004219AA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A1408232B78C79F004219AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A1408262B78C79F004219AA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFieldViewVithBindingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewVithBindingPreviewApp.swift; sourceTree = "<group>"; };
 		2A14A8562A2750450018511E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -4740,6 +4750,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2A14081A2B78C79E004219AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A14082E2B78C808004219AA /* C2BSubscriptionUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A14A84F2A2750440018511E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -5861,6 +5879,25 @@
 				2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */,
 			);
 			path = AuthLogin;
+			sourceTree = "<group>";
+		};
+		2A14081E2B78C79E004219AA /* C2BSubscriptionUIPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2A14081F2B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift */,
+				2A1408212B78C79E004219AA /* ContentView.swift */,
+				2A1408232B78C79F004219AA /* Assets.xcassets */,
+				2A1408252B78C79F004219AA /* Preview Content */,
+			);
+			path = C2BSubscriptionUIPreview;
+			sourceTree = "<group>";
+		};
+		2A1408252B78C79F004219AA /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A1408262B78C79F004219AA /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */ = {
@@ -7525,6 +7562,7 @@
 		2AE5972529F9182B0083F138 /* PreviewApps */ = {
 			isa = PBXGroup;
 			children = (
+				2A14081E2B78C79E004219AA /* C2BSubscriptionUIPreview */,
 				83361EAF2B6CF89900F58C10 /* CardGuardianPreview */,
 				2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA7A2B50576D0093EE83 /* FastPaymentsSettingsPreview */,
@@ -11694,6 +11732,7 @@
 				2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */,
 				2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */,
 				8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */,
+				2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -12512,6 +12551,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2A14081C2B78C79E004219AA /* C2BSubscriptionUIPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A14082C2B78C79F004219AA /* Build configuration list for PBXNativeTarget "C2BSubscriptionUIPreview" */;
+			buildPhases = (
+				2A1408192B78C79E004219AA /* Sources */,
+				2A14081A2B78C79E004219AA /* Frameworks */,
+				2A14081B2B78C79E004219AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = C2BSubscriptionUIPreview;
+			packageProductDependencies = (
+				2A14082D2B78C808004219AA /* C2BSubscriptionUI */,
+			);
+			productName = C2BSubscriptionUIPreview;
+			productReference = 2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2A14A8512A2750440018511E /* TextFieldViewVithBindingPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A14A8602A2750460018511E /* Build configuration list for PBXNativeTarget "TextFieldViewVithBindingPreview" */;
@@ -12895,9 +12954,12 @@
 		EDB14375265FDA410028EF5A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1520;
+				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					2A14081C2B78C79E004219AA = {
+						CreatedOnToolsVersion = 15.1;
+					};
 					2A14A8512A2750440018511E = {
 						CreatedOnToolsVersion = 14.3;
 					};
@@ -12999,11 +13061,21 @@
 				2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */,
 				2A783A802B5A87CE0035CEAB /* OTPInputComponentPreview */,
 				8357E33C2B6CF77B0065E581 /* CardGuardianPreview */,
+				2A14081C2B78C79E004219AA /* C2BSubscriptionUIPreview */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2A14081B2B78C79E004219AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A1408272B78C79F004219AA /* Preview Assets.xcassets in Resources */,
+				2A1408242B78C79F004219AA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A14A8502A2750440018511E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -13507,6 +13579,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2A1408192B78C79E004219AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A1408222B78C79E004219AA /* ContentView.swift in Sources */,
+				2A1408202B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A14A84E2A2750440018511E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -15569,6 +15650,147 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2A1408282B78C79F004219AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A1408292B78C79F004219AA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A14082A2B78C79F004219AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A14082B2B78C79F004219AA /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2A14A85D2A2750460018511E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -17611,6 +17833,17 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2A14082C2B78C79F004219AA /* Build configuration list for PBXNativeTarget "C2BSubscriptionUIPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A1408282B78C79F004219AA /* Debug */,
+				2A1408292B78C79F004219AA /* Mock */,
+				2A14082A2B78C79F004219AA /* Release */,
+				2A14082B2B78C79F004219AA /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2A14A8602A2750460018511E /* Build configuration list for PBXNativeTarget "TextFieldViewVithBindingPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -17994,6 +18227,10 @@
 		2A12674929EFE56200461884 /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CombineSchedulers;
+		};
+		2A14082D2B78C808004219AA /* C2BSubscriptionUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = C2BSubscriptionUI;
 		};
 		2A14A8612A2751760018511E /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
