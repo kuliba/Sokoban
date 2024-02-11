@@ -1170,6 +1170,7 @@ private extension Target {
         name: .uiPrimitives,
         dependencies: [
             .foraTools,
+            .sharedConfigs,
         ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )
