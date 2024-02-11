@@ -994,6 +994,9 @@ private extension Target {
     static let c2bSubscriptionUI = target(
         name: .c2bSubscriptionUI,
         dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
             .searchBarComponent,
             .textFieldComponent,
             .uiPrimitives,

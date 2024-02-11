@@ -8,7 +8,8 @@
 extension Product {
     
     static let preview: Self = .init(
-        title: "Счет списания", 
+        id: .account(1234567890),
+        title: "Счет списания",
         name: "Текущий счет",
         number: "3387",
         icon: .svg(""),
