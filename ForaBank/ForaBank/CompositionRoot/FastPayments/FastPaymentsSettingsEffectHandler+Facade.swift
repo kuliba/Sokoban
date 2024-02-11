@@ -202,10 +202,10 @@ private extension GetC2BSubscription.ProductSubscription.Subscription {
     var sub: GetC2BSubResponse.Details.ProductSubscription.Subscription {
         
         .init(
-            subscriptionToken: subscriptionToken,
-            brandIcon: brandIcon,
+            token: .init(subscriptionToken),
+            brandIcon: .svg(brandIcon),
             brandName: brandName,
-            subscriptionPurpose: subscriptionPurpose,
+            purpose: .init(subscriptionPurpose),
             cancelAlert: cancelAlert
         )
     }

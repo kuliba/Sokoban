@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-#warning("improve: replace primitive types")
+import Tagged
+import UIPrimitives
+
 public struct GetC2BSubResponse: Equatable {
     
     public let title: String
@@ -58,26 +60,30 @@ public extension GetC2BSubResponse.Details.ProductSubscription {
     
     struct Subscription: Equatable {
         
-        #warning("rename `subscriptionToken` to `token")
-        public let subscriptionToken: String
-        public let brandIcon: String
+        public let token: Token
+        public let brandIcon: Icon
         public let brandName: String
-        #warning("rename `subscriptionPurpose` to `purpose`")
-        public let subscriptionPurpose: String
+        public let purpose: Purpose
         public let cancelAlert: String
         
         public init(
-            subscriptionToken: String,
-            brandIcon: String,
+            token: Token,
+            brandIcon: Icon,
             brandName: String,
-            subscriptionPurpose: String,
+            purpose: Purpose,
             cancelAlert: String
         ) {
-            self.subscriptionToken = subscriptionToken
+            self.token = token
             self.brandIcon = brandIcon
             self.brandName = brandName
-            self.subscriptionPurpose = subscriptionPurpose
+            self.purpose = purpose
             self.cancelAlert = cancelAlert
         }
+        
+        public typealias Token = Tagged<_Token, String>
+        public enum _Token {}
+        
+        public typealias Purpose = Tagged<_Purpose, String>
+        public enum _Purpose {}
     }
 }

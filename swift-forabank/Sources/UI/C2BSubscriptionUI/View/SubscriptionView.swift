@@ -18,38 +18,46 @@ struct SubscriptionView: View {
         
         HStack {
             
-            HStack {
-                
-#warning("add icon fallback")
-                // Image(subscription.brandIcon)
-                Image(systemName: "tortoise.circle")
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                
-                VStack(alignment: .leading) {
-                    
-                    Text(subscription.brandName)
-                        .font(.headline)
-                    
-                    Text(subscription.subscriptionPurpose)
-                        .foregroundColor(.secondary)
-                        .font(.footnote)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture { event(.init(
-                subscription: subscription,
-                event: .detail
-            )) }
+            label()
+            icon()
+        }
+    }
+    
+    private func label() -> some View {
+        
+        HStack {
             
-            Button(action: { event(.init(
-                subscription: subscription,
-                event: .delete
-            )) }) {
+#warning("add icon fallback")
+            subscription.brandIcon.image(withFallback: .init(systemName: "cart"))
+                .resizable()
+                .frame(width: 32, height: 32)
+            
+            VStack(alignment: .leading) {
                 
-                Image(systemName: "trash")
+                Text(subscription.brandName)
+                    .font(.headline)
+                
+                Text(subscription.purpose.rawValue)
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { self.event(.init(
+            subscription: subscription,
+            event: .detail
+        )) }
+    }
+    
+    private func icon() -> some View {
+        
+        Button(action: { self.event(.init(
+            subscription: subscription,
+            event: .delete
+        )) }) {
+            
+            Image(systemName: "trash")
         }
     }
 }

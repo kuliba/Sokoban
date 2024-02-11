@@ -7,6 +7,7 @@
 
 import SearchBarComponent
 import SwiftUI
+import Tagged
 import TextFieldComponent
 import UIPrimitives
 
@@ -125,7 +126,7 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         in productSubscription: ProductSubscription
     ) -> Bool {
         
-        productSubscription.subscriptions.last?.subscriptionToken == subscription.subscriptionToken
+        productSubscription.subscriptions.last?.token == subscription.token
     }
 }
 
@@ -179,7 +180,7 @@ extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
 
 extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiable {
     
-    public var id: String { subscriptionToken }
+    public var id: Token { token }
 }
 
 struct C2BSubscriptionView_Previews: PreviewProvider {
