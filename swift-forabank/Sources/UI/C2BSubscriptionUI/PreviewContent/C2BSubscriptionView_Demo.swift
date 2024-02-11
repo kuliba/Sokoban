@@ -57,11 +57,18 @@ public struct C2BSubscriptionView_Demo: View {
         C2BSubscriptionView(
             state: state,
             event: event,
-            footer: {
+            footerView: {
                 Text("some footer with icon")
                     .foregroundColor(.secondary)
             },
-            textFieldConfig: .preview
+            searchView: {
+                
+                SearchView(
+                    textFieldState: $0,
+                    event: $1,
+                    textFieldConfig: .preview
+                )
+            }
         )
         .navigationTitle(state.getC2BSubResponse.title)
         .navigationBarTitleDisplayMode(.inline)

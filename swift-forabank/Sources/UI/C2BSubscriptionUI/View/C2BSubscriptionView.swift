@@ -10,23 +10,25 @@ import SwiftUI
 import TextFieldComponent
 import UIPrimitives
 
-public struct C2BSubscriptionView<Footer: View>: View {
+public struct C2BSubscriptionView<Footer: View, Search: View>: View {
     
-    let state: C2BSubscriptionState
-    let event: (C2BSubscriptionEvent) -> Void
-    let footer: () -> Footer
-    let textFieldConfig: TextFieldView.TextFieldConfig
+    public typealias SearchView = (TextFieldState, @escaping (TextFieldAction) -> Void) -> Search
+    
+    private let state: C2BSubscriptionState
+    private let event: (C2BSubscriptionEvent) -> Void
+    private let footerView: () -> Footer
+    private let searchView: SearchView
     
     public init(
         state: C2BSubscriptionState,
         event: @escaping (C2BSubscriptionEvent) -> Void,
-        footer: @escaping () -> Footer,
-        textFieldConfig: TextFieldView.TextFieldConfig
+        footerView: @escaping () -> Footer,
+        searchView: @escaping SearchView
     ) {
         self.state = state
         self.event = event
-        self.footer = footer
-        self.textFieldConfig = textFieldConfig
+        self.footerView = footerView
+        self.searchView = searchView
     }
     
     public var body: some View {
@@ -41,7 +43,7 @@ public struct C2BSubscriptionView<Footer: View>: View {
                 listView(filteredList)
             }
             
-            footer()
+            footerView()
         }
     }
     
@@ -60,7 +62,8 @@ public struct C2BSubscriptionView<Footer: View>: View {
         
         VStack(spacing: 24) {
             
-            searchView()
+            searchView(state.textFieldState, { event(.textField($0)) })
+                .padding(.horizontal)
             
             ScrollView(showsIndicators: false) {
                 
@@ -70,23 +73,6 @@ public struct C2BSubscriptionView<Footer: View>: View {
                 }
             }
         }
-    }
-    
-    private func searchView() -> some View {
-        
-        CancellableSearchView(
-            state: state.textFieldState,
-            send: { event(.textField($0)) },
-            clearButtonLabel: PreviewClearButton.init,
-            cancelButton: { PreviewCancelButton {
-                
-                event(.textField(.setTextTo(nil)))
-            }},
-            keyboardType: .default,
-            toolbar: nil,
-            textFieldConfig: textFieldConfig
-        )
-        .padding(.horizontal)
     }
     
     private func productSubscriptionView(
