@@ -20,13 +20,7 @@ public extension GetC2BSubResponse {
                 productType: .card,
                 productTitle: "Карта списания",
                 subscriptions: [
-                    .init(
-                        subscriptionToken: "161fda956d884cf5b836d5642452044b",
-                        brandIcon: "b8b31e25a275e3f04ae189f4a538536a",
-                        brandName: "Цветы  у дома",
-                        subscriptionPurpose: "Оплата за доставку цветов",
-                        cancelAlert: "Вы действительно хотите отключить подписку Цветы  у дома?"
-                    ),
+                    .preview,
                     .init(
                         subscriptionToken: "aaaada956d884cf5b836d5642452044b",
                         brandIcon: "aaaa1e25a275e3f04ae189f4a538536a",

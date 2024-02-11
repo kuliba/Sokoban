@@ -98,41 +98,10 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         _ subscription: ProductSubscription.Subscription
     ) -> some View {
         
-        HStack {
-            
-            HStack {
-                
-#warning("add icon fallback")
-                // Image(subscription.brandIcon)
-                Image(systemName: "tortoise.circle")
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                
-                VStack(alignment: .leading) {
-                    
-                    Text(subscription.brandName)
-                        .font(.headline)
-                    
-                    Text(subscription.subscriptionPurpose)
-                        .foregroundColor(.secondary)
-                        .font(.footnote)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture { event(.subscriptionTap(.init(
-                subscription: subscription,
-                event: .detail
-            ))) }
-            
-            Button(action: { event(.subscriptionTap(.init(
-                subscription: subscription,
-                event: .delete
-            ))) }) {
-                
-                Image(systemName: "trash")
-            }
-        }
+        SubscriptionView(
+            subscription: subscription,
+            event: { event(.subscriptionTap($0)) }
+        )
         .padding(.horizontal)
     }
 }
