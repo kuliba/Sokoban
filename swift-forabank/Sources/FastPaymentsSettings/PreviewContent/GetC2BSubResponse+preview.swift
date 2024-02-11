@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
+import C2BSubscriptionUI
+
 public extension GetC2BSubResponse {
     
     static let control: Self = .init(

@@ -517,6 +517,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
         ]

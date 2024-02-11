@@ -595,6 +595,7 @@
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
+		2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
@@ -4863,6 +4864,7 @@
 				2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */,
+				2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */,
 				2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
@@ -12839,6 +12841,7 @@
 				833325402B5AE955001920EB /* CardStatementAPI */,
 				2A566EA42B67830B00359E05 /* UserAccountNavigationComponent */,
 				8357E3342B6BBBFB0065E581 /* CardGuardianModule */,
+				2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -18061,6 +18064,10 @@
 		2A5762FA2AD805BA0026EBFE /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = URLRequestFactory;
+		};
+		2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = C2BSubscriptionUI;
 		};
 		2A5EB43C2AAB29C900CA931D /* LandingUIComponent */ = {
 			isa = XCSwiftPackageProductDependency;
