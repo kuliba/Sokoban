@@ -8,7 +8,7 @@
 import Tagged
 import UIPrimitives
 
-public struct Product {
+public struct Product: Equatable {
     
     public let id: ID
     public let title: String
@@ -36,7 +36,7 @@ public struct Product {
 
 public extension Product {
     
-    enum ID {
+    enum ID: Hashable {
         
         case account(AccountID)
         case card(CardID)

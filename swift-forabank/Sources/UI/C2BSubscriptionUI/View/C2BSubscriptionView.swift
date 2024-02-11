@@ -18,17 +18,20 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
     private let event: (C2BSubscriptionEvent) -> Void
     private let footerView: () -> Footer
     private let searchView: SearchView
+    private let config: C2BSubscriptionConfig
     
     public init(
         state: C2BSubscriptionState,
         event: @escaping (C2BSubscriptionEvent) -> Void,
         footerView: @escaping () -> Footer,
-        searchView: @escaping SearchView
+        searchView: @escaping SearchView,
+        config: C2BSubscriptionConfig
     ) {
         self.state = state
         self.event = event
         self.footerView = footerView
         self.searchView = searchView
+        self.config = config
     }
     
     public var body: some View {
@@ -81,7 +84,10 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         
         VStack {
             
-            ProductDetailsView(product: productSubscription.productDetails)
+            ProductView(
+                product: productSubscription.product, 
+                config: config.product
+            )
             
             Divider()
             
@@ -160,9 +166,7 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
         guard !filteredSubscriptions.isEmpty else { return nil }
         
         return .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle,
+            product: product,
             subscriptions: filteredSubscriptions
         )
     }
@@ -170,26 +174,7 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
 
 extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     
-    public var id: String { productID }
-}
-
-extension GetC2BSubResponse.Details.ProductSubscription {
-    
-    var productDetails: ProductDetails {
-        
-        .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle
-        )
-    }
-    
-    struct ProductDetails {
-        
-        let productID: String
-        let productType: ProductType
-        let productTitle: String
-    }
+    public var id: Product.ID { product.id }
 }
 
 extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiable {

@@ -6,7 +6,7 @@
 //
 
 #warning("improve: replace primitive types")
-public struct GetC2BSubResponse: Equatable, Hashable {
+public struct GetC2BSubResponse: Equatable {
     
     public let title: String
     public let explanation: [String]
@@ -25,7 +25,7 @@ public struct GetC2BSubResponse: Equatable, Hashable {
 
 public extension GetC2BSubResponse {
     
-    enum Details: Equatable, Hashable {
+    enum Details: Equatable {
         
         case empty
         case list([ProductSubscription])
@@ -34,22 +34,16 @@ public extension GetC2BSubResponse {
 
 public extension GetC2BSubResponse.Details {
     
-    struct ProductSubscription: Equatable, Hashable {
+    struct ProductSubscription: Equatable {
         
-        public let productID: String
-        public let productType: ProductType
-        public let productTitle: String
+        public let product: Product
         public let subscriptions: [Subscription]
         
         public init(
-            productID: String,
-            productType: ProductType,
-            productTitle: String,
+            product: Product,
             subscriptions: [Subscription]
         ) {
-            self.productID = productID
-            self.productType = productType
-            self.productTitle = productTitle
+            self.product = product
             self.subscriptions = subscriptions
         }
     }
@@ -62,7 +56,7 @@ public extension GetC2BSubResponse.Details.ProductSubscription {
         case account, card
     }
     
-    struct Subscription: Equatable, Hashable {
+    struct Subscription: Equatable {
         
         #warning("rename `subscriptionToken` to `token")
         public let subscriptionToken: String

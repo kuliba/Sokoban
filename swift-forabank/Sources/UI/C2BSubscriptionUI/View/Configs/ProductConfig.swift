@@ -7,10 +7,22 @@
 
 import UIPrimitives
 
-struct ProductConfig {
+public struct ProductConfig {
     
-    let balance: TextConfig
-    let name: TextConfig
-    let number: TextConfig
-    let title: TextConfig
+    public let balance: TextConfig
+    public let name: TextConfig
+    public let number: TextConfig
+    public let title: TextConfig
+    
+    public init(
+        balance: TextConfig,
+        name: TextConfig,
+        number: TextConfig,
+        title: TextConfig
+    ) {
+        self.balance = balance
+        self.name = name
+        self.number = number
+        self.title = title
+    }
 }

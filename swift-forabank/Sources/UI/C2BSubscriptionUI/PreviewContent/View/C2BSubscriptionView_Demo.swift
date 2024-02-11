@@ -68,7 +68,8 @@ public struct C2BSubscriptionView_Demo: View {
                     event: $1,
                     textFieldConfig: .preview
                 )
-            }
+            }, 
+            config: .preview
         )
         .navigationTitle(state.getC2BSubResponse.title)
         .navigationBarTitleDisplayMode(.inline)

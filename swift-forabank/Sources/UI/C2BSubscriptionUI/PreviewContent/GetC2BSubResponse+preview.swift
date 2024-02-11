@@ -16,9 +16,7 @@ public extension GetC2BSubResponse {
         ],
         details: .list([
             .init(
-                productID: "10000198241",
-                productType: .card,
-                productTitle: "Карта списания",
+                product: .card,
                 subscriptions: [
                     .preview,
                     .init(
