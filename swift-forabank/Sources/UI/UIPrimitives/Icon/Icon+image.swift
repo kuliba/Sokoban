@@ -8,8 +8,7 @@
 import ForaTools
 import SwiftUI
 
-#warning("move to UIPrimitives")
-extension Icon {
+public extension Icon {
     
     @ViewBuilder
     var image: Image? {
@@ -32,7 +31,7 @@ extension Icon {
     }
     
     @ViewBuilder
-    func image(with fallback: Image) -> Image {
+    func image(withFallback fallback: Image) -> Image {
         
         switch self {
         case .svg: image ?? fallback
