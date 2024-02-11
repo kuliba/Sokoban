@@ -83,19 +83,43 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
             
             ProductDetailsView(product: productSubscription.productDetails)
             
-            ForEach(productSubscription.subscriptions, content: subscriptionView)
+            Divider()
+            
+            ForEach(productSubscription.subscriptions) {
+                
+                subscriptionView(
+                    $0,
+                    isLast: isLast($0, in: productSubscription))
+            }
         }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.1))
+        )
+        .padding(.horizontal)
     }
     
+    @ViewBuilder
     private func subscriptionView(
-        _ subscription: ProductSubscription.Subscription
+        _ subscription: ProductSubscription.Subscription,
+        isLast: Bool
     ) -> some View {
         
         SubscriptionView(
             subscription: subscription,
             event: { event(.subscriptionTap($0)) }
         )
-        .padding(.horizontal)
+        
+        if !isLast { Divider() }
+    }
+    
+    private func isLast(
+        _ subscription: ProductSubscription.Subscription,
+        in productSubscription: ProductSubscription
+    ) -> Bool {
+        
+        productSubscription.subscriptions.last?.subscriptionToken == subscription.subscriptionToken
     }
 }
 
