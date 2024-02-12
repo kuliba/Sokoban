@@ -1056,6 +1056,7 @@ private extension Target {
             .tagged,
             // internal modules
             .rxViewModel,
+            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )

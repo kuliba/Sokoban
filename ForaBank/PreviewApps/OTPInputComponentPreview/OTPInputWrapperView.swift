@@ -34,7 +34,8 @@ struct OTPInputWrapperView: View {
             OTPInputView(
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
-                event: viewModel.event
+                event: viewModel.event, 
+                config: .preview
             )
             
         case .validOTP:

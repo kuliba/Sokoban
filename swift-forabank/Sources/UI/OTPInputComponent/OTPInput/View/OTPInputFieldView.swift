@@ -11,6 +11,7 @@ struct OTPInputFieldView: View {
     
     let state: OTPFieldState
     let event: (OTPFieldEvent) -> Void
+    let config: DigitModelConfig
     
     @State private var isFocused = false
     
@@ -29,10 +30,10 @@ struct OTPInputFieldView: View {
         
         HStack {
             
-            ForEach(
-                state.digitModels,
-                content: DigitModelView.init
-            )
+            ForEach(state.digitModels) {
+                
+                DigitModelView(model: $0, config: config)
+            }
         }
     }
     
@@ -109,7 +110,8 @@ struct OTPInputFieldView_Previews: PreviewProvider {
         
         OTPInputFieldView(
             state: state,
-            event: { _ in }
+            event: { _ in },
+            config: .preview
         )
     }
 }

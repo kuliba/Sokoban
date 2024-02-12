@@ -414,7 +414,8 @@ private struct OTPInputWrapperView: View {
             OTPInputView(
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
-                event: viewModel.event(_:)
+                event: viewModel.event(_:),
+                config: .iFora
             )
             
         case .validOTP:
