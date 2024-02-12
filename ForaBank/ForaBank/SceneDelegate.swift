@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         model: model,
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
-        fastPaymentsSettingsFlag: .init(.active(.live))
+        fastPaymentsSettingsFlag: .init(.inactive)
     )
     private lazy var rootViewFactory = RootViewFactory(
         with: model.imageCache()
