@@ -520,6 +520,7 @@ private extension Target {
             .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ]
     )
     static let fastPaymentsSettingsTests = testTarget(
@@ -993,6 +994,9 @@ private extension Target {
     static let c2bSubscriptionUI = target(
         name: .c2bSubscriptionUI,
         dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
             .searchBarComponent,
             .textFieldComponent,
             .uiPrimitives,
@@ -1167,6 +1171,10 @@ private extension Target {
     
     static let uiPrimitives = target(
         name: .uiPrimitives,
+        dependencies: [
+            .foraTools,
+            .sharedConfigs,
+        ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )
     
@@ -1263,6 +1271,7 @@ private extension Target {
             .foraTools,
             .sharedConfigs,
             .tagged,
+            .uiPrimitives,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
     )
@@ -1275,7 +1284,7 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
-            .productSelectComponent
+            .productSelectComponent,
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
     )

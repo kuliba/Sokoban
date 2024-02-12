@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-#warning("improve: replace primitive types")
-public struct GetC2BSubResponse: Equatable, Hashable {
+import Tagged
+import UIPrimitives
+
+public struct GetC2BSubResponse: Equatable {
     
     public let title: String
     public let explanation: [String]
@@ -25,7 +27,7 @@ public struct GetC2BSubResponse: Equatable, Hashable {
 
 public extension GetC2BSubResponse {
     
-    enum Details: Equatable, Hashable {
+    enum Details: Equatable {
         
         case empty
         case list([ProductSubscription])
@@ -34,22 +36,16 @@ public extension GetC2BSubResponse {
 
 public extension GetC2BSubResponse.Details {
     
-    struct ProductSubscription: Equatable, Hashable {
+    struct ProductSubscription: Equatable {
         
-        public let productID: String
-        public let productType: ProductType
-        public let productTitle: String
+        public let product: Product
         public let subscriptions: [Subscription]
         
         public init(
-            productID: String,
-            productType: ProductType,
-            productTitle: String,
+            product: Product,
             subscriptions: [Subscription]
         ) {
-            self.productID = productID
-            self.productType = productType
-            self.productTitle = productTitle
+            self.product = product
             self.subscriptions = subscriptions
         }
     }
@@ -62,28 +58,32 @@ public extension GetC2BSubResponse.Details.ProductSubscription {
         case account, card
     }
     
-    struct Subscription: Equatable, Hashable {
+    struct Subscription: Equatable {
         
-        #warning("rename `subscriptionToken` to `token")
-        public let subscriptionToken: String
-        public let brandIcon: String
+        public let token: Token
+        public let brandIcon: Icon
         public let brandName: String
-        #warning("rename `subscriptionPurpose` to `purpose`")
-        public let subscriptionPurpose: String
+        public let purpose: Purpose
         public let cancelAlert: String
         
         public init(
-            subscriptionToken: String,
-            brandIcon: String,
+            token: Token,
+            brandIcon: Icon,
             brandName: String,
-            subscriptionPurpose: String,
+            purpose: Purpose,
             cancelAlert: String
         ) {
-            self.subscriptionToken = subscriptionToken
+            self.token = token
             self.brandIcon = brandIcon
             self.brandName = brandName
-            self.subscriptionPurpose = subscriptionPurpose
+            self.purpose = purpose
             self.cancelAlert = cancelAlert
         }
+        
+        public typealias Token = Tagged<_Token, String>
+        public enum _Token {}
+        
+        public typealias Purpose = Tagged<_Purpose, String>
+        public enum _Purpose {}
     }
 }

@@ -7,11 +7,16 @@
 
 public enum C2BSubscriptionEffect {
     
-    case delete(Subscription)
-    case getDetails(Subscription)
+    case subscription(SubscriptionEffect)
 }
 
 public extension C2BSubscriptionEffect {
+    
+    enum SubscriptionEffect {
+        
+        case delete(Subscription)
+        case getDetails(Subscription)
+    }
     
     typealias Subscription = GetC2BSubResponse.Details.ProductSubscription.Subscription
 }

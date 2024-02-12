@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 14.12.2023.
 //
 
-import ForaTools
 import SwiftUI
+import UIPrimitives
 
 public struct ProductCard: Equatable {
     

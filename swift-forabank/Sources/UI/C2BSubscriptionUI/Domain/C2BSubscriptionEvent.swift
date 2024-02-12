@@ -10,6 +10,7 @@ import TextFieldDomain
 public enum C2BSubscriptionEvent {
     
     case alertTap(AlertEvent)
+    case destination(DestinationEvent)
     case subscription(SubscriptionEvent)
     case subscriptionTap(SubscriptionTap)
     case textField(TextFieldAction)
@@ -21,6 +22,11 @@ public extension C2BSubscriptionEvent {
         
         case cancel
         case delete(Subscription)
+    }
+    
+    enum DestinationEvent {
+        
+        case dismiss
     }
     
     enum SubscriptionEvent {

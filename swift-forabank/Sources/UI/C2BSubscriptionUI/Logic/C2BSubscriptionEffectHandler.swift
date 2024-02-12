@@ -31,10 +31,10 @@ public extension C2BSubscriptionEffectHandler {
                 
                 switch $0 {
                 case let .failure(failure):
-                    dispatch(.subscription(.cancelFailure(failure)))
+                    dispatch(.cancelFailure(failure))
                 
                 case let .success(success):
-                    dispatch(.subscription(.cancelled(success)))
+                    dispatch(.cancelled(success))
                 }
             }
             
@@ -43,10 +43,10 @@ public extension C2BSubscriptionEffectHandler {
                 
                 switch $0 {
                 case let .failure(failure):
-                    dispatch(.subscription(.detailFailure(failure)))
+                    dispatch(.detailFailure(failure))
                 
                 case let .success(success):
-                    dispatch(.subscription(.detailReceived(success)))
+                    dispatch(.detailReceived(success))
                 }
             }
         }
@@ -67,6 +67,6 @@ public extension C2BSubscriptionEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = C2BSubscriptionEvent
-    typealias Effect = C2BSubscriptionEffect
+    typealias Event = C2BSubscriptionEvent.SubscriptionEvent
+    typealias Effect = C2BSubscriptionEffect.SubscriptionEffect
 }

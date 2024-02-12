@@ -7,26 +7,32 @@
 
 import SearchBarComponent
 import SwiftUI
+import Tagged
 import TextFieldComponent
 import UIPrimitives
 
-public struct C2BSubscriptionView<Footer: View>: View {
+public struct C2BSubscriptionView<Footer: View, Search: View>: View {
     
-    let state: C2BSubscriptionState
-    let event: (C2BSubscriptionEvent) -> Void
-    let footer: () -> Footer
-    let textFieldConfig: TextFieldView.TextFieldConfig
+    public typealias SearchView = (TextFieldState, @escaping (TextFieldAction) -> Void) -> Search
+    
+    private let state: C2BSubscriptionState
+    private let event: (C2BSubscriptionEvent) -> Void
+    private let footerView: () -> Footer
+    private let searchView: SearchView
+    private let config: C2BSubscriptionConfig
     
     public init(
         state: C2BSubscriptionState,
         event: @escaping (C2BSubscriptionEvent) -> Void,
-        footer: @escaping () -> Footer,
-        textFieldConfig: TextFieldView.TextFieldConfig
+        footerView: @escaping () -> Footer,
+        searchView: @escaping SearchView,
+        config: C2BSubscriptionConfig
     ) {
         self.state = state
         self.event = event
-        self.footer = footer
-        self.textFieldConfig = textFieldConfig
+        self.footerView = footerView
+        self.searchView = searchView
+        self.config = config
     }
     
     public var body: some View {
@@ -41,8 +47,22 @@ public struct C2BSubscriptionView<Footer: View>: View {
                 listView(filteredList)
             }
             
-            footer()
+            footerView()
         }
+        .alert(
+            item: .init(
+                get: { state.tapAlert },
+                set: { if $0 == nil { event(.alertTap(.cancel)) }}
+            ),
+            content: { .init(with: $0, event: { event(.alertTap($0))}) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.destination(.dismiss)) }}
+            ),
+            content: destinationView
+        )
     }
     
     private func emptyView() -> some View {
@@ -60,7 +80,8 @@ public struct C2BSubscriptionView<Footer: View>: View {
         
         VStack(spacing: 24) {
             
-            searchView()
+            searchView(state.textFieldState, { event(.textField($0)) })
+                .padding(.horizontal)
             
             ScrollView(showsIndicators: false) {
                 
@@ -72,79 +93,73 @@ public struct C2BSubscriptionView<Footer: View>: View {
         }
     }
     
-    private func searchView() -> some View {
-        
-        CancellableSearchView(
-            state: state.textFieldState,
-            send: { event(.textField($0)) },
-            clearButtonLabel: PreviewClearButton.init,
-            cancelButton: PreviewCancelButton.init,
-            keyboardType: .default,
-            toolbar: nil,
-            textFieldConfig: textFieldConfig
-        )
-        .padding(.horizontal)
-    }
-    
     private func productSubscriptionView(
         _ productSubscription: ProductSubscription
     ) -> some View {
         
-        VStack {
+        ProductSubscriptionView(
+            productSubscription: productSubscription,
+            event: { event(.subscriptionTap($0)) },
+            config: config.product
+        )
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        _ destination: Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .subscriptionCancelConfirm(confirm):
+            Text("TBD: subscriptionCancelConfirm: \(String(describing: confirm))")
             
-            productView(productSubscription.productDetails)
+        case let .subscriptionDetail(detail):
+            Text("TBD: subscriptionDetail: \(String(describing: detail))")
+        }
+    }
+}
+
+private extension C2BSubscriptionState {
+    
+    var destination: Destination? {
+        
+        switch status {
+        case let .cancelled(confirmation):
+            return .subscriptionCancelConfirm(confirmation)
             
-            ForEach(productSubscription.subscriptions, content: subscriptionView)
+        case let .detail(detail):
+            return .subscriptionDetail(detail)
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private enum Destination {
+    
+    case subscriptionCancelConfirm(CancelC2BSubscriptionConfirmation)
+    case subscriptionDetail(C2BSubscriptionDetail)
+    
+}
+
+extension Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .subscriptionCancelConfirm:
+            return .subscriptionCancelConfirm
+            
+        case .subscriptionDetail:
+            return .subscriptionDetail
         }
     }
     
-    private func productView(
-        _ productDetails: ProductSubscription.ProductDetails
-    ) -> some View {
+    enum ID {
         
-        Text("TBD: ProductDetails")
-    }
-    
-    private func subscriptionView(
-        _ subscription: ProductSubscription.Subscription
-    ) -> some View {
-        
-        HStack {
-            
-            HStack {
-                
-#warning("add icon fallback")
-                // Image(subscription.brandIcon)
-                Image(systemName: "tortoise.circle")
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                
-                VStack(alignment: .leading) {
-                    
-                    Text(subscription.brandName)
-                        .font(.headline)
-                    
-                    Text(subscription.subscriptionPurpose)
-                        .foregroundColor(.secondary)
-                        .font(.footnote)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture { event(.subscriptionTap(.init(
-                subscription: subscription,
-                event: .detail
-            ))) }
-            
-            Button(action: { event(.subscriptionTap(.init(
-                subscription: subscription,
-                event: .delete
-            ))) }) {
-                
-                Image(systemName: "trash")
-            }
-        }
-        .padding(.horizontal)
+        case subscriptionCancelConfirm
+        case subscriptionDetail
     }
 }
 
@@ -171,6 +186,14 @@ private extension C2BSubscriptionState {
             return textState.text
         }
     }
+    
+    var tapAlert: TapAlert? {
+        
+        guard case let .tapAlert(tapAlert) = status
+        else { return nil }
+        
+        return tapAlert
+    }
 }
 
 private extension GetC2BSubResponse.Details.ProductSubscription {
@@ -185,9 +208,7 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
         guard !filteredSubscriptions.isEmpty else { return nil }
         
         return .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle,
+            product: product,
             subscriptions: filteredSubscriptions
         )
     }
@@ -195,31 +216,12 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
 
 extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     
-    public var id: String { productID }
-}
-
-private extension GetC2BSubResponse.Details.ProductSubscription {
-    
-    var productDetails: ProductDetails {
-        
-        .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle
-        )
-    }
-    
-    struct ProductDetails {
-        
-        let productID: String
-        let productType: ProductType
-        let productTitle: String
-    }
+    public var id: Product.ID { product.id }
 }
 
 extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiable {
     
-    public var id: String { subscriptionToken }
+    public var id: Token { token }
 }
 
 struct C2BSubscriptionView_Previews: PreviewProvider {
