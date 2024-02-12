@@ -7,6 +7,7 @@
 
 import SharedConfigs
 import SwiftUI
+import UIPrimitives
 
 public struct ProductSelectView<ProductView: View>: View {
     
