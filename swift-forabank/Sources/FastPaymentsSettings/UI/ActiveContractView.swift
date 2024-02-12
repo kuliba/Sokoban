@@ -7,6 +7,7 @@
 
 import PaymentComponents
 import SwiftUI
+import UIPrimitives
 
 struct ActiveContractView: View {
     

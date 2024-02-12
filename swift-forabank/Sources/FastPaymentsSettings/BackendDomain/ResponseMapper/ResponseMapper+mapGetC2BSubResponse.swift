@@ -8,7 +8,7 @@
 import Foundation
 
 public extension ResponseMapper {
-    #warning("replace success with `GetC2BSubResponse`")
+    
     static func mapGetC2BSubResponseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
@@ -26,18 +26,6 @@ public extension ResponseMapper {
 }
 
 // MARK: - Adapters
-
-//private extension GetC2BSubResponse {
-//    
-//    init(_ sub: GetC2BSubscription) {
-//        
-//        self.init(
-//            title: sub.title,
-//            explanation: <#T##[String]#>,
-//            details: <#T##Details#>
-//        )
-//    }
-//}
 
 private extension ResponseMapper._Data {
     
@@ -142,4 +130,3 @@ private extension ResponseMapper {
         }
     }
 }
-

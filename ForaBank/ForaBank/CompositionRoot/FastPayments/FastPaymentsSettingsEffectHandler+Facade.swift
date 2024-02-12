@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 04.02.2024.
 //
 
+import C2BSubscriptionUI
 import FastPaymentsSettings
 
 extension FastPaymentsSettingsEffectHandler {
@@ -17,6 +18,7 @@ extension FastPaymentsSettingsEffectHandler {
     convenience init(
         facade: MicroServices.Facade,
         httpClient: HTTPClient,
+        getProducts: @escaping () -> [C2BSubscriptionUI.Product],
         log: @escaping (String, StaticString, UInt) -> Void
     ) {
         let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = NanoServices.adaptedLoggingFetch(
@@ -46,7 +48,7 @@ extension FastPaymentsSettingsEffectHandler {
             createRequest: ForaRequestFactory.createGetC2BSubRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapGetC2BSubResponseResponse,
-            mapOutput: \.getC2BSubResponse,
+            mapOutput: { $0.getC2BSubResponse(getProducts()) },
             mapError: ServiceFailure.init(error:),
             log: log
         )
@@ -119,12 +121,13 @@ private extension ContractEffect.TargetContract {
     }
 }
 
-#warning("remove mapping after changing return type of `static ResponseMapper.mapGetC2BSubResponseResponse(_:_:)` to `GetC2BSubResponse`")
 // MARK: - Adapters
 
 private extension GetC2BSubscription {
     
-    var getC2BSubResponse: GetC2BSubResponse {
+    func getC2BSubResponse(
+        _ products: [C2BSubscriptionUI.Product]
+    ) -> GetC2BSubResponse {
         
         .init(
             title: title,
@@ -134,7 +137,10 @@ private extension GetC2BSubscription {
                 case .none:
                     return .empty
                 case let .some(list):
-                    return .list(list.map(\.getC2BProductSub))
+                    return .list(list.compactMap {
+                        
+                        $0.getC2BProductSub(products)
+                    })
                 }
             }()
         )
@@ -143,19 +149,51 @@ private extension GetC2BSubscription {
 
 private extension GetC2BSubscription.ProductSubscription {
     
-    var getC2BProductSub: GetC2BSubResponse.Details.ProductSubscription {
+    func getC2BProductSub(
+        _ products: [C2BSubscriptionUI.Product]
+    ) -> GetC2BSubResponse.Details.ProductSubscription? {
         
-        .init(
-            productID: productId,
-            productType: {
-                switch productType {
-                case .account: return .account
-                case .card: return .card
-                }
-            }(),
-            productTitle: productTitle,
+        guard let product = products.first(where: { $0.id.matches(self) })
+        else { return nil }
+        
+        return .init(
+            product: product,
             subscriptions: subscription.map(\.sub)
         )
+    }
+}
+
+private extension C2BSubscriptionUI.Product.ID {
+    
+    func matches(
+        _ sub: GetC2BSubscription.ProductSubscription
+    ) -> Bool {
+        
+        matches(sub.productId) && matches(sub.productType)
+    }
+    
+    func matches(_ id: String) -> Bool {
+        
+        guard let id = Int(id) else { return false }
+        
+        switch self {
+        case let .account(accountID): return accountID.rawValue == id
+        case let .card(cardID): return cardID.rawValue == id
+        }
+    }
+    
+    func matches(
+        _ productType: GetC2BSubscription.ProductSubscription.ProductType
+    ) -> Bool {
+        
+        switch (self, productType) {
+        case (.account, .account),
+            (.card, .card):
+            return true
+            
+        default:
+            return false
+        }
     }
 }
 
@@ -164,10 +202,10 @@ private extension GetC2BSubscription.ProductSubscription.Subscription {
     var sub: GetC2BSubResponse.Details.ProductSubscription.Subscription {
         
         .init(
-            subscriptionToken: subscriptionToken,
-            brandIcon: brandIcon,
+            token: .init(subscriptionToken),
+            brandIcon: .svg(brandIcon),
             brandName: brandName,
-            subscriptionPurpose: subscriptionPurpose,
+            purpose: .init(subscriptionPurpose),
             cancelAlert: cancelAlert
         )
     }
