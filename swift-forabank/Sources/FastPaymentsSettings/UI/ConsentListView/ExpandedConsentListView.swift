@@ -176,7 +176,6 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

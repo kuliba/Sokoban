@@ -66,7 +66,7 @@ extension ExpandedConsentConfig {
     
     static let iFora: Self = .init(
         apply: .init(
-            backgroundColor: .blurMediumGray30,
+            backgroundColor: .mainColorsGrayLightest,
             title: .secondary
         ),
         bank: .secondary,
