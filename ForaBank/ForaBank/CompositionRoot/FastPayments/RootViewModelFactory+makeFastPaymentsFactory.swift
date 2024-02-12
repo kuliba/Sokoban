@@ -80,7 +80,7 @@ private extension FastPaymentsSettings.Bank {
         self.init(
             id: .init(id), 
             name: info.displayName,
-            image: info.svgImage.image ?? .ic24Bank
+            image: info.svgImage.image ?? .ic24Bank.renderingMode(.template)
         )
     }
 }
