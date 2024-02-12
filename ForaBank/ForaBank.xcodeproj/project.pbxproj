@@ -15663,7 +15663,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15680,7 +15680,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -15699,7 +15699,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15716,7 +15716,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15734,7 +15734,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15751,7 +15751,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15769,7 +15769,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2BSubscriptionUIPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -15786,7 +15786,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15817,7 +15817,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15848,7 +15848,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15879,7 +15879,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15896,7 +15896,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -15910,7 +15910,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15927,7 +15927,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -15941,7 +15941,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15958,7 +15958,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -15972,7 +15972,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -15989,7 +15989,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -16003,7 +16003,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16162,7 +16162,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/OTPInputComponentPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16179,7 +16179,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -16198,7 +16198,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/OTPInputComponentPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16215,7 +16215,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16233,7 +16233,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/OTPInputComponentPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16250,7 +16250,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16268,7 +16268,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/OTPInputComponentPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16285,7 +16285,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16303,7 +16303,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/DecimalTextFieldPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16320,7 +16320,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -16339,7 +16339,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/DecimalTextFieldPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16356,7 +16356,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16374,7 +16374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/DecimalTextFieldPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16391,7 +16391,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16409,7 +16409,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/DecimalTextFieldPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -16426,7 +16426,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -16438,6 +16438,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.preview.PhoneNumberTextViewPreview;
 				PRODUCT_NAME = PhoneNumberTextViewPreview;
 			};
 			name = Preprod;
@@ -16446,6 +16447,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = TextFieldViewVithBindingPreview;
 			};
 			name = Preprod;
