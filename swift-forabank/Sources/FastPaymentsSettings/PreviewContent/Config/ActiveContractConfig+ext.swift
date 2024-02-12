@@ -10,6 +10,7 @@ import ProductSelectComponent
 public extension ActiveContractConfig {
     
     static let preview: Self = .init(
+        backgroundColor: .orange.opacity(0.1),
         bankDefault: .preview,
         paymentContract: .preview,
         productSelect: .preview

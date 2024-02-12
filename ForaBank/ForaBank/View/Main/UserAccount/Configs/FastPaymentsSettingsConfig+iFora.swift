@@ -11,6 +11,7 @@ import SwiftUI
 extension FastPaymentsSettingsConfig {
     
     static let iFora: Self = .init(
+        backgroundColor: .mainColorsGrayLightest,
         bankDefault: .iFora,
         paymentContract: .iFora,
         productSelect: .iFora

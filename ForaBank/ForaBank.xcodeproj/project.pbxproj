@@ -6784,8 +6784,8 @@
 		2A5AEF2A2B7A3DC800E935B6 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
-				2A5AEF262B7A075900E935B6 /* OTPInputConfig+iFora.swift */,
 				2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift */,
+				2A5AEF262B7A075900E935B6 /* OTPInputConfig+iFora.swift */,
 				2A5AEF2D2B7A485E00E935B6 /* TextConfig+ext.swift */,
 			);
 			path = Configs;

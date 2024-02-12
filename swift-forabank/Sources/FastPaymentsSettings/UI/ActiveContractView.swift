@@ -23,22 +23,26 @@ struct ActiveContractView: View {
                 
                 Group {
                     
-                    PaymentContractView(
-                        paymentContract: contractDetails.paymentContract,
-                        action: { event(.contract(.deactivateContract)) },
-                        config: config.paymentContract
-                    )
-                    
-                    BankDefaultView(
-                        bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                        action: { event(.bankDefault(.setBankDefault)) },
-                        config: config.bankDefault
-                    )
-                    
-                    ConsentListView(
-                        state: contractDetails.consentList.uiState,
-                        event: { event(.consentList($0)) }
-                    )
+                    Group {
+                        
+                        PaymentContractView(
+                            paymentContract: contractDetails.paymentContract,
+                            action: { event(.contract(.deactivateContract)) },
+                            config: config.paymentContract
+                        )
+                        
+                        BankDefaultView(
+                            bankDefault: contractDetails.bankDefaultResponse.bankDefault,
+                            action: { event(.bankDefault(.setBankDefault)) },
+                            config: config.bankDefault
+                        )
+                        
+                        ConsentListView(
+                            state: contractDetails.consentList.uiState,
+                            event: { event(.consentList($0)) }
+                        )
+                    }
+                    .padding()
                     
                     ProductSelectView(
                         state: contractDetails.productSelect,
@@ -55,11 +59,11 @@ struct ActiveContractView: View {
                         
                         event(.subscription(.getC2BSubButtonTapped))
                     })
+                    .padding()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 9))
+                .background(config.backgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
             }
         }
