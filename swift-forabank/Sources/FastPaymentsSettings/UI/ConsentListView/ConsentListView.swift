@@ -1,6 +1,6 @@
 //
 //  ConsentListView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 13.01.2024.
 //
@@ -16,10 +16,11 @@ struct ConsentListView: View {
     
     let state: ConsentListState.UIState
     let event: (ConsentListEvent) -> Void
+    let config: ConsentListConfig = .preview
     
     @Namespace private var animationNamespace
     private let anchor: UnitPoint = .top
-
+    
     var body: some View {
         
         Group {
@@ -88,7 +89,7 @@ struct ConsentListView: View {
         CollapsedConsentListView(
             collapsed: collapsed,
             icon: icon,
-            expandButton: toggleButton, 
+            expandButton: toggleButton,
             namespace: animationNamespace,
             anchor: anchor
         )
@@ -113,16 +114,22 @@ struct ConsentListView: View {
     
     private func expandedErrorView() -> some View {
         
-        VStack {
+        VStack(spacing: 12) {
             
-            Image(systemName: "magnifyingglass.circle.fill")
-                .imageScale(.large)
-                .font(.largeTitle)
-                .padding(4)
+            ZStack {
+                
+                config.errorIcon.backgroundColor
+                    .clipShape(Circle())
+                
+                config.errorIcon.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
+            }
+            .frame(width: 40, height: 40)
             
-            Text("Что-то пошло не так.\nПопробуйте позже.")
+            "Что-то пошло не так.\nПопробуйте позже.".text(withConfig: config.title)
         }
-        .foregroundColor(.secondary)
     }
 }
 
@@ -145,7 +152,7 @@ struct ConsentListView_Previews: PreviewProvider {
             
             consentListView(.expandedError)
                 .previewDisplayName("Error Expanded")
-
+            
             VStack(spacing: 16) {
                 
                 consentListView(.collapsed(.empty))
