@@ -8,6 +8,7 @@
 import Foundation
 import CardGuardianModule
 import ProductProfile
+import RxViewModel
 
 extension ProductProfileViewModel {
     

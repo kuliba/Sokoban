@@ -14,7 +14,6 @@ public final class CardGuardianReducer {
 
 public extension CardGuardianReducer {
  
-#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
