@@ -9,4 +9,9 @@ public struct BlockUnblockData: Equatable {
     
     let statusBrief: String?
     let statusDescription: String?
+    
+    public init(statusBrief: String?, statusDescription: String?) {
+        self.statusBrief = statusBrief
+        self.statusDescription = statusDescription
+    }
 }

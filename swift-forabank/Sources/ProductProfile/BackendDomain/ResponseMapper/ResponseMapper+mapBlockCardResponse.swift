@@ -21,13 +21,13 @@ public extension ResponseMapper {
         _ data: _Data
     ) throws -> BlockUnblockData? {
         
-        data.first?.data
+        data.data
     }
 }
 
 private extension ResponseMapper {
     
-    typealias _Data = [_DTO]
+    typealias _Data = _DTO
 }
 
 private extension ResponseMapper._DTO {
