@@ -10,17 +10,20 @@ import SwiftUI
 
 public struct FastPaymentsSettingsConfig {
     
+    let accountLinking: AccountLinkingConfig
     let backgroundColor: Color
     let bankDefault: BankDefaultConfig
     let paymentContract: PaymentContractConfig
     public let productSelect: ProductSelectConfig
     
     public init(
+        accountLinking: AccountLinkingConfig,
         backgroundColor: Color,
         bankDefault: BankDefaultConfig,
         paymentContract: PaymentContractConfig,
         productSelect: ProductSelectConfig
     ) {
+        self.accountLinking = accountLinking
         self.backgroundColor = backgroundColor
         self.bankDefault = bankDefault
         self.paymentContract = paymentContract
@@ -33,6 +36,7 @@ public extension FastPaymentsSettingsConfig {
     var activeContract: ActiveContractConfig {
         
         .init(
+            accountLinking: accountLinking,
             backgroundColor: backgroundColor,
             bankDefault: bankDefault,
             paymentContract: paymentContract,

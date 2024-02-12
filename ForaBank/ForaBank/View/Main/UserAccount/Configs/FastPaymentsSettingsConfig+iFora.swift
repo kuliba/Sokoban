@@ -11,6 +11,10 @@ import SwiftUI
 extension FastPaymentsSettingsConfig {
     
     static let iFora: Self = .init(
+        accountLinking: .init(
+            image: .ic24Subscriptions,
+            title: .secondary
+        ),
         backgroundColor: .mainColorsGrayLightest,
         bankDefault: .iFora,
         paymentContract: .iFora,

@@ -55,10 +55,10 @@ struct ActiveContractView: View {
                         )
                     }
                     
-                    AccountLinkingSettingsButton(action: {
-                        
-                        event(.subscription(.getC2BSubButtonTapped))
-                    })
+                    AccountLinkingSettingsButton(
+                        action: { event(.subscription(.getC2BSubButtonTapped)) },
+                        config: config.accountLinking
+                    )
                     .padding()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
