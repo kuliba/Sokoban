@@ -9,12 +9,12 @@ import SwiftUI
 
 public struct OTPInputView: View {
     
-    private let state: OTPInputState.Input
+    private let state: OTPInputState.Status.Input
     private let phoneNumber: String
     private let event: (OTPInputEvent) -> Void
     
     public init(
-        state: OTPInputState.Input,
+        state: OTPInputState.Status.Input,
         phoneNumber: String,
         event: @escaping (OTPInputEvent) -> Void
     ) {
@@ -151,7 +151,7 @@ public struct OTPInputView: View {
     }
 }
 
-private extension OTPInputState.Input {
+private extension OTPInputState.Status.Input {
     
     var isTimerCompleted: Bool {
         
@@ -188,7 +188,7 @@ struct OTPInputView_Previews: PreviewProvider {
     }
     
     private static func otpInputView(
-        _ state: OTPInputState.Input
+        _ state: OTPInputState.Status.Input
     ) -> some View {
         
         OTPInputView(

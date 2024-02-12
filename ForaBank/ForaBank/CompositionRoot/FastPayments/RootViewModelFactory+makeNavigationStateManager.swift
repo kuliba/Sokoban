@@ -41,14 +41,17 @@ extension RootViewModelFactory {
                 
                 .init(
                     viewModel: .default(
-                        initialState: nil,
+                        initialState: .starting(
+                            phoneNumber: $0,
+                            duration: duration
+                        ),
                         duration: duration,
                         length: length,
                         initiateOTP: otpServices.initiateOTP,
                         submitOTP: otpServices.submitOTP,
-                        scheduler: $0
+                        scheduler: $1
                     ),
-                    scheduler: $0
+                    scheduler: $1
                 )
             },
             prepareSetBankDefault: otpServices.prepareSetBankDefault,

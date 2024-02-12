@@ -5,23 +5,45 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
-#warning("remake as struct, add `phoneNumber: Tagged<String>` field + maybe OTP length (used in Digits) - or it would be better to hold those in reducer")
-public enum OTPInputState: Equatable {
-    #warning("decouple from OTPFieldFailure? or vice versa up countdown state failure to common failure")
-    case failure(ServiceFailure)
-    case input(Input)
-    case validOTP
-    #warning("idea for better - more readable model:")
-    /*
-     enum OTPInputState: Equatable {
-     
-         case input(Input)
-         case result(ServiceFailure?)
-     }
-     */
+import Tagged
+
+#warning("maybe add OTP length (used in Digits) - or it would be better to hold those in reducer")
+public struct OTPInputState: Equatable {
+    
+    public let phoneNumber: PhoneNumber
+    public var status: Status
+    
+    public init(
+        phoneNumber: PhoneNumber,
+        status: Status
+    ) {
+        self.phoneNumber = phoneNumber
+        self.status = status
+    }
 }
 
 public extension OTPInputState {
+    
+    typealias PhoneNumber = Tagged<_PhoneNumber, String>
+    enum _PhoneNumber {}
+    
+    enum Status: Equatable {
+
+        case failure(ServiceFailure)
+        case input(Input)
+        case validOTP
+#warning("idea for better - more readable model:")
+        /*
+         enum OTPInputState: Equatable {
+         
+         case input(Input)
+         case result(ServiceFailure?)
+         }
+         */
+    }
+}
+
+public extension OTPInputState.Status {
     
     struct Input: Equatable {
         
@@ -36,8 +58,4 @@ public extension OTPInputState {
             self.otpField = otpField
         }
     }
-    
-    typealias OTPResult = Result<OK, ServiceFailure>
-    
-    struct OK: Equatable {}
 }

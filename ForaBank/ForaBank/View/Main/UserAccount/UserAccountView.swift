@@ -406,14 +406,14 @@ private struct OTPInputWrapperView: View {
     
     var body: some View {
         
-        switch viewModel.state {
+        switch viewModel.state.status {
         case .failure:
             EmptyView()
             
         case let .input(input):
             OTPInputView(
                 state: input,
-                phoneNumber: "TBD: hardcoded phone number",
+                phoneNumber: viewModel.state.phoneNumber.rawValue,
                 event: viewModel.event(_:)
             )
             

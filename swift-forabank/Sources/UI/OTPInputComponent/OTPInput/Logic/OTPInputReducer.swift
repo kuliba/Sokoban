@@ -64,7 +64,7 @@ private extension OTPInputReducer {
         var state = state
         var effect: Effect?
         
-        switch state {
+        switch state.status {
         case .failure, .validOTP:
             break
 
@@ -76,16 +76,16 @@ private extension OTPInputReducer {
             case let .failure(countdownFailure):
                 switch countdownFailure {
                 case .connectivityError:
-                    state = .failure(.connectivityError)
+                    state.status = .failure(.connectivityError)
                     
                 case let .serverError(message):
-                    state = .failure(.serverError(message))
+                    state.status = .failure(.serverError(message))
                 }
                 effect = countdownEffect.map(Effect.countdown)
                 
             default:
                 input.countdown = countdownState
-                state = .input(input)
+                state.status = .input(input)
                 effect = countdownEffect.map(Effect.countdown)
             }
         }
@@ -101,7 +101,7 @@ private extension OTPInputReducer {
         var state = state
         var effect: Effect?
         
-        switch state {
+        switch state.status {
         case .failure, .validOTP:
             break
             
@@ -110,14 +110,14 @@ private extension OTPInputReducer {
         
             switch otpFieldState.status {
             case let .failure(otpFieldFailure):
-                state = .failure(otpFieldFailure)
+                state.status = .failure(otpFieldFailure)
                 
             case .validOTP:
-                state = .validOTP
+                state.status = .validOTP
                 
             default:
                 input.otpField = otpFieldState
-                state = .input(input)
+                state.status = .input(input)
             }
 
             effect = otpFieldEffect.map(Effect.otpField)

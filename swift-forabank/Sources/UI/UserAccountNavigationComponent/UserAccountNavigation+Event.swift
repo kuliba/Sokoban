@@ -43,7 +43,7 @@ public extension UserAccountNavigation.Event {
 
         public enum PrepareSetBankDefaultResponse: Equatable {
             
-            case success
+            case success(OTPInputState.PhoneNumber)
             case connectivityError
             case serverError(String)
         }

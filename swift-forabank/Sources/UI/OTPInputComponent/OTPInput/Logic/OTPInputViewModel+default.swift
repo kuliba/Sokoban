@@ -7,12 +7,18 @@
 
 public extension OTPInputState {
     
-    static func starting(duration: Int) -> Self {
-     
-        .input(.init(
-            countdown: .starting(duration: duration),
-            otpField: .init()
-        ))
+    static func starting(
+        phoneNumber: PhoneNumber,
+        duration: Int
+    ) -> Self {
+        
+        .init(
+            phoneNumber: phoneNumber,
+            status: .input(.init(
+                countdown: .starting(duration: duration),
+                otpField: .init()
+            ))
+        )
     }
 }
 
@@ -20,7 +26,7 @@ public extension OTPInputViewModel {
     
 #warning("improve duration with Tagged")
     static func `default`(
-        initialState: OTPInputState? = nil,
+        initialState: OTPInputState,
         timer: TimerProtocol = RealTimer(),
         duration: Int = 60,
         length: Int = 6,
@@ -28,9 +34,7 @@ public extension OTPInputViewModel {
         submitOTP: @escaping OTPFieldEffectHandler.SubmitOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> OTPInputViewModel {
-        
-        let initialState = initialState ?? .starting(duration: duration)
-        
+                
         let countdownReducer = CountdownReducer(duration: duration)
         let otpFieldReducer = OTPFieldReducer(length: length)
         let otpInputReducer = OTPInputReducer(
