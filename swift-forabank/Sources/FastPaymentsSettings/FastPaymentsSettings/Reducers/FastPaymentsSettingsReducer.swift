@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
+import C2BSubscriptionUI
+
 public final class FastPaymentsSettingsReducer {
     
     private let bankDefaultReduce: BankDefaultReduce

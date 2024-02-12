@@ -93,27 +93,9 @@ struct CancellableSearchBarView_Previews: PreviewProvider {
             
             CancellableSearchBarView(
                 viewModel: viewModel,
-                textFieldConfig: .init(
-                    font: .systemFont(ofSize: 19, weight: .regular),
-                    textColor: .orange,
-                    tintColor: .black,
-                    backgroundColor: .clear,
-                    placeholderColor: .gray
-                ),
-                clearButtonLabel: {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .imageScale(.small)
-                        .frame(width: 12, height: 12)
-                        .foregroundColor(.gray)
-                },
-                cancelButton: {
-                    Button(action: {}) {
-                        Text("cancel")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 14))
-                    }
-                }
+                textFieldConfig: .preview,
+                clearButtonLabel: PreviewClearButton.init,
+                cancelButton: PreviewCancelButton.init
             )
             .padding(.horizontal)
             .overlay(

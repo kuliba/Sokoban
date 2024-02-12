@@ -11,83 +11,88 @@ import TextFieldModel
 
 extension RootViewModelFactory {
     
+    typealias GetSubscriptionProducts = (@escaping OnSubscriptionDelete, @escaping OnSubscriptionDetail) -> [SubscriptionsViewModel.Product]
+    typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
+    typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
+    
     static func makeSubscriptionsViewModel(
-        model: Model,
-        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
+        getProducts: @escaping GetSubscriptionProducts,
+        c2bSubscription: C2BSubscription?,
         scheduler: AnySchedulerOfDispatchQueue
-    ) -> SubscriptionsViewModel {
+    ) -> UserAccountNavigationStateManager.MakeSubscriptionsViewModel {
         
-        let products = getSubscriptions(
-            model: model,
-            with: model.subscriptions.value?.list ?? [],
-            onDelete: onDelete,
-            detailAction: { token in
-                
-                model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-            }
-        )
-        
-        let reducer = TransformingReducer(
-            placeholderText: "Поиск",
-            transform: {
-                .init(
-                    $0.text,
-                    cursorPosition: $0.cursorPosition
-                )
-            }
-        )
-        
-        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-        let titleCondition = (products.count == 0)
-        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
-        )
-        
-        return .init(
-            products: products,
-            searchViewModel: .init(
-                initialState: .placeholder("Поиск"),
-                reducer: reducer,
-                keyboardType: .default
-            ),
-            emptyViewModel: emptyViewModel,
-            configurator: .init(
-                backgroundColor: .mainColorsGrayLightest
-            ),
-            scheduler: scheduler
-        )
+        return { onDelete, onDetail in
+            
+            let products = getProducts(onDelete, onDetail)
+            
+            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+                isEmpty: products.count == 0,
+                c2bSubscription: c2bSubscription
+            )
+            
+            let reducer = TransformingReducer(placeholderText: "Поиск")
+            
+            return .init(
+                products: products,
+                searchViewModel: .init(
+                    initialState: .placeholder("Поиск"),
+                    reducer: reducer,
+                    keyboardType: .default
+                ),
+                emptyViewModel: emptyViewModel,
+                configurator: .init(
+                    backgroundColor: .mainColorsGrayLightest
+                ),
+                scheduler: scheduler
+            )
+        }
     }
-
-    private static func getSubscriptions(
-        model: Model,
-        with items: [C2BSubscription.ProductSubscription],
-        onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
+    
+    static func getSubscriptionProducts(
+        model: Model
+    ) -> GetSubscriptionProducts {
+        
+        return { onDelete, onDetail in
+            
+            getSubscriptionProducts(
+                items: model.subscriptions.value?.list ?? [],
+                getProduct: model.product(forID:),
+                formatBalance: model.formatBalanceFraction(product:),
+                makeSubscriptionViewModel: {
+                    
+#warning("reuse ImageCache")
+                    return $0.makeSubscriptionViewModel(
+                        getImage: { model.images.value[$0]?.image },
+                        requestImage: {
+                            
+                            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
+                        },
+                        onDelete: onDelete,
+                        onDetail: onDetail
+                    )
+                }
+            )
+        }
+    }
+    
+    typealias ProductID = String
+    typealias MakeSubscriptionViewModel = (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
+    
+    static func getSubscriptionProducts(
+        items: [C2BSubscription.ProductSubscription],
+        getProduct: @escaping (ProductID) -> ProductData?,
+        formatBalance: @escaping (ProductData) -> String?,
+        makeSubscriptionViewModel: @escaping MakeSubscriptionViewModel
     ) -> [SubscriptionsViewModel.Product] {
         
         items.compactMap { item in
             
-            let product = model.allProducts.first { $0.id.description == item.productId }
-            
-            let subscriptions = item.subscriptions.map {
-                
-                $0.makeSubscriptionViewModel(
-                    model: model,
-                    onDelete: onDelete,
-                    detailAction: detailAction
-                )
-            }
-            
-            guard let product,
-                  let balance = model.amountFormatted(
-                    amount: product.balanceValue,
-                    currencyCode: product.currency,
-                    style: .fraction
-                  ),
+            guard let product = getProduct(item.productId),
+                  let balance = formatBalance(product),
                   let icon = product.smallDesign.image
             else { return nil }
+            
+            let subscriptions = item.subscriptions.map(makeSubscriptionViewModel)
             
             return .init(
                 image: icon,
@@ -103,27 +108,60 @@ extension RootViewModelFactory {
     }
 }
 
+private extension Model {
+    
+    func product(forID productID: String) -> ProductData? {
+        
+        allProducts.first { $0.id.description == productID }
+    }
+    
+    func formatBalanceFraction(product: ProductData) -> String? {
+        
+        amountFormatted(
+            amount: product.balanceValue,
+            currencyCode: product.currency,
+            style: .fraction
+        )
+    }
+}
+
+private extension SubscriptionsViewModel.EmptyViewModel {
+    
+    init(
+        isEmpty: Bool,
+        c2bSubscription: C2BSubscription?
+    ) {
+        let emptyTitle = c2bSubscription?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+        let title = isEmpty ? emptyTitle : c2bSubscription?.emptySearch
+        
+        self.init(
+            icon: isEmpty ? Image.ic24Trello : Image.ic24Search,
+            title: title ?? "Нет совпадений"
+        )
+    }
+}
+
 private extension C2BSubscription.ProductSubscription.Subscription {
     
+    typealias BrandIcon = String
+    
     func makeSubscriptionViewModel(
-        model: Model,
+        getImage: @escaping (BrandIcon) -> Image?,
+        requestImage: @escaping (BrandIcon) -> Void,
         onDelete: @escaping (SubscriptionViewModel.Token, String) -> Void,
-        detailAction: @escaping (SubscriptionViewModel.Token) -> Void
+        onDetail: @escaping (SubscriptionViewModel.Token) -> Void
     ) -> ManageSubscriptionsUI.SubscriptionViewModel {
         
-        var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
+        let image: SubscriptionViewModel.Icon
         
-        let brandIcon = brandIcon
-        
-        #warning("reuse ImageCache")
-        if let icon = model.images.value[brandIcon]?.image {
+        if let icon = getImage(brandIcon) {
             
             image = .image(icon)
             
         } else {
             
             image = .default(.ic24ShoppingCart)
-            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
+            requestImage(brandIcon)
         }
         
         return .init(
@@ -138,7 +176,7 @@ private extension C2BSubscription.ProductSubscription.Subscription {
                 subtitle: .textBodySR12160()
             ),
             onDelete: onDelete,
-            detailAction: detailAction
+            onDetail: onDetail
         )
     }
 }

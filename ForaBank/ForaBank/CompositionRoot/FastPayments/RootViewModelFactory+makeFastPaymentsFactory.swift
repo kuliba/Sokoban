@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 27.12.2023.
 //
 
+import C2BSubscriptionUI
 import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
@@ -15,10 +16,10 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
-        scheduler: AnySchedulerOfDispatchQueue = .main
+        scheduler: AnySchedulerOfDispatchQueue
     ) -> FastPaymentsSettingsViewModel {
         
-        let getProducts = /*isStub ? { .preview } :*/ model.getProducts
+        let getProducts = /*isStub ? { .preview } :*/ model.getFastPaymentsSettingsProducts
         let getBanks = /*isStub ? { [] } :*/ model.getBanks
         
 #warning("add BankDefault caching")
@@ -40,7 +41,8 @@ extension RootViewModelFactory {
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
             facade: facade,
-            httpClient: httpClient,
+            httpClient: httpClient, 
+            getProducts: model.getC2BSubscriptionProducts,
             log: log
         )
         
@@ -78,7 +80,8 @@ private extension Model {
 #warning("getProducts should employ this requirements for products attributes https://shorturl.at/jtxzS")
 #warning("getProducts is expected to sort products in order that would taking first that is `active` and `main`")
     // https://shorturl.at/yTW35
-    func getProducts() -> [Product] {
+    func getFastPaymentsSettingsProducts(
+    ) -> [FastPaymentsSettings.Product] {
         
         let formatBalance = { [weak self] in
             
@@ -89,6 +92,19 @@ private extension Model {
             $0.fastPaymentsProduct(formatBalance: formatBalance)
         }
     }
+    
+    func getC2BSubscriptionProducts(
+    ) -> [C2BSubscriptionUI.Product] {
+        
+        let formatBalance = { [weak self] in
+            
+            self?.formattedBalance(of: $0) ?? ""
+        }
+        
+        return allProducts.compactMap {
+            $0.c2bSubscriptionUIProduct(formatBalance: formatBalance)
+        }
+    }
 }
 
 private extension ProductData {
@@ -96,7 +112,7 @@ private extension ProductData {
     func fastPaymentsProduct(
         formatBalance: @escaping (ProductData) -> String
     ) -> FastPaymentsSettings.Product? {
-        
+     
         switch productType {
         case .account:
             guard let account = self as? ProductAccountData,
@@ -116,6 +132,38 @@ private extension ProductData {
             else { return nil }
             
             return card.fpsProduct(
+                accountID: accountID,
+                formatBalance: formatBalance
+            )
+            
+        default:
+            return nil
+        }
+    }
+    
+    func c2bSubscriptionUIProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> C2BSubscriptionUI.Product? {
+        
+        switch productType {
+        case .account:
+            guard let account = self as? ProductAccountData,
+                  account.status == .notBlocked,
+                  account.currency == rub
+            else { return nil }
+            
+            return account.c2bProduct(formatBalance: formatBalance)
+            
+        case .card:
+            guard let card = self as? ProductCardData,
+                  let accountID = card.accountId,
+                  (card.isMain ?? false),
+                  card.status == .active,
+                  card.statusPc == .active,
+                  card.currency == rub
+            else { return nil }
+            
+            return card.c2bProduct(
                 accountID: accountID,
                 formatBalance: formatBalance
             )
@@ -148,6 +196,20 @@ private extension ProductAccountData {
             )
         )
     }
+    
+    func c2bProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> C2BSubscriptionUI.Product {
+        
+        .init(
+            id: .account(.init(id)),
+            title: "Счет списания",
+            name: displayName,
+            number: displayNumber ?? "",
+            icon: .svg(smallDesign.description),
+            balance: formatBalance(self)
+        )
+    }
 }
 
 private extension ProductCardData {
@@ -169,6 +231,21 @@ private extension ProductCardData {
                 color: backgroundColor.description,
                 icon: .svg(smallDesign.description)
             )
+        )
+    }
+    
+    func c2bProduct(
+        accountID: Int,
+        formatBalance: @escaping (ProductData) -> String
+    ) -> C2BSubscriptionUI.Product {
+        
+        .init(
+            id: .card(.init(id)),
+            title: "Счет списания",
+            name: displayName,
+            number: displayNumber ?? "",
+            icon: .svg(smallDesign.description),
+            balance: formatBalance(self)
         )
     }
 }

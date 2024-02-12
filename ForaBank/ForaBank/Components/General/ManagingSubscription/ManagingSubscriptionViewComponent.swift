@@ -221,7 +221,7 @@ private extension SubscriptionViewModel {
         trash: .init(systemName: "trash"),
         config: .init(headerFont: .body, subtitle: .subheadline),
         onDelete: { _,_ in },
-        detailAction: { _ in }
+        onDetail: { _ in }
     )
 }
 
