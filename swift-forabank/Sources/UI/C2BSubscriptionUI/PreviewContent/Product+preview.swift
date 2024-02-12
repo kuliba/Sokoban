@@ -15,4 +15,13 @@ extension Product {
         icon: .svg(""),
         balance: "654 367 ₽"
     )
+    
+    static let card: Self = .init(
+        id: .card(10000198241),
+        title: "Карта списания",
+        name: "Текущий счет",
+        number: "3387",
+        icon: .svg(""),
+        balance: "654 367 ₽"
+    )
 }

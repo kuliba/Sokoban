@@ -7,6 +7,7 @@
 
 import SearchBarComponent
 import SwiftUI
+import Tagged
 import TextFieldComponent
 import UIPrimitives
 
@@ -18,17 +19,20 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
     private let event: (C2BSubscriptionEvent) -> Void
     private let footerView: () -> Footer
     private let searchView: SearchView
+    private let config: C2BSubscriptionConfig
     
     public init(
         state: C2BSubscriptionState,
         event: @escaping (C2BSubscriptionEvent) -> Void,
         footerView: @escaping () -> Footer,
-        searchView: @escaping SearchView
+        searchView: @escaping SearchView,
+        config: C2BSubscriptionConfig
     ) {
         self.state = state
         self.event = event
         self.footerView = footerView
         self.searchView = searchView
+        self.config = config
     }
     
     public var body: some View {
@@ -45,6 +49,20 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
             
             footerView()
         }
+        .alert(
+            item: .init(
+                get: { state.tapAlert },
+                set: { if $0 == nil { event(.alertTap(.cancel)) }}
+            ),
+            content: { .init(with: $0, event: { event(.alertTap($0))}) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.destination(.dismiss)) }}
+            ),
+            content: destinationView
+        )
     }
     
     private func emptyView() -> some View {
@@ -79,47 +97,69 @@ public struct C2BSubscriptionView<Footer: View, Search: View>: View {
         _ productSubscription: ProductSubscription
     ) -> some View {
         
-        VStack {
-            
-            ProductDetailsView(product: productSubscription.productDetails)
-            
-            Divider()
-            
-            ForEach(productSubscription.subscriptions) {
-                
-                subscriptionView(
-                    $0,
-                    isLast: isLast($0, in: productSubscription))
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.1))
+        ProductSubscriptionView(
+            productSubscription: productSubscription,
+            event: { event(.subscriptionTap($0)) },
+            config: config.product
         )
-        .padding(.horizontal)
     }
     
     @ViewBuilder
-    private func subscriptionView(
-        _ subscription: ProductSubscription.Subscription,
-        isLast: Bool
+    private func destinationView(
+        _ destination: Destination
     ) -> some View {
         
-        SubscriptionView(
-            subscription: subscription,
-            event: { event(.subscriptionTap($0)) }
-        )
+        switch destination {
+        case let .subscriptionCancelConfirm(confirm):
+            Text("TBD: subscriptionCancelConfirm: \(String(describing: confirm))")
+            
+        case let .subscriptionDetail(detail):
+            Text("TBD: subscriptionDetail: \(String(describing: detail))")
+        }
+    }
+}
+
+private extension C2BSubscriptionState {
+    
+    var destination: Destination? {
         
-        if !isLast { Divider() }
+        switch status {
+        case let .cancelled(confirmation):
+            return .subscriptionCancelConfirm(confirmation)
+            
+        case let .detail(detail):
+            return .subscriptionDetail(detail)
+            
+        default:
+            return nil
+        }
+    }
+}
+
+private enum Destination {
+    
+    case subscriptionCancelConfirm(CancelC2BSubscriptionConfirmation)
+    case subscriptionDetail(C2BSubscriptionDetail)
+    
+}
+
+extension Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .subscriptionCancelConfirm:
+            return .subscriptionCancelConfirm
+            
+        case .subscriptionDetail:
+            return .subscriptionDetail
+        }
     }
     
-    private func isLast(
-        _ subscription: ProductSubscription.Subscription,
-        in productSubscription: ProductSubscription
-    ) -> Bool {
+    enum ID {
         
-        productSubscription.subscriptions.last?.subscriptionToken == subscription.subscriptionToken
+        case subscriptionCancelConfirm
+        case subscriptionDetail
     }
 }
 
@@ -146,6 +186,14 @@ private extension C2BSubscriptionState {
             return textState.text
         }
     }
+    
+    var tapAlert: TapAlert? {
+        
+        guard case let .tapAlert(tapAlert) = status
+        else { return nil }
+        
+        return tapAlert
+    }
 }
 
 private extension GetC2BSubResponse.Details.ProductSubscription {
@@ -160,9 +208,7 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
         guard !filteredSubscriptions.isEmpty else { return nil }
         
         return .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle,
+            product: product,
             subscriptions: filteredSubscriptions
         )
     }
@@ -170,31 +216,12 @@ private extension GetC2BSubResponse.Details.ProductSubscription {
 
 extension GetC2BSubResponse.Details.ProductSubscription: Identifiable {
     
-    public var id: String { productID }
-}
-
-extension GetC2BSubResponse.Details.ProductSubscription {
-    
-    var productDetails: ProductDetails {
-        
-        .init(
-            productID: productID,
-            productType: productType,
-            productTitle: productTitle
-        )
-    }
-    
-    struct ProductDetails {
-        
-        let productID: String
-        let productType: ProductType
-        let productTitle: String
-    }
+    public var id: Product.ID { product.id }
 }
 
 extension GetC2BSubResponse.Details.ProductSubscription.Subscription: Identifiable {
     
-    public var id: String { subscriptionToken }
+    public var id: Token { token }
 }
 
 struct C2BSubscriptionView_Previews: PreviewProvider {

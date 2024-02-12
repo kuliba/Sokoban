@@ -16,16 +16,14 @@ public extension GetC2BSubResponse {
         ],
         details: .list([
             .init(
-                productID: "10000198241",
-                productType: .card,
-                productTitle: "Карта списания",
+                product: .card,
                 subscriptions: [
                     .preview,
                     .init(
-                        subscriptionToken: "aaaada956d884cf5b836d5642452044b",
-                        brandIcon: "aaaa1e25a275e3f04ae189f4a538536a",
+                        token: "aaaada956d884cf5b836d5642452044b",
+                        brandIcon: .svg("aaaa1e25a275e3f04ae189f4a538536a"),
                         brandName: "Дом у цветов",
-                        subscriptionPurpose: "Подписка на получение…",
+                        purpose: "Подписка на получение…",
                         cancelAlert: "Вы действительно хотите отключить подписку Дом у цветов?"
                     ),
                 ]

@@ -114,3 +114,17 @@ extension UserAccountNavigation.State.FPSDestination: Hashable {
         }
     }
 }
+
+extension GetC2BSubResponse: Hashable {
+    
+    public func hash(into hasher: inout Hasher) {
+        
+        switch details {
+        case .empty:
+            hasher.combine(0)
+        
+        case let .list(list):
+            hasher.combine(list.map(\.id))
+        }
+    }
+}

@@ -1,12 +1,13 @@
 //
 //  C2BSubscriptionView_Demo.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 11.02.2024.
 //
 
 import SwiftUI
 import TextFieldComponent
+import UIPrimitives
 
 public struct C2BSubscriptionView_Demo: View {
     
@@ -28,7 +29,13 @@ public struct C2BSubscriptionView_Demo: View {
         
         if let effect {
             
-            c2bSubscriptionEffectHandler.handleEffect(effect, self.event(_:))
+            switch effect {
+            case let .subscription(subscriptionEffect):
+                c2bSubscriptionEffectHandler.handleEffect(subscriptionEffect) {
+                    
+                    self.event(.subscription($0))
+                }
+            }
         }
     }
     
@@ -40,9 +47,9 @@ public struct C2BSubscriptionView_Demo: View {
                 
                 c2bSubscriptionView()
             }
-         
+            
             if state.status == .inflight {
-             
+                
                 Color.gray
                     .opacity(0.7)
                     .ignoresSafeArea()
@@ -68,28 +75,11 @@ public struct C2BSubscriptionView_Demo: View {
                     event: $1,
                     textFieldConfig: .preview
                 )
-            }
+            },
+            config: .preview
         )
         .navigationTitle(state.getC2BSubResponse.title)
         .navigationBarTitleDisplayMode(.inline)
-        .alert(
-            item: .init(
-                get: { state.tapAlert },
-                set: { if $0 == nil { event(.alertTap(.cancel)) }}
-            ),
-            content: { .init(with: $0, event: { event(.alertTap($0))}) }
-        )
-    }
-}
-
-private extension C2BSubscriptionState {
-    
-    var tapAlert: TapAlert? {
-        
-        guard case let .tapAlert(tapAlert) = status
-        else { return nil }
-        
-        return tapAlert
     }
 }
 

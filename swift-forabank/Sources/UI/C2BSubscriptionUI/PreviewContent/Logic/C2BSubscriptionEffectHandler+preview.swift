@@ -14,7 +14,6 @@ public extension C2BSubscriptionEffectHandler {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 
-                print("Effect: subscription \(subscription.brandName) DELETED")
                 completion(.success(.init()))
             }
         },
@@ -22,7 +21,6 @@ public extension C2BSubscriptionEffectHandler {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 
-                print("Effect: received DETAILS for subscription \(subscription.brandName)")
                 completion(.success(.init()))
             }
         }
