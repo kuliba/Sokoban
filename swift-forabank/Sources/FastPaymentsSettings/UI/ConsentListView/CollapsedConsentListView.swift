@@ -17,9 +17,10 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     
     var body: some View {
         
-        HStack(alignment: .top) {
+        HStack(alignment: alignment, spacing: 16) {
             
             icon()
+                .padding(.top, topPadding)
             
             VStack(alignment: .leading, spacing:6) {
                 
@@ -39,6 +40,16 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
                 anchor: anchor
             )
         }
+    }
+    
+    private var alignment: VerticalAlignment {
+        
+        collapsed.bankNames.isEmpty ? .center : .top
+    }
+    
+    private var topPadding: CGFloat {
+        
+        collapsed.bankNames.isEmpty ? .zero : 11
     }
 }
 
@@ -69,8 +80,13 @@ struct CollapsedConsentListView_Preview: PreviewProvider {
         
         CollapsedConsentListView(
             collapsed: collapsed,
-            icon: { Image(systemName: "building.columns") },
+            icon: {
+                
+                Image(systemName: "building.columns")
+                    .foregroundColor(.secondary)
+            },
             expandButton: {
+                
                 HStack {
                     
                     Text("Transfer requests")
