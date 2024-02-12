@@ -10,6 +10,7 @@ import UIPrimitives
 public extension OTPInputConfig {
     
     static let preview: Self = .init(
+        button: .preview,
         digitModel: .preview,
         subtitle: .init(
             textFont: .footnote,

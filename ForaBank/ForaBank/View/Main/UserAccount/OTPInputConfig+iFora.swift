@@ -10,6 +10,7 @@ import OTPInputComponent
 extension OTPInputConfig {
     
     static let iFora: Self = .init(
+        button: .iFora,
         digitModel: .init(
             digitConfig: .init(
                 textFont: .textH0B32402(),

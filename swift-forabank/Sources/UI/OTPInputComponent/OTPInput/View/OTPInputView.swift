@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct OTPInputView: View {
     
@@ -106,10 +107,16 @@ public struct OTPInputView: View {
     private func confirmButton() -> some View {
         
         Button(action: confirmButtonAction) {
-            Text("Подтвердить")
-                .bold()
-                .padding(.vertical, 9)
-                .frame(maxWidth: .infinity)
+            
+            ZStack {
+                
+                confirmButtonBackgroundColor()
+                
+                "Подтвердить".text(withConfig: confirmButtonTextConfig())
+            }
+            .frame(height: config.button.buttonHeight)
+            .frame(maxWidth: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(.horizontal)
         .padding(.bottom, 24)
@@ -122,6 +129,20 @@ public struct OTPInputView: View {
             
             event(.otpField(.confirmOTP))
         }
+    }
+    
+    private func confirmButtonBackgroundColor() -> some View {
+        
+        state.isConfirmButtonActive
+        ? config.button.active.backgroundColor
+        : config.button.inactive.backgroundColor
+    }
+    
+    private func confirmButtonTextConfig() -> TextConfig {
+        
+        state.isConfirmButtonActive
+        ? config.button.active.text
+        : config.button.active.text
     }
     
     private func autofocusTextField() -> some View {
