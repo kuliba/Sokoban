@@ -10,14 +10,28 @@ import SwiftUI
 extension BankDefaultConfig {
     
     static let preview: Self = .init(
-        onDisabled: .init(
-            toggleColor: .orange.opacity(0.7)
+        logo: .init(
+            backgroundColor: .pink.opacity(0.5),
+            image: .init(systemName: "building.columns")
         ),
-        offEnabled: .init(
-            toggleColor: .blue
+        title: .init(
+            textFont: .title3,
+            textColor: .orange
         ),
-        offDisabled: .init(
-            toggleColor: .blue.opacity(0.5)
+        toggleConfig: .init(
+            onDisabled: .init(
+                toggleColor: .orange.opacity(0.7)
+            ),
+            offEnabled: .init(
+                toggleColor: .blue
+            ),
+            offDisabled: .init(
+                toggleColor: .blue.opacity(0.5)
+            )
+        ),
+        subtitle: .init(
+            textFont: .headline,
+            textColor: .blue
         )
     )
 }

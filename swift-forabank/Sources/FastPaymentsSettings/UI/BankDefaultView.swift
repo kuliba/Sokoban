@@ -20,32 +20,38 @@ struct BankDefaultView: View {
             icon()
             label()
             Spacer()
-            bankDefaultIcon(bankDefault)
+            bankDefaultToggle(bankDefault, config.toggleConfig)
         }
     }
     
-    #warning("replace with actual")
     private func icon() -> some View {
         
-        Image(systemName: "building.columns")
-            .imageScale(.large)
+        ZStack {
+            
+            config.logo.backgroundColor
+                .clipShape(Circle())
+            
+            config.logo.image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 16, height: 16)
+        }
+        .frame(width: 32, height: 32)
     }
 
     private func label() -> some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 4) {
             
-            Text("Банк по умолчанию")
-                .foregroundColor(.secondary)
-                .font(.subheadline)
-            
-            Text("Фора-банк")
+            "Банк по умолчанию".text(withConfig: config.subtitle)
+            "Фора-банк".text(withConfig: config.title)
         }
     }
     
     @ViewBuilder
-    private func bankDefaultIcon(
-        _ bankDefault: BankDefault
+    private func bankDefaultToggle(
+        _ bankDefault: BankDefault,
+        _ config: BankDefaultConfig.ToggleConfig
     ) -> some View {
         
         switch bankDefault {
@@ -85,7 +91,7 @@ struct BankDefaultView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        List {
+        VStack {
             
             bankDefaultView(.onDisabled)
             bankDefaultView(.offEnabled)
