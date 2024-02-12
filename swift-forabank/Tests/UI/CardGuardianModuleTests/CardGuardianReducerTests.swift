@@ -12,49 +12,34 @@ final class CardGuardianReducerTests: XCTestCase {
     
     // MARK: - test reduce
     
-    func test_reduce_appear_shouldSetAppearEffectNone() {
+    func test_reduce_appear_shouldSetEffectNone() {
         
-        assertEvent(expectedEvent: .appear, onEvent: .appear)
+        assertEffect(.none, onEvent: .appear, state: .default)
     }
     
-    func test_reduce_tapChangePin_shouldSetChangePinEffectNone() {
+    func test_reduce_tapChangePin_shouldSetEffectNone() {
         
-        assertEvent(
-            expectedEvent: .buttonTapped(.changePin),
-            onEvent: .buttonTapped(.changePin)
-        )
+        assertEffect(.none, onEvent: .buttonTapped(.changePin), state: .default)
     }
     
-    func test_reduce_tapToggleLockActive_shouldSetToggleLockActiveEffectNone() {
+    func test_reduce_tapToggleLockActive_shouldSetEffectNone() {
         
-        assertEvent(
-            expectedEvent: .buttonTapped(.toggleLock(.active)),
-            onEvent: .buttonTapped(.toggleLock(.active))
-        )
+        assertEffect(.none, onEvent: .buttonTapped(.toggleLock(.active)), state: .default)
     }
     
-    func test_reduce_tapToggleLockBlockedUnlockAvailable_shouldSetToggleLockBlockedUnlockAvailableEffectNone() {
+    func test_reduce_tapToggleLockBlockedUnlockAvailable_shouldSetEffectNone() {
         
-        assertEvent(
-            expectedEvent: .buttonTapped(.toggleLock(.blockedUnlockAvailable)),
-            onEvent: .buttonTapped(.toggleLock(.blockedUnlockAvailable))
-        )
+        assertEffect(.none, onEvent: .buttonTapped(.toggleLock(.blockedUnlockAvailable)), state: .default)
     }
     
-    func test_reduce_tapToggleLockBlockedUnlockNotAvailable_shouldSetToggleLockBlockedUnlockNotAvailableEffectNone() {
+    func test_reduce_tapToggleLockBlockedUnlockNotAvailable_shouldSetEffectNone() {
         
-        assertEvent(
-            expectedEvent: .buttonTapped(.toggleLock(.blockedUnlockNotAvailable)),
-            onEvent: .buttonTapped(.toggleLock(.blockedUnlockNotAvailable))
-        )
+        assertEffect(.none, onEvent: .buttonTapped(.toggleLock(.blockedUnlockNotAvailable)), state: .default)
     }
     
-    func test_reduce_tapShowOnMain_shouldSetShowOnMainEffectNone() {
+    func test_reduce_tapShowOnMain_shouldSetEffectNone() {
         
-        assertEvent(
-            expectedEvent: .buttonTapped(.showOnMain),
-            onEvent: .buttonTapped(.showOnMain)
-        )
+        assertEffect(.none, onEvent: .buttonTapped(.showOnMain), state: .default)
     }
     
     // MARK: - Helpers
@@ -63,6 +48,7 @@ final class CardGuardianReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
+    private typealias Result = (State, Effect?)
     
     private func makeSUT(
         file: StaticString = #file,
@@ -78,26 +64,24 @@ final class CardGuardianReducerTests: XCTestCase {
         _ sut: SUT,
         _ initialState: State = .init(buttons: .default),
         event: Event
-    ) -> (State, Effect?) {
+    ) -> Result {
         
         return sut.reduce(initialState, event)
     }
     
-    private func assertEvent(
+    private func assertEffect(
         sut: SUT? = nil,
-        expectedEvent: Event,
-        expectedEffect: Effect? = .none,
+        _ expectedEffect: Effect?,
         onEvent event: Event,
+        state: State,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         
         let sut = sut ?? makeSUT(file: file, line: line)
+        let (_, receivedEffect): Result = sut.reduce(state, event)
         
-        let received = reduce(sut, event: event)
-        
-        XCTAssertNoDiff(received.0.event, expectedEvent, file: file, line: line)
-        XCTAssertNoDiff(received.1, expectedEffect, file: file, line: line)
+        XCTAssertNoDiff(receivedEffect, expectedEffect, file: file, line: line)
     }
 }
 
@@ -127,4 +111,9 @@ private extension CardGuardianButton {
 private extension Array where Element == CardGuardianButton {
     
     static let `default`: Self = [.changePin, .showOnMain, .toggleLock]
+}
+
+private extension CardGuardianReducer.State {
+    
+    static let `default`: Self = .init(buttons: .default, event: .none)
 }
