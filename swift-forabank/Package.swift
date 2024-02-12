@@ -1055,6 +1055,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .paymentComponents,
             .rxViewModel,
             .uiPrimitives,
         ],
