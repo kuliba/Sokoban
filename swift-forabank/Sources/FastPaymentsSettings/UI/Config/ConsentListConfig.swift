@@ -10,11 +10,19 @@ import UIPrimitives
 
 public struct ConsentListConfig {
     
+    let chevron: Chevron
     let errorIcon: ErrorIcon
     let title: TextConfig
 }
 
 public extension ConsentListConfig {
+    
+    struct Chevron {
+        
+        let image: Image
+        let color: Color
+        let title: TextConfig
+    }
     
     struct ErrorIcon {
         

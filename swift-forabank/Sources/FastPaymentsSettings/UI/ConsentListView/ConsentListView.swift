@@ -45,25 +45,23 @@ struct ConsentListView: View {
     
     private func toggleButton() -> some View {
         
-        Button(action: toggle) {
+        Button(action: { event(.toggle) }) {
             
             HStack {
                 
-                Text("Запросы на переводы из банков")
+                "Запросы на переводы из банков".text(withConfig: config.chevron.title)
                 
                 Spacer()
                 
-                Image(systemName: "chevron.down")
+                config.chevron.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 16, height: 16)
                     .rotationEffect(.degrees(chevronRotationAngle))
+                    .foregroundColor(config.chevron.color)
             }
         }
-        .foregroundColor(.secondary)
-        .font(.subheadline)
-    }
-    
-    private func toggle() {
-        
-        event(.toggle)
+        .contentShape(Rectangle())
     }
     
     private var chevronRotationAngle: CGFloat {

@@ -42,10 +42,45 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     }
 }
 
-//struct CollapsedConsentListView_Preview: PreviewProvider {
-//
-//    static var previews: some View {
-//        
-//        CollapsedConsentListView()
-//    }
-//}
+struct CollapsedConsentListView_Preview: PreviewProvider {
+    
+    @Namespace private static var animationNamespace
+    
+    static var previews: some View {
+        
+        VStack(spacing: 32, content: previewsGroup)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            collapsedConsentListView(.empty)
+            collapsedConsentListView(.one)
+            collapsedConsentListView(.two)
+            collapsedConsentListView(.preview)
+        }
+    }
+    
+    static func collapsedConsentListView(
+        _ collapsed: ConsentListState.UIState.Collapsed
+    ) -> some View {
+        
+        CollapsedConsentListView(
+            collapsed: collapsed,
+            icon: { Image(systemName: "building.columns") },
+            expandButton: {
+                HStack {
+                    
+                    Text("Transfer requests")
+                    Spacer()
+                    Image(systemName: "chevron.up")
+                }
+                .foregroundColor(.secondary)
+                .font(.footnote)
+            },
+            namespace: animationNamespace,
+            anchor: .center
+        )
+    }
+}
