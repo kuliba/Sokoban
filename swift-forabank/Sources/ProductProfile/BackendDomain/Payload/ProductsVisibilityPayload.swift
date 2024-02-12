@@ -24,7 +24,7 @@ public extension Payload {
 
 public extension Payload.ProductsVisibilityPayload {
     
-    enum Category: String, Encodable {
+    enum Category: String {
         
         case card = "CARD"
         case account = "ACCOUNT"
@@ -35,7 +35,7 @@ public extension Payload.ProductsVisibilityPayload {
 
 public extension Payload.ProductsVisibilityPayload {
     
-    struct Product: Encodable, Equatable {
+    struct Product {
         
         public typealias ProductID = Tagged<_ProductID, Int>
         public enum _ProductID {}
