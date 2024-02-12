@@ -1,5 +1,5 @@
 //
-//  RequestFactory+blockCard.swift
+//  RequestFactory+blockCardRequestTests.swift
 //
 //
 //  Created by Andryusina Nataly on 12.02.2024.
@@ -65,7 +65,7 @@ final class RequestFactory_blockCardRequestTests: XCTestCase {
         payload: Payload.CardPayload = .init(cardId: 1, cardNumber: "11")
     ) throws -> URLRequest {
         
-        return try RequestFactory.createBlockCardRequest(
+        return try RequestFactory.blockCardRequest(
             url: url,
             payload: payload
         )

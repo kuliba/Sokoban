@@ -1,5 +1,5 @@
 //
-//  RequestFactory+unblockCard.swift
+//  RequestFactory+blockCardRequest.swift
 //
 //
 //  Created by Andryusina Nataly on 12.02.2024.
@@ -10,7 +10,7 @@ import Tagged
 
 public extension RequestFactory {
         
-    static func createUnblockCardRequest(
+    static func blockCardRequest(
         url: URL,
         payload: Payload.CardPayload
     ) throws -> URLRequest {
