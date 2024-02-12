@@ -43,35 +43,6 @@ struct ConsentListView: View {
         .animation(.easeInOut, value: chevronRotationAngle)
     }
     
-    private func toggleButton() -> some View {
-        
-        Button(action: { event(.toggle) }) {
-            
-            HStack {
-                
-                "Запросы на переводы из банков".text(withConfig: config.chevron.title)
-                
-                Spacer()
-                
-                config.chevron.image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-                    .rotationEffect(.degrees(chevronRotationAngle))
-                    .foregroundColor(config.chevron.color)
-            }
-        }
-        .contentShape(Rectangle())
-    }
-    
-    private var chevronRotationAngle: CGFloat {
-        
-        switch state {
-        case .collapsed, .collapsedError: return 0
-        case .expanded, .expandedError:   return 180
-        }
-    }
-    
 #warning("replace with actual")
     private func icon() -> some View {
         
@@ -97,16 +68,30 @@ struct ConsentListView: View {
         _ expanded: ConsentListState.UIState.Expanded
     ) -> some View {
         
-        VStack(alignment: .leading) {
-            
-            ExpandedConsentListView(
-                expanded: expanded,
-                event: event,
-                icon: icon,
-                collapseButton: toggleButton,
-                namespace: animationNamespace,
-                anchor: anchor
-            )
+        ExpandedConsentListView(
+            expanded: expanded,
+            event: event,
+            icon: icon,
+            collapseButton: toggleButton,
+            namespace: animationNamespace,
+            anchor: anchor
+        )
+    }
+    
+    private func toggleButton() -> some View {
+        
+        ConsentListToggleButton(
+            chevronRotationAngle: chevronRotationAngle,
+            action: { event(.toggle) },
+            config: config.chevron
+        )
+    }
+    
+    private var chevronRotationAngle: CGFloat {
+        
+        switch state {
+        case .collapsed, .collapsedError: return 0
+        case .expanded, .expandedError:   return 180
         }
     }
     

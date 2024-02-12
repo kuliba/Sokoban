@@ -10,14 +10,7 @@ import SwiftUI
 extension ConsentListConfig {
     
     static let preview: Self = .init(
-        chevron: .init(
-            image: .init(systemName: "chevron.down"), 
-            color: .pink.opacity(0.5),
-            title: .init(
-                textFont: .footnote,
-                textColor: .pink.opacity(0.5)
-            )
-        ),
+        chevron: .preview,
         errorIcon: .init(
             backgroundColor: .pink.opacity(0.1),
             image: .init(systemName: "magnifyingglass")
