@@ -55,7 +55,7 @@ struct OTPInputFieldView: View {
         .onAppear {
             
             DispatchQueue.main.asyncAfter(
-                deadline: .now() + 0.1, 
+                deadline: .now() + 0.1,
                 execute: { isFocused = true }
             )
         }
@@ -83,9 +83,24 @@ struct OTPInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        otpInputView(.init())
-        otpInputView(.init(text: "1234"))
-        otpInputView(.init(text: "123456", isInputComplete: true))
+        VStack(spacing: 64, content: previewsGroup)
+        
+        previewsGroup()
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            otpInputView(.init())
+                .previewDisplayName("empty")
+            
+            otpInputView(.init(text: "1234"))
+                .previewDisplayName("partial")
+            
+            otpInputView(.init(text: "123456", isInputComplete: true))
+                .previewDisplayName("full")
+        }
     }
     
     private static func otpInputView(
