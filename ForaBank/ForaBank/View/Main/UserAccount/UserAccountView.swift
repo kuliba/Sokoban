@@ -259,7 +259,7 @@ struct UserAccountView: View {
         
         FastPaymentsSettingsWrapperView(
             viewModel: route.viewModel,
-            config: .preview
+            config: .iFora
         )
         .navigationBar(with: .fastPayments(
             action: { viewModel.event(.dismiss(.destination)) }

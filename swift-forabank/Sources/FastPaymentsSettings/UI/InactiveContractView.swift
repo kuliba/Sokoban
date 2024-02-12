@@ -20,15 +20,23 @@ struct InactiveContractView: View {
                 
                 HStack(spacing: 16) {
                     
-                    Text("Включить переводы СБП")
+                    "Включить переводы СБП".text(withConfig: config.title)
                     
                     Spacer()
                     
-                    ToggleMockView(status: .inactive)
+                    ToggleMockView(
+                        status: .off(.enabled),
+                        color: config.toggleColor
+                    )
                 }
             }
             
-            AttributedTextView(attributedString: .consent)
+            AttributedTextView(
+                attributedString: .consent,
+                linkColor: config.subtitle.textColor
+            )
+            .foregroundColor(config.subtitle.textColor)
+            .font(config.subtitle.textFont)
             
             Spacer()
         }

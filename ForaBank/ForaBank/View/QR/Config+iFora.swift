@@ -46,7 +46,7 @@ private extension InfoComponent.InfoConfig {
     )
 }
 
-private extension ProductSelectComponent.ProductSelectConfig {
+extension ProductSelectComponent.ProductSelectConfig {
     
     static let iFora: Self = .init(
         amount: .secondary,
@@ -68,19 +68,6 @@ private extension ProductSelectComponent.ProductSelectConfig {
         footer: .placeholder,
         header: .placeholder,
         title: .secondary
-    )
-}
-
-private extension SberQR.TextConfig {
-    
-    static let secondary: Self = .init(
-        textFont: .textH4M16240(),
-        textColor: .textSecondary
-    )
-    
-    static let placeholder: Self = .init(
-        textFont: .textBodyMR14180(),
-        textColor: .textPlaceholder
     )
 }
 

@@ -10,6 +10,8 @@ import ProductSelectComponent
 public extension ActiveContractConfig {
     
     static let preview: Self = .init(
+        bankDefault: .preview,
+        paymentContract: .preview,
         productSelect: .preview
     )
 }
