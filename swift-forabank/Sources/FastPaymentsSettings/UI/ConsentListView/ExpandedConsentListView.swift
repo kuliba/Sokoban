@@ -151,10 +151,10 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     }
     
     private func bankIcon(
-        _ bank: ConsentList.SelectableBank
+        _ selectableBank: ConsentList.SelectableBank
     ) -> some View {
         
-        Image(systemName: "building.columns")
+        selectableBank.bank.image
             .resizable()
             .aspectRatio(contentMode: .fit)
             .clipShape(Circle())

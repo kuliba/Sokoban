@@ -61,7 +61,13 @@ private extension Model {
     
     func getBanks() -> [FastPaymentsSettings.Bank] {
         
-        bankListFullInfo.value.compactMap(FastPaymentsSettings.Bank.init(info:))
+        // https://shorturl.at/dxCV4
+        bankListFullInfo.value
+            .filter {
+                $0.receiverList.contains("ME2MEPULL")
+                && $0.memberId != "100000000217"
+            }
+            .compactMap(FastPaymentsSettings.Bank.init(info:))
     }
 }
 
@@ -71,7 +77,11 @@ private extension FastPaymentsSettings.Bank {
         
         guard let id = info.memberId else { return nil }
         
-        self.init(id: .init(id), name: info.displayName)
+        self.init(
+            id: .init(id), 
+            name: info.displayName,
+            image: info.svgImage.image ?? .ic24Bank
+        )
     }
 }
 

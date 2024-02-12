@@ -12,7 +12,11 @@ public extension Array where Element == ConsentList.SelectableBank {
     static let preview: Self = ["Сбербанк", "Альфа-банк", "ВТБ", "Тинькофф банк", "Открытие", "Сургутнефтегазбанк"].map {
         
         .init(
-            bank: .init(id: .init($0.lowercased()), name: $0),
+            bank: .init(
+                id: .init($0.lowercased()), 
+                name: $0,
+                image: .init(systemName: "building.columns")
+            ),
             isSelected: false
         )
     }
