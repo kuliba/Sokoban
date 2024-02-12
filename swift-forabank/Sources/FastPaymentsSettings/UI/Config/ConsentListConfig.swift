@@ -11,6 +11,7 @@ import UIPrimitives
 public struct ConsentListConfig {
     
     let chevron: Chevron
+    let collapsedBankList: TextConfig
     let errorIcon: ErrorIcon
     let image: Image
     let title: TextConfig

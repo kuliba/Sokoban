@@ -11,6 +11,10 @@ extension ConsentListConfig {
     
     static let preview: Self = .init(
         chevron: .preview,
+        collapsedBankList: .init(
+            textFont: .headline,
+            textColor: .green
+        ),
         errorIcon: .init(
             backgroundColor: .pink.opacity(0.1),
             image: .init(systemName: "magnifyingglass")

@@ -58,6 +58,7 @@ struct ConsentListView: View {
         
         CollapsedConsentListView(
             collapsed: collapsed,
+            config: config.collapsedBankList,
             icon: icon,
             expandButton: toggleButton,
             namespace: animationNamespace,

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     
     let collapsed: ConsentListState.UIState.Collapsed
+    let config: TextConfig
     let icon: () -> Icon
     let expandButton: () -> ExpandButton
     let namespace: Namespace.ID
@@ -28,7 +30,7 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
                 
                 if !collapsed.bankNames.isEmpty {
                     
-                    Text(collapsed.bankNames.joined(separator: ", "))
+                    collapsed.bankNames.joined(separator: ", ").text(withConfig: config)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -79,7 +81,11 @@ struct CollapsedConsentListView_Preview: PreviewProvider {
     ) -> some View {
         
         CollapsedConsentListView(
-            collapsed: collapsed,
+            collapsed: collapsed, 
+            config: .init(
+                textFont: .headline, 
+                textColor: .green
+            ),
             icon: {
                 
                 Image(systemName: "building.columns")
