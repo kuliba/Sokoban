@@ -11,6 +11,7 @@ struct BankDefaultView: View {
     
     let bankDefault: BankDefault
     let action: () -> Void
+    let config: BankDefaultConfig
     
     var body: some View {
         
@@ -49,21 +50,28 @@ struct BankDefaultView: View {
         
         switch bankDefault {
         case .onDisabled:
-            ToggleMockView(status: .active)
-                .opacity(0.4)
+            ToggleMockView(
+                status: .on(.disabled),
+                color: config.onDisabled.toggleColor
+            )
             
         case .offEnabled:
             VStack(alignment: .leading) {
                 
                 Button(action: action) {
             
-                    ToggleMockView(status: .inactive)
+                    ToggleMockView(
+                        status: .off(.enabled),
+                        color: config.offEnabled.toggleColor
+                    )
                 }
             }
             
         case .offDisabled:
-            ToggleMockView(status: .inactive)
-                .opacity(0.4)
+            ToggleMockView(
+                status: .off(.disabled),
+                color: config.offDisabled.toggleColor
+            )
         }
     }
 }
@@ -89,6 +97,10 @@ struct BankDefaultView_Previews: PreviewProvider {
         _ bankDefault: BankDefaultView.BankDefault
     ) -> some View {
         
-        BankDefaultView(bankDefault: bankDefault, action: {})
+        BankDefaultView(
+            bankDefault: bankDefault,
+            action: {},
+            config: .preview
+        )
     }
 }

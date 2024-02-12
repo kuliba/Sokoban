@@ -25,12 +25,14 @@ struct ActiveContractView: View {
                     
                     PaymentContractView(
                         paymentContract: contractDetails.paymentContract,
-                        action: { event(.contract(.deactivateContract)) }
+                        action: { event(.contract(.deactivateContract)) },
+                        config: config.paymentContract
                     )
                     
                     BankDefaultView(
                         bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                        action: { event(.bankDefault(.setBankDefault)) }
+                        action: { event(.bankDefault(.setBankDefault)) },
+                        config: config.bankDefault
                     )
                     
                     ConsentListView(
@@ -49,7 +51,10 @@ struct ActiveContractView: View {
                         )
                     }
                     
-                    AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
+                    AccountLinkingSettingsButton(action: {
+                        
+                        event(.subscription(.getC2BSubButtonTapped))
+                    })
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
