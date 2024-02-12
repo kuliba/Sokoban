@@ -6,6 +6,7 @@
 //
 
 import Combine
+import InfoComponent
 import SberQR
 import SwiftUI
 
@@ -13,24 +14,51 @@ extension RootViewFactory {
     
     init(with imageCache: ImageCache) {
         
-        self.init(
-            makeSberQRConfirmPaymentView: { viewModel in
-                
+        let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = { viewModel in
+            
                 .init(
                     viewModel: viewModel,
                     map: { info in
                         
-                        .init(
-                            id: info.id,
-                            value: info.value,
-                            title: info.title,
-                            image: imageCache.imagePublisher(for: info.icon)
-                        )
+                            .init(
+                                id: info.infoID,
+                                value: info.value,
+                                title: info.title,
+                                image: imageCache.imagePublisher(for: info.icon)
+                            )
                     },
                     config: .iFora
                 )
-            }
+        }
+        
+        let makeUserAccountView = UserAccountView.init(viewModel:)
+        
+        self.init(
+            makePaymentsTransfersView: { viewModel in
+                
+                    .init(
+                        viewModel: viewModel,
+                        viewFactory: .init(
+                            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                            makeUserAccountView: makeUserAccountView
+                        )
+                    )
+            },
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: makeUserAccountView
         )
+    }
+}
+
+private extension GetSberQRDataResponse.Parameter.Info {
+    
+    var infoID: InfoComponent.Info.ID {
+        
+        switch id {
+        case .amount:        return .amount
+        case .brandName:     return .brandName
+        case .recipientBank: return .recipientBank
+        }
     }
 }
 

@@ -12,8 +12,15 @@ struct ChangeReturnView: UIViewControllerRepresentable {
     let viewModel: ChangeReturnViewModel
     
     func makeUIViewController(context: Context) -> ChangeReturnCountryController {
+        var status = ConfirmViewControllerModel.StatusOperation.changeRequest
+        switch viewModel.type {
+        case .changePay:
+            status = .changeRequest
+        case .returnPay:
+            status = .returnRequest
+        }
         
-        let confurmVCModel = ConfirmViewControllerModel(type: .contact)
+        let confurmVCModel = ConfirmViewControllerModel(type: .contact, status: status)
         confurmVCModel.summTransction = viewModel.amount
         confurmVCModel.name = viewModel.name
         confurmVCModel.surname = viewModel.surname

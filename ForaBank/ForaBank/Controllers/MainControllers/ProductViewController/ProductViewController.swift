@@ -826,7 +826,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         if product?.productType == ProductType.deposit.rawValue {
             
-            let model = ConfirmViewControllerModel(type: .card2card)
+            let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
             var popView = CustomPopUpWithRateView()
             let currentDate = Date()
             let endDate = product?.endDate ?? 0

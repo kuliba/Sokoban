@@ -77,14 +77,10 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        makeProductProfileViewModel: ProductProfileViewModel.make(
-            with: .emptyMock,
-            sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
-        ),
-        sberQRServices: .empty(),
-        qrViewModelFactory: .preview(),
+        navigationStateManager: .preview,
+        sberQRServices: .empty(), 
+        qrViewModelFactory: .preview(), 
+        paymentsTransfersFactory: .preview,
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]

@@ -5,6 +5,7 @@
 //  Created by Andrew Kurdin on 19.10.2023.
 //
 
+import Combine
 @testable import ForaBank
 import XCTest
 
@@ -118,7 +119,12 @@ final class UserAccountViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept(
             settingsAgent: spy
         )
-        let sut = SUT(model: model, clientInfo: .sample, dismissAction: {})
+        let sut = SUT(
+            navigationStateManager: .preview,
+            model: model,
+            clientInfo: .sample,
+            dismissAction: {}
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)
@@ -126,7 +132,6 @@ final class UserAccountViewModelTests: XCTestCase {
         
         return (sut, model, spy)
     }
-    
 }
 
 // MARK: - DSL
@@ -138,9 +143,9 @@ private extension UserAccountViewModel {
         action.send(UserAccountViewModelAction.ExitAction())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
        
-        if let alert {
+        if let alert = route.alert {
             
-            alert.primary.action()
+            self.event(.alertButtonTapped(alert.primaryButton.event))
         } else {
             
             XCTFail("Expected none nil Alert")

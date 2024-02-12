@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import PaymentComponents
 
 public final class SberQRConfirmPaymentStateEditableAmountReducer {
     
-    public typealias State = SberQRConfirmPaymentState.EditableAmount
+    public typealias State = EditableAmount<GetSberQRDataResponse.Parameter.Info>
     public typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
-    public typealias ProductSelectReduce = (ProductSelect, SberQRConfirmPaymentEvent.ProductSelectEvent) -> ProductSelect
+    public typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect
     
     private let productSelectReduce: ProductSelectReduce
     
@@ -60,6 +61,9 @@ private extension ProductSelect {
     
     func canPay(_ amount: Decimal) -> Bool {
         
-        0 < amount && amount <= selected.balance
+        guard let balance = selected?.balance
+        else { return false }
+        
+        return 0 < amount && amount <= balance
     }
 }

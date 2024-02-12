@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+import PaymentComponents
+
+extension EditableAmount<Info> {
     
     static var preview: Self {
         
@@ -20,7 +22,7 @@ extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     }
 }
 
-extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
+extension FixedAmount<Info> {
     
     static var preview: Self {
         
@@ -30,12 +32,12 @@ extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
             brandName: .brandName,
             amount: .amount,
             recipientBank: .recipientBank,
-            bottom: .preview
+            button: .preview
         )
     }
 }
 
-public extension SberQRConfirmPaymentState.EditableAmount {
+public extension EditableAmount<GetSberQRDataResponse.Parameter.Info> {
     
     static var preview: Self {
         
@@ -50,7 +52,7 @@ public extension SberQRConfirmPaymentState.EditableAmount {
     }
 }
 
-public extension SberQRConfirmPaymentState.FixedAmount {
+public extension FixedAmount<GetSberQRDataResponse.Parameter.Info> {
     
     static var preview: Self {
         
@@ -60,7 +62,7 @@ public extension SberQRConfirmPaymentState.FixedAmount {
             brandName: .brandName,
             amount: .amount,
             recipientBank: .recipientBank,
-            bottom: .preview
+            button: .preview
         )
     }
 }
@@ -69,97 +71,8 @@ extension ProductSelect {
     
     static let preview: Self = .init(selected: .cardPreview)
     static let previewExpanded: Self = .init(
-        selected: .accountPreview, 
+        selected: .accountPreview,
         products: .allProducts
-    )
-}
-
-public extension Array where Element == ProductSelect.Product {
-    
-    static let allProducts: Self = [
-        .accountPreview,
-        .account2Preview,
-        .cardPreview,
-        .card2Preview,
-        .card3Preview,
-    ]
-}
-
-extension ProductSelect.Product {
-    
-    public static let accountPreview: Self = .init(
-        id: 234567891,
-        type: .account,
-        header: "Счет списания",
-        title: "Текущий счет",
-        footer: "7891",
-        amountFormatted: "123 456 ₽",
-        balance: 123_456,
-        look: .init(
-            background: .svg(""),
-            color: "orange",
-            icon: .svg("")
-        )
-    )
-    
-    static let account2Preview: Self = .init(
-        id: 2345678912,
-        type: .account,
-        header: "Счет списания",
-        title: "Account 2",
-        footer: "8912",
-        amountFormatted: "678.09 ₽",
-        balance: 678.09,
-        look: .init(
-            background: .svg(""),
-            color: "orange",
-            icon: .svg("")
-        )
-    )
-    
-    public static let cardPreview: Self = .init(
-        id: 123456789,
-        type: .card,
-        header: "Счет списания",
-        title: "Card",
-        footer: "6789",
-        amountFormatted: "1 234.56 ₽",
-        balance: 1_234.56,
-        look: .init(
-            background: .svg(""),
-            color: "orange",
-            icon: .svg("")
-        )
-    )
-    
-    static let card2Preview: Self = .init(
-        id: 1234567892,
-        type: .card,
-        header: "Счет списания",
-        title: "Card 2",
-        footer: "7892",
-        amountFormatted: "12 345 ₽",
-        balance: 12_345,
-        look: .init(
-            background: .svg(""),
-            color: "orange",
-            icon: .svg("")
-        )
-    )
-    
-    static let card3Preview: Self = .init(
-        id: 1234567893,
-        type: .card,
-        header: "Счет списания",
-        title: "Card 3",
-        footer: "7893",
-        amountFormatted: "123 456.78 ₽",
-        balance: 123_456.78,
-        look: .init(
-            background: .svg(""),
-            color: "orange",
-            icon: .svg("")
-        )
     )
 }
 
@@ -197,7 +110,7 @@ extension GetSberQRDataResponse.Parameter.DataString {
     )
 }
 
-extension SberQRConfirmPaymentState.Header {
+extension Header {
     
     static let preview: Self = .init(
         id: .title,

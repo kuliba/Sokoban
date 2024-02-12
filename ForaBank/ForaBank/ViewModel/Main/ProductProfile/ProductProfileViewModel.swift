@@ -46,8 +46,12 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
+    private let fastPaymentsFactory: FastPaymentsFactory
+    private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
+    private let paymentsTransfersFactory: PaymentsTransfersFactory
+    private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -66,8 +70,12 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
+         fastPaymentsFactory: FastPaymentsFactory,
+         navigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
+         paymentsTransfersFactory: PaymentsTransfersFactory,
+         operationDetailFactory: OperationDetailFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -80,8 +88,12 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
+        self.fastPaymentsFactory = fastPaymentsFactory
+        self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.paymentsTransfersFactory = paymentsTransfersFactory
+        self.operationDetailFactory = operationDetailFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -96,8 +108,12 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
+        fastPaymentsFactory: FastPaymentsFactory,
+        navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
+        operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -115,7 +131,22 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(
+            navigationBar: navigationBar,
+            product: productViewModel,
+            buttons: buttons,
+            detail: nil,
+            history: nil,
+            accentColor: accentColor,
+            model: model,
+            fastPaymentsFactory: fastPaymentsFactory,
+            navigationStateManager: navigationStateManager,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            operationDetailFactory: operationDetailFactory,
+            cvvPINServicesClient: cvvPINServicesClient,
+            rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -337,14 +368,17 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] _ in
                 
                 model.setPreferredProductID(to: product.activeProductId)
+                
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    makeProductProfileViewModel: makeProductProfileViewModel,
+                    navigationStateManager: navigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
+                    paymentsTransfersFactory: paymentsTransfersFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )
+                paymentsTransfersViewModel.rootActions = rootActions
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
             }.store(in: &bindings)
@@ -874,12 +908,15 @@ private extension ProductProfileViewModel {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
                     guard let storage = self.model.statements.value[self.product.activeProductId],
                           let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
-                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
-                        
-                        return
-                    }
+                          statementData.paymentDetailType != .notFinance,
+                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+                    else { return }
                     
+                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
+                        statementData,
+                        productData,
+                        self.model
+                    )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
                     if #unavailable(iOS 14.5) {
@@ -1467,8 +1504,12 @@ private extension ProductProfileViewModel {
         
         .init(
             model,
+            fastPaymentsFactory: fastPaymentsFactory,
+            navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory, 
+            paymentsTransfersFactory: paymentsTransfersFactory, 
+            operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -1697,7 +1738,7 @@ fileprivate extension NavigationBarView.ViewModel {
         rightButtons: [ButtonItemViewModel] = []
     ) {
         self.init(
-            title: ProductView.ViewModel.name(product: product, style: .profile),
+            title: ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle),
             subtitle: Self.subtitle(with: product),
             leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             rightItems: rightButtons,
@@ -1740,7 +1781,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(product: product, style: .profile)
+        self.title = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .navigationTitle)
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)

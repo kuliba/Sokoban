@@ -105,15 +105,20 @@ class ForaInput: UIView {
     //MARK: - Helpers
     private func configure() {
         imageView.image = viewModel.image
+        imageView.accessibilityIdentifier = "ForaInputIcon"
         balanceLabel.isHidden = true
         textField.placeholder = viewModel.title
+        placeHolder.accessibilityIdentifier = "ForaInputTitle"
         textField.keyboardType = viewModel.fieldType.keyboardType
         textField.isUserInteractionEnabled = viewModel.isEditable
         textField.clearButtonMode = viewModel.needCleanButton ? .unlessEditing : .never
+        textField.accessibilityIdentifier = "ForaInputText"
         rubButton.isHidden = !viewModel.showCurrencyButton
         usdButton.isHidden = true //!viewModel.showCurrencyButton
         chooseButton.isHidden = !viewModel.showChooseButton
+        chooseButton.accessibilityIdentifier = "ForaInputChooseButton"
         errorLabel.text = viewModel.errorText
+        errorLabel.accessibilityIdentifier = "ForaInputErrorText"
         errorLabel.isHidden = !viewModel.needValidate
         errorLabel.alpha = 0
         bottomLabel.isHidden = !viewModel.showBottomLabel

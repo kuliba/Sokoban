@@ -2278,7 +2278,8 @@ extension OperationDetailInfoViewModel {
         let productNumber = productNumber ?? ""
         let lastNumber = productNumber.isEmpty == false ? "• \(productNumber.suffix(4)) • " : ""
         let name = ProductView.ViewModel.name(product: productData,
-                                              style: .main)
+                                              style: .main, 
+                                              creditProductName: .cardTitle)
         let description = productData.additionalField ?? ""
         
         let viewModel: ProductCellViewModel = .init(

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 19.12.2023.
 //
 
-import SberQR
+import PaymentComponents
 
 extension ProductSelect {
     

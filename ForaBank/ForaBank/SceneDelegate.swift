@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         httpClient: httpClient,
         model: model,
         logger: logger,
-        qrResolverFeatureFlag: .init(.active)
+        qrResolverFeatureFlag: .init(.active),
+        fastPaymentsSettingsFlag: .init(.inactive)
     )
     private lazy var rootViewFactory = RootViewFactory(
         with: model.imageCache()

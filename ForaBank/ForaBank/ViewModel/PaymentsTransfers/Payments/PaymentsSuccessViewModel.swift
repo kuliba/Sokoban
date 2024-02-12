@@ -50,7 +50,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             bind(section: section)
         }
         
-        if let paymentOperationDetailID {
+        if let paymentOperationDetailID, documentStatus != .suspended {
             
             adapter.requestOperationDetail(with: paymentOperationDetailID)
         }
@@ -66,7 +66,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             sections: mapper(paymentSuccess, model),
             adapter: .init(model: model, mapper: mapper, scheduler: scheduler),
             operation: paymentSuccess.operation,
-            scheduler: scheduler)
+            scheduler: scheduler
+        )
     }
     
     private func bind() {
@@ -96,7 +97,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspended,
+                        let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,
@@ -129,7 +131,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspended,
+                       let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,
@@ -157,7 +160,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                    if documentStatus != .suspended,
+                       let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
                         with: mode,
                         documentStatus: documentStatus,
                         operationDetail: fakeOperationDetailData,

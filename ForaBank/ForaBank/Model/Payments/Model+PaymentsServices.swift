@@ -278,9 +278,10 @@ extension Model {
         return nil
     }
     
-    func paymentsProcessRemoteStepServices(operation: Payments.Operation,
-                                           response: TransferResponseData)
-    async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepServices(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
         
         var parameters = [PaymentsParameterRepresentable]()
         let group = Payments.Parameter.Group(id: UUID().uuidString, type: .info)
@@ -320,15 +321,39 @@ extension Model {
             )
             parameters.append(parameterOperatorLogo)
             parameters.append(Payments.ParameterCode.regular)
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
-        }
-        else {
             
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
+            if response.scenario == .suspect {
+                
+                parameters.append(Payments.ParameterInfo(
+                    .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                    icon: .image(.parameterDocument),
+                    title: "Antifraud"
+                ))
+            }
+            
+            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id).filter({ $0 != antifraudParameterId }), isCompleted: false),
+                back: .init(stage: .remote(.confirm), required: [], processed: nil)
+            )
+        } else {
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id), isCompleted: false),
+                back: .init(stage: .remote(.next), required: [], processed: nil)
+            )
         }
     }
     
-    func paymentsServicesStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsServicesStepVisible(
+        _ operation: Payments.Operation,
+        nextStepParameters: [PaymentsParameterRepresentable],
+        operationParameters: [PaymentsParameterRepresentable],
+        response: TransferAnywayResponseData
+    ) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -347,14 +372,18 @@ extension Model {
             
             result.append(Payments.Parameter.Identifier.product.rawValue)
         }
-        return result
+        
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        return result.filter({ $0 != antifraudParameterId })
     }
     
     func paymentsServicesStepExcludingParameters(
         response: TransferAnywayResponseData
     ) throws -> [Payments.Parameter.ID] {
         
-        response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        var params = response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        params.append(Payments.Parameter.Identifier.sfpAntifraud.rawValue)
+        return params
     }
     
     func paymentsServicesStepStage(_ operation: Payments.Operation,

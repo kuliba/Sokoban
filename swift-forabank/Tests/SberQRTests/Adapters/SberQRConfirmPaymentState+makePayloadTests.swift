@@ -6,6 +6,7 @@
 //
 
 import SberQR
+import PaymentComponents
 import XCTest
 
 final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
@@ -85,23 +86,23 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
         amount: Decimal
     ) -> SberQRConfirmPaymentState {
         
-        .editableAmount(
+        .init(confirm: .editableAmount(
             makeEditableAmount(
                 productSelect: .compact(product),
                 amount: amount
             )
-        )
+        ))
     }
     
     private func makeFixed(
         _ product: ProductSelect.Product
     ) -> SberQRConfirmPaymentState {
         
-        .fixedAmount(
+        .init(confirm: .fixedAmount(
             makeFixedAmount(
                 productSelect: .compact(product)
             )
-        )
+        ))
     }
     
     private func anyCard(

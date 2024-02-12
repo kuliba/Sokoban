@@ -97,7 +97,7 @@ extension GKHInputViewController {
                 guard let respModel = respModel else { return }
                 if respModel.statusCode == 0 {
                     guard let data = respModel.data else { return }
-                    let model = ConfirmViewControllerModel(type: .gkh)
+                    let model = ConfirmViewControllerModel(type: .gkh, status: .succses)
                     
                     let r = Double(data.debitAmount ?? 0)
                     
@@ -114,7 +114,7 @@ extension GKHInputViewController {
                 }
             } else {
                 guard let data = self.nextStepModel?.data else { return }
-                let model = ConfirmViewControllerModel(type: .gkh)
+                let model = ConfirmViewControllerModel(type: .gkh, status: .succses)
                 
                 let r = Double(data.debitAmount ?? 0)
                 

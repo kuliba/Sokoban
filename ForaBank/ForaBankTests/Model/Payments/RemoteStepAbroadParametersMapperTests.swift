@@ -564,7 +564,8 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
             needOTP: needOTP,
             payeeName: payeeName,
             documentStatus: documentStatus,
-            paymentOperationDetailId: paymentOperationDetailId
+            paymentOperationDetailId: paymentOperationDetailId,
+            scenario: .ok
         )
     }
     

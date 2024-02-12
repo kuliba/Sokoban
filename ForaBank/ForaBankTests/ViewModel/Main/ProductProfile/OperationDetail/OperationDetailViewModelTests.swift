@@ -268,7 +268,8 @@ extension OperationDetailViewModelTests {
         let sut = try XCTUnwrap(
             OperationDetailViewModel(
                 productStatement: statement,
-                product: .stub(),
+                product: .stub(), 
+                updateFastAll: {},
                 model: model
             ),
             "failed to create OperationDetailViewModel",

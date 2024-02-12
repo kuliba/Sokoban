@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import InfoComponent
 import SberQR
 import SwiftUI
 
@@ -16,7 +17,7 @@ struct MyProductsView: View {
     
     @ObservedObject var viewModel: MyProductsViewModel
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -114,7 +115,7 @@ struct MyProductsView: View {
                     case let .productProfile(productProfileViewModel):
                         ProductProfileView(
                             viewModel: productProfileViewModel,
-                            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                            viewFactory: viewFactory
                         )
                     }
                 }
@@ -160,7 +161,7 @@ extension MyProductsView {
 struct MyProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
-       
+        
         Group {
             NavigationView {
                 myProductsView(viewModel: .sample)
@@ -178,14 +179,17 @@ struct MyProductsView_Previews: PreviewProvider {
         
         MyProductsView(
             viewModel: viewModel,
-            makeSberQRConfirmPaymentView: {
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }

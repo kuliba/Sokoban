@@ -24,12 +24,14 @@ struct DepositCalculateAmountView: View {
                     Text(viewModel.depositTerm)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
+                        .accessibilityIdentifier("DepositCalculatorTermTitle")
                     
                     HStack {
                         
                         Text(viewModel.depositValue)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
+                            .accessibilityIdentifier("DepositCalculatorTermValue")
                         
                         Button {
                             
@@ -40,6 +42,7 @@ struct DepositCalculateAmountView: View {
                             Image.ic24ChevronDown
                                 .renderingMode(.template)
                                 .foregroundColor(.mainColorsGray)
+                                .accessibilityIdentifier("DepositCalculatorTermButton")
                         }
                     }
                 }
@@ -51,10 +54,12 @@ struct DepositCalculateAmountView: View {
                     Text(viewModel.interestRate)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
+                        .accessibilityIdentifier("DepositCalculatorRateTitle")
                     
                     Text(viewModel.interestRateValueCurrency)
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
+                        .accessibilityIdentifier("DepositCalculatorRateValue")
                 }
                 .padding(.trailing, 15)
             }
@@ -66,6 +71,7 @@ struct DepositCalculateAmountView: View {
                     Text(viewModel.depositAmount)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
+                        .accessibilityIdentifier("DepositCalculatorAmountTitle")
                     
                     HStack {
                         
@@ -86,6 +92,7 @@ struct DepositCalculateAmountView: View {
                                 IQKeyboardManager.shared.enable = false
                                 IQKeyboardManager.shared.enableAutoToolbar = false
                             }
+                            .accessibilityIdentifier("DepositCalculatorAmountTextField")
                         
                         Button {
                             
@@ -96,6 +103,7 @@ struct DepositCalculateAmountView: View {
                             Image.ic16Edit2
                                 .renderingMode(.template)
                                 .foregroundColor(.mainColorsGray)
+                                .accessibilityIdentifier("DepositCalculatorAmountEditButton")
                         }
                     }
                 }
@@ -107,6 +115,7 @@ struct DepositCalculateAmountView: View {
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
                     .padding(.top, 26)
+                    .accessibilityIdentifier("DepositCalculatorInitialAmountText")
             }
             
             DepositSliderViewComponent(

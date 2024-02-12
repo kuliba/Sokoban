@@ -108,7 +108,7 @@ extension OpenDepositDetailView {
                             .foregroundColor(.white)
                         
                         viewModel.productImage
-                    }
+                    }.accessibilityIdentifier("OpenDepositDetailHeaderIcon")
                     
                     VStack(alignment: .leading, spacing: 8) {
                         
@@ -120,6 +120,7 @@ extension OpenDepositDetailView {
                             .foregroundColor(.mainColorsBlack)
                             .font(.system(size: 24))
                             .fontWeight(.semibold)
+                            .accessibilityIdentifier("OpenDepositDetailProductTitle")
                     }
                 }
                 
@@ -154,6 +155,7 @@ extension OpenDepositDetailView {
                     Text(viewModel.description)
                         .foregroundColor(.mainColorsBlack)
                         .font(.system(size: 16))
+                        .accessibilityIdentifier("OpenDepositDetailItemText")
                     
                 }
             }
@@ -177,6 +179,7 @@ extension OpenDepositDetailView {
                         .font(.system(size: 14))
                         .padding(.bottom, 6)
                         .padding(.horizontal, 12)
+                        .accessibilityIdentifier("OpenDepositDetailPercentDescription")
                     
                     TableView(viewModel: viewModel.table)
                 }
@@ -200,6 +203,7 @@ extension OpenDepositDetailView {
                         .foregroundColor(.mainColorsBlack)
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
+                        .accessibilityIdentifier("OpenDepositDetailPercentTitle")
                     
                     Spacer()
                     
@@ -225,6 +229,7 @@ extension OpenDepositDetailView {
                                 .foregroundColor(.mainColorsGray)
                         }
                     }
+                    .accessibilityIdentifier("OpenDepositDetailPercentCollapseButton")
                 }
             }
         }
@@ -269,6 +274,8 @@ extension OpenDepositDetailView {
                         
                         RowView(viewModel: row)
                             .frame(height: 48)
+                            .accessibilityIdentifier("OpenDepositDetailPercentTableAmount")
+                        
                     }
                 }
                 .background(Color.white)
@@ -290,6 +297,7 @@ extension OpenDepositDetailView {
                             .frame(height: 34)
                             .padding(.leading, 12)
                             .padding(.bottom, 6)
+                            .accessibilityIdentifier("OpenDepositDetailPercentTableTerm")
                         
                         
                         ForEach(viewModel.stripes) { stripe in
@@ -328,6 +336,7 @@ extension OpenDepositDetailView {
                                         
                                         RowView(viewModel: row)
                                             .frame(width: 90, height: 48)
+                                            .accessibilityIdentifier("OpenDepositDetailPercentTablePercents")
                                     }
                                 }
                             }
@@ -398,10 +407,12 @@ extension OpenDepositDetailView {
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .top)
                                 .foregroundColor(Color.green)
+                                .accessibilityIdentifier("OpenDepositDetailDetailIconEnabled")
                             
                             Text(item.title)
                                 .foregroundColor(.mainColorsBlack)
                                 .font(.system(size: 16))
+                                .accessibilityIdentifier("OpenDepositDetailDetailTextEnabled")
                             
                         } else {
                             
@@ -409,10 +420,12 @@ extension OpenDepositDetailView {
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .top)
                                 .foregroundColor(.mainColorsGray)
+                                .accessibilityIdentifier("OpenDepositDetailDetailIconDisabled")
                             
                             Text(item.title)
                                 .foregroundColor(.mainColorsGray)
                                 .font(.system(size: 16))
+                                .accessibilityIdentifier("OpenDepositDetailDetailTextDisabled")
                         }
                         
                         Spacer()
@@ -447,10 +460,12 @@ extension OpenDepositDetailView {
                                 Circle()
                                     .frame(width: 4, height: 4, alignment: .top)
                                     .padding(.top, 8)
+                                    .accessibilityIdentifier("OpenDepositDetailConditionPoint")
                                 
                                 Text(item)
                                     .foregroundColor(.mainColorsBlack)
                                     .font(.system(size: 16))
+                                    .accessibilityIdentifier("OpenDepositDetailConditionText")
                                 
                                 Spacer()
                                 
@@ -477,6 +492,7 @@ extension OpenDepositDetailView {
                         .foregroundColor(.mainColorsBlack)
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
+                        .accessibilityIdentifier("OpenDepositDetailConditionTitle")
                     
                     Spacer()
                     
@@ -501,7 +517,7 @@ extension OpenDepositDetailView {
                                 .frame(width: 24, height: 24, alignment: .center)
                                 .foregroundColor(.mainColorsGray)
                         }
-                    }
+                    }.accessibilityIdentifier("OpenDepositDetailConditionCollapseButton")
                 }
             }
         }
@@ -529,11 +545,13 @@ extension OpenDepositDetailView {
                                     .resizable()
                                     .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(.mainColorsGray)
+                                    .accessibilityIdentifier("OpenDepositDetailDocumentIcon")
                                 
                                 Text(item.title)
                                     .foregroundColor(.mainColorsBlack)
                                     .font(.system(size: 16))
                                     .multilineTextAlignment(.leading)
+                                    .accessibilityIdentifier("OpenDepositDetailDocumentText")
                                 
                                 Spacer()
                                 
@@ -560,6 +578,7 @@ extension OpenDepositDetailView {
                         .foregroundColor(.mainColorsBlack)
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
+                        .accessibilityIdentifier("OpenDepositDetailDocumentTitle")
                     
                     Spacer()
                     
@@ -584,7 +603,7 @@ extension OpenDepositDetailView {
                                 .frame(width: 24, height: 24, alignment: .center)
                                 .foregroundColor(.mainColorsGray)
                         }
-                    }
+                    }.accessibilityIdentifier("OpenDepositDetailDocumentCollapseButton")
                 }
             }
         }

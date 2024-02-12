@@ -553,8 +553,12 @@ final class ProductProfileViewModelTests: XCTestCase {
 
         return .init(
             model, 
+            fastPaymentsFactory: .legacy,
+            navigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
+            qrViewModelFactory: .preview(), 
+            paymentsTransfersFactory: .preview, 
+            operationDetailFactory: .preview,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -585,8 +589,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
+                fastPaymentsFactory: .legacy,
+                navigationStateManager: .preview,
                 sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(), 
+                paymentsTransfersFactory: .preview,
+                operationDetailFactory: .preview,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

@@ -78,20 +78,25 @@ final class CardChooseView: UIView {
         var balance = Double(model.balance)
 
         imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
-                
+        imageView.accessibilityIdentifier = "ChooseProductIcon"
+        
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
-            
+        self.balanceLabel.accessibilityIdentifier = "ChooseProductBalance"
+        
         let text = NSAttributedString(
             string: model.mainField ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
+        self.numberCardLabel.accessibilityIdentifier = "ChooseProductName"
         
         switch model.productType {
         case ProductType.card.rawValue:
             
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
             self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+            self.maskNumberLabel.accessibilityIdentifier = "ChooseProductNumber"
+            self.nameLabel.accessibilityIdentifier = "ChooseProductAdditionalField"
 
         case ProductType.account.rawValue:
             
@@ -128,6 +133,7 @@ final class CardChooseView: UIView {
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
         self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
+        self.cardTypeImage.accessibilityIdentifier = "ChooseProductPaymentSystemIcon"
     }
     
     private func setupData(with model: GetProductListDatum) {

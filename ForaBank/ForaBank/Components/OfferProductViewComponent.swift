@@ -213,6 +213,7 @@ struct OfferProductView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(viewModel.design.textColor)
                     .padding(.top, 32)
+                    .accessibilityIdentifier("OfferProductTitle")
                 
                 if let conditionViewModel = viewModel.conditionViewModel {
                     
@@ -230,12 +231,14 @@ struct OfferProductView: View {
                                 .frame(width: 5, height: 5)
                                 .padding(.leading, 10)
                                 .padding(.top, 7)
+                                .accessibilityIdentifier("OfferProductTextPoint")
                             
                             Text(line)
                                 .font(.textBodyMR14200())
                                 .foregroundColor(viewModel.design.textColor)
                                 .lineLimit(nil)
                                 .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("OfferProductText")
                         }
                     }
                 }
@@ -248,6 +251,7 @@ struct OfferProductView: View {
                         .frame(height: 236)
                         .cornerRadius(12)
                         .padding(.top, 24)
+                        .accessibilityIdentifier("OfferProductImage")
                     
                 case .endpoint:
                     Color
@@ -261,6 +265,7 @@ struct OfferProductView: View {
                 HStack(alignment: .center, spacing: 20) {
                     
                     OfferProductView.InfoButtonView(viewModel: viewModel, color: viewModel.design.textColor)
+                        .accessibilityIdentifier("OfferProductInfoButton")
                     
                     Spacer()
                     
@@ -294,18 +299,22 @@ struct OfferProductView: View {
                     .background(Color.mainColorsRed)
                     .cornerRadius(4)
                     .font(.system(size: 14))
+                    .accessibilityIdentifier("OfferProductPercent")
                 
                 Text(viewModel.amountViewModel)
                     .font(.system(size: 14))
                     .foregroundColor(color)
+                    .accessibilityIdentifier("OfferProductAmount")
                 
                 color
                     .frame(width: 1, alignment: .center)
                     .padding(.vertical, 3)
+                    .accessibilityIdentifier("OfferProductSeparator")
                 
                 Text(viewModel.date)
                     .font(.system(size: 14))
                     .foregroundColor(color)
+                    .accessibilityIdentifier("OfferProductTerm")
                 
             }
             .frame(height: 24, alignment: .leading)
@@ -337,6 +346,7 @@ struct OfferProductView: View {
                         Text(infoButton.title)
                             .foregroundColor(color)
                             .multilineTextAlignment(.leading)
+                            .accessibilityIdentifier("OfferProductInfoButtonText")
                     }
                 }
             }
@@ -358,7 +368,7 @@ struct OfferProductView: View {
                     .padding(.horizontal, 17)
                     .background(Color.buttonPrimary)
                     .cornerRadius(8)
-            }
+            }.accessibilityIdentifier("OfferProductContinueButton")
         }
     }
     
@@ -372,6 +382,7 @@ struct OfferProductView: View {
                 
                 Text(viewModel.title)
                     .fontWeight(.semibold)
+                    .accessibilityIdentifier("OfferProductDetailConditionTitle")
                 
                 VStack(alignment: .leading, spacing: 15) {
                     
@@ -386,10 +397,12 @@ struct OfferProductView: View {
                                     .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(Color.green)
                                     .padding(.top, 5)
+                                    .accessibilityIdentifier("OfferProductDetailConditionIconEnabled")
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsBlack)
-                                
+                                    .accessibilityIdentifier("OfferProductDetailConditionTextEnabled")
+
                             } else {
                                 
                                 Image.ic24Close
@@ -397,9 +410,11 @@ struct OfferProductView: View {
                                     .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(.mainColorsGray)
                                     .padding(.top, 5)
+                                    .accessibilityIdentifier("OfferProductDetailConditionIconDisabled")
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsGray)
+                                    .accessibilityIdentifier("OfferProductDetailConditionTextDisabled")
                             }
                         }
                     }

@@ -398,8 +398,42 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsConfirmViewModelAction.CancelOperation:
-                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(amount: payload.amount, reason: payload.reason))
-                
+                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(
+                        amount: payload.amount,
+                        reason: payload.reason
+                    ))
+                    
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+                    
+                    switch payload.reason {
+                    case .cancel, .none:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                        
+                    case .timeOut:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                    }
+                    
                 case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
                     updateBottomSection(isContinueEnabled: isItemsValuesValid)
                     
@@ -566,6 +600,7 @@ extension PaymentsOperationViewModel {
         
     enum Link {
         
+        case success(PaymentsSuccessViewModel)
         case confirm(PaymentsConfirmViewModel)
     }
     
@@ -628,8 +663,10 @@ enum PaymentsOperationViewModelAction {
     
     struct CancelOperation: Action {
         
+        typealias Reason = PaymentsConfirmViewModelAction.CancelOperation.Reason?
+        
         let amount: String
-        let reason: String?
+        let reason: Reason
     }
     
     struct ShowWarning: Action {

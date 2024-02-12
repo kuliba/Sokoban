@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
+import PaymentComponents
 import SberQR
 
 extension SberQR.Config {
@@ -20,7 +21,7 @@ extension SberQR.Config {
     )
 }
 
-private extension SberQR.ButtonConfig {
+private extension ButtonComponent.ButtonConfig {
     
     static let iFora: Self = .init(
         active: .init(
@@ -40,7 +41,7 @@ private extension SberQR.ButtonConfig {
     )
 }
 
-private extension SberQR.AmountConfig {
+private extension AmountComponent.AmountConfig {
     
     static let iFora: Self = .init(
         amount: .init(
@@ -57,7 +58,7 @@ private extension SberQR.AmountConfig {
     )
 }
 
-private extension SberQR.InfoConfig {
+private extension InfoComponent.InfoConfig {
     
     static let iFora: Self = .init(
         title: .placeholder,
@@ -65,7 +66,7 @@ private extension SberQR.InfoConfig {
     )
 }
 
-private extension SberQR.ProductSelectConfig {
+private extension ProductSelectComponent.ProductSelectConfig {
     
     static let iFora: Self = .init(
         amount: .secondary,
@@ -113,10 +114,10 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
         
         Group {
             
-            sberQRConfirmPaymentWrapperView(.fixedAmount(.preview))
+            sberQRConfirmPaymentWrapperView(.init(confirm: .fixedAmount(.preview)))
                 .previewDisplayName("SberQRConfirmPayment: Fixed")
             
-            sberQRConfirmPaymentWrapperView(.editableAmount(.preview))
+            sberQRConfirmPaymentWrapperView(.init(confirm: .editableAmount(.preview)))
                 .previewDisplayName("SberQRConfirmPayment: Editable")
         }
     }

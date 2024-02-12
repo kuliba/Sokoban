@@ -33,6 +33,7 @@ struct DepositTotalAmountView: View {
                         Text(viewModel.yourIncomeCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
+                            .accessibilityIdentifier("DepositCalculatorProfit")
                     }
 
                     Spacer()
@@ -46,6 +47,7 @@ struct DepositTotalAmountView: View {
                         Text(viewModel.totalAmountCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
+                            .accessibilityIdentifier("DepositCalculatorTotalAmount")
 
                     }.frame(width: 150, alignment: .leading)
 
@@ -57,6 +59,7 @@ struct DepositTotalAmountView: View {
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
                     .padding(.top, 8)
+                    .accessibilityIdentifier("DepositCalculatorDescription")
 
             }.padding(20)
         }

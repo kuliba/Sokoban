@@ -5,11 +5,14 @@
 //  Created by Mikhail on 18.04.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import FastPaymentsSettings
+import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
+import SwiftUI
+import UserAccountNavigationComponent
+import UIPrimitives
 
 class UserAccountViewModel: ObservableObject {
     
@@ -21,60 +24,66 @@ class UserAccountViewModel: ObservableObject {
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel? = nil
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
-    @Published var bottomSheet: BottomSheet?
-    @Published var sheet: Sheet?
-    @Published var alert: Alert.ViewModel?
-    @Published var textFieldAlert: AlertTextFieldView.ViewModel?
+    @Published private(set) var route: UserAccountRoute
+    
+    private let routeSubject = PassthroughSubject<UserAccountRoute, Never>()
     
     var appVersionFull: String? {
         
-        guard let version = model.authAppVersion else {
-            return nil
-        }
-        
-        return "Версия \(version)"
+        model.authAppVersion.map { "Версия \($0)" }
     }
     
     private let model: Model
+    private let navigationStateManager: UserAccountNavigationStateManager
+    
+    private let scheduler: AnySchedulerOfDispatchQueue
     private var bindings = Set<AnyCancellable>()
     
-    init(
+    private init(
+        route: UserAccountRoute = .init(),
+        navigationStateManager: UserAccountNavigationStateManager,
         navigationBar: NavigationBarView.ViewModel,
         avatar: AvatarViewModel,
         sections: [AccountSectionViewModel],
         exitButton: AccountCellFullButtonView.ViewModel,
         deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
-        model: Model = .emptyMock
+        model: Model = .emptyMock,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
+        self.route = route
+        self.navigationStateManager = navigationStateManager
         self.model = model
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
         self.exitButton = exitButton
         self.deleteAccountButton = deleteAccountButton
+        self.scheduler = scheduler
     }
     
     init(
+        route: UserAccountRoute = .init(),
+        navigationStateManager: UserAccountNavigationStateManager,
         model: Model,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
-        action: Action? = nil
+        action: Action? = nil,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
-        
+        self.route = route
+        self.navigationStateManager = navigationStateManager
         self.model = model
-        sections = []
-        navigationBar = .init(title: "Профиль", leftItems: [
+        self.sections = []
+        self.navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
-        
-        exitButton = .init(
+        self.scheduler = scheduler
+        self.exitButton = .init(
             icon: .ic24LogOut, content: "Выход из приложения", action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.ExitAction())
             })
         
-        deleteAccountButton = .init(
+        self.deleteAccountButton = .init(
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteInfoAction())
@@ -83,18 +92,41 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
+        routeSubject
+            .receive(on: scheduler)
+            .assign(to: &$route)
+        
         bind()
-                
-        if let action = action {
+        
+        if let action {
             
             self.action.send(action)
         }
     }
+}
+
+extension UserAccountViewModel {
+    
+    func event(_ event: UserAccountEvent) {
+
+        let (route, effect) = navigationStateManager.reduce(route, event)
+        routeSubject.send(route)
+        
+        if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+}
+
+// MARK: - Bindings
+
+private extension UserAccountViewModel {
     
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
         
         documentInfoViewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -114,309 +146,70 @@ class UserAccountViewModel: ObservableObject {
                         }
                         
                         UIPasteboard.general.string = "Адрес: \(address)"
+                        
                     case .adress:
                         guard let addressResidential = clientInfo?.addressResidential else {
                             return
                         }
                         
                         UIPasteboard.general.string = "Адрес проживания: \(addressResidential)"
+                        
                     default:
                         break
                     }
                     
-                    
                 default:
                     break
-                    
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func bind() {
         
         model.clientInfo
             .combineLatest(model.clientName)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] info in
                 
                 guard let clientInfo = info.0 else { return }
+                
                 let clientNameData = info.1
                 sections = createSections(userData: clientInfo, customName: clientNameData?.name)
                 bind(sections)
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.clientPhoto
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] clientPhotoData in
                 
                 avatar = .init(
                     image: clientPhotoData?.photo.image, action: { [weak self] in
                         self?.action.send(UserAccountViewModelAction.AvatarAction())
                     })
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as ModelAction.C2B.CancelC2BSub.Response:
-                    let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
-                    self.link = .successView(paymentSuccessViewModel)
-
-                case let payload as ModelAction.C2B.GetC2BDetail.Response:
-                    self.link = .successView(.init(paymentSuccess: .init(operation: nil, parameters: payload.params), model))
-                    
-                case let payload as ModelAction.Media.CameraPermission.Response:
-                    
-                    withAnimation {
-                        
-                        self.bottomSheet = nil
-                    }
-                    
-                    if payload.result {
-                        self.bottomSheet = .init(sheetType: .imageCapture(.init(closeAction: { [weak self] image in
-                            
-                            self?.bottomSheet = nil
-                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
-                        })))
-                        
-                    } else {
-                        
-                        self.alert = .init(title: "Ошибка", message: "Нет доступа к камере", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                        
-                    }
-                    
-                case let payload as ModelAction.Media.GalleryPermission.Response:
-                    
-                    withAnimation {
-                        
-                        self.bottomSheet = nil
-                    }
-                    
-                    if payload.result {
-                        
-                        self.link = .imagePicker(.init(closeAction: { [weak self] image in
-                            
-                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
-                        }))
-                        
-                    } else {
-                        
-                        self.alert = .init(title: "Ошибка", message: "Нет доступа к галереи", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                    }
-                    
-                case _ as ModelAction.ClientInfo.Delete.Response:
-                    
-                    self.link = .deleteUserInfo(.init(model: self.model))
-                    
-                default:
-                    break
-                    
-                }
-                
-            }.store(in: &bindings)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handleModelAction($0) }
+            .store(in: &bindings)
         
         action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                    
-                case _ as PaymentsSuccessAction.Button.Close:
-                    self.action.send(PaymentsViewModelAction.Dismiss())
-                    
-                case _ as UserAccountViewModelAction.CloseLink:
-                    link = nil
-                    
-                case _ as UserAccountViewModelAction.CloseFieldAlert:
-                    textFieldAlert = nil
-                    
-                case _ as UserAccountViewModelAction.AvatarAction:
-                    
-                    var buttons: [ButtonIconTextView.ViewModel] = []
-                    
-                    if model.cameraIsAvailable {
-                        buttons.append(.init(icon: .init(image: .ic24Camera, style: .original, background: .circleSmall), title: .init(text: "Сделать фото", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.bottomSheet = nil
-                            self?.model.action.send(ModelAction.Media.CameraPermission.Request())
-                        }))
-                    }
-                    
-                    if model.galleryIsAvailable {
-                        buttons.append(.init(icon: .init(image: .ic24Image, style: .original, background: .circleSmall), title: .init(text: "Выбрать из галереи", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.bottomSheet = nil
-                            self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                        }))
-                    }
-                    
-                    if model.clientPhoto.value != nil {
-                        buttons.append(.init(icon: .init(image: .ic24Trash2, style: .original, background: .circleSmall), title: .init(text: "Удалить", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.bottomSheet = nil
-                            self?.model.action.send(ModelAction.ClientPhoto.Delete())
-                        }))
-                    }
-                    
-                    self.bottomSheet = .init(sheetType: .avatarOptions(.init(buttons: buttons)))
-                    
-                case let payload as UserAccountViewModelAction.SaveAvatarImage:
-                    
-                    self.bottomSheet = nil
-                    
-                    guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)) else { return }
-                    guard let photoData = ImageData(with: image) else { return }
-                    
-                    model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
-                    
-                case _ as UserAccountViewModelAction.ExitAction:
-                    alert = .exit {
-                        
-                        self.model.auth.value = .unlockRequiredManual
-                    }
-                    
-                case _ as UserAccountViewModelAction.DeleteAction:
-                    alert = .delete {
-                        
-                        self.model.action.send(ModelAction.ClientInfo.Delete.Request())
-                    }
-                    
-                case _ as UserAccountViewModelAction.DeleteInfoAction:
-                    
-                    bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
-                
-                case let payload as UserAccountViewModelAction.OpenSbpPay:
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
-                        
-                        withAnimation {
-                            
-                            self?.bottomSheet = .init(sheetType: .sbpay(payload.sbpPay))
-                        }
-                    }
-                    
-                default:
-                    break
-                    
-                }
-                
-            }.store(in: &bindings)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handleAction($0) }
+            .store(in: &bindings)
     }
     
-    private func bind(_ sections: [AccountSectionViewModel]) {
+    func bind(_ sections: [AccountSectionViewModel]) {
         
         for section in sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                        
-                    case _ as UserAccountViewModelAction.ChangeUserName:
-                        
-                        textFieldAlert = .init(
-                            title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов", maxLength: 15,
-                            primary: .init(type: .default, title: "ОК", action: { [weak self] text in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                                self?.model.action.send(ModelAction.ClientName.Save(name: text))
-                                
-                            }),
-                            secondary: .init(type: .cancel, title: "Отмена", action: { [weak self] _ in
-                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                            }))
-                        
-                    case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                            
-                        let products = self.getSubscriptions(with: model.subscriptions.value?.list)
-                        
-                        let reducer = TransformingReducer(
-                            placeholderText: "Поиск",
-                            transform: {
-                                .init(
-                                    $0.text,
-                                    cursorPosition: $0.cursorPosition
-                                )
-                            }
-                        )
-                        
-                        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-                        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-                        let titleCondition = (products.count == 0)
-                        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-                            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-                            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
-                        )
-                        
-                        link = .managingSubscription(
-                            .init(products: products,
-                                  searchViewModel: .init(
-                                    initialState: .placeholder("Поиск"),
-                                    reducer: reducer,
-                                    keyboardType: .default
-                                  ),
-                                  emptyViewModel: emptyViewModel,
-                                  configurator: .init(
-                                    backgroundColor: .mainColorsGrayLightest
-                                ))
-                        )
-                        
-                    case _ as UserAccountViewModelAction.OpenFastPayment:
-                        link = .fastPaymentSettings(MeToMeSettingView.ViewModel(
-                            model: model.fastPaymentContractFullInfo.value
-                                .map { $0.getFastPaymentContractFindListDatum() },
-                            newModel: model,
-                            closeAction: { [weak self] in
-                                
-                                self?.action.send(UserAccountViewModelAction.CloseLink())
-                            }))
-                        
-                    case let payload as UserAccountViewModelAction.Switch:
-                        switch payload.type {
-                            
-                        case .faceId:
-                            //TODO: set action
-                            break
-                            
-                        case .notification:
-                            
-                            self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
-                        }
-                        
-                    case let payload as UserAccountViewModelAction.OpenDocument:
-                        guard let clientInfo = model.clientInfo.value else { return }
-                        switch payload.type {
-                            
-                        case .passport:
-                            self.link = .userDocument(.init(clientInfo: clientInfo, itemType: .passport, dismissAction: {[weak self] in self?.action.send(UserAccountViewModelAction.CloseLink())}))
-                            
-                        case .inn:
-                            guard let inn = clientInfo.inn else { return }
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
-                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                            
-                        case .adressPass:
-                            let address = clientInfo.address
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
-                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                            
-                        case .adress:
-                            guard let addressResidential = clientInfo.addressResidential else { return }
-                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
-                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
-                            self.bind(documentInfoViewModel: documentInfoViewModel)
-                        }
-                        
-                    default:
-                        break
-                        
-                    }
-                    
-                }.store(in: &bindings)
+                .receive(on: scheduler)
+                .sink { [weak self] in self?.handleSectionAction($0) }
+                .store(in: &bindings)
         }
     }
     
@@ -438,153 +231,420 @@ class UserAccountViewModel: ObservableObject {
         
         return sections
     }
+}
+
+private extension UserAccountViewModel {
     
-    
-    func getSubscriptions(
-        with items: [C2BSubscription.ProductSubscription]?
-    ) -> [SubscriptionsViewModel.Product] {
-        
-        var products: [SubscriptionsViewModel.Product] = []
-        
-        guard let items else {
-            return []
+    func handleModelAction(
+        _ action: Action
+    ) {
+        switch action {
+        case let payload as ModelAction.C2B.CancelC2BSub.Response:
+            let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
+            
+            event(.navigate(.link(
+                .successView(paymentSuccessViewModel)
+            )))
+            
+        case let payload as ModelAction.C2B.GetC2BDetail.Response:
+            event(.navigate(.link(
+                .successView(.init(
+                    paymentSuccess: .init(
+                        operation: nil,
+                        parameters: payload.params),
+                    model
+                ))
+            )))
+            
+        case let payload as ModelAction.Media.CameraPermission.Response:
+            withAnimation {
+                
+                event(.dismiss(.bottomSheet))
+            }
+            
+            if payload.result {
+                event(.navigate(.bottomSheet(.init(
+                    sheetType: .imageCapture(.init(
+                        closeAction: { [weak self] image in
+                            
+                            self?.event(.dismiss(.bottomSheet))
+                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
+                        }
+                    ))
+                ))))
+                
+            } else {
+                
+                event(.navigate(.alert(
+                    .cameraPermissionError(event: .dismiss(.alert))
+                )))
+            }
+            
+        case let payload as ModelAction.Media.GalleryPermission.Response:
+            withAnimation {
+                
+                    event(.dismiss(.bottomSheet))
+            }
+            
+            if payload.result {
+                
+                event(.navigate(.link(
+                    .imagePicker(.init(
+                        closeAction: { [weak self] image in
+                            
+                            self?.action.send(UserAccountViewModelAction.SaveAvatarImage(image: image))
+                        }
+                    ))
+                )))
+                
+            } else {
+                
+                event(.navigate(.alert(
+                    .galleryPermissionError(event: .dismiss(.alert))
+                )))
+            }
+            
+        case _ as ModelAction.ClientInfo.Delete.Response:
+            event(.navigate(.link(
+                .deleteUserInfo(.init(model: self.model))
+            )))
+            
+        default:
+            break
         }
-        
-        for item in items {
+    }
+    
+    func handleAction(
+        _ action: Action
+    ) {
+        switch action {
+        case _ as PaymentsSuccessAction.Button.Close:
+            self.action.send(PaymentsViewModelAction.Dismiss())
             
-            let product = model.allProducts.first(where: { $0.id.description == item.productId })
+        case _ as UserAccountViewModelAction.CloseLink:
+            event(.dismiss(.destination))
             
-            let subscriptions = item.subscriptions.map({
-                
-                var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
-                
-                let brandIcon = $0.brandIcon
-                
-                if let icon = model.images.value[brandIcon]?.image {
-                    
-                    image = .image(icon)
-                    
-                } else {
-                    
-                    image = .default(.ic24ShoppingCart)
-                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
-                    
-                }
-                
-                return ManageSubscriptionsUI.SubscriptionViewModel(
-                    token: $0.subscriptionToken,
-                    name: $0.brandName,
-                    image: image,
-                    subtitle: $0.subscriptionPurpose,
-                    purposeTitle: $0.cancelAlert,
-                    trash: .ic24Trash2,
-                    config: .init(
-                        headerFont: .textH4M16240(),
-                        subtitle: .textBodySR12160()
-                    ),
-                    onDelete: { token, title in
-                        
-                        self.alert = .init(
-                            title: title,
-                            message: nil,
-                            primary: .init(
-                                type: .cancel, title: "Отмена", action: {}),
-                            secondary: .init(type: .default, title: "Отключить", action: {
-                                
-                                self.model.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
-                            }))
-                    },
-                    detailAction: { token in
-                        
-                        self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-                    })
-            })
+        case _ as UserAccountViewModelAction.CloseFieldAlert:
+            event(.dismiss(.textFieldAlert))
             
-            if let product,
-               let balance = model.amountFormatted(
-                amount: product.balanceValue,
-                currencyCode: product.currency,
-                style: .fraction
-               ),
-               let icon = product.smallDesign.image {
+        case _ as UserAccountViewModelAction.AvatarAction:
+            var buttons: [ButtonIconTextView.ViewModel] = []
+            
+            if model.cameraIsAvailable {
+                buttons.append(.init(icon: .init(image: .ic24Camera, style: .original, background: .circleSmall), title: .init(text: "Сделать фото", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.dismiss(.bottomSheet))
+                    self?.model.action.send(ModelAction.Media.CameraPermission.Request())
+                }))
+            }
+            
+            if model.galleryIsAvailable {
+                buttons.append(.init(icon: .init(image: .ic24Image, style: .original, background: .circleSmall), title: .init(text: "Выбрать из галереи", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.dismiss(.bottomSheet))
+                    self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                }))
+            }
+            
+            if model.clientPhoto.value != nil {
+                buttons.append(.init(icon: .init(image: .ic24Trash2, style: .original, background: .circleSmall), title: .init(text: "Удалить", color: .textSecondary, style: .bold), orientation: .horizontal, action: { [weak self] in
+                    self?.event(.dismiss(.bottomSheet))
+                    self?.model.action.send(ModelAction.ClientPhoto.Delete())
+                }))
+            }
+            
+            event(.navigate(.bottomSheet(.init(
+                sheetType: .avatarOptions(.init(buttons: buttons)))
+            )))
+            
+        case let payload as UserAccountViewModelAction.SaveAvatarImage:
+                                        event(.dismiss(.bottomSheet))
+            
+            guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)),
+                  let photoData = ImageData(with: image)
+            else { return }
+            
+            model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
+            
+        case _ as UserAccountViewModelAction.ExitAction:
+            event(.navigate(.alert(.exit(event: .exit))))
+            
+        case _ as UserAccountViewModelAction.DeleteAction:
+            event(.navigate(.alert(.delete(event: .deleteRequest))))
+            
+        case _ as UserAccountViewModelAction.DeleteInfoAction:
+            event(.navigate(.bottomSheet(.init(
+                sheetType: .deleteInfo(.exitInfoViewModel))
+            )))
+            
+        case let payload as UserAccountViewModelAction.OpenSbpPay:
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
                 
-                if let product = product as? ProductCardData {
+                withAnimation {
                     
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: product.isBlocked,
-                        subscriptions: subscriptions
-                    ))
-                    
-                } else {
-                    
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: false,
-                        subscriptions: subscriptions
-                    ))
+                    self?.event(.navigate(.bottomSheet(.init(
+                        sheetType: .sbpay(payload.sbpPay))
+                    )))
                 }
             }
+            
+        default:
+            break
         }
-        
-        return products
+    }
+    
+    func handleSectionAction(
+        _ action: Action
+    ) {
+        switch action {
+        case _ as UserAccountViewModelAction.ChangeUserName:
+            event(.navigate(.textFieldAlert(.name(
+                primaryAction: { [weak self] text in
+                    
+                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                    self?.model.action.send(ModelAction.ClientName.Save(name: text))
+                },
+                secondaryAction: { [weak self] _ in
+                    
+                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                }
+            ))))
+            
+        case _ as UserAccountViewModelAction.OpenManagingSubscription:
+            let viewModel = navigationStateManager.makeSubscriptionsViewModel { token, title in
+                
+                self.event(.navigate(.alert(.cancelC2BSub(
+                    title: title,
+                    event: .cancelC2BSub(token)
+                ))))
+            }
+            
+            self.event(.navigate(.link(.managingSubscription(viewModel))))
+            
+        case _ as UserAccountViewModelAction.OpenFastPayment:
+            switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {
+            case let .legacy(makeLegacy):
+                let data = model.fastPaymentContractFullInfo.value
+                    .map { $0.getFastPaymentContractFindListDatum() }
+                
+                self.event(.navigate(.link(
+                    .fastPaymentSettings(.legacy(
+                        makeLegacy(
+                            data,
+                            { [weak self] in self?.event(.dismiss(.destination)) }
+                        )
+                    ))
+                )))
+                
+#warning("move to reducer with event?")
+            case let .new(makeNew):
+                let viewModel = makeNew(scheduler)
+                let cancellable = viewModel.$state
+                    .dropFirst()
+                    .removeDuplicates()
+                    .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
+                    .receive(on: scheduler)
+                    .sink { [weak self] in self?.event(.fps($0)) }
+#warning("and change to effect (??) when moved to `reduce` (?)")
+                viewModel.event(.appear)
+                
+                self.event(.navigate(.link(
+                    .fastPaymentSettings(.new(
+                        .init(viewModel, cancellable)
+                    ))
+                )))
+            }
+            
+        case let payload as UserAccountViewModelAction.Switch:
+            switch payload.type {
+            case .faceId:
+                //TODO: set action
+                break
+                
+            case .notification:
+                self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
+            }
+            
+        case let payload as UserAccountViewModelAction.OpenDocument:
+            guard let clientInfo = model.clientInfo.value
+            else { return }
+            
+            switch payload.type {
+                
+            case .passport:
+                self.event(.navigate(.link(
+                    .userDocument(.init(
+                        clientInfo: clientInfo,
+                        itemType: .passport,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(UserAccountViewModelAction.CloseLink())
+                        }
+                    ))
+                )))
+                
+            case .inn:
+                guard let inn = clientInfo.inn else { return }
+                
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
+                self.event(.navigate(.bottomSheet(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                )))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
+                
+            case .adressPass:
+                let address = clientInfo.address
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
+                self.event(.navigate(.bottomSheet(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                )))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
+                
+            case .adress:
+                guard let addressResidential = clientInfo.addressResidential
+                else { return }
+                
+                let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
+                self.event(.navigate(.bottomSheet(.init(
+                    sheetType: .inn(documentInfoViewModel))
+                )))
+                self.bind(documentInfoViewModel: documentInfoViewModel)
+            }
+            
+        default:
+            break
+        }
     }
 }
 
-private extension Alert.ViewModel {
+// MARK: - Helpers
+
+private extension AlertModelOf<UserAccountEvent> {
     
-    static func exit(
-        action: @escaping () -> Void
+    static func cameraPermissionError(
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
-            title: "Выход",
-            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
-            primary: .init(
+            title: "Ошибка",
+            message: "Нет доступа к камере",
+            primaryButton: .init(
                 type: .default,
-                title: "Выход",
-                action: action
-            ),
-            secondary: .init(
+                title: "Ok",
+                event: event
+            )
+        )
+    }
+    
+    static func cancelC2BSub(
+        title: String,
+        event: UserAccountEvent
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: nil,
+            primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                action: {}
+                event: .dismiss(.alert)
+            ),
+            secondaryButton: .init(
+                type: .default,
+                title: "Отключить",
+                event: event
             )
         )
     }
     
     static func delete(
-        action: @escaping () -> Void
+        event: UserAccountEvent
     ) -> Self {
         
         .init(
             title: "Удалить учетную запись?",
             message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
+            primaryButton: .init(
+                type: .default,
+                title: "ОК",
+                event: event
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .dismiss(.alert)
+            )
+        )
+    }
+    
+    static func exit(
+        event: UserAccountEvent
+    ) -> Self {
+        
+        .init(
+            title: "Выход",
+            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
+            primaryButton: .init(
+                type: .default,
+                title: "Выход",
+                event: event
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .dismiss(.alert)
+            )
+        )
+    }
+    
+    static func galleryPermissionError(
+        event: UserAccountEvent
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: "Нет доступа к галереи",
+            primaryButton: .init(
+                type: .default,
+                title: "Ok",
+                event: event
+            )
+        )
+    }
+    
+}
+
+private extension AlertTextFieldView.ViewModel {
+    
+    static func name(
+        primaryAction: @escaping (String?) -> Void,
+        secondaryAction: @escaping (String?) -> Void
+    ) -> AlertTextFieldView.ViewModel {
+        
+        .init(
+            title: "Имя",
+            message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов",
+            maxLength: 15,
             primary: .init(
                 type: .default,
                 title: "ОК",
-                action: action
+                action: primaryAction
             ),
             secondary: .init(
                 type: .cancel,
                 title: "Отмена",
-                action: {}
+                action: secondaryAction
             )
         )
     }
 }
 
+// MARK: - Types
+
 extension UserAccountViewModel {
+    
+    typealias Dispatch = (UserAccountEvent) -> Void
+    
+    typealias RouteDispatch = (UserAccountEvent.NavigateEvent) -> Void
+    typealias Reduce = (UserAccountRoute, UserAccountEvent, @escaping RouteDispatch) -> (UserAccountRoute, UserAccountEffect?)
     
     class AvatarViewModel: ObservableObject {
         
@@ -634,42 +694,6 @@ extension UserAccountViewModel {
             }
         }
     }
-    
-    enum Link {
-        
-        case userDocument(UserDocumentViewModel)
-        case fastPaymentSettings(MeToMeSettingView.ViewModel)
-        case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
-        case imagePicker(ImagePickerViewModel)
-        case managingSubscription(SubscriptionsViewModel)
-        case successView(PaymentsSuccessViewModel)
-    }
-    
-    struct Sheet: Identifiable {
-        
-        let id = UUID()
-        let sheetType: SheetType
-        
-        enum SheetType {
-            case userDocument(UserDocumentViewModel)
-        }
-    }
-    
-    struct BottomSheet: BottomSheetCustomizable {
-        
-        let id = UUID()
-        let sheetType: SheetType
-        
-        enum SheetType {
-            case deleteInfo(UserAccountExitInfoView.ViewModel)
-            case inn(UserAccountDocumentInfoView.ViewModel)
-            case camera(UserAccountPhotoSourceView.ViewModel)
-            case avatarOptions(OptionsButtonsViewComponent.ViewModel)
-            case imageCapture(ImageCaptureViewModel)
-            case sbpay(SbpPayViewModel)
-        }
-    }
-    
 }
 
 enum UserAccountViewModelAction {
@@ -683,12 +707,12 @@ enum UserAccountViewModelAction {
     struct ChangeUserName: Action {}
     
     struct AvatarAction: Action {}
-
+    
     struct OpenSbpPay: Action {
         
         let sbpPay: SbpPayViewModel
     }
-
+    
     struct ExitAction: Action {}
     
     struct DeleteAction: Action {}
@@ -696,14 +720,17 @@ enum UserAccountViewModelAction {
     struct DeleteInfoAction: Action {}
     
     struct OpenDocument: Action {
+        
         let type: DocumentCellType
     }
     
     struct SaveAvatarImage: Action {
+        
         let image: UIImage?
     }
     
     struct OpenManagingSubscription: Action {}
+    
     struct OpenFastPayment: Action {}
     
     struct Switch: Action {
@@ -711,4 +738,38 @@ enum UserAccountViewModelAction {
         let type: AccountCellSwitchView.ViewModel.Kind
         let value: Bool
     }
+}
+
+// MARK: - Preview Content
+
+extension UserAccountViewModel {
+    
+    static let sample = UserAccountViewModel(
+        navigationStateManager: .preview,
+        navigationBar: .sample,
+        avatar: .init(
+            image: Image("imgMainBanner2"),
+            //image: nil,
+            action: {
+                //TODO: set action
+            }),
+        sections:
+            [UserAccountContactsView.ViewModel.contact,
+             UserAccountDocumentsView.ViewModel.documents,
+             UserAccountPaymentsView.ViewModel.payments,
+             UserAccountSecurityView.ViewModel.security
+            ],
+        exitButton: .init(
+            icon: .ic24LogOut,
+            content: "Выход из приложения",
+            action: {
+                //TODO: set action
+            }),
+        deleteAccountButton: .init(
+            icon: .ic24UserX, content: "Удалить учетную запись",
+            infoButton: .init(icon: .ic24Info, action: { }),
+            action: {}
+        ),
+        scheduler: .main
+    )
 }

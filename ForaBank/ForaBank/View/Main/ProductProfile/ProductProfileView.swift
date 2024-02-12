@@ -5,6 +5,7 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI
@@ -14,7 +15,7 @@ struct ProductProfileView: View {
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let viewFactory: PaymentsTransfersViewFactory
 
     var accentColor: some View {
         
@@ -164,13 +165,13 @@ struct ProductProfileView: View {
         case let .myProducts(viewModel):
             MyProductsView(
                 viewModel: viewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
             
         case let .paymentsTransfers(viewModel):
             PaymentsTransfersView(
                 viewModel: viewModel,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                viewFactory: viewFactory
             )
         }
     }
@@ -358,7 +359,7 @@ struct ProductProfileView: View {
     }
 }
 
-//MARK: - Internal Views
+// MARK: - Internal Views
 
 extension ProductProfileView {
     
@@ -372,7 +373,7 @@ extension ProductProfileView {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct ProfileView_Previews: PreviewProvider {
     
@@ -391,14 +392,17 @@ struct ProfileView_Previews: PreviewProvider {
         
         ProductProfileView(
             viewModel: viewModel,
-            makeSberQRConfirmPaymentView: {
-                
-                .init(
-                    viewModel: $0,
-                    map: Info.preview(info:),
-                    config: .iFora
-                )
-            }
+            viewFactory: .init(
+                makeSberQRConfirmPaymentView: {
+                    
+                    .init(
+                        viewModel: $0,
+                        map: Info.preview(info:),
+                        config: .iFora
+                    )
+                },
+                makeUserAccountView: UserAccountView.init(viewModel:)
+            )
         )
     }
 }
@@ -413,8 +417,12 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
+        fastPaymentsFactory: .legacy,
+        navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
+        operationDetailFactory: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -425,8 +433,12 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
+        fastPaymentsFactory: .legacy,
+        navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
+        paymentsTransfersFactory: .preview,
+        operationDetailFactory: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
@@ -453,4 +465,11 @@ extension QRViewModel {
             qrResolve: QRViewModel.ScanResult.init
         )
     }
+}
+
+extension OperationDetailFactory {
+    
+    static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
+            .sampleComplete
+    })
 }

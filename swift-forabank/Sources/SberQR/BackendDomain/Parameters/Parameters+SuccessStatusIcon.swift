@@ -1,6 +1,6 @@
 //
 //  Parameters+SuccessStatusIcon.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 16.12.2023.
 //
@@ -19,12 +19,16 @@ public extension Parameters {
             self.id = id
             self.value = value
         }
+    }
+}
+
+public extension Parameters.SuccessStatusIcon {
+    
+    enum StatusIcon: Equatable {
         
-        public enum StatusIcon: Equatable {
-            
-            case complete
-            case inProgress
-            case rejected
-        }
+        case complete
+        case inProgress
+        case rejected
+        case suspended
     }
 }

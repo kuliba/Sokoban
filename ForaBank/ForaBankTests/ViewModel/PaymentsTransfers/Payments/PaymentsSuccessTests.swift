@@ -201,7 +201,8 @@ final class PaymentsSuccessTests: XCTestCase {
             needOTP: nil,
             payeeName: nil,
             documentStatus: documentStatus,
-            paymentOperationDetailId: 1
+            paymentOperationDetailId: 1,
+            scenario: .ok
         )
     }
 }
