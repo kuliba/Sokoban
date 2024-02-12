@@ -13,6 +13,12 @@ public extension ConsentListState.UIState.Expanded {
         canApply: false
     )
     
+    static let consented: Self = .init(
+        searchText: "",
+        banks: .consented(),
+        canApply: false
+    )
+    
     static let many: Self = .init(
         searchText: "",
         banks: .many,
