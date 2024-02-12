@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
+import Foundation
+
 public extension ConsentListState {
     
     var uiState: UIState {
@@ -82,12 +84,25 @@ private extension ConsentList {
     var filteredBanks: [SelectableBank] {
         
         if searchText.isEmpty {
-            return banks
+            return banks.sorted()
         } else {
             return banks.filter {
                 
-                $0.bank.name.lowercased().contains(searchText.lowercased())
+                $0.bank.name.localizedCaseInsensitiveContains(searchText)
             }
+            .sorted(by: \.bank.name)
+        }
+    }
+}
+
+extension ConsentList.SelectableBank: Comparable {
+    
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+
+        switch (lhs.isSelected, rhs.isSelected) {
+        case (true, false): return true
+        case (false, true): return false
+        default: return lhs.bank.name < rhs.bank.name
         }
     }
 }
