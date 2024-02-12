@@ -49,7 +49,7 @@ public extension UserAccountNavigation.State {
     
     enum FPSDestination: Equatable, Identifiable {
         
-#warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
+#warning("remove optionality: change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
         case c2BSub(GetC2BSubResponse, AnyCancellable?)
         case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
         

@@ -406,15 +406,16 @@ private struct OTPInputWrapperView: View {
     
     var body: some View {
         
-        switch viewModel.state {
+        switch viewModel.state.status {
         case .failure:
             EmptyView()
             
         case let .input(input):
             OTPInputView(
                 state: input,
-                phoneNumber: "TBD: hardcoded phone number",
-                event: viewModel.event(_:)
+                phoneNumber: viewModel.state.phoneNumber.rawValue,
+                event: viewModel.event(_:),
+                config: .iFora
             )
             
         case .validOTP:

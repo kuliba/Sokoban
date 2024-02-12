@@ -7,6 +7,7 @@
 
 struct DemoSettings {
     
+    let phoneNumber: String
     var confirmWithOTPSettings: ConfirmWithOTPSettings
     var countdownDemoSettings: CountdownDemoSettings
     var otpFieldDemoSettings: DemoSettingsResult
