@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct ExpandedConsentConfig {
     
+    let apply: Apply
+    let bank: TextConfig
     let checkmark: CheckmarkConfig
 }
 
 public extension ExpandedConsentConfig {
+    
+    struct Apply {
+        
+        let backgroundColor: Color
+        let title: TextConfig
+    }
     
     struct CheckmarkConfig {
         

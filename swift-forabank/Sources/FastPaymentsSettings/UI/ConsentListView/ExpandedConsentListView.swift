@@ -33,7 +33,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
         VStack(spacing: 13) {
             
             header()
-                
+            
 #warning("replace hardcoded height")
             bankList()
                 .frame(maxHeight: 350)
@@ -121,7 +121,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
                 
                 bankIcon(bank)
                 
-                Text(bank.name)
+                bank.name.text(withConfig: config.bank)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -155,16 +155,28 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     ) -> some View {
         
         Image(systemName: "building.columns")
-            .imageScale(.large)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .clipShape(Circle())
+            .frame(width: 32, height: 32)
     }
     
     @ViewBuilder
     private func applyButton() -> some View {
         
-        Button("Применить") { event(.applyConsent) }
-            .padding()
-            .background(Color.gray.opacity(0.4))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+        ZStack {
+            
+            config.apply.backgroundColor
+            
+            Button(action: { event(.applyConsent) }) {
+                
+                "Применить".text(withConfig: config.apply.title)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
