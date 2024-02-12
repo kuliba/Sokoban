@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 04.02.2024.
 //
 
+import C2BSubscriptionUI
 import FastPaymentsSettings
 
 extension FastPaymentsSettingsEffectHandler {

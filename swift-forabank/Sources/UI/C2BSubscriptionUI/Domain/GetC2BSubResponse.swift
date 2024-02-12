@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
+#warning("improve: replace primitive types")
 public struct GetC2BSubResponse: Equatable, Hashable {
     
     public let title: String
@@ -26,8 +27,8 @@ public extension GetC2BSubResponse {
     
     enum Details: Equatable, Hashable {
         
-        case list([ProductSubscription])
         case empty
+        case list([ProductSubscription])
     }
 }
 
@@ -63,9 +64,11 @@ public extension GetC2BSubResponse.Details.ProductSubscription {
     
     struct Subscription: Equatable, Hashable {
         
+        #warning("rename `subscriptionToken` to `token")
         public let subscriptionToken: String
         public let brandIcon: String
         public let brandName: String
+        #warning("rename `subscriptionPurpose` to `purpose`")
         public let subscriptionPurpose: String
         public let cancelAlert: String
         

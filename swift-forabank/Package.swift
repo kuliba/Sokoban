@@ -517,6 +517,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
         ]
@@ -991,6 +992,11 @@ private extension Target {
     
     static let c2bSubscriptionUI = target(
         name: .c2bSubscriptionUI,
+        dependencies: [
+            .searchBarComponent,
+            .textFieldComponent,
+            .uiPrimitives,
+        ],
         path: "Sources/UI/\(String.c2bSubscriptionUI)"
     )
     
@@ -1424,6 +1430,10 @@ private extension Target.Dependency {
     
     static let rxViewModel = byName(
         name: .rxViewModel
+    )
+    
+    static let searchBarComponent = byName(
+        name: .searchBarComponent
     )
     
     static let textFieldUI = byName(

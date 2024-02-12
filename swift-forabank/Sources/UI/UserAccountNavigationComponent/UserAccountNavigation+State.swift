@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
+import C2BSubscriptionUI
 import Combine
 import FastPaymentsSettings
 import OTPInputComponent

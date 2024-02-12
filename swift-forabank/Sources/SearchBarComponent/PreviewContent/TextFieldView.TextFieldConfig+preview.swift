@@ -7,7 +7,7 @@
 
 import TextFieldUI
 
-extension TextFieldView.TextFieldConfig {
+public extension TextFieldView.TextFieldConfig {
     
     static let preview: Self = .init(
         font: .systemFont(ofSize: 19, weight: .regular),
