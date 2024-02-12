@@ -25,15 +25,18 @@ struct InactiveContractView: View {
                     Spacer()
                     
                     ToggleMockView(
-                        status: .off(.enabled), 
+                        status: .off(.enabled),
                         color: config.toggleColor
                     )
                 }
             }
             
-            AttributedTextView(attributedString: .consent)
-                .foregroundColor(config.subtitle.textColor)
-                .font(config.subtitle.textFont)
+            AttributedTextView(
+                attributedString: .consent,
+                linkColor: config.subtitle.textColor
+            )
+            .foregroundColor(config.subtitle.textColor)
+            .font(config.subtitle.textFont)
             
             Spacer()
         }

@@ -11,6 +11,7 @@ import SwiftUI
 struct AttributedTextView: View {
     
     let attributedString: NSAttributedString
+    let linkColor: Color
     
     var body: some View {
         
@@ -22,16 +23,40 @@ struct AttributedTextView: View {
     private func attributedTextView() -> some View {
         
         if #available(iOS 15, *) {
-            Text(AttributedString(attributedString))
+            Text(AttributedString(modifiedAttributedString()))
         } else {
 #warning("extract with own preview")
             GeometryReader { geometry in
                 
-                AttributedText(attributedString: attributedString)
+                AttributedText(attributedString: modifiedAttributedString())
                     .frame(width: geometry.size.width)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
+    }
+    
+    private func modifiedAttributedString(
+    ) -> NSAttributedString {
+        
+        let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
+        
+        mutableAttributedString.enumerateAttribute(
+            .link,
+            in: NSRange(
+                location: 0,
+                length: attributedString.length
+            ),
+            options: []
+        ) { value, range, _ in
+            
+            if let _ = value as? URL {
+                
+                let uiColor = UIColor(linkColor)
+                mutableAttributedString.addAttribute(.foregroundColor, value: uiColor, range: range)
+            }
+        }
+        
+        return mutableAttributedString
     }
 }
 
@@ -58,6 +83,12 @@ struct AttributedTextView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AttributedTextView(attributedString: .consent)
+        VStack(spacing: 64) {
+ 
+            AttributedTextView(attributedString: .consent, linkColor: .orange)
+                .foregroundColor(.green)
+            
+            AttributedTextView(attributedString: .consent, linkColor: .gray)
+        }
     }
 }

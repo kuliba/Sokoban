@@ -51,7 +51,10 @@ struct PaymentContractView: View {
                 Text("Настройки для входящих и исходящих переводов СБП  ")
                 
             case .inactive:
-                AttributedTextView(attributedString: .consent)
+                AttributedTextView(
+                    attributedString: .consent,
+                    linkColor: .red
+                )
             }
         }
         .font(.subheadline)
