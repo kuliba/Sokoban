@@ -27,14 +27,15 @@ private extension Payload.ProductsVisibilityPayload {
         
         get throws {
             
+            let products: [[String: Any]] = products.map {
+                [
+                    "id": $0.productID.rawValue,
+                    "visibility": $0.visibility.rawValue
+                ]
+            }
             return try JSONSerialization.data(withJSONObject: [
                 "categoryType": category.rawValue,
-                "products" : products.map {
-                    [
-                        "id": $0.productID,
-                        "visibility": $0.visibility
-                    ]
-                }
+                "products" : products
             ] as [String: Any])
         }
     }

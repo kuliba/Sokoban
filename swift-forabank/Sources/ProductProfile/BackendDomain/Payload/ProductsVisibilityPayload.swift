@@ -12,8 +12,8 @@ public extension Payload {
     
     struct ProductsVisibilityPayload {
         
-        let category: Category
-        let products: [Product]
+        public let category: Category
+        public let products: [Product]
         
         public init(category: Category, products: [Product]) {
             self.category = category
@@ -35,7 +35,7 @@ public extension Payload.ProductsVisibilityPayload {
 
 public extension Payload.ProductsVisibilityPayload {
     
-    struct Product: Encodable {
+    struct Product: Encodable, Equatable {
         
         public typealias ProductID = Tagged<_ProductID, Int>
         public enum _ProductID {}
