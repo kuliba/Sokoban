@@ -90,7 +90,7 @@ public struct OTPInputView: View {
         
         switch state {
         case .completed:
-            Button("resend") { event(.prepare) }
+            resendButton(action: { event(.prepare) })
             
         case let .failure(countdownFailure):
             // Alert should dismiss view
@@ -101,6 +101,25 @@ public struct OTPInputView: View {
             
         case let .starting(duration):
             remainingTime(duration).text(withConfig: config.timer)
+        }
+    }
+    
+    private func resendButton(
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) {
+            
+            ZStack {
+                
+                config.resend.backgroundColor
+                
+                "Отправить повторно".text(withConfig: config.resend.text)
+                    .padding(.horizontal)
+            }
+            .frame(height: 24)
+            .fixedSize()
+            .clipShape(RoundedRectangle(cornerRadius: 90))
         }
     }
     

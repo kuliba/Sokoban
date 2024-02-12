@@ -18,6 +18,13 @@ extension OTPInputConfig {
             ), 
             rectColor: .mainColorsGrayMedium
         ),
+        resend: .init(
+            backgroundColor: .buttonSecondary,
+            text: .init(
+                textFont: .textBodySR12160(),
+                textColor: .textRed
+            )
+        ),
         subtitle: .init(
             textFont: .textBodyMR14200(),
             textColor: .textPlaceholder

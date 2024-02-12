@@ -12,6 +12,7 @@ public extension OTPInputConfig {
     static let preview: Self = .init(
         button: .preview,
         digitModel: .preview,
+        resend: .preview,
         subtitle: .init(
             textFont: .footnote,
             textColor: .green
