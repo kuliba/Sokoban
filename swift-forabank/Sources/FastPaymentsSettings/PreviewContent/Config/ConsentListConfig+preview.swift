@@ -15,6 +15,7 @@ extension ConsentListConfig {
             backgroundColor: .pink.opacity(0.1),
             image: .init(systemName: "magnifyingglass")
         ),
+        image: .init(systemName: "building.columns"),
         title: .init(
             textFont: .headline,
             textColor: .blue

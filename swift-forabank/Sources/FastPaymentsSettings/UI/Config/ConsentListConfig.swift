@@ -12,6 +12,7 @@ public struct ConsentListConfig {
     
     let chevron: Chevron
     let errorIcon: ErrorIcon
+    let image: Image
     let title: TextConfig
 }
 

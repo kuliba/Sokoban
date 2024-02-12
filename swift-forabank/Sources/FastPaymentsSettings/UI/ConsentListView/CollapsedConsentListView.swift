@@ -60,6 +60,7 @@ struct CollapsedConsentListView_Preview: PreviewProvider {
             collapsedConsentListView(.two)
             collapsedConsentListView(.preview)
         }
+        .border(.red)
     }
     
     static func collapsedConsentListView(

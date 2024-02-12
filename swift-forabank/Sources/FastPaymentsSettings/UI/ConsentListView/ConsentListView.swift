@@ -43,11 +43,12 @@ struct ConsentListView: View {
         .animation(.easeInOut, value: chevronRotationAngle)
     }
     
-#warning("replace with actual")
     private func icon() -> some View {
         
-        Image(systemName: "building.columns")
-            .imageScale(.large)
+        config.image
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 24, height: 24)
     }
     
     @ViewBuilder
