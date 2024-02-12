@@ -10,7 +10,7 @@ import Tagged
 
 public extension Payload {
     
-    struct CardPayload: Encodable {
+    struct CardPayload {
         
         public typealias CardID = Tagged<_CardID, Int>
         public enum _CardID {}
