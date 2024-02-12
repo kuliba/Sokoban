@@ -52,7 +52,13 @@ struct OTPInputFieldView: View {
         .accentColor(.clear)
         .foregroundColor(.clear)
         .textContentType(.oneTimeCode)
-        .onAppear { isFocused = true }
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 0.1, 
+                execute: { isFocused = true }
+            )
+        }
     }
 }
 
@@ -60,11 +66,12 @@ private extension OTPFieldState {
     
     var digitModels: [DigitModel] {
         
-#warning("move maxLength to init")
-        let length = 6
+        // TODO: move maxLength to init
+        let maxLength = 6
+        
         return text
             .filter(\.isNumber)
-            .padding(toLength: length, withPad: " ", startingAt: 0)
+            .padding(toLength: maxLength, withPad: " ", startingAt: 0)
             .map { String($0) }
             .enumerated()
             .map { .init(id: $0.offset, value: $0.element) }
