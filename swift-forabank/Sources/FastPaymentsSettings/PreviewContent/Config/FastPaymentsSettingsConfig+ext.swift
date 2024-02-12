@@ -10,6 +10,8 @@ import ProductSelectComponent
 public extension FastPaymentsSettingsConfig {
     
     static let preview: Self = .init(
+        bankDefault: .preview,
+        paymentContract: .preview,
         productSelect: .preview
     )
 }

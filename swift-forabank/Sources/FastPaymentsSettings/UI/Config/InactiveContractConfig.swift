@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
-public struct InactiveContractConfig {
-    
-    public init() {}
-}
+import SwiftUI
+import UIPrimitives
+
+public typealias InactiveContractConfig = PaymentContractConfig.StateConfig
