@@ -1055,7 +1055,9 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )

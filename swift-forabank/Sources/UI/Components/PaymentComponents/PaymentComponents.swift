@@ -9,6 +9,7 @@
 @_exported import ButtonComponent
 @_exported import InfoComponent
 @_exported import ProductSelectComponent
+@_exported import SharedConfigs
 
 /// A namespace for Payment Components.
 ///
@@ -25,8 +26,8 @@ public extension PaymentComponents {
     typealias AmountView = AmountComponent.AmountView
     
     typealias Button = ButtonComponent.Button
-    typealias ButtonConfig = ButtonComponent.ButtonConfig
-    typealias ButtonStateConfig = ButtonComponent.ButtonStateConfig
+    typealias ButtonConfig = SharedConfigs.ButtonConfig
+    typealias ButtonStateConfig = SharedConfigs.ButtonStateConfig
     typealias ButtonView = ButtonComponent.ButtonView
     
     typealias Info = InfoComponent.Info
