@@ -17,6 +17,7 @@ extension FastPaymentsSettingsConfig {
         ),
         backgroundColor: .mainColorsGrayLightest,
         bankDefault: .iFora,
+        consentList: .iFora,
         paymentContract: .iFora,
         productSelect: .iFora
     )
@@ -36,6 +37,45 @@ extension BankDefaultConfig {
             offDisabled: .init(toggleColor: .iconGray)
         ),
         subtitle: .placeholder
+    )
+}
+
+extension ConsentListConfig {
+    
+    static let iFora: Self = .init(
+        chevron: .init(
+            image: .ic24ChevronDown,
+            color: .iconGray,
+            title: .placeholder
+        ),
+        collapsedBankList: .secondary,
+        errorIcon: .init(
+            backgroundColor: .bordersDivider,
+            image: .ic24Search
+        ),
+        expandedConsent: .iFora,
+        image: .ic24Bank,
+        title: .init(
+            textFont: .textBodySR12160(),
+            textColor: .textPlaceholder
+        )
+    )
+}
+
+extension ExpandedConsentConfig {
+    
+    static let iFora: Self = .init(
+        apply: .init(
+            backgroundColor: .blurMediumGray30,
+            title: .secondary
+        ),
+        bank: .secondary,
+        checkmark: .init(
+            backgroundColor: .iconWhite,
+            borderColor: .buttonSecondaryHover,
+            color: .iconBlack,
+            image: .ic16Check
+        )
     )
 }
 

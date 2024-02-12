@@ -15,7 +15,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
     let collapseButton: () -> CollapseButton
     let namespace: Namespace.ID
     let anchor: UnitPoint
-    let config: ExpandedConsentConfig = .preview
+    let config: ExpandedConsentConfig
     
     var body: some View {
         
@@ -227,7 +227,8 @@ struct ExpandedConsentListView_Previews: PreviewProvider {
                     .font(.footnote)
                 },
                 namespace: animationNamespace,
-                anchor: .center
+                anchor: .center,
+                config: .preview
             )
         }
     }

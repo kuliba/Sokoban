@@ -16,7 +16,7 @@ struct ConsentListView: View {
     
     let state: ConsentListState.UIState
     let event: (ConsentListEvent) -> Void
-    let config: ConsentListConfig = .preview
+    let config: ConsentListConfig
     
     @Namespace private var animationNamespace
     private let anchor: UnitPoint = .top
@@ -76,7 +76,8 @@ struct ConsentListView: View {
             icon: icon,
             collapseButton: toggleButton,
             namespace: animationNamespace,
-            anchor: anchor
+            anchor: anchor,
+            config: config.expandedConsent
         )
     }
     
@@ -161,7 +162,8 @@ struct ConsentListView_Previews: PreviewProvider {
         
         ConsentListView(
             state: state,
-            event: { _ in }
+            event: { _ in },
+            config: .preview
         )
     }
 }

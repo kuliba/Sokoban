@@ -39,7 +39,8 @@ struct ActiveContractView: View {
                         
                         ConsentListView(
                             state: contractDetails.consentList.uiState,
-                            event: { event(.consentList($0)) }
+                            event: { event(.consentList($0)) },
+                            config: config.consentList
                         )
                     }
                     .padding()

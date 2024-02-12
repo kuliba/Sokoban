@@ -25,8 +25,8 @@ struct ConsentListToggleButton: View {
                 
                 config.image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 24, height: 24)
                     .rotationEffect(.degrees(chevronRotationAngle))
                     .foregroundColor(config.color)
             }
