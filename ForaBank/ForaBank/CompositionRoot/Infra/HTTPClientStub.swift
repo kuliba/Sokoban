@@ -8,9 +8,6 @@
 import Foundation
 import Tagged
 
-typealias URLPath = Tagged<_URLPath, String>
-enum _URLPath {}
-
 final class HTTPClientStub: HTTPClient {
     
     private let stub: Stub
@@ -32,14 +29,14 @@ final class HTTPClientStub: HTTPClient {
             
             guard let self else { return }
             
-            guard let path = request.urlPath
+            guard let service = request.service
             else {
-                fatalError("Bad URL in URLRequest")
+                fatalError("Bad URL in URLRequest.")
             }
             
-            guard let result = stub[path]
+            guard let result = stub[service]
             else {
-                fatalError("No stub for \"\(path.rawValue)\"")
+                fatalError("No stub for \"\(service.rawValue)\".")
             }
             
             completion(.success(result))
@@ -49,10 +46,16 @@ final class HTTPClientStub: HTTPClient {
 
 extension HTTPClientStub {
     
-    typealias Stub = [URLPath: HTTPClient.Response]
+    typealias Stub = [Services.Endpoint.ServiceName: HTTPClient.Response]
 }
 
 private extension URLRequest {
     
-    var urlPath: URLPath? { (url?.path).map { .init($0) } }
+    var service: Services.Endpoint.ServiceName? {
+        
+        guard let last = url?.lastPathComponent
+        else { return nil }
+        
+        return .init(rawValue: last)
+    }
 }

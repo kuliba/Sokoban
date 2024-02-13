@@ -64,9 +64,21 @@ extension ProductSelectComponent.ProductSelectConfig {
                 textColor: .textWhite.opacity(0.4)
             )
         ),
-        chevronColor: .iconGray,
+        chevron: .init(
+            color: .iconGray,
+            image: .ic24ChevronDown
+        ),
         footer: .placeholder,
         header: .placeholder,
+        missingSelected: .init(
+            backgroundColor: .bordersDivider,
+            foregroundColor: .iconBlackMedium,
+            image: .init("foralogo"),
+            title: .init(
+                textFont: .textH4M16240(),
+                textColor: .textPlaceholder
+            )
+        ),
         title: .secondary
     )
 }
