@@ -35,8 +35,8 @@ private extension ResponseMapper._DTO {
     var data: BlockUnblockData? {
                 
         return .init(
-            statusBrief: statusBrief,
-            statusDescription: statusDescription)
+            statusBrief: statusBrief ?? "",
+            statusDescription: statusDescription ?? "")
     }
 }
 
