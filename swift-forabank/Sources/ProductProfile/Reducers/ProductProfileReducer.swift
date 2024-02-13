@@ -24,23 +24,10 @@ public extension ProductProfileReducer {
         
         var state = state
         var effect: Effect?
-        
+
         switch event {
-        case let .closeAlert(action):
+        case .closeAlert:
             state.alert = nil
-            
-            switch action {
-            case .close:
-                break
-            case .changePin:
-                effect = .changePin
-            case .lockCard:
-                effect = .lockCard
-            case .unlockCard:
-                effect = .unlockCard
-            case .showСontacts:
-                effect = .showСontacts
-            }
         case .create:
             state.modal = nil
             effect = .create
@@ -51,32 +38,8 @@ public extension ProductProfileReducer {
         case let .open(modal):
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
-            (state, effect) = reduce(state, cardGuardianInput)
-      // TODO: need or remove?
-        case .showOnMain1:
-            state.modal = nil
-            print ("send request hideOnMain")
-            
-        case .hideOnMain:
-            state.modal = nil
-            print ("send request showOnMain")
-            
-        case .changePin:
-            print ("change pin")
-            
-        case .lockCard:
-            print ("send request lock card")
-            
-        case .unlockCard:
-            print ("send request unlock card")
-            
-        case .showСontacts:
-            print ("showСontacts")
-            
-        case let .showOnMain(status):
-            effect = .showOnMain(status)
+            (state, effect) = reduce(state, cardGuardianInput)            
         }
-        
         return (state, effect)
     }
 }
@@ -101,7 +64,7 @@ private extension ProductProfileReducer {
         var effect: Effect?
         
         switch cardGuardianInput {
-            
+        
         case .appear:
             break
         case let .buttonTapped(tap):
@@ -116,7 +79,6 @@ private extension ProductProfileReducer {
                 
             case let .showOnMain(status):
                 state.modal = nil
-                effect = .showOnMain(status)
             }
         }
         

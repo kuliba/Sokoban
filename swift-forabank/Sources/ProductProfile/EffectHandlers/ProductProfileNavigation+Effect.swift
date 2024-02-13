@@ -14,10 +14,5 @@ public extension ProductProfileNavigation {
         
         case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
-        case lockCard
-        case unlockCard
-        case changePin
-        case showOnMain(Bool)
-        case showСontacts
     }
 }
