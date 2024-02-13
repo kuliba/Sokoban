@@ -78,7 +78,7 @@ private extension ConsentList {
     
     var canApply: Bool {
         
-        Set(banks.filter(\.isSelected).map(\.id)) != consent
+        Set(banks.filter(\.isSelected).map(\.id)) != Set(banks.filter(\.isConsented).map(\.id))
     }
     
     var filteredBanks: [SelectableBank] {
