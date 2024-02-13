@@ -25,6 +25,8 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             
             applyButton()
                 .opacity(expanded.canApply ? 1 : 0)
+                .animation(.default, value: expanded.canApply)
+                .offset(y: EdgeInsets.default.bottom)
         }
     }
     
