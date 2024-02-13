@@ -59,18 +59,18 @@ struct FPSEndpointStub {
     
     var httpClientStub: [Services.Endpoint.ServiceName: Data] {
         
-        let pairs: [(Services.Endpoint.ServiceName, String)] = [
-            (fastPaymentContractFindList.service, fastPaymentContractFindList.filename),
-            (getClientConsentMe2MePull.service, getClientConsentMe2MePull.filename),
-            (getBankDefault.service, getBankDefault.filename),
-            (updateFastPaymentContract.service, updateFastPaymentContract.filename),
-            (prepareSetBankDefault.service, prepareSetBankDefault.filename),
-            (changeClientConsentMe2MePull.service, changeClientConsentMe2MePull.filename),
-            (getC2BSub.service, getC2BSub.filename),
+        let stub = [
+            fastPaymentContractFindList.service: fastPaymentContractFindList.filename,
+            getClientConsentMe2MePull.service: getClientConsentMe2MePull.filename,
+            getBankDefault.service: getBankDefault.filename,
+            makeSetBankDefault.service: makeSetBankDefault.filename,
+            updateFastPaymentContract.service: updateFastPaymentContract.filename,
+            prepareSetBankDefault.service: prepareSetBankDefault.filename,
+            changeClientConsentMe2MePull.service: changeClientConsentMe2MePull.filename,
+            getC2BSub.service: getC2BSub.filename,
         ]
-        let mapped = pairs.map { ($0.0, Data.json($0.1)) }
         
-        return .init(uniqueKeysWithValues: mapped)
+        return stub.mapValues { Data.json($0) }
     }
 }
 
