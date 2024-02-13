@@ -6,4 +6,4 @@
 //
 
 /// A namespace
-public enum Payload {}
+public enum Payloads {}

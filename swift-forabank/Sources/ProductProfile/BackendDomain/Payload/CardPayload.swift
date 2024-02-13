@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-public extension Payload {
+public extension Payloads {
     
     struct CardPayload {
         
@@ -19,30 +19,28 @@ public extension Payload {
         public enum _CardNumber {}
 
         public let cardId: CardID
-        public let cardNumber: CardNumber?
+        public let cardNumber: CardNumber
         
-        public init(cardId: CardID, cardNumber: CardNumber?) {
+        public init(
+            cardId: CardID,
+            cardNumber: CardNumber
+        ) {
             self.cardId = cardId
             self.cardNumber = cardNumber
         }
     }
 }
 
-extension Payload.CardPayload {
+extension Payloads.CardPayload {
     
     var httpBody: Data {
         
         get throws {
             
-            var parameters: [String: Any] = [
-                "cardID": self.cardId.rawValue
-            ]
-
-            cardNumber.map {
-                parameters["cardNumber"] = $0.rawValue
-            }
-            
-            return try JSONSerialization.data(withJSONObject: parameters as [String: Any])
+            return try JSONSerialization.data(withJSONObject: [
+                "cardID": cardId.rawValue,
+                "cardNumber": cardNumber.rawValue
+            ] as [String: Any])
         }
     }
 }
