@@ -12,14 +12,14 @@ extension FPSEndpointStub {
     
     /// Change this stub with feature flag set to `.active(.stub)` to test.
     static let `default`: Self = .init(
-        fastPaymentContractFindList: .a1,
-        getClientConsentMe2MePull: .b1,
-        getBankDefault: .c2,
-        updateFastPaymentContract: .d1,
-        prepareSetBankDefault: .f1,
-        makeSetBankDefault: .g1,
-        changeClientConsentMe2MePull: .h1,
-        getC2BSub: .j1
+        fastPaymentContractFindList: [.a1],
+        getClientConsentMe2MePull: [.b1],
+        getBankDefault: [.c2],
+        updateFastPaymentContract: [.d1],
+        prepareSetBankDefault: [.f1],
+        makeSetBankDefault: [.g1],
+        changeClientConsentMe2MePull: [.h1],
+        getC2BSub: [.j1]
     )
 }
 
@@ -30,47 +30,39 @@ extension HTTPClientStub {
         delay: TimeInterval = 1
     ) -> HTTPClientStub {
         
-        let stub = stub.httpClientStub.mapValues { $0.response(statusCode: 200) }
+        let stub = stub.httpClientStub
+            .mapValues { $0.map { $0.response(statusCode: 200) }}
+            .mapValues(HTTPClientStub.Response.multiple)
         
         return .init(stub: stub, delay: delay)
-    }
-    
-    private convenience init(
-        _ stub: [Services.Endpoint.ServiceName: (statusCode: Int, data: Data)],
-        delay: TimeInterval = 1
-    ) {
-        self.init(
-            stub: stub.mapValues { $0.data.response(statusCode: $0.statusCode) },
-            delay: delay
-        )
     }
 }
 
 struct FPSEndpointStub {
     
-    let fastPaymentContractFindList: FPSEndpoint.FastPaymentContractFindList
-    let getClientConsentMe2MePull: FPSEndpoint.GetClientConsentMe2MePull
-    let getBankDefault: FPSEndpoint.GetBankDefault
-    let updateFastPaymentContract: FPSEndpoint.UpdateFastPaymentContract
-    let prepareSetBankDefault: FPSEndpoint.PrepareSetBankDefault
-    let makeSetBankDefault: FPSEndpoint.MakeSetBankDefault
-    let changeClientConsentMe2MePull: FPSEndpoint.ChangeClientConsentMe2MePull
-    let getC2BSub: FPSEndpoint.GetC2BSub
+    let fastPaymentContractFindList: [FPSEndpoint.FastPaymentContractFindList]
+    let getClientConsentMe2MePull: [FPSEndpoint.GetClientConsentMe2MePull]
+    let getBankDefault: [FPSEndpoint.GetBankDefault]
+    let updateFastPaymentContract: [FPSEndpoint.UpdateFastPaymentContract]
+    let prepareSetBankDefault: [FPSEndpoint.PrepareSetBankDefault]
+    let makeSetBankDefault: [FPSEndpoint.MakeSetBankDefault]
+    let changeClientConsentMe2MePull: [FPSEndpoint.ChangeClientConsentMe2MePull]
+    let getC2BSub: [FPSEndpoint.GetC2BSub]
     
-    var httpClientStub: [Services.Endpoint.ServiceName: Data] {
+    var httpClientStub: [Services.Endpoint.ServiceName: [Data]] {
         
-        let stub = [
-            fastPaymentContractFindList.service: fastPaymentContractFindList.filename,
-            getClientConsentMe2MePull.service: getClientConsentMe2MePull.filename,
-            getBankDefault.service: getBankDefault.filename,
-            makeSetBankDefault.service: makeSetBankDefault.filename,
-            updateFastPaymentContract.service: updateFastPaymentContract.filename,
-            prepareSetBankDefault.service: prepareSetBankDefault.filename,
-            changeClientConsentMe2MePull.service: changeClientConsentMe2MePull.filename,
-            getC2BSub.service: getC2BSub.filename,
+        let stub: [Services.Endpoint.ServiceName: [String]] = [
+            .fastPaymentContractFindList: fastPaymentContractFindList.map(\.filename),
+            .getClientConsentMe2MePull: getClientConsentMe2MePull.map(\.filename),
+            .getBankDefault: getBankDefault.map(\.filename),
+            .makeSetBankDefault: makeSetBankDefault.map(\.filename),
+            .updateFastPaymentContract: updateFastPaymentContract.map(\.filename),
+            .prepareSetBankDefault: prepareSetBankDefault.map(\.filename),
+            .changeClientConsentMe2MePull: changeClientConsentMe2MePull.map(\.filename),
+            .getC2BSub: getC2BSub.map(\.filename),
         ]
         
-        return stub.mapValues { Data.json($0) }
+        return stub.mapValues { $0.map { Data.json($0) }}
     }
 }
 

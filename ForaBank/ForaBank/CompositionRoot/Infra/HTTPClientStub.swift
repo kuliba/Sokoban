@@ -10,7 +10,7 @@ import Tagged
 
 final class HTTPClientStub: HTTPClient {
     
-    private let stub: Stub
+    private var stub: Stub
     private let delay: TimeInterval
     
     init(
@@ -25,7 +25,9 @@ final class HTTPClientStub: HTTPClient {
         _ request: Request,
         completion: @escaping Completion
     ) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + delay
+        ) { [weak self] in
             
             guard let self else { return }
             
@@ -39,14 +41,28 @@ final class HTTPClientStub: HTTPClient {
                 fatalError("No stub for \"\(service.rawValue)\".")
             }
             
-            completion(.success(result))
+            switch result {
+            case let .constant(response):
+                completion(.success(response))
+                
+            case var .multiple(responses):
+                let response = responses.removeFirst()
+                stub[service] = .multiple(responses)
+                completion(.success(response))
+            }
         }
     }
 }
 
 extension HTTPClientStub {
     
-    typealias Stub = [Services.Endpoint.ServiceName: HTTPClient.Response]
+    typealias Stub = [Services.Endpoint.ServiceName: Response]
+    
+    enum Response {
+        
+        case constant(HTTPClient.Response)
+        case multiple([HTTPClient.Response])
+    }
 }
 
 private extension URLRequest {
