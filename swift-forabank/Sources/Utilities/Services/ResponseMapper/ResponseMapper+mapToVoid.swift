@@ -2,14 +2,14 @@
 //  ResponseMapper+mapToVoid.swift
 //
 //
-//  Created by Andryusina Nataly on 12.02.2024.
+//  Created by Andryusina Nataly on 13.02.2024.
 //
 
 import Foundation
 
 public extension ResponseMapper {
     
-    typealias VoidMappingResult = MappingResult<Void>
+    public typealias VoidMappingResult = MappingResult<Void>
     
     static func mapToVoid(
         _ data: Data,

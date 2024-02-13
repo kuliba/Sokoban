@@ -26,21 +26,8 @@ public extension ProductProfileReducer {
         var effect: Effect?
 
         switch event {
-        case let .closeAlert(action):
+        case .closeAlert:
             state.alert = nil
-
-            switch action {
-            case .close:
-                break
-            case .changePin:
-                effect = .action(.changePin)
-            case .lockCard:
-                effect = .action(.lockCard)
-            case .unlockCard:
-                effect = .action(.unlockCard)
-            case .showСontacts:
-                effect = .action(.showСontacts)
-            }
         case .create:
             state.modal = nil
             effect = .create
@@ -52,33 +39,7 @@ public extension ProductProfileReducer {
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)            
-        case let .action(action):
-            switch action {
-                
-            case .showOnMain:
-                state.modal = nil
-                print ("send request hideOnMain")
-
-            case .hideOnMain:
-                state.modal = nil
-                print ("send request showOnMain")
-                
-            case .changePin:
-                print ("change pin")
-            
-            case .lockCard:
-                print ("send request lock card")
-
-            case .unlockCard:
-                print ("send request unlock card")
-
-            case .showСontacts:
-                print ("showСontacts")
-            }
-        case let .onMain(status):
-            effect = .action(.onMain(status))
         }
-
         return (state, effect)
     }
 }
@@ -115,10 +76,9 @@ private extension ProductProfileReducer {
             case .changePin:
                 state.modal = nil
                 effect = .delayAlert(Alerts.alertChangePin())
-
-            case let .onMain(status):
+                
+            case .showOnMain:
                 state.modal = nil
-                effect = .action(.onMain(status))
             }
         }
         

@@ -14,18 +14,5 @@ public extension ProductProfileNavigation {
         
         case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
-        case action(ActionType)
-    }
-}
-
-public extension ProductProfileNavigation.Effect {
-    
-    enum ActionType: Equatable {
-        
-        case lockCard
-        case unlockCard
-        case changePin
-        case onMain(Bool)
-        case showСontacts
     }
 }

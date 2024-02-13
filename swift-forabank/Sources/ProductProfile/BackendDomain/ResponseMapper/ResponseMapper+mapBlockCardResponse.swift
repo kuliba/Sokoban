@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Services
 
 public extension ResponseMapper {
     
@@ -18,16 +19,11 @@ public extension ResponseMapper {
     }
     
     private static func map(
-        _ data: _Data
+        _ data: _DTO
     ) throws -> BlockUnblockData? {
         
         data.data
     }
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = _DTO
 }
 
 private extension ResponseMapper._DTO {
@@ -35,8 +31,8 @@ private extension ResponseMapper._DTO {
     var data: BlockUnblockData? {
                 
         return .init(
-            statusBrief: statusBrief,
-            statusDescription: statusDescription)
+            statusBrief: statusBrief ?? "",
+            statusDescription: statusDescription ?? "")
     }
 }
 

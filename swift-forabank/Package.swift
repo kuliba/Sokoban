@@ -57,6 +57,8 @@ let package = Package(
         // UI Components
         .paymentComponents,
         .carouselComponent,
+        // Utilities
+        .services,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -163,6 +165,8 @@ let package = Package(
         .sharedConfigs,
         .carouselComponent,
         .carouselComponentTests,
+        // Utilities
+        .services,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -395,6 +399,15 @@ private extension Product {
         ]
     )
     
+    // MARK: - Utilities
+    
+    static let services = library(
+        name: .services,
+        targets: [
+            .services
+        ]
+    )
+
     // MARK: - Infra
     
     static let fetcher = library(
@@ -616,7 +629,8 @@ private extension Target {
             // internal modules
             .rxViewModel,
             .cardGuardianModule,
-            .uiPrimitives
+            .uiPrimitives,
+            .services
         ]
     )
     static let productProfileTests = testTarget(
@@ -629,6 +643,7 @@ private extension Target {
             // internal modules
             .productProfile,
             .rxViewModel,
+            .services,
         ]
     )
 
@@ -1300,6 +1315,18 @@ private extension Target {
         path: "Sources/UI/Components/\(String.sharedConfigs)"
     )
     
+    // MARK: - Utilities
+    
+    static let services = target(
+        name: .services,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/Utilities/\(String.services)"
+    )
+
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -1493,6 +1520,12 @@ private extension Target.Dependency {
         name: .carouselComponent
     )
     
+    // MARK: - Utilities
+    
+    static let services = byName(
+        name: .services
+    )
+
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1661,6 +1694,10 @@ private extension String {
     
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
+    
+    // MARK: - Utilities
+    
+    static let services = "Services"
     
     // MARK: - Infra
     

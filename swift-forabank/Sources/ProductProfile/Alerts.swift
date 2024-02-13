@@ -21,11 +21,11 @@ extension Alerts {
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: .closeAlert(.close)),
+                event: .closeAlert),
             secondaryButton: .init(
                 type: .default,
                 title: "Активировать",
-                event: .closeAlert(.changePin))
+                event: .closeAlert)
         )
     }
     
@@ -39,11 +39,11 @@ extension Alerts {
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: .closeAlert(.close)),
+                event: .closeAlert),
             secondaryButton: .init(
                 type: .default,
                 title: titleSecondaryButtonForAlertCardGuardian(status),
-                event: .closeAlert(action(status)))
+                event: .closeAlert)
         )
     }
     
@@ -97,17 +97,9 @@ extension Alerts {
     
     private static func action(
         _ status: CardGuardian.CardGuardianStatus
-    ) -> ProductProfileNavigation.Event.CloseType {
+    ) -> ProductProfileNavigation.Event {
         
-        switch status {
-        case .active:
-            return .lockCard
-        case .blockedUnlockAvailable:
-            return .unlockCard
-        case .blockedUnlockNotAvailable:
-            return .showСontacts
-        case .notActivated:
-            return .close
-        }
+        // TODO: add other
+        return .closeAlert
     }
 }

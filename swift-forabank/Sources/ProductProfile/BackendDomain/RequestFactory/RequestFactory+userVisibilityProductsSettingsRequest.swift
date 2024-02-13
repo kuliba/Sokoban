@@ -7,6 +7,7 @@
 
 import Foundation
 import Tagged
+import Services
 
 public extension RequestFactory {
         

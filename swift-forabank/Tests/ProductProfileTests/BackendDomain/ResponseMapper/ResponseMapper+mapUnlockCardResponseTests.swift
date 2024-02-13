@@ -7,6 +7,7 @@
 
 import ProductProfile
 import XCTest
+import Services
 
 final class ResponseMapper_mapUnlockCardResponseTests: XCTestCase {
     
@@ -75,7 +76,7 @@ final class ResponseMapper_mapUnlockCardResponseTests: XCTestCase {
         let validData = Data(jsonStringWithEmpty.utf8)
         let result = map(validData)
         
-        assert(result, equals: .success(.init(statusBrief: .none, statusDescription: .none)))
+        assert(result, equals: .success(.init(statusBrief: "", statusDescription: "")))
     }
     
     func test_map_shouldDeliverOkResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
