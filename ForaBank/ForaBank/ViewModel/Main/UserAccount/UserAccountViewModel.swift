@@ -445,7 +445,7 @@ private extension UserAccountViewModel {
                 let cancellable = viewModel.$state
                     .dropFirst()
                     .removeDuplicates()
-                    .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
+                    .map(UserAccountEvent.FastPaymentsSettings.updated)
                     .receive(on: scheduler)
                     .sink { [weak self] in self?.event(.fps($0)) }
 #warning("and change to effect (??) when moved to `reduce` (?)")
