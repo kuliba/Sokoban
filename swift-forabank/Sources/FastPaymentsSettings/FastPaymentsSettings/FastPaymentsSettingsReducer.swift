@@ -107,6 +107,7 @@ private extension FastPaymentsSettingsReducer {
             let (consentList, consentListEffect) = consentListReduce(contractDetails.consentList, event)
             contractDetails.consentList = consentList
             state.settingsResult = .success(.contracted(contractDetails))
+            state.updateStatus(with: consentList)
             effect = consentListEffect.map(Effect.consentList)
             
         case .none, .success(.missingContract), .failure:
@@ -184,5 +185,32 @@ private extension FastPaymentsSettingsReducer {
         }
         
         return state
+    }
+}
+
+extension FastPaymentsSettingsState {
+    
+    mutating func updateStatus(
+        with consentListState: ConsentListState
+    ) {
+        guard case let .success(success) = consentListState
+        else { return }
+        
+        switch success.status {
+        case .none:
+            status = nil
+            
+        case .inflight:
+            status = .inflight
+            
+        case let .failure(serviceFailure):
+            switch serviceFailure {
+            case .connectivityError:
+                status = .connectivityError
+                
+            case let .serverError(message):
+                status = .serverError(message)
+            }
+        }
     }
 }
