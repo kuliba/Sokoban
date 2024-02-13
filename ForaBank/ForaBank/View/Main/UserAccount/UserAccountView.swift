@@ -433,7 +433,7 @@ private extension NavigationBarView.ViewModel {
         .init(
             title: "Настройки СБП",
             subtitle: "Система быстрых платежей",
-            icon: "sfpBig",
+            icon: "ic32Sbp",
             action: action
         )
     }
