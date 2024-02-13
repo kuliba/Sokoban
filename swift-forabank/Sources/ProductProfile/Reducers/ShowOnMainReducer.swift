@@ -1,16 +1,16 @@
 //
-//  GuardianReducer.swift
-//  
+//  ShowOnMainReducer.swift
+//
 //
 //  Created by Andryusina Nataly on 13.02.2024.
 //
 
-public final class GuardianReducer {
+public final class ShowOnMainReducer {
     
     public init() {}
 }
 
-public extension GuardianReducer {
+public extension ShowOnMainReducer {
     
     func reduce(
         _ state: State,
@@ -21,49 +21,50 @@ public extension GuardianReducer {
         var effect: Effect?
         
         switch event {
-        case let .blockCard(card):
-            (state, effect) = blockCard(state, card)
-        case let .unblockCard(card):
-            (state, effect) = unblockCard(state, card)
+        case let .showOnMain(product):
+            (state, effect) = showOnMain(state, product)
+        case let .hideFromMain(product):
+            (state, effect) = hideFromMain(state, product)
         }
         
         return (state, effect)
     }
 }
 
-public extension GuardianReducer {
+public extension ShowOnMainReducer {
     
     typealias State = ProductProfileState
-    typealias Event = GuardianEvent
+    typealias Event = ShowOnMainEvent
     typealias Effect = ProductProfileEffect
 }
 
-private extension GuardianReducer {
+private extension ShowOnMainReducer {
     
-    func blockCard(
+    func showOnMain(
         _ state: State,
-        _ card: Card
+        _ product: Product
     ) -> (State, Effect?) {
                 
         var state = state
         var effect: Effect?
         
         state.status = .infligth
-        effect = .blockCard(card)
+        effect = .showOnMain(product)
         
         return (state, effect)
     }
     
-    func unblockCard(
+    func hideFromMain(
         _ state: State,
-        _ card: Card
+        _ product: Product
     ) -> (State, Effect?) {
-
+                
         var state = state
         var effect: Effect?
         
         state.status = .infligth
-        effect = .unblockCard(card)
+        
+        effect = .hideFromMain(product)
         
         return (state, effect)
     }

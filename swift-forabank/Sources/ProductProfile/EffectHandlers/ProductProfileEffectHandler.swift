@@ -32,7 +32,6 @@ public extension ProductProfileEffectHandler {
         _ effect: ProductProfileNavigation.Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        
         switch effect {
         case let .delayAlert(alert):
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

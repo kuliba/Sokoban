@@ -6,12 +6,20 @@
 //
 
 import Foundation
-import UIPrimitives
 import CardGuardianModule
 
 public final class ProductProfileReducer {
     
-    public init() {}
+    private let guardianReduce: GuardianReduce
+    private let showOnMainReduce: ShowOnMainReduce
+    
+    public init(
+        guardianReduce: @escaping GuardianReduce,
+        showOnMainReduce: @escaping ShowOnMainReduce
+    ) {
+        self.guardianReduce = guardianReduce
+        self.showOnMainReduce = showOnMainReduce
+    }
 }
 
 public extension ProductProfileReducer {
@@ -24,21 +32,17 @@ public extension ProductProfileReducer {
         
         var state = state
         var effect: Effect?
-
+        
         switch event {
-        case .closeAlert:
-            state.alert = nil
-        case .create:
-            state.modal = nil
-            effect = .create
-        case .dismissDestination:
-            state.modal = nil
-        case let .showAlert(alert):
-            state.alert = alert
-        case let .open(modal):
-            state.modal = .init(modal.viewModel, modal.cancellable)
-        case let .cardGuardianInput(cardGuardianInput):
-            (state, effect) = reduce(state, cardGuardianInput)            
+        case .appear:
+            state.status = .appear
+        case let .cardGuardian(guardianEvent):
+            (state, effect) = guardianReduce(state, guardianEvent)
+        case let .showOnMain(showOnMainEvent):
+            (state, effect) = showOnMainReduce(state, showOnMainEvent)
+        case .changePin:
+            state.status = .infligth
+            effect = .changePin // ????
         }
         return (state, effect)
     }
@@ -46,41 +50,40 @@ public extension ProductProfileReducer {
 
 public extension ProductProfileReducer {
     
-    typealias State = ProductProfileNavigation.State
-    typealias Event = ProductProfileNavigation.Event
-    typealias Effect = ProductProfileNavigation.Effect
+    typealias GuardianReduce = (State, GuardianEvent) -> (State, Effect?)
+    typealias ShowOnMainReduce = (State, ShowOnMainEvent) -> (State, Effect?)
     
-    typealias Reduce = (State, Event) -> (State, Effect?)
+    typealias State = ProductProfileState
+    typealias Event = ProductProfileEvent
+    typealias Effect = ProductProfileEffect
 }
 
 private extension ProductProfileReducer {
     
-    func reduce(
+    func blockCard(
         _ state: State,
-        _ cardGuardianInput: CardGuardianStateProjection
+        _ card: Card
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
         
-        switch cardGuardianInput {
+        state.status = .infligth
+        effect = .blockCard(card)
         
-        case .appear:
-            break
-        case let .buttonTapped(tap):
-            switch tap {
-                
-            case let .toggleLock(status):
-                state.modal = nil
-                effect = .delayAlert(Alerts.alertBlockCard(status))
-            case .changePin:
-                state.modal = nil
-                effect = .delayAlert(Alerts.alertChangePin())
-                
-            case .showOnMain:
-                state.modal = nil
-            }
-        }
+        return (state, effect)
+    }
+    
+    func unblockCard(
+        _ state: State,
+        _ card: Card
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.status = .infligth
+        effect = .unblockCard(card)
         
         return (state, effect)
     }

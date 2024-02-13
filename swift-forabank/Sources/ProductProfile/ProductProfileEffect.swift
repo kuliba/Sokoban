@@ -7,4 +7,9 @@
 
 public enum ProductProfileEffect: Equatable {
     
+    case blockCard(Card)
+    case unblockCard(Card)
+    case showOnMain(Product)
+    case hideFromMain(Product)
+    case changePin
 }

@@ -18,11 +18,11 @@ final class ProductProfileReducerTests: XCTestCase {
     
     // MARK: - Helpers
         
-    private func makeSUT(
+    /*private func makeSUT(
         state: ProductProfileReducer.State,
         event: ProductProfileReducer.Event
     ) -> (ProductProfileReducer.State, ProductProfileReducer.Effect?) {
         
         return ProductProfileReducer().reduce(state, event)
-    }
+    }*/
 }

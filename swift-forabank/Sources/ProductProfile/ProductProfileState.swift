@@ -20,10 +20,7 @@ public extension ProductProfileState {
 
     enum Status: Equatable {
         
-        case blockCard
-        case unblockCard
-        case showOnMain
-        case hideFromMain
-        case changePin
+        case appear
+        case infligth
     }
 }
