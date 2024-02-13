@@ -12,8 +12,8 @@ public extension Payload {
     
     struct ProductsVisibilityPayload {
         
-        public let category: Category
-        public let products: [Product]
+        let category: Category
+        let products: [Product]
         
         public init(category: Category, products: [Product]) {
             self.category = category
@@ -24,12 +24,12 @@ public extension Payload {
 
 public extension Payload.ProductsVisibilityPayload {
     
-    enum Category: String {
+    enum Category {
         
-        case card = "CARD"
-        case account = "ACCOUNT"
-        case deposit = "DEPOSIT"
-        case loan = "LOAN"
+        case card
+        case account
+        case deposit
+        case loan
     }
 }
 

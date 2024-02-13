@@ -41,3 +41,31 @@ private extension Payload.ProductsVisibilityPayload {
         }
     }
 }
+
+private extension Payload.ProductsVisibilityPayload.Category {
+    
+    enum _Category: String {
+        
+        case card = "CARD"
+        case account = "ACCOUNT"
+        case deposit = "DEPOSIT"
+        case loan = "LOAN"
+    }
+
+    var rawValue: String {
+        
+        let _category: _Category = {
+            switch self {
+            case .card:
+                return .card
+            case .account:
+                return .account
+            case .deposit:
+                return .deposit
+            case .loan:
+                return .loan
+            }
+        }()
+        return _category.rawValue
+    }
+}

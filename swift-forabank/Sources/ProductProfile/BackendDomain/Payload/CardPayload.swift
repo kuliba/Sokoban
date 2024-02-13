@@ -18,8 +18,8 @@ public extension Payload {
         public typealias CardNumber = Tagged<_CardNumber, String>
         public enum _CardNumber {}
 
-        public let cardId: CardID
-        public let cardNumber: CardNumber?
+        let cardId: CardID
+        let cardNumber: CardNumber?
         
         public init(cardId: CardID, cardNumber: CardNumber?) {
             self.cardId = cardId

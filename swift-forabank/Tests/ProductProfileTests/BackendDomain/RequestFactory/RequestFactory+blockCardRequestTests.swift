@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 12.02.2024.
 //
 
-import ProductProfile
+@testable import ProductProfile
 import XCTest
 import Services
 

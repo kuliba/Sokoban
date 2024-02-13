@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 12.02.2024.
 //
 
-import ProductProfile
+@testable import ProductProfile
 import XCTest
 import Services
 
@@ -40,7 +40,7 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
      
         let body = try request.decodedBody(as: Body.self)
         
-        XCTAssertNoDiff(body.categoryType, payload.category.rawValue)
+        XCTAssertNoDiff(body.categoryType, payload.category.description)
         XCTAssertNoDiff(body.products.count, payload.products.count)
     }
     
@@ -53,7 +53,7 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
         
         try assertBody(of: request, hasJSON: """
         {
-          "categoryType": \(categoryType),
+          "categoryType": \(categoryType.description),
           "products": [
             {
               "id": \(id),
@@ -95,6 +95,18 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
             
             let id: Int
             let visibility: Bool
+        }
+    }
+}
+
+private extension Payload.ProductsVisibilityPayload.Category {
+    
+    var description : String {
+        switch self {
+        case .account: return "ACCOUNT"
+        case .card: return "CARD"
+        case .deposit: return "DEPOSIT"
+        case .loan: return "LOAN"
         }
     }
 }
