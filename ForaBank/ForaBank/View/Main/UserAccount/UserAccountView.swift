@@ -242,11 +242,13 @@ struct UserAccountView: View {
         ZStack(alignment: .top) {
             
             fpsWrapperView(route)
+            
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+            
             viewModel.route.informer.map {
                 InformerView(viewModel: .init(
                     message: $0.message,
-                    icon: .init(systemName: "xmark")
+                    icon: $0.icon.image
                 ))
                 .padding(.top, 56)
             }
@@ -370,6 +372,19 @@ struct UserAccountView: View {
 //        }
 //    }
 //}
+
+extension UserAccountRoute.Informer.Icon {
+    
+    var image: Image {
+        
+        switch self {
+        case .failure:
+            return .ic16Check
+        case .success:
+            return .ic16Close
+        }
+    }
+}
 
 private extension UserAccountRoute {
     

@@ -144,7 +144,7 @@ private extension UserAccountNavigationOTPReducer {
             
         case .connectivityError:
             state.fpsRoute?.destination = nil
-            state.informer = .init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             effect = .navigation(.dismissInformer)
             
         case let .serverError(message):

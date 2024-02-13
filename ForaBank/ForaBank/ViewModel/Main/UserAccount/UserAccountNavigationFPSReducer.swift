@@ -163,21 +163,21 @@ private extension UserAccountNavigationFPSReducer {
         case let .setBankDefaultFailure(message):
             state.spinner = nil
             state.fpsRoute?.destination = nil
-            state.informer = .init(message: message)
+            state.informer = .failure(message)
             effect = .navigation(.dismissInformer)
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.spinner = nil
             state.fpsRoute?.destination = nil
-            state.informer = .init(message: "Банк по умолчанию установлен.")
+            state.informer = .success("Банк по умолчанию установлен.")
             effect = .navigation(.dismissInformer)
 #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
             // state = .init()
             state.spinner = nil
-            state.informer = .init(message: "Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
             effect = .navigation(.dismissInformer)
             
         case .getC2BSubResponse(_):
@@ -190,6 +190,19 @@ private extension UserAccountNavigationFPSReducer {
 }
 
 // MARK: - Alert Helpers
+
+extension UserAccountRoute.Informer {
+    
+    static func failure(_ message: String) -> Self {
+        
+        .init(icon: .failure, message: message)
+    }
+    
+    static func success(_ message: String) -> Self {
+        
+        .init(icon: .success, message: message)
+    }
+}
 
 extension AlertModelOf<UserAccountEvent> {
     

@@ -27,7 +27,13 @@ extension UserAccountRoute {
     
     struct Informer {
         
+        let icon: Icon
         let message: String
+        
+        enum Icon {
+            
+            case failure, success
+        }
     }
     
     enum Link: Hashable, Identifiable {
