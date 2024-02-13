@@ -77,7 +77,7 @@ private extension ProductProfileReducer {
                 state.modal = nil
                 effect = .delayAlert(Alerts.alertChangePin())
                 
-            case let .showOnMain(status):
+            case .showOnMain:
                 state.modal = nil
             }
         }
