@@ -31,3 +31,11 @@ let jsonStringOk = """
   }
 }
 """
+
+let jsonStringWithNilData = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": null
+}
+"""
