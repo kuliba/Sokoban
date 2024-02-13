@@ -104,8 +104,9 @@ private extension ConsentListRxReducer {
         guard var consentList = state.expandedConsentList
         else { return state }
         
-        consentList.consent = consent
+        consentList.banks.apply(consent: consent)
         consentList.mode = .collapsed
+        consentList.searchText = ""
         consentList.status = nil
         
         return .success(consentList)
@@ -120,7 +121,7 @@ private extension ConsentListRxReducer {
         else { return state }
 
         #warning("looks similar to toggle")
-        consentList.banks.resetSelection(to: consentList.consent)
+        consentList.banks.resetToConsented()
         consentList.mode = .collapsed
         consentList.searchText = ""
 
@@ -169,7 +170,7 @@ private extension ConsentList {
     func toggled() -> Self {
         
         var consentList = self
-        consentList.banks.resetSelection(to: consent)
+        consentList.banks.resetToConsented()
         consentList.mode.toggle()
         consentList.searchText = ""
         
@@ -179,13 +180,27 @@ private extension ConsentList {
 
 private extension Array where Element == ConsentList.SelectableBank {
     
-    mutating func resetSelection(to selected: Set<Bank.ID>) {
+    func resetedToConsented() -> Self {
         
-        for index in indices {
-            
-            let isSelected = selected.contains(self[index].id)
-            self[index].isSelected = isSelected
-        }
+        let consented = filter(\.isConsented).map(\.id)
+        let consent: Consent = .init(consented)
+        
+        return applied(consent: consent)
+    }
+    
+    mutating func resetToConsented() {
+        
+        self = resetedToConsented()
+    }
+    
+    func applied(consent: Consent) -> Self {
+        
+        .init(banks: map(\.bank), consent: consent).sorted()
+    }
+    
+    mutating func apply(consent: Consent) {
+        
+        self = applied(consent: consent)
     }
 }
 

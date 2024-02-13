@@ -7,13 +7,20 @@
 
 import SwiftUI
 
-#warning("move to UIPrimitives")
-struct AttributedTextView: View {
+public struct AttributedTextView: View {
     
-    let attributedString: NSAttributedString
-    let linkColor: Color
+    private let attributedString: NSAttributedString
+    private let linkColor: Color
     
-    var body: some View {
+    public init(
+        attributedString: NSAttributedString,
+        linkColor: Color
+    ) {
+        self.attributedString = attributedString
+        self.linkColor = linkColor
+    }
+    
+    public var body: some View {
         
         attributedTextView()
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -90,5 +97,48 @@ struct AttributedTextView_Previews: PreviewProvider {
             
             AttributedTextView(attributedString: .consent, linkColor: .gray)
         }
+    }
+}
+
+extension NSAttributedString {
+    
+    static var consent: NSAttributedString {
+        
+        makeHyperlinkedString(
+            .consentMessage,
+            linkString: "условиями",
+            url: .init(string: .consentLink)!
+        )
+    }
+    
+    static func makeHyperlinkedString(
+        _ fullString: String,
+        linkString: String,
+        url: URL
+    ) -> NSAttributedString {
+        
+        let attributedString = NSMutableAttributedString(string: fullString)
+        
+        if let hyperlinkRange = fullString.range(of: linkString) {
+            
+            let nsRange = NSRange(hyperlinkRange, in: fullString)
+            attributedString.addAttribute(.link, value: url, range: nsRange)
+            attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: nsRange)
+        }
+        
+        return attributedString
+    }
+}
+
+private extension String {
+    
+    static var consentMessage: Self {
+        
+        "Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь с условиями осуществления переводов СБП"
+    }
+    
+    static var consentLink: Self {
+        
+        "https://www.forabank.ru/user-upload/sbpay/Usloviya-osuschestvleniya-perevodov-klientov.pdf"
     }
 }

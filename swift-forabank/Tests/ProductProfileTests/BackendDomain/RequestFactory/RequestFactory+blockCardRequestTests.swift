@@ -41,7 +41,7 @@ final class RequestFactory_blockCardRequestTests: XCTestCase {
         let body = try request.decodedBody(as: Body.self)
         
         XCTAssertNoDiff(body.cardID, payload.cardId.rawValue)
-        XCTAssertNoDiff(body.cardNumber, payload.cardNumber?.rawValue)
+        XCTAssertNoDiff(body.cardNumber, payload.cardNumber.rawValue)
     }
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
@@ -63,7 +63,7 @@ final class RequestFactory_blockCardRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: Payload.CardPayload = .init(cardId: 1, cardNumber: "11")
+        payload: Payloads.CardPayload = .init(cardId: 1, cardNumber: "11")
     ) throws -> URLRequest {
         
         return try RequestFactory.blockCardRequest(
@@ -73,9 +73,9 @@ final class RequestFactory_blockCardRequestTests: XCTestCase {
     }
     
     private func anyPayload(
-       _ cardID: Payload.CardPayload.CardID = 1,
-       _ cardNumber: Payload.CardPayload.CardNumber = "11"
-    ) -> Payload.CardPayload {
+       _ cardID: Payloads.CardPayload.CardID = 1,
+       _ cardNumber: Payloads.CardPayload.CardNumber = "11"
+    ) -> Payloads.CardPayload {
         
         .init(cardId: cardID, cardNumber: cardNumber)
     }

@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-public extension Payload {
+public extension Payloads {
     
     struct ProductsVisibilityPayload {
         
@@ -22,7 +22,7 @@ public extension Payload {
     }
 }
 
-public extension Payload.ProductsVisibilityPayload {
+public extension Payloads.ProductsVisibilityPayload {
     
     enum Category {
         
@@ -33,7 +33,7 @@ public extension Payload.ProductsVisibilityPayload {
     }
 }
 
-public extension Payload.ProductsVisibilityPayload {
+public extension Payloads.ProductsVisibilityPayload {
     
     struct Product {
         

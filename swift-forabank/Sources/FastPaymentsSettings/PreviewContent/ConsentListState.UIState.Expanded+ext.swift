@@ -5,11 +5,17 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-public extension ConsentListState.UIState.Expanded {
+extension ConsentListState.UIState.Expanded {
     
     static let preview: Self = .init(
         searchText: "",
         banks: .preview,
+        canApply: false
+    )
+    
+    static let consented: Self = .init(
+        searchText: "",
+        banks: .consented(),
         canApply: false
     )
     

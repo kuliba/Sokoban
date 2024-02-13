@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import SharedConfigs
 import SwiftUI
 import UIPrimitives
 
@@ -15,20 +14,16 @@ public struct ProductSelectView<ProductView: View>: View {
     let event: (ProductSelectEvent) -> Void
     let config: ProductSelectConfig
     let productView: (ProductSelect.Product) -> ProductView
-    #warning("move cardSize into config")
-    private let cardSize: CGSize
     
     public init(
         state: ProductSelect,
         event: @escaping (ProductSelectEvent) -> Void,
         config: ProductSelectConfig,
-        cardSize: CGSize = .init(width: 112, height: 71),
         productView: @escaping (ProductSelect.Product) -> ProductView
     ) {
         self.state = state
         self.event = event
         self.config = config
-        self.cardSize = cardSize
         self.productView = productView
     }
     
@@ -38,25 +33,10 @@ public struct ProductSelectView<ProductView: View>: View {
             
             switch (state.selected, state.products) {
             case (.none, .none):
-                HStack {
-                    Image(systemName: "creditcard")
-                    
-                    VStack(alignment: .leading) {
-                        
-                        Text("Счёт списания и зачисления")
-                            .font(.footnote)
-                        
-                        Text("Данные счёта")
-                            .font(.headline)
-                    }
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Image(systemName: "chevron.down")
-                        .onTapGesture { event(.toggleProductSelect) }
-                }
+                missingSelectedProductView("Данные счёта")
                 
             case let (.none, .some(products)):
+                missingSelectedProductView("Выберите счёт")
                 productsView(products: products)
                 
             case let (.some(selected), .none):
@@ -71,6 +51,42 @@ public struct ProductSelectView<ProductView: View>: View {
             }
         }
         .animation(.easeInOut, value: state)
+    }
+    
+    private func missingSelectedProductView(
+        _ title: String
+    ) -> some View {
+        
+        HStack(spacing: 12) {
+            
+            ZStack(alignment: .topLeading) {
+                
+                config.missingSelected.backgroundColor
+                    .clipShape(RoundedRectangle(cornerRadius: 3))
+                    .frame(height: 22)
+                
+                config.missingSelected.image
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(config.missingSelected.foregroundColor)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 5, height: 5)
+                    .padding(5)
+            }
+            .frame(width: 32, height: 32)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                "Счёт списания и зачисления".text(withConfig: config.header)
+                
+                title.text(withConfig: config.missingSelected.title)
+            }
+            .foregroundColor(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            chevron()
+        }
+        .padding(.default)
     }
     
     private func selectedProductView(
@@ -143,8 +159,10 @@ public struct ProductSelectView<ProductView: View>: View {
     
     private func chevron() -> some View {
         
-        Image(systemName: "chevron.up")
-            .foregroundColor(config.chevronColor)
+        config.chevron.image
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .foregroundColor(config.chevron.color)
             .frame(width: 24, height: 24)
             .rotationEffect(.degrees(state.isExpanded ? 0 : 180))
             .onTapGesture { event(.toggleProductSelect) }

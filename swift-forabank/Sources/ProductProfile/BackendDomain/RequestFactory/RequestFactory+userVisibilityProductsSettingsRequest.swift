@@ -13,7 +13,7 @@ public extension RequestFactory {
         
     static func userVisibilityProductsSettingsRequest(
         url: URL,
-        payload: Payload.ProductsVisibilityPayload
+        payload: Payloads.ProductsVisibilityPayload
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -22,18 +22,17 @@ public extension RequestFactory {
     }
 }
 
-private extension Payload.ProductsVisibilityPayload {
+private extension Payloads.ProductsVisibilityPayload {
     
     var httpBody: Data {
         
         get throws {
             
-            let products: [[String: Any]] = products.map {
-                [
-                    "id": $0.productID.rawValue,
-                    "visibility": $0.visibility.rawValue
-                ]
-            }
+            let products: [[String: Any]] = products.map {[
+                "id": $0.productID.rawValue,
+                "visibility": $0.visibility.rawValue
+            ]}
+
             return try JSONSerialization.data(withJSONObject: [
                 "categoryType": category.rawValue,
                 "products" : products
@@ -42,7 +41,7 @@ private extension Payload.ProductsVisibilityPayload {
     }
 }
 
-private extension Payload.ProductsVisibilityPayload.Category {
+private extension Payloads.ProductsVisibilityPayload.Category {
     
     enum _Category: String {
         

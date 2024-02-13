@@ -13,7 +13,7 @@ public extension RequestFactory {
         
     static func unblockCardRequest(
         url: URL,
-        payload: Payload.CardPayload
+        payload: Payloads.CardPayload
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
