@@ -55,7 +55,7 @@ public extension UserAccountNavigationOTPEffectHandler {
 
 public extension UserAccountNavigationOTPEffectHandler {
     
-    typealias MakeTimedOTPInputViewModel = (OTPInputState.PhoneNumber, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+    typealias MakeTimedOTPInputViewModel = (OTPInputState.PhoneNumberMask, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
     typealias Dispatch = (Event) -> Void
 
@@ -66,7 +66,7 @@ public extension UserAccountNavigationOTPEffectHandler {
 private extension UserAccountNavigationOTPEffectHandler {
     
     func makeDestination(
-        _ phoneNumber: OTPInputState.PhoneNumber,
+        _ phoneNumber: OTPInputState.PhoneNumberMask,
         _ dispatch: @escaping Dispatch
     ) -> Event {
         

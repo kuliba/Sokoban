@@ -159,7 +159,7 @@ private extension UserAccountNavigationOTPReducer {
 
 private extension UserAccountNavigationOTPReducer.State {
     
-    var phoneNumber: OTPInputState.PhoneNumber? {
+    var phoneNumber: OTPInputState.PhoneNumberMask? {
         
         guard case let .success(.contracted(details)) = fpsRoute?.viewModel.state.settingsResult
         else { return nil }

@@ -8,7 +8,7 @@
 public extension OTPInputState {
     
     static func starting(
-        phoneNumber: PhoneNumber,
+        phoneNumber: PhoneNumberMask,
         duration: Int
     ) -> Self {
         
