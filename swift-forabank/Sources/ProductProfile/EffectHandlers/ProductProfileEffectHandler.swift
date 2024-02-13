@@ -42,24 +42,20 @@ public extension ProductProfileEffectHandler {
         case .create:
             dispatch(makeDestination(dispatch))
             
-        case let .action(action):
-         
-            switch action {
-            case .lockCard:
-                dispatch(.action(.lockCard))
-           
-            case .unlockCard:
-                dispatch(.action(.unlockCard))
-
-            case .changePin:
-                dispatch(.action(.changePin))
-
-            case let .showOnMain(status):
-                dispatch(.action(status ? .hideOnMain : .showOnMain))
-
-            case .showСontacts:
-                dispatch(.action(.showСontacts))
-            }
+        case .lockCard:
+            dispatch(.lockCard)
+            
+        case .unlockCard:
+            dispatch(.unlockCard)
+            
+        case .changePin:
+            dispatch(.changePin)
+            
+        case let .showOnMain(status):
+            dispatch(status ? .hideOnMain : .showOnMain1)
+            
+        case .showСontacts:
+            dispatch(.showСontacts)
         }
     }
 }
