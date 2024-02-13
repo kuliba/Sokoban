@@ -25,7 +25,7 @@ public extension ProductProfileNavigation.Effect {
         case lockCard
         case unlockCard
         case changePin
-        case onMain(Bool)
+        case showOnMain(Bool)
         case showСontacts
     }
 }

@@ -54,7 +54,7 @@ public extension ProductProfileEffectHandler {
             case .changePin:
                 dispatch(.action(.changePin))
 
-            case let .onMain(status):
+            case let .showOnMain(status):
                 dispatch(.action(status ? .hideOnMain : .showOnMain))
 
             case .showСontacts:

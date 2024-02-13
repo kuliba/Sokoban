@@ -75,8 +75,8 @@ public extension ProductProfileReducer {
             case .showСontacts:
                 print ("showСontacts")
             }
-        case let .onMain(status):
-            effect = .action(.onMain(status))
+        case let .showOnMain(status):
+            effect = .action(.showOnMain(status))
         }
 
         return (state, effect)
@@ -116,9 +116,9 @@ private extension ProductProfileReducer {
                 state.modal = nil
                 effect = .delayAlert(Alerts.alertChangePin())
 
-            case let .onMain(status):
+            case let .showOnMain(status):
                 state.modal = nil
-                effect = .action(.onMain(status))
+                effect = .action(.showOnMain(status))
             }
         }
         
