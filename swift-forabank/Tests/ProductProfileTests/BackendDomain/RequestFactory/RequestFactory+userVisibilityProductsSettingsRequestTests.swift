@@ -46,7 +46,7 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
-        let categoryType = Payload.ProductsVisibilityPayload.Category.card
+        let categoryType = Payloads.ProductsVisibilityPayload.Category.card
         let id = 2222
         let visibility = false
         let request = try createRequest(payload: .init(category: categoryType, products: [.init(productID: .init(id), visibility: .init(visibility))]))
@@ -69,7 +69,7 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: Payload.ProductsVisibilityPayload = .init(category: .card, products: [.init(productID: 1, visibility: false)])
+        payload: Payloads.ProductsVisibilityPayload = .init(category: .card, products: [.init(productID: 1, visibility: false)])
     ) throws -> URLRequest {
         
         return try RequestFactory.userVisibilityProductsSettingsRequest(
@@ -79,9 +79,9 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
     }
     
     private func anyPayload(
-        _ category: Payload.ProductsVisibilityPayload.Category = .card,
-        _ products: [Payload.ProductsVisibilityPayload.Product] = [.init(productID: 12, visibility: true)]
-    ) -> Payload.ProductsVisibilityPayload {
+        _ category: Payloads.ProductsVisibilityPayload.Category = .card,
+        _ products: [Payloads.ProductsVisibilityPayload.Product] = [.init(productID: 12, visibility: true)]
+    ) -> Payloads.ProductsVisibilityPayload {
         
         .init(category: category, products: products)
     }
@@ -99,7 +99,7 @@ final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCas
     }
 }
 
-private extension Payload.ProductsVisibilityPayload.Category {
+private extension Payloads.ProductsVisibilityPayload.Category {
     
     var description : String {
         switch self {
