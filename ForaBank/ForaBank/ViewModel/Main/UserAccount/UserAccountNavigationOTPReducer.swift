@@ -118,7 +118,7 @@ private extension UserAccountNavigationOTPReducer {
         var state = state
         var effect: Effect?
         
-        if let phoneNumber = state.phoneNumber {
+        if let phoneNumber = state.phoneNumberMask {
             
             state.spinner = .init()
             state.fpsRoute?.viewModel.event(.resetStatus)
@@ -159,12 +159,12 @@ private extension UserAccountNavigationOTPReducer {
 
 private extension UserAccountNavigationOTPReducer.State {
     
-    var phoneNumber: OTPInputState.PhoneNumberMask? {
+    var phoneNumberMask: OTPInputState.PhoneNumberMask? {
         
         guard case let .success(.contracted(details)) = fpsRoute?.viewModel.state.settingsResult
         else { return nil }
         
-        return .init(details.paymentContract.phoneNumber.rawValue)
+        return .init(details.paymentContract.phoneNumberMasked.rawValue)
         
 //        guard case let .confirmSetBankDefault(timedOTPInputViewModel, _) = fpsRoute?.destination
 //        else { return nil }
