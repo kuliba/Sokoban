@@ -1,6 +1,6 @@
 //
-//  ProductProfileEffectHandler.swift
-//  
+//  ProductProfileNavigationEffectHandler.swift
+//
 //
 //  Created by Andryusina Nataly on 07.02.2024.
 //
@@ -9,7 +9,7 @@ import Foundation
 import CardGuardianModule
 import RxViewModel
 
-public final class ProductProfileEffectHandler {
+public final class ProductProfileNavigationEffectHandler {
     
     public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
 
@@ -25,7 +25,7 @@ public final class ProductProfileEffectHandler {
     }
 }
 
-public extension ProductProfileEffectHandler {
+public extension ProductProfileNavigationEffectHandler {
     
 #warning("add tests")
     func handleEffect(
@@ -44,7 +44,7 @@ public extension ProductProfileEffectHandler {
     }
 }
 
-private extension ProductProfileEffectHandler {
+private extension ProductProfileNavigationEffectHandler {
     
     func makeDestination(
         _ dispatch: @escaping Dispatch
@@ -63,7 +63,7 @@ private extension ProductProfileEffectHandler {
     }
 }
 
-public extension ProductProfileEffectHandler {
+public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
     typealias Effect = ProductProfileNavigation.Effect
