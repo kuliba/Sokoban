@@ -10,7 +10,10 @@ import ProductSelectComponent
 public extension FastPaymentsSettingsConfig {
     
     static let preview: Self = .init(
+        accountLinking: .preview,
+        backgroundColor: .orange.opacity(0.5),
         bankDefault: .preview,
+        consentList: .preview,
         paymentContract: .preview,
         productSelect: .preview
     )
