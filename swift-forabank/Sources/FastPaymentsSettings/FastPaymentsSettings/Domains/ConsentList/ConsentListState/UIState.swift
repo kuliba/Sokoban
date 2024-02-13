@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension ConsentListState {
+extension ConsentListState {
     
     var uiState: UIState {
         
@@ -45,23 +45,23 @@ public extension ConsentListState {
         case collapsedError
         case expandedError
         
-        public struct Collapsed: Equatable {
+        struct Collapsed: Equatable {
             
-            public let bankNames: [String]
+            let bankNames: [String]
             
-            public init(bankNames: [String]) {
+            init(bankNames: [String]) {
                 
                 self.bankNames = bankNames
             }
         }
         
-        public struct Expanded: Equatable {
+        struct Expanded: Equatable {
             
-            public var searchText: String
-            public var banks: [ConsentList.SelectableBank]
-            public var canApply: Bool
+            var searchText: String
+            var banks: [ConsentList.SelectableBank]
+            var canApply: Bool
             
-            public init(
+            init(
                 searchText: String,
                 banks: [ConsentList.SelectableBank],
                 canApply: Bool
@@ -98,7 +98,7 @@ private extension ConsentList {
 extension ConsentList.SelectableBank: Comparable {
     
     public static func < (lhs: Self, rhs: Self) -> Bool {
-
+        
         switch (lhs.isSelected, rhs.isSelected) {
         case (true, false): return true
         case (false, true): return false
