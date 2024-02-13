@@ -20,7 +20,7 @@ extension CardGuardianState._Button {
         iconType: .changePin,
         subtitle: nil)
     static let three: Self = .init(
-        event: .showOnMain,
+        event: .showOnMain(false),
         title: "Скрыть с главного",
         iconType: .showOnMain,
         subtitle: "Карта не будет отображаться на главном экране")
@@ -38,7 +38,7 @@ extension CardGuardianState._Button {
         subtitle: nil)
 
     static let cardHidden: Self = .init(
-        event: .showOnMain,
+        event: .showOnMain(true),
         title: "Вернуть на главный",
         iconType: .showOnMain,
         subtitle: "Карта будет отображаться на главном экране")
