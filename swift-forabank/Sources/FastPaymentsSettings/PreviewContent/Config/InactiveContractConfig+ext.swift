@@ -7,5 +7,5 @@
 
 public extension InactiveContractConfig {
     
-    static let preview: Self = PaymentContractConfig.preview.inactive
+    static let preview: Self = FastPaymentsSettingsConfig.preview.inactiveContract
 }
