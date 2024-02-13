@@ -30,8 +30,7 @@ extension UserAccountNavigationOTPReducer {
                 state.fpsRoute?.destination = .confirmSetBankDefault(route.viewModel, route.cancellable)
                 
             case let .otpInput(otpInput):
-                break
-               // (state, effect) = reduce(state, otpInput)
+                (state, effect) = reduce(state, otpInput)
                 
             case .prepareSetBankDefault:
                 (state, effect) = prepareSetBankDefault(state)
