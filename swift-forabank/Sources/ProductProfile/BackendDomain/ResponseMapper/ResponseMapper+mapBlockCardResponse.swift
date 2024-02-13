@@ -19,16 +19,11 @@ public extension ResponseMapper {
     }
     
     private static func map(
-        _ data: _Data
+        _ data: _DTO
     ) throws -> BlockUnblockData? {
         
         data.data
     }
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = _DTO
 }
 
 private extension ResponseMapper._DTO {
