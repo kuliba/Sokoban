@@ -12,7 +12,7 @@ public extension ProductProfileNavigation {
     
     indirect enum Event: Equatable {
         
-        case closeAlert(CloseType)
+        case closeAlert(Close)
         case create
         case open(CardGuardianRoute)
         case cardGuardianInput(CardGuardianStateProjection)
@@ -27,7 +27,7 @@ public extension ProductProfileNavigation {
 
 public extension ProductProfileNavigation.Event {
     
-    enum CloseType {
+    enum Close {
         
         case close
         case changePin

@@ -97,7 +97,7 @@ extension Alerts {
     
     private static func action(
         _ status: CardGuardian.CardGuardianStatus
-    ) -> ProductProfileNavigation.Event.CloseType {
+    ) -> ProductProfileNavigation.Event.Close {
         
         switch status {
         case .active:
