@@ -7,6 +7,7 @@
 
 import ProductProfile
 import XCTest
+import Services
 
 final class ResponseMapper_mapUnlockCardResponseTests: XCTestCase {
     

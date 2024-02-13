@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Services
 
 public extension ResponseMapper {
     
