@@ -84,7 +84,7 @@ private extension ConsentList {
     var filteredBanks: [SelectableBank] {
         
         if searchText.isEmpty {
-            return banks.sorted()
+            return banks
         } else {
             return banks.filter {
                 

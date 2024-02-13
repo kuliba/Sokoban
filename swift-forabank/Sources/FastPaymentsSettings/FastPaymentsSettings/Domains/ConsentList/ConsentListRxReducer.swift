@@ -104,8 +104,10 @@ private extension ConsentListRxReducer {
         guard var consentList = state.expandedConsentList
         else { return state }
         
+        consentList.banks = consentList.banks.sorted()
         consentList.consent = consent
         consentList.mode = .collapsed
+        consentList.searchText = ""
         consentList.status = nil
         
         return .success(consentList)

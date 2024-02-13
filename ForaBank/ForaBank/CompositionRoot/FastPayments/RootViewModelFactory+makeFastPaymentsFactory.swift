@@ -68,6 +68,7 @@ private extension Model {
                 && $0.memberId != "100000000217"
             }
             .compactMap(FastPaymentsSettings.Bank.init(info:))
+            .sorted(by: \.name)
     }
 }
 

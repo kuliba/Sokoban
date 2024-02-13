@@ -514,6 +514,81 @@ final class ConsentListRxReducerTests: XCTestCase {
         assert(.changeConsent(anyConsent()), on: collapsed, effect: nil)
     }
     
+    func test_changeConsent_shouldChangeConsentOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNotEqual(consentList.consent, consent)
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state.consent,
+            consent
+        )
+    }
+    
+    func test_changeConsent_shouldSortBanksOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNotEqual(consentList.banks, consentList.banks.sorted())
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state.banks,
+            consentList.banks.sorted()
+        )
+    }
+    
+    func test_changeConsent_shouldChangeModeToCollapseOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList()
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(consentList.mode, .expanded)
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state.mode,
+            .collapsed
+        )
+    }
+    
+    func test_changeConsent_shouldResetSearchTextOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList(searchText: "abc")
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(consentList.searchText, "abc")
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state.searchText,
+            ""
+        )
+    }
+    
+    func test_changeConsent_shouldResetStatusOnExpandedConsentList() {
+        
+        let consent = anyConsent()
+        let consentList = expandedConsentList(status: .inflight)
+        let expanded: State = .success(consentList)
+        let sut = makeSUT()
+        
+        XCTAssertNoDiff(consentList.status, .inflight)
+        
+        XCTAssertNoDiff(
+            reduce(sut, expanded, .changeConsent(consent)).state.status,
+            nil
+        )
+    }
+    
     func test_changeConsent_shouldChangeConsentAndModeOnExpandedConsentList() {
         
         let consent = anyConsent()
@@ -524,7 +599,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsent(consent)).state,
             .success(.init(
-                banks: consentList.banks,
+                banks: consentList.banks.sorted(),
                 consent: consent,
                 mode: .collapsed,
                 searchText: consentList.searchText,
@@ -543,7 +618,7 @@ final class ConsentListRxReducerTests: XCTestCase {
         XCTAssertNoDiff(
             reduce(sut, expanded, .changeConsent(consent)).state,
             .success(.init(
-                banks: consentList.banks,
+                banks: consentList.banks.sorted(),
                 consent: consent,
                 mode: .collapsed,
                 searchText: consentList.searchText,
@@ -1088,6 +1163,17 @@ private extension ConsentListState {
             
         case let .success(consentList):
             return consentList.searchText
+        }
+    }
+    
+    var status: ConsentList.Status? {
+        
+        switch self {
+        case .failure:
+            return nil
+            
+        case let .success(consentList):
+            return consentList.status
         }
     }
 }
