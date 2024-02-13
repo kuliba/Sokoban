@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 15.01.2024.
 //
 
-public extension ConsentListState {
+import Foundation
+
+extension ConsentListState {
     
     var uiState: UIState {
         
@@ -43,23 +45,23 @@ public extension ConsentListState {
         case collapsedError
         case expandedError
         
-        public struct Collapsed: Equatable {
+        struct Collapsed: Equatable {
             
-            public let bankNames: [String]
+            let bankNames: [String]
             
-            public init(bankNames: [String]) {
+            init(bankNames: [String]) {
                 
                 self.bankNames = bankNames
             }
         }
         
-        public struct Expanded: Equatable {
+        struct Expanded: Equatable {
             
-            public var searchText: String
-            public var banks: [ConsentList.SelectableBank]
-            public var canApply: Bool
+            var searchText: String
+            var banks: [ConsentList.SelectableBank]
+            var canApply: Bool
             
-            public init(
+            init(
                 searchText: String,
                 banks: [ConsentList.SelectableBank],
                 canApply: Bool
@@ -86,8 +88,21 @@ private extension ConsentList {
         } else {
             return banks.filter {
                 
-                $0.bank.name.lowercased().contains(searchText.lowercased())
+                $0.bank.name.localizedCaseInsensitiveContains(searchText)
             }
+            .sorted(by: \.bank.name)
+        }
+    }
+}
+
+extension ConsentList.SelectableBank: Comparable {
+    
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        
+        switch (lhs.isSelected, rhs.isSelected) {
+        case (true, false): return true
+        case (false, true): return false
+        default: return lhs.bank.name < rhs.bank.name
         }
     }
 }

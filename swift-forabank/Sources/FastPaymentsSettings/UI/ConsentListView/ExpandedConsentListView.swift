@@ -113,18 +113,15 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
         _ bank: ConsentList.SelectableBank
     ) -> some View {
         
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             
             checkmark(isSelected: bank.isSelected)
             
-            HStack(spacing: 12) {
-                
-                bankIcon(bank)
-                
-                bank.name.text(withConfig: config.bank)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            bankIcon(bank)
+            
+            bank.name.text(withConfig: config.bank)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .foregroundColor(bank.isSelected ? .primary : .secondary)
         .animation(.easeInOut(duration: 0.2), value: bank.isSelected)
@@ -148,13 +145,14 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
                 .frame(width: 16, height: 16)
         }
         .frame(width: 24, height: 24)
+        .frame(width: 32, height: 32)
     }
     
     private func bankIcon(
-        _ bank: ConsentList.SelectableBank
+        _ selectableBank: ConsentList.SelectableBank
     ) -> some View {
         
-        Image(systemName: "building.columns")
+        selectableBank.bank.image
             .resizable()
             .aspectRatio(contentMode: .fit)
             .clipShape(Circle())
@@ -176,7 +174,6 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

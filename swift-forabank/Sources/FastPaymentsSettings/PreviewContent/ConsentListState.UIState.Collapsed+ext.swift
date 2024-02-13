@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-public extension ConsentListState.UIState.Collapsed {
+extension ConsentListState.UIState.Collapsed {
     
     static let empty: Self = .init(bankNames: [])
     
