@@ -35,20 +35,12 @@ extension ProductProfileViewModel {
                 )
         }
 
-        let blockCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
-            print("block card \($0.status)")
+        let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("block/unblock card \($0.status)")
         }
         
-        let unblockCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
-            print("unblock card \($0.status)")
-        }
-
-        let showOnMain: ProductProfileNavigationEffectHandler.ShowOnMainAction = {
-            print("showOnMain product \($0.productID)")
-        }
-
-        let hideFormMain: ProductProfileNavigationEffectHandler.ShowOnMainAction = {
-            print("hide from main product \($0.productID)")
+        let visibilityOnMain: ProductProfileNavigationEffectHandler.ShowOnMainAction = {
+            print("show/hide product \($0.productID)")
         }
 
         let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
@@ -61,10 +53,8 @@ extension ProductProfileViewModel {
         
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            blockCard: blockCard,
-            unblockCard: unblockCard,
-            showOnMain: showOnMain,
-            hideFromMain: hideFormMain,
+            guardianCard: guardianCard,
+            visibilityOnMain: visibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
             scheduler: scheduler

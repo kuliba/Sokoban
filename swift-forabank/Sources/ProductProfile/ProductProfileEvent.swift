@@ -10,8 +10,8 @@ import CardGuardianModule
 
 public enum ProductProfileEvent: Equatable {
     
-    case cardGuardian(GuardianEvent)
-    case showOnMain(ShowOnMainEvent)
+    case cardGuardian(Card)
+    case visibilityOnMain(Product)
     case changePin(Card)
     case showContacts
 }

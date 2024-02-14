@@ -83,10 +83,8 @@ extension Alerts {
     ) -> ProductProfileNavigation.Event {
         
         switch card.status {
-        case .active:
-            return .alertInput(.cardGuardian(.blockCard(card)))
-        case .blockedUnlockAvailable:
-            return .alertInput(.cardGuardian(.unblockCard(card)))
+        case .active, .blockedUnlockAvailable:
+            return .alertInput(.cardGuardian(card))
         case .blockedUnlockNotAvailable:
             return .alertInput(.showContacts)
         case .notActivated:

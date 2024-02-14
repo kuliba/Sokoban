@@ -14,10 +14,8 @@ public final class ProductProfileNavigationEffectHandler {
     public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
 
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
-    private let blockCard: CardGuardianAction
-    private let unblockCard: CardGuardianAction
-    private let showOnMain: ShowOnMainAction
-    private let hideFromMain: ShowOnMainAction
+    private let guardianCard: CardGuardianAction
+    private let visibilityOnMain: ShowOnMainAction
     private let showContacts: EmptyAction
     private let changePin: CardGuardianAction
 
@@ -25,19 +23,15 @@ public final class ProductProfileNavigationEffectHandler {
 
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        blockCard: @escaping CardGuardianAction,
-        unblockCard: @escaping CardGuardianAction,
-        showOnMain: @escaping ShowOnMainAction,
-        hideFromMain: @escaping ShowOnMainAction,
+        guardianCard: @escaping CardGuardianAction,
+        visibilityOnMain: @escaping ShowOnMainAction,
         showContacts: @escaping EmptyAction,
         changePin: @escaping CardGuardianAction,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.blockCard = blockCard
-        self.unblockCard = unblockCard
-        self.showOnMain = showOnMain
-        self.hideFromMain = hideFromMain
+        self.guardianCard = guardianCard
+        self.visibilityOnMain = visibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
         
@@ -64,22 +58,10 @@ public extension ProductProfileNavigationEffectHandler {
             
             switch alertEvent {
                 
-            case let .cardGuardian(guardian):
-                switch guardian {
-                    
-                case let .blockCard(card):
-                    blockCard(card)
-                case let .unblockCard(card):
-                    unblockCard(card)
-                }
-            case let .showOnMain(event):
-                switch event {
-                    
-                case let .showOnMain(product):
-                    showOnMain(product)
-                case let .hideFromMain(product):
-                    hideFromMain(product)
-                }
+            case let .cardGuardian(card):
+                guardianCard(card)
+            case let .visibilityOnMain(product):
+                visibilityOnMain(product)
             case let .changePin(card):
                 changePin(card)
             case .showContacts:
