@@ -33,8 +33,11 @@ struct ConsentListView: View {
                 expandedView(expanded)
                 
             case .collapsedError:
-                toggleButton()
-                    .padding(.vertical, 6)
+                HStack(spacing: 16) {
+                    icon()
+                    toggleButton()
+                }
+                .padding(.vertical, 6)
                 
             case .expandedError:
                 expandedErrorView()
@@ -103,7 +106,11 @@ struct ConsentListView: View {
         
         VStack(spacing: 12) {
             
-            toggleButton()
+            HStack(spacing: 16) {
+                
+                icon()
+                toggleButton()
+            }
             
             ZStack {
                 
