@@ -38,8 +38,10 @@ public extension ProductProfileNavigationReducer {
         case let .open(modal):
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
+            state.alert = nil
             (state, effect) = reduce(state, cardGuardianInput)
         case let .alertInput(event):
+            state.alert = nil
             (state, effect) = reduce(state, event)
         }
         return (state, effect)
