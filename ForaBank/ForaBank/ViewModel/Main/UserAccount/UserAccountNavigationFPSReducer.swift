@@ -127,15 +127,11 @@ private extension UserAccountNavigationFPSReducer {
         case .inflight:
             state.spinner = .init()
             
-//        case let .getC2BSubResponse(getC2BSubResponse):
-//            state.spinner = nil
-//            state.fpsRoute?.destination = .c2BSub(getC2BSubResponse, nil)
-            
         case .connectivityError:
             state.spinner = nil
-            // non-final => closeAlert
             state.fpsRoute?.destination = nil
-            state.fpsRoute?.alert = .tryAgainFPSAlert(.dismiss(.alert))
+            state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            effect = .navigation(.dismissInformer())
             
         case let .serverError(message):
             state.spinner = nil
@@ -164,21 +160,20 @@ private extension UserAccountNavigationFPSReducer {
             state.spinner = nil
             state.fpsRoute?.destination = nil
             state.informer = .failure(message)
-            effect = .navigation(.dismissInformer)
+            effect = .navigation(.dismissInformer())
 #warning("effect = .fps(.resetStatus)")
             
         case .setBankDefaultSuccess:
             state.spinner = nil
             state.fpsRoute?.destination = nil
             state.informer = .success("Банк по умолчанию установлен.")
-            effect = .navigation(.dismissInformer)
+            effect = .navigation(.dismissInformer())
 #warning("effect = .fps(.resetStatus)")
             
         case .updateContractFailure:
-            // state = .init()
             state.spinner = nil
             state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            effect = .navigation(.dismissInformer)
+            effect = .navigation(.dismissInformer())
             
         case .getC2BSubResponse(_):
             // ignoring for now

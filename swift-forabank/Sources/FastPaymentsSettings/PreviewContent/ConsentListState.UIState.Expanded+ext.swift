@@ -7,11 +7,16 @@
 
 extension ConsentListState.UIState.Expanded {
     
-    static let preview: Self = .init(
-        searchText: "",
-        banks: .preview,
-        canApply: false
-    )
+    static func preview(
+        searchText: String = ""
+    ) -> Self {
+     
+        .init(
+            searchText: searchText,
+            banks: .preview,
+            canApply: false
+        )
+    }
     
     static let consented: Self = .init(
         searchText: "",
@@ -19,11 +24,16 @@ extension ConsentListState.UIState.Expanded {
         canApply: false
     )
     
-    static let many: Self = .init(
-        searchText: "",
-        banks: .many,
-        canApply: false
-    )
+    static func many(
+        searchText: String = ""
+    ) -> Self {
+        
+        .init(
+            searchText: searchText,
+            banks: .many,
+            canApply: false
+        )
+    }
     
     static let search: Self = .init(
         searchText: "сбер",

@@ -75,6 +75,16 @@ extension ExpandedConsentConfig {
             borderColor: .buttonSecondaryHover,
             color: .iconBlack,
             image: .ic16Check
+        ),
+        noMatch: .init(
+            image: .init(
+                backgroundColor: .bordersDivider,
+                image: .ic24Search
+            ),
+            title: .init(
+                textFont: .textBodySR12160(),
+                textColor: .textPlaceholder
+            )
         )
     )
 }

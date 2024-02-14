@@ -98,9 +98,9 @@ private extension UserAccountNavigationOTPReducer {
             state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
             
         case let .serverError(message):
-            let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
             if message == tryAgain {
-                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP("Банк по умолчанию не установлен"))))
                 
             } else {
                 state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
@@ -145,7 +145,7 @@ private extension UserAccountNavigationOTPReducer {
         case .connectivityError:
             state.fpsRoute?.destination = nil
             state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
-            effect = .navigation(.dismissInformer)
+            effect = .navigation(.dismissInformer())
             
         case let .serverError(message):
             state.fpsRoute?.destination = nil
@@ -164,11 +164,6 @@ private extension UserAccountNavigationOTPReducer.State {
         else { return nil }
         
         return .init(details.paymentContract.phoneNumberMasked.rawValue)
-        
-//        guard case let .confirmSetBankDefault(timedOTPInputViewModel, _) = fpsRoute?.destination
-//        else { return nil }
-//        
-//        return timedOTPInputViewModel.state.phoneNumber
     }
 }
 
