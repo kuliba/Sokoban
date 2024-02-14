@@ -98,9 +98,9 @@ private extension UserAccountNavigationOTPReducer {
             state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
             
         case let .serverError(message):
-            let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
             if message == tryAgain {
-                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain))))
+                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP("Банк по умолчанию не установлен"))))
                 
             } else {
                 state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
