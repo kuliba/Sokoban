@@ -39,7 +39,7 @@ extension RootViewModelFactory {
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
                 products: { model.productsMapper() },
-                cityList: { transferType in model.citiesMapper(transferType) }
+                cityList: { model.citiesMapper($0) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
@@ -389,7 +389,7 @@ private extension Model {
     
     func productsMapper() -> [BusinessLogic.Product] {
         
-        let cards = allProducts.compactMap({ $0 as? ProductCardData })
+        let cards = allProducts.compactMap { $0 as? ProductCardData }
         let products = cards.filter({ $0.isMain ?? false }).filter({ $0.allowDebit == true })
         
         let allProducts = products.map({ BusinessLogic.Product(
