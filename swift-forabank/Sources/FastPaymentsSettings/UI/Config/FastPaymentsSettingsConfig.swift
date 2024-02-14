@@ -50,6 +50,9 @@ public extension FastPaymentsSettingsConfig {
     
     var inactiveContract: InactiveContractConfig {
         
-        paymentContract.inactive
+        .init(
+            backgroundColor: backgroundColor,
+            contract: paymentContract.inactive
+        )
     }
 }

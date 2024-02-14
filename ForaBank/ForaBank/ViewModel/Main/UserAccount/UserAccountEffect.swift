@@ -6,12 +6,13 @@
 //
 
 import ManageSubscriptionsUI
+import OTPInputComponent
 import UserAccountNavigationComponent
 
 enum UserAccountEffect {
     
     case model(ModelEffect)
-    case navigation(UserAccountNavigation.Effect)
+    case navigation(NavigationEffect)
 }
 
 extension UserAccountEffect {
@@ -21,5 +22,24 @@ extension UserAccountEffect {
         case cancelC2BSub(SubscriptionViewModel.Token)
         case deleteRequest
         case exit
+    }
+}
+
+extension UserAccountEffect {
+    
+    enum NavigationEffect: Equatable {
+        
+        case dismissInformer
+//        case fps(FastPaymentsSettingsEvent)
+        case otp(OTP)
+    }
+}
+
+extension UserAccountEffect.NavigationEffect {
+    
+    enum OTP: Equatable {
+        
+        case create(OTPInputState.PhoneNumberMask)
+        case prepareSetBankDefault(OTPInputState.PhoneNumberMask)
     }
 }

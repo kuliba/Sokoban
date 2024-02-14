@@ -17,31 +17,38 @@ struct InactiveContractView: View {
         
         VStack {
             
-            Button(action: action) {
-                
-                HStack(spacing: 16) {
-                    
-                    "Включить переводы СБП".text(withConfig: config.title)
-                    
-                    Spacer()
-                    
-                    ToggleMockView(
-                        status: .off(.enabled),
-                        color: config.toggleColor
-                    )
-                }
-            }
+            button()
             
             AttributedTextView(
                 attributedString: .consent,
-                linkColor: config.subtitle.textColor
+                linkColor: config.contract.subtitle.textColor
             )
-            .foregroundColor(config.subtitle.textColor)
-            .font(config.subtitle.textFont)
-            
-            Spacer()
+            .foregroundColor(config.contract.subtitle.textColor)
+            .font(config.contract.subtitle.textFont)
         }
-        .padding()
+        .padding(.default)
+        .background(config.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+    
+    private func button() -> some View {
+        
+        Button(action: action) {
+            
+            HStack(spacing: 16) {
+                
+                "Включить переводы СБП".text(withConfig: config.contract.title)
+                
+                Spacer()
+                
+                ToggleMockView(
+                    status: .off(.enabled),
+                    color: config.contract.toggleColor
+                )
+            }
+        }
     }
 }
 

@@ -86,6 +86,8 @@ public struct ProductSelectView<ProductView: View>: View {
             
             chevron()
         }
+        .contentShape(Rectangle())
+        .onTapGesture { event(.toggleProductSelect) }
         .padding(.default)
     }
     
@@ -164,8 +166,7 @@ public struct ProductSelectView<ProductView: View>: View {
             .aspectRatio(contentMode: .fit)
             .foregroundColor(config.chevron.color)
             .frame(width: 24, height: 24)
-            .rotationEffect(.degrees(state.isExpanded ? 0 : 180))
-            .onTapGesture { event(.toggleProductSelect) }
+            .rotationEffect(.degrees(state.isExpanded ? 180 : 0))
     }
 }
 

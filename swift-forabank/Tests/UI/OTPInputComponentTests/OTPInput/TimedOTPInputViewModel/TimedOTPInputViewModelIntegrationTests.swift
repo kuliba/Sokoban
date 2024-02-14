@@ -186,7 +186,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     }
     
     private func makeState(
-        phoneNumber: State.PhoneNumber = .init(anyMessage()),
+        phoneNumber: State.PhoneNumberMask = .init(anyMessage()),
         countdown: CountdownState = .completed,
         otpField: OTPFieldState = .init()
     ) -> State {

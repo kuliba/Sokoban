@@ -6,11 +6,12 @@
 //
 
 import OTPInputComponent
+import UIPrimitives
 
 extension OTPInputConfig {
     
     static let iFora: Self = .init(
-        button: .iFora,
+        button: .iForaConfirm,
         digitModel: .init(
             digitConfig: .init(
                 textFont: .textH0B32402(),
@@ -36,6 +37,26 @@ extension OTPInputConfig {
         title: .init(
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
+        )
+    )
+}
+
+extension ButtonConfig {
+    
+    static let iForaConfirm: Self = .init(
+        active: .init(
+            backgroundColor: .init(hex: "#FF3636"),
+            text: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textWhite
+            )
+        ),
+        inactive: .init(
+            backgroundColor: .buttonPrimaryDisabled,
+            text: .init(
+                textFont: .textH4R16240(),
+                textColor: .mainColorsWhite.opacity(0.5)
+            )
         )
     )
 }

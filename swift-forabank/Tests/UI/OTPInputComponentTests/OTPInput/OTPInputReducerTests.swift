@@ -358,7 +358,7 @@ final class OTPInputReducerTests: XCTestCase {
 }
 
 private func makeState(
-    phoneNumber: OTPInputReducer.State.PhoneNumber = .init(anyMessage()),
+    phoneNumber: OTPInputReducer.State.PhoneNumberMask = .init(anyMessage()),
     _ status: OTPInputState.Status
 ) -> OTPInputReducer.State {
     

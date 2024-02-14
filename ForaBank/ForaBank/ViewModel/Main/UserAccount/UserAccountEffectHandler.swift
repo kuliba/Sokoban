@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UserAccountNavigationComponent
 
 final class UserAccountEffectHandler {
     
@@ -45,10 +44,7 @@ extension UserAccountEffectHandler {
                 }
                 
             case let .otp(otpEffect):
-                handleOTPEffect(otpEffect) {
-                    
-                    dispatch(.otp($0))
-                }
+                handleOTPEffect(otpEffect) { dispatch(.otp($0)) }
             }
         }
     }
@@ -60,7 +56,7 @@ extension UserAccountEffectHandler {
     typealias HandleModelEffect = (Effect.ModelEffect, @escaping Dispatch) -> Void
     
     typealias OTPDispatch = (Event.OTPEvent) -> Void
-    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
+    typealias HandleOTPEffect = (UserAccountEffect.NavigationEffect.OTP, @escaping OTPDispatch) -> Void
     
     typealias Effect = UserAccountEffect
     typealias Event = UserAccountEvent
