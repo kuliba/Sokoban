@@ -617,6 +617,7 @@ private extension Target {
             .uiPrimitives
         ]
     )
+    
     static let productProfileTests = testTarget(
         name: .productProfileTests,
         dependencies: [
@@ -838,6 +839,7 @@ private extension Target {
             .combineSchedulers,
         ]
     )
+    
     static let cvvPinTests = testTarget(
         name: .cvvPinTests,
         dependencies: [
@@ -849,10 +851,19 @@ private extension Target {
         ]
     )
     
+    static let operatorsComponent = testTarget(
+        name: .operatorsListComponents,
+        dependencies: [
+            // external packages
+            .genericRemoteService
+        ]
+    )
+    
     static let cvvPIN_Services = target(
         name: .cvvPIN_Services,
         path: "Sources/Services/\(String.cvvPIN_Services)"
     )
+    
     static let cvvPIN_ServicesTests = testTarget(
         name: .cvvPIN_ServicesTests,
         dependencies: [
