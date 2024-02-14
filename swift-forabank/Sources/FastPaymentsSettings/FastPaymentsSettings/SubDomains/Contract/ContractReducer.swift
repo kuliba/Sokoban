@@ -59,7 +59,7 @@ private extension ContractReducer {
         case let .success(.contracted(details)):
 #warning("add tests for branches")
             guard details.isInactive,
-                  let core = details.core
+                  let core = coreOrFallback(for: details)
             else { return (state, nil) }
             
             var state = state
@@ -173,6 +173,40 @@ private extension ContractReducer {
 }
 
 // MARK: - Helpers
+
+private extension FastPaymentsSettingsState {
+    
+    var details: UserPaymentSettings.Details? {
+        
+        guard case let .success(.contracted(details)) = settingsResult
+        else { return nil }
+        
+        return details
+    }
+}
+
+private extension ContractReducer {
+    
+    func coreOrFallback(
+        for details: UserPaymentSettings.Details
+    ) -> FastPaymentsSettingsEffect.ContractCore? {
+        
+        details.core ?? fallback(for: details)
+    }
+    
+    func fallback(
+        for details: UserPaymentSettings.Details
+    ) -> FastPaymentsSettingsEffect.ContractCore? {
+        
+        guard let product = getProducts().first
+        else { return nil }
+        
+        return .init(
+            contractID: .init(details.paymentContract.id.rawValue),
+            selectableProductID: product.id.selectableProductID
+        )
+    }
+}
 
 private extension FastPaymentsSettingsState {
     

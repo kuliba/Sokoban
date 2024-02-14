@@ -10,11 +10,11 @@ import Tagged
 #warning("maybe add OTP length (used in Digits) - or it would be better to hold those in reducer")
 public struct OTPInputState: Equatable {
     
-    public let phoneNumber: PhoneNumber
+    public let phoneNumber: PhoneNumberMask
     public var status: Status
     
     public init(
-        phoneNumber: PhoneNumber,
+        phoneNumber: PhoneNumberMask,
         status: Status
     ) {
         self.phoneNumber = phoneNumber
@@ -24,8 +24,8 @@ public struct OTPInputState: Equatable {
 
 public extension OTPInputState {
     
-    typealias PhoneNumber = Tagged<_PhoneNumber, String>
-    enum _PhoneNumber {}
+    typealias PhoneNumberMask = Tagged<_PhoneNumberMask, String>
+    enum _PhoneNumberMask {}
     
     enum Status: Equatable {
 

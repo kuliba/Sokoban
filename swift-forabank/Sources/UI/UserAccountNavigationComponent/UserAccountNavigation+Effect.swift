@@ -22,7 +22,7 @@ public extension UserAccountNavigation.Effect {
     
     enum OTP: Equatable {
         
-        case create(OTPInputState.PhoneNumber)
-        case prepareSetBankDefault(OTPInputState.PhoneNumber)
+        case create(OTPInputState.PhoneNumberMask)
+        case prepareSetBankDefault(OTPInputState.PhoneNumberMask)
     }
 }

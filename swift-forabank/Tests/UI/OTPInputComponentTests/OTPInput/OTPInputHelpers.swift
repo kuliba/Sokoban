@@ -15,7 +15,7 @@ func submitOTP(
 }
 
 func completed(
-    phoneNumber: OTPInputState.PhoneNumber = .init(anyMessage()),
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     otpField: OTPFieldState = .init()
 ) -> OTPInputState {
     
@@ -29,7 +29,7 @@ func completed(
 }
 
 func running(
-    phoneNumber: OTPInputState.PhoneNumber = .init(anyMessage()),
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     _ remaining: Int,
     otpField: OTPFieldState = .init()
 ) -> OTPInputState {
@@ -44,7 +44,7 @@ func running(
 }
 
 func starting(
-    phoneNumber: OTPInputState.PhoneNumber = .init(anyMessage()),
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     duration: Int,
     otpField: OTPFieldState = .init()
 ) -> OTPInputState {
@@ -91,7 +91,7 @@ func starting(
 }
 
 func runningInflight(
-    phoneNumber: OTPInputState.PhoneNumber = .init(anyMessage()),
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     _ remaining: Int,
     _ text: String
 ) -> OTPInputState.Status {

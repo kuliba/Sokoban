@@ -8,4 +8,8 @@
 import SwiftUI
 import UIPrimitives
 
-public typealias InactiveContractConfig = PaymentContractConfig.StateConfig
+public struct InactiveContractConfig {
+    
+    let backgroundColor: Color
+    let contract: PaymentContractConfig.StateConfig
+}

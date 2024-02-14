@@ -160,7 +160,7 @@ private extension UserAccountNavigationOTPReducer {
 
 private extension UserAccountNavigationOTPReducer.State {
     
-    var phoneNumber: OTPInputState.PhoneNumber? {
+    var phoneNumber: OTPInputState.PhoneNumberMask? {
         
         guard case let .confirmSetBankDefault(timedOTPInputViewModel, _) = destination?.destination
         else { return nil }

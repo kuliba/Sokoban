@@ -1,23 +1,24 @@
 //
 //  UserAccountNavigationOTPEffectHandler.swift
+//  ForaBank
 //
-//
-//  Created by Igor Malyarov on 28.01.2024.
+//  Created by Igor Malyarov on 13.02.2024.
 //
 
+import CombineSchedulers
 import FastPaymentsSettings
 import OTPInputComponent
 
-public final class UserAccountNavigationOTPEffectHandler {
+final class UserAccountNavigationOTPEffectHandler {
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let scheduler: AnySchedulerOfDispatchQueue
-
-    public init(
+    
+    init(
         makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
         self.prepareSetBankDefault = prepareSetBankDefault
@@ -25,7 +26,7 @@ public final class UserAccountNavigationOTPEffectHandler {
     }
 }
 
-public extension UserAccountNavigationOTPEffectHandler {
+extension UserAccountNavigationOTPEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -53,14 +54,14 @@ public extension UserAccountNavigationOTPEffectHandler {
     }
 }
 
-public extension UserAccountNavigationOTPEffectHandler {
+extension UserAccountNavigationOTPEffectHandler {
     
     typealias MakeTimedOTPInputViewModel = (OTPInputState.PhoneNumberMask, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
     typealias Dispatch = (Event) -> Void
-
-    typealias Effect = UserAccountNavigation.Effect.OTP
-    typealias Event = UserAccountNavigation.Event.OTP
+    
+    typealias Effect = UserAccountEffect.NavigationEffect.OTP
+    typealias Event = UserAccountEvent.OTPEvent
 }
 
 private extension UserAccountNavigationOTPEffectHandler {

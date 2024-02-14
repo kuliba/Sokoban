@@ -66,11 +66,11 @@ struct ActiveContractView: View {
             )
         }
         
-        AccountLinkingSettingsButton(
-            action: { event(.subscription(.getC2BSubButtonTapped)) },
-            config: config.accountLinking
-        )
-        .padding()
+//        AccountLinkingSettingsButton(
+//            action: { event(.subscription(.getC2BSubButtonTapped)) },
+//            config: config.accountLinking
+//        )
+//        .padding()
     }
 }
 
