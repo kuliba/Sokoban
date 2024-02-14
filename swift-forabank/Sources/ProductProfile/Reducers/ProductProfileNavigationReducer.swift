@@ -80,7 +80,7 @@ private extension ProductProfileNavigationReducer {
                 state.modal = nil
                 state.alert = nil
                 effect = .sendRequest(.changePin(card))
-            case let .showOnMain(product):
+            case let .visibilityOnMain(product):
                 state.modal = nil
                 effect = .sendRequest(.visibilityOnMain(product))
             }

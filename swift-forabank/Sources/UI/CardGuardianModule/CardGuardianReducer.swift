@@ -34,8 +34,8 @@ public extension CardGuardianReducer {
             case let .changePin(card):
                 state.updateEvent(.buttonTapped(.changePin(card)))
                 
-            case let .showOnMain(product):
-                state.updateEvent(.buttonTapped(.showOnMain(product)))
+            case let .visibilityOnMain(product):
+                state.updateEvent(.buttonTapped(.visibilityOnMain(product)))
             }
         }
         return (state, .none)
