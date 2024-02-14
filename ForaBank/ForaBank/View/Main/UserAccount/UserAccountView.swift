@@ -293,6 +293,9 @@ struct UserAccountView: View {
             switch fpsDestination {
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
                 OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+                    .navigationBar(with: .fastPayments(
+                        action: { viewModel.event(.dismiss(.fpsDestination)) }
+                    ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
