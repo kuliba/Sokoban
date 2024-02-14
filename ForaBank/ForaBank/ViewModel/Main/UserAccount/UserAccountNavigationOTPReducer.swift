@@ -164,11 +164,6 @@ private extension UserAccountNavigationOTPReducer.State {
         else { return nil }
         
         return .init(details.paymentContract.phoneNumberMasked.rawValue)
-        
-//        guard case let .confirmSetBankDefault(timedOTPInputViewModel, _) = fpsRoute?.destination
-//        else { return nil }
-//        
-//        return timedOTPInputViewModel.state.phoneNumber
     }
 }
 
