@@ -64,8 +64,6 @@ public extension ProductProfileNavigationEffectHandler {
             
             switch alertEvent {
                 
-            case .appear:
-                break
             case let .cardGuardian(guardian):
                 switch guardian {
                     
