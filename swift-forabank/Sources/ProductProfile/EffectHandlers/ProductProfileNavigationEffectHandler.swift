@@ -12,21 +12,23 @@ import RxViewModel
 public final class ProductProfileNavigationEffectHandler {
     
     public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
-
+    
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
     private let guardianCard: CardGuardianAction
-    private let visibilityOnMain: ShowOnMainAction
+    private let visibilityOnMain: VisibilityOnMainAction
     private let showContacts: EmptyAction
     private let changePin: CardGuardianAction
-
+    
+    private let alertLifespan: TimeInterval
     private let scheduler: AnySchedulerOfDispatchQueue
-
+    
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
         guardianCard: @escaping CardGuardianAction,
-        visibilityOnMain: @escaping ShowOnMainAction,
+        visibilityOnMain: @escaping VisibilityOnMainAction,
         showContacts: @escaping EmptyAction,
         changePin: @escaping CardGuardianAction,
+        alertLifespan: TimeInterval = 1,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
@@ -34,7 +36,7 @@ public final class ProductProfileNavigationEffectHandler {
         self.visibilityOnMain = visibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
-        
+        self.alertLifespan = alertLifespan
         self.scheduler = scheduler
     }
 }
@@ -48,25 +50,30 @@ public extension ProductProfileNavigationEffectHandler {
     ) {
         switch effect {
         case let .delayAlert(alert):
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + alertLifespan) {
                 
                 dispatch(.showAlert(alert))
             }
         case .create:
             dispatch(makeDestination(dispatch))
-        case let .sendRequest(alertEvent): //
-            
-            switch alertEvent {
-                
-            case let .cardGuardian(card):
-                guardianCard(card)
-            case let .visibilityOnMain(product):
-                visibilityOnMain(product)
-            case let .changePin(card):
-                changePin(card)
-            case .showContacts:
-                showContacts()
-            }
+        case let .sendRequest(alertEvent):
+            // fire and forget
+            handleEffect(alertEvent)
+        }
+    }
+    
+    private func handleEffect(
+        _ alertEvent: ProductProfileEvent
+    ) {
+        switch alertEvent {
+        case let .cardGuardian(card):
+            guardianCard(card)
+        case let .visibilityOnMain(product):
+            visibilityOnMain(product)
+        case let .changePin(card):
+            changePin(card)
+        case .showContacts:
+            showContacts()
         }
     }
 }
@@ -85,7 +92,7 @@ private extension ProductProfileNavigationEffectHandler {
             .map(Event.cardGuardianInput)
             .receive(on: scheduler)
             .sink { dispatch($0) }
-
+        
         return .open(.init(cardGuardianViewModel, cancellable))
     }
 }
@@ -98,7 +105,7 @@ public extension ProductProfileNavigationEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias CardGuardianAction = (Card) -> Void
-    typealias ShowOnMainAction = (Product) -> Void
+    typealias VisibilityOnMainAction = (Product) -> Void
     typealias EmptyAction = () -> Void
 }
 
