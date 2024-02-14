@@ -404,9 +404,7 @@ public extension BusinessLogic {
         if operation.parameters.first(where: { $0.id == .input }) != nil {
             
             let parameters = operation.parameters.filter({ 
-                $0.id != .input
-            }).filter({
-                $0.id != .amount
+                ($0.id != .input &&  $0.id != .amount)
             })
             
             let newOperation = Operation(parameters: parameters)
