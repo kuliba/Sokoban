@@ -18,7 +18,7 @@ public struct Card: Equatable, Hashable {
     
     let cardId: CardID
     let cardNumber: CardNumber
-    let cardGuardoanStatus: CardGuardianStatus
+    let cardGuardianStatus: CardGuardianStatus
     
     public init(
         cardId: CardID,
@@ -27,11 +27,11 @@ public struct Card: Equatable, Hashable {
     ) {
         self.cardId = cardId
         self.cardNumber = cardNumber
-        self.cardGuardoanStatus = cardGuardianStatus
+        self.cardGuardianStatus = cardGuardianStatus
     }
     
     public var status: CardGuardianStatus {
-        return cardGuardoanStatus
+        return cardGuardianStatus
     }
 }
 

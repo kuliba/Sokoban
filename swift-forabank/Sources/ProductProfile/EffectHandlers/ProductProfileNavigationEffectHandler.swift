@@ -60,7 +60,7 @@ public extension ProductProfileNavigationEffectHandler {
             }
         case .create:
             dispatch(makeDestination(dispatch))
-        case let .sendRequest(alertEvent):
+        case let .sendRequest(alertEvent): //
             
             switch alertEvent {
                 
