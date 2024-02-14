@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ResponseMapper.swift
 //  
 //
 //  Created by Дмитрий Савушкин on 13.02.2024.
