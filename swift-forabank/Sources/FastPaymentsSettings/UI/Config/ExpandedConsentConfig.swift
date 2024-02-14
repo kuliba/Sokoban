@@ -13,15 +13,18 @@ public struct ExpandedConsentConfig {
     let apply: Apply
     let bank: TextConfig
     let checkmark: CheckmarkConfig
+    let noMatch: NoMatch
     
     public init(
         apply: Apply,
         bank: TextConfig,
-        checkmark: CheckmarkConfig
+        checkmark: CheckmarkConfig,
+        noMatch: NoMatch
     ) {
         self.apply = apply
         self.bank = bank
         self.checkmark = checkmark
+        self.noMatch = noMatch
     }
 }
 
@@ -58,6 +61,20 @@ public extension ExpandedConsentConfig {
             self.borderColor = borderColor
             self.color = color
             self.image = image
+        }
+    }
+    
+    struct NoMatch {
+        
+        let image: LogoConfig
+        let title: TextConfig
+        
+        public init(
+            image: LogoConfig,
+            title: TextConfig
+        ) {
+            self.image = image
+            self.title = title
         }
     }
 }

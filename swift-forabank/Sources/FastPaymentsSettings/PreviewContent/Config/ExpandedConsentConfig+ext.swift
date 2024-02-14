@@ -21,6 +21,16 @@ extension ExpandedConsentConfig {
             textFont: .headline,
             textColor: .green
         ),
-        checkmark: .preview
+        checkmark: .preview,
+        noMatch: .init(
+            image: .init(
+                backgroundColor: .blue.opacity(0.7),
+                image: .init(systemName: "magnifyingglass")
+            ),
+            title: .init(
+                textFont: .footnote, 
+                textColor: .orange
+            )
+        )
     )
 }

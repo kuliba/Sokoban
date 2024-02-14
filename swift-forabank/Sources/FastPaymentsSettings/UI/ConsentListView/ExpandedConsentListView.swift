@@ -37,7 +37,7 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
             header()
             
 #warning("replace hardcoded height")
-            bankList()
+            banks()
                 .frame(maxHeight: 350)
                 .matchedGeometryEffect(
                     id: Match.toggle,
@@ -74,6 +74,40 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
                 set: { event(.search($0)) }
             )
         )
+    }
+    
+    @ViewBuilder
+    private func banks() -> some View {
+        
+        ZStack {
+            noMatch()
+                .opacity(expanded.banks.isEmpty ? 1 : 0)
+                .frame(height: expanded.banks.isEmpty ? nil : 0)
+            // .animation(.default, value: expanded.banks.isEmpty)
+            
+            bankList()
+                .opacity(expanded.banks.isEmpty ? 0 : 1)
+        }
+    }
+    
+    private func noMatch() -> some View {
+        
+        VStack(spacing: 8) {
+            
+            ZStack {
+                
+                config.noMatch.image.backgroundColor
+                    .clipShape(Circle())
+                
+                config.noMatch.image.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
+            }
+            .frame(width: 40, height: 40)
+            
+            "Не удалось найти банк".text(withConfig: config.noMatch.title)
+        }
     }
     
     private func bankList() -> some View {
@@ -197,7 +231,7 @@ struct ExpandedConsentListView_Previews: PreviewProvider {
         Group {
             
             expandedConsentListView(.consented)
-            expandedConsentListView(.preview)
+            expandedConsentListView(.preview())
             expandedConsentListView(.search)
             expandedConsentListView(.apply)
         }

@@ -151,10 +151,35 @@ struct ConsentListView_Previews: PreviewProvider {
             }
             .previewDisplayName("Collapsed")
             
-            consentListView(.expanded(.preview))
-                .previewDisplayName("Expanded some")
-            consentListView(.expanded(.many))
+            consentListView(.expanded(.preview()))
+                .previewDisplayName("Expanded")
+            consentListView(.expanded(.many()))
                 .previewDisplayName("Expanded many")
+            
+            consentListView(.expanded(.apply))
+                .previewDisplayName("Apply")
+            
+#warning("extract to preview content")
+            let searchMatch = ConsentListState.success(
+                .init(
+                    .preview,
+                    consent: [],
+                    mode: .expanded,
+                    searchText: "бан"
+                ))
+            consentListView(searchMatch.uiState)
+                .previewDisplayName("Search: match")
+            
+            let searchNoMatch = ConsentListState.success(
+                .init(
+                    .preview,
+                    consent: [],
+                    mode: .expanded,
+                    searchText: "мур"
+                ))
+            consentListView(searchNoMatch.uiState)
+                .previewDisplayName("Search: no match")
+                .border(.red)
         }
         .padding(.horizontal)
     }
