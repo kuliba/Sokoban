@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 31.01.2024.
 //
 
+import Foundation
 import ManageSubscriptionsUI
 import OTPInputComponent
-import UserAccountNavigationComponent
 
 enum UserAccountEffect {
     
@@ -29,8 +29,7 @@ extension UserAccountEffect {
     
     enum NavigationEffect: Equatable {
         
-        case dismissInformer
-//        case fps(FastPaymentsSettingsEvent)
+        case dismissInformer(TimeInterval = 2)
         case otp(OTP)
     }
 }

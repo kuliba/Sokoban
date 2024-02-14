@@ -65,12 +65,6 @@ struct ActiveContractView: View {
                 config: config.productSelect.card.productCardConfig
             )
         }
-        
-//        AccountLinkingSettingsButton(
-//            action: { event(.subscription(.getC2BSubButtonTapped)) },
-//            config: config.accountLinking
-//        )
-//        .padding()
     }
 }
 

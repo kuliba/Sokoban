@@ -12,12 +12,12 @@ extension FPSEndpointStub {
     
     /// Change this stub with feature flag set to `.active(.stub)` to test.
     static let `default`: Self = .init(
-        fastPaymentContractFindList: [.a2, .a1, .a2, .a1],
-        getClientConsentMe2MePull: [.b1],
+        fastPaymentContractFindList: [.a1, .a2, .a1, .a2, .a1],
+        getClientConsentMe2MePull: [.b3],
         getBankDefault: [.c2],
         updateFastPaymentContract: [.d1, .d1, .d1, .d1],
         prepareSetBankDefault: [.f1],
-        makeSetBankDefault: [.g1],
+        makeSetBankDefault: [.g4],
         changeClientConsentMe2MePull: [.h1],
         getC2BSub: [.j1]
     )

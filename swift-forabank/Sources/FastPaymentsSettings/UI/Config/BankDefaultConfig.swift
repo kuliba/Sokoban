@@ -30,20 +30,6 @@ public struct BankDefaultConfig {
 
 public extension BankDefaultConfig {
     
-    struct LogoConfig {
-        
-        let backgroundColor: Color
-        let image: Image
-        
-        public init(
-            backgroundColor: Color,
-            image: Image
-        ) {
-            self.backgroundColor = backgroundColor
-            self.image = image
-        }
-    }
-    
     struct ToggleConfig {
         
         let onDisabled: StateConfig

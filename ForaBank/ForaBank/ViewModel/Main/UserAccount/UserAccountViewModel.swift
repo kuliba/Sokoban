@@ -11,7 +11,6 @@ import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
-import UserAccountNavigationComponent
 import UIPrimitives
 
 class UserAccountViewModel: ObservableObject {

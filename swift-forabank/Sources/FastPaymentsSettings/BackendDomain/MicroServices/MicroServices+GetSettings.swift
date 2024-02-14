@@ -18,7 +18,6 @@ public extension MicroServices {
         
         private let getContract: GetContract
         private let getConsent: GetConsent
-#warning("getBankDefault should be decorated with caching!")
         private let getBankDefault: GetBankDefault
         private let mapToMissing: MapToMissing
         private let mapToSettings: MapToSettings

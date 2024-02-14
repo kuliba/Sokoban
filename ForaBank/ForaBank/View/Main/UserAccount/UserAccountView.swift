@@ -12,7 +12,6 @@ import Presentation
 import ManageSubscriptionsUI
 import SearchBarComponent
 import SwiftUI
-//import UserAccountNavigationComponent
 import UIPrimitives
 
 struct UserAccountView: View {
@@ -294,9 +293,9 @@ struct UserAccountView: View {
             switch fpsDestination {
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
                 OTPInputWrapperView(viewModel: timedOTPInputViewModel)
-                
-//            case let .c2BSub(getC2BSubResponse, _):
-//                Text("TBD: \(String(describing: getC2BSubResponse))")
+                    .navigationBar(with: .fastPayments(
+                        action: { viewModel.event(.dismiss(.fpsDestination)) }
+                    ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
@@ -344,44 +343,15 @@ struct UserAccountView: View {
     }
 }
 
-//private extension UserAccountEvent {
-//    
-//    init(event: UserAccountNavigation.Event) {
-//        
-//        switch event {
-//        case .closeAlert:
-//            self = .dismiss(.alert)
-//            
-//        case .closeFPSAlert:
-//            self = .dismiss(.fpsAlert)
-//            
-//        case .dismissDestination:
-//            self = .dismiss(.destination)
-//            
-//        case .dismissFPSDestination:
-//            self = .dismiss(.fpsDestination)
-//            
-//        case .dismissRoute:
-//            self = .dismiss(.route)
-//            
-//        case let .fps(fps):
-//            self = .fps(fps)
-//            
-//        case let .otp(otp):
-//            self = .otp(otp)
-//        }
-//    }
-//}
-
 extension UserAccountRoute.Informer.Icon {
     
     var image: Image {
         
         switch self {
         case .failure:
-            return .ic16Check
-        case .success:
             return .ic16Close
+        case .success:
+            return .ic16Check
         }
     }
 }
@@ -397,17 +367,6 @@ private extension UserAccountRoute {
         
         fpsRoute?.destination
     }
-    
-//    private var fpsRoute: UserAccountNavigation.State.FPSRoute? {
-//        
-//        switch link {
-//        case let .fastPaymentSettings(.new(fpsRoute)):
-//            return fpsRoute
-//            
-//        default:
-//            return nil
-//        }
-//    }
 }
 
 private struct OTPInputWrapperView: View {
