@@ -13,6 +13,7 @@ struct Alerts {}
 extension Alerts {
     
     static func alertChangePin(
+        _ card: Card
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
@@ -25,7 +26,7 @@ extension Alerts {
             secondaryButton: .init(
                 type: .default,
                 title: "Активировать",
-                event: .alertInput(.changePin))
+                event: .alertInput(.changePin(card)))
         )
     }
     

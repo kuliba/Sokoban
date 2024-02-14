@@ -12,8 +12,8 @@ public extension CardGuardian {
     enum ButtonEvent: Equatable, Hashable {
         
         case toggleLock(Card)
-        case changePin
-        case showOnMain(Bool)
+        case changePin(Card)
+        case showOnMain(Product)
     }
 }
 
@@ -28,8 +28,8 @@ private extension CardGuardianEvent {
         switch buttonEvent {
         case let .toggleLock(status):
             self = .buttonTapped(.toggleLock(status))
-        case .changePin:
-            self = .buttonTapped(.changePin)
+        case let .changePin(card):
+            self = .buttonTapped(.changePin(card))
         case let .showOnMain(status):
             self = .buttonTapped(.showOnMain(status))
         }

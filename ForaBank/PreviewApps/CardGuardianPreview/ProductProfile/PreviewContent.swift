@@ -17,15 +17,7 @@ extension ProductProfileViewModel {
         buttons: [CardGuardianState._Button],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
-        
-        let guardianReduce = GuardianReducer().reduce(_:_:)
-        let showOnMainReduce = ShowOnMainReducer().reduce(_:_:)
-
-        let productProfileReduce = ProductProfileReducer(
-            guardianReduce: guardianReduce,
-            showOnMainReduce: showOnMainReduce
-        ).reduce(_:_:)
-        
+                
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
 
         let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
@@ -43,9 +35,38 @@ extension ProductProfileViewModel {
                 )
         }
 
+        let blockCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("block card \($0.status)")
+        }
+        
+        let unblockCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("unblock card \($0.status)")
+        }
+
+        let showOnMain: ProductProfileNavigationEffectHandler.ShowOnMainAction = {
+            print("showOnMain product \($0.productID)")
+        }
+
+        let hideFormMain: ProductProfileNavigationEffectHandler.ShowOnMainAction = {
+            print("hide from main product \($0.productID)")
+        }
+
+        let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("change pin \($0)")
+        }
+
+        let showContacts: ProductProfileNavigationEffectHandler.EmptyAction = {
+            print("show contacts")
+        }
+        
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            reduce: productProfileReduce,
+            blockCard: blockCard,
+            unblockCard: unblockCard,
+            showOnMain: showOnMain,
+            hideFromMain: hideFormMain,
+            showContacts: showContacts,
+            changePin: changePin,
             scheduler: scheduler
         )
             .handleEffect(_:_:)

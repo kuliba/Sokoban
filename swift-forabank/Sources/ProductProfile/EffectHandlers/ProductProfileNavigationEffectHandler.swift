@@ -14,16 +14,33 @@ public final class ProductProfileNavigationEffectHandler {
     public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
 
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
-    private let reduce: Reduce
+    private let blockCard: CardGuardianAction
+    private let unblockCard: CardGuardianAction
+    private let showOnMain: ShowOnMainAction
+    private let hideFromMain: ShowOnMainAction
+    private let showContacts: EmptyAction
+    private let changePin: CardGuardianAction
+
     private let scheduler: AnySchedulerOfDispatchQueue
 
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        reduce: @escaping Reduce,
+        blockCard: @escaping CardGuardianAction,
+        unblockCard: @escaping CardGuardianAction,
+        showOnMain: @escaping ShowOnMainAction,
+        hideFromMain: @escaping ShowOnMainAction,
+        showContacts: @escaping EmptyAction,
+        changePin: @escaping CardGuardianAction,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.reduce = reduce
+        self.blockCard = blockCard
+        self.unblockCard = unblockCard
+        self.showOnMain = showOnMain
+        self.hideFromMain = hideFromMain
+        self.showContacts = showContacts
+        self.changePin = changePin
+        
         self.scheduler = scheduler
     }
 }
@@ -45,7 +62,31 @@ public extension ProductProfileNavigationEffectHandler {
             dispatch(makeDestination(dispatch))
         case let .sendRequest(alertEvent):
             
-            reduce(.init(status: .infligth), alertEvent)
+            switch alertEvent {
+                
+            case .appear:
+                break
+            case let .cardGuardian(guardian):
+                switch guardian {
+                    
+                case let .blockCard(card):
+                    blockCard(card)
+                case let .unblockCard(card):
+                    unblockCard(card)
+                }
+            case let .showOnMain(event):
+                switch event {
+                    
+                case let .showOnMain(product):
+                    showOnMain(product)
+                case let .hideFromMain(product):
+                    hideFromMain(product)
+                }
+            case let .changePin(card):
+                changePin(card)
+            case .showContacts:
+                showContacts()
+            }
         }
     }
 }
@@ -75,8 +116,10 @@ public extension ProductProfileNavigationEffectHandler {
     typealias Effect = ProductProfileNavigation.Effect
     
     typealias Dispatch = (Event) -> Void
-
-    typealias Reduce = (ProductProfileState, ProductProfileEvent) -> (ProductProfileState, ProductProfileEffect?)
+    
+    typealias CardGuardianAction = (Card) -> Void
+    typealias ShowOnMainAction = (Product) -> Void
+    typealias EmptyAction = () -> Void
 }
 
 // MARK: - CardGuardian

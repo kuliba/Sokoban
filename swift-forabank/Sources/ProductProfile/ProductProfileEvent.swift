@@ -6,6 +6,7 @@
 //
 
 import Tagged
+import CardGuardianModule
 
 public enum ProductProfileEvent: Equatable {
     
@@ -13,6 +14,6 @@ public enum ProductProfileEvent: Equatable {
     
     case cardGuardian(GuardianEvent)
     case showOnMain(ShowOnMainEvent)
-    case changePin
+    case changePin(Card)
     case showContacts
 }

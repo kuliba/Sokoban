@@ -2,12 +2,12 @@
 //  Product.swift
 //  
 //
-//  Created by Andryusina Nataly on 13.02.2024.
+//  Created by Andryusina Nataly on 14.02.2024.
 //
 
 import Tagged
 
-public struct Product: Equatable {
+public struct Product: Equatable, Hashable {
     
     public typealias ProductID = Tagged<_ProductID, Int>
     public enum _ProductID {}
@@ -15,8 +15,8 @@ public struct Product: Equatable {
     public typealias Visibility = Tagged<_Visibility, Bool>
     public enum _Visibility {}
     
-    let productID: ProductID
-    let visibility: Visibility
+    public let productID: ProductID
+    public let visibility: Visibility
     
     public init(
         productID: ProductID,

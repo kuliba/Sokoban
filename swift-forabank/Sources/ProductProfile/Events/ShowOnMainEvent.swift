@@ -6,6 +6,7 @@
 //
 
 import Tagged
+import CardGuardianModule
 
 public enum ShowOnMainEvent: Equatable {
     
