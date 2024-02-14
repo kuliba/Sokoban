@@ -89,6 +89,10 @@ struct ExpandedConsentListView<Icon: View, CollapseButton: View>: View {
                         isLast: $0.id == expanded.banks.last?.id
                     )
                 }
+                
+                Color.clear
+                    .frame(height: expanded.canApply ? 48 : 0)
+                    .animation(.default, value: expanded.canApply)
             }
         }
     }
