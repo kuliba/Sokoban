@@ -13,13 +13,13 @@ public struct ExpandedConsentConfig {
     let apply: Apply
     let bank: TextConfig
     let checkmark: CheckmarkConfig
-    let noMatch: NoMatch
+    let noMatch: NoSearchMatchConfig
     
     public init(
         apply: Apply,
         bank: TextConfig,
         checkmark: CheckmarkConfig,
-        noMatch: NoMatch
+        noMatch: NoSearchMatchConfig
     ) {
         self.apply = apply
         self.bank = bank
@@ -64,7 +64,7 @@ public extension ExpandedConsentConfig {
         }
     }
     
-    struct NoMatch {
+    struct NoSearchMatchConfig {
         
         let image: LogoConfig
         let title: TextConfig
