@@ -12,24 +12,6 @@ struct Alerts {}
 
 extension Alerts {
     
-    static func alertChangePin(
-        _ card: Card
-    ) -> AlertModelOf<ProductProfileNavigation.Event> {
-        
-        .init(
-            title: "Активируйте сертификат",
-            message: "\nСертификат позволяет просматривать CVV по картам и изменять PIN-код\nв течение 6 месяцев\n\nЭто мера предосторожности во избежание мошеннических операций",
-            primaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: .closeAlert),
-            secondaryButton: .init(
-                type: .default,
-                title: "Активировать",
-                event: .alertInput(.changePin(card)))
-        )
-    }
-    
     static func alertBlockCard(
         _ card: Card
     ) -> AlertModelOf<ProductProfileNavigation.Event> {

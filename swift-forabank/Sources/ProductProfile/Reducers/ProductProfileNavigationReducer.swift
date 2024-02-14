@@ -72,10 +72,12 @@ private extension ProductProfileNavigationReducer {
                 
             case let .toggleLock(card):
                 state.modal = nil
+                state.alert = nil
                 effect = .delayAlert(Alerts.alertBlockCard(card))
             case let .changePin(card):
                 state.modal = nil
-                effect = .delayAlert(Alerts.alertChangePin(card))
+                state.alert = nil
+                effect = .sendRequest(.changePin(card))
             case let .showOnMain(product):
                 state.modal = nil
                 effect = .sendRequest(.showOnMain(product.visibility.rawValue ? .hideFromMain(product) : .showOnMain(product)))
