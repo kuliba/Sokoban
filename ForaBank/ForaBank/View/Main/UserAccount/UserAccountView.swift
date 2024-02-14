@@ -349,9 +349,9 @@ extension UserAccountRoute.Informer.Icon {
         
         switch self {
         case .failure:
-            return .ic16Check
-        case .success:
             return .ic16Close
+        case .success:
+            return .ic16Check
         }
     }
 }
