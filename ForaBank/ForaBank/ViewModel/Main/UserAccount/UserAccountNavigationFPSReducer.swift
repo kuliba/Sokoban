@@ -129,9 +129,9 @@ private extension UserAccountNavigationFPSReducer {
             
         case .connectivityError:
             state.spinner = nil
-            // non-final => closeAlert
             state.fpsRoute?.destination = nil
-            state.fpsRoute?.alert = .tryAgainFPSAlert(.dismiss(.alert))
+            state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            effect = .navigation(.dismissInformer())
             
         case let .serverError(message):
             state.spinner = nil
