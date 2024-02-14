@@ -14,13 +14,16 @@ public final class ProductProfileNavigationEffectHandler {
     public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
 
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
+    private let reduce: Reduce
     private let scheduler: AnySchedulerOfDispatchQueue
 
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
+        reduce: @escaping Reduce,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
+        self.reduce = reduce
         self.scheduler = scheduler
     }
 }
@@ -40,6 +43,9 @@ public extension ProductProfileNavigationEffectHandler {
             }
         case .create:
             dispatch(makeDestination(dispatch))
+        case let .sendRequest(alertEvent):
+            
+            reduce(.init(status: .infligth), alertEvent)
         }
     }
 }
@@ -69,6 +75,8 @@ public extension ProductProfileNavigationEffectHandler {
     typealias Effect = ProductProfileNavigation.Effect
     
     typealias Dispatch = (Event) -> Void
+
+    typealias Reduce = (ProductProfileState, ProductProfileEvent) -> (ProductProfileState, ProductProfileEffect?)
 }
 
 // MARK: - CardGuardian

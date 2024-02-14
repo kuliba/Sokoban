@@ -1,14 +1,14 @@
 //
 //  Card.swift
+//  
 //
-//
-//  Created by Andryusina Nataly on 13.02.2024.
+//  Created by Andryusina Nataly on 14.02.2024.
 //
 
 import Foundation
 import Tagged
 
-public struct Card: Equatable {
+public struct Card: Equatable, Hashable {
     
     public typealias CardID = Tagged<_CardID, Int>
     public enum _CardID {}
@@ -18,13 +18,20 @@ public struct Card: Equatable {
     
     let cardId: CardID
     let cardNumber: CardNumber
+    let cardGuardoanStatus: CardGuardianStatus
     
     public init(
         cardId: CardID,
-        cardNumber: CardNumber
+        cardNumber: CardNumber,
+        cardGuardianStatus: CardGuardianStatus
     ) {
         self.cardId = cardId
         self.cardNumber = cardNumber
+        self.cardGuardoanStatus = cardGuardianStatus
+    }
+    
+    public var status: CardGuardianStatus {
+        return cardGuardoanStatus
     }
 }
 

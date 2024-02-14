@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 13.02.2024.
 //
 
+import CardGuardianModule
+
 public final class GuardianReducer {
     
     public init() {}

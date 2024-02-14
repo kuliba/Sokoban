@@ -15,13 +15,16 @@ public extension ProductProfileNavigation {
         
         public var modal: ProductProfileRoute?
         public var alert: AlertModelOf<Event>?
-        
+        public var isLoading: Bool
+
         public init(
             modal: ProductProfileRoute? = nil,
-            alert: AlertModelOf<Event>? = nil
+            alert: AlertModelOf<Event>? = nil,
+            isLoading: Bool = false
         ) {
             self.modal = modal
             self.alert = alert
+            self.isLoading = false
         }
     }
 }

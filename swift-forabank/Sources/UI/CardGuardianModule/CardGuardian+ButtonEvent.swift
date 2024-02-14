@@ -11,7 +11,7 @@ public extension CardGuardian {
     
     enum ButtonEvent: Equatable, Hashable {
         
-        case toggleLock(CardGuardianStatus)
+        case toggleLock(Card)
         case changePin
         case showOnMain(Bool)
     }

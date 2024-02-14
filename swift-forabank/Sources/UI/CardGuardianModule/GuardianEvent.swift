@@ -2,10 +2,8 @@
 //  GuardianEvent.swift
 //
 //
-//  Created by Andryusina Nataly on 13.02.2024.
+//  Created by Andryusina Nataly on 14.02.2024.
 //
-
-import CardGuardianModule
 
 public enum GuardianEvent: Equatable {
     

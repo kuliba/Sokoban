@@ -14,4 +14,5 @@ public enum ProductProfileEvent: Equatable {
     case cardGuardian(GuardianEvent)
     case showOnMain(ShowOnMainEvent)
     case changePin
+    case showContacts
 }

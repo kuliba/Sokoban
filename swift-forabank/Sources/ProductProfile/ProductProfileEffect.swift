@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 13.02.2024.
 //
 
+import CardGuardianModule
+
 public enum ProductProfileEffect: Equatable {
     
     case blockCard(Card)
@@ -12,4 +14,5 @@ public enum ProductProfileEffect: Equatable {
     case showOnMain(Product)
     case hideFromMain(Product)
     case changePin
+    case showContacts
 }

@@ -39,6 +39,8 @@ public extension ProductProfileNavigationReducer {
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)
+        case let .alertInput(event):
+            (state, effect) = reduce(state, event)
         }
         return (state, effect)
     }
@@ -49,8 +51,6 @@ public extension ProductProfileNavigationReducer {
     typealias State = ProductProfileNavigation.State
     typealias Event = ProductProfileNavigation.Event
     typealias Effect = ProductProfileNavigation.Effect
-    
-    typealias Reduce = (State, Event) -> (State, Effect?)
 }
 
 private extension ProductProfileNavigationReducer {
@@ -70,9 +70,9 @@ private extension ProductProfileNavigationReducer {
         case let .buttonTapped(tap):
             switch tap {
                 
-            case let .toggleLock(status):
+            case let .toggleLock(card):
                 state.modal = nil
-                effect = .delayAlert(Alerts.alertBlockCard(status))
+                effect = .delayAlert(Alerts.alertBlockCard(card))
             case .changePin:
                 state.modal = nil
                 effect = .delayAlert(Alerts.alertChangePin())
@@ -82,5 +82,16 @@ private extension ProductProfileNavigationReducer {
         }
         
         return (state, effect)
+    }
+}
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ alertInput: ProductProfileEvent
+    ) -> (State, Effect?) {
+        
+        return (state, .sendRequest(alertInput))
     }
 }

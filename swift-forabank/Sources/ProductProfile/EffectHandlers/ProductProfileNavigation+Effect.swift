@@ -14,5 +14,6 @@ public extension ProductProfileNavigation {
         
         case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
+        case sendRequest(ProductProfileEvent)
     }
 }

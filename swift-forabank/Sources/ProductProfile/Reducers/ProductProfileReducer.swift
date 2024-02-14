@@ -43,6 +43,8 @@ public extension ProductProfileReducer {
         case .changePin:
             state.status = .infligth
             effect = .changePin // ????
+        case .showContacts:
+            effect = .showContacts
         }
         return (state, effect)
     }

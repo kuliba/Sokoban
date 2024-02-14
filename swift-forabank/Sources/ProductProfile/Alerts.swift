@@ -25,33 +25,33 @@ extension Alerts {
             secondaryButton: .init(
                 type: .default,
                 title: "Активировать",
-                event: .closeAlert)
+                event: .alertInput(.changePin))
         )
     }
     
     static func alertBlockCard(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
-            title: titleForAlertCardGuardian(status),
-            message: messageForAlertCardGuardian(status),
+            title: titleForAlertCardGuardian(card),
+            message: messageForAlertCardGuardian(card),
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
                 event: .closeAlert),
             secondaryButton: .init(
                 type: .default,
-                title: titleSecondaryButtonForAlertCardGuardian(status),
-                event: .closeAlert)
+                title: titleSecondaryButtonForAlertCardGuardian(card),
+                event: event(card))
         )
     }
     
     private static func titleForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String {
         
-        switch status {
+        switch card.status {
         case .active:
             return "Заблокировать карту?"
         case .blockedUnlockAvailable:
@@ -64,10 +64,10 @@ extension Alerts {
     }
     
     private static func messageForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String? {
         
-        switch status {
+        switch card.status {
         case .active:
             return "Карту можно будет разблокировать в приложении или в колл-центре"
         case .blockedUnlockAvailable:
@@ -80,10 +80,10 @@ extension Alerts {
     }
     
     private static func titleSecondaryButtonForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String {
         
-        switch status {
+        switch card.status {
         case .active:
             return "ОК"
         case .blockedUnlockAvailable:
@@ -95,11 +95,19 @@ extension Alerts {
         }
     }
     
-    private static func action(
-        _ status: CardGuardian.CardGuardianStatus
+    private static func event(
+        _ card: Card
     ) -> ProductProfileNavigation.Event {
         
-        // TODO: add other
-        return .closeAlert
+        switch card.status {
+        case .active:
+            return .alertInput(.cardGuardian(.blockCard(card)))
+        case .blockedUnlockAvailable:
+            return .alertInput(.cardGuardian(.unblockCard(card)))
+        case .blockedUnlockNotAvailable:
+            return .alertInput(.showContacts)
+        case .notActivated:
+            return .closeAlert
+        }
     }
 }
