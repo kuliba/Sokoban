@@ -19,7 +19,6 @@ public final class ProductProfileNavigationEffectHandler {
     private let showContacts: EmptyAction
     private let changePin: CardGuardianAction
     
-    private let alertLifespan: TimeInterval
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
@@ -28,7 +27,6 @@ public final class ProductProfileNavigationEffectHandler {
         visibilityOnMain: @escaping VisibilityOnMainAction,
         showContacts: @escaping EmptyAction,
         changePin: @escaping CardGuardianAction,
-        alertLifespan: TimeInterval = 1,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
@@ -36,7 +34,6 @@ public final class ProductProfileNavigationEffectHandler {
         self.visibilityOnMain = visibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
-        self.alertLifespan = alertLifespan
         self.scheduler = scheduler
     }
 }
@@ -48,8 +45,8 @@ public extension ProductProfileNavigationEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .delayAlert(alert):
-            DispatchQueue.main.asyncAfter(deadline: .now() + alertLifespan) {
+        case let .delayAlert(alert, timeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
                 
                 dispatch(.showAlert(alert))
             }

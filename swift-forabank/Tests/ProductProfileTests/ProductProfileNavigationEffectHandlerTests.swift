@@ -54,7 +54,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         
         var event: EventNavigation._Event? = .none
         
-        let (sut, _) = makeSUT(alertLifespan: 0)
+        let (sut, _) = makeSUT()
         
         sut.handleEffect(.create) {
             
@@ -72,9 +72,9 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         
         var event: EventNavigation._Event? = .none
         
-        let (sut, _) = makeSUT(alertLifespan: 0)
+        let (sut, _) = makeSUT()
         
-        sut.handleEffect(.delayAlert(Alerts.alertBlockCard(.newCard(status: .active)))) {
+        sut.handleEffect(.delayAlert(Alerts.alertBlockCard(.newCard(status: .active)), 0)) {
             
             event = $0.value
         }
@@ -128,7 +128,6 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         visibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
         showContacts: @escaping SUT.EmptyAction = {},
         changePin: @escaping SUT.CardGuardianAction = {_ in },
-        alertLifespan: TimeInterval = 1,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
         file: StaticString = #file,
         line: UInt = #line
@@ -154,7 +153,6 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             visibilityOnMain: visibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
-            alertLifespan: alertLifespan,
             scheduler: scheduler
         )
         

@@ -10,8 +10,12 @@ import UIPrimitives
 import CardGuardianModule
 
 public final class ProductProfileNavigationReducer {
-        
-    public init() {}
+    
+    private let alertLifespan: TimeInterval
+
+    public init(alertLifespan: TimeInterval = 1) {
+        self.alertLifespan = alertLifespan
+    }
 }
 
 public extension ProductProfileNavigationReducer {
@@ -75,7 +79,7 @@ private extension ProductProfileNavigationReducer {
             case let .toggleLock(card):
                 state.modal = nil
                 state.alert = nil
-                effect = .delayAlert(Alerts.alertBlockCard(card))
+                effect = .delayAlert(Alerts.alertBlockCard(card), alertLifespan)
             case let .changePin(card):
                 state.modal = nil
                 state.alert = nil
