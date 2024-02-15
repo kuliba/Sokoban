@@ -18,7 +18,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: MainViewModel.UserAccountButtonViewModel = .init(
-        logo: Image("foraLogoNewYear"),
+        logo: .ic12LogoForaColor,
         name: "",
         avatar: nil,
         action: { [weak self] in
