@@ -20,7 +20,8 @@ struct UserAccountNavigationStateManager {
 extension UserAccountNavigationStateManager {
 
     typealias OnDelete = (SubscriptionViewModel.Token, String) -> Void
-    typealias MakeSubscriptionsViewModel = (@escaping OnDelete) -> SubscriptionsViewModel
+    typealias OnDetail = (SubscriptionViewModel.Token) -> Void
+    typealias MakeSubscriptionsViewModel = (@escaping OnDelete, @escaping OnDetail) -> SubscriptionsViewModel
     
     typealias Reduce = (State, Event) -> (State, Effect?)
     

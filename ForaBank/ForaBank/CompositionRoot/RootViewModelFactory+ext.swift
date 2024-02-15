@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import SberQR
+import ManageSubscriptionsUI
 import PaymentSticker
+import SberQR
 import SwiftUI
 
 extension RootViewModelFactory {
@@ -19,7 +20,8 @@ extension RootViewModelFactory {
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
+        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -69,13 +71,18 @@ extension RootViewModelFactory {
             }
         }()
         
-        let otpServices = FastPaymentsSettingsOTPServices(fpsHTTPClient, infoNetworkLog)
-        
         let navigationStateManager = makeNavigationStateManager(
-            otpServices: otpServices,
-            model: model,
+            modelEffectHandler: .init(model: model),
+            otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
-            log: infoNetworkLog
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
+            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
+            log: infoNetworkLog,
+            scheduler: scheduler
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -403,3 +410,28 @@ private extension RootViewModelFactory {
         )
     }
 }
+
+// MARK: - Adapters
+
+private extension UserAccountModelEffectHandler {
+    
+    convenience init(model: Model) {
+        
+        self.init(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            },
+            deleteRequest: {
+                
+                model.action.send(ModelAction.ClientInfo.Delete.Request())
+            },
+            exit: {
+                
+                model.auth.value = .unlockRequiredManual
+            }
+        )
+    }
+}
+

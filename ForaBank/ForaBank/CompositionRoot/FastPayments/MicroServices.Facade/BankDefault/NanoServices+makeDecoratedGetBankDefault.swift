@@ -14,10 +14,22 @@ extension NanoServices {
     
     static func makeDecoratedGetBankDefault(
         _ httpClient: HTTPClient,
-        _ bankDefaultCacheRead: @escaping BankDefaultCacheRead,
-        _ bankDefaultCacheWrite: @escaping BankDefaultCacheWrite,
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetBankDefaultResponse {
+        
+        let bankDefaultStore = BankDefaultStore(keyTag: .bankDefault)
+        
+        let bankDefaultCacheRead: BankDefaultCacheRead = {
+            
+            guard let (bankDefault, _) = try? bankDefaultStore.load()
+            else { return nil }
+            
+            return .init(bankDefault)
+        }
+        let bankDefaultCacheWrite: BankDefaultCacheWrite = {
+            
+            try? bankDefaultStore.save(($0.rawValue, .distantFuture))
+        }
         
         let getBankDefault = adaptedLoggingFetch(
             createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
@@ -81,7 +93,7 @@ private extension ServiceFailure {
         
         guard case .serverError(errorMessage) = self
         else { return nil }
- 
+        
         return errorMessage
     }
 }

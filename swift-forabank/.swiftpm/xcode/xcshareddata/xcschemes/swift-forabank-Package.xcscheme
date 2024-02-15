@@ -972,6 +972,48 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C2BSubscriptionUI"
+               BuildableName = "C2BSubscriptionUI"
+               BlueprintName = "C2BSubscriptionUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Utilities"
+               BuildableName = "Utilities"
+               BlueprintName = "Utilities"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Services"
+               BuildableName = "Services"
+               BlueprintName = "Services"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1213,26 +1255,6 @@
                BlueprintIdentifier = "CarouselComponentTests"
                BuildableName = "CarouselComponentTests"
                BlueprintName = "CarouselComponentTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BlockUnBlockCardNavigationComponentTests"
-               BuildableName = "BlockUnBlockCardNavigationComponentTests"
-               BlueprintName = "BlockUnBlockCardNavigationComponentTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "cardGuardianModuleTests"
-               BuildableName = "cardGuardianModuleTests"
-               BlueprintName = "cardGuardianModuleTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

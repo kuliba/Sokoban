@@ -11,7 +11,6 @@ import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
-import UserAccountNavigationComponent
 import UIPrimitives
 
 class UserAccountViewModel: ObservableObject {
@@ -409,13 +408,18 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            let viewModel = navigationStateManager.makeSubscriptionsViewModel { token, title in
-                
-                self.event(.navigate(.alert(.cancelC2BSub(
-                    title: title,
-                    event: .cancelC2BSub(token)
-                ))))
-            }
+            let viewModel = navigationStateManager.makeSubscriptionsViewModel(
+                { [weak self] token, title in
+                    
+                    self?.event(.navigate(.alert(.cancelC2BSub(
+                        title: title,
+                        event: .cancelC2BSub(token)
+                    ))))
+                },
+                { [weak self] token in
+                    
+                    self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                })
             
             self.event(.navigate(.link(.managingSubscription(viewModel))))
             
@@ -440,7 +444,7 @@ private extension UserAccountViewModel {
                 let cancellable = viewModel.$state
                     .dropFirst()
                     .removeDuplicates()
-                    .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
+                    .map(UserAccountEvent.FastPaymentsSettings.updated)
                     .receive(on: scheduler)
                     .sink { [weak self] in self?.event(.fps($0)) }
 #warning("and change to effect (??) when moved to `reduce` (?)")

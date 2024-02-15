@@ -5,7 +5,11 @@
 //  Created by Igor Malyarov on 25.01.2024.
 //
 
+import SwiftUI
+import UIPrimitives
+
 public struct InactiveContractConfig {
     
-    public init() {}
+    let backgroundColor: Color
+    let contract: PaymentContractConfig.StateConfig
 }

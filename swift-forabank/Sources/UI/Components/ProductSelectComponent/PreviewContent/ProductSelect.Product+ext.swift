@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 22.12.2023.
 //
 
-import ForaTools
+import UIPrimitives
 
 public extension Array where Element == ProductSelect.Product {
     

@@ -38,7 +38,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         sut.event(prepare())
         initiateOTPSpy.complete(with: .failure(.connectivityError))
         
-        XCTAssertNoDiff(stateSpy.values, [
+        XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
             .failure(.connectivityError)
         ])
@@ -61,9 +61,9 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         sut.event(.otpField(.confirmOTP))
         submitOTPSpy.complete(with: .failure(.connectivityError))
         
-        XCTAssertNoDiff(stateSpy.values, [
+        XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
-            .starting(duration: duration),
+            starting(duration),
             running(32),
             running(31),
             running(31, otpField: text("12345")),
@@ -91,9 +91,9 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         sut.event(.otpField(.confirmOTP))
         submitOTPSpy.complete(with: .success(()))
         
-        XCTAssertNoDiff(stateSpy.values, [
+        XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
-            .starting(duration: duration),
+            starting(duration),
             running(32),
             running(31),
             running(30),
@@ -120,9 +120,9 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         sut.event(.otpField(.confirmOTP))
         submitOTPSpy.complete(with: .success(()))
         
-        XCTAssertNoDiff(stateSpy.values, [
+        XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
-            .starting(duration: duration),
+            starting(duration),
             running(32),
             running(32, otpField: completed("654321")),
             runningInflight(32, "654321"),
@@ -186,10 +186,14 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     }
     
     private func makeState(
+        phoneNumber: State.PhoneNumberMask = .init(anyMessage()),
         countdown: CountdownState = .completed,
         otpField: OTPFieldState = .init()
     ) -> State {
         
-        .input(.init(countdown: countdown, otpField: otpField))
+        .init(
+            phoneNumber: phoneNumber,
+            status: .input(.init(countdown: countdown, otpField: otpField))
+        )
     }
 }
