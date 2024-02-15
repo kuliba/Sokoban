@@ -139,8 +139,7 @@ public extension BusinessLogic {
                                 )
                                 
                                 let parameters = newOperation.parameters
-                                    .filter { $0.id != .amount }
-                                    .filter { $0.id != .input }
+                                    .filter { $0.id != .amount && $0.id != .input }
                                 
                                 completion(.success(.operation(.init(parameters: parameters))))
                             
