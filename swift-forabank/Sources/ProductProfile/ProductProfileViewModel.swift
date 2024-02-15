@@ -96,7 +96,6 @@ public extension ProductProfileViewModel {
     }
 }
 
-
 // MARK: - Types
 
 public extension ProductProfileNavigationStateManager {

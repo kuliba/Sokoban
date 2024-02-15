@@ -103,5 +103,4 @@ extension Alerts {
                 title: "OK",
                 event: .closeAlert))
     }
-
 }
