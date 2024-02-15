@@ -60,9 +60,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             
             event = $0.value
         }
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
+                
         XCTAssertNoDiff(event, .open)
     }
     
