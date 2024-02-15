@@ -14,10 +14,10 @@ struct CvvButtonView: View {
         
     var body: some View {
         
-        showAlert()
+        showCVV()
     }
     
-    private func showAlert() -> some View {
+    private func showCVV() -> some View {
         
         Button(action: viewModel.showCvvAlert) {
             Text("CVV")
