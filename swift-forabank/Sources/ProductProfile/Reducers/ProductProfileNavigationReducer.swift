@@ -20,7 +20,6 @@ public final class ProductProfileNavigationReducer {
 
 public extension ProductProfileNavigationReducer {
     
-#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event

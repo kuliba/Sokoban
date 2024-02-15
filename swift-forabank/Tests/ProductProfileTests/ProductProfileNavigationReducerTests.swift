@@ -8,26 +8,87 @@
 @testable import ProductProfile
 import XCTest
 import UIPrimitives
+import CardGuardianModule
+import RxViewModel
 
 final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test create
     
-    func test_create_shouldModalNilEffectCreate() {
+    func test_create_shouldEffectCreate() {
         
-        let sut = makeSUT()
-        
-        let (state, effect) = sut.reduce(.init(), .create)
-        
-        XCTAssertNoDiff(state.modal, nil)
-        XCTAssertNoDiff(effect, .create)
+        assert(
+            .create,
+            on: productProfileState(),
+            effect: .create)
     }
     
-    typealias SUT = ProductProfileNavigationReducer
-    typealias State = SUT.State
-    typealias Event = SUT.Event
-    typealias Effect = SUT.Effect
+    // MARK: test open
+    
+    func test_open_shouldEffectNil() {
+        
+        assert(
+            .open(createCardGuardianRoute()),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test closeAlert
+    
+    func test_closeAlert_shouldEffectNil() {
+        
+        assert(
+            .closeAlert,
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test dismissDestination
+    
+    func test_dismissDestination_shouldEffectNil() {
+        
+        assert(
+            .dismissDestination,
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test cardGuardianInput
+    
+    func test_cardGuardianInput_shouldEffectNil() {
+        
+        assert(
+            .cardGuardianInput(.appear),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test showAlert
+    
+    func test_showAlert_shouldEffectNil() {
+        
+        assert(
+            .showAlert(Alerts.alertBlockCard(.newCard(status: .active))),
+            on: productProfileState(),
+            effect: nil)
+    }
 
+    // MARK: test alertInput
+    
+    func test_alertInput_showContacts_shouldEffectShowContacts() {
+        
+        assert(
+            .alertInput(.showContacts),
+            on: productProfileState(),
+            effect: .sendRequest(.showContacts))
+    }
+    
+    private typealias SUT = ProductProfileNavigationReducer
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -40,7 +101,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         return sut
     }
     
-    func productProfileState(
+    private func productProfileState(
         _ modal: SUT.State.ProductProfileRoute? = nil,
         _ alert: AlertModelOf<ProductProfileNavigation.Event>? = nil
     ) -> SUT.State {
@@ -58,5 +119,58 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     ) -> (state: State, effect: Effect?) {
         
         sut.reduce(state, event)
+    }
+    
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        effect expectedEffect: Effect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let receivedEffect = reduce(sut ?? makeSUT(), state, event).effect
+        
+        XCTAssertNoDiff(
+            receivedEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)) state, but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+    }
+    
+    private func createCardGuardianRoute(
+    ) -> ProductProfileNavigation.CardGuardianRoute {
+        
+        let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
+        
+        let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
+            .init(
+                initialState: .init(buttons: .preview),
+                reduce: cardGuardianReduce,
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
+        }
+        
+        let cardGuardianViewModel = makeCardGuardianViewModel(.main)
+        let cancellable = cardGuardianViewModel.$state
+            .sink { _ in }
+        
+        return .init(cardGuardianViewModel, cancellable)
+    }
+}
+
+private extension Card {
+    
+    static func newCard(
+        status: CardGuardianStatus
+    ) -> Card {
+        
+        .init(
+            cardId: 1,
+            cardNumber: "111",
+            cardGuardianStatus: status
+        )
     }
 }
