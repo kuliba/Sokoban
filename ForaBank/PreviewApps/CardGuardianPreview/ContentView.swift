@@ -25,7 +25,8 @@ struct ContentView: View {
                         .font(.system(size: 120))
                 }
                 
-                CvvButtonView.cardUnblokedOnMain.offset(x: 30, y: 30)
+                CvvButtonView.cardUnblokedOnMain.offset(x: 40, y: 30)
+                CvvCardBlocked.card.offset(x: -40, y: 30)
             }
         }
     }

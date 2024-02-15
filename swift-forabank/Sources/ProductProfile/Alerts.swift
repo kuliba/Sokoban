@@ -103,4 +103,16 @@ extension Alerts {
                 title: "OK",
                 event: .closeAlert))
     }
+    
+    static func alertCardBlocked(
+    ) -> AlertModelOf<ProductProfileNavigation.Event> {
+        
+        .init(
+            title: "Информация",
+            message: "Для просмотра CVV и смены PIN карта должна быть активна.",
+            primaryButton: .init(
+                type: .cancel,
+                title: "OK",
+                event: .closeAlert))
+    }
 }

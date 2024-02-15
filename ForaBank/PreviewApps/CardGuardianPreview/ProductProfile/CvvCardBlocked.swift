@@ -1,5 +1,5 @@
 //
-//  CvvButtonView.swift
+//  CvvCardBlocked.swift
 //  CardGuardianPreview
 //
 //  Created by Andryusina Nataly on 15.02.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import ProductProfile
 
-struct CvvButtonView: View {
+struct CvvCardBlocked: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
         
@@ -19,7 +19,7 @@ struct CvvButtonView: View {
     
     private func showCVV() -> some View {
         
-        Button(action: viewModel.showCvvAlert) {
+        Button(action: viewModel.showAlertIfCardBlocked) {
             Text("CVV")
                 .foregroundColor(.white)
                 .padding(10)
@@ -38,5 +38,5 @@ struct CvvButtonView: View {
 }
 
 #Preview {
-    CvvButtonView.cardUnblokedOnMain
+    CvvCardBlocked.card
 }

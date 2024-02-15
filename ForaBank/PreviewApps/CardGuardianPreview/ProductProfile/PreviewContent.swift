@@ -93,3 +93,10 @@ extension CvvButtonView {
         viewModel: .preview(buttons: .preview)
     )
 }
+
+extension CvvCardBlocked {
+    
+    static let card: Self = .init(
+        viewModel: .preview(buttons: .preview)
+    )
+}

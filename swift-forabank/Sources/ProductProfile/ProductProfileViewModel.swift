@@ -94,6 +94,11 @@ public extension ProductProfileViewModel {
         
         self.event(.showAlert(Alerts.alertCVV()))
     }
+    
+    func showAlertIfCardBlocked(){
+        
+        self.event(.showAlert(Alerts.alertCardBlocked()))
+    }
 }
 
 // MARK: - Types
