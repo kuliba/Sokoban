@@ -91,4 +91,17 @@ extension Alerts {
             return .closeAlert
         }
     }
+    
+    static func alertCVV(
+    ) -> AlertModelOf<ProductProfileNavigation.Event> {
+        
+        .init(
+            title: "Информация",
+            message: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.",
+            primaryButton: .init(
+                type: .cancel,
+                title: "OK",
+                event: .closeAlert))
+    }
+
 }

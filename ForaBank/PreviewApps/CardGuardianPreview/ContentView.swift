@@ -15,12 +15,17 @@ struct ContentView: View {
         
         NavigationView {
             
-            NavigationLink(destination: destination()) {
+            ZStack {
                 
-                Image(systemName: "person.text.rectangle.fill")
-                    .renderingMode(.original)
-                    .foregroundColor(Color(.systemMint))
-                    .font(.system(size: 120))
+                NavigationLink(destination: destination()) {
+                    
+                    Image(systemName: "person.text.rectangle.fill")
+                        .renderingMode(.original)
+                        .foregroundColor(Color(.systemMint))
+                        .font(.system(size: 120))
+                }
+                
+                CvvButtonView.cardUnblokedOnMain.offset(x: 30, y: 30)
             }
         }
     }
@@ -33,21 +38,21 @@ struct ContentView: View {
                 Text("Aктивна, на главном")
                     .lineLimit(2)
                 Spacer()
-                ProductProfileView.cardUnblokedOnMain
+                ControlButtonView.cardUnblokedOnMain
             }
             
             HStack {
                 Text("Заблокирована (можно разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ProductProfileView.cardBlockedHideOnMain
+                ControlButtonView.cardBlockedHideOnMain
             }
             
             HStack {
                 Text("Заблокирована (нельзя разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ProductProfileView.cardBlockedUnlockNotAvailable
+                ControlButtonView.cardBlockedUnlockNotAvailable
             }
         }
         .padding()
