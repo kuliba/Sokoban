@@ -43,7 +43,6 @@ public final class ProductProfileNavigationEffectHandler {
 
 public extension ProductProfileNavigationEffectHandler {
     
-#warning("add tests")
     func handleEffect(
         _ effect: ProductProfileNavigation.Effect,
         _ dispatch: @escaping Dispatch
