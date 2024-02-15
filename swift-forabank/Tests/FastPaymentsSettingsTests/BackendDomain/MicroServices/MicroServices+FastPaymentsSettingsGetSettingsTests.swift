@@ -19,6 +19,19 @@ final class MicroServices_FastPaymentsSettingsGetSettingsTests: XCTestCase {
         XCTAssertEqual(getBankDefaultSpy.callCount, 0)
     }
     
+    func test_process_shouldDeliverMissingContractOnNilContractNilConsent_a3b3c1() {
+        
+        let (sut, getContractSpy, getConsentSpy, getBankDefaultSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.missingContract(.failure(.collapsedError))), on: {
+            
+            getContractSpy.complete(with: .success(nil)) // a3
+            getConsentSpy.complete(with: nil)            // b3
+        })
+        
+        XCTAssertEqual(getBankDefaultSpy.callCount, 0)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = MicroServices.SettingsGetter<UserPaymentSettings.PaymentContract, Consent?, UserPaymentSettings>
@@ -57,5 +70,26 @@ final class MicroServices_FastPaymentsSettingsGetSettingsTests: XCTestCase {
         trackForMemoryLeaks(getBankDefaultSpy, file: file, line: line)
         
         return (sut, getContractSpy, getConsentSpy, getBankDefaultSpy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        toDeliver expected: SUT.ProcessResult,
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.process {
+            
+            XCTAssertNoDiff($0, expected, "\nExpected \(expected), but got \($0) instead.", file: file, line: line)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }

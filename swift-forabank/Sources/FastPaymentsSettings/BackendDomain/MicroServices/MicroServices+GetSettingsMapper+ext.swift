@@ -27,9 +27,10 @@ where Contract == UserPaymentSettings.PaymentContract,
         
         let mapToMissing: MapToMissing = { consent in
             
-            ConsentListState(banks: getBanks(), consent: consent)
-                .map { .missingContract(consent: .success($0)) }
-                .mapError { _ in .connectivityError }
+            return .success(.missingContract(.init(
+                banks: getBanks(),
+                consent: consent
+            )))
         }
         
         self.init(
