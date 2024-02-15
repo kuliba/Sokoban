@@ -34,32 +34,6 @@ where Key == String {
     struct DataToStringConversionError: Swift.Error {}
 }
 
-extension KeyChainStore
-where Key == Bool {
-    
-    convenience init(keyTag: KeyTag) {
-        
-        self.init(
-            keyTag: keyTag,
-            data: {
-                
-                try JSONEncoder().encode(Activation(status: $0))
-            },
-            key: {
-                
-                let activation = try JSONDecoder().decode(Activation.self, from: $0)
-                
-                return activation.status
-            }
-        )
-    }
-    
-    private struct Activation: Codable {
-        
-        let status: Bool
-    }
-}
-
 extension KeyTagKeyChainStore
 where Key == SecKey {
     

@@ -40,6 +40,7 @@ let package = Package(
         .urlRequestFactory,
         // UI
         .buttonWithSheet,
+        .c2bSubscriptionUI,
         .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
@@ -57,6 +58,8 @@ let package = Package(
         .paymentComponents,
         .carouselComponent,
         .operatorsListComponents,
+        // Utilities
+        .services,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -129,6 +132,7 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
+        .c2bSubscriptionUI,
         .cardGuardianModule,
         .cardGuardianModuleTests,
         .linkableText,
@@ -162,6 +166,8 @@ let package = Package(
         .sharedConfigs,
         .carouselComponent,
         .carouselComponentTests,
+        // Utilities
+        .services,
         .operatorsListComponents,
         // tools
         .foraTools,
@@ -274,6 +280,13 @@ private extension Product {
         name: .buttonWithSheet,
         targets: [
             .buttonWithSheet
+        ]
+    )
+    
+    static let c2bSubscriptionUI = library(
+        name: .c2bSubscriptionUI,
+        targets: [
+            .c2bSubscriptionUI
         ]
     )
     
@@ -395,6 +408,15 @@ private extension Product {
         ]
     )
     
+    // MARK: - Utilities
+    
+    static let services = library(
+        name: .services,
+        targets: [
+            .services
+        ]
+    )
+
     // MARK: - Infra
     
     static let fetcher = library(
@@ -517,8 +539,10 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ]
     )
     static let fastPaymentsSettingsTests = testTarget(
@@ -614,7 +638,8 @@ private extension Target {
             // internal modules
             .rxViewModel,
             .cardGuardianModule,
-            .uiPrimitives
+            .uiPrimitives,
+            .services
         ]
     )
     
@@ -628,6 +653,7 @@ private extension Target {
             // internal modules
             .productProfile,
             .rxViewModel,
+            .services,
         ]
     )
 
@@ -1001,6 +1027,19 @@ private extension Target {
         path: "Sources/UI/\(String.buttonWithSheet)"
     )
     
+    static let c2bSubscriptionUI = target(
+        name: .c2bSubscriptionUI,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .searchBarComponent,
+            .textFieldComponent,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.c2bSubscriptionUI)"
+    )
+    
     static let cardGuardianModule = target(
         name: .cardGuardianModule,
         dependencies: [
@@ -1052,7 +1091,9 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"
     )
@@ -1168,6 +1209,10 @@ private extension Target {
     
     static let uiPrimitives = target(
         name: .uiPrimitives,
+        dependencies: [
+            .foraTools,
+            .sharedConfigs,
+        ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )
     
@@ -1278,6 +1323,7 @@ private extension Target {
             .foraTools,
             .sharedConfigs,
             .tagged,
+            .uiPrimitives,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
     )
@@ -1290,7 +1336,7 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
-            .productSelectComponent
+            .productSelectComponent,
         ],
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
     )
@@ -1304,6 +1350,18 @@ private extension Target {
         path: "Sources/UI/Components/\(String.sharedConfigs)"
     )
     
+    // MARK: - Utilities
+    
+    static let services = target(
+        name: .services,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/Utilities/\(String.services)"
+    )
+
     // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
@@ -1419,6 +1477,10 @@ private extension Target.Dependency {
         name: .buttonWithSheet
     )
     
+    static let c2bSubscriptionUI = byName(
+        name: .c2bSubscriptionUI
+    )
+    
     static let cardGuardianModule = byName(
         name: .cardGuardianModule
     )
@@ -1441,6 +1503,10 @@ private extension Target.Dependency {
     
     static let rxViewModel = byName(
         name: .rxViewModel
+    )
+    
+    static let searchBarComponent = byName(
+        name: .searchBarComponent
     )
     
     static let textFieldUI = byName(
@@ -1489,6 +1555,12 @@ private extension Target.Dependency {
         name: .carouselComponent
     )
     
+    // MARK: - Utilities
+    
+    static let services = byName(
+        name: .services
+    )
+
     // MARK: - Infra
     
     static let fetcher = byName(
@@ -1603,6 +1675,8 @@ private extension String {
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
+    
+    static let c2bSubscriptionUI = "C2BSubscriptionUI"
 
     static let cardGuardianModule = "CardGuardianModule"
     static let cardGuardianModuleTests = "CardGuardianModuleTests"
@@ -1655,6 +1729,10 @@ private extension String {
     
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
+    
+    // MARK: - Utilities
+    
+    static let services = "Services"
     
     static let operatorsListComponents = "OperatorsListComponents"
     

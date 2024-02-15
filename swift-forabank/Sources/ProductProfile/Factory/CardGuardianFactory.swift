@@ -6,6 +6,7 @@
 //
 
 import CardGuardianModule
+import RxViewModel
 
 public struct CardGuardianFactory {
     

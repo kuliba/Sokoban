@@ -5,93 +5,73 @@
 //  Created by Igor Malyarov on 30.01.2024.
 //
 
-import SwiftUI
+import FastPaymentsSettings
 import ManageSubscriptionsUI
-import UserAccountNavigationComponent
+import OTPInputComponent
+import SwiftUI
 import UIPrimitives
 
-enum UserAccountEvent {
+indirect enum UserAccountEvent {
     
-    #warning("suboptimal event structure, needs cleaning")
-    case closeAlert
-    case closeFPSAlert
-    case dismissDestination
-    case dismissFPSDestination
-    case dismissInformer
-    case dismissRoute
+    case alertButtonTapped(UserAccountEvent)
+    case dismiss(DismissEvent)
+    case navigate(NavigateEvent)
     
-    case alertButtonTapped(AlertButtonTap)
-    case route(RouteEvent)
+    case cancelC2BSub(SubscriptionViewModel.Token)
+    case deleteRequest
+    case exit
+    
     case fps(FastPaymentsSettings)
-    case otp(OTP)
+    case otp(OTPEvent)
 }
 
 extension UserAccountEvent {
     
-    enum AlertButtonTap {
+    enum DismissEvent {
         
-        #warning("suboptimal event structure, needs cleaning")
-        case closeAlert
-        case closeFPSAlert
-        case dismissDestination
+        case alert
+        case bottomSheet
+        case destination
+        case fpsAlert
+        case fpsDestination
+        case informer
+        case route
+        case sheet
+        case textFieldAlert
+    }
+    
+    enum NavigateEvent {
+        
+        case alert(AlertModelOf<UserAccountEvent>)
+        case bottomSheet(UserAccountRoute.BottomSheet)
+        case link(UserAccountRoute.Link)
+        case spinner
+        case textFieldAlert(AlertTextFieldView.ViewModel)
+    }
+}
+
+extension UserAccountEvent {
+    
+    enum FastPaymentsSettings: Equatable {
+        
         case dismissFPSDestination
-        case dismissRoute
-
-        case fps(FastPaymentsSettings)
-        case otp(OTP)
-        
-        case cancelC2BSub(SubscriptionViewModel.Token)
-        case delete
-        case exit
+        case updated(FastPaymentsSettingsState)
     }
     
-    enum RouteEvent {
+    enum OTPEvent: Equatable {
         
-        case alert(AlertEvent)
-        case bottomSheet(BottomSheetEvent)
-        case link(LinkEvent)
-        case spinner(SpinnerEvent)
-        case sheet(SheetEvent)
-        case textFieldAlert(TextFieldAlertEvent)
+        case create(TimedOTPRoute)
+        case otpInput(OTPInputStateProjection)
+        case prepareSetBankDefault
+        case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
         
-        enum AlertEvent {
+        typealias TimedOTPRoute = GenericRoute<TimedOTPInputViewModel, Never, Never, Never>
+        
+        enum PrepareSetBankDefaultResponse: Equatable {
             
-            case reset
-            case setTo(AlertModelOf<AlertButtonTap>)
-        }
-        
-        enum BottomSheetEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.BottomSheet)
-        }
-        
-        enum LinkEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.Link)
-        }
-        
-        enum SpinnerEvent {
-            
-            case hide, show
-        }
-        
-        enum SheetEvent {
-            
-            case reset
-        }
-        
-        enum TextFieldAlertEvent {
-            
-            case reset
-            case setTo(AlertTextFieldView.ViewModel)
+            case success(OTPInputState.PhoneNumberMask)
+            case connectivityError
+            case serverError(String)
         }
     }
-}
-
-extension UserAccountEvent {
-    
-    typealias FastPaymentsSettings = UserAccountNavigation.Event.FastPaymentsSettings
-    typealias OTP = UserAccountNavigation.Event.OTP
 }

@@ -149,7 +149,7 @@ extension Model {
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData, group: spoilerGroup) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, additionalData: additionalData, group: spoilerGroup) else {
                 continue
             }
             
@@ -170,6 +170,15 @@ extension Model {
         }
 
         result.append(Payments.ParameterCode.regular)
+        
+        if response.scenario == .suspect {
+            
+            result.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
         
         return result
     }
