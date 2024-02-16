@@ -56,17 +56,33 @@ extension NoCompanyInListView {
     static let title = "Нет компании в списке?"
     static let description = "Воспользуйтесь другими способами оплаты"
     static let subtitle = "Сообщите нам, и мы подключим новую организацию"
+}
+
+public struct NoCompanyInListViewConfig {
     
-    struct NoCompanyInListViewConfig {
-        
-        let titleFont: Font
-        let titleColor: Color
-        
-        let descriptionFont: Font
-        let descriptionColor: Color
-        
-        let subtitleFont: Font
-        let subtitleColor: Color
+    let titleFont: Font
+    let titleColor: Color
+    
+    let descriptionFont: Font
+    let descriptionColor: Color
+    
+    let subtitleFont: Font
+    let subtitleColor: Color
+    
+    public init(
+        titleFont: Font,
+        titleColor: Color,
+        descriptionFont: Font,
+        descriptionColor: Color,
+        subtitleFont: Font,
+        subtitleColor: Color
+    ) {
+        self.titleFont = titleFont
+        self.titleColor = titleColor
+        self.descriptionFont = descriptionFont
+        self.descriptionColor = descriptionColor
+        self.subtitleFont = subtitleFont
+        self.subtitleColor = subtitleColor
     }
 }
 
@@ -83,7 +99,8 @@ struct NoCompanyInListView_Previews: PreviewProvider {
                         title: "Оплатить по реквизитам",
                         buttonConfiguration: .init(
                             titleFont: .body,
-                            titleForeground: .red
+                            titleForeground: .red,
+                            backgroundColor: .gray
                         ),
                         action: {}
                     ),
@@ -91,7 +108,8 @@ struct NoCompanyInListView_Previews: PreviewProvider {
                         title: "Добавить организацию",
                         buttonConfiguration: .init(
                             titleFont: .body,
-                            titleForeground: .blue
+                            titleForeground: .blue,
+                            backgroundColor: .gray
                         ),
                         action: {}
                     )

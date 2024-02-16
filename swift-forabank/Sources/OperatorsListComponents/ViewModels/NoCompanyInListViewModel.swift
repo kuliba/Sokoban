@@ -12,5 +12,5 @@ struct NoCompanyInListViewModel {
     let title: String
     let description: String
     let subtitle: String
-    let buttons: [ButtonSimpleView.ViewModel]
+    let buttons: [ButtonSimpleViewModel]
 }
