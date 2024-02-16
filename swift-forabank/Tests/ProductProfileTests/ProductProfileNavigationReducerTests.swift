@@ -78,9 +78,9 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     func test_alertInput_showContacts_shouldEffectShowContacts() {
         
         assert(
-            .alertInput(.showContacts),
+            .productProfile(.showContacts),
             on: productProfileState(),
-            effect: .sendRequest(.showContacts))
+            effect: .productProfile(.showContacts))
     }
     
     private typealias SUT = ProductProfileNavigationReducer

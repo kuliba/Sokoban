@@ -52,19 +52,19 @@ public extension ProductProfileNavigationEffectHandler {
             }
         case .create:
             dispatch(makeDestination(dispatch))
-        case let .sendRequest(alertEvent):
+        case let .productProfile(effect):
             // fire and forget
-            handleEffect(alertEvent)
+            handleEffect(effect)
         }
     }
     
     private func handleEffect(
-        _ alertEvent: ProductProfileEvent
+        _ effect: ProductProfileEffect
     ) {
-        switch alertEvent {
-        case let .cardGuardian(card):
+        switch effect {
+        case let .guardCard(card):
             guardianCard(card)
-        case let .visibilityOnMain(product):
+        case let .toggleVisibilityOnMain(product):
             visibilityOnMain(product)
         case let .changePin(card):
             changePin(card)

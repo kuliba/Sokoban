@@ -21,6 +21,6 @@ public extension ProductProfileNavigation {
         case dismissDestination
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
-        case alertInput(ProductProfileEvent)
+        case productProfile(ProductProfileEvent)
     }
 }

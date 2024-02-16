@@ -43,7 +43,7 @@ public extension ProductProfileNavigationReducer {
         case let .cardGuardianInput(cardGuardianInput):
             state.alert = nil
             (state, effect) = reduce(state, cardGuardianInput)
-        case let .alertInput(event):
+        case let .productProfile(event):
             state.alert = nil
             (state, effect) = reduce(state, event)
         }
@@ -82,10 +82,10 @@ private extension ProductProfileNavigationReducer {
             case let .changePin(card):
                 state.modal = nil
                 state.alert = nil
-                effect = .sendRequest(.changePin(card))
+                effect = .productProfile(.changePin(card))
             case let .visibilityOnMain(product):
                 state.modal = nil
-                effect = .sendRequest(.visibilityOnMain(product))
+                effect = .productProfile(.toggleVisibilityOnMain(product))
             }
         }
         
@@ -97,9 +97,22 @@ private extension ProductProfileNavigationReducer {
     
     func reduce(
         _ state: State,
-        _ alertInput: ProductProfileEvent
+        _ event: ProductProfileEvent
     ) -> (State, Effect?) {
         
-        return (state, .sendRequest(alertInput))
+        var effect: Effect?
+        
+        switch event {
+            
+        case let .guardCard(card):
+            effect = .productProfile(.guardCard(card))
+        case let .toggleVisibilityOnMain(product):
+            effect = .productProfile(.toggleVisibilityOnMain(product))
+        case let .changePin(card):
+            effect = .productProfile(.changePin(card))
+        case .showContacts:
+            effect = .productProfile(.showContacts)
+        }
+        return (state, effect)
     }
 }

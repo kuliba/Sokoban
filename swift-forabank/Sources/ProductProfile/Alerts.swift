@@ -84,9 +84,9 @@ extension Alerts {
         
         switch card.status {
         case .active, .blockedUnlockAvailable:
-            return .alertInput(.cardGuardian(card))
+            return .productProfile(.guardCard(card))
         case .blockedUnlockNotAvailable:
-            return .alertInput(.showContacts)
+            return .productProfile(.showContacts)
         case .notActivated:
             return .closeAlert
         }
