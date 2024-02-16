@@ -642,6 +642,19 @@ extension Model {
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
         
+        Task {
+            
+            do {
+                let data = try await Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient()).process("").get()
+                try self.localAgent.store(data, serial: nil)
+                
+            } catch {
+                
+                LoggerAgent().log(category: .cache, message: "Invalid data for getOperatorsListByParam")
+
+            }
+        }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
