@@ -136,7 +136,33 @@ extension ContactInputViewController {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
         
-                let model = ConfirmViewControllerModel(type: .contact)
+                var status = ConfirmViewControllerModel.StatusOperation.succses
+                
+                switch respModel.data?.documentStatus{
+                case .some("COMPLETE"):
+                    status = .succses
+                    
+                case .some("IN_PROGRESS"):
+                    status = .inProgress
+                    
+                case .some("REJECTED"):
+                    status = .error
+                    
+                case .some("SUSPEND"):
+                    status = .antifraudCanceled
+                                        
+                case .some(_):
+                    status = .error
+
+                case .none:
+                    status = .error
+                }
+                
+                let model = ConfirmViewControllerModel(
+                    type: .contact,
+                    status: status
+                )
+                
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
                 model.cardFromRealm = self.cardFromField.model
@@ -210,7 +236,7 @@ extension ContactInputViewController {
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
-                let model = ConfirmViewControllerModel(type: .mig)
+                let model = ConfirmViewControllerModel(type: .mig, status: .succses)
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
                 model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""

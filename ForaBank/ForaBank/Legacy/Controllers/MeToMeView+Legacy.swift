@@ -14,7 +14,7 @@ struct MeToMeView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> CustomPopUpWithRateView {
         
-        let model = ConfirmViewControllerModel(type: .card2card)
+        let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
         
         switch viewModel.type {
         case .general:

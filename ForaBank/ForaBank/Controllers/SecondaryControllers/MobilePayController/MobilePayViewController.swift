@@ -322,7 +322,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     if data?.statusCode == 0 {
-                        let model = ConfirmViewControllerModel(type: .mobilePayment)
+                        let model = ConfirmViewControllerModel(type: .mobilePayment, status: .succses)
                         model.operatorImage = svgImage ?? ""
                         model.cardFromRealm = self?.cardField.model
                         

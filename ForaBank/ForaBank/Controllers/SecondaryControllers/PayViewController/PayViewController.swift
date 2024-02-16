@@ -122,7 +122,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 self.showAlert(with: "Ошибка", and: "Нельзя пополнить валютный счет")
             }
         case 1:
-            let model = ConfirmViewControllerModel(type: .card2card)
+            let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
             var popView = CustomPopUpWithRateView()
             
             if let card = card {

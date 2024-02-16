@@ -96,7 +96,7 @@ private extension UserPaymentSettings.PaymentContract {
             accountID: .init(info.account.accountID),
             contractStatus: contractStatus,
             phoneNumber: .init(info.contract.phoneNumber),
-            phoneNumberMasked: info.contract.phoneNumberMask
+            phoneNumberMasked: .init(info.contract.phoneNumberMask)
         )
     }
 }

@@ -115,7 +115,7 @@ extension Model {
         }
         
         // next parameters without duplicates
-        let nextParameters = next.filter { !operation.parametersIds.contains($0.id) }
+        var nextParameters = next.filter { !operation.parametersIds.contains($0.id) }
         
         let visible = try paymentsTransferMobileConnectionStepVisible(
             nextStepParameters: nextParameters,
@@ -132,6 +132,15 @@ extension Model {
             nextStepParameters: nextParameters,
             operationParameters: operation.parameters
         )
+        
+        if response.scenario == .suspect {
+            
+            nextParameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
         
         return Payments.Operation.Step(
             parameters: nextParameters,

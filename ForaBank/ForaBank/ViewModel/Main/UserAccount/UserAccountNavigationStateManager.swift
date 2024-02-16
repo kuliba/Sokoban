@@ -6,16 +6,22 @@
 //
 
 import FastPaymentsSettings
+import ManageSubscriptionsUI
 import UserAccountNavigationComponent
 
 struct UserAccountNavigationStateManager {
     
     let fastPaymentsFactory: FastPaymentsFactory
+    let makeSubscriptionsViewModel: MakeSubscriptionsViewModel
     let reduce: Reduce
     let handleEffect: HandleEffect
 }
 
 extension UserAccountNavigationStateManager {
+
+    typealias OnDelete = (SubscriptionViewModel.Token, String) -> Void
+    typealias OnDetail = (SubscriptionViewModel.Token) -> Void
+    typealias MakeSubscriptionsViewModel = (@escaping OnDelete, @escaping OnDetail) -> SubscriptionsViewModel
     
     typealias Reduce = (State, Event) -> (State, Effect?)
     

@@ -94,4 +94,12 @@ extension Alerts {
             return ""
         }
     }
+    
+    private static func action(
+        _ status: CardGuardian.CardGuardianStatus
+    ) -> ProductProfileNavigation.Event {
+        
+        // TODO: add other
+        return .closeAlert
+    }
 }

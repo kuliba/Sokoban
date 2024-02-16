@@ -36,7 +36,7 @@ public extension UserAccountNavigationStateManager {
     typealias Inform = (String) -> Void
     typealias Dispatch = (Event) -> Void
     
-    typealias Reduce = (State, Event, @escaping Inform, @escaping Dispatch) -> (State, Effect?)
+    typealias Reduce = (State, Event) -> (State, Effect?)
     
     typealias OTPDispatch = (Event.OTP) -> Void
     typealias HandleOTPEffect = (Effect.OTP, @escaping OTPDispatch) -> Void

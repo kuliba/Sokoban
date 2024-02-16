@@ -50,16 +50,8 @@ public struct ManagingSubscriptionsView<P: Product, SearchView: View, EmptyListV
                 
                 searchView()
                 
-                Spacer()
-                
-                VStack {
-                    
-                    Spacer()
-                    
-                    emptyListView()
-                    
-                    Spacer()
-                }
+                emptyListView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
             } else {
                 

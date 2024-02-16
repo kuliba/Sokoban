@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UserAccountNavigationComponent
 
 final class UserAccountEffectHandler {
     
@@ -34,17 +33,15 @@ extension UserAccountEffectHandler {
             
         case let .navigation(navigation):
             switch navigation {
-            case .dismissInformer:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    
-                    dispatch(.dismissInformer)
+            case let .dismissInformer(informerLifespan):
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + informerLifespan
+                ) {
+                    dispatch(.dismiss(.informer))
                 }
                 
             case let .otp(otpEffect):
-                handleOTPEffect(otpEffect) {
-                    
-                    dispatch(.otp($0))
-                }
+                handleOTPEffect(otpEffect) { dispatch(.otp($0)) }
             }
         }
     }
@@ -55,8 +52,8 @@ extension UserAccountEffectHandler {
     typealias Dispatch = (Event) -> Void
     typealias HandleModelEffect = (Effect.ModelEffect, @escaping Dispatch) -> Void
     
-    typealias OTPDispatch = (Event.OTP) -> Void
-    typealias HandleOTPEffect = (UserAccountNavigation.Effect.OTP, @escaping OTPDispatch) -> Void
+    typealias OTPDispatch = (Event.OTPEvent) -> Void
+    typealias HandleOTPEffect = (UserAccountEffect.NavigationEffect.OTP, @escaping OTPDispatch) -> Void
     
     typealias Effect = UserAccountEffect
     typealias Event = UserAccountEvent

@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import SberQR
+import ManageSubscriptionsUI
 import PaymentSticker
+import SberQR
 import SwiftUI
 
 extension RootViewModelFactory {
@@ -19,7 +20,8 @@ extension RootViewModelFactory {
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag
+        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -42,19 +44,45 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
-        let fastPaymentsFactory = makeFastPaymentsFactory(
-            httpClient: httpClient,
-            model: model,
-            log: infoNetworkLog,
-            fastPaymentsSettingsFlag: fastPaymentsSettingsFlag
-        )
+        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
+        ? HTTPClientStub.fastPaymentsSettings(delay: 1)
+        : httpClient
         
-        let navigationStateManager = Services.makeNavigationStateManager(
-            useStub: fastPaymentsSettingsFlag.isStub,
-            httpClient: httpClient,
-            model: model,
+        // TODO: Remove after `legacy` case eliminated
+        let fastPaymentsFactory: FastPaymentsFactory = {
+            
+            switch fastPaymentsSettingsFlag.rawValue {
+            case .active:
+                return .init(fastPaymentsViewModel: .new({
+                    
+                    makeNewFastPaymentsViewModel(
+                        httpClient: fpsHTTPClient,
+                        model: model,
+                        log: infoNetworkLog,
+                        scheduler: $0
+                    )
+                }))
+                
+            case .inactive:
+                return .init(fastPaymentsViewModel: .legacy({
+                    
+                    .init(model: $0,newModel: model,closeAction: $1)
+                }))
+            }
+        }()
+        
+        let navigationStateManager = makeNavigationStateManager(
+            modelEffectHandler: .init(model: model),
+            otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
-            log: infoNetworkLog
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
+            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
+            log: infoNetworkLog,
+            scheduler: scheduler
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -382,3 +410,28 @@ private extension RootViewModelFactory {
         )
     }
 }
+
+// MARK: - Adapters
+
+private extension UserAccountModelEffectHandler {
+    
+    convenience init(model: Model) {
+        
+        self.init(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            },
+            deleteRequest: {
+                
+                model.action.send(ModelAction.ClientInfo.Delete.Request())
+            },
+            exit: {
+                
+                model.auth.value = .unlockRequiredManual
+            }
+        )
+    }
+}
+

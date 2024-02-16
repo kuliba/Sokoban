@@ -14,7 +14,6 @@ public final class CardGuardianReducer {
 
 public extension CardGuardianReducer {
  
-#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
@@ -35,8 +34,8 @@ public extension CardGuardianReducer {
             case .changePin:
                 state.updateEvent(.buttonTapped(.changePin))
                 
-            case .showOnMain:
-                state.updateEvent(.buttonTapped(.showOnMain))
+            case let .showOnMain(status):
+                state.updateEvent(.buttonTapped(.showOnMain(status)))
             }
         }
         return (state, .none)

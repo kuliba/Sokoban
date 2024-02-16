@@ -15,7 +15,10 @@ public extension ProductSelectConfig {
             textColor: .purple
         ),
         card: .preview,
-        chevronColor: .gray.opacity(0.4),
+        chevron: .init(
+            color: .pink,
+            image: .init(systemName: "chevron.up")
+        ),
         footer: .init(
             textFont: .caption,
             textColor: .gray.opacity(0.5)
@@ -23,6 +26,15 @@ public extension ProductSelectConfig {
         header: .init(
             textFont: .footnote,
             textColor: .pink.opacity(0.5)
+        ),
+        missingSelected: .init(
+            backgroundColor: .green,
+            foregroundColor: .pink,
+            image: .init(systemName: "text.justify"),
+            title: .init(
+                textFont: .title2,
+                textColor: .orange
+            )
         ),
         title: .init(
             textFont: .headline,

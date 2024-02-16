@@ -33,7 +33,7 @@ extension TextFieldView {
     }
 }
 
-extension KeyboardType {
+public extension KeyboardType {
     
     var uiKeyboardType: UIKeyboardType {
         

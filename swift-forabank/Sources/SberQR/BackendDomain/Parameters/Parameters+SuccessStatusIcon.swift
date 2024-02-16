@@ -29,5 +29,6 @@ public extension Parameters.SuccessStatusIcon {
         case complete
         case inProgress
         case rejected
+        case suspended
     }
 }

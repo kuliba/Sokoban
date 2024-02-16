@@ -121,7 +121,7 @@ class GKHInputViewController: BottomPopUpViewAdapter {
                                                amount: amount)
                 guard let model = model else { return }
                 // Переход на экран подтверждения
-                let m = ConfirmViewControllerModel(type: .gkh)
+                let m = ConfirmViewControllerModel(type: .gkh, status: .succses)
 
                 let r = Double(model.data?.debitAmount ?? 0)
 

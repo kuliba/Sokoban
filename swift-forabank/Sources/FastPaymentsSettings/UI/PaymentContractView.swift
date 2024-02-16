@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentContractView: View {
     
     let paymentContract: PaymentContract
     let action: () -> Void
+    let config: PaymentContractConfig
     
     var body: some View {
         
@@ -34,7 +36,7 @@ struct PaymentContractView: View {
                 
                 Spacer()
                 
-                ToggleMockView(status: status)
+                ToggleMockView(status: status, color: color)
             }
         }
     }
@@ -50,7 +52,10 @@ struct PaymentContractView: View {
                 Text("Настройки для входящих и исходящих переводов СБП  ")
                 
             case .inactive:
-                AttributedTextView(attributedString: .consent)
+                AttributedTextView(
+                    attributedString: .consent,
+                    linkColor: .red
+                )
             }
         }
         .font(.subheadline)
@@ -59,8 +64,16 @@ struct PaymentContractView: View {
     private var status: ToggleMockView.Status {
         
         switch paymentContract.contractStatus {
-        case .active:   return .active
-        case .inactive: return .inactive
+        case .active:   return .on(.enabled)
+        case .inactive: return .off(.enabled)
+        }
+    }
+    
+    private var color: Color {
+        
+        switch paymentContract.contractStatus {
+        case .active:   return config.active.toggleColor
+        case .inactive: return config.inactive.toggleColor
         }
     }
 }
@@ -89,6 +102,10 @@ struct PaymentContractView_Previews: PreviewProvider {
         _ paymentContract: PaymentContractView.PaymentContract
     ) -> some View {
         
-        PaymentContractView(paymentContract: paymentContract, action: {})
+        PaymentContractView(
+            paymentContract: paymentContract,
+            action: {},
+            config: .preview
+        )
     }
 }

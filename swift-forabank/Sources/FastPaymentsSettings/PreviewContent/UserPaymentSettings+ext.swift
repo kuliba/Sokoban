@@ -92,7 +92,6 @@ private extension ConsentList {
     
     static let preview: Self = .init(
         banks: .preview,
-        consent: .preview,
         mode: .collapsed,
         searchText: ""
     )
