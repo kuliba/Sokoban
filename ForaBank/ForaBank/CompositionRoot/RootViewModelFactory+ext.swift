@@ -10,10 +10,11 @@ import ManageSubscriptionsUI
 import PaymentSticker
 import SberQR
 import SwiftUI
+import OperatorsListComponents
 
 extension RootViewModelFactory {
     
-    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
         httpClient: HTTPClient,
@@ -378,7 +379,27 @@ private extension RootViewModelFactory {
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            operators: {
+                
+                if let operators = model.localAgent.load(type: [OperatorGroup]?.self) {
+                 
+                    let `operator` = operators!.compactMap({ $0 }).map({
+                        OperatorViewModel(
+                            icon: Data(),
+                            title: $0.title,
+                            description: $0.description,
+                            action: {}
+                        ) }
+                    ).prefix(10)
+                    
+                    return `operator`.shuffled()
+                } else {
+                    
+                    return nil
+                    
+                }
+            }
         )
         
         let chatViewModel = ChatViewModel()

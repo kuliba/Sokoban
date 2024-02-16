@@ -9,6 +9,7 @@ import Combine
 import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -39,6 +40,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
+    private let operators: () -> [OperatorViewModel]?
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -47,6 +49,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
+        operators: @escaping () -> [OperatorViewModel]?,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty
@@ -64,6 +67,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
+        self.operators = operators
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -80,6 +84,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
+        operators: @escaping () -> [OperatorViewModel]?,
         mode: Mode = .normal,
         route: Route = .empty
     ) {
@@ -92,6 +97,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.navButtonsRight = navButtonsRight
+        self.operators = operators
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }
@@ -378,8 +384,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             // на экране платежей нижний переход
                             self.openScanner()
+                    
+                        case .service:
+                            self.route.destination = .operatorList(operators, {
+                                
+                                var lastPayment: [PaymentServiceData] = []
+                                let services = self.model.latestPayments.value.filter({ $0.type == .service })
+                                
+                                for item in services {
+                                 
+                                    guard let item = item as? PaymentServiceData else {
+                                        continue
+                                    }
+                                    
+                                    lastPayment.append(item)
+                                }
+                                
+                                return lastPayment
+                            })
                             
-                        case .service, .internet:
+                        case .internet:
                             
                             guard let dictionaryAnywayOperators = model.dictionaryAnywayOperators(),
                                   let operatorValue = Payments.operatorByPaymentsType(payload.type)
@@ -1376,7 +1400,7 @@ extension PaymentsTransfersViewModel {
         
         let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
         
-        var keyboardOfssetMultiplier: CGFloat {
+        var keyboardOffsetMultiplier: CGFloat {
             
             switch type {
             case .meToMe: return 1
@@ -1451,6 +1475,7 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        case operatorList(() -> [OperatorViewModel]?, () -> [PaymentServiceData])
         
         var id: Case {
             
@@ -1503,6 +1528,8 @@ extension PaymentsTransfersViewModel {
                 return .openDepositsList
             case .sberQRPayment:
                 return .sberQRPayment
+            case .operatorList:
+                return .operatorsList
             }
         }
         
@@ -1531,6 +1558,7 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
+            case operatorsList
         }
     }
     

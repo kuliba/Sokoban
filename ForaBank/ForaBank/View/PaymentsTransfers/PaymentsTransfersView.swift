@@ -8,6 +8,8 @@
 import InfoComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
+import TextFieldModel
 
 struct PaymentsTransfersView: View {
     
@@ -226,6 +228,66 @@ struct PaymentsTransfersView: View {
                     sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
+            
+        case let .operatorList(operators, latestPayments):
+            ComposedOperatorsView<DefaultCancellableSearchBarView>(
+                operators: operators()?.compactMap({ $0 }).map({
+                    ComposedOperatorsView.OperatorViewModel(
+                        title: $0.title,
+                        subtitle: $0.description,
+                        image: .init(systemName: ""))
+                }) ?? [], 
+                latestPayments: latestPayments().map({
+                    ComposedOperatorsView.LatestPayment(
+                        image: .ic12Coins,
+                        title: $0.lastPaymentName ?? "",
+                        amount: $0.amount.description
+                    )
+                }),
+                selectEvent: { _ in },
+                noCompaniesButtons: [
+                    .init(
+                        title: "Оплатить по реквизитам",
+                        buttonConfiguration: .init(
+                            titleFont: .textH3Sb18240(),
+                            titleForeground: .textSecondary,
+                            backgroundColor: .buttonSecondary
+                        ),
+                        action: {}
+                    ),
+                        .init(
+                            title: "Добавить организацию",
+                            buttonConfiguration: .init(
+                                titleFont: .textH3Sb18240(),
+                                titleForeground: .textSecondary,
+                                backgroundColor: .buttonSecondary
+                            ),
+                            action: {}
+                        )
+                ],
+                searchView: {
+                    DefaultCancellableSearchBarView(
+                        
+                        viewModel: .init(
+                            initialState: .placeholder("Наименование или ИНН"),
+                            reducer: TransformingReducer(placeholderText: "Поиск"),
+                            keyboardType: .default
+                        ),
+                        textFieldConfig: .black16,
+                        cancel: {}
+                    )
+                },
+                configuration: .init(noCompanyListConfiguration: .init(
+                    titleFont: .textH3Sb18240(),
+                    titleColor: .textSecondary,
+                    descriptionFont: .textBodyMR14200(),
+                    descriptionColor: .textPlaceholder,
+                    subtitleFont: .textBodyMR14200(),
+                    subtitleColor: .textPlaceholder
+                ))
+            )
+            .navigationBarTitle("Услуги ЖКХ", displayMode: .inline)
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
     
