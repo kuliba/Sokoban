@@ -6,23 +6,52 @@
 //
 
 import SwiftUI
-import SearchBarComponent
 
-struct ComposedOperatorsView: View {
+public struct ComposedOperatorsView<SearchView: View>: View {
     
     let operators: [OperatorViewModel]
+    let latestPayments: [LatestPayment]
     let selectEvent: (OperatorViewModel.ID) -> Void
-    let noCompaniesButtons: [ButtonSimpleView.ViewModel]
+    let noCompaniesButtons: [ButtonSimpleViewModel]
+    let searchView: () -> SearchView
     
     let configuration: Configuration
     
-    var body: some View {
+    public init(
+        operators: [OperatorViewModel],
+        latestPayments: [LatestPayment],
+        selectEvent: @escaping (OperatorViewModel.ID) -> Void,
+        noCompaniesButtons: [ButtonSimpleViewModel],
+        searchView: @escaping () -> SearchView,
+        configuration: Configuration
+    ) {
+        self.operators = operators
+        self.latestPayments = latestPayments
+        self.selectEvent = selectEvent
+        self.noCompaniesButtons = noCompaniesButtons
+        self.searchView = searchView
+        self.configuration = configuration
+    }
+    
+    public var body: some View {
         
-        VStack {
+        ScrollView(showsIndicators: false) {
             
-            ScrollView(showsIndicators: false) {
+            searchView()
+            
+            VStack(spacing: 32) {
                 
-                ForEach(operators, content: operatorView)
+                ScrollView(.horizontal) {
+                    
+                    ForEach(latestPayments, content:  lastPaymentView)
+                    
+                    Spacer()
+                }
+                
+                VStack(spacing: 8) {
+                    
+                    ForEach(operators, content: operatorView)
+                }
                 
                 NoCompanyInListView(
                     noCompanyListViewModel: .init(
@@ -35,12 +64,48 @@ struct ComposedOperatorsView: View {
                 )
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
         .padding(.bottom, 20)
     }
 }
 
 extension ComposedOperatorsView {
+    
+    private func lastPaymentView(
+        latestPayment: ComposedOperatorsView.LatestPayment
+    ) -> some View {
+        
+        Button {
+            selectEvent("")
+        } label: {
+            
+            VStack {
+             
+                latestPayment.image
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                
+                VStack(spacing: 8) {
+
+                    Text(latestPayment.title)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundColor(.black)
+                        .font(.system(size: 12))
+                        .lineLimit(1)
+                        
+                        Text(latestPayment.amount)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .foregroundColor(.red)
+                            .font(.system(size: 12))
+                }
+            }
+            .frame(width: 80, height: 80, alignment: .center)
+        }
+        .contentShape(Rectangle())
+    }
     
     private func operatorView(
         _ operatorViewModel: ComposedOperatorsView.OperatorViewModel
@@ -53,13 +118,28 @@ extension ComposedOperatorsView {
             HStack {
              
                 operatorViewModel.image
+                    .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 
-                VStack {
+                VStack(spacing: 8) {
 
                     Text(operatorViewModel.title)
-                    Text(operatorViewModel.subtitle)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
+                        .font(.system(size: 16))
+                        .lineLimit(1)
+                    
+                    if let subtitle = operatorViewModel.subtitle {
+                        
+                        Text(subtitle)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(.gray)
+                            .font(.system(size: 12))
+                    }
                 }
             }
+            .frame(height: 56)
         }
         .contentShape(Rectangle())
     }
@@ -67,17 +147,51 @@ extension ComposedOperatorsView {
 
 extension ComposedOperatorsView {
     
-    struct Configuration {
+    public struct Configuration {
         
-        let noCompanyListConfiguration: NoCompanyInListView.NoCompanyInListViewConfig
+        let noCompanyListConfiguration: NoCompanyInListViewConfig
         
+        public init(
+            noCompanyListConfiguration: NoCompanyInListViewConfig
+        ) {
+            self.noCompanyListConfiguration = noCompanyListConfiguration
+        }
     }
-    struct OperatorViewModel: Identifiable {
+    
+    public struct OperatorViewModel: Identifiable {
         
-        var id: String { self.title }
+        public var id: String { self.title }
         let title: String
-        let subtitle: String
+        let subtitle: String?
         let image: Image
+        
+        public init(
+            title: String,
+            subtitle: String?,
+            image: Image
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.image = image
+        }
+    }
+    
+    public struct LatestPayment: Identifiable {
+        
+        public var id: String { title }
+        let image: Image
+        let title: String
+        let amount: String
+        
+        public init(
+            image: Image,
+            title: String,
+            amount: String
+        ) {
+            self.image = image
+            self.title = title
+            self.amount = amount
+        }
     }
 }
 
@@ -85,10 +199,12 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
    
     static var previews: some View {
         
-        ComposedOperatorsView(
+        ComposedOperatorsView<EmptyView>(
             operators: [],
+            latestPayments: [],
             selectEvent: { _ in },
             noCompaniesButtons: [],
+            searchView: { EmptyView() },
             configuration: .init(noCompanyListConfiguration: .init(
                 titleFont: .body,
                 titleColor: .red,
