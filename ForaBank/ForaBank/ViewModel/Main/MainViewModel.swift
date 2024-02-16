@@ -21,7 +21,7 @@ class MainViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(
-        logo: MainViewModel.logotype,
+        logo: MainViewModel.logo,
         name: "",
         avatar: nil,
         action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())}
@@ -112,7 +112,7 @@ class MainViewModel: ObservableObject, Resetable {
 
 extension MainViewModel {
     
-    static let logotype: Image = .ic12LogoForaColor
+    static let logo: Image = .ic12LogoForaColor
     
     func reset() {
         
