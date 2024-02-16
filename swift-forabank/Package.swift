@@ -881,7 +881,8 @@ private extension Target {
         name: .operatorsListComponents,
         dependencies: [
             // external packages
-            .genericRemoteService
+            .genericRemoteService,
+            .services
         ]
     )
     
