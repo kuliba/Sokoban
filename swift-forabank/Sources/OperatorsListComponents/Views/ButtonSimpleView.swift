@@ -24,7 +24,7 @@ struct ButtonSimpleView: View {
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(.black)
+                    .foregroundColor(viewModel.buttonConfiguration.backgroundColor)
                 
                 Text(viewModel.title)
                     .font(viewModel.buttonConfiguration.titleFont)
@@ -46,7 +46,8 @@ struct ButtonSimpleView_Previews: PreviewProvider {
                 title: "Оплатить",
                 buttonConfiguration: .init(
                     titleFont: .title,
-                    titleForeground: .black
+                    titleForeground: .black,
+                    backgroundColor: .gray
                 ),
                 action: {}
             ))
