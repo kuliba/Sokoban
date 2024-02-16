@@ -19,12 +19,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: MainViewModel.UserAccountButtonViewModel = .init(
-        logo: Image("foraLogoNewYear"),
+        logo: MainViewModel.logo,
         name: "",
         avatar: nil,
         action: { [weak self] in
             self?.action.send(PaymentsTransfersViewModelAction
-                .ButtonTapped.UserAccount())})
+                .ButtonTapped.UserAccount())
+        }
+    )
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
