@@ -15,7 +15,7 @@ public final class ProductProfileNavigationEffectHandler {
     
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
     private let guardianCard: CardGuardianAction
-    private let visibilityOnMain: VisibilityOnMainAction
+    private let toggleVisibilityOnMain: VisibilityOnMainAction
     private let showContacts: EmptyAction
     private let changePin: CardGuardianAction
     
@@ -24,14 +24,14 @@ public final class ProductProfileNavigationEffectHandler {
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
         guardianCard: @escaping CardGuardianAction,
-        visibilityOnMain: @escaping VisibilityOnMainAction,
+        toggleVisibilityOnMain: @escaping VisibilityOnMainAction,
         showContacts: @escaping EmptyAction,
         changePin: @escaping CardGuardianAction,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
         self.guardianCard = guardianCard
-        self.visibilityOnMain = visibilityOnMain
+        self.toggleVisibilityOnMain = toggleVisibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
         self.scheduler = scheduler
@@ -65,7 +65,7 @@ public extension ProductProfileNavigationEffectHandler {
         case let .guardCard(card):
             guardianCard(card)
         case let .toggleVisibilityOnMain(product):
-            visibilityOnMain(product)
+            toggleVisibilityOnMain(product)
         case let .changePin(card):
             changePin(card)
         case .showContacts:

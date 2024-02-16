@@ -13,7 +13,7 @@ public extension CardGuardian {
         
         case toggleLock(Card)
         case changePin(Card)
-        case visibilityOnMain(Product)
+        case toggleVisibilityOnMain(Product)
     }
 }
 
@@ -30,8 +30,8 @@ private extension CardGuardianEvent {
             self = .buttonTapped(.toggleLock(card))
         case let .changePin(card):
             self = .buttonTapped(.changePin(card))
-        case let .visibilityOnMain(card):
-            self = .buttonTapped(.visibilityOnMain(card))
+        case let .toggleVisibilityOnMain(card):
+            self = .buttonTapped(.toggleVisibilityOnMain(card))
         }
     }
 }

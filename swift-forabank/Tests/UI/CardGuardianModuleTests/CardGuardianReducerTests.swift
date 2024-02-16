@@ -39,12 +39,12 @@ final class CardGuardianReducerTests: XCTestCase {
     
     func test_reduce_tapShowOnMain_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.visibilityOnMain(.show)), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.toggleVisibilityOnMain(.show)), state: .default)
     }
     
     func test_reduce_tapHiddenOnMain_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.visibilityOnMain(.hide)), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.toggleVisibilityOnMain(.hide)), state: .default)
     }
 
     // MARK: - Helpers
@@ -107,7 +107,7 @@ private extension CardGuardianButton {
         subtitle: "subtitle")
     
     static let showOnMain: Self = .init(
-        event: .visibilityOnMain(.show),
+        event: .toggleVisibilityOnMain(.show),
         title: "title",
         iconType: .showOnMain,
         subtitle: "subtitle")

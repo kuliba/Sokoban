@@ -39,7 +39,7 @@ extension ProductProfileViewModel {
             print("block/unblock card \($0.status)")
         }
         
-        let visibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
+        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
             print("show/hide product \($0.productID)")
         }
 
@@ -54,7 +54,7 @@ extension ProductProfileViewModel {
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             guardianCard: guardianCard,
-            visibilityOnMain: visibilityOnMain,
+            toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
             scheduler: scheduler

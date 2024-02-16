@@ -61,7 +61,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         buttons: [CardGuardianState._Button] = .preview,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.CardGuardianAction = {_ in },
-        visibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
+        toggleVisibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
         showContacts: @escaping SUT.EmptyAction = {},
         changePin: @escaping SUT.CardGuardianAction = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
@@ -69,13 +69,13 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
+        let cardGuardianReduce = CardGuardianReducer()
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
             .init(
                 initialState: .init(buttons: buttons),
-                reduce: cardGuardianReduce,
+                reduce: cardGuardianReduce.reduce(_:_:),
                 handleEffect: { _,_ in },
                 scheduler: $0
             )
@@ -84,12 +84,13 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             guardianCard: guardianCard,
-            visibilityOnMain: visibilityOnMain,
+            toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
             scheduler: scheduler
         )
         
+        trackForMemoryLeaks(cardGuardianReduce, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
