@@ -86,6 +86,21 @@ public extension ProductProfileViewModel {
     }
 }
 
+// MARK: - CVV
+
+public extension ProductProfileViewModel {
+    
+    func showCvvAlert(){
+        
+        self.event(.showAlert(Alerts.alertCVV()))
+    }
+    
+    func showAlertIfCardBlocked(){
+        
+        self.event(.showAlert(Alerts.alertCardBlocked()))
+    }
+}
+
 // MARK: - Types
 
 public extension ProductProfileNavigationStateManager {

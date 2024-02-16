@@ -15,7 +15,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test create
     
-    func test_create_shouldEffectCreate() {
+    func test_create_shouldDeliverEffectCreate() {
         
         assert(
             .create,
@@ -25,7 +25,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test open
     
-    func test_open_shouldEffectNil() {
+    func test_open_shouldNotDeliverEffect() {
         
         assert(
             .open(createCardGuardianRoute()),
@@ -35,7 +35,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test closeAlert
     
-    func test_closeAlert_shouldEffectNil() {
+    func test_closeAlert_shouldNotDeliverEffect() {
         
         assert(
             .closeAlert,
@@ -45,7 +45,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test dismissDestination
     
-    func test_dismissDestination_shouldEffectNil() {
+    func test_dismissDestination_shouldNotDeliverEffect() {
         
         assert(
             .dismissDestination,
@@ -55,7 +55,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test cardGuardianInput
     
-    func test_cardGuardianInput_shouldEffectNil() {
+    func test_cardGuardianInput_shouldNotDeliverEffect() {
         
         assert(
             .cardGuardianInput(.appear),
@@ -65,7 +65,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test showAlert
     
-    func test_showAlert_shouldEffectNil() {
+    func test_showAlert_shouldNotDeliverEffect() {
         
         assert(
             .showAlert(Alerts.alertBlockCard(.newCard(status: .active))),
@@ -75,7 +75,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
 
     // MARK: test alertInput
     
-    func test_alertInput_showContacts_shouldEffectShowContacts() {
+    func test_alertInput_showContacts_shouldDeliverEffectShowContacts() {
         
         assert(
             .productProfile(.showContacts),

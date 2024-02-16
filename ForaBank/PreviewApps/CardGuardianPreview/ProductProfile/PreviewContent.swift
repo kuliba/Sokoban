@@ -72,7 +72,7 @@ extension ProductProfileViewModel {
     }
 }
 
-extension ProductProfileView {
+extension ControlButtonView {
     
     static let cardUnblokedOnMain: Self = .init(
         viewModel: .preview(buttons: .preview)
@@ -84,5 +84,19 @@ extension ProductProfileView {
     
     static let cardBlockedUnlockNotAvailable : Self = .init(
         viewModel: .preview(buttons: .previewBlockUnlockNotAvailable)
+    )
+}
+
+extension CvvButtonView {
+    
+    static let cardUnblokedOnMain: Self = .init(
+        viewModel: .preview(buttons: .preview)
+    )
+}
+
+extension CvvCardBlocked {
+    
+    static let card: Self = .init(
+        viewModel: .preview(buttons: .preview)
     )
 }
