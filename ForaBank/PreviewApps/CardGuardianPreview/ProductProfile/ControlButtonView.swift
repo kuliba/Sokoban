@@ -1,5 +1,5 @@
 //
-//  ProductProfileView.swift
+//  ControlButtonView.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 02.02.2024.
@@ -9,7 +9,7 @@ import SwiftUI
 import CardGuardianModule
 import ProductProfile
 
-struct ProductProfileView: View {
+struct ControlButtonView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
         
@@ -29,7 +29,8 @@ struct ProductProfileView: View {
         .alert(
             item: .init(
                 get: { viewModel.state.alert },
-                set: { if $0 == nil { viewModel.event(.closeAlert) }}
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
             ),
             content: { .init(with: $0, event: viewModel.event) }
         )
@@ -56,6 +57,6 @@ struct ProductProfileView: View {
 }
 
 #Preview {
-    ProductProfileView.cardBlockedHideOnMain
+    ControlButtonView.cardBlockedHideOnMain
 }
 

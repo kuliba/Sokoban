@@ -19,12 +19,12 @@ final class CardGuardianReducerTests: XCTestCase {
     
     func test_reduce_tapChangePin_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.changePin), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.changePin(.default)), state: .default)
     }
     
     func test_reduce_tapToggleLockActive_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.toggleLock(.active)), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.toggleLock(.default)), state: .default)
     }
     
     func test_reduce_tapToggleLockBlockedUnlockAvailable_shouldSetEffectNone() {
@@ -39,12 +39,12 @@ final class CardGuardianReducerTests: XCTestCase {
     
     func test_reduce_tapShowOnMain_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.showOnMain(true)), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.toggleVisibilityOnMain(.show)), state: .default)
     }
     
     func test_reduce_tapHiddenOnMain_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .buttonTapped(.showOnMain(false)), state: .default)
+        assertEffect(.none, onEvent: .buttonTapped(.toggleVisibilityOnMain(.hide)), state: .default)
     }
 
     // MARK: - Helpers
@@ -95,19 +95,19 @@ private typealias CardGuardianButton = CardGuardianState._Button
 private extension CardGuardianButton {
     
     static let changePin: Self = .init(
-        event: .changePin,
+        event: .changePin(.default),
         title: "title",
         iconType: .changePin,
         subtitle: "subtitle")
     
     static let toggleLock: Self = .init(
-        event: .toggleLock(.active),
+        event: .toggleLock(.default),
         title: "title",
         iconType: .toggleLock,
         subtitle: "subtitle")
     
     static let showOnMain: Self = .init(
-        event: .showOnMain(true),
+        event: .toggleVisibilityOnMain(.show),
         title: "title",
         iconType: .showOnMain,
         subtitle: "subtitle")
@@ -121,4 +121,31 @@ private extension Array where Element == CardGuardianButton {
 private extension CardGuardianReducer.State {
     
     static let `default`: Self = .init(buttons: .default, event: .none)
+}
+
+private extension Card {
+    
+    static let `default`: Self = .init(
+        cardId: 1,
+        cardNumber: "111",
+        cardGuardianStatus: .active
+    )
+    
+    static let blockedUnlockAvailable: Self = .init(
+        cardId: 1,
+        cardNumber: "111",
+        cardGuardianStatus: .blockedUnlockAvailable
+    )
+
+    static let blockedUnlockNotAvailable: Self = .init(
+        cardId: 1,
+        cardNumber: "111",
+        cardGuardianStatus: .blockedUnlockNotAvailable
+    )
+}
+
+private extension Product {
+    
+    static let show: Self = .init(productID: 2, visibility: true)
+    static let hide: Self = .init(productID: 2, visibility: false)
 }
