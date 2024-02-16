@@ -25,7 +25,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test open
     
-    func test_open_shouldDeliverEffectNil() {
+    func test_open_shouldNotDeliverEffect() {
         
         assert(
             .open(createCardGuardianRoute()),
@@ -35,7 +35,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test closeAlert
     
-    func test_closeAlert_shouldDeliverEffectNil() {
+    func test_closeAlert_shouldNotDeliverEffect() {
         
         assert(
             .closeAlert,
@@ -45,7 +45,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test dismissDestination
     
-    func test_dismissDestination_shouldDeliverEffectNil() {
+    func test_dismissDestination_shouldNotDeliverEffect() {
         
         assert(
             .dismissDestination,
@@ -55,7 +55,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test cardGuardianInput
     
-    func test_cardGuardianInput_shouldDeliverEffectNil() {
+    func test_cardGuardianInput_shouldNotDeliverEffect() {
         
         assert(
             .cardGuardianInput(.appear),
@@ -65,7 +65,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test showAlert
     
-    func test_showAlert_shouldDeliverEffectNil() {
+    func test_showAlert_shouldNotDeliverEffect() {
         
         assert(
             .showAlert(Alerts.alertBlockCard(.newCard(status: .active))),
