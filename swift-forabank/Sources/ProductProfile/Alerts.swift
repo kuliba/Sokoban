@@ -7,16 +7,19 @@
 
 import UIPrimitives
 import CardGuardianModule
+import Foundation
 
 struct Alerts {}
 
 extension Alerts {
     
     static func alertBlockCard(
-        _ card: Card
+        _ card: Card,
+        _ id: UUID = .init()
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
+            id: id,
             title: titleForAlertCardGuardian(card),
             message: messageForAlertCardGuardian(card),
             primaryButton: .init(
@@ -93,9 +96,11 @@ extension Alerts {
     }
     
     static func alertCVV(
+        _ id: UUID = .init()
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
+            id: id,
             title: "Информация",
             message: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.",
             primaryButton: .init(
@@ -105,9 +110,11 @@ extension Alerts {
     }
     
     static func alertCardBlocked(
+        _ id: UUID = .init()
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
+            id: id,
             title: "Информация",
             message: "Для просмотра CVV и смены PIN карта должна быть активна.",
             primaryButton: .init(

@@ -11,105 +11,42 @@ import RxViewModel
 import UIPrimitives
 import XCTest
 
+extension ProductProfileNavigationEffectHandler: EffectHandler {}
+
 final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     
-    // MARK: test init
+    // MARK: test showAlert
     
-    func test_init_shouldNotCallCollaborators() {
+    func test_showCVVAlert_shouldDeliverShowAlert() {
         
-        var count = 0
+        let sut = makeSUT()
         
-        (_, _) = makeSUT { _ in
-            count = 1
-        } visibilityOnMain: { _ in
-            count = 2
-        } showContacts: {
-            count = 3
-        } changePin: { _ in
-            count = 4
-        }
+        let id = UUID()
+        let alert = Alerts.alertCVV(id)
         
-        XCTAssertNoDiff(count, 0)
+        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
     
-    // MARK: test create
-    
-   /* func test_create_shouldCallOpenPanel() {
+    func test_showCardBlockedAlert_shouldDeliverShowAlert() {
         
-        var event: EventNavigation._Event? = .none
+        let sut = makeSUT()
+
+        let id = UUID()
+        let alert = Alerts.alertCardBlocked(id)
         
-        let (sut, _) = makeSUT()
-        
-        sut.handleEffect(.create) {
-            
-            event = $0.value
-        }
-        
-        XCTAssertNoDiff(event, .open)
+        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
     
-    // MARK: test show panel
-    
-    func test_create_shouldShowPanel() {
+    func test_showBlockCardAlert_shouldDeliverShowAlert() {
         
-        var event: EventNavigation._Event? = .none
+        let sut = makeSUT()
+
+        let id = UUID()
+        let alert = Alerts.alertBlockCard(.card(), id)
         
-        let (sut, _) = makeSUT()
-        
-        sut.handleEffect(.create) {
-            
-            event = $0.value
-        }
-                
-        XCTAssertNoDiff(event, .open)
+        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
-    
-    // MARK: test show alert
-    
-    func test_delayAlert_shouldShowAlert() {
-        
-        var event: EventNavigation._Event? = .none
-        
-        let (sut, _) = makeSUT()
-        
-        sut.handleEffect(.delayAlert(Alerts.alertBlockCard(.newCard(status: .active)), 0)) {
-            
-            event = $0.value
-        }
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNoDiff(event, .showAlert)
-    }
-    
-    // MARK: - tap alert button show/hide on main
-    
-    func test_tap_shouldCallOnlyVisibilityOnMain() {
-        
-        assert(event: .visibilityOnMain)
-    }
-    
-    // MARK: - tap changePin
-    
-    func test_tap_shouldCallOnlyChangePin() {
-        
-        assert(event: .changePin)
-    }
-    
-    // MARK: - tap alert button block/unblock
-    
-    func test_tap_shouldCallOnlyCardGuardian() {
-        
-        assert(event: .cardGuardian)
-    }
-    
-    // MARK: - tap alert button showContacts
-    
-    func test_tap_shouldCallOnlyShowContacts() {
-        
-        assert(event: .showContacts)
-    }*/
-    
+
     // MARK: - Helpers
     
     private typealias SUT = ProductProfileNavigationEffectHandler
@@ -118,6 +55,8 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     
+    private typealias OpenPanelSpy = () -> Void
+    
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
         event: CardGuardianEvent? = nil,
@@ -125,13 +64,11 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         visibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
         showContacts: @escaping SUT.EmptyAction = {},
         changePin: @escaping SUT.CardGuardianAction = {_ in },
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
+        scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (
-        sut: SUT,
-        cardGuardianViewModel: MakeCardGuardianViewModel
-    ) {
+    ) -> SUT {
+        
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
@@ -155,46 +92,14 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, makeCardGuardianViewModel)
+        return sut
     }
-    
-  /*  private func assertProductProfileEffect(
-        // Spy
-        effect: ProductProfileEffect
-    ) {
-        var result: ProductProfileEffect?
-        
-        let exp = expectation(description: "wait for handle")
-
-        let (sut, _) = makeSUT { _ in
-            result = .cardGuardian
-            exp.fulfill()
-
-        } visibilityOnMain: { _ in
-            result = .visibilityOnMain
-            exp.fulfill()
-
-        } showContacts: {
-            result = .showContacts
-            exp.fulfill()
-
-        } changePin: { _ in
-            result = .changePin
-            exp.fulfill()
-        }
-        
-        sut.handleEffect(.(Event.createEvent(event: event))) { _ in }
-
-        wait(for: [exp], timeout: 0.5)
-        
-        XCTAssertNoDiff(result, event)
-    }*/
 }
 
 private extension Card {
     
-    static func newCard(
-        status: CardGuardianStatus
+    static func card(
+        status: CardGuardianStatus = .active
     ) -> Card {
         
         .init(
@@ -203,4 +108,11 @@ private extension Card {
             cardGuardianStatus: status
         )
     }
+}
+
+private extension Product {
+    
+    static let product: Self = .init(
+        productID: 1,
+        visibility: false)
 }
