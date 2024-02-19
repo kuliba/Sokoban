@@ -1252,7 +1252,6 @@ private extension Target {
             // external packages
             .tagged,
             // internal modules
-            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.utilityPaymentsRx)"
     )
