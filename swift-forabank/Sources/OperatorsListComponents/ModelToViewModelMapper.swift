@@ -26,8 +26,8 @@ public extension ModelToViewModelMapper {
         
         return .init(
             icon: Data(),
-            title: `operator`.name,
-            description: `operator`.inn,
+            title: `operator`.title,
+            description: `operator`.subtitle,
             action: {}
         )
     }
