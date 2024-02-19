@@ -27,15 +27,6 @@ public struct SliderConfig {
 
     private var slideLength: CGFloat { totalWidth - thumbWidth - thumbPadding * 2 }
     
-    func progressBy(offsetX: CGFloat) -> CGFloat {
-        1 - (slideLength - offsetX) / slideLength
-    }
-    
-    func titleOpacityBy(offsetX: CGFloat) -> CGFloat {
-        
-        max(1 - (progressBy(offsetX: offsetX) * 2), 0)
-    }
-    
     public struct Item {
         
         let icon: Image
@@ -70,30 +61,44 @@ public struct SliderConfig {
         self.font = font
     }
     
-    func itemByState(_ state: SliderState) -> Item {
+    func itemByState(_ state: SliderStatus) -> Item {
         
         switch state {
             
         case .notActivated:
-            return self.notActivated
+            return notActivated
         case .waiting:
-            return self.waiting
+            return waiting
         case .activating:
-            return self.activating
+            return activating
         case .activated:
-            return self.activated
+            return activated
         }
     }
     
-    func thumbConfig(_ state: SliderState) -> ThumbConfig {
+    func thumbConfig(_ state: SliderStatus) -> ThumbConfig {
         
         let itemConfig = itemByState(state)
         return .init(
             icon: itemConfig.icon,
-            color: self.thumbIconColor,
-            backgroundColor: self.backgroundColor,
-            foregroundColor: self.foregroundColor,
-            isAnimated: state == .activating ? true : false
+            color: thumbIconColor,
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            isAnimated: state == .activating
         )
+    }
+    
+    func progressBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        1 - (slideLength - offsetX) / slideLength
+    }
+    
+    func titleOpacityBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        max(1 - (progressBy(offsetX: offsetX) * 2), 0)
     }
 }

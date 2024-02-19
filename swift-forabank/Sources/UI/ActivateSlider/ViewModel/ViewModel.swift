@@ -9,9 +9,9 @@ import Foundation
 
 class ViewModel: ObservableObject {
     
-    @Published var state: SliderState
+    @Published var state: SliderStatus
     
-    init(state: SliderState) {
+    init(state: SliderStatus) {
         
         self.state = state
     }
