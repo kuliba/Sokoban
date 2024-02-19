@@ -39,6 +39,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         // UI
+        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -130,6 +131,7 @@ let package = Package(
         .urlRequestFactory,
         .urlRequestFactoryTests,
         // UI
+        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -274,6 +276,13 @@ private extension Product {
     
     // MARK: - UI
     
+    static let activateSlider = library(
+        name: .activateSlider,
+        targets: [
+            .activateSlider
+        ]
+    )
+
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -1001,6 +1010,11 @@ private extension Target {
 
     // MARK: - UI
     
+    static let activateSlider = target(
+        name: .activateSlider,
+        path: "Sources/UI/\(String.activateSlider)"
+    )
+
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
         path: "Sources/UI/\(String.buttonWithSheet)"
@@ -1438,6 +1452,10 @@ private extension Target.Dependency {
     
     // MARK: - UI
     
+    static let activateSlider = byName(
+        name: .activateSlider
+    )
+
     static let buttonWithSheet = byName(
         name: .buttonWithSheet
     )
@@ -1638,6 +1656,8 @@ private extension String {
     static let landingUIComponentTests = "LandingUIComponentTests"
     
     // MARK: - UI
+    
+    static let activateSlider = "ActivateSlider"
     
     static let buttonWithSheet = "ButtonWithSheet"
     
