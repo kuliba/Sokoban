@@ -18,7 +18,23 @@ public struct SliderConfig {
     let foregroundColor: Color
     
     let font: Font
+    
+    let totalWidth: CGFloat = 167
+    let thumbWidth: CGFloat = 40
+    let thumbPadding: CGFloat = 4
+    var maxOffsetX: CGFloat { totalWidth - (thumbWidth + thumbPadding * 2) }
 
+    private var slideLength: CGFloat { totalWidth - thumbWidth - thumbPadding * 2 }
+    
+    func progressBy(offsetX: CGFloat) -> CGFloat {
+        1 - (slideLength - offsetX) / slideLength
+    }
+    
+    func titleOpacityBy(offsetX: CGFloat) -> CGFloat {
+        
+        max(1 - (progressBy(offsetX: offsetX) * 2), 0)
+    }
+    
     public struct Item {
         
         let icon: Image

@@ -7,36 +7,16 @@
 
 import SwiftUI
 
-extension ActivateSliderView {
-    
-    class ViewModel: ObservableObject {
-        
-        @Published var state: SliderState
-        
-        init(state: SliderState) {
-            
-            self.state = state
-        }
-    }
-}
-
 //MARK: - View
 
 struct ActivateSliderView: View {
     
-    @ObservedObject var viewModel: ActivateSliderView.ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     let config: SliderConfig
     
     @State private var offsetX: CGFloat = 0
-    private let totalWidth: CGFloat = 167
-    private let knobWidth: CGFloat = 40
-    private let knobPadding: CGFloat = 4
-    
-    private var slideLength: CGFloat { totalWidth - knobWidth - knobPadding * 2 }
-    private var progress: CGFloat { 1 - (slideLength - offsetX) / slideLength }
-    private var titleOpacity: CGFloat { max(1 - (progress * 2), 0) }
-    
+        
     var body: some View {
         
         VStack {
@@ -48,11 +28,11 @@ struct ActivateSliderView: View {
                     
                     Capsule()
                         .foregroundColor(Color.black.opacity(0.1))
-                        .opacity(1 - progress)
+                        .opacity(1 - config.progressBy(offsetX: offsetX))
                     
                     Capsule()
                         .foregroundColor(Color.white.opacity(0.3))
-                        .opacity(progress)
+                        .opacity(config.progressBy(offsetX: offsetX))
                     
                     HStack{
                         
@@ -61,7 +41,7 @@ struct ActivateSliderView: View {
                         Text(config.itemByState(viewModel.state).title)
                             .font(config.font)
                             .foregroundColor(config.foregroundColor)
-                            .opacity(titleOpacity)
+                            .opacity(config.titleOpacityBy(offsetX: offsetX))
                             .padding(.trailing, 14)
                             .frame(width: 120)
                     }
@@ -118,14 +98,14 @@ struct ActivateSliderView: View {
                             .padding(.all, 4)
                     }
                 }
-                .frame(width: totalWidth, height: 48)
+                .frame(width: config.totalWidth, height: 48)
             }
         }
     }
     
     func dragOnChanged(value: DragGesture.Value) {
         
-        if value.translation.width > 0 && offsetX <= totalWidth - knobWidth - knobPadding * 2 {
+        if value.translation.width > 0 && offsetX <= config.maxOffsetX {
             
             self.offsetX = value.translation.width
         }
@@ -133,7 +113,7 @@ struct ActivateSliderView: View {
     
     func dragOnEnded(value: DragGesture.Value, completion: () -> Void) {
         
-        if self.offsetX < totalWidth - knobWidth - knobPadding * 2 {
+        if self.offsetX < config.maxOffsetX {
             
             withAnimation {
                 
@@ -144,22 +124,20 @@ struct ActivateSliderView: View {
             
             withAnimation {
                 
-                self.offsetX = totalWidth - (knobWidth + knobPadding * 2)
+                self.offsetX = config.maxOffsetX
             }
             
             completion()
         }
     }
-    
-    func textLabelOpacity(totalWidth: CGFloat)-> CGFloat {
         
-        let halfTotalWidth = totalWidth / 2
-        return (halfTotalWidth - abs(self.offsetX)) / halfTotalWidth
-    }
-    
     func resetState() {
         viewModel.state = .notActivated
-        self.offsetX = 0
+        
+        withAnimation {
+            
+            self.offsetX = 0
+        }
     }
 }
 
