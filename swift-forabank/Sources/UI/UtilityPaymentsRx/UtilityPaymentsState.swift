@@ -7,13 +7,13 @@
 
 public struct UtilityPaymentsState {
     
-    public var lastPayments: LastPayments?
-    public var operators: Operators?
+    public var lastPayments: [LastPayment]?
+    public var operators: [Operator]?
     public var status: Status?
     
     public init(
-        lastPayments: LastPayments? = nil, 
-        operators: Operators? = nil,
+        lastPayments: [LastPayment]? = nil,
+        operators: [Operator]? = nil,
         status: Status? = nil
     ) {
         self.lastPayments = lastPayments
@@ -23,9 +23,6 @@ public struct UtilityPaymentsState {
 }
 
 public extension UtilityPaymentsState {
-    
-   typealias LastPayments = [LastPayment]
-   typealias Operators = [Operator]
     
     enum Status: Equatable {
         

@@ -7,8 +7,10 @@
 
 public enum UtilityPaymentsEvent {
     
+    case didScrollTo(Operator.ID)
     case initiate
     case loaded(Loaded)
+    case paginated([Operator])
 }
 
 public extension UtilityPaymentsEvent {

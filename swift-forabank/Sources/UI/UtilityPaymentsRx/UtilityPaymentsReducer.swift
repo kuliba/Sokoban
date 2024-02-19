@@ -26,12 +26,18 @@ public extension UtilityPaymentsReducer {
         var effect: Effect?
         
         switch event {
+        case let .didScrollTo(operatorID):
+            (state, effect) = reduce(state, operatorID)
+            
         case .initiate:
             state.status = .inflight
             effect = .initiate
             
         case let .loaded(loaded):
             (state, effect) = reduce(state, loaded)
+            
+        case let .paginated(paginated):
+            (state, effect) = reduce(state, paginated)
         }
         
         return (state, effect)
@@ -46,6 +52,22 @@ public extension UtilityPaymentsReducer {
 }
 
 private extension UtilityPaymentsReducer {
+    
+    func reduce(
+        _ state: State,
+        _ operatorID: Operator.ID
+    ) -> (State, Effect?) {
+        
+        var effect: Effect?
+        
+        guard let lastObserved = state.operators?.map(\.id).suffix(observeLast),
+              Set(lastObserved).contains(operatorID)
+        else { return (state, nil) }
+        
+        effect = .paginate
+        
+        return (state, effect)
+    }
     
     func reduce(
         _ state: State,
@@ -75,6 +97,19 @@ private extension UtilityPaymentsReducer {
                 state.operators = operators
             }
         }
+        
+        return (state, nil)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ paginated: [Operator]
+    ) -> (State, Effect?) {
+
+        var operators = state.operators ?? []
+        operators.append(contentsOf: paginated)
+        var state = state
+        state.operators = operators
         
         return (state, nil)
     }

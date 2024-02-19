@@ -31,6 +31,9 @@ public extension UtilityPaymentsEffectHandler {
         switch effect {
         case .initiate:
             initiate(dispatch)
+            
+        case .paginate:
+            paginate(dispatch)
         }
     }
 }
@@ -59,5 +62,11 @@ private extension UtilityPaymentsEffectHandler {
     ) {
         loadLastPayments { dispatch(.loaded(.lastPayments($0))) }
         loadOperators { dispatch(.loaded(.operators($0))) }
+    }
+    
+    func paginate(
+        _ dispatch: @escaping Dispatch
+    ) {
+        paginate { dispatch(.paginated($0)) }
     }
 }

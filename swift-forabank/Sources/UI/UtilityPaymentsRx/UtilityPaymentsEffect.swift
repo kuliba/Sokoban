@@ -8,6 +8,7 @@
 public enum UtilityPaymentsEffect {
     
     case initiate
+    case paginate
 }
 
 extension UtilityPaymentsEffect: Equatable {}
