@@ -280,7 +280,7 @@ extension ProductView {
                         return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                         
                     case .navigationTitle:
-                        return cardProduct.isCreditCard ? "\(cardProduct.displayName)" : cardProduct.displayName
+                        return cardProduct.isCreditCard ? cardProduct.displayName : cardProduct.displayName
                     }
                 }
                 
