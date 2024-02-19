@@ -9,10 +9,10 @@ import Foundation
 
 public struct ModelToViewModelMapper {
     
-    let action: (Event) -> Void
+    let action: (ComposedOperatorsEvent) -> Void
     
     public init(
-        action: @escaping (Event) -> Void
+        action: @escaping (ComposedOperatorsEvent) -> Void
     ) {
         self.action = action
     }

@@ -163,7 +163,7 @@ extension ComposedOperatorsView {
 
 public struct Operator: Identifiable {
     
-    public var id: String //customerID
+    public var id: String
     let title: String
     let subtitle: String?
     let image: Image
