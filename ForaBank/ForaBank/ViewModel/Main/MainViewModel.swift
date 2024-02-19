@@ -20,7 +20,12 @@ class MainViewModel: ObservableObject, Resetable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: Image("foraLogoNewYear"), name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    lazy var userAccountButton: UserAccountButtonViewModel = .init(
+        logo: MainViewModel.logo,
+        name: "",
+        avatar: nil,
+        action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())}
+    )
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?
@@ -106,6 +111,8 @@ class MainViewModel: ObservableObject, Resetable {
 }
 
 extension MainViewModel {
+    
+    static let logo: Image = .ic12LogoForaColor
     
     func reset() {
         
