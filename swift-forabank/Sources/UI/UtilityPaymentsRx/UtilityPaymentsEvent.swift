@@ -7,6 +7,17 @@
 
 public enum UtilityPaymentsEvent {
     
+    case initiate
+    case loaded(Loaded)
+}
+
+public extension UtilityPaymentsEvent {
+    
+    enum Loaded: Equatable {
+        
+        case lastPayments(LoadLastPaymentsResult)
+        case operators(LoadOperatorsResult)
+    }
 }
 
 extension UtilityPaymentsEvent: Equatable {}

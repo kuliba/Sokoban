@@ -7,6 +7,7 @@
 
 public enum UtilityPaymentsEffect {
     
+    case initiate
 }
 
 extension UtilityPaymentsEffect: Equatable {}
