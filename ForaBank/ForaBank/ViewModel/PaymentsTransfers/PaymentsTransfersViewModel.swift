@@ -385,25 +385,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             // на экране платежей нижний переход
                             self.openScanner()
                     
-                        case .service:
-                            self.route.destination = .operatorList(operators, {
-                                
-                                var lastPayment: [PaymentServiceData] = []
-                                let services = self.model.latestPayments.value.filter({ $0.type == .service })
-                                
-                                for item in services {
-                                 
-                                    guard let item = item as? PaymentServiceData else {
-                                        continue
-                                    }
-                                    
-                                    lastPayment.append(item)
-                                }
-                                
-                                return lastPayment
-                            })
-                            
-                        case .internet:
+                        case .internet, .service:
                             
                             guard let dictionaryAnywayOperators = model.dictionaryAnywayOperators(),
                                   let operatorValue = Payments.operatorByPaymentsType(payload.type)
@@ -1475,7 +1457,6 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
-        case operatorList(() -> [OperatorViewModel]?, () -> [PaymentServiceData])
         
         var id: Case {
             
@@ -1528,8 +1509,6 @@ extension PaymentsTransfersViewModel {
                 return .openDepositsList
             case .sberQRPayment:
                 return .sberQRPayment
-            case .operatorList:
-                return .operatorsList
             }
         }
         
@@ -1558,7 +1537,6 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
-            case operatorsList
         }
     }
     
