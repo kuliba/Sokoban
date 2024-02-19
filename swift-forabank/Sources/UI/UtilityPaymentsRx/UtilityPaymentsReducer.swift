@@ -7,7 +7,12 @@
 
 public final class UtilityPaymentsReducer {
     
-    public init() {}
+    private let observeLast: Int
+    
+    public init(observeLast: Int) {
+        
+        self.observeLast = observeLast
+    }
 }
 
 public extension UtilityPaymentsReducer {

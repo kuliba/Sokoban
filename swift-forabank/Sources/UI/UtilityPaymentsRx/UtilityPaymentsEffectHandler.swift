@@ -9,13 +9,16 @@ public final class UtilityPaymentsEffectHandler {
     
     private let loadLastPayments: LoadLastPayments
     private let loadOperators: LoadOperators
+    private let paginate: Paginate
     
     public init(
         loadLastPayments: @escaping LoadLastPayments,
-        loadOperators: @escaping LoadOperators
+        loadOperators: @escaping LoadOperators,
+        paginate: @escaping Paginate
     ) {
         self.loadLastPayments = loadLastPayments
         self.loadOperators = loadOperators
+        self.paginate = paginate
     }
 }
 
@@ -39,6 +42,9 @@ public extension UtilityPaymentsEffectHandler {
     
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    typealias PaginateCompletion = ([Operator]) -> Void
+    typealias Paginate = (@escaping PaginateCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     

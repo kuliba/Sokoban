@@ -24,6 +24,9 @@ public struct UtilityPaymentsState {
 
 public extension UtilityPaymentsState {
     
+   typealias LastPayments = [LastPayment]
+   typealias Operators = [Operator]
+    
     enum Status: Equatable {
         
         case inflight
