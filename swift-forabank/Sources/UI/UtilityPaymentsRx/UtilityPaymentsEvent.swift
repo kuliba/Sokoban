@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public enum UtilityPaymentsEvent {
+public enum UtilityPaymentsEvent: Equatable {
     
     case didScrollTo(Operator.ID)
     case initiate
@@ -21,5 +21,3 @@ public extension UtilityPaymentsEvent {
         case operators(LoadOperatorsResult)
     }
 }
-
-extension UtilityPaymentsEvent: Equatable {}

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public struct UtilityPaymentsState {
+public struct UtilityPaymentsState: Equatable {
     
     public var lastPayments: [LastPayment]?
     public var operators: [Operator]?
@@ -30,5 +30,3 @@ public extension UtilityPaymentsState {
         case failure(ServiceFailure)
     }
 }
-
-extension UtilityPaymentsState: Equatable {}
