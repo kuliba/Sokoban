@@ -169,6 +169,7 @@ let package = Package(
         // Utilities
         .services,
         .operatorsListComponents,
+        .operatorsListComponentsTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -877,13 +878,21 @@ private extension Target {
         ]
     )
     
-    static let operatorsComponent = testTarget(
+    static let operatorsComponent = target(
         name: .operatorsListComponents,
         dependencies: [
             // external packages
             .genericRemoteService,
             .services
         ]
+    )
+    
+    static let operatorsComponentTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+//            .operatorsListComponents
+        ],
+        path: "Tests/Services/\(String.operatorsListComponentsTests)"
     )
     
     static let cvvPIN_Services = target(
@@ -926,6 +935,7 @@ private extension Target {
             .copy("Resources/generatepin.pem"),
         ]
     )
+    
     static let foraCryptoTests = testTarget(
         name: .foraCryptoTests,
         dependencies: [
@@ -940,6 +950,7 @@ private extension Target {
         name: .genericRemoteService,
         path: "Sources/Services/\(String.genericRemoteService)"
     )
+    
     static let genericRemoteServiceTests = testTarget(
         name: .genericRemoteServiceTests,
         dependencies: [
@@ -1316,6 +1327,14 @@ private extension Target {
             .paymentComponents,
             .productSelectComponent,
         ]
+    )
+    
+    static let operatorsListComponentsTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+//            .operatorsListComponents
+        ],
+        path: "Tests/\(String.operatorsListComponentsTests)"
     )
     
     static let productSelectComponent = target(
@@ -1736,6 +1755,7 @@ private extension String {
     static let services = "Services"
     
     static let operatorsListComponents = "OperatorsListComponents"
+    static let operatorsListComponentsTests = "OperatorsListComponentsTests"
     
     // MARK: - Infra
     
