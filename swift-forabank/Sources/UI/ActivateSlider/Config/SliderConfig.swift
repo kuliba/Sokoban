@@ -14,8 +14,9 @@ public struct SliderConfig {
     let activating: Item
     let activated: Item
     
-    let thumbIconColor: Color
+    let backgroundColor: Color
     let foregroundColor: Color
+    let thumbIconColor: Color
     
     let font: Font
     
@@ -54,16 +55,18 @@ public struct SliderConfig {
         waiting: Item,
         activating: Item,
         activated: Item,
-        thumbIconColor: Color = .black,
+        backgroundColor: Color = Color.black.opacity(0.1),
         foregroundColor: Color = .white,
+        thumbIconColor: Color = .black,
         font: Font
     ) {
         self.notActivated = notActivated
         self.waiting = waiting
         self.activating = activating
         self.activated = activated
-        self.thumbIconColor = thumbIconColor
+        self.backgroundColor = backgroundColor
         self.foregroundColor = foregroundColor
+        self.thumbIconColor = thumbIconColor
         self.font = font
     }
     
@@ -88,7 +91,8 @@ public struct SliderConfig {
         return .init(
             icon: itemConfig.icon,
             color: self.thumbIconColor,
-            backgroundColor: self.foregroundColor,
+            backgroundColor: self.backgroundColor,
+            foregroundColor: self.foregroundColor,
             isAnimated: state == .activating ? true : false
         )
     }
