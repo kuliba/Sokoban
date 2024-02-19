@@ -21,16 +21,13 @@ public struct ComposedOperatorsView<
     let footerView: () -> FooterView
     let searchView: () -> SearchView
     
-    let configuration: Configuration
-    
     public init(
         state: ComposedOperatorsState,
         event: @escaping (ComposedOperatorsEvent) -> Void,
         lastPaymentView: @escaping (LatestPayment) -> LastPaymentView,
         operatorView: @escaping (Operator) -> OperatorView,
         footerView: @escaping () -> FooterView,
-        searchView: @escaping () -> SearchView,
-        configuration: ComposedOperatorsView.Configuration
+        searchView: @escaping () -> SearchView
     ) {
         self.state = state
         self.event = event
@@ -38,7 +35,6 @@ public struct ComposedOperatorsView<
         self.operatorView = operatorView
         self.footerView = footerView
         self.searchView = searchView
-        self.configuration = configuration
     }
     
     public var body: some View {
@@ -209,17 +205,7 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
             lastPaymentView: { _ in  EmptyView() },
             operatorView: { _ in  EmptyView() },
             footerView: { EmptyView() },
-            searchView: { EmptyView() },
-            configuration: .init(
-                noCompanyListConfiguration: .init(
-                    titleFont: .body,
-                    titleColor: .black,
-                    descriptionFont: .callout,
-                    descriptionColor: .black,
-                    subtitleFont: .body,
-                    subtitleColor: .black
-                )
-            )
+            searchView: { EmptyView() }
         )
     }
 }
