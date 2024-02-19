@@ -6,16 +6,20 @@
 //
 
 import SwiftUI
+import OperatorsListComponents
 
 struct ContentView: View {
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        
+        ComposedOperatorsView(
+            state: .init(operators: [], latestPayments: []),
+            event: { _ in },
+            lastPaymentView: { _ in EmptyView() },
+            operatorView: { _ in EmptyView() },
+            footerView: { EmptyView() },
+            searchView: { EmptyView() }
+        )
     }
 }
 
