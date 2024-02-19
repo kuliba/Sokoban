@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Operator {
+public struct OperatorData {
     
     let name: String
     let inn: String
