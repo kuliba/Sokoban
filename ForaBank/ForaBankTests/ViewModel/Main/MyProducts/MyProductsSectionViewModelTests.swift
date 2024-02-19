@@ -14,9 +14,9 @@ final class MyProductsSectionViewModelTests: XCTestCase {
         
         let myProductsSection = makeSUT()
         
-        myProductsSection.update(with: loanProduct(amount: 20))
+        myProductsSection.update(with: loanProduct(amount: 123.45))
         
-        XCTAssertNoDiff(myProductsSection.balance, "20.0")
+        XCTAssertNoDiff(myProductsSection.balance, "123.45")
     }
 }
 
