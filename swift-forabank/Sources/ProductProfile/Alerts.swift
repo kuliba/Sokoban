@@ -7,51 +7,37 @@
 
 import UIPrimitives
 import CardGuardianModule
+import Foundation
 
 struct Alerts {}
 
 extension Alerts {
     
-    static func alertChangePin(
-    ) -> AlertModelOf<ProductProfileNavigation.Event> {
-        
-        .init(
-            title: "Активируйте сертификат",
-            message: "\nСертификат позволяет просматривать CVV по картам и изменять PIN-код\nв течение 6 месяцев\n\nЭто мера предосторожности во избежание мошеннических операций",
-            primaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: .closeAlert),
-            secondaryButton: .init(
-                type: .default,
-                title: "Активировать",
-                event: .closeAlert)
-        )
-    }
-    
     static func alertBlockCard(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card,
+        _ id: UUID = .init()
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
-            title: titleForAlertCardGuardian(status),
-            message: messageForAlertCardGuardian(status),
+            id: id,
+            title: titleForAlertCardGuardian(card),
+            message: messageForAlertCardGuardian(card),
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
                 event: .closeAlert),
             secondaryButton: .init(
                 type: .default,
-                title: titleSecondaryButtonForAlertCardGuardian(status),
-                event: .closeAlert)
+                title: titleSecondaryButtonForAlertCardGuardian(card),
+                event: event(card))
         )
     }
     
     private static func titleForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String {
         
-        switch status {
+        switch card.status {
         case .active:
             return "Заблокировать карту?"
         case .blockedUnlockAvailable:
@@ -64,10 +50,10 @@ extension Alerts {
     }
     
     private static func messageForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String? {
         
-        switch status {
+        switch card.status {
         case .active:
             return "Карту можно будет разблокировать в приложении или в колл-центре"
         case .blockedUnlockAvailable:
@@ -80,10 +66,10 @@ extension Alerts {
     }
     
     private static func titleSecondaryButtonForAlertCardGuardian(
-        _ status: CardGuardian.CardGuardianStatus
+        _ card: Card
     ) -> String {
         
-        switch status {
+        switch card.status {
         case .active:
             return "ОК"
         case .blockedUnlockAvailable:
@@ -95,11 +81,45 @@ extension Alerts {
         }
     }
     
-    private static func action(
-        _ status: CardGuardian.CardGuardianStatus
+    private static func event(
+        _ card: Card
     ) -> ProductProfileNavigation.Event {
         
-        // TODO: add other
-        return .closeAlert
+        switch card.status {
+        case .active, .blockedUnlockAvailable:
+            return .productProfile(.guardCard(card))
+        case .blockedUnlockNotAvailable:
+            return .productProfile(.showContacts)
+        case .notActivated:
+            return .closeAlert
+        }
+    }
+    
+    static func alertCVV(
+        _ id: UUID = .init()
+    ) -> AlertModelOf<ProductProfileNavigation.Event> {
+        
+        .init(
+            id: id,
+            title: "Информация",
+            message: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.",
+            primaryButton: .init(
+                type: .cancel,
+                title: "OK",
+                event: .closeAlert))
+    }
+    
+    static func alertCardBlocked(
+        _ id: UUID = .init()
+    ) -> AlertModelOf<ProductProfileNavigation.Event> {
+        
+        .init(
+            id: id,
+            title: "Информация",
+            message: "Для просмотра CVV и смены PIN карта должна быть активна.",
+            primaryButton: .init(
+                type: .cancel,
+                title: "OK",
+                event: .closeAlert))
     }
 }

@@ -41,9 +41,9 @@ final class CardGuardianStateTests: XCTestCase {
         
         XCTAssertNoDiff(sut.event, .appear)
 
-        sut.updateEvent(.buttonTapped(.changePin))
+        sut.updateEvent(.buttonTapped(.changePin(.default)))
         
-        XCTAssertNoDiff(sut.event, .buttonTapped(.changePin))
+        XCTAssertNoDiff(sut.event, .buttonTapped(.changePin(.default)))
     }
         
     // MARK: - Helpers
@@ -63,9 +63,17 @@ final class CardGuardianStateTests: XCTestCase {
 private extension CardGuardianButton {
     
     static let button: Self = .init(
-        event: .changePin,
+        event: .changePin(.default),
         title: "title",
         iconType: .changePin,
         subtitle: "subtitle")
 }
 
+private extension Card {
+    
+    static let `default`: Self = .init(
+        cardId: 1,
+        cardNumber: "111",
+        cardGuardianStatus: .active
+    )
+}
