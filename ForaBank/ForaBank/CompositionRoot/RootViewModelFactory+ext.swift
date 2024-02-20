@@ -98,6 +98,7 @@ extension RootViewModelFactory {
         )
         
         let makeUtilitiesViewModel = makeUtilitiesViewModel(
+            httpClient: httpClient,
             model: model,
             flag: utilitiesPaymentsFlag
         )
@@ -125,6 +126,7 @@ extension RootViewModelFactory {
     }
     
     static func makeUtilitiesViewModel(
+        httpClient: HTTPClient,
         model: Model,
         flag: UtilitiesPaymentsFlag
     ) -> MakeUtilitiesViewModel {
@@ -137,7 +139,11 @@ extension RootViewModelFactory {
                 
             case .service:
                 switch flag.rawValue {
-                case let .active(option):
+                case .active:
+                    let utilitiesHTTPClient = flag.isStub
+                    ? HTTPClientStub.utilityPayments(delay: 1)
+                    : httpClient
+                    
                     fatalError("unimplemented")
                     
                 case .inactive:
