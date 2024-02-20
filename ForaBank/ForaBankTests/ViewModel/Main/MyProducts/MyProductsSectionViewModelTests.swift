@@ -16,7 +16,7 @@ final class MyProductsSectionViewModelTests: XCTestCase {
         
         myProductsSection.update(with: loanProduct(amount: 123.45))
         
-        XCTAssertNoDiff(myProductsSection.balance, "123.45")
+        XCTAssertNoDiff(myProductsSection.balance, "123,45 ₽")
     }
 }
 
@@ -25,9 +25,12 @@ extension MyProductsSectionViewModelTests {
     func makeSUT(
     ) -> MyProductsSectionItemViewModel {
         
-        .init(
+        let model = Model.emptyMock
+        model.currencyList.value.append(.rub)
+        
+        return .init(
             productData: loanProduct(),
-            model: .emptyMock
+            model: model
         )
     }
     
@@ -64,7 +67,7 @@ extension MyProductsSectionViewModelTests {
             currentInterestRate: 10,
             principalDebt: 10,
             defaultPrincipalDebt: 10,
-            totalAmountDebt: 10,
+            totalAmountDebt: amount,
             principalDebtAccount: "principalDebtAccount",
             settlementAccount: "settlementAccount",
             settlementAccountId: 1,
