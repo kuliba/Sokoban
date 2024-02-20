@@ -172,6 +172,24 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         sut.event(.didScrollTo("5"))
         sut.event(.didScrollTo("8"))
         
+        assert(
+            stateSpy, initialState,
+            {
+                $0.status = .inflight
+            }, {
+                $0.status = .failure(.connectivityError) },
+            {
+                $0.lastPayments = .init()
+                $0.status = .none
+            }, {
+                $0.operators = .init()
+            }, {
+                $0.lastPayments = .stub
+            }, {
+                $0.operators = .stub
+            }
+        )
+        
         sut.event(.didScrollTo("9"))
         paginator.complete(with: [.init(id: "111")])
         
