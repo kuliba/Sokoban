@@ -14,18 +14,17 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, loadLastPaymentsSpy, loadOperatorsSpy, paginator, _) = makeSUT()
+        let (_, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
         XCTAssertEqual(loadLastPaymentsSpy.callCount, 0)
         XCTAssertEqual(loadOperatorsSpy.callCount, 0)
-        XCTAssertEqual(paginator.callCount, 0)
     }
     
     // MARK: - initiate
     
     func test_initiate_shouldCallLoaders() {
         
-        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
         sut.handleEffect(.initiate, { _ in })
         
@@ -33,9 +32,19 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         XCTAssertEqual(loadOperatorsSpy.callCount, 1)
     }
     
+    func test_initiate_shouldCallLoadOperatorWithNilPayload() {
+        
+        let (sut, _, loadOperatorsSpy, _) = makeSUT()
+        
+        sut.handleEffect(.initiate, { _ in })
+        
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), [nil])
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [nil])
+    }
+    
     func test_initiate_shouldDeliverFailureLoadResults() {
         
-        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.failure(.connectivityError))), .loaded(.operators(.failure(.connectivityError)))) {
             
@@ -46,7 +55,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     func test_initiate_shouldDeliverEmptyLoadResults() {
         
-        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success([]))), .loaded(.operators(.success([])))) {
             
@@ -57,7 +66,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     func test_initiate_shouldDeliverLoadResults() {
         
-        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success(.stub))), .loaded(.operators(.success(.stub)))) {
             
@@ -68,32 +77,36 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     // MARK: - paginate
     
-    func test_paginate_shouldCallPaginator() {
+    func test_paginate_shouldCallLoadOperatorWithPayload() {
         
-        let (sut, _,_, paginator, _) = makeSUT()
+        let (operatorID, pageSize) = anyPayload()
+        let (sut, _, loadOperatorsSpy, _) = makeSUT()
         
-        sut.handleEffect(.paginate, { _ in })
+        sut.handleEffect(.paginate(operatorID, pageSize), { _ in })
         
-        XCTAssertEqual(paginator.callCount, 1)
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), [operatorID])
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [pageSize])
     }
     
-    func test_paginate_shouldDeliverPaginatorEmptyResult() {
+    func test_paginate_shouldDeliverLoadOperatorEmptyResult() {
         
-        let (sut, _,_, paginator, _) = makeSUT()
+        let (operatorID, pageSize) = anyPayload()
+        let (sut, _, loadOperatorsSpy, _) = makeSUT()
         
-        expect(sut, with: .paginate, toDeliver: .paginated([])) {
+        expect(sut, with: .paginate(operatorID, pageSize), toDeliver: .paginated(.success([]))) {
             
-            paginator.complete(with: [])
+            loadOperatorsSpy.complete(with: .success([]))
         }
     }
     
-    func test_paginate_shouldDeliverPaginatorResult() {
+    func test_paginate_shouldDeliverLoadOperatorResult() {
         
-        let (sut, _,_, paginator, _) = makeSUT()
+        let (operatorID, pageSize) = anyPayload()
+        let (sut, _, loadOperatorsSpy, _) = makeSUT()
         
-        expect(sut, with: .paginate, toDeliver: .paginated(.stub)) {
+        expect(sut, with: .paginate(operatorID, pageSize), toDeliver: .paginated(.success(.stub))) {
             
-            paginator.complete(with: .stub)
+            loadOperatorsSpy.complete(with: .success(.stub))
         }
     }
     
@@ -101,7 +114,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     func test_search_shouldDebounceForSetInterval() {
         
-        let (sut, _,_,_, scheduler) = makeSUT(
+        let (sut, _,_, scheduler) = makeSUT(
             debounce: .milliseconds(150)
         )
         let exp = expectation(description: "wait for completion")
@@ -131,8 +144,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias LoadLastPaymentsSpy = Spy<Void, LoadLastPaymentsResult>
-    private typealias LoadOperatorsSpy = Spy<Void, LoadOperatorsResult>
-    private typealias Paginator = Spy<Void, [Operator]>
+    private typealias LoadOperatorsSpy = Spy<SUT.LoadOperatorsPayload?, LoadOperatorsResult>
     
     private func makeSUT(
         debounce: DispatchTimeInterval = .milliseconds(500),
@@ -142,27 +154,23 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         sut: SUT,
         loadLastPaymentsSpy: LoadLastPaymentsSpy,
         loadOperatorsSpy: LoadOperatorsSpy,
-        paginator: Paginator,
         scheduler: TestSchedulerOfDispatchQueue
     ) {
         let loadLastPaymentsSpy = LoadLastPaymentsSpy()
         let loadOperatorsSpy = LoadOperatorsSpy()
-        let paginator = Paginator()
         let scheduler = DispatchQueue.test
         let sut = SUT(
             debounce: debounce,
             loadLastPayments: loadLastPaymentsSpy.process(completion:),
-            loadOperators: loadOperatorsSpy.process(completion:),
-            paginate: paginator.process(completion:),
+            loadOperators: loadOperatorsSpy.process(_:completion:),
             scheduler: scheduler.eraseToAnyScheduler()
         )
         
         trackForMemoryLeaks(loadLastPaymentsSpy, file: file, line: line)
         trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
-        trackForMemoryLeaks(paginator, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, loadLastPaymentsSpy, loadOperatorsSpy, paginator, scheduler)
+        return (sut, loadLastPaymentsSpy, loadOperatorsSpy, scheduler)
     }
     
     private func expect(
@@ -188,5 +196,13 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
         
         wait(for: [exp], timeout: 1)
+    }
+    
+    private func anyPayload(
+        operatorID: Operator.ID = .init(UUID().uuidString),
+        pageSize: Int = 789
+    ) -> SUT.LoadOperatorsPayload {
+        
+        (operatorID, pageSize)
     }
 }

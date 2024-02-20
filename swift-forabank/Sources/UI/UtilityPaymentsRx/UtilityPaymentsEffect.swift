@@ -8,6 +8,11 @@
 public enum UtilityPaymentsEffect: Equatable {
     
     case initiate
-    case paginate
+    case paginate(Operator.ID, PageSize)
     case search(String)
+}
+
+public extension UtilityPaymentsEffect {
+    
+    typealias PageSize = Int
 }

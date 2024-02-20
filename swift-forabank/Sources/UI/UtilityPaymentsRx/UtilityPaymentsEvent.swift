@@ -10,7 +10,7 @@ public enum UtilityPaymentsEvent: Equatable {
     case didScrollTo(Operator.ID)
     case initiate
     case loaded(Loaded)
-    case paginated([Operator])
+    case paginated(LoadOperatorsResult)
     case search(Search)
 }
 

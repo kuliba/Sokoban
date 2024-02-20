@@ -17,11 +17,11 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, loadLastPaymentsSpy, loadOperatorsSpy, paginator) = makeSUT()
+        let (_,_, loadLastPaymentsSpy, loadOperatorsSpy) = makeSUT()
         
         XCTAssertEqual(loadLastPaymentsSpy.callCount, 0)
         XCTAssertEqual(loadOperatorsSpy.callCount, 0)
-        XCTAssertEqual(paginator.callCount, 0)
+        XCTAssertEqual(loadOperatorsSpy.callCount, 0)
     }
     
     func test_init_shouldNotChangeInitialState() {
@@ -38,84 +38,93 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         
         let observeLast = 3
         let emptyInitialState: State = .init()
-        let (sut, _, _,_, paginator) = makeSUT(
+        let (sut, _, _, loadOperatorsSpy) = makeSUT(
             initialState: emptyInitialState,
             observeLast: observeLast
         )
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
         
         sut.event(.didScrollTo("6"))
         
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
     }
     
     func test_didScroll_shouldNotCallForAdditionalDataForIDOutOfObservedRange() {
         
         let observeLast = 3
-        let (sut, _, _,_, paginator) = makeSUT(
+        let (sut, _, _, loadOperatorsSpy) = makeSUT(
             initialState: .init(operators: .stub),
             observeLast: observeLast
         )
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
         
         sut.event(.didScrollTo("6"))
         
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
     }
     
     func test_didScroll_shouldCallForAdditionalDataForIDInObservedRange() {
         
         let observeLast = 3
-        let (sut, _, _,_, paginator) = makeSUT(
+        let pageSize = 99
+        let (sut, _, _, loadOperatorsSpy) = makeSUT(
             initialState: .init(operators: .stub),
-            observeLast: observeLast
+            observeLast: observeLast,
+            pageSize: pageSize
         )
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
         
         sut.event(.didScrollTo("7"))
         
-        XCTAssertNoDiff(paginator.callCount, 1)
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), ["7"])
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [pageSize])
     }
     
     func test_didScroll_shouldCallForAdditionalDataForIDInObservedRange_2() {
         
         let observeLast = 3
-        let (sut, _, _,_, paginator) = makeSUT(
+        let pageSize = 99
+        let (sut, _, _, loadOperatorsSpy) = makeSUT(
             initialState: .init(operators: .stub),
-            observeLast: observeLast
+            observeLast: observeLast,
+            pageSize: pageSize
         )
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
         
         sut.event(.didScrollTo("8"))
         
-        XCTAssertNoDiff(paginator.callCount, 1)
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), ["8"])
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [pageSize])
     }
     
     func test_didScroll_shouldCallForAdditionalDataForIDInObservedRange_3() {
         
         let observeLast = 3
-        let (sut, _, _,_, paginator) = makeSUT(
+        let pageSize = 99
+        let (sut, _, _, loadOperatorsSpy) = makeSUT(
             initialState: .init(operators: .stub),
-            observeLast: observeLast
+            observeLast: observeLast,
+            pageSize: pageSize
         )
-        XCTAssertNoDiff(paginator.callCount, 0)
+        XCTAssertNoDiff(loadOperatorsSpy.callCount, 0)
         
         sut.event(.didScrollTo("9"))
         
-        XCTAssertNoDiff(paginator.callCount, 1)
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), ["9"])
+        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [pageSize])
     }
     
     func test_didScroll_shouldAppendPaginatedData() {
         
         let observeLast = 3
         let initialState: State = .init(operators: .stub)
-        let (sut, stateSpy, _,_, paginator) = makeSUT(
+        let (sut, stateSpy, _, loadOperatorsSpy) = makeSUT(
             initialState: initialState,
             observeLast: observeLast
         )
         
         sut.event(.didScrollTo("9"))
-        paginator.complete(with: [.init(id: "111")])
+        loadOperatorsSpy.complete(with: .success([.init(id: "111")]))
         
         assert(
             stateSpy, initialState,
@@ -132,13 +141,13 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         
         let observeLast = 3
         let initialState: State = .init(operators: .stub)
-        let (sut, stateSpy, _,_, paginator) = makeSUT(
+        let (sut, stateSpy, _, loadOperatorsSpy) = makeSUT(
             initialState: initialState,
             observeLast: observeLast
         )
         
         sut.event(.didScrollTo("9"))
-        paginator.complete(with: [])
+        loadOperatorsSpy.complete(with: .success([]))
         
         assert(
             stateSpy, initialState,
@@ -151,7 +160,7 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     func test_sampleFlow() {
         
         let initialState: State = .init()
-        let (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy, paginator) = makeSUT(
+        let (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy) = makeSUT(
             initialState: initialState,
             observeLast: 1
         )
@@ -163,11 +172,11 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
         loadOperatorsSpy.complete(with: .failure(.connectivityError))
         
-        loadLastPaymentsSpy.complete(with: .success(.init()))
-        loadOperatorsSpy.complete(with: .success(.init()))
+        loadLastPaymentsSpy.complete(with: .success(.init()), at: 1)
+        loadOperatorsSpy.complete(with: .success(.init()), at: 1)
         
-        loadLastPaymentsSpy.complete(with: .success(.stub))
-        loadOperatorsSpy.complete(with: .success(.stub))
+        loadLastPaymentsSpy.complete(with: .success(.stub), at: 2)
+        loadOperatorsSpy.complete(with: .success(.stub), at: 2)
         
         sut.event(.didScrollTo("5"))
         sut.event(.didScrollTo("8"))
@@ -191,7 +200,7 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         )
         
         sut.event(.didScrollTo("9"))
-        paginator.complete(with: [.init(id: "111")])
+        loadOperatorsSpy.complete(with: .success([.init(id: "111")]), at: 3)
         
         sut.event(.search(.entered("abc")))
         
@@ -229,30 +238,30 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     private typealias StateSpy = ValueSpy<State>
     private typealias LoadLastPaymentsSpy = Spy<Void, LoadLastPaymentsResult>
-    private typealias LoadOperatorsSpy = Spy<Void, LoadOperatorsResult>
-    private typealias Paginator = Spy<Void, [Operator]>
+    private typealias LoadOperatorsSpy = Spy<UtilityPaymentsEffectHandler.LoadOperatorsPayload?, LoadOperatorsResult>
     
     private func makeSUT(
         initialState: UtilityPaymentsState = .init(),
         observeLast: Int = 10,
+        pageSize: Int = 100,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
         loadLastPaymentsSpy: LoadLastPaymentsSpy,
-        loadOperatorsSpy: LoadOperatorsSpy,
-        paginator: Paginator
+        loadOperatorsSpy: LoadOperatorsSpy
     ) {
-        let reducer = UtilityPaymentsReducer(observeLast: observeLast)
+        let reducer = UtilityPaymentsReducer(
+            observeLast: observeLast,
+            pageSize: pageSize
+        )
         
         let loadLastPaymentsSpy = LoadLastPaymentsSpy()
         let loadOperatorsSpy = LoadOperatorsSpy()
-        let paginator = Paginator()
         let effectHandler = UtilityPaymentsEffectHandler(
             loadLastPayments: loadLastPaymentsSpy.process(completion:),
-            loadOperators: loadOperatorsSpy.process(completion:),
-            paginate: paginator.process(completion:),
+            loadOperators: loadOperatorsSpy.process(_:completion:),
             scheduler: .immediate
         )
         
@@ -271,7 +280,7 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
         trackForMemoryLeaks(stateSpy, file: file, line: line)
         
-        return (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy, paginator)
+        return (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy)
     }
     
     private func assert(
