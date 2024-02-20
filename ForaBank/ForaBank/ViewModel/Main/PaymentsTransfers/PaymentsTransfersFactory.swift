@@ -9,8 +9,14 @@ import Foundation
 
 struct PaymentsTransfersFactory {
     
+    let makeUtilitiesViewModel: MakeUtilitiesViewModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makeTemplatesListViewModel: MakeTemplatesListViewModel
+}
+
+extension PaymentsTransfersFactory {
+    
+    typealias MakeUtilitiesViewModel = ((PaymentsServicesViewModel) -> Void) -> Void
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
@@ -25,12 +31,14 @@ extension PaymentsTransfersFactory {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _ in },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
         )
         return .init(
+            makeUtilitiesViewModel: { _ in },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete }
         )

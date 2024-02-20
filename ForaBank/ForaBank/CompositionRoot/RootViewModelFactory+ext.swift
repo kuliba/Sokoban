@@ -96,9 +96,13 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
+        let makeUtilitiesViewModel: MakeUtilitiesViewModel = { _ in
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -109,6 +113,7 @@ extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -238,6 +243,8 @@ extension RootViewModelFactory {
     }
 }
 
+typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
+
 extension ProductProfileViewModel {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
@@ -245,6 +252,7 @@ extension ProductProfileViewModel {
     static func make(
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
+        makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -256,6 +264,7 @@ extension ProductProfileViewModel {
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
+                makeUtilitiesViewModel: makeUtilitiesViewModel,
                 navigationStateManager: navigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
@@ -273,7 +282,8 @@ extension ProductProfileViewModel {
             }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeProductProfileViewModel: makeProductProfileViewModel, 
+                makeUtilitiesViewModel: makeUtilitiesViewModel,
+                makeProductProfileViewModel: makeProductProfileViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel
             )
             
@@ -343,6 +353,7 @@ private extension RootViewModelFactory {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
+        makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -360,7 +371,9 @@ private extension RootViewModelFactory {
         }
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeProductProfileViewModel: makeProductProfileViewModel, makeTemplatesListViewModel: makeTemplatesListViewModel
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makeTemplatesListViewModel: makeTemplatesListViewModel
         )
         
         let mainViewModel = MainViewModel(
