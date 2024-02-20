@@ -55,6 +55,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .utilityPaymentsRx,
         // UI Components
         .paymentComponents,
         .carouselComponent,
@@ -157,6 +158,8 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .utilityPaymentsRx,
+        .utilityPaymentsRxTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -380,10 +383,18 @@ private extension Product {
             .uiPrimitives,
         ]
     )
+    
     static let userAccountNavigationComponent = library(
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
+        ]
+    )
+    
+    static let utilityPaymentsRx = library(
+        name: .utilityPaymentsRx,
+        targets: [
+            .utilityPaymentsRx,
         ]
     )
     
@@ -1236,6 +1247,29 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
+    static let utilityPaymentsRx = target(
+        name: .utilityPaymentsRx,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/UI/\(String.utilityPaymentsRx)"
+    )
+    
+    static let utilityPaymentsRxTests = testTarget(
+        name: .utilityPaymentsRxTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+            .utilityPaymentsRx,
+        ],
+        path: "Tests/UI/\(String.utilityPaymentsRxTests)"
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1509,6 +1543,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
     
+    static let utilityPaymentsRx = byName(
+        name: .utilityPaymentsRx
+    )
+    
     // MARK: - UI Components
 
     static let amountComponent = byName(
@@ -1697,6 +1735,9 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
+    
+    static let utilityPaymentsRx = "UtilityPaymentsRx"
+    static let utilityPaymentsRxTests = "UtilityPaymentsRxTests"
     
     // MARK: - UI Components
 
