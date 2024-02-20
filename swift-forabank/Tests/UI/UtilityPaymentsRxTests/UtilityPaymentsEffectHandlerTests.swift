@@ -28,34 +28,44 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
         
         sut.handleEffect(.initiate, { _ in })
-                
+        
         XCTAssertEqual(loadLastPaymentsSpy.callCount, 1)
         XCTAssertEqual(loadOperatorsSpy.callCount, 1)
+    }
+    
+    func test_initiate_shouldDeliverFailureLoadResults() {
+        
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.failure(.connectivityError))), .loaded(.operators(.failure(.connectivityError)))) {
+            
+            loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
+            loadOperatorsSpy.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_initiate_shouldDeliverEmptyLoadResults() {
+        
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success([]))), .loaded(.operators(.success([])))) {
+            
+            loadLastPaymentsSpy.complete(with: .success([]))
+            loadOperatorsSpy.complete(with: .success([]))
+        }
     }
     
     func test_initiate_shouldDeliverLoadResults() {
         
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _,_) = makeSUT()
-        let exp = expectation(description: "Wait for completion")
-        exp.expectedFulfillmentCount = 2
-        var event: Event?
         
-        sut.handleEffect(.initiate) {
+        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success(.stub))), .loaded(.operators(.success(.stub)))) {
             
-            event = $0
-            exp.fulfill()
+            loadLastPaymentsSpy.complete(with: .success(.stub))
+            loadOperatorsSpy.complete(with: .success(.stub))
         }
-        loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
-        
-        XCTAssertNoDiff(event, .loaded(.lastPayments(.failure(.connectivityError))))
-        
-        loadOperatorsSpy.complete(with: .failure(.connectivityError))
-        
-        XCTAssertNoDiff(event, .loaded(.operators(.failure(.connectivityError))))
-        
-        wait(for: [exp], timeout: 1)
     }
-
+    
     // MARK: - paginate
     
     func test_paginate_shouldCallPaginator() {
@@ -70,37 +80,21 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     func test_paginate_shouldDeliverPaginatorEmptyResult() {
         
         let (sut, _,_, paginator, _) = makeSUT()
-        let exp = expectation(description: "Wait for completion")
-        var event: Event?
-        
-        sut.handleEffect(.paginate) {
+
+        expect(sut, with: .paginate, toDeliver: .paginated([])) {
             
-            event = $0
-            exp.fulfill()
+            paginator.complete(with: [])
         }
-        paginator.complete(with: [])
-        
-        XCTAssertNoDiff(event, .paginated([]))
-        
-        wait(for: [exp], timeout: 1)
     }
     
     func test_paginate_shouldDeliverPaginatorResult() {
         
         let (sut, _,_, paginator, _) = makeSUT()
-        let exp = expectation(description: "Wait for completion")
-        var event: Event?
         
-        sut.handleEffect(.paginate) {
+        expect(sut, with: .paginate, toDeliver: .paginated(.stub)) {
             
-            event = $0
-            exp.fulfill()
+            paginator.complete(with: .stub)
         }
-        paginator.complete(with: .stub)
-        
-        XCTAssertNoDiff(event, .paginated(.stub))
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - Helpers
@@ -108,11 +102,11 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     private typealias SUT = UtilityPaymentsEffectHandler
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-
+    
     private typealias LoadLastPaymentsSpy = Spy<Void, LoadLastPaymentsResult>
     private typealias LoadOperatorsSpy = Spy<Void, LoadOperatorsResult>
     private typealias Paginator = Spy<Void, [Operator]>
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -133,12 +127,37 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
             paginate: paginator.process(completion:),
             scheduler: scheduler.eraseToAnyScheduler()
         )
-
+        
         trackForMemoryLeaks(loadLastPaymentsSpy, file: file, line: line)
         trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
         trackForMemoryLeaks(paginator, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, loadLastPaymentsSpy, loadOperatorsSpy, paginator, scheduler)
+    }
+
+    private func expect(
+        _ sut: SUT,
+        with effect: Effect,
+        toDeliver expectedEvents: Event...,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = expectedEvents.count
+        var events = [Event]()
+        
+        sut.handleEffect(effect) {
+            
+            events.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
+        
+        wait(for: [exp], timeout: 1)
     }
 }
