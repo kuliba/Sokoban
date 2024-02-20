@@ -271,6 +271,36 @@ extension RootViewModelFactory {
     }
 }
 
+private extension NavigationBarView.ViewModel {
+    
+    static func allRegions(
+        titleButtonAction: @escaping () -> Void,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: PaymentsServicesViewModel.allRegion,
+            titleButton: .init(
+                icon: .ic24ChevronDown,
+                action: titleButtonAction
+            ),
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: Image("qr_Icon"),
+                    action: navTrailingAction
+                )
+            ]
+        )
+    }
+}
+
 typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
 
 extension ProductProfileViewModel {

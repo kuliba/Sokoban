@@ -1157,59 +1157,6 @@ private extension Model {
     }
 }
 
-extension NavigationBarView.ViewModel {
-    
-    static func allRegions(
-        titleButtonAction: @escaping () -> Void,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
-    ) -> NavigationBarView.ViewModel {
-        
-        .init(
-            title: PaymentsServicesViewModel.allRegion,
-            titleButton: .init(
-                icon: .ic24ChevronDown,
-                action: titleButtonAction
-            ),
-            leftItems: [
-                NavigationBarView.ViewModel.BackButtonItemViewModel(
-                    icon: .ic24ChevronLeft,
-                    action: navLeadingAction
-                )
-            ],
-            rightItems: [
-                NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: Image("qr_Icon"),
-                    action: navTrailingAction
-                )
-            ]
-        )
-    }
-    
-    static func with(
-        title: String,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
-    ) -> NavigationBarView.ViewModel {
-        
-        .init(
-            title: title,
-            leftItems: [
-                NavigationBarView.ViewModel.BackButtonItemViewModel(
-                    icon: .ic24ChevronLeft,
-                    action: navLeadingAction
-                )
-            ],
-            rightItems: [
-                NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: Image("qr_Icon"),
-                    action: navTrailingAction
-                )
-            ]
-        )
-    }
-}
-
 extension Array where Element == OperatorGroupData.OperatorData {
     
     func replacingAvtodors(
