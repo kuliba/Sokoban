@@ -12,20 +12,17 @@ public final class UtilityPaymentsEffectHandler {
     private let debounce: DispatchTimeInterval
     private let loadLastPayments: LoadLastPayments
     private let loadOperators: LoadOperators
-    private let paginate: Paginate
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         debounce: DispatchTimeInterval = .milliseconds(300),
         loadLastPayments: @escaping LoadLastPayments,
         loadOperators: @escaping LoadOperators,
-        paginate: @escaping Paginate,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.debounce = debounce
         self.loadLastPayments = loadLastPayments
         self.loadOperators = loadOperators
-        self.paginate = paginate
         self.scheduler = scheduler
     }
 }
@@ -40,8 +37,8 @@ public extension UtilityPaymentsEffectHandler {
         case .initiate:
             initiate(dispatch)
             
-        case .paginate:
-            paginate(dispatch)
+        case let .paginate(operatorID, pageSize):
+            paginate(operatorID, pageSize, dispatch)
             
         case let .search(text):
             search(text, dispatch)
@@ -54,11 +51,10 @@ public extension UtilityPaymentsEffectHandler {
     typealias LoadLastPaymentsCompletion = (LoadLastPaymentsResult) -> Void
     typealias LoadLastPayments = (@escaping LoadLastPaymentsCompletion) -> Void
     
+    typealias PageSize = Int
+    typealias LoadOperatorsPayload = (Operator.ID, PageSize)
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
-    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
-    
-    typealias PaginateCompletion = ([Operator]) -> Void
-    typealias Paginate = (@escaping PaginateCompletion) -> Void
+    typealias LoadOperators = (LoadOperatorsPayload?, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -72,13 +68,16 @@ private extension UtilityPaymentsEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         loadLastPayments { dispatch(.loaded(.lastPayments($0))) }
-        loadOperators { dispatch(.loaded(.operators($0))) }
+        loadOperators(nil) { dispatch(.loaded(.operators($0))) }
     }
     
     func paginate(
+        _ operatorID: Operator.ID,
+        _ pageSize: Int,
         _ dispatch: @escaping Dispatch
     ) {
-        paginate { dispatch(.paginated($0)) }
+        loadOperators((operatorID, pageSize)) {
+            dispatch(.paginated($0)) }
     }
     
     func search(

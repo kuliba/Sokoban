@@ -8,10 +8,12 @@
 public final class UtilityPaymentsReducer {
     
     private let observeLast: Int
+    private let pageSize: Int
     
-    public init(observeLast: Int) {
+    public init(observeLast: Int, pageSize: Int) {
         
         self.observeLast = observeLast
+        self.pageSize = pageSize
     }
 }
 
@@ -67,7 +69,7 @@ private extension UtilityPaymentsReducer {
               Set(lastObserved).contains(operatorID)
         else { return (state, nil) }
         
-        effect = .paginate
+        effect = .paginate(operatorID, pageSize)
         
         return (state, effect)
     }
@@ -106,13 +108,20 @@ private extension UtilityPaymentsReducer {
     
     func reduce(
         _ state: State,
-        _ paginated: [Operator]
+        _ result: LoadOperatorsResult
     ) -> (State, Effect?) {
-
-        var operators = state.operators ?? []
-        operators.append(contentsOf: paginated)
+        
         var state = state
-        state.operators = operators
+        
+        switch result {
+        case let .failure(serviceFailure):
+            state.status = .failure(serviceFailure)
+            
+        case let .success(paged):
+            var operators = state.operators ?? []
+            operators.append(contentsOf: paged)
+            state.operators = operators
+        }
         
         return (state, nil)
     }
@@ -121,7 +130,7 @@ private extension UtilityPaymentsReducer {
         _ state: State,
         _ event: Event.Search
     ) -> (State, Effect?) {
-
+        
         var state = state
         var effect: Effect?
         
@@ -132,7 +141,7 @@ private extension UtilityPaymentsReducer {
         case let .updated(text):
             state.searchText = text
         }
-
+        
         return (state, effect)
     }
 }
