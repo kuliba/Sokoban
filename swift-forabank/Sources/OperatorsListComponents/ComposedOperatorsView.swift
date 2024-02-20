@@ -39,7 +39,7 @@ public struct ComposedOperatorsView<
     
     public var body: some View {
         
-        ScrollView(showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: false) {
             
             searchView()
             
@@ -52,9 +52,18 @@ public struct ComposedOperatorsView<
                     Spacer()
                 }
                 
-                VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
                     
                     ForEach(state.operators, content: operatorView)
+                }
+                
+                if let lastOperator = state.operators.last {
+                    
+                    Color.red.frame(width: 40, height: 40, alignment: .center)
+                        .onAppear(perform: {
+                            print(lastOperator)
+                            event(.didScroll(lastOperator))
+                        })
                 }
                 
                 footerView()
@@ -105,7 +114,7 @@ extension ComposedOperatorsView {
         .contentShape(Rectangle())
     }
     
-    private func operatorView(
+    public func operatorView(
         _ operator: Operator
     ) -> some View {
         
@@ -163,17 +172,20 @@ public struct Operator: Identifiable {
     let title: String
     let subtitle: String?
     let image: Image
+    let action: (Operator.ID) -> Void
     
     public init(
         id: String,
         title: String,
         subtitle: String?,
-        image: Image
+        image: Image,
+        action: @escaping (Operator.ID) -> Void
     ) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
         self.image = image
+        self.action = action
     }
 }
 
