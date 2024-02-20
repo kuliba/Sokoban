@@ -38,6 +38,9 @@ public extension UtilityPaymentsReducer {
             
         case let .paginated(paginated):
             (state, effect) = reduce(state, paginated)
+            
+        case let .search(search):
+            (state, effect) = reduce(state, search)
         }
         
         return (state, effect)
@@ -110,6 +113,16 @@ private extension UtilityPaymentsReducer {
         operators.append(contentsOf: paginated)
         var state = state
         state.operators = operators
+        
+        return (state, nil)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.Search
+    ) -> (State, Effect?) {
+
+        #warning("FIX ME")
         
         return (state, nil)
     }

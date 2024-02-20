@@ -9,4 +9,5 @@ public enum UtilityPaymentsEffect: Equatable {
     
     case initiate
     case paginate
+    case search(String)
 }

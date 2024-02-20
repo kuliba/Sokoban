@@ -11,6 +11,7 @@ public enum UtilityPaymentsEvent: Equatable {
     case initiate
     case loaded(Loaded)
     case paginated([Operator])
+    case search(Search)
 }
 
 public extension UtilityPaymentsEvent {
@@ -19,5 +20,11 @@ public extension UtilityPaymentsEvent {
         
         case lastPayments(LoadLastPaymentsResult)
         case operators(LoadOperatorsResult)
+    }
+    
+    enum Search: Equatable {
+        
+        case entered(String)
+        case updated(String)
     }
 }

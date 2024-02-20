@@ -1,6 +1,6 @@
 //
 //  UtilityPaymentsEffectHandlerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 20.02.2024.
 //
@@ -80,7 +80,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     func test_paginate_shouldDeliverPaginatorEmptyResult() {
         
         let (sut, _,_, paginator, _) = makeSUT()
-
+        
         expect(sut, with: .paginate, toDeliver: .paginated([])) {
             
             paginator.complete(with: [])
@@ -97,6 +97,33 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         }
     }
     
+    // MARK: - search
+    
+    func test_search_shouldDebounceForSetInterval() {
+        
+        let (sut, _,_,_, scheduler) = makeSUT(
+            debounce: .milliseconds(150)
+        )
+        let exp = expectation(description: "wait for completion")
+        var event: Event?
+        
+        sut.handleEffect(.search("abc")) {
+            
+            event = $0
+            exp.fulfill()
+        }
+        
+        XCTAssertNil(event)
+        
+        scheduler.advance(to: .init(.now() + .milliseconds(149)))
+        XCTAssertNil(event)
+        
+        scheduler.advance(to: .init(.now() + .milliseconds(150)))
+        XCTAssertNoDiff(event, .search(.updated("abc")))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityPaymentsEffectHandler
@@ -108,6 +135,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     private typealias Paginator = Spy<Void, [Operator]>
     
     private func makeSUT(
+        debounce: DispatchTimeInterval = .milliseconds(500),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -122,6 +150,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         let paginator = Paginator()
         let scheduler = DispatchQueue.test
         let sut = SUT(
+            debounce: debounce,
             loadLastPayments: loadLastPaymentsSpy.process(completion:),
             loadOperators: loadOperatorsSpy.process(completion:),
             paginate: paginator.process(completion:),
@@ -135,7 +164,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         
         return (sut, loadLastPaymentsSpy, loadOperatorsSpy, paginator, scheduler)
     }
-
+    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
