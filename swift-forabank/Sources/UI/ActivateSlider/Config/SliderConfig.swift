@@ -101,4 +101,12 @@ public struct SliderConfig {
         
         max(1 - (progressBy(offsetX: offsetX) * 2), 0)
     }
+    
+    func backgroundOpacityBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        max(1 - (progressBy(offsetX: offsetX) * 2), 0.7)
+    }
+
 }

@@ -15,7 +15,7 @@ extension SliderConfig {
         activating: .activating,
         activated: .activated, 
         thumbIconColor: .gray,
-        font: .footnote
+        font: .subheadline
     )
 }
 

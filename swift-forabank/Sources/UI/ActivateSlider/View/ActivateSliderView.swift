@@ -28,7 +28,7 @@ struct ActivateSliderView: View {
                     
                     Capsule()
                         .foregroundColor(config.backgroundColor)
-                        .opacity(1 - config.progressBy(offsetX: offsetX))
+                        .opacity(config.backgroundOpacityBy(offsetX: offsetX))
                                     
                     HStack{
                         
@@ -141,7 +141,7 @@ struct ActivateSliderView: View {
     VStack {
         
         ZStack {
-            Color.green
+            Color.gray
                 .frame(width: 300, height: 100)
             ActivateSliderView(
                 viewModel: .init(state: .notActivated),
@@ -149,7 +149,15 @@ struct ActivateSliderView: View {
         }
         
         ZStack {
-            Color.green
+            Color.gray
+                .frame(width: 300, height: 100)
+            ActivateSliderView(
+                viewModel: .init(state: .waiting),
+                config: .default)
+        }
+        
+        ZStack {
+            Color.gray
                 .frame(width: 300, height: 100)
             ActivateSliderView(
                 viewModel: .init(state: .activated),
@@ -157,12 +165,11 @@ struct ActivateSliderView: View {
         }
 
         ZStack {
-            Color.green
+            Color.gray
                 .frame(width: 300, height: 100)
             ActivateSliderView(
                 viewModel: .init(state: .activating),
                 config: .default)
         }
-
     }
 }

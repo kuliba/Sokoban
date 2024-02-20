@@ -55,19 +55,19 @@ struct AnimationModifire: ViewModifier {
     VStack {
         
         ZStack {
-            Color.green
+            Color.gray
                 .frame(width: 100, height: 100)
             ThumbView(config: SliderConfig.default.thumbConfig(.notActivated))
         }
         
         ZStack {
-            Color.green
+            Color.gray
                 .frame(width: 100, height: 100)
             ThumbView(config: SliderConfig.default.thumbConfig(.activated))
         }
         
         ZStack {
-            Color.green
+            Color.gray
                 .frame(width: 100, height: 100)
             ThumbView(config: SliderConfig.default.thumbConfig(.activating))
         }
