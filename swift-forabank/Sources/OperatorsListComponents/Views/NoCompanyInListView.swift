@@ -7,13 +7,20 @@
 
 import SwiftUI
 
-struct NoCompanyInListView: View {
+public struct NoCompanyInListView: View {
     
     let noCompanyListViewModel: NoCompanyInListViewModel
-    
     let config: NoCompanyInListViewConfig
     
-    var body: some View {
+    public init(
+        noCompanyListViewModel: NoCompanyInListViewModel,
+        config: NoCompanyInListViewConfig
+    ) {
+        self.noCompanyListViewModel = noCompanyListViewModel
+        self.config = config
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 24) {
             
@@ -24,6 +31,7 @@ struct NoCompanyInListView: View {
                     .foregroundColor(config.titleColor)
                 
                 Text(noCompanyListViewModel.description)
+                    .multilineTextAlignment(.center)
                     .font(config.descriptionFont)
                     .foregroundColor(config.descriptionColor)
             }
@@ -86,34 +94,39 @@ public struct NoCompanyInListViewConfig {
     }
 }
 
+public extension NoCompanyInListViewModel {
+    
+    static let sample: Self = .init(
+        title: "Нет компании в списке?",
+        description: "Воспользуйтесь другими способами оплаты",
+        subtitle: "Сообщите нам, и мы подключим новую организацию",
+        buttons: [
+            .init(
+                title: "Оплатить по реквизитам",
+                buttonConfiguration: .init(
+                    titleFont: .body,
+                    titleForeground: .red,
+                    backgroundColor: .gray
+                ),
+                action: {}
+            ),
+            .init(
+                title: "Добавить организацию",
+                buttonConfiguration: .init(
+                    titleFont: .body,
+                    titleForeground: .blue,
+                    backgroundColor: .gray
+                ),
+                action: {}
+            )
+        ])
+}
+
 struct NoCompanyInListView_Previews: PreviewProvider {
     static var previews: some View {
         
         NoCompanyInListView(
-            noCompanyListViewModel: .init(
-                title: "Нет компании в списке?",
-                description: "Воспользуйтесь другими способами оплаты",
-                subtitle: "Сообщите нам, и мы подключим новую организацию",
-                buttons: [
-                    .init(
-                        title: "Оплатить по реквизитам",
-                        buttonConfiguration: .init(
-                            titleFont: .body,
-                            titleForeground: .red,
-                            backgroundColor: .gray
-                        ),
-                        action: {}
-                    ),
-                    .init(
-                        title: "Добавить организацию",
-                        buttonConfiguration: .init(
-                            titleFont: .body,
-                            titleForeground: .blue,
-                            backgroundColor: .gray
-                        ),
-                        action: {}
-                    )
-                ]),
+            noCompanyListViewModel: .sample,
             config: .init(
                 titleFont: .title3,
                 titleColor: .black,
