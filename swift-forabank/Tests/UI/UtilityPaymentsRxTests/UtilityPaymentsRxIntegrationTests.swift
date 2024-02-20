@@ -151,7 +151,10 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     func test_sampleFlow() {
         
         let initialState: State = .init()
-        let (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy, paginator) = makeSUT(initialState: initialState)
+        let (sut, stateSpy, loadLastPaymentsSpy, loadOperatorsSpy, paginator) = makeSUT(
+            initialState: initialState,
+            observeLast: 1
+        )
         
         sut.event(.initiate)
         sut.event(.initiate)
@@ -213,7 +216,7 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     private func makeSUT(
         initialState: UtilityPaymentsState = .init(),
-        observeLast: Int = 1,
+        observeLast: Int = 10,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
