@@ -46,6 +46,8 @@ public extension ProductProfileNavigationReducer {
         case let .productProfile(event):
             state.alert = nil
             (state, effect) = reduce(state, event)
+        case let .card(_):
+            break
         }
         return (state, effect)
     }
@@ -112,6 +114,8 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.changePin(card))
         case .showContacts:
             effect = .productProfile(.showContacts)
+        case let .activateCard(card):
+            break
         }
         return (state, effect)
     }
