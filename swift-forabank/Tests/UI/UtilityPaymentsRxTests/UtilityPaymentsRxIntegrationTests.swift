@@ -267,21 +267,3 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, values, file: file, line: line)
     }
 }
-
-import Tagged
-
-private extension Array where Element == LastPayment {
-    
-    static let stub: Self = (0..<10)
-        .map { $0 }
-        .map(String.init)
-        .map { .init(id: .init($0)) }
-}
-
-private extension Array where Element == Operator {
-    
-    static let stub: Self = (0..<10)
-        .map { $0 }
-        .map(String.init)
-        .map { .init(id: .init($0)) }
-}

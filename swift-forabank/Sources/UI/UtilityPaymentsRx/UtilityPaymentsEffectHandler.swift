@@ -10,15 +10,18 @@ public final class UtilityPaymentsEffectHandler {
     private let loadLastPayments: LoadLastPayments
     private let loadOperators: LoadOperators
     private let paginate: Paginate
+    private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         loadLastPayments: @escaping LoadLastPayments,
         loadOperators: @escaping LoadOperators,
-        paginate: @escaping Paginate
+        paginate: @escaping Paginate,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.loadLastPayments = loadLastPayments
         self.loadOperators = loadOperators
         self.paginate = paginate
+        self.scheduler = scheduler
     }
 }
 
