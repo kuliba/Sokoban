@@ -101,6 +101,18 @@ public extension ProductProfileViewModel {
     }
 }
 
+// MARK: - Activate card
+
+public extension ProductProfileViewModel {
+
+    func showAlertIfCardNotActivate(
+        _ card: Card
+    ){
+        
+        self.event(.showAlert(Alerts.alertCardNotActivate(card: card)))
+    }
+}
+
 // MARK: - Types
 
 public extension ProductProfileNavigationStateManager {

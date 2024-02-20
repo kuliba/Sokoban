@@ -636,6 +636,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .activateSlider,
             .rxViewModel,
             .cardGuardianModule,
             .uiPrimitives,

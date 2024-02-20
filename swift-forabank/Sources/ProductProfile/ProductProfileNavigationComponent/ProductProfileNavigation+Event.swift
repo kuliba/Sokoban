@@ -22,5 +22,7 @@ public extension ProductProfileNavigation {
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
         case productProfile(ProductProfileEvent)
+        
+        case card(ProductProfileEvent)
     }
 }
