@@ -6,12 +6,21 @@
 //
 
 import SwiftUI
+import SearchBarComponent
+import TextFieldUI
+import TextFieldComponent
 
 @main
 struct OperatorsListPreviewApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(searchViewModel: .init(
+                initialState: .placeholder("Search subscriptions"),
+                reducer: TransformingReducer(
+                    placeholderText: "Search subscriptions"
+                ),
+                keyboardType: .decimal
+            ))
         }
     }
 }
