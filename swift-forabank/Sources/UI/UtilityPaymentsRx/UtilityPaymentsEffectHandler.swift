@@ -5,17 +5,28 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
+import Foundation
+
 public final class UtilityPaymentsEffectHandler {
     
+    private let debounce: DispatchTimeInterval
     private let loadLastPayments: LoadLastPayments
     private let loadOperators: LoadOperators
+    private let paginate: Paginate
+    private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
+        debounce: DispatchTimeInterval = .milliseconds(300),
         loadLastPayments: @escaping LoadLastPayments,
-        loadOperators: @escaping LoadOperators
+        loadOperators: @escaping LoadOperators,
+        paginate: @escaping Paginate,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        self.debounce = debounce
         self.loadLastPayments = loadLastPayments
         self.loadOperators = loadOperators
+        self.paginate = paginate
+        self.scheduler = scheduler
     }
 }
 
@@ -28,6 +39,12 @@ public extension UtilityPaymentsEffectHandler {
         switch effect {
         case .initiate:
             initiate(dispatch)
+            
+        case .paginate:
+            paginate(dispatch)
+            
+        case let .search(text):
+            search(text, dispatch)
         }
     }
 }
@@ -39,6 +56,9 @@ public extension UtilityPaymentsEffectHandler {
     
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    typealias PaginateCompletion = ([Operator]) -> Void
+    typealias Paginate = (@escaping PaginateCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -53,5 +73,21 @@ private extension UtilityPaymentsEffectHandler {
     ) {
         loadLastPayments { dispatch(.loaded(.lastPayments($0))) }
         loadOperators { dispatch(.loaded(.operators($0))) }
+    }
+    
+    func paginate(
+        _ dispatch: @escaping Dispatch
+    ) {
+        paginate { dispatch(.paginated($0)) }
+    }
+    
+    func search(
+        _ searchText: String,
+        _ dispatch: @escaping Dispatch
+    ) {
+        scheduler.schedule(after: .init(.now() + debounce)) {
+            
+            dispatch(.search(.updated(searchText)))
+        }
     }
 }
