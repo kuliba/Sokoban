@@ -20,7 +20,7 @@ struct CvvCardBlocked: View {
     private func showCVV() -> some View {
         
         Button(action: viewModel.showAlertIfCardBlocked) {
-            Text("CVV")
+            Text("block")
                 .foregroundColor(.white)
                 .padding(10)
                 .background(Color.blue)

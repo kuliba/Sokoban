@@ -155,20 +155,20 @@ struct ActivateSliderView: View {
                 viewModel: .init(state: .waiting),
                 config: .default)
         }
-        
-        ZStack {
-            Color.gray
-                .frame(width: 300, height: 100)
-            ActivateSliderView(
-                viewModel: .init(state: .activated),
-                config: .default)
-        }
 
         ZStack {
             Color.gray
                 .frame(width: 300, height: 100)
             ActivateSliderView(
                 viewModel: .init(state: .activating),
+                config: .default)
+        }
+        
+        ZStack {
+            Color.gray
+                .frame(width: 300, height: 100)
+            ActivateSliderView(
+                viewModel: .init(state: .activated),
                 config: .default)
         }
     }
