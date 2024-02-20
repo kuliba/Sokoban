@@ -21,6 +21,7 @@ extension RootViewModelFactory {
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
