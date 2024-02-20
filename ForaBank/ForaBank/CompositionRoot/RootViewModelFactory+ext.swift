@@ -97,35 +97,10 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
-        let makeUtilitiesViewModel: MakeUtilitiesViewModel = { payload, completion in
-              
-            guard let operators = model.operators(for: payload.type)
-            else { return }
-            
-            let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-                titleButtonAction: { [weak model] in
-                    
-                    model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-                },
-                navLeadingAction: payload.navLeadingAction,
-                navTrailingAction: payload.navTrailingAction
-            )
-            
-            let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-            let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
-            
-            let paymentsServicesViewModel = PaymentsServicesViewModel(
-                searchBar: .withText("Наименование или ИНН"),
-                navigationBar: navigationBarViewModel,
-                model: model,
-                latestPayments: latestPayments,
-                allOperators: operators,
-                addCompanyAction: payload.addCompany,
-                requisitesAction: payload.requisites
-            )
-            
-            completion(paymentsServicesViewModel)
-        }
+        let makeUtilitiesViewModel = makeUtilitiesViewModel(
+            model: model,
+            flag: utilitiesPaymentsFlag
+        )
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -146,6 +121,63 @@ extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
+        )
+    }
+    
+    static func makeUtilitiesViewModel(
+        model: Model,
+        flag: UtilitiesPaymentsFlag
+    ) -> MakeUtilitiesViewModel {
+        
+        return { payload, completion in
+            
+            switch payload.type {
+            case .internet:
+                makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                
+            case .service:
+                switch flag.rawValue {
+                case let .active(option):
+                    fatalError("unimplemented")
+                    
+                case .inactive:
+                    makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                }
+                
+            default:
+                return
+            }
+        }
+    }
+    
+    static func makeLegacyUtilitiesViewModel(
+        _ payload: PaymentsTransfersFactory.MakeUtilitiesPayload,
+        _ model: Model
+    ) -> PaymentsServicesViewModel? {
+        
+        guard let operators = model.operators(for: payload.type)
+        else { return nil }
+        
+        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+            titleButtonAction: { [weak model] in
+                
+                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+            },
+            navLeadingAction: payload.navLeadingAction,
+            navTrailingAction: payload.navTrailingAction
+        )
+        
+        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
+        
+        return .init(
+            searchBar: .withText("Наименование или ИНН"),
+            navigationBar: navigationBarViewModel,
+            model: model,
+            latestPayments: latestPayments,
+            allOperators: operators,
+            addCompanyAction: payload.addCompany,
+            requisitesAction: payload.requisites
         )
     }
     
