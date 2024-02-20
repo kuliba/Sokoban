@@ -122,8 +122,17 @@ private extension UtilityPaymentsReducer {
         _ event: Event.Search
     ) -> (State, Effect?) {
 
-        #warning("FIX ME")
+        var state = state
+        var effect: Effect?
         
-        return (state, nil)
+        switch event {
+        case let .entered(text):
+            effect = .search(text)
+            
+        case let .updated(text):
+            state.searchText = text
+        }
+
+        return (state, effect)
     }
 }

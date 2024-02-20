@@ -9,15 +9,18 @@ public struct UtilityPaymentsState: Equatable {
     
     public var lastPayments: [LastPayment]?
     public var operators: [Operator]?
+    public var searchText: String
     public var status: Status?
     
     public init(
         lastPayments: [LastPayment]? = nil,
         operators: [Operator]? = nil,
+        searchText: String = "",
         status: Status? = nil
     ) {
         self.lastPayments = lastPayments
         self.operators = operators
+        self.searchText = searchText
         self.status = status
     }
 }

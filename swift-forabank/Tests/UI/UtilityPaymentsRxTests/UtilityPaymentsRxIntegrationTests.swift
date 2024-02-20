@@ -172,6 +172,8 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         sut.event(.didScrollTo("9"))
         paginator.complete(with: [.init(id: "111")])
         
+        sut.event(.search(.entered("abc")))
+        
         assert(
             stateSpy, initialState,
             {
@@ -191,6 +193,8 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
                 var operators = $0.operators
                 operators?.append(.init(id: "111"))
                 $0.operators = operators
+            }, {
+                $0.searchText = "abc"
             }
         )
     }
@@ -227,7 +231,8 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         let effectHandler = UtilityPaymentsEffectHandler(
             loadLastPayments: loadLastPaymentsSpy.process(completion:),
             loadOperators: loadOperatorsSpy.process(completion:),
-            paginate: paginator.process(completion:)
+            paginate: paginator.process(completion:),
+            scheduler: .immediate
         )
         
         let sut = SUT(
