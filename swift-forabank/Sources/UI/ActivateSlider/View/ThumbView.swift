@@ -51,25 +51,29 @@ struct AnimationModifire: ViewModifier {
     }
 }
 
-#Preview {
-    VStack {
+struct ThumbView_Previews: PreviewProvider {
+    
+    static var previews: some View {
         
-        ZStack {
-            Color.gray
-                .frame(width: 100, height: 100)
-            ThumbView(config: SliderConfig.default.thumbConfig(.notActivated))
-        }
-        
-        ZStack {
-            Color.gray
-                .frame(width: 100, height: 100)
-            ThumbView(config: SliderConfig.default.thumbConfig(.activated))
-        }
-        
-        ZStack {
-            Color.gray
-                .frame(width: 100, height: 100)
-            ThumbView(config: SliderConfig.default.thumbConfig(.activating))
+        VStack {
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 100, height: 100)
+                ThumbView(config: SliderConfig.default.thumbConfig(.notActivated))
+            }
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 100, height: 100)
+                ThumbView(config: SliderConfig.default.thumbConfig(.activated))
+            }
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 100, height: 100)
+                ThumbView(config: SliderConfig.default.thumbConfig(.activating))
+            }
         }
     }
 }

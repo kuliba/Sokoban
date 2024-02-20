@@ -9,7 +9,7 @@ import Foundation
 
 public extension ActivateSlider {
     
-    enum ActivateSliderEffect: Equatable {
+    enum Effect: Equatable {
         
     }
 }

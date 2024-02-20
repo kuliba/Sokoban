@@ -7,6 +7,7 @@
 
 import UIPrimitives
 import CardGuardianModule
+import ActivateSlider
 
 public extension ProductProfileNavigation {
     
@@ -23,6 +24,6 @@ public extension ProductProfileNavigation {
         
         case productProfile(ProductProfileEvent)
         
-        case card(ProductProfileEvent)
+        case card(ActivateSlider.Event)
     }
 }

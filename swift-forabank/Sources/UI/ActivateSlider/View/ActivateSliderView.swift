@@ -137,39 +137,43 @@ struct ActivateSliderView: View {
     }
 }
 
-#Preview {
-    VStack {
+struct ActivateSliderView_Previews: PreviewProvider {
+    
+    static var previews: some View {
         
-        ZStack {
-            Color.gray
-                .frame(width: 300, height: 100)
-            ActivateSliderView(
-                viewModel: .init(state: .notActivated),
-                config: .default)
-        }
-        
-        ZStack {
-            Color.gray
-                .frame(width: 300, height: 100)
-            ActivateSliderView(
-                viewModel: .init(state: .waiting),
-                config: .default)
-        }
-
-        ZStack {
-            Color.gray
-                .frame(width: 300, height: 100)
-            ActivateSliderView(
-                viewModel: .init(state: .activating),
-                config: .default)
-        }
-        
-        ZStack {
-            Color.gray
-                .frame(width: 300, height: 100)
-            ActivateSliderView(
-                viewModel: .init(state: .activated),
-                config: .default)
+        VStack {
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 300, height: 100)
+                ActivateSliderView(
+                    viewModel: .init(state: .notActivated),
+                    config: .default)
+            }
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 300, height: 100)
+                ActivateSliderView(
+                    viewModel: .init(state: .waiting),
+                    config: .default)
+            }
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 300, height: 100)
+                ActivateSliderView(
+                    viewModel: .init(state: .activating),
+                    config: .default)
+            }
+            
+            ZStack {
+                Color.gray
+                    .frame(width: 300, height: 100)
+                ActivateSliderView(
+                    viewModel: .init(state: .activated),
+                    config: .default)
+            }
         }
     }
 }
