@@ -2083,6 +2083,8 @@
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
 		C1ECBA9D28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */; };
+		C1F2FC112B84D031007BAA4A /* Operators+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F2FC102B84D031007BAA4A /* Operators+Preview.swift */; };
+		C1F2FC132B84D128007BAA4A /* StubbedOperatorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F2FC122B84D128007BAA4A /* StubbedOperatorLoader.swift */; };
 		C1F346D62AE25C6000EE1E87 /* StickerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */; };
 		C1F346D82AE25C6000EE1E87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346D72AE25C6000EE1E87 /* ContentView.swift */; };
 		C1F346DA2AE25C6100EE1E87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F346D92AE25C6100EE1E87 /* Assets.xcassets */; };
@@ -4493,6 +4495,8 @@
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
 		C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
+		C1F2FC102B84D031007BAA4A /* Operators+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Operators+Preview.swift"; sourceTree = "<group>"; };
+		C1F2FC122B84D128007BAA4A /* StubbedOperatorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedOperatorLoader.swift; sourceTree = "<group>"; };
 		C1F346D32AE25C6000EE1E87 /* StickerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewApp.swift; sourceTree = "<group>"; };
 		C1F346D72AE25C6000EE1E87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -11050,6 +11054,7 @@
 			children = (
 				C1C6F1C82B83642400237C07 /* OperatorsListPreviewApp.swift */,
 				C1C6F1CA2B83642400237C07 /* ContentView.swift */,
+				C1F2FC122B84D128007BAA4A /* StubbedOperatorLoader.swift */,
 				C1C6F1CC2B83642500237C07 /* Assets.xcassets */,
 				C1C6F1CE2B83642500237C07 /* Preview Content */,
 			);
@@ -11059,6 +11064,7 @@
 		C1C6F1CE2B83642500237C07 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				C1F2FC102B84D031007BAA4A /* Operators+Preview.swift */,
 				C1C6F1CF2B83642500237C07 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -13932,6 +13938,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1C6F1CB2B83642400237C07 /* ContentView.swift in Sources */,
+				C1F2FC112B84D031007BAA4A /* Operators+Preview.swift in Sources */,
+				C1F2FC132B84D128007BAA4A /* StubbedOperatorLoader.swift in Sources */,
 				C1C6F1C92B83642400237C07 /* OperatorsListPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
