@@ -47,9 +47,10 @@ public struct ComposedOperatorsView<
                 
                 ScrollView(.horizontal) {
                     
-                    ForEach(state.latestPayments, content:  lastPaymentView)
-                    
-                    Spacer()
+                    HStack {
+                        
+                        ForEach(state.latestPayments, content:  lastPaymentView)
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {

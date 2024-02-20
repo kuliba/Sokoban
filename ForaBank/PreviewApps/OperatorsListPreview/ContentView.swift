@@ -21,17 +21,17 @@ struct ContentView: View {
         
         ComposedOperatorsView(
             state: .init(
-                operators: mock(),
-                latestPayments: [
-                    .init(
-                        image: .init(systemName: "photo.artframe"),
-                        title: "title",
-                        amount: "amount"
-                    )
-                ]
+                operators: mockOperators(),
+                latestPayments: mockLatestPayment()
             ),
             event: { _ in },
-            lastPaymentView: { _ in EmptyView() },
+            lastPaymentView: { payment in
+                
+                LatestPaymentView(
+                    latestPayment: payment,
+                    event: { _ in }
+                )
+            },
             operatorView: { `operator` in OperatorView(
                 operator: `operator`,
                 config: .init(
@@ -65,7 +65,28 @@ struct ContentView: View {
 
 private extension ContentView {
     
-    func mock() -> [Operator] {
+    func mockLatestPayment() -> [LatestPayment] {
+    
+        [
+            .init(
+                image: .init(systemName: "photo.artframe"),
+                title: "ЖКУ Москвы (ЕИРЦ)",
+                amount: "100 ₽"
+            ),
+            .init(
+                image: .init(systemName: "photo.artframe"),
+                title: "МОСОБЛГАЗ",
+                amount: "1 780 ₽"
+            ),
+            .init(
+                image: .init(systemName: "photo.artframe"),
+                title: "ЖКУ Краснодара",
+                amount: "1 680 ₽"
+            )
+        ]
+    }
+    
+    func mockOperators() -> [Operator] {
         
         [.init(
             id: "1",
