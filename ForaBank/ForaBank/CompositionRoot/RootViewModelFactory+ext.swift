@@ -97,7 +97,34 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
-        let makeUtilitiesViewModel: MakeUtilitiesViewModel = { _ in
+        let makeUtilitiesViewModel: MakeUtilitiesViewModel = { payload, completion in
+              
+            guard let operators = model.operators(for: payload.type)
+            else { return }
+            
+            let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+                titleButtonAction: { [weak model] in
+                    
+                    model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+                },
+                navLeadingAction: payload.navLeadingAction,
+                navTrailingAction: payload.navTrailingAction
+            )
+            
+            let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+            let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
+            
+            let paymentsServicesViewModel = PaymentsServicesViewModel(
+                searchBar: .withText("Наименование или ИНН"),
+                navigationBar: navigationBarViewModel,
+                model: model,
+                latestPayments: latestPayments,
+                allOperators: operators,
+                addCompanyAction: payload.addCompany,
+                requisitesAction: payload.requisites
+            )
+            
+            completion(paymentsServicesViewModel)
         }
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
@@ -318,6 +345,23 @@ extension ProductProfileViewModel {
                 dismissAction: dismissAction
             )
         }
+    }
+}
+
+private extension Model {
+    
+    func operators(
+        for type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> [OperatorGroupData.OperatorData]? {
+        
+        guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
+              let operatorValue = Payments.operatorByPaymentsType(type)
+        else { return nil }
+        
+        return  dictionaryAnywayOperators
+            .filter { $0.parentCode == operatorValue.rawValue }
+            .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
+            .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
     }
 }
 

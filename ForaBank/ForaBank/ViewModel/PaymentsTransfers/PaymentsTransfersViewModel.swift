@@ -380,52 +380,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.openScanner()
                             
                         case .service, .internet:
-                            
-                            guard let dictionaryAnywayOperators = model.dictionaryAnywayOperators(),
-                                  let operatorValue = Payments.operatorByPaymentsType(payload.type)
-                            else { return }
-                            
-                            let operators = dictionaryAnywayOperators
-                                .filter { $0.parentCode == operatorValue.rawValue }
-                                .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
-                                .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
-                            
-                            let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-                                titleButtonAction: { [weak self] in
-                                    self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-                                },
-                                navLeadingAction: { [weak self] in self?.resetDestination() },
-                                navTrailingAction: { [weak self] in
-                                    self?.resetDestination()
-                                    self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-                                }
+                            paymentsTransfersFactory.makeUtilitiesViewModel(
+                                makeUtilitiesPayload(forType: payload.type)
+                            ) { [weak self] in
                                 
-                            )
-                            let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-                            let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
-                            
-                            let paymentsServicesViewModel = PaymentsServicesViewModel(
-                                searchBar: .withText("Наименование или ИНН"),
-                                navigationBar: navigationBarViewModel,
-                                model: self.model,
-                                latestPayments: latestPayments,
-                                allOperators: operators,
-                                addCompanyAction: { [weak self] in
-                                    
-                                    self?.resetDestination()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                        self?.rootActions?.switchTab(.chat)
-                                    }
-                                    
-                                },
-                                requisitesAction: { [weak self] in
-                                    
-                                    self?.resetDestination()
-                                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
-                                }
-                            )
-                            
-                            self.route.destination = .paymentsServices(paymentsServicesViewModel)
+                                self?.route.destination = .paymentsServices($0)
+                            }
                             
                         case .transport:
                             
@@ -453,6 +413,32 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func makeUtilitiesPayload(
+        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> PaymentsTransfersFactory.MakeUtilitiesPayload {
+        
+        .init(
+            type: type,
+            navLeadingAction: { [weak self] in self?.resetDestination() },
+            navTrailingAction: { [weak self] in
+                self?.resetDestination()
+                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+            },
+            addCompany: { [weak self] in
+                
+                self?.resetDestination()
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    self?.rootActions?.switchTab(.chat)
+                }
+            },
+            requisites: { [weak self] in
+                
+                self?.resetDestination()
+                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
+            }
+        )
     }
     
     private func bindTransport() {
