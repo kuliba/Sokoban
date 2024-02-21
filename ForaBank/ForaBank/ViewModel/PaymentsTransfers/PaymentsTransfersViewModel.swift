@@ -40,7 +40,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
-    private let operators: () -> [OperatorViewModel]?
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -49,7 +48,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
-        operators: @escaping () -> [OperatorViewModel]?,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty
@@ -67,7 +65,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.operators = operators
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -84,7 +81,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
-        operators: @escaping () -> [OperatorViewModel]?,
         mode: Mode = .normal,
         route: Route = .empty
     ) {
@@ -97,7 +93,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.navButtonsRight = navButtonsRight
-        self.operators = operators
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }

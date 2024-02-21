@@ -83,8 +83,7 @@ extension PaymentsTransfersViewModel {
         paymentsTransfersFactory: .preview,
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
-        ],
-        operators: { return [] }
+        ]
     )
 }
 

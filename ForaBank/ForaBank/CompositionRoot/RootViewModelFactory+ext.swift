@@ -379,27 +379,7 @@ private extension RootViewModelFactory {
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory,
-            operators: {
-                
-                if let operators = model.localAgent.load(type: [OperatorGroup]?.self) {
-                 
-                    let `operator` = operators!.compactMap({ $0 }).map({
-                        OperatorViewModel(
-                            icon: Data(),
-                            title: $0.title,
-                            description: $0.description,
-                            action: {}
-                        ) }
-                    ).prefix(10)
-                    
-                    return `operator`.shuffled()
-                } else {
-                    
-                    return nil
-                    
-                }
-            }
+            paymentsTransfersFactory: paymentsTransfersFactory
         )
         
         let chatViewModel = ChatViewModel()
