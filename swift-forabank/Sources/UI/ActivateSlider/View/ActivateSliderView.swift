@@ -16,88 +16,80 @@ struct ActivateSliderView: View {
     let config: SliderConfig
     
     @State private var offsetX: CGFloat = 0
-        
+    
     var body: some View {
         
         VStack {
             
             switch state {
             case .notActivated:
-                
-                ZStack {
-                    
-                    Capsule()
-                        .foregroundColor(config.backgroundColor)
-                        .opacity(config.backgroundOpacityBy(offsetX: offsetX))
-                                    
-                    HStack{
-                        
-                        Spacer()
-                        
-                        Text(config.itemForState(state).title)
-                            .font(config.font)
-                            .foregroundColor(config.foregroundColor)
-                            .opacity(config.titleOpacityBy(offsetX: offsetX))
-                            .padding(.trailing, 14)
-                            .frame(width: 120)
-                    }
-                    
-                    HStack {
-                        
-                        ThumbView(config: config.thumbConfig(state))
-                            .padding(.all, 4)
-                            .offset(x: self.offsetX, y: 0)
-                            .gesture(DragGesture(coordinateSpace: .local).onChanged({ value in
-                                
-                                dragOnChanged(value: value)
-                                
-                            }).onEnded({ value in
-                                
-                                dragOnEnded(value: value) {
-                                    
-                                    withAnimation {
-                                        
-                                        //state = .activating
-                                        event(.swipe)
-                                    }
-                                }
-                            }))
-                        
-                        Spacer()
-                    }
-                }
-                .frame(width: 167, height: 48)
+                leftSwitchView()
                 
             case .activating, .activated, .waiting:
-                
-                ZStack {
-                    
-                    Capsule()
-                        .foregroundColor(Color.white.opacity(0.3))
-                    
-                    HStack{
-                        
-                        Text(config.itemForState(state).title)
-                            .font(config.font)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(config.foregroundColor)
-                            .padding(.leading, 11)
-                            .frame(width: 120)
-                        
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        
-                        Spacer()
-                        
-                        ThumbView(config: config.thumbConfig(state))
-                            .padding(.all, 4)
-                    }
-                }
-                .frame(width: config.totalWidth, height: 48)
+                rightSwipeView()
             }
         }
+    }
+    
+    private func leftSwitchView() -> some View {
+        
+        ZStack {
+            
+            Capsule()
+                .foregroundColor(config.backgroundColor)
+                .opacity(config.backgroundOpacityBy(offsetX: offsetX))
+                
+                Text(config.itemForState(state).title)
+                    .font(config.font)
+                    .foregroundColor(config.foregroundColor)
+                    .opacity(config.titleOpacityBy(offsetX: offsetX))
+                    .padding(.trailing, 14)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                
+                ThumbView(config: config.thumbConfig(state))
+                    .padding(.all, 4)
+                    .offset(x: self.offsetX, y: 0)
+                    .gesture(DragGesture(coordinateSpace: .local).onChanged({ value in
+                        
+                        dragOnChanged(value: value)
+                        
+                    }).onEnded({ value in
+                        
+                        dragOnEnded(value: value) {
+                            
+                            withAnimation {
+                                
+                                //state = .activating
+                                event(.swipe)
+                            }
+                        }
+                    }))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+        }
+        .frame(width: config.totalWidth, height: 48)
+    }
+    
+    private func rightSwipeView() -> some View {
+        
+        ZStack {
+            
+            Capsule()
+                .foregroundColor(Color.white.opacity(0.3))
+            
+                Text(config.itemForState(state).title)
+                    .font(config.font)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .foregroundColor(config.foregroundColor)
+                    .padding(.leading, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                ThumbView(config: config.thumbConfig(state))
+                    .padding(.all, 4)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .frame(width: config.totalWidth, height: 48)
     }
     
     func dragOnChanged(value: DragGesture.Value) {
@@ -127,7 +119,7 @@ struct ActivateSliderView: View {
             completion()
         }
     }
-        
+    
     func resetState() {
         
         //state = .notActivated
@@ -139,7 +131,7 @@ struct ActivateSliderView: View {
     }
 }
 
-/*struct ActivateSliderView_Previews: PreviewProvider {
+struct ActivateSliderView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -149,34 +141,40 @@ struct ActivateSliderView: View {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(state: .notActivated),
-                    config: .default)
+                    state: .notActivated,
+                    event: {_ in },
+                    config: .default
+                )
             }
             
             ZStack {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(state: .waiting),
-                    config: .default)
-            }
+                    state: .waiting,
+                    event: {_ in },
+                    config: .default
+                )            }
             
             ZStack {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(state: .activating),
-                    config: .default)
-            }
+                    state: .activating,
+                    event: {_ in },
+                    config: .default
+                )            }
             
             ZStack {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(state: .activated),
-                    config: .default)
+                    state: .activated,
+                    event: {_ in },
+                    config: .default
+                )
             }
         }
     }
 }
-*/
+

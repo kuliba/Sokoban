@@ -21,12 +21,12 @@ extension SliderConfig.Item {
     
     static let activating: Self = .init(
         icon: Image(systemName: "arrow.clockwise"),
-        title: "Данные обновляются"
+        title: "Данные\nобновляются"
     )
     
     static let activated: Self = .init(
         icon: Image(systemName: "checkmark"),
-        title: "Карта активирована"
+        title: "Карта\nактивирована"
     )
 }
 
