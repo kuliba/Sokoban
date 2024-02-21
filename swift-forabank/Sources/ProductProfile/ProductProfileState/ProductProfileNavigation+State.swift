@@ -15,7 +15,7 @@ public extension ProductProfileNavigation {
         
         public var modal: ProductProfileRoute?
         public var alert: AlertModelOf<Event>?
-        
+
         public init(
             modal: ProductProfileRoute? = nil,
             alert: AlertModelOf<Event>? = nil

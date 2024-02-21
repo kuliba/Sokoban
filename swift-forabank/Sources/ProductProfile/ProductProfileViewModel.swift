@@ -10,6 +10,8 @@ import Combine
 import CombineSchedulers
 import UIPrimitives
 import CardGuardianModule
+import RxViewModel
+
 
 public final class ProductProfileViewModel: ObservableObject {
     
@@ -81,6 +83,21 @@ public extension ProductProfileViewModel {
     func openCardGuardian(){
         
         self.event(.create)
+    }
+}
+
+// MARK: - CVV
+
+public extension ProductProfileViewModel {
+    
+    func showCvvAlert(){
+        
+        self.event(.showAlert(Alerts.alertCVV()))
+    }
+    
+    func showAlertIfCardBlocked(){
+        
+        self.event(.showAlert(Alerts.alertCardBlocked()))
     }
 }
 

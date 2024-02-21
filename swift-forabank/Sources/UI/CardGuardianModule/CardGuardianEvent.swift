@@ -8,5 +8,5 @@
 public enum CardGuardianEvent: Equatable {
     
     case appear
-    case buttonTapped(CardGuardian.ButtonTapped)
+    case buttonTapped(CardGuardian.ButtonEvent)
 }

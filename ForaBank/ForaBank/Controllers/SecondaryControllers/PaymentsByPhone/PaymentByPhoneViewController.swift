@@ -437,7 +437,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     guard let statusCode = dataresp?.statusCode else { return }
                     if statusCode == 0 {
                         DispatchQueue.main.async {
-                            let model = ConfirmViewControllerModel(type: .phoneNumber)
+                            let model = ConfirmViewControllerModel(type: .phoneNumber, status: .succses)
                             model.bank = self?.viewModel.selectedBank
                             model.cardFromRealm = self?.cardField.model
                             model.phone = self?.phoneField.textField.unmaskedText
@@ -507,7 +507,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             guard let data = data else { return }
             if data.statusCode == 0 {
                 DispatchQueue.main.async {
-                    let model = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                    let model = ConfirmViewControllerModel(type: .phoneNumberSBP, status: .succses)
                     if self?.viewModel.selectedBank != nil {
                         model.bank = self?.viewModel.selectedBank
                     }

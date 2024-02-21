@@ -130,10 +130,17 @@ class PaymentsDetailsView: UIView {
                 let paymentImage: UIImage = paymentSystem.svgImage?.convertSVGStringToImage() ?? UIImage()
                 operatorImageView.image = paymentImage
             }
+        
+        case .antifraudCanceled:
+            statusLabel.text = "Операция временно приостановлена в целях безопасности"
+            infoLabel.text = Payments.Success.antifraudSubtitle
+            statusImageView.image = UIImage(named: "waiting")
+            summLabel.text = model.summTransction
             
         case .error:
             statusLabel.text = "Операция неуспешна!"
-            statusImageView.image = UIImage(named: "errorIcon")
+            statusImageView.image = UIImage(named: "waiting")
+            detailButtonsStackView.isHidden = true
             
         case .returnRequest:
             statusLabel.text = "Запрос на возврат перевода принят в обработку"

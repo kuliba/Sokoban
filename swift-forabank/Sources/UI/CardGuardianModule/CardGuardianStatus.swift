@@ -5,13 +5,11 @@
 //  Created by Andryusina Nataly on 07.02.2024.
 //
 
-public extension CardGuardian {
+public enum CardGuardianStatus: Equatable {
     
-    enum CardGuardianStatus {
-        
-        case active
-        case blockedUnlockAvailable
-        case blockedUnlockNotAvailable
-        case notActivated
-    }
+    case active
+    case blockedUnlockAvailable
+    case blockedUnlockNotAvailable
+    case notActivated
 }
+

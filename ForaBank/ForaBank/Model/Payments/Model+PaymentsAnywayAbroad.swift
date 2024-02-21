@@ -121,7 +121,7 @@ extension Model {
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData, group: spoilerGroup) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, additionalData: additionalData, group: spoilerGroup) else {
                 
                 continue
             }
