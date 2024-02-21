@@ -34,7 +34,7 @@ struct ActivateSliderView: View {
                         
                         Spacer()
                         
-                        Text(config.itemByState(viewModel.state).title)
+                        Text(config.itemForState(viewModel.state).title)
                             .font(config.font)
                             .foregroundColor(config.foregroundColor)
                             .opacity(config.titleOpacityBy(offsetX: offsetX))
@@ -76,7 +76,7 @@ struct ActivateSliderView: View {
                     
                     HStack{
                         
-                        Text(config.itemByState(viewModel.state).title)
+                        Text(config.itemForState(viewModel.state).title)
                             .font(config.font)
                             .multilineTextAlignment(.center)
                             .foregroundColor(config.foregroundColor)

@@ -61,7 +61,7 @@ public struct SliderConfig {
         self.font = font
     }
     
-    func itemByState(_ state: SliderStatus) -> Item {
+    func itemForState(_ state: SliderStatus) -> Item {
         
         switch state {
             
@@ -78,7 +78,7 @@ public struct SliderConfig {
     
     func thumbConfig(_ state: SliderStatus) -> ThumbConfig {
         
-        let itemConfig = itemByState(state)
+        let itemConfig = itemForState(state)
         return .init(
             icon: itemConfig.icon,
             color: thumbIconColor,
