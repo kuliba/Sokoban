@@ -437,6 +437,7 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _,_ in },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -454,6 +455,7 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _,_ in },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -471,6 +473,7 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _,_ in },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
