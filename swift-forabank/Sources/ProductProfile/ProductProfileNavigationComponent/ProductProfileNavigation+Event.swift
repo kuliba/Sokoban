@@ -10,6 +10,8 @@ import CardGuardianModule
 
 public extension ProductProfileNavigation {
     
+    typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
+
     indirect enum Event: Equatable {
         
         case closeAlert
@@ -19,6 +21,6 @@ public extension ProductProfileNavigation {
         case dismissDestination
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
-        public typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
+        case productProfile(ProductProfileEvent)
     }
 }
