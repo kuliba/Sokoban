@@ -11,22 +11,22 @@ public extension ActivateSlider {
     
     enum Event: Equatable {
         
-        case swipe
+        case activateCardResponse(ActivateCardResponse)
         case alertTap(AlertEvent)
         case inflight
-        case activateCardResponse(ActivateCardResponse)
+        case swipe
 
         public enum ActivateCardResponse: Equatable {
             
-            case success
             case connectivityError
             case serverError(String)
+            case success
         }
         
         public enum AlertEvent: Equatable {
             
-            case cancel
             case activate
+            case cancel
         }
     }
 }
