@@ -171,9 +171,9 @@ let package = Package(
         .sharedConfigs,
         .carouselComponent,
         .carouselComponentTests,
-        .operatorsListComponents,
         // Utilities
         .services,
+        .operatorsListComponents,
         // tools
         .foraTools,
         .foraToolsTests,
