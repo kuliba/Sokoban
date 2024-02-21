@@ -222,7 +222,7 @@ final class RootViewModelTests: XCTestCase {
                 navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
-                paymentsTransfersFactory: .preview
+                paymentsTransfersFactory: .preview, operators: <#() -> [OperatorViewModel]?#>
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

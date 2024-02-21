@@ -375,7 +375,6 @@ private extension ProductProfileViewModel {
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     paymentsTransfersFactory: paymentsTransfersFactory,
-                    operators: { nil },
                     isTabBarHidden: true,
                     mode: .link
                 )
