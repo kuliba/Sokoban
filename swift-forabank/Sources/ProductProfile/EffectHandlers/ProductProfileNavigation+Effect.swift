@@ -7,12 +7,14 @@
 
 import CardGuardianModule
 import UIPrimitives
+import Foundation
 
 public extension ProductProfileNavigation {
     
     enum Effect: Equatable {
         
         case create
-        case delayAlert(AlertModelOf<ProductProfileNavigation.Event>)
+        case delayAlert(AlertModelOf<ProductProfileNavigation.Event>, TimeInterval)
+        case productProfile(ProductProfileEffect)
     }
 }

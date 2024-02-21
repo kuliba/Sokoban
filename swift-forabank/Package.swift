@@ -39,6 +39,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         // UI
+        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -54,6 +55,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .utilityPaymentsRx,
         // UI Components
         .paymentComponents,
         .carouselComponent,
@@ -131,6 +133,7 @@ let package = Package(
         .urlRequestFactory,
         .urlRequestFactoryTests,
         // UI
+        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -156,6 +159,8 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .utilityPaymentsRx,
+        .utilityPaymentsRxTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -276,6 +281,13 @@ private extension Product {
     
     // MARK: - UI
     
+    static let activateSlider = library(
+        name: .activateSlider,
+        targets: [
+            .activateSlider
+        ]
+    )
+
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -380,10 +392,18 @@ private extension Product {
             .uiPrimitives,
         ]
     )
+    
     static let userAccountNavigationComponent = library(
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
+        ]
+    )
+    
+    static let utilityPaymentsRx = library(
+        name: .utilityPaymentsRx,
+        targets: [
+            .utilityPaymentsRx,
         ]
     )
     
@@ -1011,6 +1031,11 @@ private extension Target {
 
     // MARK: - UI
     
+    static let activateSlider = target(
+        name: .activateSlider,
+        path: "Sources/UI/\(String.activateSlider)"
+    )
+
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
         path: "Sources/UI/\(String.buttonWithSheet)"
@@ -1229,6 +1254,29 @@ private extension Target {
             .userAccountNavigationComponent,
         ],
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
+    )
+    
+    static let utilityPaymentsRx = target(
+        name: .utilityPaymentsRx,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/UI/\(String.utilityPaymentsRx)"
+    )
+    
+    static let utilityPaymentsRxTests = testTarget(
+        name: .utilityPaymentsRxTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+            .utilityPaymentsRx,
+        ],
+        path: "Tests/UI/\(String.utilityPaymentsRxTests)"
     )
     
     // MARK: - UI Components
@@ -1462,6 +1510,10 @@ private extension Target.Dependency {
     
     // MARK: - UI
     
+    static let activateSlider = byName(
+        name: .activateSlider
+    )
+
     static let buttonWithSheet = byName(
         name: .buttonWithSheet
     )
@@ -1512,6 +1564,10 @@ private extension Target.Dependency {
     
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
+    )
+    
+    static let utilityPaymentsRx = byName(
+        name: .utilityPaymentsRx
     )
     
     // MARK: - UI Components
@@ -1663,6 +1719,8 @@ private extension String {
     
     // MARK: - UI
     
+    static let activateSlider = "ActivateSlider"
+    
     static let buttonWithSheet = "ButtonWithSheet"
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"
@@ -1700,6 +1758,9 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
+    
+    static let utilityPaymentsRx = "UtilityPaymentsRx"
+    static let utilityPaymentsRxTests = "UtilityPaymentsRxTests"
     
     // MARK: - UI Components
 

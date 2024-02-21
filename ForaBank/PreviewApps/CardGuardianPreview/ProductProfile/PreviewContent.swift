@@ -17,10 +17,10 @@ extension ProductProfileViewModel {
         buttons: [CardGuardianState._Button],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
-        
-        let productProfileReduce = ProductProfileReducer().reduce(_:_:)
-        
+                
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
+
+        let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
 
         
         typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
@@ -35,14 +35,34 @@ extension ProductProfileViewModel {
                 )
         }
 
-        let handleEffect = ProductProfileEffectHandler(
+        let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("block/unblock card \($0.status)")
+        }
+        
+        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
+            print("show/hide product \($0.productID)")
+        }
+
+        let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+            print("change pin \($0)")
+        }
+
+        let showContacts: ProductProfileNavigationEffectHandler.EmptyAction = {
+            print("show contacts")
+        }
+        
+        let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
+            guardianCard: guardianCard,
+            toggleVisibilityOnMain: toggleVisibilityOnMain,
+            showContacts: showContacts,
+            changePin: changePin,
             scheduler: scheduler
         )
             .handleEffect(_:_:)
         
         let navigationStateManager: ProductProfileNavigationStateManager = .init(
-            reduce: productProfileReduce,
+            reduce: productProfileNavigationReduce,
             handleEffect: handleEffect)
         
         return .init(
@@ -52,7 +72,7 @@ extension ProductProfileViewModel {
     }
 }
 
-extension ProductProfileView {
+extension ControlButtonView {
     
     static let cardUnblokedOnMain: Self = .init(
         viewModel: .preview(buttons: .preview)
@@ -64,5 +84,19 @@ extension ProductProfileView {
     
     static let cardBlockedUnlockNotAvailable : Self = .init(
         viewModel: .preview(buttons: .previewBlockUnlockNotAvailable)
+    )
+}
+
+extension CvvButtonView {
+    
+    static let cardUnblokedOnMain: Self = .init(
+        viewModel: .preview(buttons: .preview)
+    )
+}
+
+extension CvvCardBlocked {
+    
+    static let card: Self = .init(
+        viewModel: .preview(buttons: .preview)
     )
 }
