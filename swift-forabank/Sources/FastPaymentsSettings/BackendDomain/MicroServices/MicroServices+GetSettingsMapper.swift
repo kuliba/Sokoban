@@ -57,7 +57,7 @@ public extension MicroServices.GetSettingsMapper {
 extension ConsentListState {
     
     init(banks: [Bank], consent: Consent?) {
-        #warning("add tests")
+        
         if let consent {
             self = .success(.init(banks, consent: consent))
         } else {

@@ -2000,6 +2000,7 @@
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
 		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
 		C14F85532AF537B000749534 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C14F85522AF537B000749534 /* PaymentSticker */; };
+		C152489E2B83A6A20043F412 /* MyProductsSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C152489D2B83A6A20043F412 /* MyProductsSectionViewModelTests.swift */; };
 		C1549866290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */; };
 		C1549868290756DC00D00670 /* ContactsBanksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */; };
 		C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */; };
@@ -4399,6 +4400,7 @@
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
 		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
+		C152489D2B83A6A20043F412 /* MyProductsSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionViewModelTests.swift; sourceTree = "<group>"; };
 		C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionCollapsableViewModel.swift; sourceTree = "<group>"; };
 		C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionViewModel.swift; sourceTree = "<group>"; };
 		C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountriesSectionViewModel.swift; sourceTree = "<group>"; };
@@ -10297,6 +10299,7 @@
 		77ED5FA82A2F78B7001BFA3D /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				C152489C2B83A67F0043F412 /* MyProducts */,
 				2AAA02802B3AFF300048A4EA /* UserAccount */,
 				77ED5FA92A2F78C0001BFA3D /* ProductProfile */,
 				2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */,
@@ -10887,6 +10890,14 @@
 				C14303F92A85F0BB00FAD5AA /* Model+Success.swift */,
 			);
 			path = Success;
+			sourceTree = "<group>";
+		};
+		C152489C2B83A67F0043F412 /* MyProducts */ = {
+			isa = PBXGroup;
+			children = (
+				C152489D2B83A6A20043F412 /* MyProductsSectionViewModelTests.swift */,
+			);
+			path = MyProducts;
 			sourceTree = "<group>";
 		};
 		C155ABD72A28F2F600BE66AE /* Stubs */ = {
@@ -15510,6 +15521,7 @@
 				2A3BD6252B6D3501009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift in Sources */,
 				2A1F08572A7905B500C5B11B /* Services+getProcessingSessionCodeTests.swift in Sources */,
 				2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */,
+				C152489E2B83A6A20043F412 /* MyProductsSectionViewModelTests.swift in Sources */,
 				5A5ABF9427AAF70300D548AA /* ServerCommandsAccountControllerTests.swift in Sources */,
 				2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */,
 				2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */,
@@ -17772,7 +17784,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconNewYear;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconNewYear;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;

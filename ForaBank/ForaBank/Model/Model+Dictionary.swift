@@ -1693,18 +1693,9 @@ extension Model {
                         return
                     }
                     
-                    var atmDataSource = [AtmData]()
-                    
-                    // load items from cache if exists
-                    if let cached = self.localAgent.load(type: [AtmData].self)  {
-                        atmDataSource.append(contentsOf: cached)
-                    }
-                    
-                    let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
-                    
                     do {
                         
-                        try self.localAgent.store(result, serial: "\(data.version)")
+                        try self.localAgent.store(data.list, serial: "\(data.version)")
                         
                     } catch {
                         
