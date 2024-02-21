@@ -63,7 +63,7 @@ public struct ComposedOperatorsView<
                     Color.red.frame(width: 40, height: 40, alignment: .center)
                         .onAppear(perform: {
                             print(lastOperator)
-                            event(.didScroll(lastOperator))
+                            event(.utility(.didScrollTo(.init(lastOperator.id))))
                         })
                 }
                 

@@ -33,7 +33,7 @@ public extension BusinessLogic {
             break
         case let .selectOperator(id):
             break
-        case let .didScroll(`operator`):
+        case let .utility(utility):
             break
         }
     }
