@@ -140,7 +140,7 @@ enum FPSEndpoint {
     }
 }
 
-private extension Data {
+extension Data {
     
     static let error: HTTPClient.Response = Data.empty.response(statusCode: 201)
     

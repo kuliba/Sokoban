@@ -7,7 +7,9 @@
 
 import Foundation
 
-public final class UtilityPaymentsEffectHandler {
+public final class UtilityPaymentsEffectHandler<LastPayment, Operator>
+where LastPayment: Equatable & Identifiable,
+      Operator: Equatable & Identifiable {
     
     private let debounce: DispatchTimeInterval
     private let loadLastPayments: LoadLastPayments
@@ -48,18 +50,20 @@ public extension UtilityPaymentsEffectHandler {
 
 public extension UtilityPaymentsEffectHandler {
     
+    typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
     typealias LoadLastPaymentsCompletion = (LoadLastPaymentsResult) -> Void
     typealias LoadLastPayments = (@escaping LoadLastPaymentsCompletion) -> Void
     
     typealias PageSize = Int
     typealias LoadOperatorsPayload = (Operator.ID, PageSize)
+    typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     typealias LoadOperators = (LoadOperatorsPayload?, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentsEvent
-    typealias Effect = UtilityPaymentsEffect
+    typealias Event = UtilityPaymentsEvent<LastPayment, Operator>
+    typealias Effect = UtilityPaymentsEffect<Operator>
 }
 
 private extension UtilityPaymentsEffectHandler {

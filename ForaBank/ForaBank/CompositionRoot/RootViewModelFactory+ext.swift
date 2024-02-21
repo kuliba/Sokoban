@@ -21,6 +21,7 @@ extension RootViewModelFactory {
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
@@ -96,9 +97,16 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
+        let makeUtilitiesViewModel = makeUtilitiesViewModel(
+            httpClient: httpClient,
+            model: model,
+            flag: utilitiesPaymentsFlag
+        )
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -109,10 +117,73 @@ extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
             navigationStateManager: navigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
+        )
+    }
+    
+    static func makeUtilitiesViewModel(
+        httpClient: HTTPClient,
+        model: Model,
+        flag: UtilitiesPaymentsFlag
+    ) -> MakeUtilitiesViewModel {
+        
+        return { payload, completion in
+            
+            switch payload.type {
+            case .internet:
+                makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                
+            case .service:
+                switch flag.rawValue {
+                case .active:
+                    let utilitiesHTTPClient = flag.isStub
+                    ? HTTPClientStub.utilityPayments(delay: 1)
+                    : httpClient
+                    
+                    fatalError("unimplemented")
+                    
+                case .inactive:
+                    makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                }
+                
+            default:
+                return
+            }
+        }
+    }
+    
+    static func makeLegacyUtilitiesViewModel(
+        _ payload: PaymentsTransfersFactory.MakeUtilitiesPayload,
+        _ model: Model
+    ) -> PaymentsServicesViewModel? {
+        
+        guard let operators = model.operators(for: payload.type)
+        else { return nil }
+        
+        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+            titleButtonAction: { [weak model] in
+                
+                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+            },
+            navLeadingAction: payload.navLeadingAction,
+            navTrailingAction: payload.navTrailingAction
+        )
+        
+        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
+        
+        return .init(
+            searchBar: .withText("Наименование или ИНН"),
+            navigationBar: navigationBarViewModel,
+            model: model,
+            latestPayments: latestPayments,
+            allOperators: operators,
+            addCompanyAction: payload.addCompany,
+            requisitesAction: payload.requisites
         )
     }
     
@@ -238,6 +309,38 @@ extension RootViewModelFactory {
     }
 }
 
+private extension NavigationBarView.ViewModel {
+    
+    static func allRegions(
+        titleButtonAction: @escaping () -> Void,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: PaymentsServicesViewModel.allRegion,
+            titleButton: .init(
+                icon: .ic24ChevronDown,
+                action: titleButtonAction
+            ),
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: Image("qr_Icon"),
+                    action: navTrailingAction
+                )
+            ]
+        )
+    }
+}
+
+typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
+
 extension ProductProfileViewModel {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
@@ -245,6 +348,7 @@ extension ProductProfileViewModel {
     static func make(
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
+        makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -256,6 +360,7 @@ extension ProductProfileViewModel {
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
+                makeUtilitiesViewModel: makeUtilitiesViewModel,
                 navigationStateManager: navigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
@@ -273,7 +378,8 @@ extension ProductProfileViewModel {
             }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeProductProfileViewModel: makeProductProfileViewModel, 
+                makeUtilitiesViewModel: makeUtilitiesViewModel,
+                makeProductProfileViewModel: makeProductProfileViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel
             )
             
@@ -310,6 +416,23 @@ extension ProductProfileViewModel {
     }
 }
 
+private extension Model {
+    
+    func operators(
+        for type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> [OperatorGroupData.OperatorData]? {
+        
+        guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
+              let operatorValue = Payments.operatorByPaymentsType(type)
+        else { return nil }
+        
+        return  dictionaryAnywayOperators
+            .filter { $0.parentCode == operatorValue.rawValue }
+            .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
+            .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
+    }
+}
+
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
@@ -343,6 +466,7 @@ private extension RootViewModelFactory {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
+        makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -360,7 +484,9 @@ private extension RootViewModelFactory {
         }
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeProductProfileViewModel: makeProductProfileViewModel, makeTemplatesListViewModel: makeTemplatesListViewModel
+            makeUtilitiesViewModel: makeUtilitiesViewModel,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makeTemplatesListViewModel: makeTemplatesListViewModel
         )
         
         let mainViewModel = MainViewModel(
