@@ -18,23 +18,28 @@ extension Model {
         _ payload: Payload,
         _ completion: @escaping LoadOperatorsCompletion
     ) {
-        guard let operatorGroups = localAgent.load(type: [OperatorGroup].self)
-        else {
-            completion(.failure(LoadOperatorsFailure()))
-            return
-        }
-        
-        switch payload.id {
-        case .none:
-            let operators = operatorGroups
-                .prefix(payload.pageSize)
-                .map(OperatorsListComponents.Operator.init)
-            completion(.success(operators))
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             
-        case let .some(id):
-            let operators = operatorGroups
-                .page(startingAt: id, pageSize: payload.pageSize)
-                .map(OperatorsListComponents.Operator.init)
+            guard let self else { return }
+            
+            guard let operatorGroups = localAgent.load(type: [OperatorGroup].self)
+            else {
+                completion(.failure(LoadOperatorsFailure()))
+                return
+            }
+            
+            switch payload.id {
+            case .none:
+                let operators = operatorGroups
+                    .prefix(payload.pageSize)
+                    .map(OperatorsListComponents.Operator.init)
+                completion(.success(operators))
+                
+            case let .some(id):
+                let operators = operatorGroups
+                    .page(startingAt: id, pageSize: payload.pageSize)
+                    .map(OperatorsListComponents.Operator.init)
+            }
         }
     }
     
