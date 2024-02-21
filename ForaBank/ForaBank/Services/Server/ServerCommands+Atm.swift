@@ -46,15 +46,8 @@ extension ServerCommands {
             }
             
             init(token: String, serial: String?) {
-                
-                if let serial = serial, let version = Int(serial) {
-                    
-                    self.init(token: token, version: version)
-                    
-                } else {
-                    
-                    self.init(token: token, version: 0)
-                }
+                 
+                self.init(token: token, version: 0)
             }
         }
         

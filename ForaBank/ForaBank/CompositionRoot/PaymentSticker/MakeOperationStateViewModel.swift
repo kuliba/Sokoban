@@ -38,8 +38,8 @@ extension RootViewModelFactory {
                 processMakeTransferService: makeTransferService.makeTransferProcess,
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
-                products: { model.productsMapper(model: model) },
-                cityList: { model.citiesMapper(model: model) }
+                products: { model.productsMapper() },
+                cityList: { model.citiesMapper($0) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
@@ -387,11 +387,9 @@ private extension StickerDictionaryError {
 
 private extension Model {
     
-    func productsMapper(
-        model: Model
-    ) -> [BusinessLogic.Product] {
+    func productsMapper() -> [BusinessLogic.Product] {
         
-        let cards = model.allProducts.compactMap({ $0 as? ProductCardData })
+        let cards = allProducts.compactMap { $0 as? ProductCardData }
         let products = cards.filter({ $0.isMain ?? false }).filter({ $0.allowDebit == true })
         
         let allProducts = products.map({ BusinessLogic.Product(
@@ -415,22 +413,31 @@ private extension Model {
     }
     
     func citiesMapper(
-        model: Model
+        _ transferType: BusinessLogic.TransferType
     ) -> [BusinessLogic.City] {
         
-        let atmData = model.dictionaryAtmList()
+        let cities = localAgent.load(type: [AtmCityData].self) ?? []
         
-        let cities = model.localAgent.load(type: [AtmCityData].self)?
-            .filter({ $0.productList?.contains(where: { $0 == .sticker } ) ?? false })
-            .filter({ item in
-                
-                atmData?
-                    .filter({ $0.serviceIdList.contains(where: { $0 == 140 } )})
-                    .contains(where: {$0.cityId == item.id }) ?? false
-            })
-        return (cities?.compactMap{ $0 }.map({
+        switch transferType {
+        case .courier:
             
-            BusinessLogic.City(id: $0.id.description, name: $0.name)
-        })) ?? []
+            let filtered = cities
+                .filter { ($0.productList ?? []).contains { $0 == .sticker }}
+                .map { BusinessLogic.City(id: $0.id.description, name: $0.name) }
+            
+            return filtered
+            
+        case .office:
+            let atmData = dictionaryAtmList()?
+                .filter { $0.serviceIdList.contains { $0 == 140 }}
+            
+            let atmIDs = (atmData?.map(\.cityId) ?? []).uniqued()
+            
+            let filtered = cities
+                .filter { city in atmIDs.contains { $0 == city.id }}
+                .map { BusinessLogic.City(id: $0.id.description, name: $0.name) }
+            
+            return filtered
+        }
     }
 }

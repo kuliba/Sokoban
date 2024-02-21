@@ -34,7 +34,7 @@ final public class BusinessLogic {
     let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
     let products: () -> [Product]
-    let cityList: () -> [City]
+    let cityList: (TransferType) -> [City]
     
     public init(
         processDictionaryService: @escaping ProcessDictionaryService,
@@ -43,7 +43,7 @@ final public class BusinessLogic {
         processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
         products: @escaping () -> [Product],
-        cityList: @escaping () -> [City]
+        cityList: @escaping (TransferType) -> [City]
     ) {
         self.processDictionaryService = processDictionaryService
         self.processTransferService = processTransferService
@@ -101,9 +101,9 @@ public extension BusinessLogic {
                     
                 case .selector:
                     completion(.success(.operation(operation)))
+                    
                 case .officeSelector:
                     completion(.success(.operation(operation)))
-
                 }
                 
                 break
@@ -119,13 +119,18 @@ public extension BusinessLogic {
                         switch result {
                         case let .some(office):
                             
-                            let parametersWithInput = operation.parameters.filter { $0.id != .input }
+                            let parametersWithInput = operation.parameters
+                                .filter { $0.id == .input }
                             
                             if parametersWithInput.isEmpty {
-                                
-                                let parameters = parametersWithInput.filter({ $0.id != .amount })
-                                completion(.success(.operation(.init(parameters: parameters))))
 
+                                let newOperation = operation.updateOperation(
+                                    operation: operation,
+                                    newParameter: .select(.officeSelect(office: office))
+                                )
+                                
+                                completion(.success(.operation(newOperation)))
+                                
                             } else {
                                 
                                 let newOperation = operation.updateOperation(
@@ -133,7 +138,11 @@ public extension BusinessLogic {
                                     newParameter: .select(.officeSelect(office: office))
                                 )
                                 
-                                completion(.success(.operation(newOperation)))
+                                let parameters = newOperation.parameters
+                                    .filter { $0.id != .amount && $0.id != .input }
+                                
+                                completion(.success(.operation(.init(parameters: parameters))))
+                            
                             }
                             
                         case .none:
@@ -393,8 +402,17 @@ public extension BusinessLogic {
     ) {
         if operation.parameters.first(where: { $0.id == .input }) != nil {
             
-            let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
-            completion(.success(.operation(.init(parameters: parameters))))
+            let parameters = operation.parameters.filter({ 
+                ($0.id != .input &&  $0.id != .amount)
+            })
+            
+            let newOperation = Operation(parameters: parameters)
+            let updateOperation = newOperation.updateOperation(
+                operation: newOperation,
+                newParameter: .select(.branchSelect)
+            )
+            
+            completion(.success(.operation(updateOperation)))
             
         } else {
             
@@ -642,23 +660,50 @@ public extension BusinessLogic {
                 
                 switch main.data {
                 case let .citySelector(citySelector):
-                    return Operation.Parameter.select(.init(
-                        id: .citySelector,
-                        value: nil,
-                        title: citySelector.title,
-                        placeholder: citySelector.subtitle,
-                        options: self.cityList().map({ Operation.Parameter.Select.Option(
-                            id: $0.id,
-                            name: $0.name,
-                            iconName: ""
-                        )}),
-                        staticOptions: self.cityList().map({ Operation.Parameter.Select.Option(
-                            id: $0.id,
-                            name: $0.name,
-                            iconName: ""
-                        )}),
-                        state: .idle(.init(iconName: "", title: citySelector.title)))
-                    )
+                    
+                    let transferType = operation.parameters.getParameterTransferType()
+                    
+                    if transferType?.value == "typeDeliveryOffice" {
+                        
+                        return Operation.Parameter.select(.init(
+                            id: .citySelector,
+                            value: nil,
+                            title: citySelector.title,
+                            placeholder: citySelector.subtitle,
+                            options: self.cityList(.office).map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            staticOptions: self.cityList(.office).map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            state: .idle(.init(iconName: "", title: citySelector.title)))
+                        )
+                        
+                    } else {
+                     
+                        return Operation.Parameter.select(.init(
+                            id: .citySelector,
+                            value: nil,
+                            title: citySelector.title,
+                            placeholder: citySelector.subtitle,
+                            options: self.cityList(.courier).map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            staticOptions: self.cityList(.courier).map({ Operation.Parameter.Select.Option(
+                                id: $0.id,
+                                name: $0.name,
+                                iconName: ""
+                            )}),
+                            state: .idle(.init(iconName: "", title: citySelector.title)))
+                        )
+                        
+                    }
                     
                 case let .officeSelector(officeSelector):
                     return Operation.Parameter.select(.init(
@@ -828,6 +873,12 @@ extension BusinessLogic {
             self.id = id
             self.name = name
         }
+    }
+    
+    public enum TransferType {
+        
+        case office
+        case courier
     }
 }
 
