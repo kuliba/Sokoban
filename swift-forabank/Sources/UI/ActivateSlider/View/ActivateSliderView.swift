@@ -11,8 +11,8 @@ import SwiftUI
 
 struct ActivateSliderView: View {
     
-    @ObservedObject var viewModel: ViewModel
-    
+    let state: SliderStatus
+    let event: (ActivateSlider.Event) -> Void
     let config: SliderConfig
     
     @State private var offsetX: CGFloat = 0
@@ -21,7 +21,7 @@ struct ActivateSliderView: View {
         
         VStack {
             
-            switch viewModel.state {
+            switch state {
             case .notActivated:
                 
                 ZStack {
@@ -34,7 +34,7 @@ struct ActivateSliderView: View {
                         
                         Spacer()
                         
-                        Text(config.itemForState(viewModel.state).title)
+                        Text(config.itemForState(state).title)
                             .font(config.font)
                             .foregroundColor(config.foregroundColor)
                             .opacity(config.titleOpacityBy(offsetX: offsetX))
@@ -44,7 +44,7 @@ struct ActivateSliderView: View {
                     
                     HStack {
                         
-                        ThumbView(config: config.thumbConfig(viewModel.state))
+                        ThumbView(config: config.thumbConfig(state))
                             .padding(.all, 4)
                             .offset(x: self.offsetX, y: 0)
                             .gesture(DragGesture(coordinateSpace: .local).onChanged({ value in
@@ -57,7 +57,8 @@ struct ActivateSliderView: View {
                                     
                                     withAnimation {
                                         
-                                        viewModel.state = .activating
+                                        //state = .activating
+                                        event(.swipe)
                                     }
                                 }
                             }))
@@ -76,7 +77,7 @@ struct ActivateSliderView: View {
                     
                     HStack{
                         
-                        Text(config.itemForState(viewModel.state).title)
+                        Text(config.itemForState(state).title)
                             .font(config.font)
                             .multilineTextAlignment(.center)
                             .foregroundColor(config.foregroundColor)
@@ -90,7 +91,7 @@ struct ActivateSliderView: View {
                         
                         Spacer()
                         
-                        ThumbView(config: config.thumbConfig(viewModel.state))
+                        ThumbView(config: config.thumbConfig(state))
                             .padding(.all, 4)
                     }
                 }
@@ -128,7 +129,8 @@ struct ActivateSliderView: View {
     }
         
     func resetState() {
-        viewModel.state = .notActivated
+        
+        //state = .notActivated
         
         withAnimation {
             
@@ -137,7 +139,7 @@ struct ActivateSliderView: View {
     }
 }
 
-struct ActivateSliderView_Previews: PreviewProvider {
+/*struct ActivateSliderView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -177,3 +179,4 @@ struct ActivateSliderView_Previews: PreviewProvider {
         }
     }
 }
+*/

@@ -9,8 +9,8 @@ import Foundation
 
 public struct ActiveSliderState: Equatable {
         
-    var event: ActivateSlider.Event?
-    
+    public var event: ActivateSlider.Event?
+
     public init(
         event: ActivateSlider.Event? = nil
     ) {

@@ -15,6 +15,7 @@ public extension ActivateSlider {
         case alertTap(AlertEvent)
         case inflight
         case swipe
+        case toggleStatus(SliderStatus)
 
         public enum ActivateCardResponse: Equatable {
             

@@ -1024,6 +1024,13 @@ private extension Target {
     
     static let activateSlider = target(
         name: .activateSlider,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+        ],
         path: "Sources/UI/\(String.activateSlider)"
     )
 
