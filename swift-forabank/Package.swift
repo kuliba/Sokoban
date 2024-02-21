@@ -1260,6 +1260,7 @@ private extension Target {
         name: .utilityPaymentsRx,
         dependencies: [
             // external packages
+            .combineSchedulers,
             .tagged,
             // internal modules
         ],
