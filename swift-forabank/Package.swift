@@ -1780,8 +1780,6 @@ private extension String {
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
     
-    static let operatorsListComponents = "OperatorsListComponents"
-    
     // MARK: - Utilities
     
     static let services = "Services"
