@@ -28,7 +28,7 @@ public struct ThreeButtonsWrappedView: View {
         
         ThreeButtonsView(
             buttons: viewModel.state.buttons,
-            event: viewModel.event,
+            event: { viewModel.event(.buttonTapped($0)) },
             config: config
         )
     }

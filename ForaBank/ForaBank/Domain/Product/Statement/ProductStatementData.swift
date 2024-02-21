@@ -9,7 +9,7 @@ import Foundation
 
 struct ProductStatementData: Identifiable, Equatable, Hashable {
     
-    var id: String { operationId }
+    var id: String { operationId + operationType.rawValue }
     let mcc: Int?
     let accountId: Int?
     let accountNumber: String

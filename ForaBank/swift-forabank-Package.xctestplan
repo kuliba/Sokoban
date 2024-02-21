@@ -291,6 +291,13 @@
         "identifier" : "CardGuardianModuleTests",
         "name" : "CardGuardianModuleTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UtilityPaymentsRxTests",
+        "name" : "UtilityPaymentsRxTests"
+      }
     }
   ],
   "version" : 1

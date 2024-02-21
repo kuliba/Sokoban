@@ -8,6 +8,7 @@
 extension DemoSettings {
     
     static let shortSuccess: Self = .init(
+        phoneNumber: "+7 ... ... 54 15",
         confirmWithOTPSettings: .success,
         countdownDemoSettings: .shortSuccess,
         otpFieldDemoSettings: .success

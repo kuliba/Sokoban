@@ -97,7 +97,7 @@ extension Services {
 
 extension Services.Endpoint {
     
-    private var path: String {
+    var path: String {
         
         let version = version.map { "\($0.rawValue)/"} ?? ""
         return "/\(pathPrefix.path)/\(version)\(serviceName.rawValue)"

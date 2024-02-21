@@ -68,7 +68,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
         case .transfers:
             if indexPath.row == 1 {
-                let model = ConfirmViewControllerModel(type: .card2card)
+                let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
                 popView.modalPresentationStyle = .custom

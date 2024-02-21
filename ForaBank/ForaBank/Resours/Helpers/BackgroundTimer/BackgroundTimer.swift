@@ -53,7 +53,7 @@ public class TimerRepeat {
         timer.resume()
     }
 
-    public func suspend() {
+    public func suspended() {
         if state == .suspended {
             return
         }

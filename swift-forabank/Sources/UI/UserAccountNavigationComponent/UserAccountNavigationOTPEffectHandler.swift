@@ -32,15 +32,15 @@ public extension UserAccountNavigationOTPEffectHandler {
         dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .create:
-            dispatch(makeDestination(dispatch))
+        case let .create(phoneNumber):
+            dispatch(makeDestination(phoneNumber, dispatch))
             
-        case .prepareSetBankDefault:
+        case let .prepareSetBankDefault(phoneNumber):
             prepareSetBankDefault { result in
                 
                 switch result {
                 case .success(()):
-                    dispatch(.prepareSetBankDefaultResponse(.success))
+                    dispatch(.prepareSetBankDefaultResponse(.success(phoneNumber)))
                     
                 case .failure(.connectivityError):
                     dispatch(.prepareSetBankDefaultResponse(.connectivityError))
@@ -55,7 +55,7 @@ public extension UserAccountNavigationOTPEffectHandler {
 
 public extension UserAccountNavigationOTPEffectHandler {
     
-    typealias MakeTimedOTPInputViewModel = (AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+    typealias MakeTimedOTPInputViewModel = (OTPInputState.PhoneNumberMask, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
     typealias Dispatch = (Event) -> Void
 
@@ -66,10 +66,11 @@ public extension UserAccountNavigationOTPEffectHandler {
 private extension UserAccountNavigationOTPEffectHandler {
     
     func makeDestination(
+        _ phoneNumber: OTPInputState.PhoneNumberMask,
         _ dispatch: @escaping Dispatch
     ) -> Event {
         
-        let otpInputViewModel = makeTimedOTPInputViewModel(scheduler)
+        let otpInputViewModel = makeTimedOTPInputViewModel(phoneNumber, scheduler)
         let cancellable = otpInputViewModel.$state
             .dropFirst()
             .compactMap(\.projection)
@@ -88,7 +89,7 @@ private extension OTPInputState {
     
     var projection: OTPInputStateProjection? {
         
-        switch self {
+        switch status {
         case let .failure(otpFieldFailure):
             switch otpFieldFailure {
             case .connectivityError:

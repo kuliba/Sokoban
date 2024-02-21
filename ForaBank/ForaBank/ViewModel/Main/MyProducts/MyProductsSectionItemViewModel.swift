@@ -19,9 +19,9 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     @Published var icon: IconViewModel
     @Published var balance: String
     @Published var sideButton: SideButtonViewModel?
+    @Published var name: String
     
     let paymentSystemIcon: Image?
-    let name: String
     let descriptions: [String]
     let orderModePadding: CGFloat
     
@@ -48,7 +48,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
 
         let icon = IconViewModel(with: productData, model: model)
         let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
-        let name = ProductView.ViewModel.name(product: productData, style: .profile)
+        let name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .navigationTitle)
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
         let descriptions = productData.description
         var orderModePadding: CGFloat = 0
@@ -81,6 +81,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     func update(with productData: ProductData) {
         
         icon = IconViewModel(with: productData, model: model)
+        name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .navigationTitle)
         balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
     }
     

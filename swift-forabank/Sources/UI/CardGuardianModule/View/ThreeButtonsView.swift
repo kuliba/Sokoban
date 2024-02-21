@@ -10,7 +10,7 @@ import SwiftUI
 struct ThreeButtonsView: View {
     
     let buttons: [CardGuardianState._Button] // state
-    let event: (CardGuardianEvent) -> Void
+    let event: (CardGuardian.ButtonEvent) -> Void
     let config: CardGuardian.Config
     
     var body: some View {
@@ -26,7 +26,7 @@ struct ThreeButtonsView: View {
     
     private func buttonView(button: CardGuardianState._Button) -> some View {
         
-        Button(action: { event(button.event.event) }) {
+        Button(action: { event(button.event) }) {
             
             VStack(alignment: .leading) {
                 

@@ -22,18 +22,45 @@ class PaymentsAntifraudViewModel {
         self.bottom = bottom
     }
     
-    convenience init(payeeName: String, phone: String, amount: String, cancelAction: @escaping () -> Void, continueAction: @escaping () -> Void) {
+    convenience init(
+        payeeName: String,
+        phone: String,
+        amount: String,
+        cancelAction: @escaping () -> Void,
+        timeOutAction: @escaping () -> Void,
+        continueAction: @escaping () -> Void
+    ) {
         
-        let main: MainViewModel = .init(name: payeeName, phone: phone, amount: amount, timer: .init(delay: .init(120), completeAction: cancelAction))
-        let bottom: BottomViewModel = .init(cancelButton: .init(title: "Отменить", style: .gray, action: cancelAction),
-                                            continueButton: .init(title: "Продолжить", style: .gray, action: continueAction))
+        let main: MainViewModel = .init(
+            name: payeeName,
+            phone: phone,
+            amount: amount,
+            timer: .init(delay: .init(120), completeAction: timeOutAction)
+        )
+        
+        let bottom: BottomViewModel = .init(
+            cancelButton: .init(title: "Отменить", style: .gray, action: cancelAction),
+            continueButton: .init(title: "Продолжить", style: .gray, action: continueAction)
+        )
         
         self.init(header: .init(), main: main, bottom: bottom)
     }
     
-    convenience init(with antifraudData: Payments.AntifraudData, cancelAction: @escaping () -> Void, continueAction: @escaping () -> Void) {
+    convenience init(
+        with antifraudData: Payments.AntifraudData,
+        cancelAction: @escaping () -> Void,
+        timeOutAction: @escaping () -> Void,
+        continueAction: @escaping () -> Void
+    ) {
         
-        self.init(payeeName: antifraudData.payeeName, phone: antifraudData.phone, amount: antifraudData.amount, cancelAction: cancelAction, continueAction: continueAction)
+        self.init(
+            payeeName: antifraudData.payeeName,
+            phone: antifraudData.phone,
+            amount: antifraudData.amount,
+            cancelAction: cancelAction,
+            timeOutAction: timeOutAction,
+            continueAction: continueAction
+        )
     }
     
 }

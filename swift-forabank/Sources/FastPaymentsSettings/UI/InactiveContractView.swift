@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct InactiveContractView: View {
     
@@ -16,23 +17,38 @@ struct InactiveContractView: View {
         
         VStack {
             
-            Button(action: action) {
-                
-                HStack(spacing: 16) {
-                    
-                    Text("Включить переводы СБП")
-                    
-                    Spacer()
-                    
-                    ToggleMockView(status: .inactive)
-                }
-            }
+            button()
             
-            AttributedTextView(attributedString: .consent)
-            
-            Spacer()
+            AttributedTextView(
+                attributedString: .consent,
+                linkColor: config.contract.subtitle.textColor
+            )
+            .foregroundColor(config.contract.subtitle.textColor)
+            .font(config.contract.subtitle.textFont)
         }
-        .padding()
+        .padding(.default)
+        .background(config.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+    
+    private func button() -> some View {
+        
+        Button(action: action) {
+            
+            HStack(spacing: 16) {
+                
+                "Включить переводы СБП".text(withConfig: config.contract.title)
+                
+                Spacer()
+                
+                ToggleMockView(
+                    status: .off(.enabled),
+                    color: config.contract.toggleColor
+                )
+            }
+        }
     }
 }
 

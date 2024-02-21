@@ -15,8 +15,52 @@ func submitOTP(
 }
 
 func completed(
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     otpField: OTPFieldState = .init()
 ) -> OTPInputState {
+    
+    .init(
+        phoneNumber: phoneNumber,
+        status: .input(.init(
+            countdown: .completed,
+            otpField: otpField
+        ))
+    )
+}
+
+func running(
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
+    _ remaining: Int,
+    otpField: OTPFieldState = .init()
+) -> OTPInputState {
+    
+    .init(
+        phoneNumber: phoneNumber,
+        status: .input(.init(
+            countdown: .running(remaining: remaining),
+            otpField: otpField
+        ))
+    )
+}
+
+func starting(
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
+    duration: Int,
+    otpField: OTPFieldState = .init()
+) -> OTPInputState {
+    
+    .init(
+        phoneNumber: phoneNumber,
+        status: .input(.init(
+            countdown: .starting(duration: duration),
+            otpField: otpField
+        ))
+    )
+}
+
+func completed(
+    otpField: OTPFieldState = .init()
+) -> OTPInputState.Status {
     
     .input(.init(
         countdown: .completed,
@@ -27,7 +71,7 @@ func completed(
 func running(
     _ remaining: Int,
     otpField: OTPFieldState = .init()
-) -> OTPInputState {
+) -> OTPInputState.Status {
     
     .input(.init(
         countdown: .running(remaining: remaining),
@@ -38,7 +82,7 @@ func running(
 func starting(
     _ duration: Int,
     otpField: OTPFieldState = .init()
-) -> OTPInputState {
+) -> OTPInputState.Status {
     
     .input(.init(
         countdown: .starting(duration: duration),
@@ -47,9 +91,10 @@ func starting(
 }
 
 func runningInflight(
+    phoneNumber: OTPInputState.PhoneNumberMask = .init(anyMessage()),
     _ remaining: Int,
     _ text: String
-) -> OTPInputState {
+) -> OTPInputState.Status {
     
     .input(.init(
         countdown: .running(remaining: remaining),

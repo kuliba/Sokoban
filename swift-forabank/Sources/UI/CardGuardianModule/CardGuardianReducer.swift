@@ -14,7 +14,6 @@ public final class CardGuardianReducer {
 
 public extension CardGuardianReducer {
  
-#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
@@ -29,14 +28,14 @@ public extension CardGuardianReducer {
         case let .buttonTapped(tap):
             switch tap {
                 
-            case let .toggleLock(status):
-                state.updateEvent(.buttonTapped(.toggleLock(status)))
+            case let .toggleLock(card):
+                state.updateEvent(.buttonTapped(.toggleLock(card)))
                 
-            case .changePin:
-                state.updateEvent(.buttonTapped(.changePin))
+            case let .changePin(card):
+                state.updateEvent(.buttonTapped(.changePin(card)))
                 
-            case .showOnMain:
-                state.updateEvent(.buttonTapped(.showOnMain))
+            case let .toggleVisibilityOnMain(product):
+                state.updateEvent(.buttonTapped(.toggleVisibilityOnMain(product)))
             }
         }
         return (state, .none)

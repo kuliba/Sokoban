@@ -51,6 +51,7 @@ extension ExamplesDataToFormat {
         case startsWith8(StartsWith8)
         case startsWithPlus8(StartsWithPlus8)
         case startsWith9(StartsWith9)
+        case startsWith982(StartsWith982)
         case startsWithZero(StartsWithZero)
         
         enum StartsWith8: String {
@@ -67,12 +68,14 @@ extension ExamplesDataToFormat {
         
         enum StartsWith7: String {
             case equals10Digits = "79630000000"
+            case equals10DigitsWith7982 = "79820000000"
             case lessThen10Digits = "79630000"
             case moreThen10Digits = "796300000000"
         }
         
         enum StartsWithPlus7: String {
             case equals10Digits = "+79630000000"
+            case equals10DigitsWith7982 = "+79820000000"
             case lessThen10Digits = "+7963000000"
             case moreThen10Digits = "+796300000000"
         }
@@ -81,6 +84,7 @@ extension ExamplesDataToFormat {
             case equals10DigitsNotValid = "00796300000"
             case lessThen10DigitsNotValid = "00796300"
             case moreThen10DigitsValid = "0079630000000"
+            case moreThen10DigitsValidWith7982 = "0079820000000"
             case moreThen10DigitsNotValid = "0000796300000"
         }
         
@@ -88,6 +92,12 @@ extension ExamplesDataToFormat {
             case equals10Digits = "9630000000"
             case lessThen10Digits = "963000000"
             case moreThen10Digits = "96300000000"
+        }
+        
+        enum StartsWith982: String {
+            case equals10Digits = "9820000000"
+            case lessThen10Digits = "982000000"
+            case moreThen10Digits = "98200000000"
         }
 
         var phone: String {
@@ -103,6 +113,8 @@ extension ExamplesDataToFormat {
             case let .startsWith9(phone):
                 return phone.rawValue
             case let .startsWithZero(phone):
+                return phone.rawValue
+            case let .startsWith982(phone):
                 return phone.rawValue
             }
         }
@@ -209,6 +221,7 @@ extension ExamplesDataToFormat {
         case longLuxembourg = "35211122233344455566"
         case longPhilippines = "63121545454542121"
         case longTurkey = "901213121545454545454"
+        case longIran =  "98920555085654545454"
         case longUSA = "1232545454545444"
         case short = "+11223"
     }

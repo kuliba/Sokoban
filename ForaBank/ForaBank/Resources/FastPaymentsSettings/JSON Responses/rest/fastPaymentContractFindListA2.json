@@ -1,0 +1,48 @@
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [
+        {
+          "accountID": 10004176990,
+          "flagPossibAddAccount": "NO",
+          "maxAddAccount": 0E-10,
+          "minAddAccount": 0E-10,
+          "accountNumber": "40817810552005000639"
+        }
+      ],
+      "fastPaymentContractAttributeList": [
+        {
+          "accountID": 10004176990,
+          "branchID": 2000,
+          "clientID": 10002053887,
+          "flagBankDefault": "EMPTY",
+          "flagClientAgreementIn": "NO",
+          "flagClientAgreementOut": "NO",
+          "fpcontractID": 10000082922,
+          "phoneNumber": "79191619658",
+          "phoneNumberMask": "+7 ... ... 96 58",
+          "branchBIC": "044525341"
+        }
+      ],
+      "fastPaymentContractClAttributeList": [
+        {
+          "clientInfo": {
+            "clientID": 10002053887,
+            "inn": "480211238460",
+            "name": "Чаликян Геворг Акопович",
+            "nm": "Геворг Акопович Ч",
+            "clientSurName": "Чаликян",
+            "clientPatronymicName": "Акопович",
+            "clientName": "Геворг",
+            "docType": "21",
+            "regSeries": "42 17",
+            "regNumber": "095830",
+            "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, Липецкая обл, Грязинский р-н, Сошки с, Фролова ул ,  д. 4"
+          }
+        }
+      ]
+    }
+  ]
+}

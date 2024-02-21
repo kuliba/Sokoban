@@ -253,23 +253,20 @@ struct InformerInternalView: View {
     
     var body: some View {
         
-        ZStack {
+        HStack(spacing: 10) {
             
-            HStack(spacing: 10) {
-                
-                icon
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.mainColorsWhite)
-                
-                Text(message)
-                    .font(.textH4R16240())
-                    .foregroundColor(.mainColorsWhite)
-            }
-            .padding([.leading, .trailing], 16)
-            .padding([.top, .bottom], 12)
+            icon
+                .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundColor(.mainColorsWhite)
             
+            Text(message)
+                .font(.textH4R16240())
+                .foregroundColor(.mainColorsWhite)
+                .multilineTextAlignment(.leading)
         }
+        .padding([.leading, .trailing], 16)
+        .padding([.top, .bottom], 12)
         .background(color)
         .cornerRadius(8)
         .overlay(

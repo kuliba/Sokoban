@@ -286,7 +286,7 @@ extension ProductSelectorView.ViewModel {
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
             
-            let name = ProductView.ViewModel.name(product: productData, style: .main)
+            let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
             let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
             
             var paymentSystemImage: SVGImageData?

@@ -54,6 +54,7 @@ struct PaymentsAntifraudView: View {
                         .foregroundColor(.textPlaceholder)
                         .font(.textBodySR12160())
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
                 }
             }
         }
@@ -113,13 +114,13 @@ struct PaymentsAntifraudView: View {
         
         var body: some View {
             
-            HStack(spacing: 15) {
+            HStack(spacing: 8) {
                 
                 ButtonSimpleView(viewModel: viewModel.cancelButton)
-                    .frame(height: 48)
+                    .frame(height: 56)
                 
                 ButtonSimpleView(viewModel: viewModel.continueButton)
-                    .frame(height: 48)
+                    .frame(height: 56)
             }
             .padding(.horizontal, 20)
         }

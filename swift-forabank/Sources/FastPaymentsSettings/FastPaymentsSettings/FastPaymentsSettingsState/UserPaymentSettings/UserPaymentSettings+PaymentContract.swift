@@ -15,14 +15,14 @@ public extension UserPaymentSettings {
         public let accountID: Product.AccountID
         public let contractStatus: ContractStatus
         public let phoneNumber: PhoneNumber
-        public let phoneNumberMasked: String
+        public let phoneNumberMasked: PhoneNumberMask
         
         public init(
             id: ID,
             accountID: Product.AccountID,
             contractStatus: ContractStatus,
             phoneNumber: PhoneNumber,
-            phoneNumberMasked: String
+            phoneNumberMasked: PhoneNumberMask
         ) {
             self.id = id
             self.accountID = accountID

@@ -12,24 +12,27 @@ public struct ProductSelectConfig {
     
     let amount: TextConfig
     public let card: Card
-    let chevronColor: Color
+    let chevron: Chevron
     let footer: TextConfig
     let header: TextConfig
+    let missingSelected: MissingSelected
     let title: TextConfig
     
     public init(
         amount: TextConfig,
         card: Card,
-        chevronColor: Color,
+        chevron: Chevron,
         footer: TextConfig,
         header: TextConfig,
+        missingSelected: MissingSelected,
         title: TextConfig
     ) {
         self.amount = amount
         self.card = card
-        self.chevronColor = chevronColor
+        self.chevron = chevron
         self.footer = footer
         self.header = header
+        self.missingSelected = missingSelected
         self.title = title
     }
 }
@@ -39,16 +42,53 @@ public extension ProductSelectConfig {
     struct Card {
         
         let amount: TextConfig
+        let cardSize: CGSize
         let number: TextConfig
         let title: TextConfig
         
         public init(
             amount: TextConfig,
+            cardSize: CGSize = .init(width: 112, height: 71),
             number: TextConfig,
             title: TextConfig
         ) {
             self.amount = amount
+            self.cardSize = cardSize
             self.number = number
+            self.title = title
+        }
+    }
+    
+    struct Chevron {
+        
+        let color: Color
+        let image: Image
+        
+        public init(
+            color: Color,
+            image: Image
+        ) {
+            self.color = color
+            self.image = image
+        }
+    }
+    
+    struct MissingSelected {
+        
+        let backgroundColor: Color
+        let foregroundColor: Color
+        let image: Image
+        let title: TextConfig
+        
+        public init(
+            backgroundColor: Color,
+            foregroundColor: Color,
+            image: Image,
+            title: TextConfig
+        ) {
+            self.backgroundColor = backgroundColor
+            self.foregroundColor = foregroundColor
+            self.image = image
             self.title = title
         }
     }

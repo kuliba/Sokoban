@@ -69,7 +69,7 @@ private extension TemplatesListViewHostingViewController {
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
                 case let payload as TemplatesListViewModelAction.Present.PaymentToMyCard:
-                    let model = ConfirmViewControllerModel(type: .card2card)
+                    let model = ConfirmViewControllerModel(type: .card2card, status: .succses)
                     let paymentViewController = CustomPopUpWithRateView(paymentTemplate: payload.viewModel)
                     paymentViewController.viewModel = model
                     navigationController?.pushViewController(paymentViewController, animated: true)
