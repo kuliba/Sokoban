@@ -10,13 +10,115 @@ import OperatorsListComponents
 import SearchBarComponent
 import TextFieldUI
 import TextFieldComponent
+import UtilityPaymentsRx
 
 typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
+
+private extension OperatorsListComponents.Operator {
+    
+    init(_ operator: UtilityPaymentsRx.Operator) {
+        fatalError()
+    }
+}
+
+private extension OperatorsListComponents.LatestPayment {
+
+    init(_ latestPayment: UtilityPaymentsRx.LastPayment) {
+        fatalError()
+    }
+}
+
+private extension UtilityPaymentsViewModel {
+    
+    var operators: [OperatorsListComponents.Operator] {
+        guard let operators = state.operators else {
+            return [] //FIX: remove empty unwrapp
+        }
+        
+        return operators.map(OperatorsListComponents.Operator.init)
+    }
+    var lastPayments: [OperatorsListComponents.LatestPayment] {
+        
+        guard let latestPayments = state.lastPayments else {
+            return [] //FIX: remove empty unwrapp
+        }
+        
+        return latestPayments.map(OperatorsListComponents.LatestPayment.init)
+    }
+}
+
+struct ComposedOperatorsWrapperView: View {
+    
+    @StateObject var searchViewModel: SearchViewModel
+    @StateObject var viewModel: UtilityPaymentsViewModel = .preview(initialState: .init())
+ 
+    let selectLast: (LatestPayment.ID) -> Void
+    let selectOperator: (OperatorsListComponents.Operator.ID) -> Void
+    
+    func event(_ event: ComposedOperatorsEvent) {
+    
+        switch event {
+        case let .selectLastOperation(id):
+            selectLast(id)
+            
+        case let .selectOperator(id):
+            selectOperator(id)
+            
+        case let .utility(event):
+            viewModel.event(event)
+        }
+    }
+    
+    var body: some View {
+        
+        ComposedOperatorsView(
+            state: .init(
+                operators: viewModel.operators,
+                latestPayments: viewModel.lastPayments
+            ),
+            event: event(_:),
+            lastPaymentView: { payment in
+                
+                LatestPaymentView(
+                    latestPayment: payment,
+                    event: { _ in }
+                )
+            },
+            operatorView: { `operator` in OperatorView(
+                operator: `operator`,
+                config: .init(
+                    titleFont: .title3,
+                    titleColor: .black,
+                    descriptionFont: .footnote,
+                    descriptionColor: .gray
+                ))
+            },
+            footerView: { NoCompanyInListView(
+                noCompanyListViewModel: .sample,
+                config: .init(
+                    titleFont: .title,
+                    titleColor: .black,
+                    descriptionFont: .callout,
+                    descriptionColor: .gray,
+                    subtitleFont: .footnote,
+                    subtitleColor: .gray
+                )) },
+            searchView: {
+                CancellableSearchBarView(
+                    viewModel: searchViewModel,
+                    textFieldConfig: .sample,
+                    clearButtonLabel: { Image(systemName: "xmark") },
+                    cancelButton: { Button("Cancel", action: {}) }
+                )
+            }
+        )
+    }
+}
 
 struct ContentView: View {
     
     let searchViewModel: SearchViewModel
-    
+
     var body: some View {
         
         ComposedOperatorsView(
@@ -86,7 +188,7 @@ private extension ContentView {
         ]
     }
     
-    func mockOperators() -> [Operator] {
+    func mockOperators() -> [OperatorsListComponents.Operator] {
         
         [.init(
             id: "1",
