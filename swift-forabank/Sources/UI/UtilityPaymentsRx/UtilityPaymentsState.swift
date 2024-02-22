@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public struct UtilityPaymentsState: Equatable {
+public struct UtilityPaymentsState<LastPayment, Operator>: Equatable
+where LastPayment: Equatable & Identifiable,
+      Operator: Equatable & Identifiable {
     
     public var lastPayments: [LastPayment]?
     public var operators: [Operator]?

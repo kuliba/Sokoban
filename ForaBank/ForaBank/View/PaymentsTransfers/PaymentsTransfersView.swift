@@ -354,6 +354,32 @@ struct PaymentsTransfersView: View {
     }
 }
 
+private extension NavigationBarView.ViewModel {
+    
+    static func with(
+        title: String,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: title,
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: Image("qr_Icon"),
+                    action: navTrailingAction
+                )
+            ]
+        )
+    }
+}
+
 private extension PaymentsTransfersViewModel.Route {
     
     var isEmpty: Bool {

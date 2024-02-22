@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public final class UtilityPaymentsReducer {
+public final class UtilityPaymentsReducer<LastPayment, Operator>
+where LastPayment: Equatable & Identifiable,
+      Operator: Equatable & Identifiable {
     
     private let observeLast: Int
     private let pageSize: Int
@@ -51,9 +53,9 @@ public extension UtilityPaymentsReducer {
 
 public extension UtilityPaymentsReducer {
     
-    typealias State = UtilityPaymentsState
-    typealias Event = UtilityPaymentsEvent
-    typealias Effect = UtilityPaymentsEffect
+    typealias State = UtilityPaymentsState<LastPayment, Operator>
+    typealias Event = UtilityPaymentsEvent<LastPayment, Operator>
+    typealias Effect = UtilityPaymentsEffect<Operator>
 }
 
 private extension UtilityPaymentsReducer {
@@ -108,7 +110,7 @@ private extension UtilityPaymentsReducer {
     
     func reduce(
         _ state: State,
-        _ result: LoadOperatorsResult
+        _ result: Event.LoadOperatorsResult
     ) -> (State, Effect?) {
         
         var state = state

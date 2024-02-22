@@ -12,7 +12,7 @@ extension FPSEndpointStub {
     
     /// Change this stub with feature flag set to `.active(.stub)` to test.
     static let `default`: Self = .init(
-        fastPaymentContractFindList: [.a1, .a2, .a1, .a2, .a1],
+        fastPaymentContractFindList: [.a3, .a1, .a2, .a1, .a2, .a1],
         getClientConsentMe2MePull: [.b3],
         getBankDefault: [.c2],
         updateFastPaymentContract: [.d1, .d1, .d1, .d1],
@@ -140,7 +140,7 @@ enum FPSEndpoint {
     }
 }
 
-private extension Data {
+extension Data {
     
     static let error: HTTPClient.Response = Data.empty.response(statusCode: 201)
     
