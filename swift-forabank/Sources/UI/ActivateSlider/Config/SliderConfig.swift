@@ -23,8 +23,8 @@ public struct SliderConfig {
     let totalWidth: CGFloat = 167
     let thumbWidth: CGFloat = 40
     let thumbPadding: CGFloat = 4
-    var maxOffsetX: CGFloat { totalWidth - (thumbWidth + thumbPadding * 2) }
-
+    var maxOffsetX: CGFloat { totalWidth - (thumbWidth + thumbPadding * 2) } 
+    
     private var slideLength: CGFloat { totalWidth - thumbWidth - thumbPadding * 2 }
     
     public struct Item {
@@ -61,30 +61,38 @@ public struct SliderConfig {
         self.font = font
     }
     
-    func itemForState(_ state: SliderStatus) -> Item {
+    func itemForState(_ state: CardState.Status?) -> Item {
         
         switch state {
-            
-        case .notActivated:
-            return notActivated
-        case .waiting:
-            return waiting
-        case .activating:
-            return activating
         case .activated:
             return activated
+            
+        case .confirmActivate:
+            return waiting
+            
+        case .inflight:
+            return activating
+            
+        case .none:
+            return notActivated
         }
     }
     
-    func thumbConfig(_ state: SliderStatus) -> ThumbConfig {
+    func thumbConfig(_ state: CardState.Status?) -> ThumbConfig {
         
         let itemConfig = itemForState(state)
+        let isAnimated: Bool = {
+            
+            if case .inflight = state { return true }
+            return false
+        }()
+        
         return .init(
             icon: itemConfig.icon,
             color: thumbIconColor,
             backgroundColor: backgroundColor,
             foregroundColor: foregroundColor,
-            isAnimated: state == .activating
+            isAnimated: isAnimated
         )
     }
     
@@ -108,5 +116,5 @@ public struct SliderConfig {
         
         max(1 - (progressBy(offsetX: offsetX) * 2), 0.7)
     }
-
+    
 }

@@ -11,7 +11,7 @@ extension SliderConfig {
     
     static let `default`: Self = .init(
         notActivated: .notActivated,
-        waiting: .waiting,
+        waiting: .confirmingActivation,
         activating: .activating,
         activated: .activated, 
         thumbIconColor: .gray,

@@ -14,7 +14,7 @@ extension SliderConfig.Item {
         title: "Активировать"
     )
     
-    static let waiting: Self = .init(
+    static let confirmingActivation: Self = .init(
         icon: Image(systemName: "checkmark"),
         title: ""
     )
