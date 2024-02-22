@@ -47,6 +47,8 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, event)
         case let .card(event):
             (state, effect) = reduce(state, event)
+        case let .show(event):
+             break
         }
         return (state, effect)
     }
@@ -128,7 +130,7 @@ private extension ProductProfileNavigationReducer {
     
     func reduce(
         _ state: State,
-        _ event: ActivateSlider.Event
+        _ event: CardEvent
     ) -> (State, Effect?) {
         
         var effect: Effect?

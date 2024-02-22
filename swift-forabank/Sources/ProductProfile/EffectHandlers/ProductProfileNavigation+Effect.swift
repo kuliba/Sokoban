@@ -17,6 +17,6 @@ public extension ProductProfileNavigation {
         case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>, TimeInterval)
         case productProfile(ProductProfileEffect)
-        case card(ActivateSlider.Effect)
+        case card(CardEffect)
     }
 }

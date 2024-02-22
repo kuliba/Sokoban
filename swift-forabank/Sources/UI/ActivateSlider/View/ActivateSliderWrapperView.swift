@@ -9,7 +9,7 @@ import SwiftUI
 import RxViewModel
 import UIPrimitives
 
-typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
+public typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
 
 struct ActivateSliderWrapperView: View {
     
