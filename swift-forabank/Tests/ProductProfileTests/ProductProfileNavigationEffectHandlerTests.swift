@@ -7,6 +7,7 @@
 
 @testable import ProductProfile
 import CardGuardianModule
+import ActivateSlider
 import RxViewModel
 import UIPrimitives
 import XCTest
@@ -30,7 +31,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     func test_showCardBlockedAlert_shouldDeliverShowAlert() {
         
         let sut = makeSUT()
-
+        
         let id = UUID()
         let alert = Alerts.alertCardBlocked(id)
         
@@ -40,13 +41,13 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     func test_showBlockCardAlert_shouldDeliverShowAlert() {
         
         let sut = makeSUT()
-
+        
         let id = UUID()
         let alert = Alerts.alertBlockCard(.card(), id)
         
         expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
-
+    
     // MARK: - Helpers
     
     private typealias SUT = ProductProfileNavigationEffectHandler
@@ -54,6 +55,8 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    
+    private typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
     
     private typealias OpenPanelSpy = () -> Void
     
@@ -81,8 +84,21 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let cardReduce = CardReducer()
+        
+        let makeCardViewModel: MakeCardViewModel =  {
+            
+            .init(
+                initialState: .status(nil),
+                reduce: cardReduce.reduce(_:_:),
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
+        }
+        
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
+            makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
@@ -91,6 +107,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(cardGuardianReduce, file: file, line: line)
+        trackForMemoryLeaks(cardReduce, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
