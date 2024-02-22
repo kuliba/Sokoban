@@ -902,6 +902,7 @@ private extension Target {
         name: .operatorsListComponents,
         dependencies: [
             // external packages
+            .utilityPaymentsRx,
             .genericRemoteService,
             .services
         ]
@@ -1375,6 +1376,7 @@ private extension Target {
             .buttonComponent,
             .paymentComponents,
             .productSelectComponent,
+            .utilityPaymentsRx
         ]
     )
     

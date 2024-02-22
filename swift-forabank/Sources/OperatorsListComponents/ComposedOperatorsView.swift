@@ -167,30 +167,27 @@ extension ComposedOperatorsView {
     }
 }
 
-public struct Operator: Identifiable {
+public struct Operator: Equatable, Identifiable {
     
     public var id: String
     let title: String
     let subtitle: String?
     let image: Image
-    let action: (Operator.ID) -> Void
     
     public init(
         id: String,
         title: String,
         subtitle: String?,
-        image: Image,
-        action: @escaping (Operator.ID) -> Void
+        image: Image
     ) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
         self.image = image
-        self.action = action
     }
 }
 
-public struct LatestPayment: Identifiable {
+public struct LatestPayment: Equatable, Identifiable {
     
     public var id: String { title }
     let image: Image

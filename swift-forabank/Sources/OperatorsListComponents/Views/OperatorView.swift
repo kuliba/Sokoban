@@ -22,7 +22,7 @@ public struct OperatorView: View {
     
     public var body: some View {
         
-        Button(action: { `operator`.action(`operator`.id) }) {
+        Button(action: {  }) {
             
             HStack(spacing: 20) {
                  
@@ -84,8 +84,7 @@ struct OperatorView_Previews: PreviewProvider {
                 id: "id",
                 title: "ЖКУ Москвы (ЕИРЦ)",
                 subtitle: "ИНН 7702070139",
-                image: .init(systemName: ""),
-                action: { _ in }
+                image: .init(systemName: "")
             ),
             config: .init(
                 titleFont: .title3,
