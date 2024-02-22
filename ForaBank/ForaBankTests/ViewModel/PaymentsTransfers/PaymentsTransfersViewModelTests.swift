@@ -305,7 +305,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
-            fastPaymentsFactory: .legacy,
+            fastPaymentsFactory: .legacy, 
+            makeUtilitiesViewModel: { _,_ in },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -313,6 +314,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete }
         )
