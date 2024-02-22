@@ -379,8 +379,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             // на экране платежей нижний переход
                             self.openScanner()
-                    
-                        case .internet, .service:
                             
                         case .service, .internet:
                             paymentsTransfersFactory.makeUtilitiesViewModel(
