@@ -59,9 +59,9 @@ let package = Package(
         // UI Components
         .paymentComponents,
         .carouselComponent,
-        .operatorsListComponents,
         // Utilities
         .services,
+        .operatorsListComponents,
         // tools
         .foraTools,
         // WIP: Explorations
