@@ -209,14 +209,20 @@ extension ProductView {
             
             switch product {
             case let loanProduct as ProductLoanData:
-                return Self.balanceFormatted(amount: loanProduct.amount,
-                                             debt: loanProduct.totalAmountDebtValue,
-                                             currency: loanProduct.currency,
-                                             style: style, model: model)
+                return Self.balanceFormatted(
+                    amount: loanProduct.amount,
+                    debt: loanProduct.totalAmountDebtValue,
+                    currency: loanProduct.currency,
+                    style: style, 
+                    model: model
+                )
             default:
-                return Self.balanceFormatted(balance: product.balanceValue,
-                                             currency: product.currency,
-                                             style: style, model: model)
+                return Self.balanceFormatted(
+                    balance: product.balanceValue,
+                    currency: product.currency,
+                    style: style,
+                    model: model
+                )
             }
         }
         

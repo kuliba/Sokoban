@@ -139,12 +139,12 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentsEffectHandler
+    private typealias SUT = UtilityPaymentsEffectHandler<TestLastPayment, TestOperator>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias LoadLastPaymentsSpy = Spy<Void, LoadLastPaymentsResult>
-    private typealias LoadOperatorsSpy = Spy<SUT.LoadOperatorsPayload?, LoadOperatorsResult>
+    private typealias LoadLastPaymentsSpy = Spy<Void, SUT.LoadLastPaymentsResult>
+    private typealias LoadOperatorsSpy = Spy<SUT.LoadOperatorsPayload?, SUT.LoadOperatorsResult>
     
     private func makeSUT(
         debounce: DispatchTimeInterval = .milliseconds(500),
@@ -199,7 +199,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     }
     
     private func anyPayload(
-        operatorID: Operator.ID = .init(UUID().uuidString),
+        operatorID: TestOperator.ID = UUID().uuidString,
         pageSize: Int = 789
     ) -> SUT.LoadOperatorsPayload {
         
