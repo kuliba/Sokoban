@@ -18,14 +18,21 @@ extension HTTPClientStub {
     
     static func utilityPayments(
         _ stub: UtilityPaymentsEndpointStub = .default,
-        delay: TimeInterval = 1
+        delay: DispatchTimeInterval = .seconds(1)
     ) -> HTTPClientStub {
         
         let stub = stub.httpClientStub
             .mapValues { $0.map { $0.response(statusCode: 200) }}
-            .mapValues(HTTPClientStub.Response.multiple)
-        
-        return .init(stub: stub, delay: delay)
+            .mapValues(HTTPClientStub.DelayedResponse.Response.multiple)
+            .mapValues {
+                
+                HTTPClientStub.DelayedResponse(
+                    response: $0,
+                    delay: delay
+                )
+            }
+
+        return .init(stub: stub)
     }
 }
 
