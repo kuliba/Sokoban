@@ -1,5 +1,5 @@
 //
-//  CvvCardBlocked.swift
+//  CvvCardBlockedView.swift
 //  CardGuardianPreview
 //
 //  Created by Andryusina Nataly on 15.02.2024.
