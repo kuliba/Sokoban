@@ -13,7 +13,7 @@ import UIPrimitives
 struct CvvButtonView: View {
     
     let state: AlertModelOf<ProductProfileNavigation.Event>?
-    let event: (CvvButtonEvent) -> Void
+    let event: (ProductProfileNavigation.Event) -> Void
         
     var body: some View {
         
@@ -42,11 +42,12 @@ struct CvvButtonView: View {
 
 enum CvvButtonEvent {
     
-    case open(ProductProfileNavigation.CardGuardianRoute)
-    case productProfile(ProductProfileEvent)
+    case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
+    case closeAlert
 }
 
-
 #Preview {
-    CvvButtonView.cardUnblokedOnMain
+    CvvButtonView.init(
+        state: nil,
+        event: {_ in })
 }

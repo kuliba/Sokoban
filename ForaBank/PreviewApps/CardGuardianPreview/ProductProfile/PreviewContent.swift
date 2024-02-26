@@ -9,6 +9,7 @@ import Foundation
 import CardGuardianModule
 import ProductProfile
 import RxViewModel
+import ActivateSlider
 
 extension ProductProfileViewModel {
     
@@ -25,6 +26,9 @@ extension ProductProfileViewModel {
         
         typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
         
+        typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
+
+        
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
                 .init(
@@ -33,6 +37,18 @@ extension ProductProfileViewModel {
                     handleEffect: { _,_ in },
                     scheduler: $0
                 )
+        }
+
+        let cardReduce = CardReducer().reduce(_:_:)
+
+        let makeCardViewModel: MakeCardViewModel =  {
+            
+            .init(
+                initialState: .status(nil),
+                reduce: cardReduce,
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
         }
 
         let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
@@ -52,7 +68,7 @@ extension ProductProfileViewModel {
         }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
-            makeCardGuardianViewModel: makeCardGuardianViewModel,
+            makeCardGuardianViewModel: makeCardGuardianViewModel, makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
@@ -61,42 +77,7 @@ extension ProductProfileViewModel {
         )
             .handleEffect(_:_:)
         
-        let navigationStateManager: ProductProfileNavigationStateManager = .init(
-            reduce: productProfileNavigationReduce,
-            handleEffect: handleEffect)
         
-        return .init(
-            initialState: initialState,
-            navigationStateManager: navigationStateManager,
-            scheduler: scheduler)
+        return .init(initialState: .init(), reduce: productProfileNavigationReduce, handleEffect: handleEffect)
     }
-}
-
-extension ControlButtonView {
-    
-    static let cardUnblokedOnMain: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
-    
-    static let cardBlockedHideOnMain : Self = .init(
-        viewModel: .preview(buttons: .previewBlockHide)
-    )
-    
-    static let cardBlockedUnlockNotAvailable : Self = .init(
-        viewModel: .preview(buttons: .previewBlockUnlockNotAvailable)
-    )
-}
-
-extension CvvButtonView {
-    
-    static let cardUnblokedOnMain: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
-}
-
-extension CvvCardBlocked {
-    
-    static let card: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
 }

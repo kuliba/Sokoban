@@ -32,24 +32,15 @@ struct ContentView: View {
                 
                 CvvButtonView(
                     state: viewModel.state.alert,
-                    event: {
-                        
-                        switch $0 {
-                        case let .open(open):
-                            viewModel.event(.open(open))
-                            
-                        case let .productProfile(productProfile):
-                            viewModel.event(.productProfile(productProfile))
-
-                        }
-                    }
+                    event: viewModel.event
                 )
-                    .offset(x: 40, y: 30)
+                .offset(x: 40, y: 30)
                 
                 CvvCardBlocked(
-                    
+                    state: viewModel.state.alert,
+                    event: viewModel.event
                 )
-                    .offset(x: -40, y: 30)
+                .offset(x: -40, y: 30)
             }
         }
     }
@@ -62,21 +53,30 @@ struct ContentView: View {
                 Text("Aктивна, на главном")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardUnblokedOnMain
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
             
             HStack {
                 Text("Заблокирована (можно разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardBlockedHideOnMain
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
             
             HStack {
                 Text("Заблокирована (нельзя разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardBlockedUnlockNotAvailable
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
         }
         .padding()
