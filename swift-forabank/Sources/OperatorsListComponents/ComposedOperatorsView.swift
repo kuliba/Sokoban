@@ -61,19 +61,22 @@ public struct ComposedOperatorsView<
                     VStack(alignment: .leading, spacing: 8) {
                         
                         ForEach(operators, content: operatorView)
+                 
+                        if let lastOperator = state.operators?.last {
+                            
+                            Color.clear.frame(width: 40, height: 40, alignment: .center)
+                                .onAppear(perform: {
+                                    
+                                    event(.utility(.didScrollTo(.init(lastOperator.id))))
+                                })
+                        }
                     }
                 }
                 
-                if let lastOperator = state.operators.last {
-                    
-                    Color.red.frame(width: 40, height: 40, alignment: .center)
-                        .onAppear(perform: {
-                            print(lastOperator)
-                            event(.utility(.didScrollTo(.init(lastOperator.id))))
-                        })
-                }
-                
                 footerView()
+                    .onAppear {
+                        event(.utility(.initiate))
+                    }
             }
         }
         .padding(.horizontal, 16)
