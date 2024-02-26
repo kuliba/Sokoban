@@ -23,78 +23,67 @@ extension Array where Element == Operator {
             id: "1",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "2",
             title: "МОСОБЛГАЗ",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "3",
             title: "ПИК-Комфорт",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "4",
             title: "ЖКУ Краснодара",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "5",
             title: "ГАЗПРОМ МЕЖРЕГИОН ГАЗ ЯРОСЛАВЛЬ",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "6",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "7",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "8",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "9",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "10",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         ),
         .init(
             id: "11",
             title: "ЖКУ Москвы (ЕИРЦ)",
             subtitle: "ИНН 7702070139",
-            image: .init(systemName: "photo.artframe"),
-            action: { _ in }
+            image: .init(systemName: "photo.artframe")
         )
     ]
 }
