@@ -425,7 +425,9 @@ private extension Model {
         guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
               let operatorValue = Payments.operatorByPaymentsType(type)
         else { return nil }
-        
+        #warning("suboptimal sort + missing sort condition")
+        // TODO: fix sorting: remove excessive iterations
+        // TODO: fix sorting according to https://shorturl.at/ehxIQ
         return  dictionaryAnywayOperators
             .filter { $0.parentCode == operatorValue.rawValue }
             .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
