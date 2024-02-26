@@ -13,34 +13,32 @@ import ActivateSlider
 
 extension ProductProfileViewModel {
     
+    typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    
+    typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
+    
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
-                
+        
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
-
+        
         let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
-
-        
-        typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-        
-        typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
-
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
-                .init(
-                    initialState: .init(buttons: buttons),
-                    reduce: cardGuardianReduce,
-                    handleEffect: { _,_ in },
-                    scheduler: $0
-                )
+            .init(
+                initialState: .init(buttons: buttons),
+                reduce: cardGuardianReduce,
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
         }
-
+        
         let cardReduce = CardReducer().reduce(_:_:)
-
+        
         let makeCardViewModel: MakeCardViewModel =  {
             
             .init(
@@ -50,7 +48,7 @@ extension ProductProfileViewModel {
                 scheduler: $0
             )
         }
-
+        
         let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
             print("block/unblock card \($0.status)")
         }
@@ -58,26 +56,28 @@ extension ProductProfileViewModel {
         let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
             print("show/hide product \($0.productID)")
         }
-
+        
         let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
             print("change pin \($0)")
         }
-
+        
         let showContacts: ProductProfileNavigationEffectHandler.EmptyAction = {
             print("show contacts")
         }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
-            makeCardGuardianViewModel: makeCardGuardianViewModel, makeCardViewModel: makeCardViewModel,
+            makeCardGuardianViewModel: makeCardGuardianViewModel,
+            makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
             scheduler: scheduler
-        )
-            .handleEffect(_:_:)
+        ).handleEffect(_:_:)
         
-        
-        return .init(initialState: .init(), reduce: productProfileNavigationReduce, handleEffect: handleEffect)
+        return .init(
+            initialState: .init(),
+            reduce: productProfileNavigationReduce,
+            handleEffect: handleEffect)
     }
 }
