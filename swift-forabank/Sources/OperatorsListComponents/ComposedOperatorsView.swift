@@ -60,21 +60,12 @@ public struct ComposedOperatorsView<
                     
                     VStack(alignment: .leading, spacing: 8) {
                         
-                        ForEach(operators, content: operatorView)
-                 
-                        if let lastOperator = state.operators?.last {
-                            
-                            Color.clear.frame(width: 40, height: 40, alignment: .center)
-                                .onAppear(perform: {
-                                    
-                                    event(.utility(.didScrollTo(.init(lastOperator.id))))
-                                })
-                        }
+                        ForEach(operators, content: _operatorView)
                     }
                 }
                 
                 footerView()
-                    .onAppear {
+                    .onAppear { 
                         event(.utility(.initiate))
                     }
             }
@@ -82,6 +73,31 @@ public struct ComposedOperatorsView<
         .padding(.horizontal, 16)
         .padding(.top, 8)
         .padding(.bottom, 20)
+    }
+    
+    private func _operatorView(
+        operator: Operator
+    ) -> some View {
+        
+        operatorView(`operator`)
+            .onAppear { 
+                
+                self.listItemAppears(`operator`)
+            }
+    }
+}
+
+extension ComposedOperatorsView {
+    
+    private func listItemAppears<Item: Identifiable>(_ item: Item) {
+        
+        if state.operators?.last?.id.description == "\(item.id)" {
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                
+                event(.utility(.didScrollTo("\(item.id)")))
+            }
+        }
     }
 }
 

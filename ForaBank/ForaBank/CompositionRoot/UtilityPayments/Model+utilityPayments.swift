@@ -51,11 +51,10 @@ private extension OperatorsListComponents.Operator {
     init(_ operatorGroup: OperatorGroup) {
         
         self.init(
-            id: <#T##String#>,
-            title: <#T##String#>,
-            subtitle: <#T##String?#>,
-            image: <#T##Image#>,
-            action: <#T##(ID) -> Void#>
+            id: operatorGroup.title,
+            title: operatorGroup.title,
+            subtitle: operatorGroup.description,
+            image: nil
         )
     }
 }
