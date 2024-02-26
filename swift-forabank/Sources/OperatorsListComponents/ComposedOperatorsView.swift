@@ -45,17 +45,23 @@ public struct ComposedOperatorsView<
             
             VStack(spacing: 32) {
                 
-                ScrollView(.horizontal) {
+                if let latestPayments = state.latestPayments {
                     
-                    HStack {
+                    ScrollView(.horizontal) {
                         
-                        ForEach(state.latestPayments, content:  lastPaymentView)
+                        HStack {
+                            
+                            ForEach(latestPayments, content:  lastPaymentView)
+                        }
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
+                if let operators = state.operators {
                     
-                    ForEach(state.operators, content: operatorView)
+                    VStack(alignment: .leading, spacing: 8) {
+                        
+                        ForEach(operators, content: operatorView)
+                    }
                 }
                 
                 if let lastOperator = state.operators.last {
