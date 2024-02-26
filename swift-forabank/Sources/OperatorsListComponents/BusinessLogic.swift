@@ -7,9 +7,6 @@
 
 import Foundation
 
-import Combine
-import GenericRemoteService
-
 final public class BusinessLogic {
     
     let latestPayments: () -> [LatestPayment]
@@ -27,12 +24,16 @@ final public class BusinessLogic {
 public extension BusinessLogic {
 
     func process(
-        event: Event,
+        event: ComposedOperatorsEvent,
         completion: @escaping () -> Void
     ) {
         
         switch event {
-        case .optionSelect(let operatorViewModel):
+        case let .selectLastOperation(id):
+            break
+        case let .selectOperator(id):
+            break
+        case let .utility(utility):
             break
         }
     }

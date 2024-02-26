@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LatestPayment {
+public struct LatestPaymentData {
     
     let amount: String
     let additionalList: [AdditionalItem]

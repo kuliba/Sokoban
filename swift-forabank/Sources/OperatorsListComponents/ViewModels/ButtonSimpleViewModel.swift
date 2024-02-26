@@ -16,13 +16,7 @@ public final class ButtonSimpleViewModel: ObservableObject, Identifiable {
 
     let buttonConfiguration: ButtonConfiguration
     
-    struct ButtonConfiguration {
-    
-        let titleFont: Font
-        let titleForeground: Color
-    }
-    
-    internal init(
+    public init(
         title: String,
         buttonConfiguration: ButtonConfiguration,
         action: @escaping () -> Void
@@ -31,5 +25,22 @@ public final class ButtonSimpleViewModel: ObservableObject, Identifiable {
         self.title = title
         self.action = action
         self.buttonConfiguration = buttonConfiguration
+    }
+    
+    public struct ButtonConfiguration {
+    
+        let titleFont: Font
+        let titleForeground: Color
+        let backgroundColor: Color
+        
+        public init(
+            titleFont: Font,
+            titleForeground: Color,
+            backgroundColor: Color
+        ) {
+            self.titleFont = titleFont
+            self.titleForeground = titleForeground
+            self.backgroundColor = backgroundColor
+        }
     }
 }
