@@ -26,9 +26,18 @@ public struct OperatorView: View {
             
             HStack(spacing: 20) {
                  
-                `operator`.image
-                    .resizable()
-                    .frame(width: 40, height: 40)
+                if let image = `operator`.image {
+                    
+                    image
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                } else {
+                    
+                    defaultIcon(
+                        backgroundColor: config.defaultIconBackgroundColor,
+                        icon: config.defaultIcon
+                    )
+                }
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
@@ -52,26 +61,53 @@ public struct OperatorView: View {
             .padding(.vertical, 8)
         }
     }
+    
+    func defaultIcon(
+        backgroundColor: Color,
+        icon: Image
+    ) -> some View {
+        
+        ZStack {
+            
+            Circle()
+                .frame(width: 40, height: 40)
+                .background(backgroundColor)
+            
+            icon
+                .frame(width: 24, height: 24)
+                .foregroundColor(.white)
+        }
+    }
 }
 
-public struct OperatorViewConfig {
+public extension OperatorView {
     
-    let titleFont: Font
-    let titleColor: Color
-    
-    let descriptionFont: Font
-    let descriptionColor: Color
-    
-    public init(
-        titleFont: Font,
-        titleColor: Color,
-        descriptionFont: Font,
-        descriptionColor: Color
-    ) {
-        self.titleFont = titleFont
-        self.titleColor = titleColor
-        self.descriptionFont = descriptionFont
-        self.descriptionColor = descriptionColor
+    struct OperatorViewConfig {
+        
+        let titleFont: Font
+        let titleColor: Color
+        
+        let descriptionFont: Font
+        let descriptionColor: Color
+        
+        let defaultIconBackgroundColor: Color
+        let defaultIcon: Image
+        
+        public init(
+            titleFont: Font,
+            titleColor: Color,
+            descriptionFont: Font,
+            descriptionColor: Color,
+            defaultIconBackgroundColor: Color,
+            defaultIcon: Image
+        ) {
+            self.titleFont = titleFont
+            self.titleColor = titleColor
+            self.descriptionFont = descriptionFont
+            self.descriptionColor = descriptionColor
+            self.defaultIconBackgroundColor = defaultIconBackgroundColor
+            self.defaultIcon = defaultIcon
+        }
     }
 }
 
@@ -90,7 +126,9 @@ struct OperatorView_Previews: PreviewProvider {
                 titleFont: .title3,
                 titleColor: .black,
                 descriptionFont: .body,
-                descriptionColor: .gray
+                descriptionColor: .gray,
+                defaultIconBackgroundColor: .black,
+                defaultIcon: .init(systemName: "")
             )
         )
     }

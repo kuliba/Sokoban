@@ -172,13 +172,13 @@ public struct Operator: Equatable, Identifiable {
     public var id: String
     let title: String
     let subtitle: String?
-    let image: Image
+    let image: Image?
     
     public init(
         id: String,
         title: String,
         subtitle: String?,
-        image: Image
+        image: Image?
     ) {
         self.id = id
         self.title = title

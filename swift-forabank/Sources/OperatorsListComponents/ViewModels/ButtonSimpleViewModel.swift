@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public final class ButtonSimpleViewModel {
+public final class ButtonSimpleViewModel: Identifiable {
     
     public let id = UUID()
     let title: String
