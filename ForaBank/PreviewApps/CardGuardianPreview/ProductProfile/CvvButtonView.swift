@@ -13,7 +13,7 @@ import UIPrimitives
 struct CvvButtonView: View {
     
     let state: AlertModelOf<ProductProfileNavigation.Event>?
-    let event: (ProductProfileNavigation.Event) -> Void
+    let event: (CvvButtonEvent) -> Void
         
     var body: some View {
         
@@ -31,7 +31,7 @@ struct CvvButtonView: View {
         }
         .alert(
             item: .init(
-                get: { state },
+                get: { state?.cvvAlert() },
                 // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                 set: { _ in }
             ),
@@ -46,8 +46,25 @@ enum CvvButtonEvent {
     case closeAlert
 }
 
+extension AlertModelOf<ProductProfileNavigation.Event> {
+    
+    func cvvAlert() -> AlertModelOf<CvvButtonEvent>? {
+                
+        return .init(
+            id: self.id,
+            title: self.title,
+            message: self.message,
+            primaryButton: .init(
+                type: .cancel,
+                title: self.primaryButton.title,
+                event: .closeAlert
+            )
+        )
+    }
+}
+
 #Preview {
     CvvButtonView.init(
         state: nil,
         event: {_ in })
-}
+} 

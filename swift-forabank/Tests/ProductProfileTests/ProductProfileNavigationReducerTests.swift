@@ -68,7 +68,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     func test_showAlert_shouldNotDeliverEffect() {
         
         assert(
-            .showAlert(Alerts.alertBlockCard(.newCard(status: .active))),
+            .showAlert(AlertModelOf.alertBlockCard(.newCard(status: .active))),
             on: productProfileState(),
             effect: nil)
     }

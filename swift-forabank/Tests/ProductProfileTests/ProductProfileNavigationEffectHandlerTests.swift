@@ -23,7 +23,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let sut = makeSUT()
         
         let id = UUID()
-        let alert = Alerts.alertCVV(id)
+        let alert = AlertModelOf.alertCVV(id)
         
         expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
@@ -33,7 +33,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let sut = makeSUT()
         
         let id = UUID()
-        let alert = Alerts.alertCardBlocked(id)
+        let alert = AlertModelOf.alertCardBlocked(id)
         
         expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }
@@ -43,7 +43,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let sut = makeSUT()
         
         let id = UUID()
-        let alert = Alerts.alertBlockCard(.card(), id)
+        let alert = AlertModelOf.alertBlockCard(.card(), id)
         
         expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
     }

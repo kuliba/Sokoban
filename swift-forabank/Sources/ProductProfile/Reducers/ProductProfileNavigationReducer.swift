@@ -82,7 +82,7 @@ private extension ProductProfileNavigationReducer {
                 
             case let .toggleLock(card):
                 state.modal = nil
-                effect = .delayAlert(Alerts.alertBlockCard(card), alertLifespan)
+                effect = .delayAlert(AlertModelOf.alertBlockCard(card), alertLifespan)
             case let .changePin(card):
                 state.modal = nil
                 effect = .productProfile(.changePin(card))

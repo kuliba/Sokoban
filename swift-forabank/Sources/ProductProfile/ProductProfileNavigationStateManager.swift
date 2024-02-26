@@ -1,19 +1,14 @@
 //
-//  ProductProfileViewModel.swift
-//  
+//  ProductProfileNavigationStateManager.swift
+//
 //
 //  Created by Andryusina Nataly on 06.02.2024.
 //
 
 import Foundation
-import Combine
-import CombineSchedulers
-import UIPrimitives
-import CardGuardianModule
-import RxViewModel
 
-
-public final class ProductProfileViewModel: ObservableObject {
+// TODO: убрать после интегрирования в приложение!!
+     /*public final class ProductProfileViewModel: ObservableObject {
     
     @Published public private(set) var state: ProductProfileNavigation.State
     
@@ -38,6 +33,24 @@ public final class ProductProfileViewModel: ObservableObject {
     }
 }
 
+extension ProductProfileViewModel {
+    
+    public func event(
+        _ event: ProductProfileNavigation.Event
+    ) {
+        
+        let (state, effect) = navigationStateManager.reduce(state, event)
+        stateSubject.send(state)
+        
+        if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in
+                    self?.event($0)
+            }
+        }
+    }
+}
+*/
 public struct ProductProfileNavigationStateManager {
     
     let reduce: Reduce
@@ -62,66 +75,4 @@ public extension ProductProfileNavigationStateManager {
     
     typealias Reduce = (State, Event) -> (State, Effect?)
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
-}
-
-// MARK: - CardGuardian
-
-public extension ProductProfileViewModel {
-    
-    func openCardGuardian(){
-        
-        self.event(.create)
-    }
-}
-
-// MARK: - CVV
-
-public extension ProductProfileViewModel {
-    
-    func showCvvAlert(){
-        
-        self.event(.showAlert(Alerts.alertCVV()))
-    }
-    
-    func showAlertIfCardBlocked(){
-        
-        self.event(.showAlert(Alerts.alertCardBlocked()))
-    }
-}
-
-// MARK: - Activate card
-
-public extension ProductProfileViewModel {
-
-    func showAlertIfCardNotActivate(
-        _ card: Card
-    ){
-        
-        self.event(.showAlert(Alerts.alertCardNotActivate(card: card)))
-    }
-}
-
-// MARK: - Types
-
-public extension ProductProfileNavigationStateManager {
-    
-    typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
-}
-
-extension ProductProfileViewModel {
-    
-    public func event(
-        _ event: ProductProfileNavigation.Event
-    ) {
-        
-        let (state, effect) = navigationStateManager.reduce(state, event)
-        stateSubject.send(state)
-        
-        if let effect {
-            
-            navigationStateManager.handleEffect(effect) { [weak self] in
-                    self?.event($0)
-            }
-        }
-    }
 }
