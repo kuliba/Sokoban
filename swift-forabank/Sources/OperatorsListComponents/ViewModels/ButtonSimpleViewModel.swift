@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-public final class ButtonSimpleViewModel: ObservableObject, Identifiable {
+public final class ButtonSimpleViewModel {
     
     public let id = UUID()
-    @Published var title: String
+    let title: String
     let action: () -> Void
 
     let buttonConfiguration: ButtonConfiguration
