@@ -19,7 +19,7 @@ final class StubbedOperatorLoader {
     _ completion: @escaping LoadCompletion
     ) {
         
-        if let payload {
+        if payload != nil {
          
             completion(.success(.next1()))
             
