@@ -21,16 +21,13 @@ public struct ComposedOperatorsView<
     let footerView: () -> FooterView
     let searchView: () -> SearchView
     
-    let configuration: Configuration
-    
     public init(
         state: ComposedOperatorsState,
         event: @escaping (ComposedOperatorsEvent) -> Void,
         lastPaymentView: @escaping (LatestPayment) -> LastPaymentView,
         operatorView: @escaping (Operator) -> OperatorView,
         footerView: @escaping () -> FooterView,
-        searchView: @escaping () -> SearchView,
-        configuration: ComposedOperatorsView.Configuration
+        searchView: @escaping () -> SearchView
     ) {
         self.state = state
         self.event = event
@@ -38,12 +35,11 @@ public struct ComposedOperatorsView<
         self.operatorView = operatorView
         self.footerView = footerView
         self.searchView = searchView
-        self.configuration = configuration
     }
     
     public var body: some View {
         
-        ScrollView(showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: false) {
             
             searchView()
             
@@ -51,14 +47,24 @@ public struct ComposedOperatorsView<
                 
                 ScrollView(.horizontal) {
                     
-                    ForEach(state.latestPayments, content:  lastPaymentView)
-                    
-                    Spacer()
+                    HStack {
+                        
+                        ForEach(state.latestPayments, content:  lastPaymentView)
+                    }
                 }
                 
-                VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
                     
                     ForEach(state.operators, content: operatorView)
+                }
+                
+                if let lastOperator = state.operators.last {
+                    
+                    Color.red.frame(width: 40, height: 40, alignment: .center)
+                        .onAppear(perform: {
+                            print(lastOperator)
+                            event(.utility(.didScrollTo(.init(lastOperator.id))))
+                        })
                 }
                 
                 footerView()
@@ -109,7 +115,7 @@ extension ComposedOperatorsView {
         .contentShape(Rectangle())
     }
     
-    private func operatorView(
+    public func operatorView(
         _ operator: Operator
     ) -> some View {
         
@@ -161,7 +167,7 @@ extension ComposedOperatorsView {
     }
 }
 
-public struct Operator: Identifiable {
+public struct Operator: Equatable, Identifiable {
     
     public var id: String
     let title: String
@@ -181,7 +187,7 @@ public struct Operator: Identifiable {
     }
 }
 
-public struct LatestPayment: Identifiable {
+public struct LatestPayment: Equatable, Identifiable {
     
     public var id: String { title }
     let image: Image
@@ -209,17 +215,7 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
             lastPaymentView: { _ in  EmptyView() },
             operatorView: { _ in  EmptyView() },
             footerView: { EmptyView() },
-            searchView: { EmptyView() },
-            configuration: .init(
-                noCompanyListConfiguration: .init(
-                    titleFont: .body,
-                    titleColor: .black,
-                    descriptionFont: .callout,
-                    descriptionColor: .black,
-                    subtitleFont: .body,
-                    subtitleColor: .black
-                )
-            )
+            searchView: { EmptyView() }
         )
     }
 }

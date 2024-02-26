@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import UtilityPaymentsRx
 
 public enum ComposedOperatorsEvent {
 
     case selectLastOperation(LatestPayment.ID)
     case selectOperator(Operator.ID)
-    case didScroll(Operator)
+    
+    case utility(UtilityPaymentsEvent<LatestPayment, Operator>)
 }
