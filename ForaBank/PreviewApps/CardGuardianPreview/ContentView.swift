@@ -8,8 +8,13 @@
 import SwiftUI
 import CardGuardianModule
 import ProductProfile
+import RxViewModel
+
+typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
     
     var body: some View {
         
@@ -25,8 +30,26 @@ struct ContentView: View {
                         .font(.system(size: 120))
                 }
                 
-                CvvButtonView.cardUnblokedOnMain.offset(x: 40, y: 30)
-                CvvCardBlocked.card.offset(x: -40, y: 30)
+                CvvButtonView(
+                    state: viewModel.state.alert,
+                    event: {
+                        
+                        switch $0 {
+                        case let .open(open):
+                            viewModel.event(.open(open))
+                            
+                        case let .productProfile(productProfile):
+                            viewModel.event(.productProfile(productProfile))
+
+                        }
+                    }
+                )
+                    .offset(x: 40, y: 30)
+                
+                CvvCardBlocked(
+                    
+                )
+                    .offset(x: -40, y: 30)
             }
         }
     }

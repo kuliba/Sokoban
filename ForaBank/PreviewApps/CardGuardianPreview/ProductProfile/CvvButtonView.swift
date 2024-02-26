@@ -7,10 +7,13 @@
 
 import SwiftUI
 import ProductProfile
+import CardGuardianModule
+import UIPrimitives
 
 struct CvvButtonView: View {
     
-    @ObservedObject var viewModel: ProductProfileViewModel
+    let state: AlertModelOf<ProductProfileNavigation.Event>?
+    let event: (CvvButtonEvent) -> Void
         
     var body: some View {
         
@@ -19,7 +22,7 @@ struct CvvButtonView: View {
     
     private func showCVV() -> some View {
         
-        Button(action: viewModel.showCvvAlert) {
+        Button(action: { self.event(.showAlert(.alertCVV())) }) {
             Text("CVV")
                 .foregroundColor(.white)
                 .padding(10)
@@ -28,14 +31,21 @@ struct CvvButtonView: View {
         }
         .alert(
             item: .init(
-                get: { viewModel.state.alert },
+                get: { state },
                 // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                 set: { _ in }
             ),
-            content: { .init(with: $0, event: viewModel.event) }
+            content: { .init(with: $0, event: event) }
         )
     }
 }
+
+enum CvvButtonEvent {
+    
+    case open(ProductProfileNavigation.CardGuardianRoute)
+    case productProfile(ProductProfileEvent)
+}
+
 
 #Preview {
     CvvButtonView.cardUnblokedOnMain

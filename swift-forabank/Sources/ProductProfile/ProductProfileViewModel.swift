@@ -38,17 +38,17 @@ public final class ProductProfileViewModel: ObservableObject {
     }
 }
 
-public extension ProductProfileViewModel {
-    
-    enum State: Equatable {
-        
-        case initial
-        case openPanel
-        case toggleLock
-        case changePin
-        case showOnMain
-    }
-}
+//public extension ProductProfileViewModel {
+//    
+//    enum State: Equatable {
+//        
+//        case initial
+//        case openPanel
+//        case toggleLock
+//        case changePin
+//        case showOnMain
+//    }
+//}
 
 public struct ProductProfileNavigationStateManager {
     
