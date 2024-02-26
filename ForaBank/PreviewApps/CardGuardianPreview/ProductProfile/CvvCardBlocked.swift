@@ -12,7 +12,7 @@ import UIPrimitives
 struct CvvCardBlockedView: View {
     
     let state: AlertModelOf<ProductProfileNavigation.Event>?
-    let event: (ProductProfileNavigation.Event) -> Void
+    let event: (CvvButtonEvent) -> Void
 
     var body: some View {
         
@@ -30,7 +30,7 @@ struct CvvCardBlockedView: View {
         }
         .alert(
             item: .init(
-                get: { state },
+                get: { state?.cvvAlert() },
                 // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                 set: { _ in }
             ),

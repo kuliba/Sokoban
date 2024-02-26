@@ -47,7 +47,16 @@ struct ContentView: View {
                 
                 CvvCardBlockedView(
                     state: viewModel.state.alert,
-                    event: viewModel.event
+                    event: {
+                        
+                        switch $0 {
+                        case let .showAlert(alert):
+                            viewModel.event(.showAlert(.alertCardBlocked()))
+                            
+                        case .closeAlert:
+                            viewModel.event(.closeAlert)
+                        }
+                    }
                 )
                 .offset(x: -40, y: 30)
             }

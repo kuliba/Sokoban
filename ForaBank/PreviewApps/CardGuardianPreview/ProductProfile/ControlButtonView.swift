@@ -10,9 +10,7 @@ import CardGuardianModule
 import ProductProfile
 
 struct ControlButtonView: View {
-    
-  //  @ObservedObject var viewModel: ProductProfileViewModel
-     
+         
     let state: ProductProfileNavigation.State
     let event: (ProductProfileNavigation.Event) -> Void
 
