@@ -10,11 +10,11 @@ import OperatorsListComponents
 
 extension Array where Element == Operator {
     
-    static func initial(count: Int = 10) -> Self {
+    static func initial(count: Int = 20) -> Self {
         .init(Self.preview.prefix(count))
     }
     
-    static func next1(count: Int = 10) -> Self {
+    static func next1(count: Int = 20) -> Self {
         .init(Self.preview.dropFirst(count).prefix(count))
     }
     
@@ -81,7 +81,115 @@ extension Array where Element == Operator {
         ),
         .init(
             id: "11",
-            title: "ЖКУ Москвы (ЕИРЦ)",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "12",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "13",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "14",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "15",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "16",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "17",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "18",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "19",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "20",
+            title: "ПИК-Комфорт",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "21",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "22",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "23",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "24",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "25",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "26",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "27",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "21",
+            title: "МОСОБЛГАЗ",
+            subtitle: "ИНН 7702070139",
+            image: .init(systemName: "photo.artframe")
+        ),
+        .init(
+            id: "28",
+            title: "МОСОБЛГАЗ",
             subtitle: "ИНН 7702070139",
             image: .init(systemName: "photo.artframe")
         )
