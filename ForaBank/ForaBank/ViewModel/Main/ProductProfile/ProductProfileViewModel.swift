@@ -202,7 +202,6 @@ extension ProductProfileViewModel {
                         cardId: cardId,
                         phone: displayNumber)
                 ))
-                self?.event(.productProfile(.changePin(cardId)))
             }
             
         case .showCvv:
