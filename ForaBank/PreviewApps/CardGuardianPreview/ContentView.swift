@@ -36,7 +36,7 @@ struct ContentView: View {
                 )
                 .offset(x: 40, y: 30)
                 
-                CvvCardBlocked(
+                CvvCardBlockedView(
                     state: viewModel.state.alert,
                     event: viewModel.event
                 )

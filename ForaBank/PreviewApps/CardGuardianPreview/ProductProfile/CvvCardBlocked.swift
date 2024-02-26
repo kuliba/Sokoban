@@ -9,7 +9,7 @@ import SwiftUI
 import ProductProfile
 import UIPrimitives
 
-struct CvvCardBlocked: View {
+struct CvvCardBlockedView: View {
     
     let state: AlertModelOf<ProductProfileNavigation.Event>?
     let event: (ProductProfileNavigation.Event) -> Void
@@ -40,7 +40,7 @@ struct CvvCardBlocked: View {
 }
 
 #Preview {
-    CvvCardBlocked.init(
+    CvvCardBlockedView.init(
         state: .none,
         event: { _ in }
     )
