@@ -10,23 +10,23 @@ import RxViewModel
 import UtilityPaymentsRx
 import OperatorsListComponents
 
-typealias UtilityPaymentsViewModel = RxViewModel<UtilityPaymentsState, UtilityPaymentsEvent, UtilityPaymentsEffect>
+typealias UtilityPaymentsViewModel = RxViewModel<UtilityPaymentsState<LatestPayment, Operator>, UtilityPaymentsEvent<LatestPayment, Operator>, UtilityPaymentsEffect<Operator>>
 
 extension UtilityPaymentsViewModel {
 
     static func preview(
-        initialState: UtilityPaymentsState,
+        initialState: UtilityPaymentsState<LatestPayment, Operator>,
         observeLast: Int = 3,
         pageSize: Int = 10
     ) -> UtilityPaymentsViewModel {
  
-        let reducer = UtilityPaymentsReducer(
+        let reducer = UtilityPaymentsReducer<LatestPayment, Operator>(
             observeLast: observeLast,
             pageSize: pageSize
         )
 
         let operatorsLoader = StubbedOperatorLoader()
-        let effectHandler = UtilityPaymentsEffectHandler(
+        let effectHandler = UtilityPaymentsEffectHandler<LatestPayment, Operator>(
             loadLastPayments: { $0(.success(.preview)) },
             loadOperators: operatorsLoader.load,
             scheduler: .immediate
@@ -42,34 +42,26 @@ extension UtilityPaymentsViewModel {
 
 extension StubbedOperatorLoader {
     
-    typealias UPRxPayload = UtilityPaymentsEffectHandler.LoadOperatorsPayload
-    typealias UPRxCompletion = UtilityPaymentsEffectHandler.LoadOperatorsCompletion
+    typealias UPRxPayload = UtilityPaymentsEffectHandler<LatestPayment, Operator>.LoadOperatorsPayload
+    typealias UPRxCompletion = UtilityPaymentsEffectHandler<LatestPayment, Operator>.LoadOperatorsCompletion
     
     func load(
         _ payload: UPRxPayload?,
         _ completion: @escaping UPRxCompletion
     ) {
         
-        let payload: Payload? = payload.map { ($0.0.rawValue, $0.1) }
+        let payload: Payload? = payload.map { ($0.0.description, $0.1) }
         
         load(payload) { result in
             
             switch result {
             case let .success(operators):
-                let ops = operators.map(UtilityPaymentsRx.Operator.init)
-                completion(.success(ops))
+                completion(.success(operators))
                 
             case let .failure(error):
                 completion(.failure(.init(error)))
             }
         }
-    }
-}
-
-private extension Array where Element == UtilityPaymentsRx.LastPayment {
-
-    static let preview = [LatestPayment].preview.map { latestPayment in
-            Element.init(id: .init(latestPayment.id))
     }
 }
 
@@ -84,13 +76,5 @@ private extension UtilityPaymentsRx.ServiceFailure {
         case let .serverError(string):
             self = .serverError(string)
         }
-    }
-}
-
-private extension UtilityPaymentsRx.Operator {
-    
-    init(_ operator: OperatorsListComponents.Operator) {
-        
-        self.init(id: .init(`operator`.id))
     }
 }
