@@ -77,6 +77,28 @@ extension HTTPClientStub {
     }
 }
 
+extension HTTPClientStub {
+    
+    convenience init(
+        _ stub: [Services.Endpoint.ServiceName: [Data]],
+        delay: DispatchTimeInterval = .seconds(1)
+    ) {
+        
+        let stub = stub
+            .mapValues { $0.map { $0.response(statusCode: 200) }}
+            .mapValues(HTTPClientStub.DelayedResponse.Response.multiple)
+            .mapValues {
+                
+                HTTPClientStub.DelayedResponse(
+                    response: $0,
+                    delay: delay
+                )
+            }
+        
+        self.init(stub: stub)
+    }
+}
+
 private extension URLRequest {
     
     var service: Services.Endpoint.ServiceName? {

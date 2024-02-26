@@ -21,18 +21,7 @@ extension HTTPClientStub {
         delay: DispatchTimeInterval = .seconds(1)
     ) -> HTTPClientStub {
         
-        let stub = stub.httpClientStub
-            .mapValues { $0.map { $0.response(statusCode: 200) }}
-            .mapValues(HTTPClientStub.DelayedResponse.Response.multiple)
-            .mapValues {
-                
-                HTTPClientStub.DelayedResponse(
-                    response: $0,
-                    delay: delay
-                )
-            }
-
-        return .init(stub: stub)
+        .init(stub.httpClientStub, delay: delay)
     }
 }
 
