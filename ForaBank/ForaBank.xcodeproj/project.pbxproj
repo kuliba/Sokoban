@@ -1980,6 +1980,7 @@
 		C113225C28CFC37800F90072 /* SearchBarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C113225B28CFC37800F90072 /* SearchBarViewComponent.swift */; };
 		C113225E28D2169300F90072 /* BankClientInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C113225D28D2169300F90072 /* BankClientInfo.swift */; };
 		C11389AB2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */; };
+		C1299A272B73BE7B000402BE /* OperatorsListComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1299A262B73BE7B000402BE /* OperatorsListComponent.swift */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
@@ -2422,6 +2423,15 @@
 				A51568332821B927000D4455 /* ForaPushServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1299A222B73BE7B000402BE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C1D6BB9B2AD613730006B151 /* CopyFiles */ = {
@@ -4383,6 +4393,8 @@
 		C113225B28CFC37800F90072 /* SearchBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarViewComponent.swift; sourceTree = "<group>"; };
 		C113225D28D2169300F90072 /* BankClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankClientInfo.swift; sourceTree = "<group>"; };
 		C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeViewModelTests.swift; sourceTree = "<group>"; };
+		C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOperatorsListComponent.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1299A262B73BE7B000402BE /* OperatorsListComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsListComponent.swift; sourceTree = "<group>"; };
 		C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetImageList.swift"; sourceTree = "<group>"; };
 		C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTests.swift; sourceTree = "<group>"; };
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
@@ -4864,6 +4876,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A51568292821B927000D4455 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1299A212B73BE7B000402BE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -10864,6 +10883,14 @@
 			path = PaymentsMeToMe;
 			sourceTree = "<group>";
 		};
+		C1299A252B73BE7B000402BE /* OperatorsListComponent */ = {
+			isa = PBXGroup;
+			children = (
+				C1299A262B73BE7B000402BE /* OperatorsListComponent.swift */,
+			);
+			path = OperatorsListComponent;
+			sourceTree = "<group>";
+		};
 		C130E3722A8FBDF0002F99BC /* PaymentsTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -11769,6 +11796,7 @@
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
+				C1299A252B73BE7B000402BE /* OperatorsListComponent */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
 			);
@@ -11791,6 +11819,7 @@
 				2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */,
 				2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */,
 				2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */,
+				C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */,
 				8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */,
 				2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */,
 			);
@@ -12820,6 +12849,23 @@
 			productReference = A515682C2821B927000D4455 /* ForaPushServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		C1299A232B73BE7B000402BE /* OperatorsListComponent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1299A2C2B73BE7C000402BE /* Build configuration list for PBXNativeTarget "OperatorsListComponent" */;
+			buildPhases = (
+				C1299A202B73BE7B000402BE /* Sources */,
+				C1299A212B73BE7B000402BE /* Frameworks */,
+				C1299A222B73BE7B000402BE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OperatorsListComponent;
+			productName = OperatorsListComponent;
+			productReference = C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */;
@@ -13048,6 +13094,9 @@
 					A515682B2821B927000D4455 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
+					C1299A232B73BE7B000402BE = {
+						CreatedOnToolsVersion = 15.2;
+					};
 					C1A4D37A2A67CDFC001DD9E4 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
@@ -13121,6 +13170,7 @@
 				2A95CB9F2B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */,
 				2A783A802B5A87CE0035CEAB /* OTPInputComponentPreview */,
+				C1299A232B73BE7B000402BE /* OperatorsListComponent */,
 				8357E33C2B6CF77B0065E581 /* CardGuardianPreview */,
 				2A14081C2B78C79E004219AA /* C2BSubscriptionUIPreview */,
 			);
@@ -13780,6 +13830,14 @@
 				A515682F2821B927000D4455 /* NotificationService.swift in Sources */,
 				A55E879B2824052600562060 /* URLHost.swift in Sources */,
 				A55E87882823F66100562060 /* EmptyData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1299A202B73BE7B000402BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1299A272B73BE7B000402BE /* OperatorsListComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17132,6 +17190,83 @@
 			};
 			name = Release;
 		};
+		C1299A282B73BE7B000402BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1299A292B73BE7B000402BE /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		C1299A2A2B73BE7B000402BE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C1299A2B2B73BE7B000402BE /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		C137D6782A28C72400EC337E /* Preprod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -18021,6 +18156,17 @@
 				7752FED229928A7A00795CD5 /* Mock */,
 				A51568362821B927000D4455 /* Release */,
 				C137D67C2A28C72400EC337E /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C1299A2C2B73BE7C000402BE /* Build configuration list for PBXNativeTarget "OperatorsListComponent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1299A282B73BE7B000402BE /* Debug */,
+				C1299A292B73BE7B000402BE /* Mock */,
+				C1299A2A2B73BE7B000402BE /* Release */,
+				C1299A2B2B73BE7B000402BE /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

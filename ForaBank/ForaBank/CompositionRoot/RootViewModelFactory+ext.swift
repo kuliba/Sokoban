@@ -46,7 +46,7 @@ extension RootViewModelFactory {
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
-        ? HTTPClientStub.fastPaymentsSettings(delay: 1)
+        ? HTTPClientStub.fastPaymentsSettings()
         : httpClient
         
         // TODO: Remove after `legacy` case eliminated
@@ -141,7 +141,7 @@ extension RootViewModelFactory {
                 switch flag.rawValue {
                 case .active:
                     let utilitiesHTTPClient = flag.isStub
-                    ? HTTPClientStub.utilityPayments(delay: 1)
+                    ? HTTPClientStub.utilityPayments()
                     : httpClient
                     
                     fatalError("unimplemented")
