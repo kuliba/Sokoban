@@ -8,6 +8,8 @@
 import InfoComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
+import TextFieldModel
 
 struct PaymentsTransfersView: View {
     
@@ -351,6 +353,32 @@ struct PaymentsTransfersView: View {
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
+    }
+}
+
+private extension NavigationBarView.ViewModel {
+    
+    static func with(
+        title: String,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: title,
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: Image("qr_Icon"),
+                    action: navTrailingAction
+                )
+            ]
+        )
     }
 }
 

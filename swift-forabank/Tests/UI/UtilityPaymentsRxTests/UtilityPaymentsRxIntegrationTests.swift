@@ -9,8 +9,6 @@ import RxViewModel
 import UtilityPaymentsRx
 import XCTest
 
-private typealias UtilityPaymentsViewModel = RxViewModel<UtilityPaymentsState, UtilityPaymentsEvent, UtilityPaymentsEffect>
-
 final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     // MARK: - init
@@ -231,17 +229,20 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentsViewModel
-    private typealias State = UtilityPaymentsState
-    private typealias Event = UtilityPaymentsEvent
-    private typealias Effect = UtilityPaymentsEffect
+    private typealias State = UtilityPaymentsState<TestLastPayment, TestOperator>
+    private typealias Event = UtilityPaymentsEvent<TestLastPayment, TestOperator>
+    private typealias Effect = UtilityPaymentsEffect<TestOperator>
+    
+    private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias Reducer = UtilityPaymentsReducer<TestLastPayment, TestOperator>
+    private typealias EffectHandler = UtilityPaymentsEffectHandler<TestLastPayment, TestOperator>
     
     private typealias StateSpy = ValueSpy<State>
-    private typealias LoadLastPaymentsSpy = Spy<Void, LoadLastPaymentsResult>
-    private typealias LoadOperatorsSpy = Spy<UtilityPaymentsEffectHandler.LoadOperatorsPayload?, LoadOperatorsResult>
+    private typealias LoadLastPaymentsSpy = Spy<Void, Event.LoadLastPaymentsResult>
+    private typealias LoadOperatorsSpy = Spy<EffectHandler.LoadOperatorsPayload?, Event.LoadOperatorsResult>
     
     private func makeSUT(
-        initialState: UtilityPaymentsState = .init(),
+        initialState: State = .init(),
         observeLast: Int = 10,
         pageSize: Int = 100,
         file: StaticString = #file,
@@ -252,14 +253,14 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         loadLastPaymentsSpy: LoadLastPaymentsSpy,
         loadOperatorsSpy: LoadOperatorsSpy
     ) {
-        let reducer = UtilityPaymentsReducer(
+        let reducer = Reducer(
             observeLast: observeLast,
             pageSize: pageSize
         )
         
         let loadLastPaymentsSpy = LoadLastPaymentsSpy()
         let loadOperatorsSpy = LoadOperatorsSpy()
-        let effectHandler = UtilityPaymentsEffectHandler(
+        let effectHandler = EffectHandler(
             loadLastPayments: loadLastPaymentsSpy.process(completion:),
             loadOperators: loadOperatorsSpy.process(_:completion:),
             scheduler: .immediate

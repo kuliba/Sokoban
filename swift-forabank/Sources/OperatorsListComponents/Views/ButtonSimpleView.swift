@@ -7,42 +7,11 @@
 
 import SwiftUI
 
-//MARK: - ViewModel
-
-extension ButtonSimpleView {
-    
-    class ViewModel: ObservableObject, Identifiable {
-        
-        let id = UUID()
-        @Published var title: String
-        let action: () -> Void
-
-        let buttonConfiguration: ButtonConfiguration
-        
-        struct ButtonConfiguration {
-        
-            let titleFont: Font
-            let titleForeground: Color
-        }
-        
-        internal init(
-            title: String,
-            buttonConfiguration: ButtonConfiguration,
-            action: @escaping () -> Void
-        ) {
-
-            self.title = title
-            self.action = action
-            self.buttonConfiguration = buttonConfiguration
-        }
-    }
-}
-
 //MARK: - View
 
 struct ButtonSimpleView: View {
     
-    @ObservedObject var viewModel: ButtonSimpleView.ViewModel
+    @ObservedObject var viewModel: ButtonSimpleViewModel
     
     var body: some View {
         
@@ -55,7 +24,7 @@ struct ButtonSimpleView: View {
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(.black)
+                    .foregroundColor(viewModel.buttonConfiguration.backgroundColor)
                 
                 Text(viewModel.title)
                     .font(viewModel.buttonConfiguration.titleFont)
@@ -77,7 +46,8 @@ struct ButtonSimpleView_Previews: PreviewProvider {
                 title: "Оплатить",
                 buttonConfiguration: .init(
                     titleFont: .title,
-                    titleForeground: .black
+                    titleForeground: .black,
+                    backgroundColor: .gray
                 ),
                 action: {}
             ))

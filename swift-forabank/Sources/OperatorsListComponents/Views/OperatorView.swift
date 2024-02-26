@@ -6,42 +6,47 @@
 //
 
 import SwiftUI
-import UIKit
 
-struct OperatorView: View {
+public struct OperatorView: View {
     
-    let operatorViewModel: OperatorViewModel
-    
+    let `operator`: Operator
     let config: OperatorViewConfig
     
-    var body: some View {
+    public init(
+        `operator`: Operator,
+        config: OperatorViewConfig
+    ) {
+        self.`operator` = `operator`
+        self.config = config
+    }
+    
+    public var body: some View {
         
-        Button(action: operatorViewModel.action) {
+        Button(action: {  }) {
             
             HStack(spacing: 20) {
-                
-                if let uiImage = UIImage(data: operatorViewModel.icon) {
                  
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                }
+                `operator`.image
+                    .resizable()
+                    .frame(width: 40, height: 40)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
-                    Text(operatorViewModel.title)
+                    Text(`operator`.title)
+                        .lineLimit(1)
                         .font(config.titleFont)
                         .foregroundColor(config.titleColor)
-                        .multilineTextAlignment(.leading)
                     
-                    if let description = operatorViewModel.description {
+                    if let description = `operator`.subtitle {
                         
                         Text(description)
+                            .lineLimit(1)
                             .font(config.descriptionFont)
                             .foregroundColor(config.descriptionColor)
                     }
                 }
                 
+                Spacer()
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 8)
@@ -49,13 +54,25 @@ struct OperatorView: View {
     }
 }
 
-struct OperatorViewConfig {
+public struct OperatorViewConfig {
     
     let titleFont: Font
     let titleColor: Color
     
     let descriptionFont: Font
     let descriptionColor: Color
+    
+    public init(
+        titleFont: Font,
+        titleColor: Color,
+        descriptionFont: Font,
+        descriptionColor: Color
+    ) {
+        self.titleFont = titleFont
+        self.titleColor = titleColor
+        self.descriptionFont = descriptionFont
+        self.descriptionColor = descriptionColor
+    }
 }
 
 struct OperatorView_Previews: PreviewProvider {
@@ -63,11 +80,11 @@ struct OperatorView_Previews: PreviewProvider {
     static var previews: some View {
         
         OperatorView(
-            operatorViewModel: .init(
-                icon: Data(),
+            operator: .init(
+                id: "id",
                 title: "ЖКУ Москвы (ЕИРЦ)",
-                description: "ИНН 7702070139",
-                action: {}
+                subtitle: "ИНН 7702070139",
+                image: .init(systemName: "")
             ),
             config: .init(
                 titleFont: .title3,

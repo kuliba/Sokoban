@@ -91,6 +91,7 @@ extension Services {
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
+            case getOperatorsListByParam
         }
     }
 }
@@ -320,5 +321,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .updateFastPaymentContract
+    )
+    
+    static let getOperatorsListByParam: Self = .init(
+        pathPrefix: .dict,
+        version: .none,
+        serviceName: .getOperatorsListByParam
     )
 }

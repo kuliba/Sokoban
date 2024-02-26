@@ -7,10 +7,22 @@
 
 import Foundation
 
-struct NoCompanyInListViewModel {
+public struct NoCompanyInListViewModel {
  
     let title: String
     let description: String
     let subtitle: String
-    let buttons: [ButtonSimpleView.ViewModel]
+    let buttons: [ButtonSimpleViewModel]
+    
+    public init(
+        title: String,
+        description: String,
+        subtitle: String,
+        buttons: [ButtonSimpleViewModel]
+    ) {
+        self.title = title
+        self.description = description
+        self.subtitle = subtitle
+        self.buttons = buttons
+    }
 }

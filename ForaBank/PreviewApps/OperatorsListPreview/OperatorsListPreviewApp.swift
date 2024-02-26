@@ -1,0 +1,26 @@
+//
+//  OperatorsListPreviewApp.swift
+//  OperatorsListPreview
+//
+//  Created by Дмитрий Савушкин on 19.02.2024.
+//
+
+import SwiftUI
+import SearchBarComponent
+import TextFieldUI
+import TextFieldComponent
+
+@main
+struct OperatorsListPreviewApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView(searchViewModel: .init(
+                initialState: .placeholder("Search subscriptions"),
+                reducer: TransformingReducer(
+                    placeholderText: "Search subscriptions"
+                ),
+                keyboardType: .decimal
+            ))
+        }
+    }
+}
