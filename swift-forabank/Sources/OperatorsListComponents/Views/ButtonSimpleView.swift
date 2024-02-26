@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ButtonSimpleView: View {
     
-    @ObservedObject var viewModel: ButtonSimpleViewModel
+    let viewModel: ButtonSimpleViewModel
     
     var body: some View {
         

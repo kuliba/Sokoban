@@ -12,17 +12,14 @@ public struct OperatorViewModel {
     public let icon: Data
     public let title: String
     public let description: String?
-    public let action: () -> Void
     
     public init(
         icon: Data,
         title: String,
-        description: String?,
-        action: @escaping () -> Void
+        description: String?
     ) {
         self.icon = icon
         self.title = title
         self.description = description
-        self.action = action
     }
 }
