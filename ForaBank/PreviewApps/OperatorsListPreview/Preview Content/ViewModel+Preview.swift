@@ -16,8 +16,8 @@ extension UtilityPaymentsViewModel {
 
     static func preview(
         initialState: UtilityPaymentsState<LatestPayment, Operator>,
-        observeLast: Int = 3,
-        pageSize: Int = 10
+        observeLast: Int = 1,
+        pageSize: Int = 20
     ) -> UtilityPaymentsViewModel {
  
         let reducer = UtilityPaymentsReducer<LatestPayment, Operator>(
