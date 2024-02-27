@@ -397,12 +397,7 @@ extension PaymentsTransfersViewModel {
                             route.modal = .bottomSheet(.init(type: .meToMe(viewModel)))
                             
                         case .requisites:
-                            let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
-                            bind(paymentsViewModel)
-                            
-                            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                            payByRequisites()
                             
                         case .byPhoneNumber:
                             self.action.send(PaymentsTransfersViewModelAction.Show.Contacts())
@@ -470,6 +465,21 @@ extension PaymentsTransfersViewModel {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func payByRequisites() {
+        
+        let paymentsViewModel = PaymentsViewModel(
+            model,
+            service: .requisites,
+            closeAction: { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+        bind(paymentsViewModel)
+        
+        action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
     }
     
     private func makeUtilitiesPayload(
