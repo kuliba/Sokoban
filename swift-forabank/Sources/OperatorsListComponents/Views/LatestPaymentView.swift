@@ -10,13 +10,16 @@ import SwiftUI
 public struct LatestPaymentView: View {
     
     let latestPayment: LatestPayment
+    let latestPaymentConfigView: LatestPayment.LatestPaymentConfig
     let event: (ComposedOperatorsEvent) -> Void
     
     public init(
         latestPayment: LatestPayment,
+        latestPaymentConfigView: LatestPayment.LatestPaymentConfig,
         event: @escaping (ComposedOperatorsEvent) -> Void
     ) {
         self.latestPayment = latestPayment
+        self.latestPaymentConfigView = latestPaymentConfigView
         self.event = event
     }
     
@@ -72,6 +75,10 @@ struct LatestPaymentView_Previews: PreviewProvider {
                 image: .init(systemName: ""),
                 title: "title",
                 amount: "amount"
+            ),
+            latestPaymentConfigView: .init(
+                defaultImage: .init(systemName: ""),
+                backgroundColor: .blue
             ),
             event: { _ in }
         )

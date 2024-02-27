@@ -22,6 +22,8 @@ struct ComposedOperatorsWrapperView: View {
     let selectLast: (LatestPayment.ID) -> Void
     let selectOperator: (OperatorsListComponents.Operator.ID) -> Void
     
+    let configView: ConfigView
+    
     var body: some View {
         
         ComposedOperatorsView(
@@ -34,6 +36,7 @@ struct ComposedOperatorsWrapperView: View {
                 
                 LatestPaymentView(
                     latestPayment: payment,
+                    latestPaymentConfigView: configView.latestConfig,
                     event: { _ in }
                 )
             },
@@ -44,7 +47,7 @@ struct ComposedOperatorsWrapperView: View {
                     titleColor: .black,
                     descriptionFont: .footnote,
                     descriptionColor: .gray,
-                    defaultIconBackgroundColor: .yellow,
+                    defaultIconBackgroundColor: .clear,
                     defaultIcon: .init(systemName: "photo.artframe")
                 ))
             },
@@ -70,6 +73,11 @@ struct ComposedOperatorsWrapperView: View {
     }
 }
 
+struct ConfigView {
+    
+    let latestConfig: LatestPayment.LatestPaymentConfig
+}
+
 struct ContentView: View {
     
     let searchViewModel: SearchViewModel
@@ -79,8 +87,14 @@ struct ContentView: View {
         ComposedOperatorsWrapperView(
             searchViewModel: searchViewModel,
             selectLast: { _ in },
-            selectOperator: { _ in }
+            selectOperator: { _ in },
+            configView: .init(
+                latestConfig: .init(
+                    defaultImage: .init(systemName: "photo.artframe"),
+                    backgroundColor: .clear
+                ))
         )
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
