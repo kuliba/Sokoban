@@ -35,7 +35,7 @@ struct ContentView: View {
                     event: {
                         
                         switch $0 {
-                        case let .showAlert(alert):
+                        case .showAlert:
                             viewModel.event(.showAlert(.alertCVV()))
                             
                         case .closeAlert:
@@ -50,7 +50,7 @@ struct ContentView: View {
                     event: {
                         
                         switch $0 {
-                        case let .showAlert(alert):
+                        case .showAlert:
                             viewModel.event(.showAlert(.alertCardBlocked()))
                             
                         case .closeAlert:
