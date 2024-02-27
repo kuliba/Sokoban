@@ -11,11 +11,11 @@ import RxViewModel
 import ActivateSlider
 
 public final class ProductProfileNavigationEffectHandler {
+     
+    public typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
     
-    public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
-    
-    public typealias MakeCardViewModel = CardViewFactory.MakeCardViewModel
-    
+    public typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
     private let makeCardViewModel: MakeCardViewModel
 
