@@ -63,7 +63,9 @@ public extension ProductProfileNavigationEffectHandler {
             // fire and forget
             handleEffect(effect)
         case let .card(effect):
-            handleEffect(effect)
+            handleEffect(effect, dispatch)
+        case .createSlider:
+            dispatch(makeCardDestination(dispatch))
         }
     }
     
@@ -83,7 +85,8 @@ public extension ProductProfileNavigationEffectHandler {
     }
     
     private func handleEffect(
-        _ effect: CardEffect
+        _ effect: CardEffect,
+        _ dispatch: @escaping Dispatch
     ) {
         /*switch effect {
       
@@ -123,11 +126,11 @@ private extension ProductProfileNavigationEffectHandler {
         let cardViewModel = makeCardViewModel(scheduler)
         let cancellable = cardViewModel.$state
             .dropFirst()
-            /*.compactMap(\.projection)
+            .compactMap(\.projection)
             .removeDuplicates()
-            .map(Event.cardGuardianInput)*/
+            .map(Event.card)
             .receive(on: scheduler)
-            .sink { _ in /*dispatch($0)*/ }
+            .sink { dispatch($0) }
         
         return .show(.init(cardViewModel, cancellable))
     }
@@ -167,4 +170,24 @@ private extension CardGuardianState {
 public enum CardGuardianStateProjection: Equatable {
     case appear
     case buttonTapped(CardGuardian.ButtonEvent)
+}
+
+// MARK: - Card
+private extension CardState {
+    
+    var projection: CardStateProjection? {
+        
+        switch self {
+        case .active:
+            return .active
+        case let .status(status):
+            return .status(status)
+        }
+    }
+}
+
+public enum CardStateProjection: Equatable {
+    
+    case active
+    case status(CardState.Status?)
 }

@@ -20,45 +20,57 @@ struct ContentView: View {
         
         NavigationView {
             
-            ZStack {
+            VStack {
                 
-                NavigationLink(destination: destination()) {
+                VStack {
                     
-                    Image(systemName: "person.text.rectangle.fill")
-                        .renderingMode(.original)
-                        .foregroundColor(Color(.systemMint))
-                        .font(.system(size: 120))
+                    CardSliderView(
+                        state: viewModel.state,
+                        event: viewModel.event(_:)
+                    )
                 }
+                .background(.gray)
                 
-                CvvButtonView(
-                    state: viewModel.state.alert,
-                    event: {
+                ZStack {
+                    
+                    NavigationLink(destination: destination()) {
                         
-                        switch $0 {
-                        case .showAlert:
-                            viewModel.event(.showAlert(.alertCVV()))
-                            
-                        case .closeAlert:
-                            viewModel.event(.closeAlert)
-                        }
+                        Image(systemName: "person.text.rectangle.fill")
+                            .renderingMode(.original)
+                            .foregroundColor(Color(.systemMint))
+                            .font(.system(size: 120))
                     }
-                )
-                .offset(x: 40, y: 30)
-                
-                CvvCardBlockedView(
-                    state: viewModel.state.alert,
-                    event: {
-                        
-                        switch $0 {
-                        case .showAlert:
-                            viewModel.event(.showAlert(.alertCardBlocked()))
+                    
+                    CvvButtonView(
+                        state: viewModel.state.alert,
+                        event: {
                             
-                        case .closeAlert:
-                            viewModel.event(.closeAlert)
+                            switch $0 {
+                            case .showAlert:
+                                viewModel.event(.showAlert(.alertCVV()))
+                                
+                            case .closeAlert:
+                                viewModel.event(.closeAlert)
+                            }
                         }
-                    }
-                )
-                .offset(x: -40, y: 30)
+                    )
+                    .offset(x: 40, y: 30)
+                    
+                    CvvCardBlockedView(
+                        state: viewModel.state.alert,
+                        event: {
+                            
+                            switch $0 {
+                            case .showAlert:
+                                viewModel.event(.showAlert(.alertCardBlocked()))
+                                
+                            case .closeAlert:
+                                viewModel.event(.closeAlert)
+                            }
+                        }
+                    )
+                    .offset(x: -40, y: 30)
+                }
             }
         }
     }

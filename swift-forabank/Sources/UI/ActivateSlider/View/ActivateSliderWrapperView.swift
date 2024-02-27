@@ -11,13 +11,21 @@ import UIPrimitives
 
 public typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
 
-struct ActivateSliderWrapperView: View {
+public struct ActivateSliderWrapperView: View {
     
     @ObservedObject var viewModel: CardViewModel
     
     let config: SliderConfig
     
-    var body: some View {
+    public init(
+        viewModel: CardViewModel,
+        config: SliderConfig
+    ) {
+        self.viewModel = viewModel
+        self.config = config
+    }
+    
+    public var body: some View {
         
         ActivateSliderView(
             viewModel: .init(
@@ -28,19 +36,6 @@ struct ActivateSliderWrapperView: View {
             state: viewModel.state,
             event: viewModel.event,
             config: config)
-        .alert(item: .init(
-            get: {
-                guard case .status(.confirmActivate) = viewModel.state
-                else { return nil }
-                return AlertModelOf(
-                    title: "Confirm",
-                    message: "Confirm?",
-                    primaryButton: .init(type: .cancel, title: "Cancel", event: CardEvent.confirmActivate(.cancel)),
-                    secondaryButton: .init(type: .default, title: "Ok", event: CardEvent.confirmActivate(.activate))
-                )
-            },
-            set: { _ in }),
-               content: { .init(with: $0, event: viewModel.event) })
     }
 }
 

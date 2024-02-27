@@ -16,12 +16,37 @@ struct CardSliderView: View {
     let event: (ProductProfileNavigation.Event) -> Void
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        sliderView(
+            viewModel: .init(
+                initialState: .status(nil),
+                reduce: CardReducer().reduce(_:_:),
+                handleEffect: CardEffectHandler.activateSuccess.handleEffect
+            )
+        )
+        .alert(
+            item: .init(
+                get: { state.alert },
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: event) }
+        )
+    }
+    
+    private func sliderView(
+        viewModel: CardViewModel
+    ) -> some View {
+        
+        ActivateSliderWrapperView(
+            viewModel: viewModel,
+            config: .default
+        )
     }
 }
 
 #Preview {
-    CardSliderView(       
+    CardSliderView(
         state: .init(),
         event: { _ in }
     )

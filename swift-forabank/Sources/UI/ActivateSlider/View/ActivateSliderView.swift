@@ -78,7 +78,6 @@ struct ActivateSliderView: View {
                         }
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .border(.red)
         }
         .frame(width: config.sizes.totalWidth, height: 48)
         .animation(.default, value: viewModel.offsetX)

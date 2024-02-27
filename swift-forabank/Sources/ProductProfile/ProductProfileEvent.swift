@@ -14,5 +14,5 @@ public enum ProductProfileEvent: Equatable {
     case toggleVisibilityOnMain(Product)
     case changePin(Card)
     case showContacts
-    case activateCard(Card)
+    case activateCard
 }

@@ -122,8 +122,7 @@ public extension AlertModelOf<ProductProfileNavigation.Event> {
     }
     
     static func alertCardNotActivate(
-        _ id: UUID = .init(),
-        card: Card
+        _ id: UUID = .init()
     ) -> AlertModelOf<ProductProfileNavigation.Event> {
         
         .init(
@@ -137,7 +136,7 @@ public extension AlertModelOf<ProductProfileNavigation.Event> {
             secondaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: .productProfile(.activateCard(card)))
+                event: .productProfile(.activateCard))
         )
     }
 }

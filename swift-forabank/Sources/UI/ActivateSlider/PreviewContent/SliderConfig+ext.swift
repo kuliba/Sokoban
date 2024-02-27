@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension SliderConfig {
+public extension SliderConfig {
     
     static let `default`: Self = .init(
         colors: .init(

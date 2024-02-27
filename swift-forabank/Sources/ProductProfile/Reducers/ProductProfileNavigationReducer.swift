@@ -47,10 +47,10 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, cardGuardianInput)
         case let .productProfile(event):
             (state, effect) = reduce(state, event)
-        case let .card(event):
-            (state, effect) = reduce(state, event)
-        case let .show(event):
-             break
+        case let .card(cardInput):
+            (state, effect) = reduce(state, cardInput)
+        case .show:
+            effect = .createSlider
         }
         return (state, effect)
     }
@@ -120,8 +120,8 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.changePin(card))
         case .showContacts:
             effect = .productProfile(.showContacts)
-        case let .activateCard(card):
-            // TODO: add effect
+        case .activateCard:
+            effect = .card(.activate)
             break
         }
         return (state, effect)
@@ -132,24 +132,28 @@ private extension ProductProfileNavigationReducer {
     
     func reduce(
         _ state: State,
-        _ event: CardEvent
+        _ cardInput: CardStateProjection
     ) -> (State, Effect?) {
         
         var effect: Effect?
-        
-        /*
-         // TODO: add effect
-         switch event {
+
+        switch cardInput {
             
-        case .swipe:
-            <#code#>
-        case .alertTap(_):
-            <#code#>
-        case .inflight:
-            <#code#>
-        case .activateCardResponse(_):
-            <#code#>
-        }*/
+        case .active:
+             break
+        case let .status(status):
+            switch status {
+            case .activated:
+                break
+            case .confirmActivate:
+                effect = .delayAlert(AlertModelOf.alertCardNotActivate(), alertLifespan)
+            case .inflight:
+                break
+            case nil:
+                break
+            }
+        }
+        
         return (state, effect)
     }
 }

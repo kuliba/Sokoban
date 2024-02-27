@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension CardEffectHandler {
+public extension CardEffectHandler {
     
     static let activateSuccess = CardEffectHandler(
         activate: { completion in
