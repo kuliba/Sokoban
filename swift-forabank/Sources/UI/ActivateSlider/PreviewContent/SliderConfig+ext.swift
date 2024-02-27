@@ -10,12 +10,16 @@ import SwiftUI
 extension SliderConfig {
     
     static let `default`: Self = .init(
-        notActivated: .notActivated,
-        waiting: .confirmingActivation,
-        activating: .activating,
-        activated: .activated, 
-        thumbIconColor: .gray,
-        font: .subheadline
-    )
+        colors: .init(
+            backgroundColor: Color.black.opacity(0.1),
+            foregroundColor: .white,
+            thumbIconColor: .gray),
+        items: .init(
+            notActivated: .notActivated,
+            confirmingActivation: .confirmingActivation,
+            activating: .activating,
+            activated: .activated),
+        sizes: .init(),
+        font: .subheadline)
 }
 

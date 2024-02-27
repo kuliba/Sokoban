@@ -9,22 +9,20 @@ import SwiftUI
 
 public struct SliderConfig {
     
-    let notActivated: Item
-    let waiting: Item
-    let activating: Item
-    let activated: Item
-    
-    let backgroundColor: Color
-    let foregroundColor: Color
-    let thumbIconColor: Color
+    let colors: Colors
+    let items: Items
     
     let font: Font
     
-    let totalWidth: CGFloat = 167
-    let thumbWidth: CGFloat = 40
-    let thumbPadding: CGFloat = 4
-    var maxOffsetX: CGFloat { totalWidth - (thumbWidth + thumbPadding * 2) } 
+    let sizes: Sizes
+          
+    public struct Colors {
         
+        let backgroundColor: Color
+        let foregroundColor: Color
+        let thumbIconColor: Color
+    }
+    
     public struct Item {
         
         let icon: Image
@@ -39,40 +37,52 @@ public struct SliderConfig {
         }
     }
     
-    public init(
-        notActivated: Item,
-        waiting: Item,
-        activating: Item,
-        activated: Item,
-        backgroundColor: Color = Color.black.opacity(0.1),
-        foregroundColor: Color = .white,
-        thumbIconColor: Color = .black,
-        font: Font
-    ) {
-        self.notActivated = notActivated
-        self.waiting = waiting
-        self.activating = activating
-        self.activated = activated
-        self.backgroundColor = backgroundColor
-        self.foregroundColor = foregroundColor
-        self.thumbIconColor = thumbIconColor
-        self.font = font
+    public struct Items {
+        
+        let notActivated: Item
+        let confirmingActivation: Item
+        let activating: Item
+        let activated: Item
+        
+        public init(
+            notActivated: Item,
+            confirmingActivation: Item,
+            activating: Item,
+            activated: Item
+        ) {
+            self.notActivated = notActivated
+            self.confirmingActivation = confirmingActivation
+            self.activating = activating
+            self.activated = activated
+        }
     }
     
-    func itemForState(_ state: CardState.Status?) -> Item {
+    public struct Sizes {
         
-        switch state {
-        case .activated:
-            return activated
-            
-        case .confirmActivate:
-            return waiting
-            
-        case .inflight:
-            return activating
-            
-        case .none:
-            return notActivated
+        let totalWidth: CGFloat
+        let thumbWidth: CGFloat
+        let thumbPadding: CGFloat
+        
+        public init(
+            totalWidth: CGFloat = 167,
+            thumbWidth: CGFloat = 40,
+            thumbPadding: CGFloat = 4
+        ) {
+            self.totalWidth = totalWidth
+            self.thumbWidth = thumbWidth
+            self.thumbPadding = thumbPadding
         }
+    }
+    
+    public init(
+        colors: Colors,
+        items: Items,
+        sizes: Sizes,
+        font: Font
+    ) {
+        self.colors = colors
+        self.items = items
+        self.sizes = sizes
+        self.font = font
     }
 }
