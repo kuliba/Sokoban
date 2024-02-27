@@ -30,9 +30,18 @@ public struct LatestPaymentView: View {
             
             VStack {
              
-                latestPayment.image
-                    .resizable()
-                    .frame(width: 40, height: 40, alignment: .center)
+                if let image = latestPayment.image {
+                 
+                    image
+                        .resizable()
+                        .frame(width: 40, height: 40, alignment: .center)
+                } else {
+                    
+                    Image.defaultIcon(
+                        backgroundColor: latestPaymentConfigView.backgroundColor,
+                        icon: latestPaymentConfigView.defaultImage
+                    )
+                }
                 
                 VStack(spacing: 8) {
 

@@ -24,7 +24,7 @@ public struct OperatorView: View {
         
         Button(action: {  }) {
             
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                  
                 if let image = `operator`.image {
                     
@@ -33,7 +33,7 @@ public struct OperatorView: View {
                         .frame(width: 40, height: 40)
                 } else {
                     
-                    defaultIcon(
+                    Image.defaultIcon(
                         backgroundColor: config.defaultIconBackgroundColor,
                         icon: config.defaultIcon
                     )
@@ -59,23 +59,6 @@ public struct OperatorView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 8)
-        }
-    }
-    
-    func defaultIcon(
-        backgroundColor: Color,
-        icon: Image
-    ) -> some View {
-        
-        ZStack {
-            
-            Circle()
-                .frame(width: 40, height: 40)
-                .background(backgroundColor)
-            
-            icon
-                .frame(width: 24, height: 24)
-                .foregroundColor(.white)
         }
     }
 }
@@ -128,7 +111,7 @@ struct OperatorView_Previews: PreviewProvider {
                 descriptionFont: .body,
                 descriptionColor: .gray,
                 defaultIconBackgroundColor: .black,
-                defaultIcon: .init(systemName: "")
+                defaultIcon: .init(systemName: "photo.artframe")
             )
         )
     }
