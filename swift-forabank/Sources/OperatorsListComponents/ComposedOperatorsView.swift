@@ -1,6 +1,6 @@
 //
-//  SwiftUIView.swift
-//  
+//  ComposedOperatorsView.swift
+//
 //
 //  Created by Дмитрий Савушкин on 08.02.2024.
 //
@@ -43,22 +43,22 @@ public struct ComposedOperatorsView<
             
             searchView()
             
-            VStack(spacing: 32) {
+            LazyVStack(spacing: 16) {
                 
                 if let latestPayments = state.latestPayments {
                     
                     ScrollView(.horizontal) {
                         
-                        HStack {
+                        LazyHStack {
                             
-                            ForEach(latestPayments, content:  lastPaymentView)
+                            ForEach(latestPayments, content: lastPaymentView)
                         }
                     }
                 }
                 
                 if let operators = state.operators {
                     
-                    VStack(alignment: .leading, spacing: 8) {
+                    LazyVStack(alignment: .leading, spacing: 8) {
                         
                         ForEach(operators, content: _operatorView)
                     }
@@ -66,6 +66,7 @@ public struct ComposedOperatorsView<
                 
                 footerView()
                     .onAppear { 
+                        
                         event(.utility(.initiate))
                     }
             }
@@ -80,31 +81,15 @@ public struct ComposedOperatorsView<
     ) -> some View {
         
         operatorView(`operator`)
-            .onAppear { 
-                
-                self.listItemAppears(`operator`)
-            }
-    }
-}
-
-extension ComposedOperatorsView {
-    
-    private func listItemAppears<Item: Identifiable>(_ item: Item) {
-        
-        if state.operators?.last?.id.description == "\(item.id)" {
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                
-                event(.utility(.didScrollTo("\(item.id)")))
-            }
-        }
+            .onAppear { event(.utility(.didScrollTo(`operator`.id))) }
     }
 }
 
 extension ComposedOperatorsView {
     
     private func lastPaymentView(
-        latestPayment: LatestPayment
+        latestPayment: LatestPayment,
+        latestPaymentConfigView: LatestPayment.LatestPaymentConfig
     ) -> some View {
         
         Button {
@@ -115,9 +100,19 @@ extension ComposedOperatorsView {
             
             VStack {
              
-                latestPayment.image
-                    .resizable()
-                    .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                if let image = latestPayment.image {
+                    
+                    image
+                        .resizable()
+                        .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    
+                } else {
+                    
+                    Image.defaultIcon(
+                        backgroundColor: latestPaymentConfigView.backgroundColor,
+                        icon: latestPaymentConfigView.defaultImage
+                    )
+                }
                 
                 VStack(spacing: 8) {
 
@@ -215,18 +210,32 @@ public struct Operator: Equatable, Identifiable {
 public struct LatestPayment: Equatable, Identifiable {
     
     public var id: String { title }
-    let image: Image
+    let image: Image?
     let title: String
     let amount: String
     
     public init(
-        image: Image,
+        image: Image?,
         title: String,
         amount: String
     ) {
         self.image = image
         self.title = title
         self.amount = amount
+    }
+    
+    public struct LatestPaymentConfig {
+        
+        let defaultImage: Image
+        let backgroundColor: Color
+        
+        public init(
+            defaultImage: Image,
+            backgroundColor: Color
+        ) {
+            self.defaultImage = defaultImage
+            self.backgroundColor = backgroundColor
+        }
     }
 }
 
