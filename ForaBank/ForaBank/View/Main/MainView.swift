@@ -438,7 +438,8 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
@@ -456,7 +457,8 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
@@ -474,7 +476,8 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()

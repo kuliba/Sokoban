@@ -31,25 +31,31 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var route: Route
     @Published var fullCover: FullCover?
     
+    private let routeSubject = PassthroughSubject<Route, Never>()
+    
     let mode: Mode
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let navigationStateManager: UserAccountNavigationStateManager
+    private let navigationStateManager: PaymentsTransfersNavigationStateManager
+    private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private var bindings = Set<AnyCancellable>()
+    private let scheduler: AnySchedulerOfDispatchQueue
     
     init(
         model: Model,
-        navigationStateManager: UserAccountNavigationStateManager,
+        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
-        route: Route = .empty
+        route: Route = .empty,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -59,11 +65,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         ]
         self.mode = mode
         self.model = model
-        self.navigationStateManager = navigationStateManager
+        self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
+        self.navigationStateManager = navigationStateManager
+        self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -75,23 +83,27 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        navigationStateManager: UserAccountNavigationStateManager,
+        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         mode: Mode = .normal,
-        route: Route = .empty
+        route: Route = .empty,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.sections = sections
         self.mode = mode
         self.model = model
         self.route = route
         self.navigationStateManager = navigationStateManager
+        self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.navButtonsRight = navButtonsRight
+        self.scheduler = scheduler
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }
@@ -100,6 +112,41 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel deinitialized")
     }
+}
+
+extension PaymentsTransfersViewModel {
+    
+    func event(_ event: Event) {
+    
+        let (state, effect) = reduce(route, event)
+        routeSubject.send(state)
+        
+        if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+    
+    #warning("move to navigationStateManager")
+    private func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        
+        
+        return (state, effect)
+    }
+    
+    typealias State = PaymentsTransfersViewModel.Route
+    typealias Event = PaymentsTransfersEvent
+    typealias Effect = PaymentsTransfersEffect
+}
+
+extension PaymentsTransfersViewModel {
     
     func reset() {
         
@@ -159,7 +206,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     // TODO: replace with factory
                     route.destination = .userAccount(.init(
-                        navigationStateManager: navigationStateManager,
+                        navigationStateManager: userAccountNavigationStateManager,
                         model: model,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
@@ -380,11 +427,21 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.openScanner()
                             
                         case .service, .internet:
+                            self.rootActions?.spinner.show()
+                            
                             paymentsTransfersFactory.makeUtilitiesViewModel(
                                 makeUtilitiesPayload(forType: payload.type)
                             ) { [weak self] in
+                            
+                                self?.rootActions?.spinner.hide()
                                 
-                                self?.route.destination = .paymentsServices($0)
+                                switch $0 {
+                                case let .legacy(paymentsServicesViewModel):
+                                    self?.route.destination = .paymentsServices(paymentsServicesViewModel)
+    
+                                case let .utilities(utilitiesViewModel):
+                                    self?.route.destination = .utilities(utilitiesViewModel)
+                                }
                             }
                             
                         case .transport:
@@ -1384,6 +1441,7 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        case utilities(UtilitiesViewModel)
         
         var id: Case {
             
@@ -1436,6 +1494,8 @@ extension PaymentsTransfersViewModel {
                 return .openDepositsList
             case .sberQRPayment:
                 return .sberQRPayment
+            case .utilities:
+                return .utilities
             }
         }
         
@@ -1464,6 +1524,7 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
+            case utilities
         }
     }
     

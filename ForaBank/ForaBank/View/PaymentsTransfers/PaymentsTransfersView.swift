@@ -226,6 +226,10 @@ struct PaymentsTransfersView: View {
                     sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
+            
+        case let .utilities(utilitiesViewModel):
+            utilitiesView(utilitiesViewModel)
+            #warning("add nav bar")
         }
     }
     
@@ -273,6 +277,17 @@ struct PaymentsTransfersView: View {
                 navLeadingAction: viewModel.dismiss,
                 navTrailingAction: viewModel.openScanner
             )
+        )
+    }
+    
+    private func utilitiesView(
+        _ viewModel: UtilitiesViewModel
+    ) -> some View {
+        
+        UtilitiesView(
+            state: viewModel.state,
+            onLatestPaymentTap: { self.viewModel.event(.latestPaymentTap($0)) },
+            onOperatorTap: { self.viewModel.event(.operatorTap($0)) }
         )
     }
     
