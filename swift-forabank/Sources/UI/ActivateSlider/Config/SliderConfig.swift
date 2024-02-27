@@ -24,9 +24,7 @@ public struct SliderConfig {
     let thumbWidth: CGFloat = 40
     let thumbPadding: CGFloat = 4
     var maxOffsetX: CGFloat { totalWidth - (thumbWidth + thumbPadding * 2) } 
-    
-    private var slideLength: CGFloat { totalWidth - thumbWidth - thumbPadding * 2 }
-    
+        
     public struct Item {
         
         let icon: Image
@@ -77,44 +75,4 @@ public struct SliderConfig {
             return notActivated
         }
     }
-    
-    func thumbConfig(_ state: CardState.Status?) -> ThumbConfig {
-        
-        let itemConfig = itemForState(state)
-        let isAnimated: Bool = {
-            
-            if case .inflight = state { return true }
-            return false
-        }()
-        
-        return .init(
-            icon: itemConfig.icon,
-            color: thumbIconColor,
-            backgroundColor: backgroundColor,
-            foregroundColor: foregroundColor,
-            isAnimated: isAnimated
-        )
-    }
-    
-    func progressBy(
-        offsetX: CGFloat
-    ) -> CGFloat {
-        
-        1 - (slideLength - offsetX) / slideLength
-    }
-    
-    func titleOpacityBy(
-        offsetX: CGFloat
-    ) -> CGFloat {
-        
-        max(1 - (progressBy(offsetX: offsetX) * 2), 0)
-    }
-    
-    func backgroundOpacityBy(
-        offsetX: CGFloat
-    ) -> CGFloat {
-        
-        max(1 - (progressBy(offsetX: offsetX) * 2), 0.7)
-    }
-    
 }

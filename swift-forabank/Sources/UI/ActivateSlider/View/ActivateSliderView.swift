@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-//MARK: - View
-
 struct ActivateSliderView: View {
     
     @StateObject private var viewModel: SliderViewModel
@@ -173,3 +171,46 @@ struct ActivateSliderView_Previews: PreviewProvider {
     }
 }
 
+extension SliderConfig {
+    
+    private var slideLength: CGFloat { totalWidth - thumbWidth - thumbPadding * 2 }
+    
+    func thumbConfig(_ state: CardState.Status?) -> ThumbConfig {
+        
+        let itemConfig = itemForState(state)
+        let isAnimated: Bool = {
+            
+            if case .inflight = state { return true }
+            return false
+        }()
+        
+        return .init(
+            icon: itemConfig.icon,
+            color: thumbIconColor,
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            isAnimated: isAnimated
+        )
+    }
+    
+    func progressBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        1 - (slideLength - offsetX) / slideLength
+    }
+    
+    func titleOpacityBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        max(1 - (progressBy(offsetX: offsetX) * 2), 0)
+    }
+    
+    func backgroundOpacityBy(
+        offsetX: CGFloat
+    ) -> CGFloat {
+        
+        max(1 - (progressBy(offsetX: offsetX) * 2), 0.7)
+    }
+}
