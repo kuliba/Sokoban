@@ -134,6 +134,7 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .activateSlider,
+        .activateSliderTests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -1044,6 +1045,17 @@ private extension Target {
         ],
         path: "Sources/UI/\(String.activateSlider)"
     )
+    
+    static let activateSliderTests = testTarget(
+        name: .activateSliderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .activateSlider,
+        ],
+        path: "Tests/UI/\(String.activateSliderTests)"
+    )
 
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
@@ -1730,7 +1742,8 @@ private extension String {
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
-    
+    static let activateSliderTests = "ActivateSliderTests"
+
     static let buttonWithSheet = "ButtonWithSheet"
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"
