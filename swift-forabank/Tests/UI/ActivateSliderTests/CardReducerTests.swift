@@ -6,30 +6,86 @@
 //
 
 import XCTest
+import ActivateSlider
 
 final class CardReducerTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // MARK: - test reduce
+    
+    func test_reduce_activateCard_shouldSetEffectConfirmActivate() {
+        
+        assertEffect(.none, onEvent: .activateCard, state: .status(.none))
+    }
+    
+    func test_reduce_confirmActivateCancel_shouldSetEffectNone() {
+        
+        assertEffect(.none, onEvent: .confirmActivate(.cancel), state: .status(.none))
+    }
+    
+    func test_reduce_confirmActivate_shouldSetEffectActivate() {
+        
+        assertEffect(.activate, onEvent: .confirmActivate(.activate), state: .status(.none))
+    }
+    
+    func test_reduce_activateCardResponseConnectivityError_shouldSetEffectNone() {
+        
+        assertEffect(.none, onEvent: .activateCardResponse(.connectivityError), state: .status(.none))
+    }
+    
+    func test_reduce_activateCardResponseServerError_shouldSetEffectNone() {
+        
+        assertEffect(.none, onEvent: .activateCardResponse(.serverError("error")), state: .status(.none))
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func test_reduce_activateCardResponseSuccess_shouldSetEffectDismiss() {
+        
+        assertEffect(.some(.dismiss(.seconds(1))), onEvent: .activateCardResponse(.success), state: .status(.none))
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func test_reduce_dismissActivate_shouldSetEffectNone() {
+        
+        assertEffect(.none, onEvent: .dismissActivate, state: .status(.none))
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    // MARK: - Helpers
+    
+    private typealias SUT = CardReducer
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    private typealias Result = (State, Effect?)
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        let sut = SUT()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut)
     }
-
+    
+    private func reduce(
+        _ sut: SUT,
+        _ initialState: State = .status(.none),
+        event: Event
+    ) -> Result {
+        
+        return sut.reduce(initialState, event)
+    }
+    
+    private func assertEffect(
+        sut: SUT? = nil,
+        _ expectedEffect: Effect?,
+        onEvent event: Event,
+        state: State,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        
+        let sut = sut ?? makeSUT(file: file, line: line)
+        let (_, receivedEffect): Result = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(receivedEffect, expectedEffect, file: file, line: line)
+    }
 }
