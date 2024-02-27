@@ -102,11 +102,15 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
+        let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
+        ? HTTPClientStub.utilityPayments()
+        : httpClient
+        
         let makeUtilitiesViewModel = makeUtilitiesViewModel(
-            httpClient: httpClient,
+            httpClient: utilitiesHTTPClient,
             model: model,
             log: infoNetworkLog,
-            flag: utilitiesPaymentsFlag
+            isActive: utilitiesPaymentsFlag.isActive
         )
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
@@ -137,7 +141,7 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
-        flag: UtilitiesPaymentsFlag
+        isActive: Bool
     ) -> MakeUtilitiesViewModel {
         
         return { payload, completion in
@@ -149,15 +153,9 @@ extension RootViewModelFactory {
                     .map(completion)
                 
             case .service:
-                switch flag.rawValue {
-                case .active:
-                    let utilitiesHTTPClient = flag.isStub
-                    ? HTTPClientStub.utilityPayments()
-                    : httpClient
-                    
-                    makeUtilitiesViewModel(utilitiesHTTPClient, model, log, completion)
-                    
-                case .inactive:
+                if isActive {
+                    makeUtilitiesViewModel(httpClient, model, log, completion)
+                } else {
                     makeLegacyUtilitiesViewModel(payload, model)
                         .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
                         .map(completion)
