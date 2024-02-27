@@ -4276,7 +4276,7 @@
 		8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianModule.xctestplan; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
 		8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardGuardianPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ActivateSlider.xctestplan; path = TestPlans/ActivateSlider.xctestplan; sourceTree = "<group>"; };
+		8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ActivateSlider.xctestplan; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		835E7C722B7E301E0044FB67 /* CvvButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvButtonView.swift; sourceTree = "<group>"; };
 		835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvCardBlockedView.swift; sourceTree = "<group>"; };
@@ -6765,6 +6765,7 @@
 			isa = PBXGroup;
 			children = (
 				2A4C35B92B69256400694861 /* FastPaymentsSettingsPreview-Info.plist */,
+				8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */,
 				8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */,
 				2A566EAF2B6816BB00359E05 /* CardStatementAPI.xctestplan */,
 				2A566EB82B6816BC00359E05 /* CarouselComponent.xctestplan */,
@@ -11793,7 +11794,6 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
-				8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
