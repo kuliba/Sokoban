@@ -12,9 +12,11 @@ import ActivateSlider
 
 public final class ProductProfileNavigationReducer {
     
-    private let alertLifespan: TimeInterval
+    private let alertLifespan: DispatchTimeInterval
 
-    public init(alertLifespan: TimeInterval = 1) {
+    public init(
+        alertLifespan: DispatchTimeInterval = .seconds(1)
+    ) {
         self.alertLifespan = alertLifespan
     }
 }

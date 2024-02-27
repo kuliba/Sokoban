@@ -52,8 +52,8 @@ public extension ProductProfileNavigationEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .delayAlert(alert, timeInterval):
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
+        case let .delayAlert(alert, dispatchTimeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) {
                 
                 dispatch(.showAlert(alert))
             }

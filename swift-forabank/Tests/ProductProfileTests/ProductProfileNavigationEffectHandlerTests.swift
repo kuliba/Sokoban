@@ -25,7 +25,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertCVV(id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     func test_showCardBlockedAlert_shouldDeliverShowAlert() {
@@ -35,7 +35,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertCardBlocked(id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     func test_showBlockCardAlert_shouldDeliverShowAlert() {
@@ -45,7 +45,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertBlockCard(.card(), id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     // MARK: - Helpers
