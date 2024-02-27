@@ -85,6 +85,24 @@ final class SliderViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.offsetX, 0)
     }
     
+    func test_dragOnEnded_offsetMoreThanHalfMaxOffset_shouldCallDidSwitchOn() {
+        
+        let exp = expectation(description: "wait for dragOnEnd")
+
+        let sut = makeSUT(
+            offsetX: 10,
+            maxOffsetX: 15,
+            didSwitchOn: {
+                
+                exp.fulfill()
+            }
+        )
+        
+        sut.dragOnEnded()
+
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SliderViewModel
