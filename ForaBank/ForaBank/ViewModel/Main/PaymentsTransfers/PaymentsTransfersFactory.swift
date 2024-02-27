@@ -28,8 +28,12 @@ final class UtilitiesViewModel: ObservableObject {
         let latestPayments: [LatestPayment]
         let operators: [Operator]
     }
-    struct LatestPayment {}
-    struct Operator {}
+    struct LatestPayment: Identifiable {
+        let id = UUID().uuidString
+    }
+    struct Operator: Identifiable {
+        let id: String
+    }
     struct Payload {}
     
     typealias LoadOperatorsCompletion = ([Operator]) -> Void

@@ -227,9 +227,54 @@ struct PaymentsTransfersView: View {
                     dismiss: viewModel.resetDestination
                 )
             
-        case let .utilities(utilitiesViewModel):
-            utilitiesView(utilitiesViewModel)
+        case let .utilities(utilitiesRoute):
+            utilitiesView(utilitiesRoute.viewModel)
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route.utilitiesRoute?.destination },
+                        set: { if $0 == nil {
+                            viewModel.event(.resetUtilityDestination) }}
+                    ),
+                    content: utilitiesDestinationView
+                )
             #warning("add nav bar")
+        }
+    }
+    
+    @ViewBuilder
+    private func utilitiesDestinationView(
+        destination: PaymentsTransfersViewModel.Route.UtilitiesDestination
+    ) -> some View {
+        switch destination {
+        case let .failure(`operator`):
+            VStack(spacing: 32) {
+
+                Text(String(describing: `operator`))
+                
+                Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
+                    .foregroundColor(.secondary)
+                
+                Button("Оплатить по реквизитам") {
+                    
+                    self.viewModel.event(.payByRequisites)
+                }
+            }
+#warning("add nav bar")
+            
+        case let .list(`operator`, utilityServices):
+            VStack(spacing: 32) {
+                
+                Text("Services for \(String(describing: `operator`))")
+                
+                UtilityServicePicker(
+                    state: utilityServices, 
+                    event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+                )
+            }
+#warning("add nav bar")
+            
+        case let .payment(details):
+            Text("TBD: payment for \(String(describing: details))")
         }
     }
     
@@ -287,7 +332,25 @@ struct PaymentsTransfersView: View {
         UtilitiesView(
             state: viewModel.state,
             onLatestPaymentTap: { self.viewModel.event(.latestPaymentTap($0)) },
-            onOperatorTap: { self.viewModel.event(.operatorTap($0)) }
+            onOperatorTap: { self.viewModel.event(.operatorTap($0)) },
+            footer: { isExpanded in
+                
+                VStack {
+                 
+                    Button("Оплатить по реквизитам") {
+                        
+                        self.viewModel.event(.payByRequisites)
+                    }
+                    
+                    if isExpanded {
+
+                        Button("Добавить организацию") {
+                            
+                            self.viewModel.event(.addCompany)
+                        }
+                    }
+                }
+            }
         )
     }
     

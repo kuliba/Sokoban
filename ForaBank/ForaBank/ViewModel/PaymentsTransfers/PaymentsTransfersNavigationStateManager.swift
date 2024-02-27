@@ -28,12 +28,48 @@ extension PaymentsTransfersNavigationStateManager {
 
 enum PaymentsTransfersEvent {
     
+    case addCompany
     case latestPaymentTap(UtilitiesViewModel.LatestPayment)
+    case loaded(GetOperatorsListByParamResponse, for: UtilitiesViewModel.Operator)
     case operatorTap(UtilitiesViewModel.Operator)
+    case payByRequisites
+    case paymentStarted(PaymentStarted)
+    case resetUtilityDestination
+    case utilityServiceTap(UtilitiesViewModel.Operator, UtilityService)
+}
+
+extension PaymentsTransfersEvent {
+    
+    enum GetOperatorsListByParamResponse {
+        
+        // `d3/d4/d5`
+        case failure
+        // `d1` TODO: replace with NonEmpty
+        case list([UtilityService])
+        // `d2` https://shorturl.at/csvCT
+        case single(UtilityService)
+    }
+    
+    enum PaymentStarted {
+        
+        // `e1` https://shorturl.at/jlmJ9
+        case details(PaymentDetails)
+        // `e2`
+        case serverError(String)
+        // `e3`, `e4`
+        case failure
+        
+        struct PaymentDetails {
+            
+            #warning("TBD")
+        }
+    }
 }
 
 enum PaymentsTransfersEffect {
     
+    case getServicesFor(UtilitiesViewModel.Operator)
+    case startPayment(UtilitiesViewModel.Operator, UtilityService)
 }
 
 // MARK: - Preview Content

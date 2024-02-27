@@ -77,6 +77,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         bind()
         bindSections(sections)
         
+        routeSubject
+            .receive(on: scheduler)
+            .assign(to: &$route)
+        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }
     
@@ -117,13 +121,19 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
-    
+        
         let (state, effect) = reduce(route, event)
         routeSubject.send(state)
         
         if let effect {
             
-            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+            rootActions?.spinner.show()
+
+            navigationStateManager.handleEffect(effect) { [weak self] in
+                
+                self?.rootActions?.spinner.hide()
+                self?.event($0)
+            }
         }
     }
     
@@ -136,7 +146,54 @@ extension PaymentsTransfersViewModel {
         var state = state
         var effect: Effect?
         
-        
+        switch event {
+        case .addCompany:
+#warning("side effect, should be moved to the effect handler")
+            rootActions?.switchTab(.chat)
+            
+        case let .latestPaymentTap(latestPayment):
+#warning("FIX ME")
+            break
+            
+        case let .loaded(response, for: `operator`):
+            switch response {
+            case .failure:
+                state.utilitiesRoute?.destination = .failure(`operator`)
+                
+            case let .list(utilityServices):
+                state.utilitiesRoute?.destination = .list(`operator`, utilityServices)
+                
+            case let .single(utilityService):
+                effect = .startPayment(`operator`, utilityService)
+            }
+            
+        case let .operatorTap(`operator`):
+            effect = .getServicesFor(`operator`) // flow `d`
+            
+        case .payByRequisites:
+#warning("side effect, should be moved to the effect handler")
+            payByRequisites()
+            
+        case let .paymentStarted(paymentStarted):
+            switch paymentStarted {
+            case let .details(paymentDetails):
+                state.utilitiesRoute?.destination = .payment(paymentDetails)
+                
+            case .failure:
+                state.modal = .alert(.techError {
+                    fatalError()
+                })
+                
+            case let .serverError(message):
+                state.modal = .alert(.techError(message: message, primaryAction: { fatalError() }))
+            }
+            
+        case .resetUtilityDestination:
+            state.utilitiesRoute?.destination = nil
+            
+        case let .utilityServiceTap(`operator`, utilityService):
+            effect = .startPayment(`operator`, utilityService)
+        }
         
         return (state, effect)
     }
@@ -144,6 +201,32 @@ extension PaymentsTransfersViewModel {
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
+}
+
+extension PaymentsTransfersViewModel.Route {
+    
+    var utilitiesRoute: UtilitiesRoute? {
+        
+        get {
+   
+            guard case let .utilities(utilitiesRoute) = destination
+            else { return nil }
+            
+            return utilitiesRoute
+        }
+        
+        set(newValue) {
+            
+            guard case let .utilities(utilitiesRoute) = destination
+            else { return }
+            
+            if let newValue {
+                destination = .utilities(newValue)
+            } else {
+                destination = .utilities((utilitiesRoute.viewModel, destination: nil))
+            }
+        }
+    }
 }
 
 extension PaymentsTransfersViewModel {
@@ -435,7 +518,7 @@ extension PaymentsTransfersViewModel {
                                     self?.route.destination = .paymentsServices(paymentsServicesViewModel)
     
                                 case let .utilities(utilitiesViewModel):
-                                    self?.route.destination = .utilities(utilitiesViewModel)
+                                    self?.route.destination = .utilities((utilitiesViewModel, nil))
                                 }
                             }
                             
@@ -1451,7 +1534,7 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
-        case utilities(UtilitiesViewModel)
+        case utilities(Route.UtilitiesRoute)
         
         var id: Case {
             
@@ -1553,7 +1636,34 @@ extension PaymentsTransfersViewModel {
             lhs.id == rhs.id
         }
     }
+}
+
+extension PaymentsTransfersViewModel.Route {
     
+    typealias UtilitiesRoute = (viewModel: UtilitiesViewModel, destination: UtilitiesDestination?)
+    
+    enum UtilitiesDestination: Identifiable {
+        
+        case failure(UtilitiesViewModel.Operator)
+        case list(UtilitiesViewModel.Operator, [UtilityService])
+        case payment(PaymentsTransfersEvent.PaymentStarted.PaymentDetails)
+        
+        var id: ID {
+            switch self {
+            case .failure:
+                return .failure
+            case .list:
+                return .list
+            case .payment:
+                return .payment
+            }
+        }
+        
+        enum ID {
+            
+            case failure, list, payment
+        }
+    }
 }
 
 //MARK: - Action

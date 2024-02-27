@@ -8,11 +8,12 @@
 import SwiftUI
 
 #warning("replace with types from module")
-struct UtilitiesView: View {
+struct UtilitiesView<Footer: View>: View {
     
     let state: UtilitiesViewModel.State
     let onLatestPaymentTap: (UtilitiesViewModel.LatestPayment) -> Void
     let onOperatorTap: (UtilitiesViewModel.Operator) -> Void
+    let footer: (Bool) -> Footer
     
     var body: some View {
         
@@ -20,7 +21,13 @@ struct UtilitiesView: View {
             
             if !state.latestPayments.isEmpty {
                 
-                Text(String(describing: state.latestPayments))
+                ForEach(state.latestPayments) { latestPayment in
+                    
+                    Button(String(describing: latestPayment)) {
+                        
+                        onLatestPaymentTap(latestPayment)
+                    }
+                }
             }
             
             if state.operators.isEmpty {
@@ -29,10 +36,18 @@ struct UtilitiesView: View {
                 
             } else {
                 
-                Text("Operators: \(String(describing: state.operators))")
+                List {
+                    
+                    ForEach(state.operators) { `operator` in
+                        
+                        Button(`operator`.id) { onOperatorTap(`operator`) }
+                    }
+                }
+                .listStyle(.plain)
             }
+            
+            footer(!state.operators.isEmpty)
         }
-        
     }
 }
 
@@ -46,7 +61,8 @@ struct UtilitiesView_Previews: PreviewProvider {
                 operators: []
             ),
             onLatestPaymentTap: { _ in },
-            onOperatorTap: { _ in }
+            onOperatorTap: { _ in },
+            footer: { _ in EmptyView() }
         )
     }
 }

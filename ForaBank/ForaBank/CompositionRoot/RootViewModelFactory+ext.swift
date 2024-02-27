@@ -72,11 +72,6 @@ extension RootViewModelFactory {
             }
         }()
         
-        let paymentsTransfersNavigationStateManager = PaymentsTransfersNavigationStateManager(
-            reduce: { _,_ in fatalError() },
-            handleEffect: { _,_ in fatalError() }
-        )
-
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
@@ -113,6 +108,9 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
+        let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
+        )
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -177,7 +175,17 @@ extension RootViewModelFactory {
 #warning("connect solution from MR")
         // from https://git.inn4b.ru/dbs/ios/-/merge_requests/1800
         // model.loadOperators
-        let loadOperators: UtilitiesViewModel.LoadOperators = { _, completion in completion([.init()]) }
+        let loadOperators: UtilitiesViewModel.LoadOperators = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion([
+                    .init(id: "list"),
+                    .init(id: "single"),
+                    .init(id: "failure")
+                ])
+            }
+        }
         
         /*
          rest/v2/getAllLatestPayments?isServicePayments=true
@@ -197,7 +205,13 @@ extension RootViewModelFactory {
         typealias GetAllLatestPaymentsCompletion = ([UtilitiesViewModel.LatestPayment]) -> Void
         typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
         
-        let getAllLatestPayments: GetAllLatestPayments = { $0([]) }
+        let getAllLatestPayments: GetAllLatestPayments = { completion in
+        
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion([])
+            }
+        }
         
         getAllLatestPayments { latestPayments in
             
@@ -244,6 +258,48 @@ extension RootViewModelFactory {
             allOperators: operators,
             addCompanyAction: payload.addCompany,
             requisitesAction: payload.requisites
+        )
+    }
+    
+    static func makePaymentsTransfersNavigationStateManager(
+    ) -> PaymentsTransfersNavigationStateManager {
+        
+        let createAnywayTransfer: PaymentsTransfersEffectHandler.CreateAnywayTransfer = { payload, completion in
+            
+#warning("replace with NanoService.createAnywayTransfer")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                completion(.details(.init()))
+            }
+        }
+        
+        let getOperatorsListByParam: PaymentsTransfersEffectHandler.GetOperatorsListByParam = { payload, completion in
+            
+#warning("replace with NanoService.getOperatorsListByParam")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                switch payload {
+                case "list":
+                    completion(.list([.init(), .init()]))
+                    
+                case "single":
+                    completion(.single(.init()))
+                    
+                default:
+                    completion(.failure)
+                }
+            }
+        }
+        
+        let effectHandler = PaymentsTransfersEffectHandler(
+            createAnywayTransfer: createAnywayTransfer,
+            getOperatorsListByParam: getOperatorsListByParam
+        )
+        
+        return .init(
+            reduce: { _,_ in fatalError() },
+            handleEffect: effectHandler.handleEffect
         )
     }
     
