@@ -42,6 +42,7 @@ struct ComposedOperatorsWrapperView: View {
             },
             operatorView: { `operator` in OperatorView(
                 operator: `operator`,
+                event: { _ in },
                 config: .init(
                     titleFont: .title3,
                     titleColor: .black,
@@ -49,7 +50,9 @@ struct ComposedOperatorsWrapperView: View {
                     descriptionColor: .gray,
                     defaultIconBackgroundColor: .clear,
                     defaultIcon: .init(systemName: "photo.artframe")
-                ))
+                )
+            )
+            .monospacedDigit()  
             },
             footerView: { NoCompanyInListView(
                 noCompanyListViewModel: .sample,
