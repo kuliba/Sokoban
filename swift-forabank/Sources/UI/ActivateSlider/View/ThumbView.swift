@@ -31,26 +31,6 @@ struct ThumbView: View {
     }
 }
 
-struct AnimationModifire: ViewModifier {
-    
-    let isAnimated: Bool
-    
-    @State var isAnimationStarted: Bool = false
-    
-    var animation: Animation { Animation.linear(duration: 1.0).repeatForever(autoreverses: false) }
-    
-    func body(content: Content) -> some View {
-        
-        if isAnimated {
-            
-            content
-                .rotationEffect(Angle.degrees(isAnimationStarted ? 360 : 0))
-                .animation(animation)
-                .onAppear{ isAnimationStarted = true }
-        } else { content }
-    }
-}
-
 struct ThumbView_Previews: PreviewProvider {
     
     static var previews: some View {

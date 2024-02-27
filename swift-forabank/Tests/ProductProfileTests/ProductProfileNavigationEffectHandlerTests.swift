@@ -25,7 +25,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertCVV(id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     func test_showCardBlockedAlert_shouldDeliverShowAlert() {
@@ -35,7 +35,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertCardBlocked(id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     func test_showBlockCardAlert_shouldDeliverShowAlert() {
@@ -45,7 +45,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertBlockCard(.card(), id)
         
-        expect(sut, with: .delayAlert(alert, 0), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
     }
     
     // MARK: - Helpers
@@ -63,10 +63,10 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
         event: CardGuardianEvent? = nil,
-        guardianCard: @escaping SUT.CardGuardianAction = {_ in },
-        toggleVisibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
-        showContacts: @escaping SUT.EmptyAction = {},
-        changePin: @escaping SUT.CardGuardianAction = {_ in },
+        guardianCard: @escaping SUT.GuardCard = {_ in },
+        toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
+        showContacts: @escaping SUT.ShowContacts = {},
+        changePin: @escaping SUT.GuardCard = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line

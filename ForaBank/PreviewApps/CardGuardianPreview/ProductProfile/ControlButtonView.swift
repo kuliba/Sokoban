@@ -45,11 +45,11 @@ struct ControlButtonView: View {
     }
     
     private func destinationView(
-        cgRoute: ProductProfileNavigation.State.ProductProfileRoute
+        ppRoute: ProductProfileNavigation.State.ProductProfileRoute
     ) -> some View {
         
         CardGuardianModule.ThreeButtonsWrappedView(
-            viewModel: cgRoute.viewModel,
+            viewModel: ppRoute.viewModel,
             config: .preview)
         .padding(.top, 26)
         .padding(.bottom, 72)

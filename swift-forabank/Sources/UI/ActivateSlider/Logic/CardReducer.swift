@@ -9,9 +9,9 @@ import Foundation
 
 public final class CardReducer {
     
-    private let sliderLifespan: TimeInterval
+    private let sliderLifespan: DispatchTimeInterval
     
-    public init(sliderLifespan: TimeInterval = 1) {
+    public init(sliderLifespan: DispatchTimeInterval = .seconds(1)) {
         self.sliderLifespan = sliderLifespan
     }
 }

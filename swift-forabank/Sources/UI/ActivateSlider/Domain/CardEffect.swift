@@ -10,6 +10,6 @@ import Foundation
 public enum CardEffect: Equatable {
     
     case activate
-    case dismiss(TimeInterval)
+    case dismiss(DispatchTimeInterval)
 }
 
