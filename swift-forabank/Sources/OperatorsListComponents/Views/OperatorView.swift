@@ -10,19 +10,22 @@ import SwiftUI
 public struct OperatorView: View {
     
     let `operator`: Operator
+    let event: (Operator.ID) -> Void
     let config: OperatorViewConfig
     
     public init(
         `operator`: Operator,
+        event: @escaping (Operator.ID) -> Void,
         config: OperatorViewConfig
     ) {
         self.`operator` = `operator`
         self.config = config
+        self.event = event
     }
     
     public var body: some View {
         
-        Button(action: {  }) {
+        Button(action: { event(`operator`.id) }) {
             
             HStack(spacing: 16) {
                  
@@ -59,6 +62,7 @@ public struct OperatorView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 8)
+            .contentShape(Rectangle())
         }
     }
 }
@@ -105,6 +109,7 @@ struct OperatorView_Previews: PreviewProvider {
                 subtitle: "ИНН 7702070139",
                 image: .init(systemName: "")
             ),
+            event: { _ in },
             config: .init(
                 titleFont: .title3,
                 titleColor: .black,
