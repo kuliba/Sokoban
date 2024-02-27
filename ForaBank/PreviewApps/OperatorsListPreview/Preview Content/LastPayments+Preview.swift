@@ -12,17 +12,17 @@ extension Array where Element == LatestPayment {
     
     static let preview: Self = [
         .init(
-            image: .init(systemName: "photo.artframe"),
+            image: nil,
             title: "ЖКУ Москвы (ЕИРЦ)",
             amount: "100 ₽"
         ),
         .init(
-            image: .init(systemName: "photo.artframe"),
+            image: nil,
             title: "МОСОБЛГАЗ",
             amount: "1 780 ₽"
         ),
         .init(
-            image: .init(systemName: "photo.artframe"),
+            image: nil,
             title: "ЖКУ Краснодара",
             amount: "1 680 ₽"
         )
