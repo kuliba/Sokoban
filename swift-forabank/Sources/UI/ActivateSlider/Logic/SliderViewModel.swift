@@ -25,11 +25,11 @@ final class SliderViewModel: ObservableObject {
         self.didSwitchOn = didSwitchOn
     }
     
-    func dragOnChanged(_ value: DragGesture.Value) {
+    func dragOnChanged(_ translationWidth: CGFloat) {
         
-        if value.translation.width > 0 && offsetX <= maxOffsetX {
+        if translationWidth > 0 && translationWidth <= maxOffsetX {
             
-            offsetX = value.translation.width
+            offsetX = translationWidth
         }
     }
     
