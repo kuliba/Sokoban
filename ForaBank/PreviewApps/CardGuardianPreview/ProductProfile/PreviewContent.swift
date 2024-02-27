@@ -49,19 +49,19 @@ extension ProductProfileViewModel {
             )
         }
         
-        let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+        let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
         
-        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
+        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.ToggleVisibilityOnMain = {
             print("show/hide product \($0.productID)")
         }
         
-        let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+        let changePin: ProductProfileNavigationEffectHandler.GuardCard = {
             print("change pin \($0)")
         }
         
-        let showContacts: ProductProfileNavigationEffectHandler.EmptyAction = {
+        let showContacts: ProductProfileNavigationEffectHandler.ShowContacts = {
             print("show contacts")
         }
         

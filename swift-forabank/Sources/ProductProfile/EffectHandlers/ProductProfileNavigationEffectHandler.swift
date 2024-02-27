@@ -19,25 +19,25 @@ public final class ProductProfileNavigationEffectHandler {
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
     private let makeCardViewModel: MakeCardViewModel
 
-    private let guardianCard: CardGuardianAction
-    private let toggleVisibilityOnMain: VisibilityOnMainAction
-    private let showContacts: EmptyAction
-    private let changePin: CardGuardianAction
+    private let guardCard: GuardCard
+    private let toggleVisibilityOnMain: ToggleVisibilityOnMain
+    private let showContacts: ShowContacts
+    private let changePin: ChangePin
     
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
         makeCardViewModel: @escaping MakeCardViewModel,
-        guardianCard: @escaping CardGuardianAction,
-        toggleVisibilityOnMain: @escaping VisibilityOnMainAction,
-        showContacts: @escaping EmptyAction,
-        changePin: @escaping CardGuardianAction,
+        guardianCard: @escaping GuardCard,
+        toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
+        showContacts: @escaping ShowContacts,
+        changePin: @escaping ChangePin,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
         self.makeCardViewModel = makeCardViewModel
-        self.guardianCard = guardianCard
+        self.guardCard = guardianCard
         self.toggleVisibilityOnMain = toggleVisibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
@@ -72,7 +72,7 @@ public extension ProductProfileNavigationEffectHandler {
     ) {
         switch effect {
         case let .guardCard(card):
-            guardianCard(card)
+            guardCard(card)
         case let .toggleVisibilityOnMain(product):
             toggleVisibilityOnMain(product)
         case let .changePin(card):
@@ -140,9 +140,11 @@ public extension ProductProfileNavigationEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias CardGuardianAction = (Card) -> Void
-    typealias VisibilityOnMainAction = (Product) -> Void
-    typealias EmptyAction = () -> Void
+    // fire and forget
+    typealias GuardCard = (Card) -> Void
+    typealias ChangePin = (Card) -> Void
+    typealias ToggleVisibilityOnMain = (Product) -> Void
+    typealias ShowContacts = () -> Void
 }
 
 // MARK: - CardGuardian

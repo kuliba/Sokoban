@@ -63,10 +63,10 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
         event: CardGuardianEvent? = nil,
-        guardianCard: @escaping SUT.CardGuardianAction = {_ in },
-        toggleVisibilityOnMain: @escaping SUT.VisibilityOnMainAction = {_ in },
-        showContacts: @escaping SUT.EmptyAction = {},
-        changePin: @escaping SUT.CardGuardianAction = {_ in },
+        guardianCard: @escaping SUT.GuardCard = {_ in },
+        toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
+        showContacts: @escaping SUT.ShowContacts = {},
+        changePin: @escaping SUT.GuardCard = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
