@@ -8,8 +8,13 @@
 import SwiftUI
 import CardGuardianModule
 import ProductProfile
+import RxViewModel
+
+typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
     
     var body: some View {
         
@@ -25,8 +30,35 @@ struct ContentView: View {
                         .font(.system(size: 120))
                 }
                 
-                CvvButtonView.cardUnblokedOnMain.offset(x: 40, y: 30)
-                CvvCardBlocked.card.offset(x: -40, y: 30)
+                CvvButtonView(
+                    state: viewModel.state.alert,
+                    event: {
+                        
+                        switch $0 {
+                        case .showAlert:
+                            viewModel.event(.showAlert(.alertCVV()))
+                            
+                        case .closeAlert:
+                            viewModel.event(.closeAlert)
+                        }
+                    }
+                )
+                .offset(x: 40, y: 30)
+                
+                CvvCardBlockedView(
+                    state: viewModel.state.alert,
+                    event: {
+                        
+                        switch $0 {
+                        case .showAlert:
+                            viewModel.event(.showAlert(.alertCardBlocked()))
+                            
+                        case .closeAlert:
+                            viewModel.event(.closeAlert)
+                        }
+                    }
+                )
+                .offset(x: -40, y: 30)
             }
         }
     }
@@ -39,21 +71,30 @@ struct ContentView: View {
                 Text("Aктивна, на главном")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardUnblokedOnMain
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
             
             HStack {
                 Text("Заблокирована (можно разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardBlockedHideOnMain
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
             
             HStack {
                 Text("Заблокирована (нельзя разблокировать)")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.cardBlockedUnlockNotAvailable
+                ControlButtonView.init(
+                    state: viewModel.state,
+                    event: viewModel.event
+                )
             }
         }
         .padding()

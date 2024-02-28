@@ -134,6 +134,7 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .activateSlider,
+        .activateSliderTests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianModule,
@@ -656,6 +657,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .activateSlider,
             .rxViewModel,
             .cardGuardianModule,
             .uiPrimitives,
@@ -1033,7 +1035,26 @@ private extension Target {
     
     static let activateSlider = target(
         name: .activateSlider,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
         path: "Sources/UI/\(String.activateSlider)"
+    )
+    
+    static let activateSliderTests = testTarget(
+        name: .activateSliderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .activateSlider,
+        ],
+        path: "Tests/UI/\(String.activateSliderTests)"
     )
 
     static let buttonWithSheet = target(
@@ -1721,7 +1742,8 @@ private extension String {
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
-    
+    static let activateSliderTests = "ActivateSliderTests"
+
     static let buttonWithSheet = "ButtonWithSheet"
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"

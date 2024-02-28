@@ -1,5 +1,5 @@
 //
-//  Alerts.swift
+//  AlertModelOf+ext.swift
 //
 //
 //  Created by Andryusina Nataly on 07.02.2024.
@@ -9,9 +9,7 @@ import UIPrimitives
 import CardGuardianModule
 import Foundation
 
-struct Alerts {}
-
-extension Alerts {
+public extension AlertModelOf<ProductProfileNavigation.Event> {
     
     static func alertBlockCard(
         _ card: Card,
@@ -121,5 +119,25 @@ extension Alerts {
                 type: .cancel,
                 title: "OK",
                 event: .closeAlert))
+    }
+    
+    static func alertCardNotActivate(
+        _ id: UUID = .init(),
+        card: Card
+    ) -> AlertModelOf<ProductProfileNavigation.Event> {
+        
+        .init(
+            id: id,
+            title: "Активировать карту?",
+            message: "После активации карта будет готова к использованию",
+            primaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .closeAlert),
+            secondaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .productProfile(.activateCard(card)))
+        )
     }
 }
