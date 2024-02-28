@@ -20,15 +20,14 @@ struct InputView: View {
     let config: InputConfigView
     
     var body: some View {
-            
+        
         VStack(alignment: .leading, spacing: 4) {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                    image
-                        .resizable()
-                        .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .center)
-                    
+                image
+                    .resizable()
+                    .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .center)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
@@ -60,7 +59,7 @@ struct InputView: View {
     }
     
     enum Icon {
-    
+        
         case small
         case large
     }
