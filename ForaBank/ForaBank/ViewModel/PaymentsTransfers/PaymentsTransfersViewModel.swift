@@ -264,7 +264,7 @@ extension PaymentsTransfersViewModel {
     private func bind() {
         
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -351,7 +351,7 @@ extension PaymentsTransfersViewModel {
         
         action
             .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Alert })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] in
                 
                 self.route.modal = .alert(.init(title: $0.title, message: $0.message, primary: .init(type: .default, title: "Ок", action: {})))
@@ -361,7 +361,7 @@ extension PaymentsTransfersViewModel {
         action
             .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Payment }
             .map(\.viewModel)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] in
                 
                 self.route.destination = .payments($0)
@@ -370,7 +370,7 @@ extension PaymentsTransfersViewModel {
         
         action
             .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Contacts })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
@@ -382,7 +382,7 @@ extension PaymentsTransfersViewModel {
         
         action
             .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Countries })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
@@ -408,7 +408,7 @@ extension PaymentsTransfersViewModel {
         
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] clientData in
                 
                 userAccountButton.update(clientInfo: clientData.0,
@@ -421,7 +421,7 @@ extension PaymentsTransfersViewModel {
         for section in sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
                     switch action {
@@ -617,7 +617,7 @@ extension PaymentsTransfersViewModel {
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {
         
         templatesListViewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -646,7 +646,7 @@ extension PaymentsTransfersViewModel {
         
         productProfile.action
             .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 self.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -662,7 +662,7 @@ extension PaymentsTransfersViewModel {
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
         
         paymentsViewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -690,7 +690,7 @@ extension PaymentsTransfersViewModel {
     private func bind(_ viewModel: PaymentsMeToMeViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
@@ -734,7 +734,7 @@ extension PaymentsTransfersViewModel {
     private func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -761,7 +761,7 @@ extension PaymentsTransfersViewModel {
     private func bind(_ viewModel: ContactsViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -849,7 +849,7 @@ extension PaymentsTransfersViewModel {
         
         qrViewModel.action
             .compactMap { $0 as? QRViewModelAction.Result }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] payload in
                 
                 switch payload.result {
