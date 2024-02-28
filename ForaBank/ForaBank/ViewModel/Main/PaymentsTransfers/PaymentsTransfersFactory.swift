@@ -33,6 +33,10 @@ final class UtilitiesViewModel: ObservableObject {
     }
     struct Operator: Equatable, Identifiable {
         let id: String
+        
+        init(id: String = UUID().uuidString) {
+            self.id = id
+        }
     }
     struct Payload {}
     
