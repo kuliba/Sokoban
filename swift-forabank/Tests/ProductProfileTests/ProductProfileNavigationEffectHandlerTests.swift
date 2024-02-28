@@ -67,6 +67,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
         showContacts: @escaping SUT.ShowContacts = {},
         changePin: @escaping SUT.GuardCard = {_ in },
+        activateResult: CardEffectHandler.ActivateResult = { .success(())}(),
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -84,21 +85,18 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
-        let cardReduce = CardReducer()
-        
-        let makeCardViewModel: MakeCardViewModel =  {
+        let activate: CardEffectHandler.Activate = { completion in
             
-            .init(
-                initialState: .status(nil),
-                reduce: cardReduce.reduce(_:_:),
-                handleEffect: { _,_ in },
-                scheduler: $0
-            )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+             
+                completion(activateResult)
+            }
         }
-        
+        let cardEffectHandler = CardEffectHandler(activate: activate)
+
         let sut = SUT(
+            handleCardEffect: cardEffectHandler.handleEffect,
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
@@ -107,7 +105,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(cardGuardianReduce, file: file, line: line)
-        trackForMemoryLeaks(cardReduce, file: file, line: line)
+        trackForMemoryLeaks(cardEffectHandler, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut

@@ -26,7 +26,6 @@ public extension ProductProfileNavigation {
         
         case productProfile(ProductProfileEvent)
         
-        case show(CardRoute)
-        case card(CardStateProjection)
+        case card(CardEvent)
     }
 }

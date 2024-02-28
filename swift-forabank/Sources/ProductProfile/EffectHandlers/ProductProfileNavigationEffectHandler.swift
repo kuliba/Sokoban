@@ -15,9 +15,10 @@ public final class ProductProfileNavigationEffectHandler {
     public typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
     
     public typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    
+    private let handleCardEffect: HandleCardEffect
 
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
-    private let makeCardViewModel: MakeCardViewModel
 
     private let guardCard: GuardCard
     private let toggleVisibilityOnMain: ToggleVisibilityOnMain
@@ -27,16 +28,16 @@ public final class ProductProfileNavigationEffectHandler {
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
+        handleCardEffect: @escaping HandleCardEffect,
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        makeCardViewModel: @escaping MakeCardViewModel,
         guardianCard: @escaping GuardCard,
         toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
         showContacts: @escaping ShowContacts,
         changePin: @escaping ChangePin,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        self.handleCardEffect = handleCardEffect
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.makeCardViewModel = makeCardViewModel
         self.guardCard = guardianCard
         self.toggleVisibilityOnMain = toggleVisibilityOnMain
         self.showContacts = showContacts
@@ -63,9 +64,9 @@ public extension ProductProfileNavigationEffectHandler {
             // fire and forget
             handleEffect(effect)
         case let .card(effect):
-            handleEffect(effect, dispatch)
-        case .createSlider:
-            dispatch(makeCardDestination(dispatch))
+            handleCardEffect(effect) {
+                dispatch(.card($0))
+            }
         }
     }
     
@@ -82,19 +83,6 @@ public extension ProductProfileNavigationEffectHandler {
         case .showContacts:
             showContacts()
         }
-    }
-    
-    private func handleEffect(
-        _ effect: CardEffect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        /*switch effect {
-      
-        case .activate:
-            <#code#>
-        case let .dismiss(interval):
-            <#code#>
-        }*/
     }
 }
 
@@ -117,25 +105,6 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
-private extension ProductProfileNavigationEffectHandler {
-    
-    func makeCardDestination(
-        _ dispatch: @escaping Dispatch
-    ) -> Event {
-        
-        let cardViewModel = makeCardViewModel(scheduler)
-        let cancellable = cardViewModel.$state
-            .dropFirst()
-            .compactMap(\.projection)
-            .removeDuplicates()
-            .map(Event.card)
-            .receive(on: scheduler)
-            .sink { dispatch($0) }
-        
-        return .show(.init(cardViewModel, cancellable))
-    }
-}
-
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -148,6 +117,9 @@ public extension ProductProfileNavigationEffectHandler {
     typealias ChangePin = (Card) -> Void
     typealias ToggleVisibilityOnMain = (Product) -> Void
     typealias ShowContacts = () -> Void
+    
+    typealias CardDispatch = (CardEvent) -> Void
+    typealias HandleCardEffect = (CardEffect, @escaping CardDispatch) -> Void
 }
 
 // MARK: - CardGuardian
@@ -170,24 +142,4 @@ private extension CardGuardianState {
 public enum CardGuardianStateProjection: Equatable {
     case appear
     case buttonTapped(CardGuardian.ButtonEvent)
-}
-
-// MARK: - Card
-private extension CardState {
-    
-    var projection: CardStateProjection? {
-        
-        switch self {
-        case .active:
-            return .active
-        case let .status(status):
-            return .status(status)
-        }
-    }
-}
-
-public enum CardStateProjection: Equatable {
-    
-    case active
-    case status(CardState.Status?)
 }

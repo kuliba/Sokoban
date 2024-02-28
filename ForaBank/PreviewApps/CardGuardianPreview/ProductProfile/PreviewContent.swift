@@ -48,17 +48,7 @@ extension ProductProfileViewModel {
             }
         }
         let cardEffectHandler = CardEffectHandler(activate: activate)
-        
-        let makeCardViewModel: MakeCardViewModel =  {
-            
-            .init(
-                initialState: .status(nil),
-                reduce: cardReduce,
-                handleEffect: cardEffectHandler.handleEffect(_:_:),
-                scheduler: $0
-            )
-        }
-        
+                
         let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
@@ -76,8 +66,8 @@ extension ProductProfileViewModel {
         }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
+            handleCardEffect: cardEffectHandler.handleEffect(_:_:),
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
