@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UtilityService: Identifiable {
+struct UtilityService: Equatable, Identifiable {
     
     let id = UUID().uuidString
 }

@@ -152,8 +152,8 @@ extension PaymentsTransfersViewModel {
             rootActions?.switchTab(.chat)
             
         case let .latestPaymentTapped(latestPayment):
-#warning("FIX ME")
-            break
+            // flow `e`
+            effect = .startPayment(.latestPayment(latestPayment))
             
         case let .loaded(response, for: `operator`):
             switch response {
@@ -165,7 +165,7 @@ extension PaymentsTransfersViewModel {
                 
             case let .single(utilityService):
                 // flow `e`
-                effect = .startPayment(`operator`, utilityService)
+                effect = .startPayment(.service(`operator`, utilityService))
             }
             
         case let .operatorTapped(`operator`):
@@ -195,7 +195,7 @@ extension PaymentsTransfersViewModel {
             
         case let .utilityServiceTap(`operator`, utilityService):
             // flow `e`
-            effect = .startPayment(`operator`, utilityService)
+            effect = .startPayment(.service(`operator`, utilityService))
         }
         
         return (state, effect)

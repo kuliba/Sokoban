@@ -28,10 +28,10 @@ final class UtilitiesViewModel: ObservableObject {
         let latestPayments: [LatestPayment]
         let operators: [Operator]
     }
-    struct LatestPayment: Identifiable {
+    struct LatestPayment: Equatable, Identifiable {
         let id = UUID().uuidString
     }
-    struct Operator: Identifiable {
+    struct Operator: Equatable, Identifiable {
         let id: String
     }
     struct Payload {}

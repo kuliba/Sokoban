@@ -26,7 +26,7 @@ extension PaymentsTransfersNavigationStateManager {
     typealias Effect = PaymentsTransfersEffect
 }
 
-enum PaymentsTransfersEvent {
+enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
     case latestPaymentTapped(UtilitiesViewModel.LatestPayment)
@@ -40,7 +40,7 @@ enum PaymentsTransfersEvent {
 
 extension PaymentsTransfersEvent {
     
-    enum GetOperatorsListByParamResponse {
+    enum GetOperatorsListByParamResponse: Equatable {
         
         // `d3/d4/d5`
         case failure
@@ -50,7 +50,7 @@ extension PaymentsTransfersEvent {
         case single(UtilityService)
     }
     
-    enum PaymentStarted {
+    enum PaymentStarted: Equatable {
         
         // `e1` https://shorturl.at/jlmJ9
         case details(PaymentDetails)
@@ -59,17 +59,26 @@ extension PaymentsTransfersEvent {
         // `e3`, `e4`
         case failure
         
-        struct PaymentDetails {
+        struct PaymentDetails: Equatable {
             
             #warning("TBD")
         }
     }
 }
 
-enum PaymentsTransfersEffect {
+enum PaymentsTransfersEffect: Equatable {
     
     case getServicesFor(UtilitiesViewModel.Operator)
-    case startPayment(UtilitiesViewModel.Operator, UtilityService)
+    case startPayment(StartPaymentPayload)
+}
+
+extension PaymentsTransfersEffect {
+    
+    enum StartPaymentPayload: Equatable {
+        
+        case latestPayment(UtilitiesViewModel.LatestPayment)
+        case service(UtilitiesViewModel.Operator, UtilityService)
+    }
 }
 
 // MARK: - Preview Content

@@ -13,7 +13,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_shouldFailOnEmptyProducts() throws {
         
-        let (sut, model) = makeSUT()
+        let (sut, model, _) = makeSUT()
         
         sut.sendBetweenSelf()
         
@@ -24,7 +24,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_meToMe_shouldDeliverActionOnMeToMeSendSuccess() throws {
         
         let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
+        let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
         
@@ -46,7 +46,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_meToMe_shouldNotDeliverActionsAfterBottomSheetDeallocated() throws {
         
         let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
+        let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
         
@@ -68,7 +68,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
          
-         let (sut, _) = makeSUT()
+         let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
          XCTAssertNoDiff(linkSpy.values, [.other])
          
@@ -79,7 +79,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -90,7 +90,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -99,11 +99,62 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
     }
     
+    // MARK: - event(_:)
+    
+    func test_init_shouldNotSetDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    func test_addCompany_shouldNotChangeDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        sut.event(.addCompany)
+        
+        XCTAssertNoDiff(spy.values, [nil, nil])
+    }
+    
+    func test_addCompany_shouldNotDeliverEffect() {
+        
+        let (sut, _, effectSpy) = makeSUT()
+        
+        sut.event(.addCompany)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_latestPaymentTapped_shouldNotChangeDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        sut.event(.latestPaymentTapped(.init()))
+        
+        XCTAssertNoDiff(spy.values, [nil, nil])
+    }
+    
+    func test_latestPaymentTapped_shouldDeliverEffect() {
+        
+        let latestPayment = UtilitiesViewModel.LatestPayment()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        sut.event(.latestPaymentTapped(latestPayment))
+
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
+            .startPayment(.latestPayment(latestPayment))
+        ])
+    }
+    
     // MARK: SBER QR
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
@@ -123,7 +174,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
@@ -144,7 +195,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -164,7 +215,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -185,7 +236,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
         
         try sut.scanAndWait()
@@ -197,7 +248,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$route.map(\.case))
@@ -218,7 +269,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
 //        let sberQRURL = anyURL()
 //        let sberQRData = anyGetSberQRDataResponse()
 //        let sberQRError = anySberQRError()
-//        let (sut, _) = makeSUT(
+//        let (sut, _,_) = makeSUT(
 //            getSberQRDataResultStub: .success(sberQRData)
 //        )
 //        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
@@ -235,7 +286,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
 //    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
 //
-//        let (sut, _) = makeSUT(
+//        let (sut, _,_) = makeSUT(
 //            createSberQRPaymentResultStub: .failure(anySberQRError())
 //        )
 //        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
@@ -251,7 +302,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
 //    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
 //
-//        let (sut, _) = makeSUT(
+//        let (sut, _,_) = makeSUT(
 //            createSberQRPaymentResultStub: .failure(anySberQRError())
 //        )
 //        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
@@ -272,6 +323,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
     
+    private typealias EffectSpy = EffectHandlerSpy<Event, Effect>
+    private typealias State = PaymentsTransfersViewModel.Route
+    private typealias Event = PaymentsTransfersEvent
+    private typealias Effect = PaymentsTransfersEffect
+
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
         let product2 = anyProduct(id: 2, productType: .card, currency: "USD")
@@ -288,7 +344,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: PaymentsTransfersViewModel,
-        model: Model
+        model: Model,
+        effectSpy: EffectSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         if !products.isEmpty {
@@ -302,12 +359,17 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let qrViewModelFactory = QRViewModelFactory.preview()
         
+        let effectSpy = EffectSpy()
+        let navigationStateManager = PaymentsTransfersNavigationStateManager(
+            reduce: { _,_ in fatalError() },
+            handleEffect: effectSpy.handleEffect(_:_:)
+        )
         
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: .legacy, 
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersNavigationStateManager: .preview,
+            paymentsTransfersNavigationStateManager: navigationStateManager,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -322,18 +384,20 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
 
         let sut = PaymentsTransfersViewModel(
             model: model,
-            navigationStateManager: .preview,
+            navigationStateManager: navigationStateManager,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            scheduler: .immediate
         )
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(effectSpy, file: file, line: line)
         
-        return (sut, model)
+        return (sut, model, effectSpy)
     }
 }
 

@@ -34,8 +34,8 @@ extension PaymentsTransfersEffectHandler {
                 dispatch(.loaded($0, for: `operator`))
             }
             
-        case let .startPayment(`operator`, utilityService):
-            createAnywayTransfer((`operator`, utilityService)) {
+        case let .startPayment(payload):
+            createAnywayTransfer(payload) {
                 
                 dispatch(.paymentStarted($0))
             }
@@ -45,7 +45,7 @@ extension PaymentsTransfersEffectHandler {
 
 extension PaymentsTransfersEffectHandler {
     
-    typealias CreateAnywayTransferPayload = (UtilitiesViewModel.Operator, UtilityService)
+    typealias CreateAnywayTransferPayload = PaymentsTransfersEffect.StartPaymentPayload
     typealias CreateAnywayTransferCompletion = (Event.PaymentStarted) -> Void
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
     
