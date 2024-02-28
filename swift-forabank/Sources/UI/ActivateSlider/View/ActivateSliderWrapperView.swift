@@ -34,20 +34,7 @@ public struct ActivateSliderWrapperView: View {
             get: {
                 guard case .status(.confirmActivate) = viewModel.state.cardState
                 else { return nil }
-                return AlertModelOf(
-                    title: "Активировать карту?",
-                    message: "После активации карта будет готова к использованию",
-                    primaryButton: .init(
-                        type: .cancel,
-                        title: "Отмена",
-                        event: GlobalEvent.card(.confirmActivate(.cancel))
-                    ),
-                    secondaryButton: .init(
-                        type: .default,
-                        title: "ОК",
-                        event: GlobalEvent.card(.confirmActivate(.activate))
-                    )
-                )
+                return .activateAlert()
             },
             set: { _ in }),
                content: { .init(with: $0, event: viewModel.event) })
@@ -97,30 +84,4 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             )
         }
     }
-}
-
-public extension GlobalReducer {
-    
-    static func preview(
-        maxOffsetX: CGFloat
-    ) -> GlobalReducer {
-        
-        .init(
-            cardReduce: CardReducer().reduce,
-            sliderReduce: SliderReducer(
-                maxOffsetX: SliderConfig.default.maxOffsetX
-            ).reduce,
-            maxOffset: SliderConfig.default.maxOffsetX
-        )
-    }
-}
-
-public extension CGFloat {
-    
-    static let maxOffsetX = SliderConfig.default.maxOffsetX
-}
-
-public extension GlobalState {
-    
-    static let initialState = GlobalState(cardState: .status(nil), offsetX: 0)
 }
