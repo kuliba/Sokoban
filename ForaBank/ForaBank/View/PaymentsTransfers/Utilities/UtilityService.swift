@@ -9,5 +9,10 @@ import Foundation
 
 struct UtilityService: Equatable, Identifiable {
     
-    let id = UUID().uuidString
+    let id: String
+    
+    init(id: String = UUID().uuidString) {
+     
+        self.id = id
+    }
 }

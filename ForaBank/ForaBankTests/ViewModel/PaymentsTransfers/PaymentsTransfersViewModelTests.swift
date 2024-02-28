@@ -178,7 +178,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_loaded_shouldChangeUtilitiesDestinationToFailureOnList() throws {
         
         let `operator` = makeOperator()
-        let utilityServices: [UtilityService] = [.init(), .init()]
+        let utilityServices = [makeService(), makeService()]
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
         
@@ -191,7 +191,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_loaded_shouldNotDeliverEffectOnList() throws {
         
         let `operator` = makeOperator()
-        let utilityServices: [UtilityService] = [.init(), .init()]
+        let utilityServices = [makeService(), makeService()]
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -203,7 +203,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_loaded_shouldNotChangeStateOnSingle() throws {
         
         let `operator` = makeOperator()
-        let utilityService: UtilityService = .init()
+        let utilityService = makeService()
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
@@ -220,7 +220,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_loaded_shouldDeliverEffectOnSingle() throws {
         
         let `operator` = makeOperator()
-        let utilityService: UtilityService = .init()
+        let utilityService = makeService()
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -518,6 +518,13 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private func makeOperator(
         _ id: String = UUID().uuidString
     ) -> UtilitiesViewModel.Operator {
+        
+        .init(id: id)
+    }
+    
+    private func makeService(
+        _ id: String = UUID().uuidString
+    ) -> UtilityService {
         
         .init(id: id)
     }
