@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 27.02.2024.
 //
 
+import Foundation
+
 struct PaymentsTransfersNavigationStateManager {
     
     let reduce: Reduce
@@ -61,7 +63,12 @@ extension PaymentsTransfersEvent {
         
         struct PaymentDetails: Equatable {
             
-            #warning("TBD")
+            let value: String
+            
+            init(value: String = UUID().uuidString) {
+             
+                self.value = value
+            }
         }
     }
 }

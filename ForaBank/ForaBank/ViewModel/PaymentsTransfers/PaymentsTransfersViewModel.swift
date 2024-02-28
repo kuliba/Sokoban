@@ -187,7 +187,10 @@ extension PaymentsTransfersViewModel {
                 })
                 
             case let .serverError(message):
-                state.modal = .alert(.techError(message: message, primaryAction: { fatalError() }))
+                state.modal = .alert(.techError(
+                    message: message,
+                    primaryAction: { fatalError() }
+                ))
             }
             
         case .resetUtilityDestination:
