@@ -46,7 +46,7 @@ public struct LatestPaymentView: View {
                     )
                 }
                 
-                VStack(spacing: 8) {
+                VStack(spacing: 3) {
 
                     Text(latestPayment.title)
                         .multilineTextAlignment(.center)
