@@ -142,7 +142,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_latestPaymentTapped_shouldDeliverEffect() {
         
-        let latestPayment = UtilitiesViewModel.LatestPayment()
+        let latestPayment = makeLatestPayment()
         let (sut, _, effectSpy) = makeSUT()
         
         sut.event(.latestPaymentTapped(latestPayment))
@@ -525,6 +525,13 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private func makeService(
         _ id: String = UUID().uuidString
     ) -> UtilityService {
+        
+        .init(id: id)
+    }
+    
+    private func makeLatestPayment(
+        _ id: String = UUID().uuidString
+    ) -> UtilitiesViewModel.LatestPayment {
         
         .init(id: id)
     }

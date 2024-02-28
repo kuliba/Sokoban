@@ -29,7 +29,13 @@ final class UtilitiesViewModel: ObservableObject {
         let operators: [Operator]
     }
     struct LatestPayment: Equatable, Identifiable {
-        let id = UUID().uuidString
+        
+        let id: String
+        
+        init(id: String = UUID().uuidString) {
+         
+            self.id = id
+        }
     }
     struct Operator: Equatable, Identifiable {
         let id: String
