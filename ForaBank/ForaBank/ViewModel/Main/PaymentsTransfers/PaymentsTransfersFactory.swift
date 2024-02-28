@@ -7,6 +7,50 @@
 
 import Foundation
 
+#warning("replace with type from module")
+final class UtilitiesViewModel: ObservableObject {
+    
+    @Published private(set) var state: State
+    
+    private let loadOperators: LoadOperators
+    
+    init(
+        initialState: State,
+        loadOperators: @escaping LoadOperators
+    ) {
+        self.state = initialState
+        self.loadOperators = loadOperators
+    }
+    // MARK: - types
+    
+    struct State {
+        
+        let latestPayments: [LatestPayment]
+        let operators: [Operator]
+    }
+    struct LatestPayment: Equatable, Identifiable {
+        
+        let id: String
+        
+        init(id: String = UUID().uuidString) {
+         
+            self.id = id
+        }
+    }
+    struct Operator: Equatable, Identifiable {
+        let id: String
+        
+        init(id: String = UUID().uuidString) {
+            self.id = id
+        }
+    }
+    struct Payload {}
+    
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
+
+}
+
 struct PaymentsTransfersFactory {
     
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
@@ -25,7 +69,13 @@ extension PaymentsTransfersFactory {
         let requisites: () -> Void
     }
     
-    typealias MakeUtilitiesViewModel = (MakeUtilitiesPayload, (PaymentsServicesViewModel) -> Void) -> Void
+    enum UtilitiesVM {
+        
+        case legacy(PaymentsServicesViewModel)
+        case utilities(UtilitiesViewModel)
+    }
+    
+    typealias MakeUtilitiesViewModel = (MakeUtilitiesPayload, @escaping (UtilitiesVM) -> Void) -> Void
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
@@ -41,7 +91,8 @@ extension PaymentsTransfersFactory {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
