@@ -12,37 +12,37 @@ final class CardReducerTests: XCTestCase {
 
     // MARK: - test reduce
     
-    func test_reduce_activateCard_shouldSetEffectConfirmActivate() {
+    func test_activateCard_shouldSetEffectNone() {
         
         assertEffect(.none, onEvent: .activateCard, state: .status(.none))
     }
     
-    func test_reduce_confirmActivateCancel_shouldSetEffectNone() {
+    func test_confirmActivateCancel_shouldSetEffectNone() {
         
         assertEffect(.none, onEvent: .confirmActivate(.cancel), state: .status(.none))
     }
     
-    func test_reduce_confirmActivate_shouldSetEffectActivate() {
+    func test_confirmActivate_shouldSetEffectActivate() {
         
         assertEffect(.activate, onEvent: .confirmActivate(.activate), state: .status(.none))
     }
     
-    func test_reduce_activateCardResponseConnectivityError_shouldSetEffectNone() {
+    func test_activateCardResponseConnectivityError_shouldSetEffectNone() {
         
         assertEffect(.none, onEvent: .activateCardResponse(.connectivityError), state: .status(.none))
     }
     
-    func test_reduce_activateCardResponseServerError_shouldSetEffectNone() {
+    func test_activateCardResponseServerError_shouldSetEffectNone() {
         
         assertEffect(.none, onEvent: .activateCardResponse(.serverError("error")), state: .status(.none))
     }
 
-    func test_reduce_activateCardResponseSuccess_shouldSetEffectDismiss() {
+    func test_activateCardResponseSuccess_shouldSetEffectDismiss() {
         
         assertEffect(.some(.dismiss(.seconds(1))), onEvent: .activateCardResponse(.success), state: .status(.none))
     }
 
-    func test_reduce_dismissActivate_shouldSetEffectNone() {
+    func test_dismissActivate_shouldSetEffectNone() {
         
         assertEffect(.none, onEvent: .dismissActivate, state: .status(.none))
     }
