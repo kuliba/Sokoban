@@ -25,20 +25,21 @@ extension ProductProfileViewModel {
     ) -> ProductProfileViewModel {
         
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
+        let cardReduce = CardReducer().reduce(_:_:)
+
+        let productProfileNavigationReduce = ProductProfileNavigationReducer(cardReduce: cardReduce).reduce(_:_:)
         
-        let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
+        let cardGuardianHandleEffect = CardGuardianEffectHandler().handleEffect(_:_:)
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
             .init(
                 initialState: .init(buttons: buttons),
                 reduce: cardGuardianReduce,
-                handleEffect: { _,_ in },
+                handleEffect: cardGuardianHandleEffect,
                 scheduler: $0
             )
         }
-        
-        let cardReduce = CardReducer().reduce(_:_:)
         
         let activate: CardEffectHandler.Activate = { completion in
             

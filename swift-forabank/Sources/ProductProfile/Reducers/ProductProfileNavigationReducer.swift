@@ -13,11 +13,16 @@ import ActivateSlider
 public final class ProductProfileNavigationReducer {
     
     private let alertLifespan: DispatchTimeInterval
+    private let cardReduce: CardReduce
+
+    public typealias CardReduce = (CardState, CardEvent) -> (CardState, CardEffect?)
 
     public init(
-        alertLifespan: DispatchTimeInterval = .seconds(1)
+        alertLifespan: DispatchTimeInterval = .seconds(1),
+        cardReduce: @escaping CardReduce
     ) {
         self.alertLifespan = alertLifespan
+        self.cardReduce = cardReduce
     }
 }
 
@@ -47,8 +52,8 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, cardGuardianInput)
         case let .productProfile(event):
             (state, effect) = reduce(state, event)
-        case let .card(cardInput):
-            (state, effect) = reduce(state, cardInput)
+        case let .card(cardEvent):
+            (state, effect) = reduce(state, cardEvent)
         }
         return (state, effect)
     }
@@ -132,9 +137,10 @@ private extension ProductProfileNavigationReducer {
         _ event: CardEvent
     ) -> (State, Effect?) {
         
+        var state = state
         var effect: Effect?
 
-        
         return (state, effect)
     }
 }
+
