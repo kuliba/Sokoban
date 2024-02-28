@@ -52,7 +52,6 @@ public struct ActivateSliderWrapperView: View {
             },
             set: { _ in }),
                content: { .init(with: $0, event: viewModel.event) })
-        
     }
 }
 

@@ -35,15 +35,16 @@ public final class SliderViewModel: ObservableObject {
     
     func dragOnEnded() {
         if offsetX > maxOffsetX/2 {
-            offsetX = maxOffsetX
+            withAnimation { offsetX = maxOffsetX }
             didSwitchOn()
         } else {
-            offsetX = 0
+            reset()
         }
     }
     
     func reset() {
-        offsetX = 0
+        
+        withAnimation { offsetX = 0 }
     }
 }
 
