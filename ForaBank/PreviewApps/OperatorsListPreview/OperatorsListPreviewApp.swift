@@ -26,6 +26,10 @@ struct OperatorsListPreviewApp: App {
                     keyboardType: .decimal
                 ))
                 .navigationBarTitle(Text("Услуги ЖКХ"), displayMode: .inline)
+                .navigationBarItems(trailing: Button(action: {}, label: {
+                    
+                    Image.init(systemName: "photo.artframe")
+                }))
             }
         }
     }
