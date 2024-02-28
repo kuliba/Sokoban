@@ -229,6 +229,33 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.startPayment(.service(`operator`, utilityService))])
     }
     
+    func test_operatorTapped_shouldNotChangeState() throws {
+        
+        let `operator` = UtilitiesViewModel.Operator()
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.operatorTapped(`operator`))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_operatorTapped_shouldDeliverEffect() throws {
+        
+        let `operator` = UtilitiesViewModel.Operator()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.operatorTapped(`operator`))
+
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.getServicesFor(`operator`)])
+    }
+    
     // MARK: SBER QR
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
