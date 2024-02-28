@@ -42,7 +42,7 @@ public struct OperatorView: View {
                     )
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 4) {
                     
                     Text(`operator`.title)
                         .lineLimit(1)
@@ -60,8 +60,8 @@ public struct OperatorView: View {
                 
                 Spacer()
             }
-            .padding(.horizontal, 20)
             .padding(.vertical, 8)
+            .frame(height: 46)
             .contentShape(Rectangle())
         }
     }
