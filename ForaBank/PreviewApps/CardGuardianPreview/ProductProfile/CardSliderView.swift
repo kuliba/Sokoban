@@ -12,9 +12,6 @@ import UIPrimitives
 
 struct CardSliderView: View {
     
-    let state: ProductProfileNavigation.State
-    let event: (ProductProfileNavigation.Event) -> Void
-    
     var body: some View {
         
         sliderView(
@@ -23,14 +20,6 @@ struct CardSliderView: View {
                 reduce: CardReducer().reduce(_:_:),
                 handleEffect: CardEffectHandler.activateSuccess.handleEffect
             )
-        )
-        .alert(
-            item: .init(
-                get: { state.alert },
-                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
-                set: { _ in }
-            ),
-            content: { .init(with: $0, event: event) }
         )
     }
     
@@ -46,8 +35,5 @@ struct CardSliderView: View {
 }
 
 #Preview {
-    CardSliderView(
-        state: .init(),
-        event: { _ in }
-    )
+    CardSliderView()
 }

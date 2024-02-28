@@ -14,7 +14,9 @@ typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, 
 
 struct ContentView: View {
     
-    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
+    @StateObject private var viewModel: ProductProfileViewModel = .preview(
+        buttons: .preview,
+        activateResult: .success(()))
     
     var body: some View {
         
@@ -24,9 +26,14 @@ struct ContentView: View {
                 
                 VStack {
                     
-                    CardSliderView(
-                        state: viewModel.state,
-                        event: viewModel.event(_:)
+                    CardSliderView()
+                    .alert(
+                        item: .init(
+                            get: { viewModel.state.alert },
+                            // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                            set: { _ in }
+                        ),
+                        content: { .init(with: $0, event: viewModel.event) }
                     )
                 }
                 .background(.gray)

@@ -20,6 +20,7 @@ extension ProductProfileViewModel {
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
+        activateResult: CardEffectHandler.ActivateResult,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -39,12 +40,21 @@ extension ProductProfileViewModel {
         
         let cardReduce = CardReducer().reduce(_:_:)
         
+        let activate: CardEffectHandler.Activate = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+             
+                completion(activateResult)
+            }
+        }
+        let cardEffectHandler = CardEffectHandler(activate: activate)
+        
         let makeCardViewModel: MakeCardViewModel =  {
             
             .init(
                 initialState: .status(nil),
                 reduce: cardReduce,
-                handleEffect: { _,_ in },
+                handleEffect: cardEffectHandler.handleEffect(_:_:),
                 scheduler: $0
             )
         }
