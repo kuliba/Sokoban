@@ -38,10 +38,11 @@ struct ActivateSliderView: View {
             
             switch state {
             case .active:
-                EmptyView()
+                leftSwitchView(nil)
+                    .opacity(0)
+                
             case let .status(status):
                 switch status {
-                    
                 case nil:
                     leftSwitchView(nil)
                 case .some:
@@ -174,8 +175,6 @@ struct ActivateSliderView_Previews: PreviewProvider {
 extension SliderConfig {
     
     private var slideLength: CGFloat { sizes.totalWidth - sizes.thumbWidth - sizes.thumbPadding * 2 }
-    
-    var maxOffsetX: CGFloat { sizes.totalWidth - (sizes.thumbWidth + sizes.thumbPadding * 2) }
     
     func thumbConfig(_ state: CardState.Status?) -> ThumbConfig {
         

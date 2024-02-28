@@ -12,28 +12,34 @@ import UIPrimitives
 
 struct CardSliderView: View {
     
+    let config: SliderConfig
+    
     var body: some View {
         
         sliderView(
             viewModel: .init(
-                initialState: .status(nil),
-                reduce: CardReducer().reduce(_:_:),
-                handleEffect: CardEffectHandler.activateSuccess.handleEffect
-            )
-        )
+                viewModel: .init(
+                    initialState: .status(nil),
+                    reduce: CardReducer().reduce,
+                    handleEffect: CardEffectHandler.activateSuccess.handleEffect
+                ),
+                maxOffsetX: config.maxOffsetX),
+            config: config)
+        
     }
     
     private func sliderView(
-        viewModel: CardViewModel
+        viewModel: CardViewWithSliderModel,
+        config: SliderConfig
     ) -> some View {
         
         ActivateSliderWrapperView(
             viewModel: viewModel,
-            config: .default
+            config: config
         )
     }
 }
 
 #Preview {
-    CardSliderView()
+    CardSliderView(config: .default)
 }

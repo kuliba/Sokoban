@@ -26,15 +26,7 @@ struct ContentView: View {
                 
                 VStack {
                     
-                    CardSliderView()
-                    .alert(
-                        item: .init(
-                            get: { viewModel.state.alert },
-                            // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
-                            set: { _ in }
-                        ),
-                        content: { .init(with: $0, event: viewModel.event) }
-                    )
+                    CardSliderView(config: .default)
                 }
                 .background(.gray)
                 

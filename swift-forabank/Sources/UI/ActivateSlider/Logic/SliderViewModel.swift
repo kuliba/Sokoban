@@ -8,14 +8,14 @@
 import Foundation
 import SwiftUI
 
-final class SliderViewModel: ObservableObject {
+public final class SliderViewModel: ObservableObject {
     
     @Published private(set) var offsetX: CGFloat
     private let maxOffsetX: CGFloat
     
     private let didSwitchOn: () -> Void
 
-    init(
+    public init(
         offsetX: CGFloat = 0,
         maxOffsetX: CGFloat,
         didSwitchOn: @escaping () -> Void

@@ -9,16 +9,15 @@ import SwiftUI
 import RxViewModel
 import UIPrimitives
 
-public typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
 
 public struct ActivateSliderWrapperView: View {
     
-    @ObservedObject var viewModel: CardViewModel
+    @ObservedObject var viewModel: CardViewWithSliderModel
     
     let config: SliderConfig
     
     public init(
-        viewModel: CardViewModel,
+        viewModel: CardViewWithSliderModel,
         config: SliderConfig
     ) {
         self.viewModel = viewModel
@@ -28,14 +27,24 @@ public struct ActivateSliderWrapperView: View {
     public var body: some View {
         
         ActivateSliderView(
-            viewModel: .init(
-                maxOffsetX: config.maxOffsetX,
-                didSwitchOn: {
-                    viewModel.event(.activateCard)
-                }),
+            viewModel: viewModel.sliderViewModel,
             state: viewModel.state,
             event: viewModel.event,
             config: config)
+        .alert(item: .init(
+            get: {
+                guard case .status(.confirmActivate) = viewModel.state
+                else { return nil }
+                return AlertModelOf(
+                    title: "Confirm",
+                    message: "Confirm?",
+                    primaryButton: .init(type: .cancel, title: "Cancel", event: CardEvent.confirmActivate(.cancel)),
+                    secondaryButton: .init(type: .default, title: "Ok", event: CardEvent.confirmActivate(.activate))
+                )
+            },
+            set: { _ in }),
+               content: { .init(with: $0, event: viewModel.event) })
+        
     }
 }
 
@@ -59,10 +68,12 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    initialState: .status(nil),
-                    reduce: CardReducer().reduce,
-                    handleEffect: CardEffectHandler.activateSuccess.handleEffect
-                ),
+                    viewModel: .init(
+                        initialState: .status(nil),
+                        reduce: CardReducer().reduce,
+                        handleEffect: CardEffectHandler.activateSuccess.handleEffect
+                    ),
+                    maxOffsetX: SliderConfig.default.maxOffsetX),
                 config: .default
             )
         }
@@ -76,13 +87,14 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    initialState: .status(nil),
-                    reduce: CardReducer().reduce,
-                    handleEffect: CardEffectHandler.activateFailure.handleEffect
-                ),
+                    viewModel: .init(
+                        initialState: .status(nil),
+                        reduce: CardReducer().reduce,
+                        handleEffect: CardEffectHandler.activateFailure.handleEffect
+                    ),
+                    maxOffsetX: SliderConfig.default.maxOffsetX),
                 config: .default
             )
         }
     }
 }
-
