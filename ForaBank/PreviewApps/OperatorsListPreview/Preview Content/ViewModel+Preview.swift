@@ -40,6 +40,27 @@ extension UtilityPaymentsViewModel {
     }
 }
 
+extension UtilityPaymentsState {
+    
+    var filteredOperators: [OperatorsListComponents.Operator] {
+        
+        guard let operators = operators as? [OperatorsListComponents.Operator] else {
+            return []
+        }
+        
+        if searchText.isEmpty {
+            return operators
+            
+        } else {
+            
+            return operators.filter { item in
+                
+                item.title.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+}
+
 extension StubbedOperatorLoader {
     
     typealias UPRxPayload = UtilityPaymentsEffectHandler<LatestPayment, Operator>.LoadOperatorsPayload
