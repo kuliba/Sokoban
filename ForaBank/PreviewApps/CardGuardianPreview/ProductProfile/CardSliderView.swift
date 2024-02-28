@@ -12,7 +12,7 @@ import UIPrimitives
 
 struct CardSliderView: View {
     
-    let viewModel: CardViewWithSliderModel
+    let viewModel: CardWithSliderViewModel
     let config: SliderConfig
     
     var body: some View {

@@ -1,5 +1,5 @@
 //
-//  CardViewWithSliderModel.swift
+//  CardWithSliderViewModel.swift
 //
 //
 //  Created by Andryusina Nataly on 28.02.2024.
@@ -11,7 +11,7 @@ import RxViewModel
 
 public typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
 
-public final class CardViewWithSliderModel: ObservableObject {
+public final class CardWithSliderViewModel: ObservableObject {
     
     @Published public private(set) var state: State
     
@@ -45,7 +45,7 @@ public final class CardViewWithSliderModel: ObservableObject {
     }
 }
 
-public extension CardViewWithSliderModel {
+public extension CardWithSliderViewModel {
     
     func event(_ event: Event) {
         
@@ -53,7 +53,7 @@ public extension CardViewWithSliderModel {
     }
 }
 
-public extension CardViewWithSliderModel {
+public extension CardWithSliderViewModel {
     
     typealias State = CardState
     typealias Event = CardEvent

@@ -9,15 +9,14 @@ import SwiftUI
 import RxViewModel
 import UIPrimitives
 
-
 public struct ActivateSliderWrapperView: View {
     
-    @ObservedObject var viewModel: CardViewWithSliderModel
+    @ObservedObject var viewModel: CardWithSliderViewModel
     
     let config: SliderConfig
     
     public init(
-        viewModel: CardViewWithSliderModel,
+        viewModel: CardWithSliderViewModel,
         config: SliderConfig
     ) {
         self.viewModel = viewModel
