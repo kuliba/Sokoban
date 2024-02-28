@@ -20,7 +20,6 @@ extension ProductProfileViewModel {
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
-        activateResult: CardEffectHandler.ActivateResult,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         

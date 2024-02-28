@@ -15,9 +15,7 @@ typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, 
 
 struct ContentView: View {
     
-    @StateObject private var viewModel: ProductProfileViewModel = .preview(
-        buttons: .preview,
-        activateResult: .success(()))
+    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
     
     var body: some View {
         
