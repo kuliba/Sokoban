@@ -36,10 +36,18 @@ public struct ActivateSliderWrapperView: View {
                 guard case .status(.confirmActivate) = viewModel.state
                 else { return nil }
                 return AlertModelOf(
-                    title: "Confirm",
-                    message: "Confirm?",
-                    primaryButton: .init(type: .cancel, title: "Cancel", event: CardEvent.confirmActivate(.cancel)),
-                    secondaryButton: .init(type: .default, title: "Ok", event: CardEvent.confirmActivate(.activate))
+                    title: "Активировать карту?",
+                    message: "После активации карта будет готова к использованию",
+                    primaryButton: .init(
+                        type: .cancel,
+                        title: "Отмена",
+                        event: CardEvent.confirmActivate(.cancel)
+                    ),
+                    secondaryButton: .init(
+                        type: .default,
+                        title: "ОК",
+                        event: CardEvent.confirmActivate(.activate)
+                    )
                 )
             },
             set: { _ in }),

@@ -9,6 +9,7 @@ import SwiftUI
 import CardGuardianModule
 import ProductProfile
 import RxViewModel
+import ActivateSlider
 
 typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 
@@ -26,9 +27,36 @@ struct ContentView: View {
                 
                 VStack {
                     
-                    CardSliderView(config: .default)
+                    CardSliderView(
+                        viewModel: .init(
+                            viewModel: .init(
+                                initialState: .status(nil),
+                                reduce: CardReducer().reduce,
+                                handleEffect: CardEffectHandler.activateSuccess.handleEffect
+                            ),
+                            maxOffsetX: SliderConfig.default.maxOffsetX),
+                        config: .default
+                    )
+                    .padding()
                 }
                 .background(.gray)
+                
+                VStack {
+                    
+                    CardSliderView(
+                        viewModel: .init(
+                            viewModel: .init(
+                                initialState: .status(nil),
+                                reduce: CardReducer().reduce,
+                                handleEffect: CardEffectHandler.activateFailure.handleEffect
+                            ),
+                            maxOffsetX: SliderConfig.default.maxOffsetX),
+                        config: .default
+                    )
+                    .padding()
+                }
+                .background(.gray)
+
                 
                 ZStack {
                     
