@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 27.02.2024.
 //
 
+import Foundation
+
 struct PaymentsTransfersNavigationStateManager {
     
     let reduce: Reduce
@@ -26,12 +28,12 @@ extension PaymentsTransfersNavigationStateManager {
     typealias Effect = PaymentsTransfersEffect
 }
 
-enum PaymentsTransfersEvent {
+enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
-    case latestPaymentTap(UtilitiesViewModel.LatestPayment)
+    case latestPaymentTapped(UtilitiesViewModel.LatestPayment)
     case loaded(GetOperatorsListByParamResponse, for: UtilitiesViewModel.Operator)
-    case operatorTap(UtilitiesViewModel.Operator)
+    case operatorTapped(UtilitiesViewModel.Operator)
     case payByRequisites
     case paymentStarted(PaymentStarted)
     case resetUtilityDestination
@@ -40,7 +42,7 @@ enum PaymentsTransfersEvent {
 
 extension PaymentsTransfersEvent {
     
-    enum GetOperatorsListByParamResponse {
+    enum GetOperatorsListByParamResponse: Equatable {
         
         // `d3/d4/d5`
         case failure
@@ -50,26 +52,40 @@ extension PaymentsTransfersEvent {
         case single(UtilityService)
     }
     
-    enum PaymentStarted {
+    enum PaymentStarted: Equatable {
         
         // `e1` https://shorturl.at/jlmJ9
         case details(PaymentDetails)
-        // `e2`
-        case serverError(String)
         // `e3`, `e4`
         case failure
+        // `e2`
+        case serverError(String)
         
-        struct PaymentDetails {
+        struct PaymentDetails: Equatable {
             
-            #warning("TBD")
+            let value: String
+            
+            init(value: String = UUID().uuidString) {
+             
+                self.value = value
+            }
         }
     }
 }
 
-enum PaymentsTransfersEffect {
+enum PaymentsTransfersEffect: Equatable {
     
     case getServicesFor(UtilitiesViewModel.Operator)
-    case startPayment(UtilitiesViewModel.Operator, UtilityService)
+    case startPayment(StartPaymentPayload)
+}
+
+extension PaymentsTransfersEffect {
+    
+    enum StartPaymentPayload: Equatable {
+        
+        case latestPayment(UtilitiesViewModel.LatestPayment)
+        case service(UtilitiesViewModel.Operator, UtilityService)
+    }
 }
 
 // MARK: - Preview Content
