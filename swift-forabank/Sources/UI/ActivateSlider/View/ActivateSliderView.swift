@@ -13,7 +13,7 @@ struct ActivateSliderView: View {
     
     let state: CardState
     let event: (CardEvent) -> Void
-    let dragOnChanged: (DragGesture.Value) -> Void
+    let dragOnChanged: (CGFloat) -> Void
     let dragOnEnded: () -> Void
     
     let config: SliderConfig
@@ -71,7 +71,8 @@ struct ActivateSliderView: View {
                 .offset(x: viewModel.offsetX, y: 0)
                 .gesture(
                     DragGesture(coordinateSpace: .local)
-                        .onChanged(dragOnChanged)
+                        .onChanged { dragOnChanged($0.translation.width)
+                        }
                         .onEnded {_ in
                             dragOnEnded()
                         }
