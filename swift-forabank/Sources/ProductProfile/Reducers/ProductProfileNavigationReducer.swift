@@ -8,12 +8,15 @@
 import Foundation
 import UIPrimitives
 import CardGuardianModule
+import ActivateSlider
 
 public final class ProductProfileNavigationReducer {
     
-    private let alertLifespan: TimeInterval
+    private let alertLifespan: DispatchTimeInterval
 
-    public init(alertLifespan: TimeInterval = 1) {
+    public init(
+        alertLifespan: DispatchTimeInterval = .seconds(1)
+    ) {
         self.alertLifespan = alertLifespan
     }
 }
@@ -41,11 +44,13 @@ public extension ProductProfileNavigationReducer {
         case let .open(modal):
             state.modal = .init(modal.viewModel, modal.cancellable)
         case let .cardGuardianInput(cardGuardianInput):
-            state.alert = nil
             (state, effect) = reduce(state, cardGuardianInput)
         case let .productProfile(event):
-            state.alert = nil
             (state, effect) = reduce(state, event)
+        case let .card(event):
+            (state, effect) = reduce(state, event)
+        case let .show(event):
+             break
         }
         return (state, effect)
     }
@@ -68,6 +73,8 @@ private extension ProductProfileNavigationReducer {
         var state = state
         var effect: Effect?
         
+        state.alert = nil
+        
         switch cardGuardianInput {
         
         case .appear:
@@ -77,11 +84,9 @@ private extension ProductProfileNavigationReducer {
                 
             case let .toggleLock(card):
                 state.modal = nil
-                state.alert = nil
-                effect = .delayAlert(Alerts.alertBlockCard(card), alertLifespan)
+                effect = .delayAlert(AlertModelOf.alertBlockCard(card), alertLifespan)
             case let .changePin(card):
                 state.modal = nil
-                state.alert = nil
                 effect = .productProfile(.changePin(card))
             case let .toggleVisibilityOnMain(product):
                 state.modal = nil
@@ -101,7 +106,10 @@ private extension ProductProfileNavigationReducer {
     ) -> (State, Effect?) {
         
         var effect: Effect?
+        var state = state
         
+        state.alert = nil
+
         switch event {
             
         case let .guardCard(card):
@@ -112,7 +120,36 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.changePin(card))
         case .showContacts:
             effect = .productProfile(.showContacts)
+        case let .activateCard(card):
+            // TODO: add effect
+            break
         }
+        return (state, effect)
+    }
+}
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: CardEvent
+    ) -> (State, Effect?) {
+        
+        var effect: Effect?
+        
+        /*
+         // TODO: add effect
+         switch event {
+            
+        case .swipe:
+            <#code#>
+        case .alertTap(_):
+            <#code#>
+        case .inflight:
+            <#code#>
+        case .activateCardResponse(_):
+            <#code#>
+        }*/
         return (state, effect)
     }
 }

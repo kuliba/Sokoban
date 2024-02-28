@@ -1849,7 +1849,7 @@
 		8357E34E2B6CF7C20065E581 /* CardGuardianModule in Frameworks */ = {isa = PBXBuildFile; productRef = 8357E34D2B6CF7C20065E581 /* CardGuardianModule */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
 		835E7C732B7E301E0044FB67 /* CvvButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835E7C722B7E301E0044FB67 /* CvvButtonView.swift */; };
-		835E7C752B7E3B690044FB67 /* CvvCardBlocked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835E7C742B7E3B690044FB67 /* CvvCardBlocked.swift */; };
+		835E7C752B7E3B690044FB67 /* CvvCardBlockedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */; };
 		8362FAFF29DEDCB70094457E /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */; };
 		8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */; };
 		8362FB0329DEF7F20094457E /* SearchCityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0229DEF7F20094457E /* SearchCityViewModel.swift */; };
@@ -1861,6 +1861,8 @@
 		8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 8376CE532AA7395000DCDE63 /* LandingUIComponent */; };
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83802B992A010FF100257D8C /* ProductBackViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83802B982A010FF100257D8C /* ProductBackViewComponent.swift */; };
+		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
+		83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219AF2A4D8FD500A34482 /* ProductConfig.swift */; };
 		83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219B12A4D940900A34482 /* ProductConfigTests.swift */; };
@@ -4274,9 +4276,10 @@
 		8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianModule.xctestplan; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
 		8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardGuardianPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ActivateSlider.xctestplan; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		835E7C722B7E301E0044FB67 /* CvvButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvButtonView.swift; sourceTree = "<group>"; };
-		835E7C742B7E3B690044FB67 /* CvvCardBlocked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvCardBlocked.swift; sourceTree = "<group>"; };
+		835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvCardBlockedView.swift; sourceTree = "<group>"; };
 		8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
 		8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesOperatorsView.swift; sourceTree = "<group>"; };
 		8362FB0229DEF7F20094457E /* SearchCityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCityViewModel.swift; sourceTree = "<group>"; };
@@ -4285,6 +4288,8 @@
 		83660CEF2AD940EC0001B786 /* CvvPInErrorMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvPInErrorMapperTests.swift; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		83802B982A010FF100257D8C /* ProductBackViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackViewComponent.swift; sourceTree = "<group>"; };
+		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
+		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
@@ -6760,6 +6765,7 @@
 			isa = PBXGroup;
 			children = (
 				2A4C35B92B69256400694861 /* FastPaymentsSettingsPreview-Info.plist */,
+				8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */,
 				8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */,
 				2A566EAF2B6816BB00359E05 /* CardStatementAPI.xctestplan */,
 				2A566EB82B6816BC00359E05 /* CarouselComponent.xctestplan */,
@@ -10386,7 +10392,7 @@
 				8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */,
 				833370BF2B6D369800B424E8 /* ControlButtonView.swift */,
 				835E7C722B7E301E0044FB67 /* CvvButtonView.swift */,
-				835E7C742B7E3B690044FB67 /* CvvCardBlocked.swift */,
+				835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -10396,9 +10402,11 @@
 			children = (
 				833370B72B6D2BC600B424E8 /* ProductProfile */,
 				83361EB02B6CF89900F58C10 /* CardGuardianPreviewApp.swift */,
-				83361EB12B6CF89900F58C10 /* Assets.xcassets */,
-				83361EB22B6CF89900F58C10 /* Preview Content */,
 				83361EB42B6CF89900F58C10 /* ContentView.swift */,
+				83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */,
+				83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */,
+				83361EB22B6CF89900F58C10 /* Preview Content */,
+				83361EB12B6CF89900F58C10 /* Assets.xcassets */,
 			);
 			path = CardGuardianPreview;
 			sourceTree = "<group>";
@@ -13807,11 +13815,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				835E7C752B7E3B690044FB67 /* CvvCardBlocked.swift in Sources */,
+				835E7C752B7E3B690044FB67 /* CvvCardBlockedView.swift in Sources */,
 				8300FB6E2B725E0800BE62E5 /* PreviewContent.swift in Sources */,
+				83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */,
 				83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */,
 				83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */,
 				835E7C732B7E301E0044FB67 /* CvvButtonView.swift in Sources */,
+				83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */,
 				833370C32B6D36D800B424E8 /* ControlButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

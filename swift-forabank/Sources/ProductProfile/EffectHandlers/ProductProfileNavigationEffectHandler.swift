@@ -8,29 +8,36 @@
 import Foundation
 import CardGuardianModule
 import RxViewModel
+import ActivateSlider
 
 public final class ProductProfileNavigationEffectHandler {
+     
+    public typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
     
-    public typealias MakeCardGuardianViewModel = CardGuardianFactory.MakeCardGuardianViewModel
-    
+    public typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
-    private let guardianCard: CardGuardianAction
-    private let toggleVisibilityOnMain: VisibilityOnMainAction
-    private let showContacts: EmptyAction
-    private let changePin: CardGuardianAction
+    private let makeCardViewModel: MakeCardViewModel
+
+    private let guardCard: GuardCard
+    private let toggleVisibilityOnMain: ToggleVisibilityOnMain
+    private let showContacts: ShowContacts
+    private let changePin: ChangePin
     
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        guardianCard: @escaping CardGuardianAction,
-        toggleVisibilityOnMain: @escaping VisibilityOnMainAction,
-        showContacts: @escaping EmptyAction,
-        changePin: @escaping CardGuardianAction,
+        makeCardViewModel: @escaping MakeCardViewModel,
+        guardianCard: @escaping GuardCard,
+        toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
+        showContacts: @escaping ShowContacts,
+        changePin: @escaping ChangePin,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.guardianCard = guardianCard
+        self.makeCardViewModel = makeCardViewModel
+        self.guardCard = guardianCard
         self.toggleVisibilityOnMain = toggleVisibilityOnMain
         self.showContacts = showContacts
         self.changePin = changePin
@@ -45,8 +52,8 @@ public extension ProductProfileNavigationEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .delayAlert(alert, timeInterval):
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
+        case let .delayAlert(alert, dispatchTimeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) {
                 
                 dispatch(.showAlert(alert))
             }
@@ -54,6 +61,8 @@ public extension ProductProfileNavigationEffectHandler {
             dispatch(makeDestination(dispatch))
         case let .productProfile(effect):
             // fire and forget
+            handleEffect(effect)
+        case let .card(effect):
             handleEffect(effect)
         }
     }
@@ -63,7 +72,7 @@ public extension ProductProfileNavigationEffectHandler {
     ) {
         switch effect {
         case let .guardCard(card):
-            guardianCard(card)
+            guardCard(card)
         case let .toggleVisibilityOnMain(product):
             toggleVisibilityOnMain(product)
         case let .changePin(card):
@@ -71,6 +80,18 @@ public extension ProductProfileNavigationEffectHandler {
         case .showContacts:
             showContacts()
         }
+    }
+    
+    private func handleEffect(
+        _ effect: CardEffect
+    ) {
+        /*switch effect {
+      
+        case .activate:
+            <#code#>
+        case let .dismiss(interval):
+            <#code#>
+        }*/
     }
 }
 
@@ -93,6 +114,25 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
+private extension ProductProfileNavigationEffectHandler {
+    
+    func makeCardDestination(
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let cardViewModel = makeCardViewModel(scheduler)
+        let cancellable = cardViewModel.$state
+            .dropFirst()
+            /*.compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.cardGuardianInput)*/
+            .receive(on: scheduler)
+            .sink { _ in /*dispatch($0)*/ }
+        
+        return .show(.init(cardViewModel, cancellable))
+    }
+}
+
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -100,9 +140,11 @@ public extension ProductProfileNavigationEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias CardGuardianAction = (Card) -> Void
-    typealias VisibilityOnMainAction = (Product) -> Void
-    typealias EmptyAction = () -> Void
+    // fire and forget
+    typealias GuardCard = (Card) -> Void
+    typealias ChangePin = (Card) -> Void
+    typealias ToggleVisibilityOnMain = (Product) -> Void
+    typealias ShowContacts = () -> Void
 }
 
 // MARK: - CardGuardian
