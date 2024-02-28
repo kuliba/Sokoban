@@ -11,12 +11,12 @@ import UIPrimitives
 
 public struct ActivateSliderWrapperView: View {
     
-    @ObservedObject var viewModel: CardWithSliderViewModel
+    @ObservedObject var viewModel: GlobalViewModel
     
     let config: SliderConfig
     
     public init(
-        viewModel: CardWithSliderViewModel,
+        viewModel: GlobalViewModel,
         config: SliderConfig
     ) {
         self.viewModel = viewModel
@@ -26,13 +26,13 @@ public struct ActivateSliderWrapperView: View {
     public var body: some View {
         
         ActivateSliderView(
-            viewModel: viewModel.sliderViewModel,
             state: viewModel.state,
-            event: viewModel.event,
-            config: config)
+            event: { viewModel.event(.slider($0)) },
+            config: config
+        )
         .alert(item: .init(
             get: {
-                guard case .status(.confirmActivate) = viewModel.state
+                guard case .status(.confirmActivate) = viewModel.state.cardState
                 else { return nil }
                 return AlertModelOf(
                     title: "Активировать карту?",
@@ -40,12 +40,12 @@ public struct ActivateSliderWrapperView: View {
                     primaryButton: .init(
                         type: .cancel,
                         title: "Отмена",
-                        event: CardEvent.confirmActivate(.cancel)
+                        event: GlobalEvent.card(.confirmActivate(.cancel))
                     ),
                     secondaryButton: .init(
                         type: .default,
                         title: "ОК",
-                        event: CardEvent.confirmActivate(.activate)
+                        event: GlobalEvent.card(.confirmActivate(.activate))
                     )
                 )
             },
@@ -74,12 +74,9 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    viewModel: .init(
-                        initialState: .status(nil),
-                        reduce: CardReducer().reduce,
-                        handleEffect: CardEffectHandler.activateSuccess.handleEffect
-                    ),
-                    maxOffsetX: SliderConfig.default.maxOffsetX),
+                    initialState: .initialState,
+                    reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                    handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateSuccess.handleEffect(_:_:)).handleEffect(_:_:)),
                 config: .default
             )
         }
@@ -93,14 +90,37 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    viewModel: .init(
-                        initialState: .status(nil),
-                        reduce: CardReducer().reduce,
-                        handleEffect: CardEffectHandler.activateFailure.handleEffect
-                    ),
-                    maxOffsetX: SliderConfig.default.maxOffsetX),
+                    initialState: .initialState,
+                    reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                    handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateFailure.handleEffect(_:_:)).handleEffect(_:_:)),
                 config: .default
             )
         }
     }
+}
+
+public extension GlobalReducer {
+    
+    static func preview(
+        maxOffsetX: CGFloat
+    ) -> GlobalReducer {
+        
+        .init(
+            cardReduce: CardReducer().reduce,
+            sliderReduce: SliderReducer(
+                maxOffsetX: SliderConfig.default.maxOffsetX
+            ).reduce,
+            maxOffset: SliderConfig.default.maxOffsetX
+        )
+    }
+}
+
+public extension CGFloat {
+    
+    static let maxOffsetX = SliderConfig.default.maxOffsetX
+}
+
+public extension GlobalState {
+    
+    static let initialState = GlobalState(cardState: .status(nil), offsetX: 0)
 }

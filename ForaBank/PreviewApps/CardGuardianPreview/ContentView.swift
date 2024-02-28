@@ -25,32 +25,24 @@ struct ContentView: View {
                 
                 VStack {
                     
-                    CardSliderView(
+                    ActivateSliderWrapperView(
                         viewModel: .init(
-                            viewModel: .init(
-                                initialState: .status(nil),
-                                reduce: CardReducer().reduce,
-                                handleEffect: CardEffectHandler.activateSuccess.handleEffect
-                            ),
-                            maxOffsetX: SliderConfig.default.maxOffsetX),
-                        config: .default
-                    )
+                            initialState: .initialState,
+                            reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                            handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateSuccess.handleEffect(_:_:)).handleEffect(_:_:)),
+                        config: .default)
                     .padding()
                 }
                 .background(.gray)
                 
                 VStack {
                     
-                    CardSliderView(
+                    ActivateSliderWrapperView(
                         viewModel: .init(
-                            viewModel: .init(
-                                initialState: .status(nil),
-                                reduce: CardReducer().reduce,
-                                handleEffect: CardEffectHandler.activateFailure.handleEffect
-                            ),
-                            maxOffsetX: SliderConfig.default.maxOffsetX),
-                        config: .default
-                    )
+                            initialState: .initialState,
+                            reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                            handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateFailure.handleEffect(_:_:)).handleEffect(_:_:)),
+                        config: .default)
                     .padding()
                 }
                 .background(.gray)

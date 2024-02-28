@@ -8,35 +8,17 @@
 import SwiftUI
 
 struct ActivateSliderView: View {
-    
-    @StateObject private var viewModel: SliderViewModel
-    
-    let state: CardState
-    let event: (CardEvent) -> Void
-    let dragOnChanged: (CGFloat) -> Void
-    let dragOnEnded: () -> Void
+        
+    let state: GlobalState
+    let event: (SliderEvent) -> Void
     
     let config: SliderConfig
-    
-    init(
-        viewModel: SliderViewModel,
-        state: CardState,
-        event: @escaping (CardEvent) -> Void,
-        config: SliderConfig
-    ) {
-        self._viewModel = .init(wrappedValue: viewModel)
-        self.state = state
-        self.event = event
-        self.dragOnChanged = viewModel.dragOnChanged
-        self.dragOnEnded = viewModel.dragOnEnded
-        self.config = config
-    }
-    
+        
     var body: some View {
         
         VStack {
             
-            switch state {
+            switch state.cardState {
             case .active:
                 leftSwitchView(nil)
                     .opacity(0)
@@ -52,36 +34,37 @@ struct ActivateSliderView: View {
         }
     }
     
-    private func leftSwitchView(_ state: CardState.Status?) -> some View {
+    private func leftSwitchView(_ status: CardState.Status?) -> some View {
         
         ZStack {
             
             Capsule()
                 .foregroundColor(config.colors.backgroundColor)
-                .opacity(config.backgroundOpacityBy(offsetX: viewModel.offsetX))
+                .opacity(config.backgroundOpacityBy(offsetX: state.offsetX))
             
-            Text(config.itemForState(state).title)
+            Text(config.itemForState(nil).title)
                 .font(config.font)
                 .foregroundColor(config.colors.foregroundColor)
-                .opacity(config.titleOpacityBy(offsetX: viewModel.offsetX))
+                .opacity(config.titleOpacityBy(offsetX: state.offsetX))
                 .padding(.trailing, 14)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             
-            ThumbView(config: config.thumbConfig(state))
+            ThumbView(config: config.thumbConfig(nil))
                 .padding(.all, 4)
-                .offset(x: viewModel.offsetX, y: 0)
+                .offset(x: state.offsetX, y: 0)
                 .gesture(
                     DragGesture(coordinateSpace: .local)
-                        .onChanged { dragOnChanged($0.translation.width)
+                        .onChanged { 
+                            event(.drag($0.translation.width))
                         }
-                        .onEnded {_ in
-                            dragOnEnded()
+                        .onEnded {
+                            event(.dragEnded($0.translation.width))
                         }
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(width: config.sizes.totalWidth, height: 48)
-        .animation(.default, value: viewModel.offsetX)
+        .animation(.default, value: state.offsetX)
     }
     
     private func rightSwipeView(_ state: CardState.Status?) -> some View {
@@ -117,11 +100,7 @@ struct ActivateSliderView_Previews: PreviewProvider {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(
-                        maxOffsetX: SliderConfig.default.maxOffsetX,
-                        didSwitchOn: {}
-                    ),
-                    state: .status(nil),
+                    state: .init(cardState: .status(nil), offsetX: 0),
                     event: {_ in },
                     config: .default
                 )
@@ -131,11 +110,7 @@ struct ActivateSliderView_Previews: PreviewProvider {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(
-                        maxOffsetX: SliderConfig.default.maxOffsetX,
-                        didSwitchOn: {}
-                    ),
-                    state: .status(.confirmActivate),
+                    state: .init(cardState: .status(.confirmActivate), offsetX: 0),
                     event: {_ in },
                     config: .default
                 )
@@ -145,11 +120,7 @@ struct ActivateSliderView_Previews: PreviewProvider {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(
-                        maxOffsetX: SliderConfig.default.maxOffsetX,
-                        didSwitchOn: {}
-                    ),
-                    state: .status(.inflight),
+                    state: .init(cardState: .status(.inflight), offsetX: 0),
                     event: {_ in },
                     config: .default
                 )
@@ -159,11 +130,7 @@ struct ActivateSliderView_Previews: PreviewProvider {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    viewModel: .init(
-                        maxOffsetX: SliderConfig.default.maxOffsetX,
-                        didSwitchOn: {}
-                    ),
-                    state: .status(.activated),
+                    state: .init(cardState: .status(.activated), offsetX: 0),
                     event: {_ in },
                     config: .default
                 )
@@ -232,3 +199,13 @@ extension SliderConfig {
         }
     }
 }
+
+private extension GlobalState {
+    
+    var cardStateStatus: CardState.Status? {
+        
+        guard case let .status(status) = cardState else { return nil }
+        return status
+    }
+}
+

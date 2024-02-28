@@ -14,9 +14,7 @@ import ActivateSlider
 extension ProductProfileViewModel {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-    
-    typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
-    
+        
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
