@@ -56,10 +56,10 @@ extension PaymentsTransfersEvent {
         
         // `e1` https://shorturl.at/jlmJ9
         case details(PaymentDetails)
-        // `e2`
-        case serverError(String)
         // `e3`, `e4`
         case failure
+        // `e2`
+        case serverError(String)
         
         struct PaymentDetails: Equatable {
             
