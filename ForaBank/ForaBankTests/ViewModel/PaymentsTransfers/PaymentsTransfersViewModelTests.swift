@@ -154,7 +154,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldChangeUtilitiesDestinationToFailureOnFailure() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
         
@@ -166,7 +166,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldNotDeliverEffectOnFailure() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -177,7 +177,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldChangeUtilitiesDestinationToFailureOnList() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let utilityServices: [UtilityService] = [.init(), .init()]
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
@@ -190,7 +190,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldNotDeliverEffectOnList() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let utilityServices: [UtilityService] = [.init(), .init()]
         let (sut, _, effectSpy) = makeSUT()
         
@@ -202,7 +202,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldNotChangeStateOnSingle() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let utilityService: UtilityService = .init()
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
@@ -219,7 +219,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_loaded_shouldDeliverEffectOnSingle() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let utilityService: UtilityService = .init()
         let (sut, _, effectSpy) = makeSUT()
         
@@ -231,7 +231,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_operatorTapped_shouldNotChangeState() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
@@ -247,7 +247,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_operatorTapped_shouldDeliverEffect() throws {
         
-        let `operator` = UtilitiesViewModel.Operator()
+        let `operator` = makeOperator()
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -513,6 +513,13 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         trackForMemoryLeaks(effectSpy, file: file, line: line)
         
         return (sut, model, effectSpy)
+    }
+    
+    private func makeOperator(
+        _ id: String = UUID().uuidString
+    ) -> UtilitiesViewModel.Operator {
+        
+        .init(id: id)
     }
 }
 
