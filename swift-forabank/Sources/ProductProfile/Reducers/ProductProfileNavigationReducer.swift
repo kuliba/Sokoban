@@ -8,21 +8,15 @@
 import Foundation
 import UIPrimitives
 import CardGuardianModule
-import ActivateSlider
 
 public final class ProductProfileNavigationReducer {
     
     private let alertLifespan: DispatchTimeInterval
-    private let cardReduce: CardReduce
-
-    public typealias CardReduce = (CardState, CardEvent) -> (CardState, CardEffect?)
 
     public init(
-        alertLifespan: DispatchTimeInterval = .seconds(1),
-        cardReduce: @escaping CardReduce
+        alertLifespan: DispatchTimeInterval = .seconds(1)
     ) {
         self.alertLifespan = alertLifespan
-        self.cardReduce = cardReduce
     }
 }
 
@@ -52,8 +46,6 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, cardGuardianInput)
         case let .productProfile(event):
             (state, effect) = reduce(state, event)
-        case let .card(cardEvent):
-            (state, effect) = reduce(state, cardEvent)
         }
         return (state, effect)
     }
@@ -123,24 +115,7 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.changePin(card))
         case .showContacts:
             effect = .productProfile(.showContacts)
-        case .activateCard:
-            effect = .card(.activate)
         }
         return (state, effect)
     }
 }
-
-private extension ProductProfileNavigationReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: CardEvent
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-
-        return (state, effect)
-    }
-}
-

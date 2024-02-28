@@ -120,23 +120,4 @@ public extension AlertModelOf<ProductProfileNavigation.Event> {
                 title: "OK",
                 event: .closeAlert))
     }
-    
-    static func alertCardNotActivate(
-        _ id: UUID = .init()
-    ) -> AlertModelOf<ProductProfileNavigation.Event> {
-        
-        .init(
-            id: id,
-            title: "Активировать карту?",
-            message: "После активации карта будет готова к использованию",
-            primaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: .closeAlert),
-            secondaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: .productProfile(.activateCard))
-        )
-    }
 }

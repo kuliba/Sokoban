@@ -25,9 +25,8 @@ extension ProductProfileViewModel {
     ) -> ProductProfileViewModel {
         
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
-        let cardReduce = CardReducer().reduce(_:_:)
 
-        let productProfileNavigationReduce = ProductProfileNavigationReducer(cardReduce: cardReduce).reduce(_:_:)
+        let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
         
         let cardGuardianHandleEffect = CardGuardianEffectHandler().handleEffect(_:_:)
         
@@ -40,16 +39,7 @@ extension ProductProfileViewModel {
                 scheduler: $0
             )
         }
-        
-        let activate: CardEffectHandler.Activate = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-             
-                completion(activateResult)
-            }
-        }
-        let cardEffectHandler = CardEffectHandler(activate: activate)
-                
+                        
         let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
@@ -67,7 +57,6 @@ extension ProductProfileViewModel {
         }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
-            handleCardEffect: cardEffectHandler.handleEffect(_:_:),
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,

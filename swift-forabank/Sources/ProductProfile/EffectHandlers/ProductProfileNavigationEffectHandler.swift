@@ -8,16 +8,11 @@
 import Foundation
 import CardGuardianModule
 import RxViewModel
-import ActivateSlider
 
 public final class ProductProfileNavigationEffectHandler {
-     
-    public typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
-    
+         
     public typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     
-    private let handleCardEffect: HandleCardEffect
-
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
 
     private let guardCard: GuardCard
@@ -28,7 +23,6 @@ public final class ProductProfileNavigationEffectHandler {
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
-        handleCardEffect: @escaping HandleCardEffect,
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
         guardianCard: @escaping GuardCard,
         toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
@@ -36,7 +30,6 @@ public final class ProductProfileNavigationEffectHandler {
         changePin: @escaping ChangePin,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.handleCardEffect = handleCardEffect
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
         self.guardCard = guardianCard
         self.toggleVisibilityOnMain = toggleVisibilityOnMain
@@ -63,10 +56,6 @@ public extension ProductProfileNavigationEffectHandler {
         case let .productProfile(effect):
             // fire and forget
             handleEffect(effect)
-        case let .card(effect):
-            handleCardEffect(effect) {
-                dispatch(.card($0))
-            }
         }
     }
     
@@ -117,9 +106,6 @@ public extension ProductProfileNavigationEffectHandler {
     typealias ChangePin = (Card) -> Void
     typealias ToggleVisibilityOnMain = (Product) -> Void
     typealias ShowContacts = () -> Void
-    
-    typealias CardDispatch = (CardEvent) -> Void
-    typealias HandleCardEffect = (CardEffect, @escaping CardDispatch) -> Void
 }
 
 // MARK: - CardGuardian

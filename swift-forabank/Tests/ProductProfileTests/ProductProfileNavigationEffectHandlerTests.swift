@@ -7,7 +7,6 @@
 
 @testable import ProductProfile
 import CardGuardianModule
-import ActivateSlider
 import RxViewModel
 import UIPrimitives
 import XCTest
@@ -45,7 +44,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         let id = UUID()
         let alert = AlertModelOf.alertBlockCard(.card(), id)
         
-        expect(sut, with: .delayAlert(alert, .milliseconds(300)), toDeliver: .showAlert(alert))
+        expect(sut, with: .delayAlert(alert, .seconds(1)), toDeliver: .showAlert(alert))
     }
     
     // MARK: - Helpers
@@ -55,9 +54,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-    
-    private typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
-    
+        
     private typealias OpenPanelSpy = () -> Void
     
     private func makeSUT(
@@ -67,7 +64,6 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
         showContacts: @escaping SUT.ShowContacts = {},
         changePin: @escaping SUT.GuardCard = {_ in },
-        activateResult: CardEffectHandler.ActivateResult = { .success(())}(),
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -75,27 +71,19 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         
         let cardGuardianReduce = CardGuardianReducer()
         
+        let cardGuardianHandleEffect = CardGuardianEffectHandler()
+        
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
             .init(
                 initialState: .init(buttons: buttons),
                 reduce: cardGuardianReduce.reduce(_:_:),
-                handleEffect: { _,_ in },
+                handleEffect: cardGuardianHandleEffect.handleEffect(_:_:),
                 scheduler: $0
             )
         }
         
-        let activate: CardEffectHandler.Activate = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-             
-                completion(activateResult)
-            }
-        }
-        let cardEffectHandler = CardEffectHandler(activate: activate)
-
         let sut = SUT(
-            handleCardEffect: cardEffectHandler.handleEffect,
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
@@ -105,7 +93,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(cardGuardianReduce, file: file, line: line)
-        trackForMemoryLeaks(cardEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(cardGuardianHandleEffect, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut

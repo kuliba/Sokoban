@@ -7,13 +7,10 @@
 
 import UIPrimitives
 import CardGuardianModule
-import ActivateSlider
 
 public extension ProductProfileNavigation {
     
     typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
-
-    typealias CardRoute = GenericRoute<CardViewModel, Never, Never, Never>
 
     indirect enum Event: Equatable {
         
@@ -25,7 +22,5 @@ public extension ProductProfileNavigation {
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
         case productProfile(ProductProfileEvent)
-        
-        case card(CardEvent)
     }
 }
