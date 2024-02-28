@@ -29,9 +29,9 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent {
     
     case addCompany
-    case latestPaymentTap(UtilitiesViewModel.LatestPayment)
+    case latestPaymentTapped(UtilitiesViewModel.LatestPayment)
     case loaded(GetOperatorsListByParamResponse, for: UtilitiesViewModel.Operator)
-    case operatorTap(UtilitiesViewModel.Operator)
+    case operatorTapped(UtilitiesViewModel.Operator)
     case payByRequisites
     case paymentStarted(PaymentStarted)
     case resetUtilityDestination

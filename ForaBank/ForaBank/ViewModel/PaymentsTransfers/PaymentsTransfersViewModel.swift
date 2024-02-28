@@ -151,7 +151,7 @@ extension PaymentsTransfersViewModel {
 #warning("side effect, should be moved to the effect handler")
             rootActions?.switchTab(.chat)
             
-        case let .latestPaymentTap(latestPayment):
+        case let .latestPaymentTapped(latestPayment):
 #warning("FIX ME")
             break
             
@@ -164,11 +164,13 @@ extension PaymentsTransfersViewModel {
                 state.utilitiesRoute?.destination = .list(`operator`, utilityServices)
                 
             case let .single(utilityService):
+                // flow `e`
                 effect = .startPayment(`operator`, utilityService)
             }
             
-        case let .operatorTap(`operator`):
-            effect = .getServicesFor(`operator`) // flow `d`
+        case let .operatorTapped(`operator`):
+            // flow `d`
+            effect = .getServicesFor(`operator`)
             
         case .payByRequisites:
 #warning("side effect, should be moved to the effect handler")
@@ -192,6 +194,7 @@ extension PaymentsTransfersViewModel {
             state.utilitiesRoute?.destination = nil
             
         case let .utilityServiceTap(`operator`, utilityService):
+            // flow `e`
             effect = .startPayment(`operator`, utilityService)
         }
         

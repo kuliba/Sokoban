@@ -331,8 +331,8 @@ struct PaymentsTransfersView: View {
         
         UtilitiesView(
             state: viewModel.state,
-            onLatestPaymentTap: { self.viewModel.event(.latestPaymentTap($0)) },
-            onOperatorTap: { self.viewModel.event(.operatorTap($0)) },
+            onLatestPaymentTap: { self.viewModel.event(.latestPaymentTapped($0)) },
+            onOperatorTap: { self.viewModel.event(.operatorTapped($0)) },
             footer: { isExpanded in
                 
                 VStack {
