@@ -115,45 +115,6 @@ final class GlobalReducerTestsTests: XCTestCase {
         sut: SUT? = nil,
         _ event: Event,
         on state: State,
-        updateStateToExpected: UpdateStateToExpected<State>? = nil,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let sut = sut ?? makeSUT()
-        
-        _assertState(
-            sut,
-            event,
-            on: state,
-            updateStateToExpected: updateStateToExpected,
-            file: file, line: line
-        )
-    }
-    
-    private func assert(
-        sut: SUT? = nil,
-        _ currentState: State,
-        _ event: Event,
-        reducedTo expectedState: State,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        
-        let sut = sut ?? makeSUT()
-        let (receivedState, _) = sut.reduce(currentState, event)
-        
-        XCTAssertNoDiff(
-            receivedState,
-            expectedState,
-            "\nExpected \(expectedState), but got \(receivedState) instead.",
-            file: file, line: line
-        )
-    }
-    
-    private func assert(
-        sut: SUT? = nil,
-        _ event: Event,
-        on state: State,
         effect expectedEffect: Effect?,
         file: StaticString = #file,
         line: UInt = #line
