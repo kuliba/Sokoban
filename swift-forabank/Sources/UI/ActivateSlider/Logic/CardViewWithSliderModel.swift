@@ -38,18 +38,8 @@ public final class CardViewWithSliderModel: ObservableObject {
             .sink { [weak self, sliderViewModel] state in
                 self?.state = state
                 
-                switch state {
-                    
-                case .active:
-                    break
-                case let .status(val):
-                    switch val {
-                        
-                    case .none:
-                        sliderViewModel.reset()
-                    default:
-                        break
-                    }
+                if case .status(nil) = state {
+                    sliderViewModel.reset()
                 }
             }
     }
