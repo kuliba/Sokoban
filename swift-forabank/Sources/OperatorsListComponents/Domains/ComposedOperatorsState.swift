@@ -9,12 +9,12 @@ import Foundation
 
 public struct ComposedOperatorsState {
     
-    let operators: [Operator]
-    let latestPayments: [LatestPayment]
+    let operators: [Operator]?
+    let latestPayments: [LatestPayment]?
     
     public init(
-        operators: [Operator],
-        latestPayments: [LatestPayment]
+        operators: [Operator]?,
+        latestPayments: [LatestPayment]?
     ) {
         self.operators = operators
         self.latestPayments = latestPayments

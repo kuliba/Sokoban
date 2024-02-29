@@ -14,13 +14,19 @@ import TextFieldComponent
 struct OperatorsListPreviewApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(searchViewModel: .init(
-                initialState: .placeholder("Search subscriptions"),
-                reducer: TransformingReducer(
-                    placeholderText: "Search subscriptions"
-                ),
-                keyboardType: .decimal
-            ))
+            
+            NavigationView {
+                
+                ContentView(
+                    searchViewModel: .init(
+                            initialState: .placeholder("Search subscriptions"),
+                            reducer: TransformingReducer(
+                                placeholderText: "Search subscriptions"
+                            ),
+                    keyboardType: .decimal
+                ))
+                .navigationBarTitle(Text("Услуги ЖКХ"), displayMode: .inline)
+            }
         }
     }
 }

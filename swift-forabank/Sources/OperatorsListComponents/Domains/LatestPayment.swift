@@ -13,7 +13,7 @@ public struct LatestPaymentData {
     let additionalList: [AdditionalItem]
     let serviceId: String
     
-    struct AdditionalItem: Codable, Equatable {
+    struct AdditionalItem: Equatable {
         
         let fieldTitle: String?
         let fieldName: String

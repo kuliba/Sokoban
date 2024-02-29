@@ -1,6 +1,6 @@
 //
-//  SwiftUIView.swift
-//  
+//  ComposedOperatorsView.swift
+//
 //
 //  Created by Дмитрий Савушкин on 08.02.2024.
 //
@@ -43,113 +43,45 @@ public struct ComposedOperatorsView<
             
             searchView()
             
-            VStack(spacing: 32) {
+            LazyVStack(spacing: 16) {
                 
-                ScrollView(.horizontal) {
+                if let latestPayments = state.latestPayments {
                     
-                    HStack {
+                    ScrollView(.horizontal) {
                         
-                        ForEach(state.latestPayments, content:  lastPaymentView)
+                        LazyHStack {
+                            
+                            ForEach(latestPayments, content: lastPaymentView)
+                        }
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
+                if let operators = state.operators {
                     
-                    ForEach(state.operators, content: operatorView)
-                }
-                
-                if let lastOperator = state.operators.last {
-                    
-                    Color.red.frame(width: 40, height: 40, alignment: .center)
-                        .onAppear(perform: {
-                            print(lastOperator)
-                            event(.utility(.didScrollTo(.init(lastOperator.id))))
-                        })
+                    LazyVStack(alignment: .leading, spacing: 8) {
+                        
+                        ForEach(operators, content: _operatorView)
+                    }
                 }
                 
                 footerView()
+                    .onAppear { 
+                        
+                        event(.utility(.initiate))
+                    }
             }
         }
         .padding(.horizontal, 16)
         .padding(.top, 8)
         .padding(.bottom, 20)
     }
-}
-
-extension ComposedOperatorsView {
     
-    private func lastPaymentView(
-        latestPayment: LatestPayment
+    private func _operatorView(
+        operator: Operator
     ) -> some View {
         
-        Button {
-            
-            event(.selectLastOperation(latestPayment.id))
-            
-        } label: {
-            
-            VStack {
-             
-                latestPayment.image
-                    .resizable()
-                    .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                
-                VStack(spacing: 8) {
-
-                    Text(latestPayment.title)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .foregroundColor(.black)
-                        .font(.system(size: 12))
-                        .lineLimit(1)
-                        
-                        Text(latestPayment.amount)
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .foregroundColor(.red)
-                            .font(.system(size: 12))
-                }
-            }
-            .frame(width: 80, height: 80, alignment: .center)
-        }
-        .contentShape(Rectangle())
-    }
-    
-    public func operatorView(
-        _ operator: Operator
-    ) -> some View {
-        
-        Button {
-            event(.selectOperator(`operator`.id))
-        } label: {
-            
-            HStack {
-             
-                `operator`.image
-                    .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                
-                VStack(spacing: 8) {
-
-                    Text(`operator`.title)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.black)
-                        .font(.system(size: 16))
-                        .lineLimit(1)
-                    
-                    if let subtitle = `operator`.subtitle {
-                        
-                        Text(subtitle)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.gray)
-                            .font(.system(size: 12))
-                    }
-                }
-            }
-            .frame(height: 56)
-        }
-        .contentShape(Rectangle())
+        operatorView(`operator`)
+            .onAppear { event(.utility(.didScrollTo(`operator`.id))) }
     }
 }
 
@@ -190,18 +122,32 @@ public struct Operator: Equatable, Identifiable {
 public struct LatestPayment: Equatable, Identifiable {
     
     public var id: String { title }
-    let image: Image
+    let image: Image?
     let title: String
     let amount: String
     
     public init(
-        image: Image,
+        image: Image?,
         title: String,
         amount: String
     ) {
         self.image = image
         self.title = title
         self.amount = amount
+    }
+    
+    public struct LatestPaymentConfig {
+        
+        let defaultImage: Image
+        let backgroundColor: Color
+        
+        public init(
+            defaultImage: Image,
+            backgroundColor: Color
+        ) {
+            self.defaultImage = defaultImage
+            self.backgroundColor = backgroundColor
+        }
     }
 }
 

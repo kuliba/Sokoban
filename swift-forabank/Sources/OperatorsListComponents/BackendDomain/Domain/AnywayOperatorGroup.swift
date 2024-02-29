@@ -7,8 +7,9 @@
 
 import Foundation
 
-public struct OperatorGroup: Codable, Equatable {
+public struct OperatorGroup: Codable, Equatable, Identifiable {
     
+    public var id: String { title }
     let md5hash: String
     public let title: String
     public let description: String

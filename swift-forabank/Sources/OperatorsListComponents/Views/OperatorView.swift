@@ -10,21 +10,24 @@ import SwiftUI
 public struct OperatorView: View {
     
     let `operator`: Operator
+    let event: (Operator.ID) -> Void
     let config: OperatorViewConfig
     
     public init(
         `operator`: Operator,
+        event: @escaping (Operator.ID) -> Void,
         config: OperatorViewConfig
     ) {
         self.`operator` = `operator`
         self.config = config
+        self.event = event
     }
     
     public var body: some View {
         
-        Button(action: {  }) {
+        Button(action: { event(`operator`.id) }) {
             
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                  
                 if let image = `operator`.image {
                     
@@ -33,7 +36,7 @@ public struct OperatorView: View {
                         .frame(width: 40, height: 40)
                 } else {
                     
-                    defaultIcon(
+                    Image.defaultIcon(
                         backgroundColor: config.defaultIconBackgroundColor,
                         icon: config.defaultIcon
                     )
@@ -59,23 +62,7 @@ public struct OperatorView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 8)
-        }
-    }
-    
-    func defaultIcon(
-        backgroundColor: Color,
-        icon: Image
-    ) -> some View {
-        
-        ZStack {
-            
-            Circle()
-                .frame(width: 40, height: 40)
-                .background(backgroundColor)
-            
-            icon
-                .frame(width: 24, height: 24)
-                .foregroundColor(.white)
+            .contentShape(Rectangle())
         }
     }
 }
@@ -122,13 +109,14 @@ struct OperatorView_Previews: PreviewProvider {
                 subtitle: "ИНН 7702070139",
                 image: .init(systemName: "")
             ),
+            event: { _ in },
             config: .init(
                 titleFont: .title3,
                 titleColor: .black,
                 descriptionFont: .body,
                 descriptionColor: .gray,
                 defaultIconBackgroundColor: .black,
-                defaultIcon: .init(systemName: "")
+                defaultIcon: .init(systemName: "photo.artframe")
             )
         )
     }

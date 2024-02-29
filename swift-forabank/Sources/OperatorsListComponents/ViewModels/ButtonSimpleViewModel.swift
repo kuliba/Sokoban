@@ -10,18 +10,20 @@ import SwiftUI
 
 public final class ButtonSimpleViewModel: Identifiable {
     
-    public let id = UUID()
+    public let id: UUID
     let title: String
     let action: () -> Void
 
     let buttonConfiguration: ButtonConfiguration
     
     public init(
+        id: UUID = UUID(),
         title: String,
         buttonConfiguration: ButtonConfiguration,
         action: @escaping () -> Void
     ) {
 
+        self.id = id
         self.title = title
         self.action = action
         self.buttonConfiguration = buttonConfiguration

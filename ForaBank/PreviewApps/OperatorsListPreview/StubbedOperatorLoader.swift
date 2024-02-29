@@ -19,13 +19,15 @@ final class StubbedOperatorLoader {
     _ completion: @escaping LoadCompletion
     ) {
         
-        if let payload {
-         
-            completion(.success(.next1()))
+        if let payload,
+           let index = Int(payload.0) {
+            
+            let i = (index + 1) / payload.1
+            completion(.success(.page(pageNumber: i, pageSize: payload.1)))
             
         } else {
             
-            completion(.success(.initial()))
+            completion(.success(.page(pageSize: payload?.1 ?? 20)))
         }
     }
 }
