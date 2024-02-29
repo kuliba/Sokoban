@@ -8,13 +8,7 @@
 import Tagged
 
 public struct Card: Equatable, Hashable {
-    
-    public typealias CardID = Tagged<_CardID, Int>
-    public enum _CardID {}
-    
-    public typealias CardNumber = Tagged<_CardNumber, String>
-    public enum _CardNumber {}
-    
+        
     let cardId: CardID
     let cardNumber: CardNumber
     let cardStatus: CardStatus
@@ -32,4 +26,13 @@ public struct Card: Equatable, Hashable {
     public var status: CardStatus {
         return cardStatus
     }
+}
+
+public extension Card {
+    
+    typealias CardID = Tagged<_CardID, Int>
+    enum _CardID {}
+    
+    typealias CardNumber = Tagged<_CardNumber, String>
+    enum _CardNumber {}
 }
