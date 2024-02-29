@@ -67,7 +67,6 @@ final class TopUpCardReducerTests: XCTestCase {
     private typealias Result = (State, Effect?)
     
     private func makeSUT(
-        maxOffset: CGFloat = 100,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
