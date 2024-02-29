@@ -315,9 +315,6 @@ extension PaymentsTransfersViewModel {
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     resetModal()
                     
-                case _ as PaymentsTransfersViewModelAction.Close.Sheet:
-                    resetModal()
-                    
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
                     
@@ -797,7 +794,7 @@ extension PaymentsTransfersViewModel {
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                    self.resetModal()
                     
                     switch payload.source {
                     case let .latestPayment(latestPaymentId):
@@ -1717,8 +1714,6 @@ enum PaymentsTransfersViewModelAction {
     enum Close {
         
         struct BottomSheet: Action {}
-        
-        struct Sheet: Action {}
         
         struct FullCover: Action {}
         
