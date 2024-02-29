@@ -1,11 +1,10 @@
 //
-//  Card.swift
-//
+//  TopUpCardEffect.swift
+//  
 //
 //  Created by Andryusina Nataly on 29.02.2024.
 //
 
 import Foundation
 
-public struct Card {
-}
+public enum TopUpCardEffect: Equatable {}
