@@ -35,6 +35,12 @@ public extension CardEffectHandler {
                 
                 dispatch(.dismissActivate)
             }
+        case let .confirmation(timeInterval):
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
+                
+                dispatch(.activateCard)
+            }
         }
     }
 }

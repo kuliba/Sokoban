@@ -9,35 +9,32 @@ import SwiftUI
 import RxViewModel
 import UIPrimitives
 
-public typealias CardViewModel = RxViewModel<CardState, CardEvent, CardEffect>
-
-struct ActivateSliderWrapperView: View {
+public struct ActivateSliderWrapperView: View {
     
-    @ObservedObject var viewModel: CardViewModel
+    @ObservedObject var viewModel: GlobalViewModel
     
     let config: SliderConfig
     
-    var body: some View {
+    public init(
+        viewModel: GlobalViewModel,
+        config: SliderConfig
+    ) {
+        self.viewModel = viewModel
+        self.config = config
+    }
+    
+    public var body: some View {
         
         ActivateSliderView(
-            viewModel: .init(
-                maxOffsetX: config.maxOffsetX,
-                didSwitchOn: {
-                    viewModel.event(.activateCard)
-                }),
             state: viewModel.state,
-            event: viewModel.event,
-            config: config)
+            event: { viewModel.event(.slider($0)) },
+            config: config
+        )
         .alert(item: .init(
             get: {
-                guard case .status(.confirmActivate) = viewModel.state
+                guard case .status(.confirmActivate) = viewModel.state.cardState
                 else { return nil }
-                return AlertModelOf(
-                    title: "Confirm",
-                    message: "Confirm?",
-                    primaryButton: .init(type: .cancel, title: "Cancel", event: CardEvent.confirmActivate(.cancel)),
-                    secondaryButton: .init(type: .default, title: "Ok", event: CardEvent.confirmActivate(.activate))
-                )
+                return .activateAlert()
             },
             set: { _ in }),
                content: { .init(with: $0, event: viewModel.event) })
@@ -64,10 +61,9 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    initialState: .status(nil),
-                    reduce: CardReducer().reduce,
-                    handleEffect: CardEffectHandler.activateSuccess.handleEffect
-                ),
+                    initialState: .initialState,
+                    reduce: CardActivateReducer.reduceForPreview(),
+                    handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()),
                 config: .default
             )
         }
@@ -81,10 +77,9 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             
             ActivateSliderWrapperView(
                 viewModel: .init(
-                    initialState: .status(nil),
-                    reduce: CardReducer().reduce,
-                    handleEffect: CardEffectHandler.activateFailure.handleEffect
-                ),
+                    initialState: .initialState,
+                    reduce: CardActivateReducer.reduceForPreview(),
+                    handleEffect: CardActivateEffectHandler.handleEffectActivateFailure()),
                 config: .default
             )
         }
