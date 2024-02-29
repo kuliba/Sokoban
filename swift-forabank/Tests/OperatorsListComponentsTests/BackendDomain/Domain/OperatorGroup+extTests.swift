@@ -12,7 +12,7 @@ final class OperatorGroup_extTests: XCTestCase {
     
     func test_paged_shouldReturnEmptyOnEmptyWithEmptyPayload() {
         
-        let operators = makeOperatorGroups(titles: [])
+        let operators = makeOperatorGroups([])
         let payload = makeLoadOperatorsPayload()
         
         let paged = operators.paged(with: payload)
@@ -22,7 +22,7 @@ final class OperatorGroup_extTests: XCTestCase {
     
     func test_paged_shouldReturnEmptyOnEmptyWithNonEmptyPayload() {
         
-        let operators = makeOperatorGroups(titles: [])
+        let operators = makeOperatorGroups([])
         let payload = makeLoadOperatorsPayload(
             operatorID: "abc",
             searchText: "123",
@@ -36,7 +36,7 @@ final class OperatorGroup_extTests: XCTestCase {
     
     func test_paged_shouldReturnPageFromBeginningOnNilOperatorID() {
         
-        let operators = makeOperatorGroups(titles: [
+        let operators = makeOperatorGroups([
             "b", "a", "c", "d", "e"
         ])
         let payload = makeLoadOperatorsPayload(
@@ -46,14 +46,12 @@ final class OperatorGroup_extTests: XCTestCase {
         
         let paged = operators.paged(with: payload)
         
-        XCTAssertNoDiff(paged, makeOperatorGroups(
-            titles: ["b", "a", "c"]
-        ))
+        XCTAssertNoDiff(paged, makeOperatorGroups(["b", "a", "c"]))
     }
     
     func test_paged_shouldReturnPageFromIDOnNonNilOperatorID_1() {
         
-        let operators = makeOperatorGroups(titles: [
+        let operators = makeOperatorGroups([
             "b", "a", "c", "d", "e"
         ])
         let payload = makeLoadOperatorsPayload(
@@ -63,14 +61,12 @@ final class OperatorGroup_extTests: XCTestCase {
         
         let paged = operators.paged(with: payload)
         
-        XCTAssertNoDiff(paged, makeOperatorGroups(
-            titles: ["c"]
-        ))
+        XCTAssertNoDiff(paged, makeOperatorGroups(["c"]))
     }
     
     func test_paged_shouldReturnPageFromIDOnNonNilOperatorID_2() {
         
-        let operators = makeOperatorGroups(titles: [
+        let operators = makeOperatorGroups([
             "b", "a", "c", "d", "e"
         ])
         let payload = makeLoadOperatorsPayload(
@@ -80,14 +76,12 @@ final class OperatorGroup_extTests: XCTestCase {
         
         let paged = operators.paged(with: payload)
         
-        XCTAssertNoDiff(paged, makeOperatorGroups(
-            titles: ["c", "d"]
-        ))
+        XCTAssertNoDiff(paged, makeOperatorGroups(["c", "d"]))
     }
     
     func test_paged_shouldReturnPageFromIDOnNonNilOperatorID_3() {
         
-        let operators = makeOperatorGroups(titles: [
+        let operators = makeOperatorGroups([
             "b", "a", "c", "d", "e"
         ])
         let payload = makeLoadOperatorsPayload(
@@ -97,14 +91,12 @@ final class OperatorGroup_extTests: XCTestCase {
         
         let paged = operators.paged(with: payload)
         
-        XCTAssertNoDiff(paged, makeOperatorGroups(
-            titles: ["c", "d", "e"]
-        ))
+        XCTAssertNoDiff(paged, makeOperatorGroups(["c", "d", "e"]))
     }
     
     func test_paged_shouldReturnPageFromIDOnNonNilOperatorID_10() {
         
-        let operators = makeOperatorGroups(titles: [
+        let operators = makeOperatorGroups([
             "b", "a", "c", "d", "e"
         ])
         let payload = makeLoadOperatorsPayload(
@@ -114,15 +106,61 @@ final class OperatorGroup_extTests: XCTestCase {
         
         let paged = operators.paged(with: payload)
         
-        XCTAssertNoDiff(paged, makeOperatorGroups(
-            titles: ["c", "d", "e"]
-        ))
+        XCTAssertNoDiff(paged, makeOperatorGroups(["c", "d", "e"]))
+    }
+    
+    func test_paged_shouldDeliverPageFromStartOnNilOperatorIDWithSearch() {
+        
+        let operators = makeOperatorGroups([
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        let payload = makeLoadOperatorsPayload(
+            operatorID: nil,
+            searchText: "aa",
+            pageSize: 2
+        )
+        
+        let paged = operators.paged(with: payload)
+        
+        XCTAssertNoDiff(paged, makeOperatorGroups(["aa", "aaa"]))
+    }
+    
+    func test_paged_shouldDeliverEmptyPageAfterMissingOperatorIDWithSearch_2() {
+        
+        let operators = makeOperatorGroups([
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        let payload = makeLoadOperatorsPayload(
+            operatorID: "a",
+            searchText: "aa",
+            pageSize: 2
+        )
+        
+        let paged = operators.paged(with: payload)
+        
+        XCTAssertNoDiff(paged, makeOperatorGroups([]))
+    }
+    
+    func test_paged_shouldDeliverPageAfterOperatorIDWithSearch_3() {
+        
+        let operators = makeOperatorGroups([
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        let payload = makeLoadOperatorsPayload(
+            operatorID: "aa",
+            searchText: "aa",
+            pageSize: 2
+        )
+        
+        let paged = operators.paged(with: payload)
+        
+        XCTAssertNoDiff(paged, makeOperatorGroups(["aaa", "aaaa"]))
     }
     
 #warning("add tests for `inn` field")
     
     private func makeOperatorGroups(
-        titles: [String]
+        _ titles: [String]
     ) -> [OperatorGroup] {
         
         titles.map {
