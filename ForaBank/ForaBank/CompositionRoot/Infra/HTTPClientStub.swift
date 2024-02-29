@@ -8,46 +8,44 @@
 import Foundation
 import Tagged
 
-final class HTTPClientStub: HTTPClient {
+final class HTTPClientStub {
     
     private var stub: Stub
-    private let delay: TimeInterval
     
-    init(
-        stub: Stub,
-        delay: TimeInterval = 1
-    ) {
+    init(stub: Stub) {
+        
         self.stub = stub
-        self.delay = delay
     }
+}
+
+extension HTTPClientStub: HTTPClient {
     
     func performRequest(
         _ request: Request,
         completion: @escaping Completion
     ) {
+        guard let service = request.service
+        else { fatalError("Bad URL in URLRequest.") }
+        
+        guard let result = stub[service]
+        else { fatalError("No stub for \"\(service.rawValue)\".") }
+        
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + delay
+            deadline: .now() + result.delay
         ) { [weak self] in
             
             guard let self else { return }
             
-            guard let service = request.service
-            else {
-                fatalError("Bad URL in URLRequest.")
-            }
-            
-            guard let result = stub[service]
-            else {
-                fatalError("No stub for \"\(service.rawValue)\".")
-            }
-            
-            switch result {
+            switch result.response {
             case let .constant(response):
                 completion(.success(response))
                 
             case var .multiple(responses):
                 let response = responses.removeFirst()
-                stub[service] = .multiple(responses)
+                stub[service] = .init(
+                    response: .multiple(responses),
+                    delay: result.delay
+                )
                 completion(.success(response))
             }
         }
@@ -56,12 +54,48 @@ final class HTTPClientStub: HTTPClient {
 
 extension HTTPClientStub {
     
-    typealias Stub = [Services.Endpoint.ServiceName: Response]
+    typealias Stub = [Services.Endpoint.ServiceName: DelayedResponse]
     
-    enum Response {
+    struct DelayedResponse {
         
-        case constant(HTTPClient.Response)
-        case multiple([HTTPClient.Response])
+        let response: Response
+        let delay: DispatchTimeInterval
+        
+        init(
+            response: Response,
+            delay: DispatchTimeInterval = .seconds(1)
+        ) {
+            self.response = response
+            self.delay = delay
+        }
+        
+        enum Response {
+            
+            case constant(HTTPClient.Response)
+            case multiple([HTTPClient.Response])
+        }
+    }
+}
+
+extension HTTPClientStub {
+    
+    convenience init(
+        _ stub: [Services.Endpoint.ServiceName: [Data]],
+        delay: DispatchTimeInterval = .seconds(1)
+    ) {
+        
+        let stub = stub
+            .mapValues { $0.map { $0.response(statusCode: 200) }}
+            .mapValues(HTTPClientStub.DelayedResponse.Response.multiple)
+            .mapValues {
+                
+                HTTPClientStub.DelayedResponse(
+                    response: $0,
+                    delay: delay
+                )
+            }
+        
+        self.init(stub: stub)
     }
 }
 

@@ -43,7 +43,7 @@ let package = Package(
         .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
+        .cardGuardianUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -53,6 +53,7 @@ let package = Package(
         .rxViewModel,
         .searchBarComponent,
         .textFieldComponent,
+        .topUpCardUI,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
@@ -134,10 +135,11 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .activateSlider,
+        .activateSliderTests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
-        .cardGuardianModuleTests,
+        .cardGuardianUI,
+        .cardGuardianUITests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -157,6 +159,8 @@ let package = Package(
         .textFieldComponentTests,
         .textFieldUI,
         .textFieldUITests,
+        .topUpCardUI,
+        .topUpCardUITests,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
@@ -303,10 +307,10 @@ private extension Product {
         ]
     )
     
-    static let cardGuardianModule = library(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = library(
+        name: .cardGuardianUI,
         targets: [
-            .cardGuardianModule
+            .cardGuardianUI
         ]
     )
     
@@ -377,6 +381,12 @@ private extension Product {
         name: .textFieldComponent,
         targets: [
             .textFieldComponent,
+        ]
+    )
+    static let topUpCardUI = library(
+        name: .topUpCardUI,
+        targets: [
+            .topUpCardUI,
         ]
     )
     
@@ -657,8 +667,10 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .activateSlider,
             .rxViewModel,
-            .cardGuardianModule,
+            .cardGuardianUI,
+            .topUpCardUI,
             .uiPrimitives,
             .services
         ]
@@ -1057,7 +1069,26 @@ private extension Target {
     
     static let activateSlider = target(
         name: .activateSlider,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
         path: "Sources/UI/\(String.activateSlider)"
+    )
+    
+    static let activateSliderTests = testTarget(
+        name: .activateSliderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .activateSlider,
+        ],
+        path: "Tests/UI/\(String.activateSliderTests)"
     )
 
     static let buttonWithSheet = target(
@@ -1078,8 +1109,8 @@ private extension Target {
         path: "Sources/UI/\(String.c2bSubscriptionUI)"
     )
     
-    static let cardGuardianModule = target(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = target(
+        name: .cardGuardianUI,
         dependencies: [
             // external packages
             .combineSchedulers,
@@ -1088,18 +1119,18 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.cardGuardianModule)"
+        path: "Sources/UI/\(String.cardGuardianUI)"
     )
     
-    static let cardGuardianModuleTests = testTarget(
-        name: .cardGuardianModuleTests,
+    static let cardGuardianUITests = testTarget(
+        name: .cardGuardianUITests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .cardGuardianModule,
+            .cardGuardianUI,
         ],
-        path: "Tests/UI/\(String.cardGuardianModuleTests)"
+        path: "Tests/UI/\(String.cardGuardianUITests)"
     )
     
     static let linkableText = target(
@@ -1243,6 +1274,30 @@ private extension Target {
         ]
     )
     
+    static let topUpCardUI = target(
+        name: .topUpCardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.topUpCardUI)"
+    )
+    
+    static let topUpCardUITests = testTarget(
+        name: .topUpCardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .topUpCardUI,
+        ],
+        path: "Tests/UI/\(String.topUpCardUITests)"
+    )
+
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
     static let uiPrimitives = target(
@@ -1562,8 +1617,8 @@ private extension Target.Dependency {
         name: .c2bSubscriptionUI
     )
     
-    static let cardGuardianModule = byName(
-        name: .cardGuardianModule
+    static let cardGuardianUI = byName(
+        name: .cardGuardianUI
     )
     
     static let linkableText = byName(
@@ -1592,6 +1647,10 @@ private extension Target.Dependency {
     
     static let textFieldUI = byName(
         name: .textFieldUI
+    )
+    
+    static let topUpCardUI = byName(
+        name: .topUpCardUI
     )
     
     static let uiKitHelpers = byName(
@@ -1760,13 +1819,14 @@ private extension String {
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
-    
+    static let activateSliderTests = "ActivateSliderTests"
+
     static let buttonWithSheet = "ButtonWithSheet"
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"
 
-    static let cardGuardianModule = "CardGuardianModule"
-    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    static let cardGuardianUI = "CardGuardianUI"
+    static let cardGuardianUITests = "CardGuardianUITests"
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
@@ -1792,6 +1852,9 @@ private extension String {
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     
+    static let topUpCardUI = "TopUpCardUI"
+    static let topUpCardUITests = "TopUpCardUITests"
+
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"

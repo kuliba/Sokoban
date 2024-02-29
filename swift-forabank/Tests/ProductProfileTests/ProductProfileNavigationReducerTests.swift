@@ -8,7 +8,7 @@
 @testable import ProductProfile
 import XCTest
 import UIPrimitives
-import CardGuardianModule
+import CardGuardianUI
 import RxViewModel
 
 final class ProductProfileNavigationReducerTests: XCTestCase {
@@ -68,7 +68,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     func test_showAlert_shouldNotDeliverEffect() {
         
         assert(
-            .showAlert(Alerts.alertBlockCard(.newCard(status: .active))),
+            .showAlert(AlertModelOf.alertBlockCard(.newCard(status: .active))),
             on: productProfileState(),
             effect: nil)
     }

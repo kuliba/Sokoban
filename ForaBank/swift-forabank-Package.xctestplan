@@ -288,8 +288,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CardGuardianModuleTests",
-        "name" : "CardGuardianModuleTests"
+        "identifier" : "UtilityPaymentsRxTests",
+        "name" : "UtilityPaymentsRxTests"
       }
     },
     {

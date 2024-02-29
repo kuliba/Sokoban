@@ -47,7 +47,7 @@ extension RootViewModelFactory {
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
-        ? HTTPClientStub.fastPaymentsSettings(delay: 1)
+        ? HTTPClientStub.fastPaymentsSettings()
         : httpClient
         
         // TODO: Remove after `legacy` case eliminated
@@ -73,7 +73,7 @@ extension RootViewModelFactory {
             }
         }()
         
-        let navigationStateManager = makeNavigationStateManager(
+        let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
@@ -98,17 +98,26 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
+        let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
+        ? HTTPClientStub.utilityPayments()
+        : httpClient
+        
         let makeUtilitiesViewModel = makeUtilitiesViewModel(
-            httpClient: httpClient,
+            httpClient: utilitiesHTTPClient,
             model: model,
-            flag: utilitiesPaymentsFlag
+            log: infoNetworkLog,
+            isActive: utilitiesPaymentsFlag.isActive
         )
         
+        let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
+        )
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            navigationStateManager: navigationStateManager,
+            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient
@@ -119,7 +128,8 @@ extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            navigationStateManager: navigationStateManager,
+            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
@@ -129,30 +139,94 @@ extension RootViewModelFactory {
     static func makeUtilitiesViewModel(
         httpClient: HTTPClient,
         model: Model,
-        flag: UtilitiesPaymentsFlag
+        log: @escaping (String, StaticString, UInt) -> Void,
+        isActive: Bool
     ) -> MakeUtilitiesViewModel {
         
         return { payload, completion in
             
             switch payload.type {
             case .internet:
-                makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                makeLegacyUtilitiesViewModel(payload, model)
+                    .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
+                    .map(completion)
                 
             case .service:
-                switch flag.rawValue {
-                case .active:
-                    let utilitiesHTTPClient = flag.isStub
-                    ? HTTPClientStub.utilityPayments(delay: 1)
-                    : httpClient
-                    
-                    fatalError("unimplemented")
-                    
-                case .inactive:
-                    makeLegacyUtilitiesViewModel(payload, model).map(completion)
+                if isActive {
+                    makeUtilitiesViewModel(httpClient, model, log, completion)
+                } else {
+                    makeLegacyUtilitiesViewModel(payload, model)
+                        .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
+                        .map(completion)
                 }
                 
             default:
                 return
+            }
+        }
+    }
+    
+    static func makeUtilitiesViewModel(
+        _ httpClient: HTTPClient,
+        _ model: Model,
+        _ log: @escaping (String, StaticString, UInt) -> Void,
+        _ completion: @escaping (PaymentsTransfersFactory.UtilitiesVM) -> Void
+    ) {
+        
+#warning("connect solution from MR")
+        // from https://git.inn4b.ru/dbs/ios/-/merge_requests/1800
+        // model.loadOperators
+        let loadOperators: UtilitiesViewModel.LoadOperators = { _, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion([
+                    .init(id: "list"),
+                    .init(id: "single"),
+                    .init(id: "failure")
+                ])
+            }
+        }
+        
+        /*
+         rest/v2/getAllLatestPayments?isServicePayments=true
+         https://shorturl.at/suCL9
+         
+         let getAllLatestPayments = NanoServices.adaptedLoggingFetch(
+         createRequest: { fatalError() },
+         httpClient: httpClient,
+         mapResponse: { _,_ in fatalError() },
+         mapResult: { (try? $0.get()) ?? [] }, // mapResult to non-Result type!!
+         log: log
+         )
+         */
+        
+#warning("connect real type; move typealiases")
+        
+        typealias GetAllLatestPaymentsCompletion = ([UtilitiesViewModel.LatestPayment]) -> Void
+        typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
+        
+        let getAllLatestPayments: GetAllLatestPayments = { completion in
+        
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion([])
+            }
+        }
+        
+        getAllLatestPayments { latestPayments in
+            
+            loadOperators(.init()) { operators in
+                
+                let viewModel = UtilitiesViewModel(
+                    initialState: .init(
+                        latestPayments: latestPayments,
+                        operators: operators
+                    ),
+                    loadOperators: loadOperators
+                )
+                
+                completion(.utilities(viewModel))
             }
         }
     }
@@ -185,6 +259,48 @@ extension RootViewModelFactory {
             allOperators: operators,
             addCompanyAction: payload.addCompany,
             requisitesAction: payload.requisites
+        )
+    }
+    
+    static func makePaymentsTransfersNavigationStateManager(
+    ) -> PaymentsTransfersNavigationStateManager {
+        
+        let createAnywayTransfer: PaymentsTransfersEffectHandler.CreateAnywayTransfer = { payload, completion in
+            
+#warning("replace with NanoService.createAnywayTransfer")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                completion(.details(.init()))
+            }
+        }
+        
+        let getOperatorsListByParam: PaymentsTransfersEffectHandler.GetOperatorsListByParam = { payload, completion in
+            
+#warning("replace with NanoService.getOperatorsListByParam")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                
+                switch payload {
+                case "list":
+                    completion(.list([.init(), .init()]))
+                    
+                case "single":
+                    completion(.single(.init()))
+                    
+                default:
+                    completion(.failure)
+                }
+            }
+        }
+        
+        let effectHandler = PaymentsTransfersEffectHandler(
+            createAnywayTransfer: createAnywayTransfer,
+            getOperatorsListByParam: getOperatorsListByParam
+        )
+        
+        return .init(
+            reduce: { _,_ in fatalError() },
+            handleEffect: effectHandler.handleEffect
         )
     }
     
@@ -350,7 +466,8 @@ extension ProductProfileViewModel {
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        navigationStateManager: UserAccountNavigationStateManager,
+        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient
@@ -362,7 +479,8 @@ extension ProductProfileViewModel {
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
-                navigationStateManager: navigationStateManager,
+                paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+                userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient
@@ -403,7 +521,8 @@ extension ProductProfileViewModel {
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
-                navigationStateManager: navigationStateManager,
+                paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+                userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
                 paymentsTransfersFactory: paymentsTransfersFactory, 
@@ -426,7 +545,9 @@ private extension Model {
         guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
               let operatorValue = Payments.operatorByPaymentsType(type)
         else { return nil }
-        
+        #warning("suboptimal sort + missing sort condition")
+        // TODO: fix sorting: remove excessive iterations
+        // TODO: fix sorting according to https://shorturl.at/ehxIQ
         return  dictionaryAnywayOperators
             .filter { $0.parentCode == operatorValue.rawValue }
             .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
@@ -468,7 +589,8 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        navigationStateManager: UserAccountNavigationStateManager,
+        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
@@ -489,11 +611,11 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel
         )
-        
+                
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            navigationStateManager: navigationStateManager,
+            navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
@@ -502,7 +624,8 @@ private extension RootViewModelFactory {
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            navigationStateManager: navigationStateManager,
+            navigationStateManager: paymentsTransfersNavigationStateManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory
@@ -527,7 +650,7 @@ private extension RootViewModelFactory {
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
-            navigationStateManager: navigationStateManager,
+            navigationStateManager: userAccountNavigationStateManager,
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,

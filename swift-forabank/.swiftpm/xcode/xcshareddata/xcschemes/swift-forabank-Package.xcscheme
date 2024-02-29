@@ -1042,6 +1042,48 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TopUpCardUI"
+               BuildableName = "TopUpCardUI"
+               BlueprintName = "TopUpCardUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardGuardianUI"
+               BuildableName = "CardGuardianUI"
+               BlueprintName = "CardGuardianUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListComponents"
+               BuildableName = "OperatorsListComponents"
+               BlueprintName = "OperatorsListComponents"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1283,6 +1325,36 @@
                BlueprintIdentifier = "CarouselComponentTests"
                BuildableName = "CarouselComponentTests"
                BlueprintName = "CarouselComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ActivateSliderTests"
+               BuildableName = "ActivateSliderTests"
+               BlueprintName = "ActivateSliderTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TopUpCardUITests"
+               BuildableName = "TopUpCardUITests"
+               BlueprintName = "TopUpCardUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardGuardianUITests"
+               BuildableName = "CardGuardianUITests"
+               BlueprintName = "CardGuardianUITests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

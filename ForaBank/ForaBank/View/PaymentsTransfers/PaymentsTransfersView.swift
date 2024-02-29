@@ -33,7 +33,7 @@ struct PaymentsTransfersView: View {
                 .sheet(
                     item: .init(
                         get: { viewModel.route.modal?.sheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }),
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }),
                     content: sheetView
                 )
             
@@ -41,7 +41,7 @@ struct PaymentsTransfersView: View {
                 .fullScreenCover(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }
                     ),
                     content: fullScreenCoverView
                 )
@@ -52,21 +52,21 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.resetDestination() } }
+                set: { if $0 == nil { viewModel.event(.resetDestination) } }
             ),
             content: destinationView(link:)
         )
@@ -226,8 +226,57 @@ struct PaymentsTransfersView: View {
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.resetDestination
+                    dismiss: { viewModel.event(.resetDestination) }
                 )
+            
+        case let .utilities(utilitiesRoute):
+            utilitiesView(utilitiesRoute.viewModel)
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route.utilitiesRoute?.destination },
+                        set: { if $0 == nil {
+                            viewModel.event(.resetUtilityDestination) }}
+                    ),
+                    content: utilitiesDestinationView
+                )
+            #warning("add nav bar")
+        }
+    }
+    
+    @ViewBuilder
+    private func utilitiesDestinationView(
+        destination: PaymentsTransfersViewModel.Route.UtilitiesDestination
+    ) -> some View {
+        switch destination {
+        case let .failure(`operator`):
+            VStack(spacing: 32) {
+
+                Text(String(describing: `operator`))
+                
+                Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
+                    .foregroundColor(.secondary)
+                
+                Button("Оплатить по реквизитам") {
+                    
+                    self.viewModel.event(.payByRequisites)
+                }
+            }
+#warning("add nav bar")
+            
+        case let .list(`operator`, utilityServices):
+            VStack(spacing: 32) {
+                
+                Text("Services for \(String(describing: `operator`))")
+                
+                UtilityServicePicker(
+                    state: utilityServices, 
+                    event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+                )
+            }
+#warning("add nav bar")
+            
+        case let .payment(details):
+            Text("TBD: payment for \(String(describing: details))")
         }
     }
     
@@ -275,6 +324,35 @@ struct PaymentsTransfersView: View {
                 navLeadingAction: viewModel.dismiss,
                 navTrailingAction: viewModel.openScanner
             )
+        )
+    }
+    
+    private func utilitiesView(
+        _ viewModel: UtilitiesViewModel
+    ) -> some View {
+        
+        UtilitiesView(
+            state: viewModel.state,
+            onLatestPaymentTap: { self.viewModel.event(.latestPaymentTapped($0)) },
+            onOperatorTap: { self.viewModel.event(.operatorTapped($0)) },
+            footer: { isExpanded in
+                
+                VStack {
+                 
+                    Button("Оплатить по реквизитам") {
+                        
+                        self.viewModel.event(.payByRequisites)
+                    }
+                    
+                    if isExpanded {
+
+                        Button("Добавить организацию") {
+                            
+                            self.viewModel.event(.addCompany)
+                        }
+                    }
+                }
+            }
         )
     }
     

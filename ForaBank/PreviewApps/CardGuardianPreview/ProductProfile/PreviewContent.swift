@@ -6,48 +6,50 @@
 //
 
 import Foundation
-import CardGuardianModule
+import CardGuardianUI
 import ProductProfile
 import RxViewModel
+import ActivateSlider
 
 extension ProductProfileViewModel {
     
+    typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+        
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
-                
+        
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
 
         let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
-
         
-        typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+        let cardGuardianHandleEffect = CardGuardianEffectHandler().handleEffect(_:_:)
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
-                .init(
-                    initialState: .init(buttons: buttons),
-                    reduce: cardGuardianReduce,
-                    handleEffect: { _,_ in },
-                    scheduler: $0
-                )
+            .init(
+                initialState: .init(buttons: buttons),
+                reduce: cardGuardianReduce,
+                handleEffect: cardGuardianHandleEffect,
+                scheduler: $0
+            )
         }
-
-        let guardianCard: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+                        
+        let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
         
-        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.VisibilityOnMainAction = {
+        let toggleVisibilityOnMain: ProductProfileNavigationEffectHandler.ToggleVisibilityOnMain = {
             print("show/hide product \($0.productID)")
         }
-
-        let changePin: ProductProfileNavigationEffectHandler.CardGuardianAction = {
+        
+        let changePin: ProductProfileNavigationEffectHandler.GuardCard = {
             print("change pin \($0)")
         }
-
-        let showContacts: ProductProfileNavigationEffectHandler.EmptyAction = {
+        
+        let showContacts: ProductProfileNavigationEffectHandler.ShowContacts = {
             print("show contacts")
         }
         
@@ -58,45 +60,11 @@ extension ProductProfileViewModel {
             showContacts: showContacts,
             changePin: changePin,
             scheduler: scheduler
-        )
-            .handleEffect(_:_:)
-        
-        let navigationStateManager: ProductProfileNavigationStateManager = .init(
-            reduce: productProfileNavigationReduce,
-            handleEffect: handleEffect)
+        ).handleEffect(_:_:)
         
         return .init(
-            initialState: initialState,
-            navigationStateManager: navigationStateManager,
-            scheduler: scheduler)
+            initialState: .init(),
+            reduce: productProfileNavigationReduce,
+            handleEffect: handleEffect)
     }
-}
-
-extension ControlButtonView {
-    
-    static let cardUnblokedOnMain: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
-    
-    static let cardBlockedHideOnMain : Self = .init(
-        viewModel: .preview(buttons: .previewBlockHide)
-    )
-    
-    static let cardBlockedUnlockNotAvailable : Self = .init(
-        viewModel: .preview(buttons: .previewBlockUnlockNotAvailable)
-    )
-}
-
-extension CvvButtonView {
-    
-    static let cardUnblokedOnMain: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
-}
-
-extension CvvCardBlocked {
-    
-    static let card: Self = .init(
-        viewModel: .preview(buttons: .preview)
-    )
 }
