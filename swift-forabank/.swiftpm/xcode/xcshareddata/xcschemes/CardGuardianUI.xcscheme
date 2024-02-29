@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CardGuardianModule"
-               BuildableName = "CardGuardianModule"
-               BlueprintName = "CardGuardianModule"
+               BlueprintIdentifier = "CardGuardianUI"
+               BuildableName = "CardGuardianUI"
+               BlueprintName = "CardGuardianUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/CardGuardianModule.xctestplan"
+            reference = "container:../ForaBank/TestPlans/CardGuardianUI.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -54,9 +54,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CardGuardianModule"
-            BuildableName = "CardGuardianModule"
-            BlueprintName = "CardGuardianModule"
+            BlueprintIdentifier = "CardGuardianUI"
+            BuildableName = "CardGuardianUI"
+            BlueprintName = "CardGuardianUI"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

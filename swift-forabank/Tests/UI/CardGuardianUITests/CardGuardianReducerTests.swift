@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import CardGuardianModule
+import CardGuardianUI
 
 final class CardGuardianReducerTests: XCTestCase {
     

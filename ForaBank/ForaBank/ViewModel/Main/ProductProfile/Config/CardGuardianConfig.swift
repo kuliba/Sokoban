@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CardGuardianModule
+import CardGuardianUI
 
 extension CardGuardian.Config {
     

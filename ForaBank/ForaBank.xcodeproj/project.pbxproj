@@ -4273,6 +4273,8 @@
 		83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
+		833E871C2B90BC16009A01AB /* CardGuardianUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianUI.xctestplan; sourceTree = "<group>"; };
+		833E871D2B90BC17009A01AB /* TopUpCardUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TopUpCardUI.xctestplan; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
 		834731DE2A13746B002590A3 /* NoCompanyInListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListView.swift; sourceTree = "<group>"; };
 		834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransfersServices.swift"; sourceTree = "<group>"; };
@@ -4290,7 +4292,6 @@
 		8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementServiceTests.swift"; sourceTree = "<group>"; };
 		8353CD602B57F699005F7D1A /* CardStatementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementFactory.swift; sourceTree = "<group>"; };
 		8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailFactoryl.swift; sourceTree = "<group>"; };
-		8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianModule.xctestplan; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
 		8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardGuardianPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ActivateSlider.xctestplan; sourceTree = "<group>"; };
@@ -6789,7 +6790,8 @@
 			children = (
 				2A4C35B92B69256400694861 /* FastPaymentsSettingsPreview-Info.plist */,
 				8359B54A2B8DF66100CE97E4 /* ActivateSlider.xctestplan */,
-				8357E3332B6A4AC10065E581 /* CardGuardianModule.xctestplan */,
+				833E871C2B90BC16009A01AB /* CardGuardianUI.xctestplan */,
+				833E871D2B90BC17009A01AB /* TopUpCardUI.xctestplan */,
 				2A566EAF2B6816BB00359E05 /* CardStatementAPI.xctestplan */,
 				2A566EB82B6816BC00359E05 /* CarouselComponent.xctestplan */,
 				2A566EB32B6816BC00359E05 /* CryptoSwaddler.xctestplan */,
