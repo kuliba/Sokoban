@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "DA14DE52-8592-4709-BF83-C1B0F2DC8BB8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

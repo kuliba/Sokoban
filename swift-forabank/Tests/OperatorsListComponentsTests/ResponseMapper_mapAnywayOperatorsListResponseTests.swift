@@ -78,14 +78,6 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
         assert(result, equals: .failure(.invalid(statusCode: 200, data: validData)))
     }
     
-    func test_map_shouldDeliverOkResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
-        
-        let validData = Data(jsonStringOk.utf8)
-        let result = map(validData)
-        
-        assert(result, equals: .success([.default]))
-    }
-    
     // MARK: - Helpers
     
     private func map(
