@@ -78,42 +78,44 @@ struct InputView: View {
     }
 }
 
-#Preview {
-    
-    Group {
+struct InputView_Previews: PreviewProvider {
+    static var previews: some View {
         
-        InputView(
-            icon: .large,
-            image: .init(systemName: "photo.artframe"),
-            title: "Лицевой счет",
-            placeholder: "Введите лицевой счет",
-            hint: nil,
-            config: .init(
-                titleFont: .system(size: 12),
-                titleColor: .gray.opacity(0.8),
-                textFieldFont: .system(size: 14),
-                hintFont: .system(size: 10),
-                hintColor: .gray.opacity(0.7),
-                backgroundColor: .gray.opacity(0.3)
+        Group {
+            
+            InputView(
+                icon: .large,
+                image: .init(systemName: "photo.artframe"),
+                title: "Лицевой счет",
+                placeholder: "Введите лицевой счет",
+                hint: nil,
+                config: .init(
+                    titleFont: .system(size: 12),
+                    titleColor: .gray.opacity(0.8),
+                    textFieldFont: .system(size: 14),
+                    hintFont: .system(size: 10),
+                    hintColor: .gray.opacity(0.7),
+                    backgroundColor: .gray.opacity(0.3)
+                )
             )
-        )
-        .padding(20)
-        
-        InputView(
-            icon: .small,
-            image: .init(systemName: "photo.artframe"),
-            title: "Лицевой счет",
-            placeholder: "Введите лицевой счет",
-            hint: "Сумма пени (в руб.) либо 0 если нет, если только копейки, то писать через 0, например: 0.30 - 30 копеек",
-            config: .init(
-                titleFont: .system(size: 12),
-                titleColor: .gray.opacity(0.8),
-                textFieldFont: .system(size: 14),
-                hintFont: .system(size: 10),
-                hintColor: .gray.opacity(0.7),
-                backgroundColor: .gray.opacity(0.3)
+            .padding(20)
+            
+            InputView(
+                icon: .small,
+                image: .init(systemName: "photo.artframe"),
+                title: "Лицевой счет",
+                placeholder: "Введите лицевой счет",
+                hint: "Сумма пени (в руб.) либо 0 если нет, если только копейки, то писать через 0, например: 0.30 - 30 копеек",
+                config: .init(
+                    titleFont: .system(size: 12),
+                    titleColor: .gray.opacity(0.8),
+                    textFieldFont: .system(size: 14),
+                    hintFont: .system(size: 10),
+                    hintColor: .gray.opacity(0.7),
+                    backgroundColor: .gray.opacity(0.3)
+                )
             )
-        )
-        .padding(20)
+            .padding(20)
+        }
     }
 }

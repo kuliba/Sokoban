@@ -122,38 +122,41 @@ struct NameView: View {
     }
 }
 
-#Preview {
-    
-    Group {
+
+struct NameView_Previews: PreviewProvider {
+    static var previews: some View {
         
-        VStack(spacing: 20) {
+        Group {
             
-            NameView(
-                viewModel: .init(state: .collapse),
-                changeState: {},
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .clear
+            VStack(spacing: 20) {
+                
+                NameView(
+                    viewModel: .init(state: .collapse),
+                    changeState: {},
+                    config: .init(
+                        titleFont: .system(size: 12),
+                        titleColor: .gray.opacity(0.8),
+                        textFieldFont: .system(size: 14),
+                        hintFont: .system(size: 10),
+                        hintColor: .gray.opacity(0.7),
+                        backgroundColor: .clear
+                    )
                 )
-            )
-            
-            NameView(
-                viewModel: .init(state: .expended),
-                changeState: {},
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .clear
+                
+                NameView(
+                    viewModel: .init(state: .expended),
+                    changeState: {},
+                    config: .init(
+                        titleFont: .system(size: 12),
+                        titleColor: .gray.opacity(0.8),
+                        textFieldFont: .system(size: 14),
+                        hintFont: .system(size: 10),
+                        hintColor: .gray.opacity(0.7),
+                        backgroundColor: .clear
+                    )
                 )
-            )
+            }
         }
+        .padding(.horizontal, 20)
     }
-    .padding(.horizontal, 20)
 }
