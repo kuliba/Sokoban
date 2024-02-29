@@ -12,6 +12,7 @@ let package = Package(
         .fastPaymentsSettings,
         .loadableModel,
         .loadableResourceComponent,
+        .operatorsListComponents,
         .paymentSticker,
         .phoneNumberWrapper,
         .sberQR,
@@ -61,7 +62,6 @@ let package = Package(
         .carouselComponent,
         // Utilities
         .services,
-        .operatorsListComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -143,6 +143,8 @@ let package = Package(
         .manageSubscriptionsUI,
         .otpInputComponent,
         .otpInputComponentTests,
+        .operatorsListComponents,
+        .operatorsListComponentsTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -173,8 +175,6 @@ let package = Package(
         .carouselComponentTests,
         // Utilities
         .services,
-        .operatorsListComponents,
-        .operatorsListComponentsTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -1374,6 +1374,7 @@ private extension Target {
             // internal modules
             .amountComponent,
             .buttonComponent,
+            .foraTools,
             .paymentComponents,
             .productSelectComponent,
             .utilityPaymentsRx
@@ -1383,7 +1384,8 @@ private extension Target {
     static let operatorsListComponentsTests = testTarget(
         name: .operatorsListComponentsTests,
         dependencies: [
-//            .operatorsListComponents
+            .customDump,
+            .operatorsListComponents
         ],
         path: "Tests/\(String.operatorsListComponentsTests)"
     )
@@ -1488,6 +1490,10 @@ private extension Target.Dependency {
     
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
+    )
+    
+    static let operatorsListComponents = byName(
+        name: .operatorsListComponents
     )
     
     static let paymentSticker = byName(

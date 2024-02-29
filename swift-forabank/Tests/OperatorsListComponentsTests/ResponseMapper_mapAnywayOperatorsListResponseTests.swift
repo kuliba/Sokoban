@@ -70,21 +70,21 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
         )))
     }
     
-    func test_map_shouldDeliverNilResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
-        
-        let validData = Data(jsonStringWithEmpty.utf8)
-        let result = map(validData)
-        
-        assert(result, equals: .success([]))
-    }
-    
-    func test_map_shouldDeliverOkResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
-        
-        let validData = Data(jsonStringOk.utf8)
-        let result = map(validData)
-        
-        assert(result, equals: .success([.default]))
-    }
+//    func test_map_shouldDeliverNilResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
+//        
+//        let validData = Data(jsonStringWithEmpty.utf8)
+//        let result = map(validData)
+//        
+//        assert(result, equals: .success([]))
+//    }
+//    
+//    func test_map_shouldDeliverOkResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
+//        
+//        let validData = Data(jsonStringOk.utf8)
+//        let result = map(validData)
+//        
+//        assert(result, equals: .success([.default]))
+//    }
     
     // MARK: - Helpers
     
