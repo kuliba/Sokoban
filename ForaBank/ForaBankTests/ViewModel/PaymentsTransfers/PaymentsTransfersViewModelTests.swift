@@ -371,6 +371,55 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
     }
     
+    func test_resetDestination_shouldResetDestination() throws {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+
+        try sut.openUtilityPayments()
+        sut.event(.resetDestination)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, nil])
+    }
+    
+    func test_resetDestination_shouldNotDeliverEffect() throws {
+        
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.resetDestination)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_resetModal_shouldResetModal() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _,_) = makeSUT()
+
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        
+        XCTAssertNotNil(sut.route.modal)
+        
+        sut.event(.resetModal)
+        
+        XCTAssertNil(sut.route.modal)
+    }
+    
+    func test_resetModal_shouldNotDeliverEffect() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        sut.event(.resetModal)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
     func test_resetUtilityDestination_shouldResetUtilityDestination() throws {
         
         let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
