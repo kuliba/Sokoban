@@ -193,6 +193,9 @@ extension PaymentsTransfersViewModel {
                 ))
             }
             
+        case .resetDestination:
+            state.destination = nil
+            
         case .resetUtilityDestination:
             state.utilitiesRoute?.destination = nil
             
@@ -674,10 +677,12 @@ extension PaymentsTransfersViewModel {
                     self.openScanner()
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
-                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
-                        
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    }
+                    let paymentsViewModel = PaymentsViewModel(
+                        source: payload.source,
+                        model: model) { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }
                     
                     self.action.send(DelayWrappedAction(
                         delayMS: 700,

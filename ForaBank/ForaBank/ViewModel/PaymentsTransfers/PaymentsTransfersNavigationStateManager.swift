@@ -36,6 +36,7 @@ enum PaymentsTransfersEvent: Equatable {
     case operatorTapped(UtilitiesViewModel.Operator)
     case payByRequisites
     case paymentStarted(PaymentStarted)
+    case resetDestination
     case resetUtilityDestination
     case utilityServiceTap(UtilitiesViewModel.Operator, UtilityService)
 }
