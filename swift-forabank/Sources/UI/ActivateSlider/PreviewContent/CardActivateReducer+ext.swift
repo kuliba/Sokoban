@@ -10,22 +10,20 @@ import RxViewModel
 
 public extension CardActivateReducer {
     
-    static func preview(
+    static func `default`(
         maxOffsetX: CGFloat
     ) -> CardActivateReducer {
         
         .init(
             cardReduce: CardReducer().reduce,
-            sliderReduce: SliderReducer(
-                maxOffsetX: SliderConfig.default.maxOffsetX
-            ).reduce,
-            maxOffset: SliderConfig.default.maxOffsetX
+            sliderReduce: SliderReducer(maxOffsetX: maxOffsetX).reduce,
+            maxOffset: maxOffsetX
         )
     }
     
     static func reduceForPreview() -> RxViewModel<CardActivateState, CardActivateEvent, CardActivateEffect>.Reduce {
         
-        CardActivateReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:)
+        CardActivateReducer.default(maxOffsetX: .maxOffsetX).reduce(_:_:)
     }
 }
 
