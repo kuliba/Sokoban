@@ -31,7 +31,7 @@ struct PaymentsTransfersView: View {
                 .sheet(
                     item: .init(
                         get: { viewModel.route.modal?.sheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }),
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }),
                     content: sheetView
                 )
             
@@ -39,7 +39,7 @@ struct PaymentsTransfersView: View {
                 .fullScreenCover(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }
                     ),
                     content: fullScreenCoverView
                 )
@@ -50,14 +50,14 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: bottomSheetView
         )

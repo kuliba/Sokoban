@@ -246,20 +246,15 @@ extension PaymentsTransfersViewModel {
     func reset() {
         
         event(.resetDestination)
-        resetModal()
+        event(.resetModal)
         fullCover = nil
     }
-        
-    func resetModal() {
-        
-        route.modal = nil
-    }
-    
+            
     func openScanner() {
         
         let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
-            self?.resetModal()
+            self?.event(.resetModal)
         }
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
@@ -316,7 +311,7 @@ extension PaymentsTransfersViewModel {
                     self.openScanner()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
-                    resetModal()
+                    event(.resetModal)
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
@@ -334,7 +329,7 @@ extension PaymentsTransfersViewModel {
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
-                    self.resetModal()
+                    self.event(.resetModal)
                     let paymentsViewModel = PaymentsViewModel(
                         source: .requisites(qrCode: payload.qrCode),
                         model: model,
@@ -740,11 +735,11 @@ extension PaymentsTransfersViewModel {
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
                     makeAlert("Перевод выполнен")
-                    self.resetModal()
+                    self.event(.resetModal)
                     
                 case _ as PaymentsMeToMeAction.Close.BottomSheet:
                     
-                    self.resetModal()
+                    self.event(.resetModal)
                     
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
@@ -797,7 +792,7 @@ extension PaymentsTransfersViewModel {
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
                     
-                    self.resetModal()
+                    self.event(.resetModal)
                     
                     switch payload.source {
                     case let .latestPayment(latestPaymentId):
@@ -924,13 +919,13 @@ extension PaymentsTransfersViewModel {
             
             guard operators.count > 0 else {
                 
-                self.resetModal()
+                self.event(.resetModal)
                 self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 return
             }
             
             if operators.count == 1 {
-                self.resetModal()
+                self.event(.resetModal)
                 
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                     
@@ -974,7 +969,7 @@ extension PaymentsTransfersViewModel {
                 }
             } else {
                 
-                self.resetModal()
+                self.event(.resetModal)
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                     
                     let navigationBarViewModel = NavigationBarView.ViewModel(
@@ -1015,14 +1010,14 @@ extension PaymentsTransfersViewModel {
             }
         } else {
             
-            self.resetModal()
+            self.event(.resetModal)
             self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
     }
     
     private func handleUnknownQR() {
         
-        self.resetModal()
+        self.event(.resetModal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1038,7 +1033,7 @@ extension PaymentsTransfersViewModel {
                     
                     guard let self else { return }
                     
-                    self.resetModal()
+                    self.event(.resetModal)
                     let paymentsViewModel = PaymentsViewModel(
                         model,
                         service: .requisites,
@@ -1061,7 +1056,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleFailure(qr: QRCode) {
         
-        self.resetModal()
+        self.event(.resetModal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1075,7 +1070,7 @@ extension PaymentsTransfersViewModel {
                 },
                 requisitsAction: { [weak self] in
                     
-                    self?.resetModal()
+                    self?.event(.resetModal)
                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 }
             )
@@ -1085,7 +1080,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        self.resetModal()
+        self.event(.resetModal)
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
@@ -1104,7 +1099,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.resetModal()
+        self.event(.resetModal)
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1123,7 +1118,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        resetModal()
+        event(.resetModal)
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1143,7 +1138,7 @@ extension PaymentsTransfersViewModel {
         
         switch result {
         case .failure:
-            self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
+            self.route.modal = .alert(.techError { [weak self] in self?.event(.resetModal) })
             
         case let .success(getSberQRDataResponse):
             do {
@@ -1155,7 +1150,7 @@ extension PaymentsTransfersViewModel {
                 
             } catch {
                 
-                self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
+                self.route.modal = .alert(.techError { [weak self] in self?.event(.resetModal) })
             }
         }
     }
@@ -1194,7 +1189,7 @@ extension PaymentsTransfersViewModel {
             
             switch result {
             case .failure:
-                self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
+                self.route.modal = .alert(.techError { [weak self] in self?.event(.resetModal) })
                 
             case let .success(success):
                 let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
@@ -1205,7 +1200,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        self.resetModal()
+        self.event(.resetModal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1222,9 +1217,10 @@ extension PaymentsTransfersViewModel {
                     
                     guard let self else { return }
                     
-                    self.resetModal()
+                    self.event(.resetModal)
                     let paymentsViewModel = PaymentsViewModel(
-                        model, service: .requisites,
+                        model, 
+                        service: .requisites,
                         closeAction: { [weak self] in
                             
                             self?.event(.resetDestination)
