@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxViewModel
 
 public extension GlobalReducer {
     
@@ -20,6 +21,11 @@ public extension GlobalReducer {
             ).reduce,
             maxOffset: SliderConfig.default.maxOffsetX
         )
+    }
+    
+    static func reduceForPreview() -> RxViewModel<GlobalState, GlobalEvent, GlobalEffect>.Reduce {
+        
+        GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:)
     }
 }
 

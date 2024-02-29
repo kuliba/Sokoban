@@ -62,8 +62,8 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             ActivateSliderWrapperView(
                 viewModel: .init(
                     initialState: .initialState,
-                    reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
-                    handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateSuccess.handleEffect(_:_:)).handleEffect(_:_:)),
+                    reduce: GlobalReducer.reduceForPreview(),
+                    handleEffect: GlobalEffectHandler.handleEffectActivateSuccess()),
                 config: .default
             )
         }
@@ -78,10 +78,11 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             ActivateSliderWrapperView(
                 viewModel: .init(
                     initialState: .initialState,
-                    reduce: GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:),
-                    handleEffect: GlobalEffectHandler(handleCardEffect: CardEffectHandler.activateFailure.handleEffect(_:_:)).handleEffect(_:_:)),
+                    reduce: GlobalReducer.reduceForPreview(),
+                    handleEffect: GlobalEffectHandler.handleEffectActivateFailure()),
                 config: .default
             )
         }
     }
 }
+
