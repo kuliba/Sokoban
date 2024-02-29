@@ -196,6 +196,9 @@ extension PaymentsTransfersViewModel {
         case .resetDestination:
             state.destination = nil
             
+        case .resetModal:
+            state.modal = nil
+            
         case .resetUtilityDestination:
             state.utilitiesRoute?.destination = nil
             
