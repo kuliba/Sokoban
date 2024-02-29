@@ -7,7 +7,7 @@
 
 import UIPrimitives
 
-extension AlertModelOf<GlobalEvent> {
+extension AlertModelOf<CardActivateEvent> {
     
     static func activateAlert() -> AlertModelOf {
         
@@ -17,12 +17,12 @@ extension AlertModelOf<GlobalEvent> {
             primaryButton: .init(
                 type: .cancel,
                 title: "Отмена",
-                event: GlobalEvent.card(.confirmActivate(.cancel))
+                event: CardActivateEvent.card(.confirmActivate(.cancel))
             ),
             secondaryButton: .init(
                 type: .default,
                 title: "ОК",
-                event: GlobalEvent.card(.confirmActivate(.activate))
+                event: CardActivateEvent.card(.confirmActivate(.activate))
             )
         )
     }

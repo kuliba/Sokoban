@@ -1,5 +1,5 @@
 //
-//  GlobalReducer.swift
+//  CardActivateReducer.swift
 //
 //
 //  Created by Andryusina Nataly on 28.02.2024.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import RxViewModel
 
-public final class GlobalReducer {
+public final class CardActivateReducer {
     
     private let cardReduce: CardReduce
     private let sliderReduce: SliderReduce
@@ -59,9 +59,9 @@ public final class GlobalReducer {
         return (state, effect)
     }
     
-    public typealias State = GlobalState
-    public typealias Event = GlobalEvent
-    public typealias Effect = GlobalEffect
+    public typealias State = CardActivateState
+    public typealias Event = CardActivateEvent
+    public typealias Effect = CardActivateEffect
     
     public typealias SliderState = CGFloat
     
@@ -69,5 +69,5 @@ public final class GlobalReducer {
     public typealias SliderReduce = (SliderState, SliderEvent) -> (SliderState, Never?)
 }
 
-public typealias GlobalViewModel = RxViewModel<GlobalState, GlobalEvent, GlobalEffect>
+public typealias GlobalViewModel = RxViewModel<CardActivateState, CardActivateEvent, CardActivateEffect>
 

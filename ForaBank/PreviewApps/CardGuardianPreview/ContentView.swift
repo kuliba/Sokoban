@@ -28,8 +28,8 @@ struct ContentView: View {
                     ActivateSliderWrapperView(
                         viewModel: .init(
                             initialState: .initialState,
-                            reduce: GlobalReducer.reduceForPreview(),
-                            handleEffect: GlobalEffectHandler.handleEffectActivateSuccess()),
+                            reduce: CardActivateReducer.reduceForPreview(),
+                            handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()),
                         config: .default)
                     .padding()
                 }
@@ -40,8 +40,8 @@ struct ContentView: View {
                     ActivateSliderWrapperView(
                         viewModel: .init(
                             initialState: .initialState,
-                            reduce: GlobalReducer.reduceForPreview(),
-                            handleEffect: GlobalEffectHandler.handleEffectActivateFailure()),
+                            reduce: CardActivateReducer.reduceForPreview(),
+                            handleEffect: CardActivateEffectHandler.handleEffectActivateFailure()),
                         config: .default)
                     .padding()
                 }

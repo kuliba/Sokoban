@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ActivateSliderView: View {
         
-    let state: GlobalState
+    let state: CardActivateState
     let event: (SliderEvent) -> Void
     
     let config: SliderConfig
@@ -200,7 +200,7 @@ extension SliderConfig {
     }
 }
 
-private extension GlobalState {
+private extension CardActivateState {
     
     var cardStateStatus: CardState.Status? {
         

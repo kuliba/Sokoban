@@ -1,5 +1,5 @@
 //
-//  GlobalReducerTests.swift
+//  CardActivateReducerTests.swift
 //
 //
 //  Created by Andryusina Nataly on 28.02.2024.
@@ -9,7 +9,7 @@ import XCTest
 import ActivateSlider
 import RxViewModel
 
-final class GlobalReducerTestsTests: XCTestCase {
+final class CardActivateReducerTestsTests: XCTestCase {
     
     // MARK: - card events
     
@@ -76,7 +76,7 @@ final class GlobalReducerTestsTests: XCTestCase {
         assert(sut: sut, .slider(.dragEnded(95)), on: .initialState, effect: .card(.confirmation(.milliseconds(200))))
     }
 
-    private typealias SUT = GlobalReducer
+    private typealias SUT = CardActivateReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -131,6 +131,6 @@ final class GlobalReducerTestsTests: XCTestCase {
     }
 }
 
-extension GlobalReducer: Reducer { }
+extension CardActivateReducer: Reducer { }
 extension CardReducer: Reducer { }
 extension SliderReducer: Reducer { }

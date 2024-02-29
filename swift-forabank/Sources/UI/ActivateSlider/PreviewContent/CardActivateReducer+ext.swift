@@ -1,5 +1,5 @@
 //
-//  GlobalReducer+ext.swift
+//  CardActivateReducer+ext.swift
 //
 //
 //  Created by Andryusina Nataly on 28.02.2024.
@@ -8,11 +8,11 @@
 import Foundation
 import RxViewModel
 
-public extension GlobalReducer {
+public extension CardActivateReducer {
     
     static func preview(
         maxOffsetX: CGFloat
-    ) -> GlobalReducer {
+    ) -> CardActivateReducer {
         
         .init(
             cardReduce: CardReducer().reduce,
@@ -23,9 +23,9 @@ public extension GlobalReducer {
         )
     }
     
-    static func reduceForPreview() -> RxViewModel<GlobalState, GlobalEvent, GlobalEffect>.Reduce {
+    static func reduceForPreview() -> RxViewModel<CardActivateState, CardActivateEvent, CardActivateEffect>.Reduce {
         
-        GlobalReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:)
+        CardActivateReducer.preview(maxOffsetX: .maxOffsetX).reduce(_:_:)
     }
 }
 
