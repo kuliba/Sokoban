@@ -52,6 +52,7 @@ let package = Package(
         .rxViewModel,
         .searchBarComponent,
         .textFieldComponent,
+        .topUpCardUI,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
@@ -156,6 +157,8 @@ let package = Package(
         .textFieldComponentTests,
         .textFieldUI,
         .textFieldUITests,
+        .topUpCardUI,
+        .topUpCardUITests,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
@@ -377,6 +380,12 @@ private extension Product {
         name: .textFieldComponent,
         targets: [
             .textFieldComponent,
+        ]
+    )
+    static let topUpCardUI = library(
+        name: .topUpCardUI,
+        targets: [
+            .topUpCardUI,
         ]
     )
     
@@ -660,6 +669,7 @@ private extension Target {
             .activateSlider,
             .rxViewModel,
             .cardGuardianModule,
+            .topUpCardUI,
             .uiPrimitives,
             .services
         ]
@@ -1240,6 +1250,30 @@ private extension Target {
         ]
     )
     
+    static let topUpCardUI = target(
+        name: .topUpCardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/\(String.topUpCardUI)"
+    )
+    
+    static let topUpCardUITests = testTarget(
+        name: .topUpCardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .topUpCardUI,
+        ],
+        path: "Tests/UI/\(String.topUpCardUITests)"
+    )
+
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
     static let uiPrimitives = target(
@@ -1576,6 +1610,10 @@ private extension Target.Dependency {
         name: .textFieldUI
     )
     
+    static let topUpCardUI = byName(
+        name: .topUpCardUI
+    )
+    
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
     )
@@ -1775,6 +1813,9 @@ private extension String {
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     
+    static let topUpCardUI = "TopUpCardUI"
+    static let topUpCardUITests = "TopUpCardUITests"
+
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"
