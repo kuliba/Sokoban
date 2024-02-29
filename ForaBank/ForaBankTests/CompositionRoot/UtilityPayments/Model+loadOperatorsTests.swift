@@ -47,6 +47,48 @@ final class Model_loadOperatorsTests: XCTestCase {
         expect(sut, with: payload, toDeliver: .success(["c", "d"]))
     }
     
+    func test_loadOperators_shouldDeliverPageFromStartOnNilOperatorIDWithSearch() throws {
+        
+        let payload = makeLoadOperatorsPayload(
+            operatorID: nil,
+            searchText: "aa",
+            pageSize: 2
+        )
+        let sut = try makeSUT(names: [
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        
+        expect(sut, with: payload, toDeliver: .success(["aa", "aaa"]))
+    }
+    
+    func test_loadOperators_shouldDeliverEmptyPageAfterMissingOperatorIDWithSearch_2() throws {
+        
+        let payload = makeLoadOperatorsPayload(
+            operatorID: "a",
+            searchText: "aa",
+            pageSize: 2
+        )
+        let sut = try makeSUT(names: [
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        
+        expect(sut, with: payload, toDeliver: .success([]))
+    }
+    
+    func test_loadOperators_shouldDeliverPageAfterOperatorIDWithSearch_3() throws {
+        
+        let payload = makeLoadOperatorsPayload(
+            operatorID: "aa",
+            searchText: "aa",
+            pageSize: 2
+        )
+        let sut = try makeSUT(names: [
+            "b", "a", "aa", "c", "aaa", "aaaa", "d", "e"
+        ])
+        
+        expect(sut, with: payload, toDeliver: .success(["aaa", "aaaa"]))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -55,7 +97,7 @@ final class Model_loadOperatorsTests: XCTestCase {
         line: UInt = #line
     ) throws -> SUT {
         
-        try makeSUT(stub: .stub(names: names))
+        try makeSUT(stub: .stub(titles: names))
     }
     
     private func makeSUT(
@@ -157,10 +199,10 @@ private func assert(
 private extension Array where Element == OperatorGroup {
     
     static func stub(
-        names: [String] = []
+        titles: [String] = []
     ) -> Self {
         
-        names.map {
+        titles.map {
             
             .init(md5hash: "", title: $0, description: "")
         }

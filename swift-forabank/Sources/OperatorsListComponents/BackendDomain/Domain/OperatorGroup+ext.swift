@@ -6,6 +6,7 @@
 //
 
 import ForaTools
+import Foundation
 
 public struct LoadOperatorsPayload {
     
@@ -57,6 +58,6 @@ private extension OperatorGroup {
         guard !searchText.isEmpty else { return true }
         
         #warning("uncomment after adding `inn` field to OperatorGroup")
-        return title.contains(searchText) //|| inn.contains(searchText)
+        return title.localizedCaseInsensitiveContains(searchText) //|| inn.localizedCaseInsensitiveContains(searchText)
     }
 }
