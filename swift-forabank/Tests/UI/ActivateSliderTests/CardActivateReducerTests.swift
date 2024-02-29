@@ -19,16 +19,11 @@ final class CardActivateReducerTestsTests: XCTestCase {
     }
     
     func test_activateCard_shouldSetStatusOnConfirmActivate() {
-        
-        let expectedState: State = .init(
-            cardState: .status(.confirmActivate),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.activateCard),
-            reducedTo: expectedState
-        )
+                
+        assert(.card(.activateCard), on: .initialState) {
+            
+            $0.cardState = .status(.confirmActivate)
+        }
     }
 
     func test_activateCardResponseConnectivityError_shouldSetEffectNone() {
@@ -38,15 +33,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_activateCardResponseConnectivityError_shouldSetStatusOnNil() {
         
-        let expectedState: State = .init(
-            cardState: .status(nil),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.activateCardResponse(.connectivityError)),
-            reducedTo: expectedState
-        )
+        assert(.card(.activateCardResponse(.connectivityError)), on: .initialState) {
+            
+            $0.cardState = .status(nil)
+        }
     }
     
     func test_activateCardResponseServerError_shouldSetEffectNone() {
@@ -56,15 +46,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_activateCardResponseServerError_shouldSetStatusOnNil() {
         
-        let expectedState: State = .init(
-            cardState: .status(nil),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.activateCardResponse(.serverError("error"))),
-            reducedTo: expectedState
-        )
+        assert(.card(.activateCardResponse(.serverError("message"))), on: .initialState) {
+            
+            $0.cardState = .status(nil)
+        }
     }
 
     func test_activateCardResponseSuccess_shouldSetEffectDismiss() {
@@ -74,15 +59,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
 
     func test_activateCardResponseSuccess_shouldSetStatusOnActivated() {
         
-        let expectedState: State = .init(
-            cardState: .status(.activated),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.activateCardResponse(.success)),
-            reducedTo: expectedState
-        )
+        assert(.card(.activateCardResponse(.success)), on: .initialState) {
+            
+            $0.cardState = .status(.activated)
+        }
     }
 
     func test_confirmActivateActivate_shouldSetEffectCardActivate() {
@@ -92,15 +72,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_confirmActivateActivate_shouldSetStatusOnInflight() {
         
-        let expectedState: State = .init(
-            cardState: .status(.inflight),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.confirmActivate(.activate)),
-            reducedTo: expectedState
-        )
+        assert(.card(.confirmActivate(.activate)), on: .initialState) {
+            
+            $0.cardState = .status(.inflight)
+        }
     }
 
     func test_confirmActivateCancel_shouldSetEffectNone() {
@@ -110,15 +85,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_confirmActivateCancel_shouldSetStatusOnNil() {
         
-        let expectedState: State = .init(
-            cardState: .status(nil),
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.confirmActivate(.cancel)),
-            reducedTo: expectedState
-        )
+        assert(.card(.confirmActivate(.cancel)), on: .initialState) {
+            
+            $0.cardState = .status(nil)
+        }
     }
 
     func test_dismissActivate_shouldSetEffectNone() {
@@ -128,15 +98,10 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_dismissActivate_shouldSetStatusOnActive() {
         
-        let expectedState: State = .init(
-            cardState: .active,
-            offsetX: 0)
-        
-        assert(
-            .initialState,
-            .card(.dismissActivate),
-            reducedTo: expectedState
-        )
+        assert(.card(.dismissActivate), on: .initialState) {
+            
+            $0.cardState = .active
+        }
     }
 
     // MARK: - slider events
@@ -146,11 +111,27 @@ final class CardActivateReducerTestsTests: XCTestCase {
         assert(.slider(.drag(19)), on: .initialState, effect: .none)
     }
     
+    func test_drag_shouldSetOffsetToNewValue() {
+        
+        assert(.slider(.drag(19)), on: .initialState) {
+            
+            $0.offsetX = 19
+        }
+    }
+
     func test_dragEndedOffsetLessThanHalfMaxOffset_shouldSetEffectNone() {
         
         let sut = makeSUT(maxOffset: 60)
         
         assert(sut: sut, .slider(.dragEnded(15)), on: .initialState, effect: .none)
+    }
+
+    func test_dragEndedOffsetLessThanHalfMaxOffset_shouldSetOffsetToZero() {
+        
+        assert(.slider(.dragEnded(15)), on: .initialState) {
+            
+            $0.offsetX = 0
+        }
     }
 
     func test_dragEndedOffsetMoreThanHalfMaxOffset_shouldSetEffectConfirmation() {
@@ -160,11 +141,33 @@ final class CardActivateReducerTestsTests: XCTestCase {
         assert(sut: sut, .slider(.dragEnded(75)), on: .initialState, effect: .card(.confirmation(.milliseconds(200))))
     }
     
+    func test_dragEndedOffsetMoreThanHalfMaxOffset_shouldSetOffsetToMaxOffset() {
+        
+        let maxOffset: CGFloat = 90
+        let sut = makeSUT(maxOffset: maxOffset)
+
+        assert(sut: sut, .slider(.dragEnded(75)), on: .initialState) {
+            
+            $0.offsetX = maxOffset
+        }
+    }
+
     func test_dragEndedOffsetMoreThanMaxOffset_shouldSetEffectConfirmation() {
         
         let sut = makeSUT(maxOffset: 90)
         
         assert(sut: sut, .slider(.dragEnded(95)), on: .initialState, effect: .card(.confirmation(.milliseconds(200))))
+    }
+    
+    func test_dragEndedOffsetMoreThanMaxOffset_shouldSetOffsetToMaxOffset() {
+        
+        let maxOffset: CGFloat = 90
+        let sut = makeSUT(maxOffset: maxOffset)
+
+        assert(sut: sut, .slider(.dragEnded(95)), on: .initialState) {
+            
+            $0.offsetX = maxOffset
+        }
     }
 
     private typealias SUT = CardActivateReducer
@@ -236,26 +239,6 @@ final class CardActivateReducerTestsTests: XCTestCase {
             event,
             on: state,
             updateStateToExpected: updateStateToExpected,
-            file: file, line: line
-        )
-    }
-    
-    private func assert(
-        sut: SUT? = nil,
-        _ currentState: State,
-        _ event: Event,
-        reducedTo expectedState: State,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        
-        let sut = sut ?? makeSUT()
-        let (receivedState, _) = sut.reduce(currentState, event)
-        
-        XCTAssertNoDiff(
-            receivedState,
-            expectedState,
-            "\nExpected \(expectedState), but got \(receivedState) instead.",
             file: file, line: line
         )
     }
