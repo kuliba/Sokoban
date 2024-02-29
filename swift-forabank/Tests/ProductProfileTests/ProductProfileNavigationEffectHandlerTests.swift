@@ -6,7 +6,7 @@
 //
 
 @testable import ProductProfile
-import CardGuardianModule
+import CardGuardianUI
 import RxViewModel
 import UIPrimitives
 import XCTest

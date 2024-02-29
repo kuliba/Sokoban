@@ -8,7 +8,7 @@
 @testable import ProductProfile
 import XCTest
 import UIPrimitives
-import CardGuardianModule
+import CardGuardianUI
 import RxViewModel
 
 final class ProductProfileNavigationReducerTests: XCTestCase {

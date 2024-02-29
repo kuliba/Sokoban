@@ -42,7 +42,7 @@ let package = Package(
         .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
+        .cardGuardianUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -138,8 +138,8 @@ let package = Package(
         .activateSliderTests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
-        .cardGuardianModuleTests,
+        .cardGuardianUI,
+        .cardGuardianUITests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -306,10 +306,10 @@ private extension Product {
         ]
     )
     
-    static let cardGuardianModule = library(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = library(
+        name: .cardGuardianUI,
         targets: [
-            .cardGuardianModule
+            .cardGuardianUI
         ]
     )
     
@@ -668,7 +668,7 @@ private extension Target {
             // internal modules
             .activateSlider,
             .rxViewModel,
-            .cardGuardianModule,
+            .cardGuardianUI,
             .topUpCardUI,
             .uiPrimitives,
             .services
@@ -1085,8 +1085,8 @@ private extension Target {
         path: "Sources/UI/\(String.c2bSubscriptionUI)"
     )
     
-    static let cardGuardianModule = target(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = target(
+        name: .cardGuardianUI,
         dependencies: [
             // external packages
             .combineSchedulers,
@@ -1095,18 +1095,18 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.cardGuardianModule)"
+        path: "Sources/UI/\(String.cardGuardianUI)"
     )
     
-    static let cardGuardianModuleTests = testTarget(
-        name: .cardGuardianModuleTests,
+    static let cardGuardianUITests = testTarget(
+        name: .cardGuardianUITests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .cardGuardianModule,
+            .cardGuardianUI,
         ],
-        path: "Tests/UI/\(String.cardGuardianModuleTests)"
+        path: "Tests/UI/\(String.cardGuardianUITests)"
     )
     
     static let linkableText = target(
@@ -1578,8 +1578,8 @@ private extension Target.Dependency {
         name: .c2bSubscriptionUI
     )
     
-    static let cardGuardianModule = byName(
-        name: .cardGuardianModule
+    static let cardGuardianUI = byName(
+        name: .cardGuardianUI
     )
     
     static let linkableText = byName(
@@ -1786,8 +1786,8 @@ private extension String {
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"
 
-    static let cardGuardianModule = "CardGuardianModule"
-    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    static let cardGuardianUI = "CardGuardianUI"
+    static let cardGuardianUITests = "CardGuardianUITests"
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"

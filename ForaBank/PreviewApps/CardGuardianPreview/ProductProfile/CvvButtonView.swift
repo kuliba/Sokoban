@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ProductProfile
-import CardGuardianModule
+import CardGuardianUI
 import UIPrimitives
 
 struct CvvButtonView: View {

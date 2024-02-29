@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CardGuardianModule
+import CardGuardianUI
 import ProductProfile
 
 struct ControlButtonView: View {
@@ -48,7 +48,7 @@ struct ControlButtonView: View {
         ppRoute: ProductProfileNavigation.State.ProductProfileRoute
     ) -> some View {
         
-        CardGuardianModule.ThreeButtonsWrappedView(
+        CardGuardianUI.ThreeButtonsWrappedView(
             viewModel: ppRoute.viewModel,
             config: .preview)
         .padding(.top, 26)

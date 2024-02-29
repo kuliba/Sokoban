@@ -7,7 +7,7 @@
 
 import XCTest
 import SwiftUI
-@testable import CardGuardianModule
+@testable import CardGuardianUI
 
 final class CardGuardianConfigTests: XCTestCase {
     

@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "94B42442-592D-475B-862E-778CBFE343AA",
-      "name" : "Configuration 1",
+      "id" : "865AEE20-EA88-41F7-AAA0-59669F2453AC",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CardGuardianModuleTests",
-        "name" : "CardGuardianModuleTests"
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
       }
     }
   ],

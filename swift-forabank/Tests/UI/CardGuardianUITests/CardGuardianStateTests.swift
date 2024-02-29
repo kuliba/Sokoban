@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 31.01.2024.
 //
 
-import CardGuardianModule
+import CardGuardianUI
 import XCTest
 
 private typealias CardGuardianButton = CardGuardianState._Button
