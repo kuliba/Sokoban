@@ -36,16 +36,60 @@ struct NameView: View {
         switch viewModel.state {
         case .collapse:
             
-            HStack {
+            fieldView(
+                title: "ФИО Получателя",
+                placeholder: "Введите ФИО Получателя",
+                collapseButton: true
+            )
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(12)
+            
+            
+        case .expended:
+            
+            VStack {
                 
-                InputView(
-                    icon: .small,
-                    image: .init(systemName: "photo.artframe"),
-                    title: "ФИО Получателя",
-                    placeholder: "Введите ФИО Получателя",
-                    hint: nil,
-                    config: setupConfig()
+                fieldView(
+                    title: "Фамилия получателя*",
+                    placeholder: "Введите Фамилию Получателя",
+                    collapseButton: true
                 )
+                
+                fieldView(
+                    title: "Имя получателя*",
+                    placeholder: "Введите Имя Получателя",
+                    collapseButton: false
+                )
+                
+                fieldView(
+                    title: "Отчество получателя (если есть)",
+                    placeholder: "Введите Отчество Получателя",
+                    collapseButton: false
+                )
+            }
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(12)
+        }
+    }
+    
+    private func fieldView(
+        title: String,
+        placeholder: String,
+        collapseButton: Bool
+    ) -> some View {
+    
+        HStack {
+            
+            InputView(
+                icon: .small,
+                image: .init(systemName: "person"),
+                title: title,
+                placeholder: placeholder,
+                hint: nil,
+                config: setupConfig()
+            )
+            
+            if collapseButton {
                 
                 Button(
                     action: changeState,
@@ -56,60 +100,11 @@ struct NameView: View {
                     })
                 
             }
-            .padding(.trailing, 16)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-            
-        case .expended:
-            
-            VStack {
-                
-                HStack {
-                    
-                    InputView(
-                        icon: .small,
-                        image: .init(systemName: "photo.artframe"),
-                        title: "Фамилия получателя*",
-                        placeholder: "Введите Фамилию Получателя",
-                        hint: nil,
-                        config: setupConfig()
-                    )
-                    
-                    Button(
-                        action: changeState,
-                        label: {
-                            
-                            Image(systemName: "chevron.down")
-                                .foregroundColor(Color.gray.opacity(0.7))
-                        })
-                    
-                }
-                .padding(.trailing, 16)
-                
-                InputView(
-                    icon: .small,
-                    image: .init(systemName: ""),
-                    title: "Имя получателя*",
-                    placeholder: "Введите Имя Получателя",
-                    hint: nil,
-                    config: setupConfig()
-                )
-                
-                InputView(
-                    icon: .small,
-                    image: .init(systemName: ""),
-                    title: "Отчество получателя (если есть)",
-                    placeholder: "Введите Отчество Получателя",
-                    hint: nil,
-                    config: setupConfig()
-                )
-            }
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
         }
+        .padding(.trailing, 16)
     }
     
-    func setupConfig() ->  InputView.InputConfigView {
+    private func setupConfig() ->  InputView.InputConfigView {
         
         .init(
             titleFont: config.titleFont,
