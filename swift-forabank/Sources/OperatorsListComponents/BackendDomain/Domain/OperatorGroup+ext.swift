@@ -25,7 +25,7 @@ public struct LoadOperatorsPayload {
     }
 }
 
-public extension Array where Element == OperatorGroup {
+public extension Array where Element == _OperatorGroup {
 
     func paged(with payload: LoadOperatorsPayload) -> Self {
         
@@ -47,7 +47,7 @@ public extension Array where Element == OperatorGroup {
         
         guard !searchText.isEmpty else { return self }
         
-        return filter { $0.contains(searchText) }
+        return filter { ($0.title.contains(searchText) || $0.description.contains(searchText)) }
     }
 }
 

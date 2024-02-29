@@ -11,6 +11,7 @@ import SearchBarComponent
 import TextFieldUI
 import TextFieldComponent
 import UtilityPaymentsRx
+import TextFieldComponent
 
 typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
 
@@ -24,12 +25,35 @@ struct ComposedOperatorsWrapperView: View {
     
     let configView: ConfigView
     
+    init(
+        searchViewModel: SearchViewModel,
+        viewModel: UtilityPaymentsViewModel,
+        selectLast: @escaping (LatestPayment.ID) -> Void,
+        selectOperator: @escaping (OperatorsListComponents.Operator.ID) -> Void,
+        configView: ConfigView
+    ) {
+        self.selectLast = selectLast
+        self.selectOperator = selectOperator
+        self.configView = configView
+        
+        let regularFieldViewModel: RegularFieldViewModel = .make(
+            keyboardType: .default,
+            text: nil,
+            placeholderText: "Наименование или ИНН",
+            limit: 210
+        )
+        
+        self._searchViewModel = .init(
+            wrappedValue: regularFieldViewModel
+        )
+    }
+    
     var body: some View {
         
         ComposedOperatorsView(
             state: .init(
-                operators: viewModel.state.operators,
-                latestPayments: viewModel.state.lastPayments
+                operators: viewModel.state.filteredOperators,
+                latestPayments: viewModel.state.searchText.isEmpty ? viewModel.state.lastPayments : []
             ),
             event: event(_:),
             lastPaymentView: { payment in
@@ -71,6 +95,12 @@ struct ComposedOperatorsWrapperView: View {
                     clearButtonLabel: { Image(systemName: "xmark") },
                     cancelButton: { Button("Cancel", action: {}) }
                 )
+                .onChange(of: searchViewModel.state, {
+                    
+                    if case let .editing(state) = searchViewModel.state {
+                        event(.utility(.search(.entered(state.text))))
+                    }
+                })
             }
         )
     }
@@ -83,12 +113,13 @@ struct ConfigView {
 
 struct ContentView: View {
     
-    let searchViewModel: SearchViewModel
+    @StateObject var searchViewModel: SearchViewModel
 
     var body: some View {
         
         ComposedOperatorsWrapperView(
             searchViewModel: searchViewModel,
+            viewModel: .preview(initialState: .init()),
             selectLast: { _ in },
             selectOperator: { _ in },
             configView: .init(

@@ -22,7 +22,7 @@ extension Model {
             
             guard let self else { return }
             
-            if let operators = localAgent.load(type: [OperatorGroup].self) {
+            if let operators = localAgent.load(type: [_OperatorGroup].self) {
                 
                 completion(.success(
                     operators
@@ -37,17 +37,4 @@ extension Model {
     }
     
     struct LoadOperatorsFailure: Error {}
-}
-
-private extension OperatorsListComponents.Operator {
-    
-    init(_ operatorGroup: OperatorGroup) {
-        
-        self.init(
-            id: operatorGroup.title,
-            title: operatorGroup.title,
-            subtitle: operatorGroup.description,
-            image: nil
-        )
-    }
 }

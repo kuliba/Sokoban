@@ -39,36 +39,37 @@ public struct ComposedOperatorsView<
     
     public var body: some View {
         
-        ScrollView(.vertical, showsIndicators: false) {
+        VStack(spacing: 16) {
             
             searchView()
             
-            LazyVStack(spacing: 16) {
+            ScrollView(.vertical, showsIndicators: false) {
                 
-                if let latestPayments = state.latestPayments {
+                LazyVStack(spacing: 16) {
                     
-                    ScrollView(.horizontal) {
+                    if let latestPayments = state.latestPayments {
                         
-                        LazyHStack {
+                        ScrollView(.horizontal) {
                             
-                            ForEach(latestPayments, content: lastPaymentView)
+                            LazyHStack {
+                                
+                                ForEach(latestPayments, content: lastPaymentView)
+                            }
                         }
                     }
-                }
-                
-                if let operators = state.operators {
+
                     
-                    LazyVStack(alignment: .leading, spacing: 8) {
+                    if let operators = state.operators {
                         
-                        ForEach(operators, content: _operatorView)
+                        LazyVStack(alignment: .leading, spacing: 8) {
+                            
+                            ForEach(operators, content: _operatorView)
+                        }
                     }
+                    
+                    footerView()
+                        .onAppear { event(.utility(.initiate)) }
                 }
-                
-                footerView()
-                    .onAppear { 
-                        
-                        event(.utility(.initiate))
-                    }
             }
         }
         .padding(.horizontal, 16)
@@ -102,7 +103,7 @@ extension ComposedOperatorsView {
 public struct Operator: Equatable, Identifiable {
     
     public var id: String
-    let title: String
+    public let title: String
     let subtitle: String?
     let image: Image?
     
@@ -116,6 +117,16 @@ public struct Operator: Equatable, Identifiable {
         self.title = title
         self.subtitle = subtitle
         self.image = image
+    }
+    
+    public init(
+        _operatorGroup: _OperatorGroup
+    ) {
+        
+        self.id = _operatorGroup.id
+        self.title = _operatorGroup.title
+        self.subtitle = _operatorGroup.description
+        self.image = nil
     }
 }
 

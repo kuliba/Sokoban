@@ -161,7 +161,7 @@ final class OperatorGroup_extTests: XCTestCase {
     
     private func makeOperatorGroups(
         _ titles: [String]
-    ) -> [OperatorGroup] {
+    ) -> [_OperatorGroup] {
         
         titles.map {
             
