@@ -256,7 +256,7 @@ extension PaymentsTransfersViewModel {
         
         let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
-            self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+            self?.resetModal()
         }
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
@@ -339,7 +339,7 @@ extension PaymentsTransfersViewModel {
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                    self.resetModal()
                     let paymentsViewModel = PaymentsViewModel(
                         source: .requisites(qrCode: payload.qrCode),
                         model: model,
@@ -928,13 +928,13 @@ extension PaymentsTransfersViewModel {
             
             guard operators.count > 0 else {
                 
-                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                self.resetModal()
                 self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 return
             }
             
             if operators.count == 1 {
-                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                self.resetModal()
                 
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                     
@@ -978,7 +978,7 @@ extension PaymentsTransfersViewModel {
                 }
             } else {
                 
-                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                self.resetModal()
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                     
                     let navigationBarViewModel = NavigationBarView.ViewModel(
@@ -1019,14 +1019,14 @@ extension PaymentsTransfersViewModel {
             }
         } else {
             
-            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+            self.resetModal()
             self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
     }
     
     private func handleUnknownQR() {
         
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        self.resetModal()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1042,7 +1042,7 @@ extension PaymentsTransfersViewModel {
                     
                     guard let self else { return }
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                    self.resetModal()
                     let paymentsViewModel = PaymentsViewModel(
                         model,
                         service: .requisites,
@@ -1065,7 +1065,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleFailure(qr: QRCode) {
         
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        self.resetModal()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1089,7 +1089,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        self.resetModal()
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
@@ -1108,7 +1108,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        self.resetModal()
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1127,7 +1127,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        resetModal()
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1209,7 +1209,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        self.resetModal()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1226,7 +1226,7 @@ extension PaymentsTransfersViewModel {
                     
                     guard let self else { return }
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                    self.resetModal()
                     let paymentsViewModel = PaymentsViewModel(
                         model, service: .requisites,
                         closeAction: { [weak self] in
