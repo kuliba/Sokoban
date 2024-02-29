@@ -737,11 +737,11 @@ extension PaymentsTransfersViewModel {
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
                     makeAlert("Перевод выполнен")
-                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    self.resetModal()
                     
                 case _ as PaymentsMeToMeAction.Close.BottomSheet:
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    self.resetModal()
                     
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
