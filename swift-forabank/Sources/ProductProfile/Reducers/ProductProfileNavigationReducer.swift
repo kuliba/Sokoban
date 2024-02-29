@@ -8,7 +8,6 @@
 import Foundation
 import UIPrimitives
 import CardGuardianModule
-import ActivateSlider
 
 public final class ProductProfileNavigationReducer {
     
@@ -47,10 +46,6 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, cardGuardianInput)
         case let .productProfile(event):
             (state, effect) = reduce(state, event)
-        case let .card(event):
-            (state, effect) = reduce(state, event)
-        case let .show(event):
-             break
         }
         return (state, effect)
     }
@@ -120,36 +115,7 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.changePin(card))
         case .showContacts:
             effect = .productProfile(.showContacts)
-        case let .activateCard(card):
-            // TODO: add effect
-            break
         }
-        return (state, effect)
-    }
-}
-
-private extension ProductProfileNavigationReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: CardEvent
-    ) -> (State, Effect?) {
-        
-        var effect: Effect?
-        
-        /*
-         // TODO: add effect
-         switch event {
-            
-        case .swipe:
-            <#code#>
-        case .alertTap(_):
-            <#code#>
-        case .inflight:
-            <#code#>
-        case .activateCardResponse(_):
-            <#code#>
-        }*/
         return (state, effect)
     }
 }

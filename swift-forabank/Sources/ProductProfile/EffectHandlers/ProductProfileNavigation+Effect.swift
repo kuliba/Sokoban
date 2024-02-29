@@ -5,7 +5,6 @@
 //  Created by Andryusina Nataly on 23.01.2024.
 //
 
-import ActivateSlider
 import CardGuardianModule
 import UIPrimitives
 import Foundation
@@ -17,6 +16,5 @@ public extension ProductProfileNavigation {
         case create
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>, DispatchTimeInterval)
         case productProfile(ProductProfileEffect)
-        case card(CardEffect)
     }
 }

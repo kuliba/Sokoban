@@ -14,9 +14,7 @@ import ActivateSlider
 extension ProductProfileViewModel {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-    
-    typealias MakeCardViewModel = (AnySchedulerOfDispatchQueue) -> CardViewModel
-    
+        
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
@@ -24,31 +22,21 @@ extension ProductProfileViewModel {
     ) -> ProductProfileViewModel {
         
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
-        
+
         let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
+        
+        let cardGuardianHandleEffect = CardGuardianEffectHandler().handleEffect(_:_:)
         
         let makeCardGuardianViewModel: MakeCardGuardianViewModel =  {
             
             .init(
                 initialState: .init(buttons: buttons),
                 reduce: cardGuardianReduce,
-                handleEffect: { _,_ in },
+                handleEffect: cardGuardianHandleEffect,
                 scheduler: $0
             )
         }
-        
-        let cardReduce = CardReducer().reduce(_:_:)
-        
-        let makeCardViewModel: MakeCardViewModel =  {
-            
-            .init(
-                initialState: .status(nil),
-                reduce: cardReduce,
-                handleEffect: { _,_ in },
-                scheduler: $0
-            )
-        }
-        
+                        
         let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
@@ -67,7 +55,6 @@ extension ProductProfileViewModel {
         
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            makeCardViewModel: makeCardViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,

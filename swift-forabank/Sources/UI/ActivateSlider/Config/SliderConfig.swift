@@ -85,4 +85,6 @@ public struct SliderConfig {
         self.sizes = sizes
         self.font = font
     }
+    
+    public var maxOffsetX: CGFloat { sizes.totalWidth - (sizes.thumbWidth + sizes.thumbPadding * 2) }
 }
