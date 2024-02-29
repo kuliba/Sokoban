@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TopUpCardView: View {
     
-    let buttons: [TopUpCardState._Button] // state
+    let buttons: [TopUpCardState.PanelButton] // state
     let event: (ButtonEvent) -> Void
     let config: Config
     
@@ -24,7 +24,7 @@ struct TopUpCardView: View {
         .padding(.trailing, config.paddings.trailing)
     }
     
-    private func buttonView(button: TopUpCardState._Button) -> some View {
+    private func buttonView(button: TopUpCardState.PanelButton) -> some View {
         
         Button(action: { event(button.event) }) {
             

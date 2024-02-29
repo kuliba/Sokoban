@@ -9,15 +9,15 @@ import Foundation
 
 public struct TopUpCardState: Equatable {
     
-    public let buttons: [_Button]
+    public let buttons: [PanelButton]
     public var event: TopUpCardEvent?
     
-    public init(buttons: [_Button], event: TopUpCardEvent? = nil) {
+    public init(buttons: [PanelButton], event: TopUpCardEvent? = nil) {
         self.buttons = buttons
         self.event = event
     }
     
-    public struct _Button: Hashable {
+    public struct PanelButton: Hashable {
         
         public let event: ButtonEvent
         public let title: String

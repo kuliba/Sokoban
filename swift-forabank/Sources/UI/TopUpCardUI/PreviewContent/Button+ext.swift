@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension TopUpCardState._Button {
+extension TopUpCardState.PanelButton {
     
     static let regularFirstButton: Self = .init(
         event: .accountOurBank(.regular),
@@ -43,7 +43,7 @@ extension TopUpCardState._Button {
         subtitle: "Эта услуга доступна только владельцу карты")
 }
 
-extension Array where Element == TopUpCardState._Button {
+extension Array where Element == TopUpCardState.PanelButton {
     
     public static let previewRegular: Self = [.regularFirstButton, .regularSecondButton]
     public static let previewAdditionalSelfNotOwner: Self = [.additionalSelfNotOwnerFirstButton, .additionalSelfNotOwnerSecondButton]
