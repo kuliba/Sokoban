@@ -295,6 +295,20 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
+    }
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "UtilityPaymentsRxTests",
         "name" : "UtilityPaymentsRxTests"
       }
