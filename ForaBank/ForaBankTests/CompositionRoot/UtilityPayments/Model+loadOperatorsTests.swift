@@ -101,14 +101,14 @@ final class Model_loadOperatorsTests: XCTestCase {
     }
     
     private func makeSUT(
-        stub: [OperatorGroup] = .stub(),
+        stub: [_OperatorGroup] = .stub(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> SUT {
         
         let sut: SUT = try .mockWithEmptyExcept(
             localAgent: LocalAgentStub(
-                type: [OperatorGroup].self,
+                type: [_OperatorGroup].self,
                 value: stub
             )
         )
@@ -196,7 +196,7 @@ private func assert(
     }
 }
 
-private extension Array where Element == OperatorGroup {
+private extension Array where Element == _OperatorGroup {
     
     static func stub(
         titles: [String] = []

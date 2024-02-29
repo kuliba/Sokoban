@@ -83,7 +83,7 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MappingResult<[OperatorGroup]?> {
+    ) -> ResponseMapper.MappingResult<[_OperatorGroup]?> {
         
         ResponseMapper.mapAnywayOperatorsListResponse(data, httpURLResponse)
     }
@@ -91,6 +91,10 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
 
 private extension OperatorGroup {
     
-    static let `default`: Self = .init(md5hash: "md5hash", title: "title", description: "ИНН description")
+    static let `default`: Self = .init(
+        md5hash: "md5hash",
+        title: "title",
+        description: "ИНН description"
+    )
 }
 
