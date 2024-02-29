@@ -303,6 +303,13 @@
         "identifier" : "UtilityPaymentsRxTests",
         "name" : "UtilityPaymentsRxTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
     }
   ],
   "version" : 1

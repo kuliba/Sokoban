@@ -14,7 +14,7 @@ public struct LoadOperatorsPayload {
     let pageSize: Int
     
     public init(
-        operatorID: Operator.ID? = nil,
+        afterOperatorID operatorID: Operator.ID? = nil,
         searchText: String = "",
         pageSize: Int
     ) {
@@ -26,12 +26,6 @@ public struct LoadOperatorsPayload {
 
 public extension Array where Element == OperatorGroup {
 
-    @available(*, deprecated, renamed: "paged", message: "Use `paged` instead.")
-    func filtered(with payload: LoadOperatorsPayload) -> Self {
-        
-        paged(with: payload)
-    }
-    
     func paged(with payload: LoadOperatorsPayload) -> Self {
         
         let filtered = containing(payload.searchText)

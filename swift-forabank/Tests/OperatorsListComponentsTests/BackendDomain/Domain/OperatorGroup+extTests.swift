@@ -138,7 +138,7 @@ final class OperatorGroup_extTests: XCTestCase {
     ) -> LoadOperatorsPayload {
         
         .init(
-            operatorID: operatorID,
+            afterOperatorID: operatorID,
             searchText: searchText,
             pageSize: pageSize
         )
