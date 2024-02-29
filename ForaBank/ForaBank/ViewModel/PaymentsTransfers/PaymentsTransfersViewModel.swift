@@ -282,8 +282,14 @@ extension PaymentsTransfersViewModel {
                     route.destination = .productProfile(productProfileViewModel)
                     
                 case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
-                    let openDepositViewModel = OpenDepositListViewModel(model, catalogType: .deposit, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    })
+                    let openDepositViewModel = OpenDepositListViewModel(
+                        model,
+                        catalogType: .deposit,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }
+                    )
                     route.destination = .openDepositsList(openDepositViewModel)
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
@@ -298,8 +304,7 @@ extension PaymentsTransfersViewModel {
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction
-                                .Close.Link())
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         }
                     ))
                     
@@ -335,10 +340,14 @@ extension PaymentsTransfersViewModel {
                     
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: payload.qrCode), model: model, closeAction: {[weak self] in
-                        
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    })
+                    let paymentsViewModel = PaymentsViewModel(
+                        source: .requisites(qrCode: payload.qrCode),
+                        model: model,
+                        closeAction: { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }
+                    )
                     bind(paymentsViewModel)
                     
                     self.action.send(DelayWrappedAction(
@@ -449,10 +458,16 @@ extension PaymentsTransfersViewModel {
                         
                         let currency = Currency(description: firstCurrencyWalletData.code)
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: currency, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())}) else {
-                            return
-                        }
+                        guard let walletViewModel = CurrencyWalletViewModel(
+                            currency: currency,
+                            currencyOperation: .buy,
+                            model: model,
+                            dismissAction: { [weak self] in
+                                
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }
+                        )
+                        else { return }
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .countriesWithService]))
                         
@@ -467,8 +482,14 @@ extension PaymentsTransfersViewModel {
                             
                         case .anotherCard:
                             model.action.send(ModelAction.ProductTemplate.List.Request())
-                            let paymentsViewModel = PaymentsViewModel(model, service: .toAnotherCard, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
+                            let paymentsViewModel = PaymentsViewModel(
+                                model,
+                                service: .toAnotherCard,
+                                closeAction: { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                }
+                            )
                             bind(paymentsViewModel)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
@@ -495,10 +516,14 @@ extension PaymentsTransfersViewModel {
                         
                         switch payload.type {
                         case .mobile:
-                            let paymentsViewModel = PaymentsViewModel(model, service: .mobileConnection, closeAction: { [weak self] in
-                                
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
+                            let paymentsViewModel = PaymentsViewModel(
+                                model,
+                                service: .mobileConnection,
+                                closeAction: { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                }
+                            )
                             bind(paymentsViewModel)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
@@ -531,7 +556,12 @@ extension PaymentsTransfersViewModel {
                             bindTransport()
                             
                         case .taxAndStateService:
-                            let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            let paymentsViewModel = PaymentsViewModel(
+                                category: Payments.Category.taxes,
+                                model: model
+                            ) { [weak self] in
+                                
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }
                             route.destination = .payments(paymentsViewModel)
                             
@@ -674,10 +704,11 @@ extension PaymentsTransfersViewModel {
                 case let payload as PaymentsViewModelAction.ContactAbroad:
                     let paymentsViewModel = PaymentsViewModel(
                         source: payload.source,
-                        model: model) { [weak self] in
-                            
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        }
+                        model: model
+                    ) { [weak self] in
+                        
+                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    }
                     
                     self.action.send(DelayWrappedAction(
                         delayMS: 700,
@@ -780,7 +811,10 @@ extension PaymentsTransfersViewModel {
                         handle(latestPayment: latestPayment)
                         
                     default:
-                        let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                        let paymentsViewModel = PaymentsViewModel(
+                            source: payload.source,
+                            model: model
+                        ) { [weak self] in
                             
                             guard let self else { return }
                             
@@ -812,7 +846,10 @@ extension PaymentsTransfersViewModel {
                     }
                     
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                    let paymentsViewModel = PaymentsViewModel(
+                        source: payload.source,
+                        model: model
+                    ) { [weak self] in
                         
                         guard let self else { return }
                         
@@ -1370,9 +1407,7 @@ extension PaymentsTransfersViewModel {
                 model: model
             ) { [weak self] in
                 
-                guard let self else { return }
-                
-                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
             
             bind(paymentsViewModel)
