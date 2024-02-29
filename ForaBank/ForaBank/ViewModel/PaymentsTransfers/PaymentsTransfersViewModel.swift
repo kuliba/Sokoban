@@ -324,16 +324,11 @@ extension PaymentsTransfersViewModel {
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     event(.resetDestination)
                     
-                case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
-                    resetModal()
-                    
-                    
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
                     
                     withAnimation {
                         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                     }
-                    
                     
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
@@ -357,7 +352,8 @@ extension PaymentsTransfersViewModel {
                 default:
                     break
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         action
             .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Alert })
@@ -1729,8 +1725,6 @@ enum PaymentsTransfersViewModelAction {
         struct Link: Action {}
         
         struct DismissAll: Action {}
-        
-        struct FullScreenSheet: Action {}
     }
     
     struct OpenQr: Action {}
