@@ -75,7 +75,7 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
         let validData = Data(jsonStringWithEmpty.utf8)
         let result = map(validData)
         
-        assert(result, equals: .success([]))
+        assert(result, equals: .failure(.invalid(statusCode: 200, data: validData)))
     }
     
     func test_map_shouldDeliverOkResponseOnOkHTTPURLResponseStatusCodeWithValidData() throws {
@@ -99,6 +99,6 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
 
 private extension OperatorGroup {
     
-    static let `default`: Self = .init(md5hash: "md5hash", title: "title", description: "description")
+    static let `default`: Self = .init(md5hash: "md5hash", title: "title", description: "ИНН description")
 }
 

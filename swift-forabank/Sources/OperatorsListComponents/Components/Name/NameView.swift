@@ -39,11 +39,11 @@ struct NameView: View {
             HStack {
                 
                 InputView(
-                    text: text,
                     icon: .small,
                     image: .init(systemName: "photo.artframe"),
                     title: "ФИО Получателя",
                     placeholder: "Введите ФИО Получателя",
+                    hint: nil,
                     config: setupConfig()
                 )
                 
@@ -67,11 +67,11 @@ struct NameView: View {
                 HStack {
                     
                     InputView(
-                        text: text,
                         icon: .small,
                         image: .init(systemName: "photo.artframe"),
                         title: "Фамилия получателя*",
                         placeholder: "Введите Фамилию Получателя",
+                        hint: nil,
                         config: setupConfig()
                     )
                     
@@ -87,20 +87,20 @@ struct NameView: View {
                 .padding(.trailing, 16)
                 
                 InputView(
-                    text: text,
                     icon: .small,
                     image: .init(systemName: ""),
                     title: "Имя получателя*",
                     placeholder: "Введите Имя Получателя",
+                    hint: nil,
                     config: setupConfig()
                 )
                 
                 InputView(
-                    text: text,
                     icon: .small,
                     image: .init(systemName: ""),
                     title: "Отчество получателя (если есть)",
                     placeholder: "Введите Отчество Получателя",
+                    hint: nil,
                     config: setupConfig()
                 )
             }

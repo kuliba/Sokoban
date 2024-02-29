@@ -26,20 +26,21 @@ let jsonStringOk = """
   "statusCode": 0,
   "errorMessage": null,
   "data": {
-    "serial": "serial",
-    "operatorList": "[
-        {
-            "type": "housingAndCommunalService",
-            "atributeList": {
-
-                "md5hash": "md5hash",
-                "customerId": "serviceId",
-                "juridicalName": "name",
-                "serviceList": [],
-                "inn": "inn"
-            }
-        }
-    ]"
+    "serial": "bea36075a58954199a6b8980549f6b69",
+    "operatorList": [
+      {
+        "type": "string",
+        "atributeList": [
+          {
+            "md5hash": "md5hash",
+            "juridicalName": "title",
+            "customerId": "string",
+            "serviceList": [],
+            "inn": "description"
+          }
+        ]
+      }
+    ]
   }
 }
 """
