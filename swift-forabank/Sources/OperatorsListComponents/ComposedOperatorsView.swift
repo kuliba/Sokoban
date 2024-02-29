@@ -118,6 +118,16 @@ public struct Operator: Equatable, Identifiable {
         self.subtitle = subtitle
         self.image = image
     }
+    
+    public init(
+        _operatorGroup: _OperatorGroup
+    ) {
+        
+        self.id = _operatorGroup.id
+        self.title = _operatorGroup.title
+        self.subtitle = _operatorGroup.description
+        self.image = nil
+    }
 }
 
 public struct LatestPayment: Equatable, Identifiable {

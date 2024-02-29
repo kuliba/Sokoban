@@ -22,7 +22,7 @@ extension Model {
             
             guard let self else { return }
             
-            guard let operatorGroups = localAgent.load(type: [OperatorGroup].self)
+            guard let operatorGroups = localAgent.load(type: [_OperatorGroup].self)
             else {
                 completion(.failure(LoadOperatorsFailure()))
                 return

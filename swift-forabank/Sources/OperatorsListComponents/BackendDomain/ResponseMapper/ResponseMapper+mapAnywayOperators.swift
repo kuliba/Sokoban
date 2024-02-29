@@ -12,17 +12,17 @@ public extension ResponseMapper {
     static func mapAnywayOperatorsListResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<[OperatorGroup]?> {
+    ) -> MappingResult<[_OperatorGroup]?> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: AnywayOperatorGroupData
-    ) throws -> [OperatorGroup]? {
+    ) throws -> [_OperatorGroup]? {
         
         data.operatorList.compactMap({ $0 }).first?.atributeList.map({
-            OperatorGroup(
+            _OperatorGroup(
                 md5hash: $0.md5hash ?? "",
                 title: $0.juridicalName ?? "",
                 description: "ИНН \($0.inn ?? "")"
