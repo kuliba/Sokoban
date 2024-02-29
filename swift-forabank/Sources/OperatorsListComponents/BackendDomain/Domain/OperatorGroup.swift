@@ -1,5 +1,5 @@
 //
-//  AnywayOperatorGroup.swift
+//  OperatorGroup.swift
 //
 //
 //  Created by Дмитрий Савушкин on 14.02.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct OperatorGroup: Codable, Equatable, Identifiable {
+public struct OperatorGroup: Equatable, Identifiable {
     
     public var id: String { title }
     let md5hash: String
