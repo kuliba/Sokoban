@@ -71,8 +71,13 @@ private extension UtilityPaymentsEffectHandler {
     func initiate(
         _ dispatch: @escaping Dispatch
     ) {
-        loadLastPayments { dispatch(.loaded(.lastPayments($0))) }
-        loadOperators(nil) { dispatch(.loaded(.operators($0))) }
+        loadLastPayments { [weak self] latestPayments in
+            
+            self?.loadOperators(nil) { operators in
+                
+                dispatch(.loaded(latestPayments, operators))
+            }
+        }
     }
     
     func paginate(

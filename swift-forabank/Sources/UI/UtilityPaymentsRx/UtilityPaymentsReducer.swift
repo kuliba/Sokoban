@@ -34,11 +34,11 @@ public extension UtilityPaymentsReducer {
             (state, effect) = reduce(state, operatorID)
             
         case .initiate:
-            state.status = .inflight
+            state.isInflight = true
             effect = .initiate
             
-        case let .loaded(loaded):
-            (state, effect) = reduce(state, loaded)
+        case let .loaded(latestPayments, operators):
+            (state, effect) = reduce(state, latestPayments, operators)
             
         case let .paginated(paginated):
             (state, effect) = reduce(state, paginated)
@@ -78,32 +78,15 @@ private extension UtilityPaymentsReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event.Loaded
+        _ latestPayments: Event.LoadLastPaymentsResult,
+        _ operators: Event.LoadOperatorsResult
     ) -> (State, Effect?) {
         
         var state = state
         
-        switch event {
-        case let .lastPayments(loadLastPaymentsResult):
-            switch loadLastPaymentsResult {
-            case let .failure(serviceFailure):
-                state.status = .failure(serviceFailure)
-                
-            case let .success(lastPayments):
-                state.status = nil
-                state.lastPayments = lastPayments
-            }
-            
-        case let .operators(loadOperatorsResult):
-            switch loadOperatorsResult {
-            case let .failure(serviceFailure):
-                state.status = .failure(serviceFailure)
-                
-            case let .success(operators):
-                state.status = nil
-                state.operators = operators
-            }
-        }
+        state.lastPayments = try? latestPayments.get()
+        state.operators = try? operators.get()
+        state.isInflight = false
         
         return (state, nil)
     }
@@ -115,15 +98,11 @@ private extension UtilityPaymentsReducer {
         
         var state = state
         
-        switch result {
-        case let .failure(serviceFailure):
-            state.status = .failure(serviceFailure)
-            
-        case let .success(paged):
-            var operators = state.operators ?? []
-            operators.append(contentsOf: paged)
-            state.operators = operators
-        }
+        var operators = state.operators ?? []
+        let paged = try? result.get()
+        operators.append(contentsOf: paged ?? [])
+        state.operators = operators
+        state.isInflight = false
         
         return (state, nil)
     }
