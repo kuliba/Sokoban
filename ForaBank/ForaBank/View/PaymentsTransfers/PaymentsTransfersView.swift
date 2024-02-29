@@ -64,7 +64,7 @@ struct PaymentsTransfersView: View {
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.resetDestination() } }
+                set: { if $0 == nil { viewModel.event(.resetDestination) } }
             ),
             content: destinationView(link:)
         )
@@ -224,7 +224,7 @@ struct PaymentsTransfersView: View {
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.resetDestination
+                    dismiss: { viewModel.event(.resetDestination) }
                 )
             
         case let .utilities(utilitiesRoute):

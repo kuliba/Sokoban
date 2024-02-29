@@ -242,16 +242,11 @@ extension PaymentsTransfersViewModel {
     
     func reset() {
         
-        resetDestination()
+        event(.resetDestination)
         resetModal()
         fullCover = nil
     }
-    
-    func resetDestination() {
         
-        route.destination = nil
-    }
-    
     func resetModal() {
         
         route.modal = nil
@@ -279,7 +274,7 @@ extension PaymentsTransfersViewModel {
                           let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() })
+                            { [weak self] in self?.event(.resetDestination) })
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
@@ -322,7 +317,7 @@ extension PaymentsTransfersViewModel {
                     fullCover = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
-                    resetDestination()
+                    event(.resetDestination)
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
                     resetModal()
@@ -580,21 +575,21 @@ extension PaymentsTransfersViewModel {
         
         .init(
             type: type,
-            navLeadingAction: { [weak self] in self?.resetDestination() },
+            navLeadingAction: { [weak self] in self?.event(.resetDestination) },
             navTrailingAction: { [weak self] in
-                self?.resetDestination()
+                self?.event(.resetDestination)
                 self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
             },
             addCompany: { [weak self] in
                 
-                self?.resetDestination()
+                self?.event(.resetDestination)
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     self?.rootActions?.switchTab(.chat)
                 }
             },
             requisites: { [weak self] in
                 
-                self?.resetDestination()
+                self?.event(.resetDestination)
                 self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
             }
         )
@@ -673,7 +668,7 @@ extension PaymentsTransfersViewModel {
                 
                 switch action {
                 case _ as PaymentsViewModelAction.ScanQrCode:
-                    self.resetDestination()
+                    self.event(.resetDestination)
                     self.openScanner()
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
@@ -961,7 +956,7 @@ extension PaymentsTransfersViewModel {
                         leftItems: [
                             NavigationBarView.ViewModel.BackButtonItemViewModel(
                                 icon: .ic24ChevronLeft,
-                                action: { [weak self] in self?.resetDestination() })
+                                action: { [weak self] in self?.event(.resetDestination) })
                         ]
                     )
                     
@@ -970,13 +965,13 @@ extension PaymentsTransfersViewModel {
                         navigationBar: navigationBarViewModel, model: self.model,
                         operators: operators, addCompanyAction: { [weak self] in
                             
-                            self?.resetDestination()
+                            self?.event(.resetDestination)
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                 self?.rootActions?.switchTab(.chat)
                             }
                         }, requisitesAction: { [weak self] in
                             
-                            self?.resetDestination()
+                            self?.event(.resetDestination)
                             self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                         },
                         qrCode: qr
@@ -1001,7 +996,7 @@ extension PaymentsTransfersViewModel {
                 model: self.model,
                 addCompanyAction: { [weak self] in
                     
-                    self?.resetDestination()
+                    self?.event(.resetDestination)
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         self?.rootActions?.switchTab(.chat)
                     }
@@ -1040,7 +1035,7 @@ extension PaymentsTransfersViewModel {
                 model: self.model,
                 addCompanyAction: { [weak self] in
                     
-                    self?.resetDestination()
+                    self?.event(.resetDestination)
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         self?.rootActions?.switchTab(.chat)
                     }
@@ -1156,7 +1151,7 @@ extension PaymentsTransfersViewModel {
         _ result: CreateSberQRPaymentResult
     ) {
         rootActions?.spinner.hide()
-        resetDestination()
+        event(.resetDestination)
         
         DispatchQueue.main.asyncAfter(
             deadline: .now() + .milliseconds(400)
@@ -1184,7 +1179,7 @@ extension PaymentsTransfersViewModel {
                 model: self.model,
                 addCompanyAction: { [weak self] in
                     
-                    self?.resetDestination()
+                    self?.event(.resetDestination)
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         
                         self?.rootActions?.switchTab(.chat)
@@ -1239,7 +1234,7 @@ extension PaymentsTransfersViewModel {
     
     func dismiss() {
         
-        self.resetDestination()
+        self.event(.resetDestination)
     }
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
