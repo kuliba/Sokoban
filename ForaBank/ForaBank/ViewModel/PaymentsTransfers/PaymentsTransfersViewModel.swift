@@ -287,7 +287,7 @@ extension PaymentsTransfersViewModel {
                         catalogType: .deposit,
                         dismissAction: { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.event(.resetDestination)
                         }
                     )
                     route.destination = .openDepositsList(openDepositViewModel)
@@ -304,7 +304,7 @@ extension PaymentsTransfersViewModel {
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.event(.resetDestination)
                         }
                     ))
                     
@@ -345,7 +345,7 @@ extension PaymentsTransfersViewModel {
                         model: model,
                         closeAction: { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.event(.resetDestination)
                         }
                     )
                     bind(paymentsViewModel)
@@ -445,7 +445,7 @@ extension PaymentsTransfersViewModel {
                         
                         let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.event(.resetDestination)
                         }
                         
                         bind(viewModel)
@@ -464,7 +464,7 @@ extension PaymentsTransfersViewModel {
                             model: model,
                             dismissAction: { [weak self] in
                                 
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                self?.event(.resetDestination)
                             }
                         )
                         else { return }
@@ -487,7 +487,7 @@ extension PaymentsTransfersViewModel {
                                 service: .toAnotherCard,
                                 closeAction: { [weak self] in
                                     
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    self?.event(.resetDestination)
                                 }
                             )
                             bind(paymentsViewModel)
@@ -521,7 +521,7 @@ extension PaymentsTransfersViewModel {
                                 service: .mobileConnection,
                                 closeAction: { [weak self] in
                                     
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    self?.event(.resetDestination)
                                 }
                             )
                             bind(paymentsViewModel)
@@ -561,7 +561,7 @@ extension PaymentsTransfersViewModel {
                                 model: model
                             ) { [weak self] in
                                 
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                self?.event(.resetDestination)
                             }
                             route.destination = .payments(paymentsViewModel)
                             
@@ -591,7 +591,7 @@ extension PaymentsTransfersViewModel {
             service: .requisites,
             closeAction: { [weak self] in
                 
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.event(.resetDestination)
             }
         )
         bind(paymentsViewModel)
@@ -660,7 +660,7 @@ extension PaymentsTransfersViewModel {
                     
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    self.event(.resetDestination)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
@@ -680,7 +680,7 @@ extension PaymentsTransfersViewModel {
             .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
-                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self.event(.resetDestination)
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                     
@@ -707,7 +707,7 @@ extension PaymentsTransfersViewModel {
                         model: model
                     ) { [weak self] in
                         
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        self?.event(.resetDestination)
                     }
                     
                     self.action.send(DelayWrappedAction(
@@ -818,7 +818,7 @@ extension PaymentsTransfersViewModel {
                             
                             guard let self else { return }
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self.event(.resetDestination)
                             
                             switch payload.source {
                             case .direct:
@@ -853,7 +853,7 @@ extension PaymentsTransfersViewModel {
                         
                         guard let self else { return }
                         
-                        self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        self.event(.resetDestination)
                         
                         switch payload.source {
                         case .direct:
@@ -1048,7 +1048,7 @@ extension PaymentsTransfersViewModel {
                         service: .requisites,
                         closeAction: {
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self.event(.resetDestination)
                         }
                     )
                     self.bind(paymentsViewModel)
@@ -1095,7 +1095,7 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: {[weak self] in
                 
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.event(.resetDestination)
             }
         )
         bind(paymentsViewModel)
@@ -1114,7 +1114,7 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: { [weak self] in
                 
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.event(.resetDestination)
             }
         )
         bind(paymentsViewModel)
@@ -1231,7 +1231,7 @@ extension PaymentsTransfersViewModel {
                         model, service: .requisites,
                         closeAction: { [weak self] in
                             
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.event(.resetDestination)
                         }
                     )
                     self.bind(paymentsViewModel)
@@ -1407,7 +1407,7 @@ extension PaymentsTransfersViewModel {
                 model: model
             ) { [weak self] in
                 
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.event(.resetDestination)
             }
             
             bind(paymentsViewModel)
