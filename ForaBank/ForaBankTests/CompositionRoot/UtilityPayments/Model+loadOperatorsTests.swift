@@ -27,11 +27,11 @@ final class Model_loadOperatorsTests: XCTestCase {
             operatorID: nil,
             pageSize: 2
         )
-        let sut = try makeSUT(stub: .stub(names: [
+        let sut = try makeSUT(names: [
             "b", "a", "c", "d", "e"
-        ]))
+        ])
         
-        expect(sut, with: payload, toDeliver: .success(.stub(names: ["b", "a"])))
+        expect(sut, with: payload, toDeliver: .success(["b", "a"]))
     }
     
     func test_loadOperators_shouldDeliverPageAfterOperatorID() throws {
@@ -40,14 +40,23 @@ final class Model_loadOperatorsTests: XCTestCase {
             operatorID: "a",
             pageSize: 2
         )
-        let sut = try makeSUT(stub: .stub(names: [
+        let sut = try makeSUT(names: [
             "b", "a", "c", "d", "e"
-        ]))
+        ])
         
-        expect(sut, with: payload, toDeliver: .success(.stub(names: ["c", "d"])))
+        expect(sut, with: payload, toDeliver: .success(["c", "d"]))
     }
     
     // MARK: - Helpers
+    
+    private func makeSUT(
+        names: [String],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> SUT {
+        
+        try makeSUT(stub: .stub(names: names))
+    }
     
     private func makeSUT(
         stub: [OperatorGroup] = .stub(),
@@ -83,7 +92,28 @@ final class Model_loadOperatorsTests: XCTestCase {
     private func expect(
         _ sut: SUT,
         with payload: LoadOperatorsPayload,
-        toDeliver expectedResult: SUT.LoadOperatorsResult,
+        toDeliver expectedResult: Result<[String], Error>,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let expectedResult: SUT.LoadOperatorsResult = expectedResult.map { .stub(names: $0) }
+        
+        let exp = expectation(description: "wait for completion")
+        
+        sut.loadOperators(payload) { receivedResult in
+            
+            ForaBankTests.assert(receivedResult, expectedResult, file: file, line: line)
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with payload: LoadOperatorsPayload,
+        delivers expectedResult: SUT.LoadOperatorsResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
