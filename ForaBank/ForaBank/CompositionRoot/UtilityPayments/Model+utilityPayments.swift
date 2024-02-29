@@ -8,9 +8,26 @@
 import Foundation
 import OperatorsListComponents
 
+struct LoadOperatorsPayload {
+    
+    let operatorID: OperatorsListComponents.Operator.ID?
+    let searchText: String
+    let pageSize: Int
+    
+    init(
+        operatorID: OperatorsListComponents.Operator.ID? = nil,
+        searchText: String = "",
+        pageSize: Int
+    ) {
+        self.operatorID = operatorID
+        self.searchText = searchText
+        self.pageSize = pageSize
+    }
+}
+
 extension Model {
     
-    typealias Payload = (id: OperatorsListComponents.Operator.ID?, pageSize: Int)
+    typealias Payload = LoadOperatorsPayload
     typealias LoadOperatorsResult = Result<[OperatorsListComponents.Operator], Error>
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     
@@ -28,7 +45,7 @@ extension Model {
                 return
             }
             
-            switch payload.id {
+            switch payload.operatorID {
             case .none:
                 let operators = operatorGroups
                     .prefix(payload.pageSize)
