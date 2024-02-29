@@ -301,6 +301,22 @@ enum OperationDetailViewModelAction {
     struct CloseFullScreenSheet: Action {}
 }
 
+extension OperationDetailViewModel {
+    
+    func getSpacingForDocsInHStackForOldIPhones() -> CGFloat {
+        
+        let width = UIScreen.main.bounds.width
+        
+        if width <= 360 {
+            return 32
+        } else if width <= 375 {
+            return 37
+        } else {
+            return 52
+        }
+    }
+}
+
 //MARK: - Private helpers
 
 private extension OperationDetailViewModel {
