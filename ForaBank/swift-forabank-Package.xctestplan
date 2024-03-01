@@ -306,6 +306,20 @@
         "name" : "TopUpCardUITests"
       }
     }
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityPaymentsRxTests",
+        "name" : "UtilityPaymentsRxTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
+    }
   ],
   "version" : 1
 }

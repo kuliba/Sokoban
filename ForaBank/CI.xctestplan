@@ -303,6 +303,13 @@
         "identifier" : "CardGuardianUITests",
         "name" : "CardGuardianUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
     }
   ],
   "version" : 1

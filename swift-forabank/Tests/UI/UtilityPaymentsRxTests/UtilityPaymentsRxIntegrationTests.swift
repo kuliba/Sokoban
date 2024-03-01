@@ -182,17 +182,15 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         assert(
             stateSpy, initialState,
             {
-                $0.status = .inflight
+                $0.isInflight = true
             }, {
-                $0.status = .failure(.connectivityError) },
-            {
+                $0.isInflight = false
+            }, {
                 $0.lastPayments = .init()
-                $0.status = .none
-            }, {
                 $0.operators = .init()
+                $0.isInflight = false
             }, {
                 $0.lastPayments = .stub
-            }, {
                 $0.operators = .stub
             }
         )
@@ -205,17 +203,15 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
         assert(
             stateSpy, initialState,
             {
-                $0.status = .inflight
+                $0.isInflight = true
             }, {
-                $0.status = .failure(.connectivityError) },
-            {
+                $0.isInflight = false
+            }, {
                 $0.lastPayments = .init()
-                $0.status = .none
-            }, {
                 $0.operators = .init()
+                $0.isInflight = false
             }, {
                 $0.lastPayments = .stub
-            }, {
                 $0.operators = .stub
             }, {
                 var operators = $0.operators

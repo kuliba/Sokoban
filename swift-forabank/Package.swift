@@ -12,6 +12,7 @@ let package = Package(
         .fastPaymentsSettings,
         .loadableModel,
         .loadableResourceComponent,
+        .operatorsListComponents,
         .paymentSticker,
         .phoneNumberWrapper,
         .sberQR,
@@ -62,7 +63,6 @@ let package = Package(
         .carouselComponent,
         // Utilities
         .services,
-        .operatorsListComponents,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -145,6 +145,8 @@ let package = Package(
         .manageSubscriptionsUI,
         .otpInputComponent,
         .otpInputComponentTests,
+        .operatorsListComponents,
+        .operatorsListComponentsTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -177,7 +179,6 @@ let package = Package(
         .carouselComponentTests,
         // Utilities
         .services,
-        .operatorsListComponents,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -674,6 +675,7 @@ private extension Target {
             .services
         ]
     )
+    
     static let productProfileTests = testTarget(
         name: .productProfileTests,
         dependencies: [
@@ -896,6 +898,7 @@ private extension Target {
             .combineSchedulers,
         ]
     )
+    
     static let cvvPinTests = testTarget(
         name: .cvvPinTests,
         dependencies: [
@@ -907,10 +910,29 @@ private extension Target {
         ]
     )
     
+    static let operatorsComponent = target(
+        name: .operatorsListComponents,
+        dependencies: [
+            // external packages
+            .utilityPaymentsRx,
+            .genericRemoteService,
+            .services
+        ]
+    )
+    
+    static let operatorsComponentTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+//            .operatorsListComponents
+        ],
+        path: "Tests/Services/\(String.operatorsListComponentsTests)"
+    )
+    
     static let cvvPIN_Services = target(
         name: .cvvPIN_Services,
         path: "Sources/Services/\(String.cvvPIN_Services)"
     )
+    
     static let cvvPIN_ServicesTests = testTarget(
         name: .cvvPIN_ServicesTests,
         dependencies: [
@@ -946,6 +968,7 @@ private extension Target {
             .copy("Resources/generatepin.pem"),
         ]
     )
+    
     static let foraCryptoTests = testTarget(
         name: .foraCryptoTests,
         dependencies: [
@@ -960,6 +983,7 @@ private extension Target {
         name: .genericRemoteService,
         path: "Sources/Services/\(String.genericRemoteService)"
     )
+    
     static let genericRemoteServiceTests = testTarget(
         name: .genericRemoteServiceTests,
         dependencies: [
@@ -1405,9 +1429,20 @@ private extension Target {
             // internal modules
             .amountComponent,
             .buttonComponent,
+            .foraTools,
             .paymentComponents,
             .productSelectComponent,
+            .utilityPaymentsRx
         ]
+    )
+    
+    static let operatorsListComponentsTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+            .customDump,
+            .operatorsListComponents
+        ],
+        path: "Tests/\(String.operatorsListComponentsTests)"
     )
     
     static let productSelectComponent = target(
@@ -1510,6 +1545,10 @@ private extension Target.Dependency {
     
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
+    )
+    
+    static let operatorsListComponents = byName(
+        name: .operatorsListComponents
     )
     
     static let paymentSticker = byName(
@@ -1844,11 +1883,12 @@ private extension String {
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
     
-    static let operatorsListComponents = "OperatorsListComponents"
-    
     // MARK: - Utilities
     
     static let services = "Services"
+    
+    static let operatorsListComponents = "OperatorsListComponents"
+    static let operatorsListComponentsTests = "OperatorsListComponentsTests"
     
     // MARK: - Infra
     
