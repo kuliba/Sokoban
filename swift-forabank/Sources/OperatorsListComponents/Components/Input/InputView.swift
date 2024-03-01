@@ -10,12 +10,7 @@ import SwiftUI
 struct InputView: View {
     
     @State private var text: String = ""
-    let icon: Icon
-    let image: Image
-    
-    let title: String
-    let placeholder: String
-    let hint: String?
+    let viewModel: InputViewModel
     
     let config: InputConfigView
     
@@ -25,26 +20,26 @@ struct InputView: View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                image
+                viewModel.image
                     .resizable()
-                    .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .center)
+                    .frame(width: viewModel.icon == .small ? 24 : 32, height: viewModel.icon == .small ? 24 : 32, alignment: .center)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    Text(title)
+                    Text(viewModel.title)
                         .font(config.titleFont)
                         .foregroundColor(config.titleColor)
                     
-                    TextField(placeholder, text: $text)
+                    TextField(viewModel.placeholder, text: $text)
                 }
             }
             
-            if let hint {
+            if let hint = viewModel.hint {
                 
                 HStack(alignment: .center, spacing: 16) {
                     
                     Color.clear
-                        .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .leading)
+                        .frame(width: viewModel.icon == .small ? 24 : 32, height: viewModel.icon == .small ? 24 : 32, alignment: .leading)
                     
                     Text(hint)
                         .font(config.hintFont)
@@ -52,16 +47,10 @@ struct InputView: View {
                 }
             }
         }
-        .padding(.horizontal, icon == .small ? 16 : 12)
+        .padding(.horizontal, viewModel.icon == .small ? 16 : 12)
         .padding(.vertical, 13)
         .background(config.backgroundColor)
         .cornerRadius(12)
-    }
-    
-    enum Icon {
-        
-        case small
-        case large
     }
     
     struct InputConfigView {
@@ -78,42 +67,44 @@ struct InputView: View {
     }
 }
 
+private extension InputView.InputConfigView {
+
+    static let preview: Self = .init(
+        titleFont: .system(size: 12),
+        titleColor: .gray.opacity(0.8),
+        textFieldFont: .system(size: 14),
+        hintFont: .system(size: 10),
+        hintColor: .gray.opacity(0.7),
+        backgroundColor: .gray.opacity(0.3)
+    )
+}
+
 struct InputView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
             
             InputView(
-                icon: .large,
-                image: .init(systemName: "photo.artframe"),
-                title: "Лицевой счет",
-                placeholder: "Введите лицевой счет",
-                hint: nil,
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .gray.opacity(0.3)
-                )
+                viewModel: .init(
+                    icon: .large,
+                    image: .init(systemName: "photo.artframe"),
+                    title: "Лицевой счет",
+                    placeholder: "Введите лицевой счет",
+                    hint: nil
+                ),
+                config: .preview
             )
             .padding(20)
             
             InputView(
-                icon: .small,
-                image: .init(systemName: "photo.artframe"),
-                title: "Лицевой счет",
-                placeholder: "Введите лицевой счет",
-                hint: "Сумма пени (в руб.) либо 0 если нет, если только копейки, то писать через 0, например: 0.30 - 30 копеек",
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .gray.opacity(0.3)
-                )
+                viewModel: .init(
+                    icon: .small,
+                    image: .init(systemName: "photo.artframe"),
+                    title: "Лицевой счет",
+                    placeholder: "Введите лицевой счет",
+                    hint: "Сумма пени (в руб.) либо 0 если нет, если только копейки, то писать через 0, например: 0.30 - 30 копеек"
+                ),
+                config: .preview
             )
             .padding(20)
         }
