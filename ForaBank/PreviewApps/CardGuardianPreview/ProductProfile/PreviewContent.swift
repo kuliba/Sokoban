@@ -10,14 +10,17 @@ import CardGuardianUI
 import ProductProfile
 import RxViewModel
 import ActivateSlider
+import TopUpCardUI
 
 extension ProductProfileViewModel {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-        
+    typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
+
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
+        topUpCardButtons: [TopUpCardState.PanelButton],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -33,6 +36,20 @@ extension ProductProfileViewModel {
                 initialState: .init(buttons: buttons),
                 reduce: cardGuardianReduce,
                 handleEffect: cardGuardianHandleEffect,
+                scheduler: $0
+            )
+        }
+        
+        let topUpCardReduce = TopUpCardReducer().reduce(_:_:)
+        
+        let topUpCardHandleEffect = TopUpCardEffectHandler().handleEffect(_:_:)
+
+        let makeTopUpCardViewModel: MakeTopUpCardViewModel =  {
+            
+            .init(
+                initialState: .init(buttons: topUpCardButtons),
+                reduce: topUpCardReduce,
+                handleEffect: topUpCardHandleEffect,
                 scheduler: $0
             )
         }
@@ -53,12 +70,24 @@ extension ProductProfileViewModel {
             print("show contacts")
         }
         
+        let topUpCardFromOtherBank: ProductProfileNavigationEffectHandler.TopUpCardFromOtherBank = {
+            print("top up card \($0.status)")
+        }
+
+        let topUpCardFromOurBank: ProductProfileNavigationEffectHandler.TopUpCardFromOurBank = {
+            print("top up card \($0.status)")
+        }
+
+        
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             guardianCard: guardianCard,
             toggleVisibilityOnMain: toggleVisibilityOnMain,
             showContacts: showContacts,
             changePin: changePin,
+            makeTopUpCardViewModel: makeTopUpCardViewModel,
+            topUpCardFromOtherBank: topUpCardFromOtherBank,
+            topUpCardFromOurBank: topUpCardFromOurBank,
             scheduler: scheduler
         ).handleEffect(_:_:)
         

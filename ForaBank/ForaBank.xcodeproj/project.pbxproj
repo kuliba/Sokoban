@@ -1839,6 +1839,7 @@
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833E871F2B90C388009A01AB /* CardGuardianUI in Frameworks */ = {isa = PBXBuildFile; productRef = 833E871E2B90C388009A01AB /* CardGuardianUI */; };
 		833E87212B90C52C009A01AB /* CardGuardianUI in Frameworks */ = {isa = PBXBuildFile; productRef = 833E87202B90C52C009A01AB /* CardGuardianUI */; };
+		833E87232B920027009A01AB /* TopUpCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833E87222B920027009A01AB /* TopUpCardView.swift */; };
 		834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */; };
 		834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DE2A13746B002590A3 /* NoCompanyInListView.swift */; };
 		834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */; };
@@ -3277,10 +3278,10 @@
 		2AB352E12B6BC7D5000EADC2 /* UserAccountReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountReducer.swift; sourceTree = "<group>"; };
 		2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformingReducerTests.swift; sourceTree = "<group>"; };
 		2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingServiceTests.swift"; sourceTree = "<group>"; };
-		2AB4FA602B906DE30061CBD7 /* ForaTools.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ForaTools.xctestplan; path = TestPlans/ForaTools.xctestplan; sourceTree = SOURCE_ROOT; };
-		2AB4FA612B9071BD0061CBD7 /* OperatorsListComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = OperatorsListComponent.xctestplan; path = TestPlans/OperatorsListComponent.xctestplan; sourceTree = "<group>"; };
 		2AB4FA592B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandlerTests.swift; sourceTree = "<group>"; };
 		2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessSpy.swift; sourceTree = "<group>"; };
+		2AB4FA602B906DE30061CBD7 /* ForaTools.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ForaTools.xctestplan; path = TestPlans/ForaTools.xctestplan; sourceTree = SOURCE_ROOT; };
+		2AB4FA612B9071BD0061CBD7 /* OperatorsListComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = OperatorsListComponent.xctestplan; path = TestPlans/OperatorsListComponent.xctestplan; sourceTree = "<group>"; };
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
 		2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TestHelpers.swift"; sourceTree = "<group>"; };
 		2AB63F362B26E22A0086B5EB /* SberQRServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRServices.swift; sourceTree = "<group>"; };
@@ -4301,6 +4302,7 @@
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833E871C2B90BC16009A01AB /* CardGuardianUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardGuardianUI.xctestplan; sourceTree = "<group>"; };
 		833E871D2B90BC17009A01AB /* TopUpCardUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TopUpCardUI.xctestplan; sourceTree = "<group>"; };
+		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
 		834731DE2A13746B002590A3 /* NoCompanyInListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListView.swift; sourceTree = "<group>"; };
 		834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransfersServices.swift"; sourceTree = "<group>"; };
@@ -10503,6 +10505,7 @@
 			children = (
 				8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */,
 				833370BF2B6D369800B424E8 /* ControlButtonView.swift */,
+				833E87222B920027009A01AB /* TopUpCardView.swift */,
 				835E7C722B7E301E0044FB67 /* CvvButtonView.swift */,
 				835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */,
 			);
@@ -14010,6 +14013,7 @@
 				83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */,
 				83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */,
 				83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */,
+				833E87232B920027009A01AB /* TopUpCardView.swift in Sources */,
 				835E7C732B7E301E0044FB67 /* CvvButtonView.swift in Sources */,
 				83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */,
 				833370C32B6D36D800B424E8 /* ControlButtonView.swift in Sources */,

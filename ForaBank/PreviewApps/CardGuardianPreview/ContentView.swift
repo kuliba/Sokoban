@@ -15,7 +15,10 @@ typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, 
 
 struct ContentView: View {
     
-    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
+    @StateObject private var viewModel: ProductProfileViewModel = .preview(
+        buttons: .preview,
+        topUpCardButtons: .previewAdditionalSelfNotOwner
+    )
     
     var body: some View {
         
@@ -107,24 +110,14 @@ struct ContentView: View {
             }
             
             HStack {
-                Text("Заблокирована (можно разблокировать)")
+                Text("Пополнить")
                     .lineLimit(2)
                 Spacer()
-                ControlButtonView.init(
+                TopUpCardView.init(
                     state: viewModel.state,
                     event: viewModel.event
                 )
-            }
-            
-            HStack {
-                Text("Заблокирована (нельзя разблокировать)")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.init(
-                    state: viewModel.state,
-                    event: viewModel.event
-                )
-            }
+            }            
         }
         .padding()
     }

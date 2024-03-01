@@ -18,9 +18,11 @@ public extension ProductProfileNavigation {
     indirect enum Event: Equatable {
         
         case closeAlert
-        case create
+        case create(PanelKind)
         case open(Panel)
         case cardGuardianInput(CardGuardianStateProjection)
+        case topUpCardInput(TopUpCardStateProjection)
+
         case dismissDestination
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
