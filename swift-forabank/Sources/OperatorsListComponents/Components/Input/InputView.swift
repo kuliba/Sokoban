@@ -75,7 +75,7 @@ private extension InputView.InputConfigView {
         textFieldFont: .system(size: 14),
         hintFont: .system(size: 10),
         hintColor: .gray.opacity(0.7),
-        backgroundColor: .gray.opacity(0.3)
+        backgroundColor: .gray.opacity(0.1)
     )
 }
 
