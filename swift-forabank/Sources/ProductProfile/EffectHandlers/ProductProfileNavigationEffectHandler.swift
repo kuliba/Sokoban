@@ -13,38 +13,62 @@ import RxViewModel
 public final class ProductProfileNavigationEffectHandler {
             
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
-    private let makeTopUpCardViewModel: MakeTopUpCardViewModel
+    private let cardGuardianActions: CardGuardianActions
 
-    private let guardCard: GuardCard
-    private let toggleVisibilityOnMain: ToggleVisibilityOnMain
-    private let showContacts: ShowContacts
-    private let changePin: ChangePin
-    
-    private let topUpCardFromOtherBank: TopUpCardFromOtherBank
-    private let topUpCardFromOurBank: TopUpCardFromOurBank
+    private let makeTopUpCardViewModel: MakeTopUpCardViewModel
+    private let topUpCardActions: TopUpCardActions
 
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        guardianCard: @escaping GuardCard,
-        toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
-        showContacts: @escaping ShowContacts,
-        changePin: @escaping ChangePin,
+        cardGuardianActions: CardGuardianActions,
         makeTopUpCardViewModel: @escaping MakeTopUpCardViewModel,
-        topUpCardFromOtherBank: @escaping TopUpCardFromOtherBank,
-        topUpCardFromOurBank: @escaping TopUpCardFromOurBank,
+        topUpCardActions: TopUpCardActions,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.guardCard = guardianCard
-        self.toggleVisibilityOnMain = toggleVisibilityOnMain
-        self.showContacts = showContacts
-        self.changePin = changePin
+        self.cardGuardianActions = cardGuardianActions
         self.makeTopUpCardViewModel = makeTopUpCardViewModel
-        self.topUpCardFromOurBank = topUpCardFromOurBank
-        self.topUpCardFromOtherBank = topUpCardFromOtherBank
+        self.topUpCardActions = topUpCardActions
         self.scheduler = scheduler
+    }
+}
+
+public extension ProductProfileNavigationEffectHandler {
+    
+    struct CardGuardianActions {
+        
+        let guardCard: GuardCard
+        let toggleVisibilityOnMain: ToggleVisibilityOnMain
+        let showContacts: ShowContacts
+        let changePin: ChangePin
+        
+        public init(
+            guardCard: @escaping GuardCard,
+            toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
+            showContacts: @escaping ShowContacts,
+            changePin: @escaping ChangePin
+        ) {
+            self.guardCard = guardCard
+            self.toggleVisibilityOnMain = toggleVisibilityOnMain
+            self.showContacts = showContacts
+            self.changePin = changePin
+        }
+    }
+    
+    struct TopUpCardActions {
+        
+        let topUpCardFromOtherBank: TopUpCardFromOtherBank
+        let topUpCardFromOurBank: TopUpCardFromOurBank
+        
+        public init(
+            topUpCardFromOtherBank: @escaping TopUpCardFromOtherBank,
+            topUpCardFromOurBank: @escaping TopUpCardFromOurBank
+        ) {
+            self.topUpCardFromOtherBank = topUpCardFromOtherBank
+            self.topUpCardFromOurBank = topUpCardFromOurBank
+        }
     }
 }
 
@@ -78,17 +102,17 @@ public extension ProductProfileNavigationEffectHandler {
     ) {
         switch effect {
         case let .guardCard(card):
-            guardCard(card)
+            cardGuardianActions.guardCard(card)
         case let .toggleVisibilityOnMain(product):
-            toggleVisibilityOnMain(product)
+            cardGuardianActions.toggleVisibilityOnMain(product)
         case let .changePin(card):
-            changePin(card)
+            cardGuardianActions.changePin(card)
         case .showContacts:
-            showContacts()
+            cardGuardianActions.showContacts()
         case let .accountOurBank(card):
-            topUpCardFromOurBank(card)
+            topUpCardActions.topUpCardFromOurBank(card)
         case let .accountAnotherBank(card):
-            topUpCardFromOtherBank(card)
+            topUpCardActions.topUpCardFromOtherBank(card)
         }
     }
 }

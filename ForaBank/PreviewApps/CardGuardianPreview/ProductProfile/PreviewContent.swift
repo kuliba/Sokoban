@@ -16,7 +16,7 @@ extension ProductProfileViewModel {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
-
+    
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
@@ -25,7 +25,7 @@ extension ProductProfileViewModel {
     ) -> ProductProfileViewModel {
         
         let cardGuardianReduce = CardGuardianReducer().reduce(_:_:)
-
+        
         let productProfileNavigationReduce = ProductProfileNavigationReducer().reduce(_:_:)
         
         let cardGuardianHandleEffect = CardGuardianEffectHandler().handleEffect(_:_:)
@@ -43,7 +43,7 @@ extension ProductProfileViewModel {
         let topUpCardReduce = TopUpCardReducer().reduce(_:_:)
         
         let topUpCardHandleEffect = TopUpCardEffectHandler().handleEffect(_:_:)
-
+        
         let makeTopUpCardViewModel: MakeTopUpCardViewModel =  {
             
             .init(
@@ -53,7 +53,7 @@ extension ProductProfileViewModel {
                 scheduler: $0
             )
         }
-                        
+        
         let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
@@ -73,21 +73,23 @@ extension ProductProfileViewModel {
         let topUpCardFromOtherBank: ProductProfileNavigationEffectHandler.TopUpCardFromOtherBank = {
             print("top up card \($0.status)")
         }
-
+        
         let topUpCardFromOurBank: ProductProfileNavigationEffectHandler.TopUpCardFromOurBank = {
             print("top up card \($0.status)")
         }
-
+        
         
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            guardianCard: guardianCard,
-            toggleVisibilityOnMain: toggleVisibilityOnMain,
-            showContacts: showContacts,
-            changePin: changePin,
+            cardGuardianActions: .init(
+                guardCard: guardianCard,
+                toggleVisibilityOnMain: toggleVisibilityOnMain,
+                showContacts: showContacts,
+                changePin: changePin),
             makeTopUpCardViewModel: makeTopUpCardViewModel,
-            topUpCardFromOtherBank: topUpCardFromOtherBank,
-            topUpCardFromOurBank: topUpCardFromOurBank,
+            topUpCardActions: .init(
+                topUpCardFromOtherBank: topUpCardFromOtherBank,
+                topUpCardFromOurBank: topUpCardFromOurBank),
             scheduler: scheduler
         ).handleEffect(_:_:)
         
