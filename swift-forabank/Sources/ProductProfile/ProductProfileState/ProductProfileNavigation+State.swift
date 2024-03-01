@@ -8,16 +8,17 @@
 import UIPrimitives
 import CardGuardianUI
 import Combine
+import TopUpCardUI
 
 public extension ProductProfileNavigation {
     
     struct State: Equatable {
         
-        public var modal: ProductProfileRoute?
+        public var modal: Route?
         public var alert: AlertModelOf<Event>?
 
         public init(
-            modal: ProductProfileRoute? = nil,
+            modal: Route? = nil,
             alert: AlertModelOf<Event>? = nil
         ) {
             self.modal = modal
@@ -31,18 +32,22 @@ public extension ProductProfileNavigation.State {
     enum CGDestination: Equatable, Identifiable {
         
         case showPanel(CardGuardianViewModel, AnyCancellable)
-        
+        case showTopUpCardPanel(TopUpCardViewModel, AnyCancellable)
+
         public var id: Case {
             
             switch self {
             case .showPanel:
                 return .showPanel
+            case .showTopUpCardPanel:
+                return .showTopUpCardPanel
             }
         }
         
         public enum Case {
             
             case showPanel
+            case showTopUpCardPanel
         }
     }
 }
@@ -56,6 +61,10 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch (lhs, rhs) {
         case let (.showPanel(lhs, _), .showPanel(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        case let (.showTopUpCardPanel(lhs, _), .showTopUpCardPanel(rhs, _)):
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        default:
+            return false
         }
     }
     
@@ -64,6 +73,9 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch self {
         case let .showPanel(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
+        case let .showTopUpCardPanel(viewModel, _):
+            hasher.combine(ObjectIdentifier(viewModel))
+
         }
     }
 }

@@ -37,7 +37,20 @@ struct ControlButtonView: View {
         )
         .sheet(
             item: .init(
-                get: { state.modal },
+                get: {
+                    switch state.modal {
+                        
+                    case .none:
+                        break
+                    case let .some(route):
+                        switch route {
+                            
+                        case let .cardGuardian(productProfileRoute):
+                            return productProfileRoute
+                        }
+                    }
+                    return nil
+                },
                 set: { if $0 == nil { event(.dismissDestination) }}
             ),
             content: destinationView

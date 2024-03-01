@@ -7,20 +7,28 @@
 
 import UIPrimitives
 import CardGuardianUI
+import TopUpCardUI
 
 public extension ProductProfileNavigation {
     
     typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
 
+    typealias TopUpCardRoute = GenericRoute<TopUpCardViewModel, Never, Never, Never>
+
     indirect enum Event: Equatable {
         
         case closeAlert
         case create
-        case open(CardGuardianRoute)
+        case open(Panel)
         case cardGuardianInput(CardGuardianStateProjection)
         case dismissDestination
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
         
         case productProfile(ProductProfileEvent)
+    }
+    
+    enum Panel: Equatable {
+        
+        case cardGuardianRoute(CardGuardianRoute)
     }
 }

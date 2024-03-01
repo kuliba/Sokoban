@@ -90,7 +90,7 @@ private extension ProductProfileNavigationEffectHandler {
             .receive(on: scheduler)
             .sink { dispatch($0) }
         
-        return .open(.init(cardGuardianViewModel, cancellable))
+        return .open(.cardGuardianRoute(.init(cardGuardianViewModel, cancellable)))
     }
 }
 
