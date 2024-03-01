@@ -7,21 +7,6 @@
 
 import SwiftUI
 
-class NameViewModel: ObservableObject {
-    
-    var state: NameState
-    
-    init(state: NameState) {
-        self.state = state
-    }
-    
-    enum NameState {
-        
-        case collapse
-        case expended
-    }
-}
-
 struct NameView: View {
     
     var viewModel: NameViewModel
@@ -81,11 +66,13 @@ struct NameView: View {
         HStack {
             
             InputView(
-                icon: .small,
-                image: .init(systemName: "person"),
-                title: title,
-                placeholder: placeholder,
-                hint: nil,
+                viewModel: .init(
+                    icon: .small,
+                    image: .init(systemName: "person"),
+                    title: title,
+                    placeholder: placeholder,
+                    hint: nil
+                ),
                 config: setupConfig()
             )
             
