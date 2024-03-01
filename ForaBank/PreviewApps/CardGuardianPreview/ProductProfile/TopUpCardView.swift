@@ -59,7 +59,9 @@ struct TopUpCardView: View {
             .presentationDetents([.height(300)]))
             
         case let .topUpCard(topUpCardRoute):
-            return AnyView(TopUpCardWrappedView(viewModel: topUpCardRoute.viewModel, config: .preview)
+            return AnyView(TopUpCardWrappedView(
+                viewModel: topUpCardRoute.viewModel,
+                config: .preview)
                 .padding(.top, 26)
                 .padding(.bottom, 72)
                 .presentationDetents([.height(300)]))

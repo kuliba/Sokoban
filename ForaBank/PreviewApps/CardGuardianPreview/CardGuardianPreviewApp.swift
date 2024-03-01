@@ -11,7 +11,33 @@ import SwiftUI
 struct CardGuardianPreviewApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            
+            TabView {
+                ContentView(
+                    buttons: .preview,
+                    topUpCardButtons: .previewRegular
+                )
+                .background(.cyan)
+                .tabItem {
+                    Label("1", systemImage: "list.dash")
+                }
+                
+                ContentView(
+                    buttons: .previewBlockHide,
+                    topUpCardButtons: .previewAdditionalOther
+                )
+                .tabItem {
+                    Label("2", systemImage: "square.and.pencil")
+                }
+                
+                ContentView(
+                    buttons: .previewBlockUnlockNotAvailable,
+                    topUpCardButtons: .previewAdditionalSelfNotOwner
+                )
+                .tabItem {
+                    Label("3", systemImage: "sparkles")
+                }
+            }
         }
     }
 }
