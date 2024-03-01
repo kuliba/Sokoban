@@ -12,12 +12,12 @@ import TopUpCardUI
 
 public extension ProductProfileNavigation.State {
     
-    typealias ProductProfileRoute = GenericRoute<CardGuardianViewModel, ProductProfileNavigation.State.CGDestination, Never, AlertModelOf<ProductProfileNavigation.Event>>
+    typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, ProductProfileNavigation.State.CGDestination, Never, AlertModelOf<ProductProfileNavigation.Event>>
     
     typealias TopUpCardRoute = GenericRoute<TopUpCardViewModel, ProductProfileNavigation.State.CGDestination, Never, AlertModelOf<ProductProfileNavigation.Event>>
 
     
-    enum Route: Equatable, Identifiable {
+    enum ProductProfileRoute: Equatable, Identifiable {
         
         public var id: UUID {
             switch self {
@@ -29,7 +29,7 @@ public extension ProductProfileNavigation.State {
             }
         }
 
-        case cardGuardian(ProductProfileRoute)
+        case cardGuardian(CardGuardianRoute)
         case topUpCard(TopUpCardRoute)
     }
 }

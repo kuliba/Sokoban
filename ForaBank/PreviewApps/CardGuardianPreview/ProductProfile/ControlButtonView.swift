@@ -46,7 +46,7 @@ struct ControlButtonView: View {
     }
     
     private func destinationView(
-        route: ProductProfileNavigation.State.Route
+        route: ProductProfileNavigation.State.ProductProfileRoute
     ) -> some View {
         
         switch route {

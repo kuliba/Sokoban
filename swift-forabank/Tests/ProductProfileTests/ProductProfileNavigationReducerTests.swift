@@ -140,7 +140,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     }
     
     private func productProfileState(
-        _ modal: SUT.State.Route? = nil,
+        _ modal: SUT.State.ProductProfileRoute? = nil,
         _ alert: AlertModelOf<ProductProfileNavigation.Event>? = nil
     ) -> SUT.State {
         

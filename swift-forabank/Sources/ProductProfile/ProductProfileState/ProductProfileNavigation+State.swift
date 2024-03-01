@@ -14,11 +14,11 @@ public extension ProductProfileNavigation {
     
     struct State: Equatable {
         
-        public var modal: Route?
+        public var modal: ProductProfileRoute?
         public var alert: AlertModelOf<Event>?
 
         public init(
-            modal: Route? = nil,
+            modal: ProductProfileRoute? = nil,
             alert: AlertModelOf<Event>? = nil
         ) {
             self.modal = modal
