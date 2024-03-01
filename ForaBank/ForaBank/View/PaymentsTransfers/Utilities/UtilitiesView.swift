@@ -17,7 +17,10 @@ struct UtilitiesView<Footer: View>: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 32) {
+            
+            Text("Select Utility Payment Operator")
+                .font(.title3.bold())
             
             if !state.latestPayments.isEmpty {
                 

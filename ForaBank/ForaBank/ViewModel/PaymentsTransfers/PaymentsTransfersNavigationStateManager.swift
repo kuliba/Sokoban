@@ -9,11 +9,19 @@ import Foundation
 
 struct PaymentsTransfersNavigationStateManager {
     
+    // TODO: - move into reduce in the Composition
+    let utilityPaymentReduce: UtilityPaymentReduce
+    
     let reduce: Reduce
     let handleEffect: HandleEffect
 }
 
 extension PaymentsTransfersNavigationStateManager {
+    
+    typealias UtilityPaymentDispatch = (UtilityPaymentEvent) -> Void
+    
+    typealias UtilityPaymentReduce = (UtilityPaymentState, UtilityPaymentEvent) -> (UtilityPaymentState, UtilityPaymentEffect?)
+    typealias UtilityPaymentEffectHandler = (UtilityPaymentEffect, @escaping UtilityPaymentDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -39,6 +47,7 @@ enum PaymentsTransfersEvent: Equatable {
     case resetDestination
     case resetModal
     case resetUtilityDestination
+    case utilityPayment(UtilityPaymentEvent)
     case utilityServiceTap(UtilitiesViewModel.Operator, UtilityService)
 }
 
@@ -78,6 +87,7 @@ extension PaymentsTransfersEvent {
 enum PaymentsTransfersEffect: Equatable {
     
     case getServicesFor(UtilitiesViewModel.Operator)
+    case utilityPayment(UtilityPaymentEffect)
     case startPayment(StartPaymentPayload)
 }
 
@@ -95,6 +105,7 @@ extension PaymentsTransfersEffect {
 extension PaymentsTransfersNavigationStateManager {
     
     static let preview: Self = .init(
+        utilityPaymentReduce: { state, _ in (state, nil) },
         reduce: { state, _ in (state, nil) },
         handleEffect: { _,_ in }
     )

@@ -85,7 +85,6 @@ struct PaymentsTransfersView: View {
                 }
         )
         .tabBar(isHidden: .init(
-            // get: { !viewModel.route.isEmpty },
             get: { viewModel.route.destination != nil },
             set: { if !$0 { viewModel.reset() } }
         ))
@@ -251,6 +250,7 @@ struct PaymentsTransfersView: View {
             VStack(spacing: 32) {
 
                 Text(String(describing: `operator`))
+                    .font(.title3.bold())
                 
                 Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
                     .foregroundColor(.secondary)
@@ -260,6 +260,7 @@ struct PaymentsTransfersView: View {
                     self.viewModel.event(.payByRequisites)
                 }
             }
+            .padding()
 #warning("add nav bar")
             
         case let .list(`operator`, utilityServices):
@@ -274,8 +275,12 @@ struct PaymentsTransfersView: View {
             }
 #warning("add nav bar")
             
-        case let .payment(details):
-            Text("TBD: payment for \(String(describing: details))")
+        case let .payment(utilityPaymentState):
+            UtilityPaymentWrapperView(
+                state: utilityPaymentState,
+                event: { viewModel.event(.utilityPayment($0)) }
+            )
+#warning("add nav bar")
         }
     }
     
@@ -336,7 +341,7 @@ struct PaymentsTransfersView: View {
             onOperatorTap: { self.viewModel.event(.operatorTapped($0)) },
             footer: { isExpanded in
                 
-                VStack {
+                VStack(spacing: 32) {
                  
                     Button("Оплатить по реквизитам") {
                         

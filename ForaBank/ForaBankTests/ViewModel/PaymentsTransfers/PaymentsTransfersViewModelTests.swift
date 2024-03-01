@@ -688,6 +688,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let effectSpy = EffectSpy()
         let navigationStateManager = PaymentsTransfersNavigationStateManager(
+            utilityPaymentReduce: { state,_ in (state, nil) },
             reduce: { _,_ in fatalError() },
             handleEffect: effectSpy.handleEffect(_:_:)
         )
