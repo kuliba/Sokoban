@@ -8,6 +8,7 @@
 import SwiftUI
 import CardGuardianUI
 import ProductProfile
+import TopUpCardUI
 
 struct ControlButtonView: View {
          
@@ -37,20 +38,7 @@ struct ControlButtonView: View {
         )
         .sheet(
             item: .init(
-                get: {
-                    switch state.modal {
-                        
-                    case .none:
-                        break
-                    case let .some(route):
-                        switch route {
-                            
-                        case let .cardGuardian(productProfileRoute):
-                            return productProfileRoute
-                        }
-                    }
-                    return nil
-                },
+                get: { state.modal },
                 set: { if $0 == nil { event(.dismissDestination) }}
             ),
             content: destinationView
@@ -58,15 +46,24 @@ struct ControlButtonView: View {
     }
     
     private func destinationView(
-        ppRoute: ProductProfileNavigation.State.ProductProfileRoute
+        route: ProductProfileNavigation.State.Route
     ) -> some View {
         
-        CardGuardianUI.ThreeButtonsWrappedView(
-            viewModel: ppRoute.viewModel,
-            config: .preview)
-        .padding(.top, 26)
-        .padding(.bottom, 72)
-        .presentationDetents([.height(300)])
+        switch route {
+        case let .cardGuardian(ppRoute):
+            return         AnyView(CardGuardianUI.ThreeButtonsWrappedView(
+                viewModel: ppRoute.viewModel,
+                config: .preview)
+            .padding(.top, 26)
+            .padding(.bottom, 72)
+            .presentationDetents([.height(300)]))
+            
+        case let .topUpCard(topUpCardRoute):
+            return AnyView(TopUpCardWrappedView(viewModel: topUpCardRoute.viewModel, config: .preview)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+                .presentationDetents([.height(300)]))
+        }
     }
 }
 

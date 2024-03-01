@@ -17,8 +17,19 @@ public extension ProductProfileNavigation.State {
     typealias TopUpCardRoute = GenericRoute<TopUpCardViewModel, ProductProfileNavigation.State.CGDestination, Never, AlertModelOf<ProductProfileNavigation.Event>>
 
     
-    enum Route: Equatable {
+    enum Route: Equatable, Identifiable {
         
+        public var id: UUID {
+            switch self {
+           
+            case let .cardGuardian(route):
+                return route.id
+            case let .topUpCard(route):
+                return route.id
+            }
+        }
+
         case cardGuardian(ProductProfileRoute)
+        case topUpCard(TopUpCardRoute)
     }
 }

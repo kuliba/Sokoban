@@ -44,6 +44,8 @@ public extension ProductProfileNavigationReducer {
             switch panel {
             case let .cardGuardianRoute(route):
                 state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
+            case let .topUpCardRoute(route):
+                state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
             }
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)

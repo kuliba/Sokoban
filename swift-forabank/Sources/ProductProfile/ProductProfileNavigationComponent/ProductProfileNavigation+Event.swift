@@ -30,5 +30,6 @@ public extension ProductProfileNavigation {
     enum Panel: Equatable {
         
         case cardGuardianRoute(CardGuardianRoute)
+        case topUpCardRoute(TopUpCardRoute)
     }
 }

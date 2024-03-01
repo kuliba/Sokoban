@@ -23,12 +23,21 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             effect: .create)
     }
     
+    func test_create_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.create, on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
     // MARK: test open
     
     func test_open_shouldNotDeliverEffect() {
         
         assert(
-            .open(createCardGuardianRoute()),
+            .open(.cardGuardianRoute( createCardGuardianRoute())),
             on: productProfileState(),
             effect: nil)
     }
@@ -41,6 +50,15 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .closeAlert,
             on: productProfileState(),
             effect: nil)
+    }
+    
+    func test_closeAlert_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.closeAlert, on: productProfileState(.none, .alertCVV())) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
     }
     
     // MARK: test dismissDestination
@@ -63,6 +81,15 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             effect: nil)
     }
     
+    func test_appear_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.cardGuardianInput(.appear), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
     // MARK: test showAlert
     
     func test_showAlert_shouldNotDeliverEffect() {
@@ -71,6 +98,17 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .showAlert(AlertModelOf.alertBlockCard(.newCard(status: .active))),
             on: productProfileState(),
             effect: nil)
+    }
+    
+    func test_showAlert_shouldSetStatusOnModalNilAlertNotNil() {
+        
+        let alert = AlertModelOf.alertBlockCard(.newCard(status: .active))
+
+        assert(.showAlert(alert), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = alert
+        }
     }
 
     // MARK: test alertInput
@@ -102,7 +140,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     }
     
     private func productProfileState(
-        _ modal: SUT.State.ProductProfileRoute? = nil,
+        _ modal: SUT.State.Route? = nil,
         _ alert: AlertModelOf<ProductProfileNavigation.Event>? = nil
     ) -> SUT.State {
         
@@ -135,6 +173,25 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             receivedEffect,
             expectedEffect,
             "\nExpected \(String(describing: expectedEffect)) state, but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: UpdateStateToExpected<State>? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT()
+        
+        _assertState(
+            sut,
+            event,
+            on: state,
+            updateStateToExpected: updateStateToExpected,
             file: file, line: line
         )
     }
@@ -174,3 +231,5 @@ private extension Card {
         )
     }
 }
+
+extension ProductProfileNavigationReducer: Reducer { }
