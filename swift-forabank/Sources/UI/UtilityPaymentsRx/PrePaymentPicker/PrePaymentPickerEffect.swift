@@ -1,19 +1,19 @@
 //
-//  PickerEffect.swift
+//  PrePaymentPickerEffect.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public enum PickerEffect<Operator>
+public enum PrePaymentPickerEffect<Operator>
 where Operator: Identifiable {
     
     case options(OptionsEffect)
 }
 
-public extension PickerEffect {
+public extension PrePaymentPickerEffect {
     
     typealias OptionsEffect = UtilityPaymentsEffect<Operator>
 }
 
-extension PickerEffect: Equatable where Operator: Equatable {}
+extension PrePaymentPickerEffect: Equatable where Operator: Equatable {}

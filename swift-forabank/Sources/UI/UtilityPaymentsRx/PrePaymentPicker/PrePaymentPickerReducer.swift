@@ -1,11 +1,11 @@
 //
-//  PickerReducer.swift
+//  PrePaymentPickerReducer.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class PickerReducer<LastPayment, Operator>
+public final class PrePaymentPickerReducer<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let optionsReduce: OptionsReduce
@@ -16,7 +16,7 @@ where Operator: Identifiable {
     }
 }
 
-public extension PickerReducer {
+public extension PrePaymentPickerReducer {
     
     func reduce(
         _ state: State,
@@ -49,7 +49,7 @@ public extension PickerReducer {
     }
 }
 
-public extension PickerReducer {
+public extension PrePaymentPickerReducer {
     
     typealias OptionsState = UtilityPaymentsState<LastPayment, Operator>
     typealias OptionsEvent =  UtilityPaymentsEvent<LastPayment, Operator>
@@ -57,7 +57,7 @@ public extension PickerReducer {
     
     typealias OptionsReduce = (OptionsState, OptionsEvent) -> (OptionsState, OptionsEffect?)
     
-    typealias State = PickerState<LastPayment, Operator>
-    typealias Event = PickerEvent<LastPayment, Operator>
-    typealias Effect = PickerEffect<Operator>
+    typealias State = PrePaymentPickerState<LastPayment, Operator>
+    typealias Event = PrePaymentPickerEvent<LastPayment, Operator>
+    typealias Effect = PrePaymentPickerEffect<Operator>
 }

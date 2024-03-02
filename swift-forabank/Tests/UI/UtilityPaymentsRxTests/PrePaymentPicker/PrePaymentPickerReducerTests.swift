@@ -1,5 +1,5 @@
 //
-//  PickerReducerTests.swift
+//  PrePaymentPickerReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPaymentsRx
 import XCTest
 
-final class PickerReducerTests: XCTestCase {
+final class PrePaymentPickerReducerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -120,7 +120,7 @@ final class PickerReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PickerReducer<TestLastPayment, TestOperator>
+    private typealias SUT = PrePaymentPickerReducer<TestLastPayment, TestOperator>
     private typealias Spy = ReducerSpy<SUT.OptionsState, SUT.OptionsEvent, SUT.OptionsEffect>
     
     private func makeSUT(

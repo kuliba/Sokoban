@@ -1,18 +1,18 @@
 //
-//  PickerEvent.swift
+//  PrePaymentPickerEvent.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public enum PickerEvent<LastPayment, Operator>
+public enum PrePaymentPickerEvent<LastPayment, Operator>
 where Operator: Identifiable {
     
     case options(OptionsEvent)
     case select(SelectEvent)
 }
 
-public extension PickerEvent {
+public extension PrePaymentPickerEvent {
     
     typealias OptionsEvent = UtilityPaymentsEvent<LastPayment, Operator>
     
@@ -23,6 +23,6 @@ public extension PickerEvent {
     }
 }
 
-extension PickerEvent.SelectEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentPickerEvent.SelectEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
 
-extension PickerEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentPickerEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
