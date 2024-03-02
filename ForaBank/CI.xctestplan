@@ -293,15 +293,22 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CardGuardianModuleTests",
-        "name" : "CardGuardianModuleTests"
+        "identifier" : "UtilityPaymentsRxTests",
+        "name" : "UtilityPaymentsRxTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "UtilityPaymentsRxTests",
-        "name" : "UtilityPaymentsRxTests"
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
       }
     }
   ],

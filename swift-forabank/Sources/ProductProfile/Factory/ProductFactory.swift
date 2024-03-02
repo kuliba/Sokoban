@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 22.02.2024.
 //
 
-import CardGuardianModule
+import CardGuardianUI
 import RxViewModel
 
 public struct ProductFactory {

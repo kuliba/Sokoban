@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CardGuardianModule
+import CardGuardianUI
 import ProductProfile
 import RxViewModel
 import ActivateSlider

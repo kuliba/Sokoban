@@ -6,7 +6,7 @@
 //
 
 import Tagged
-import CardGuardianModule
+import CardGuardianUI
 
 public enum ProductProfileEvent: Equatable {
     

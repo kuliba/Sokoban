@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "865AEE20-EA88-41F7-AAA0-59669F2453AC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

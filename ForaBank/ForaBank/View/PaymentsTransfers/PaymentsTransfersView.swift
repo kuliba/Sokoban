@@ -8,6 +8,8 @@
 import InfoComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
+import TextFieldModel
 
 struct PaymentsTransfersView: View {
     

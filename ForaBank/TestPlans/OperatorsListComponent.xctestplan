@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A683EC53-1599-47AC-9F8F-B0CC84BF1970",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

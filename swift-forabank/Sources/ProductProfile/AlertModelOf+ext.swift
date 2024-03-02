@@ -6,7 +6,7 @@
 //
 
 import UIPrimitives
-import CardGuardianModule
+import CardGuardianUI
 import Foundation
 
 public extension AlertModelOf<ProductProfileNavigation.Event> {

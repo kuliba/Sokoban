@@ -6,7 +6,7 @@
 //
 
 import UIPrimitives
-import CardGuardianModule
+import CardGuardianUI
 
 public extension ProductProfileNavigation {
     

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "30B8EE6D-EFE0-4E99-A955-183D0C0BDDF8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

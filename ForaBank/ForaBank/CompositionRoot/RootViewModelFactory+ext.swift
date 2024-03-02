@@ -10,10 +10,11 @@ import ManageSubscriptionsUI
 import PaymentSticker
 import SberQR
 import SwiftUI
+import OperatorsListComponents
 
 extension RootViewModelFactory {
     
-    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
         httpClient: HTTPClient,

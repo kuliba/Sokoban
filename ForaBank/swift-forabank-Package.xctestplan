@@ -288,15 +288,36 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CardGuardianModuleTests",
-        "name" : "CardGuardianModuleTests"
+        "identifier" : "UtilityPaymentsRxTests",
+        "name" : "UtilityPaymentsRxTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
+    }
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "UtilityPaymentsRxTests",
         "name" : "UtilityPaymentsRxTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
       }
     }
   ],

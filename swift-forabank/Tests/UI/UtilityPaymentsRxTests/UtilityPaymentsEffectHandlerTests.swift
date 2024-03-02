@@ -25,8 +25,13 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     func test_initiate_shouldCallLoaders() {
         
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
         
-        sut.handleEffect(.initiate, { _ in })
+        sut.handleEffect(.initiate, { _ in exp.fulfill() })
+        
+        loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
+        loadOperatorsSpy.complete(with: .failure(.connectivityError))
+        wait(for: [exp], timeout: 1)
         
         XCTAssertEqual(loadLastPaymentsSpy.callCount, 1)
         XCTAssertEqual(loadOperatorsSpy.callCount, 1)
@@ -34,9 +39,14 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     func test_initiate_shouldCallLoadOperatorWithNilPayload() {
         
-        let (sut, _, loadOperatorsSpy, _) = makeSUT()
+        let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+
+        sut.handleEffect(.initiate, { _ in exp.fulfill() })
         
-        sut.handleEffect(.initiate, { _ in })
+        loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
+        loadOperatorsSpy.complete(with: .failure(.connectivityError))
+        wait(for: [exp], timeout: 1)
         
         XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), [nil])
         XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [nil])
@@ -46,8 +56,10 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
-        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.failure(.connectivityError))), .loaded(.operators(.failure(.connectivityError)))) {
-            
+        expect(sut, with: .initiate, toDeliver: .loaded(
+            .failure(.connectivityError),
+            .failure(.connectivityError)
+        )) {
             loadLastPaymentsSpy.complete(with: .failure(.connectivityError))
             loadOperatorsSpy.complete(with: .failure(.connectivityError))
         }
@@ -57,8 +69,10 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
-        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success([]))), .loaded(.operators(.success([])))) {
-            
+        expect(sut, with: .initiate, toDeliver: .loaded(
+            .success([]),
+            .success([])
+        )) {
             loadLastPaymentsSpy.complete(with: .success([]))
             loadOperatorsSpy.complete(with: .success([]))
         }
@@ -68,8 +82,10 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
         
         let (sut, loadLastPaymentsSpy, loadOperatorsSpy, _) = makeSUT()
         
-        expect(sut, with: .initiate, toDeliver: .loaded(.lastPayments(.success(.stub))), .loaded(.operators(.success(.stub)))) {
-            
+        expect(sut, with: .initiate, toDeliver: .loaded(
+            .success(.stub),
+            .success(.stub)
+        )) {
             loadLastPaymentsSpy.complete(with: .success(.stub))
             loadOperatorsSpy.complete(with: .success(.stub))
         }

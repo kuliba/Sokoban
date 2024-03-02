@@ -12,26 +12,17 @@ where LastPayment: Equatable & Identifiable,
     public var lastPayments: [LastPayment]?
     public var operators: [Operator]?
     public var searchText: String
-    public var status: Status?
+    public var isInflight: Bool
     
     public init(
         lastPayments: [LastPayment]? = nil,
         operators: [Operator]? = nil,
         searchText: String = "",
-        status: Status? = nil
+        isInflight: Bool = false
     ) {
         self.lastPayments = lastPayments
         self.operators = operators
         self.searchText = searchText
-        self.status = status
-    }
-}
-
-public extension UtilityPaymentsState {
-    
-    enum Status: Equatable {
-        
-        case inflight
-        case failure(ServiceFailure)
+        self.isInflight = isInflight
     }
 }

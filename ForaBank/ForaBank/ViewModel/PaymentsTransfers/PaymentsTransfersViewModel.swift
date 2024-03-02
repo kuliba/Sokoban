@@ -9,6 +9,7 @@ import Combine
 import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -1534,7 +1535,7 @@ extension PaymentsTransfersViewModel {
         
         let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
         
-        var keyboardOfssetMultiplier: CGFloat {
+        var keyboardOffsetMultiplier: CGFloat {
             
             switch type {
             case .meToMe: return 1
