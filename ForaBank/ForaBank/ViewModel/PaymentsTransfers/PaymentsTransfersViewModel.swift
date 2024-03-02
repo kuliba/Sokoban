@@ -161,8 +161,12 @@ extension PaymentsTransfersViewModel {
             case .failure:
                 state.utilitiesRoute?.destination = .failure(`operator`)
                 
-            case let .list(utilityServices):
-                state.utilitiesRoute?.destination = .list(`operator`, utilityServices)
+            case let .list(services):
+                state.utilitiesRoute?.destination = .list(.init(
+                    operator: `operator`,
+                    services: services,
+                    destination: nil
+                ))
                 
             case let .single(utilityService):
                 // flow `e`
@@ -180,7 +184,27 @@ extension PaymentsTransfersViewModel {
         case let .paymentStarted(paymentStarted):
             switch paymentStarted {
             case let .details(paymentDetails):
-                state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
+                guard let utilitiesRoute = state.utilitiesRoute
+                else { break }
+                
+                switch utilitiesRoute.destination {
+                case .none:
+                    state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
+                    
+                case let .some(destination):
+                    switch destination {
+                    case let .list(list):
+                        // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
+                        state.utilitiesRoute?.destination = .list(.init(
+                            operator: list.operator,
+                            services: list.services,
+                            destination: .payment(.init(paymentDetails))
+                        ))
+                        
+                    default:
+                        break
+                    }
+                }
                 
             case .failure:
                 state.modal = .alert(.techError(
@@ -204,6 +228,16 @@ extension PaymentsTransfersViewModel {
             
         case .resetUtilityDestination:
             state.utilitiesRoute?.destination = nil
+            
+        case .resetUtilityListDestination:
+            guard case let .list(list) = route.utilitiesRoute?.destination
+            else { break }
+            
+            state.utilitiesRoute?.destination = .list(.init(
+                operator: list.`operator`, 
+                services: list.services,
+                destination: nil
+            ))
             
         case let .utilityPayment(utilityPaymentEvent):
             guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
@@ -1686,15 +1720,43 @@ extension PaymentsTransfersViewModel.Route {
     enum UtilitiesDestination: Identifiable {
         
         case failure(UtilitiesViewModel.Operator)
-        case list(UtilitiesViewModel.Operator, [UtilityService])
+        case list(List)
+        case payment(UtilityPaymentState)
+    }
+}
+ 
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    struct List {
+        
+        let `operator`: UtilitiesViewModel.Operator
+        let services: [UtilityService]
+        let destination: UtilityServicePickerDestination?
+    }
+    
+    var id: ID {
+        
+        switch self {
+        case .failure:
+            return .failure
+        case .list:
+            return .list
+        case .payment:
+            return .payment
+        }
+    }
+    
+    enum ID {
+        
+        case failure, list, payment
+    }
+    
+    enum UtilityServicePickerDestination: Identifiable {
+        
         case payment(UtilityPaymentState)
         
         var id: ID {
             switch self {
-            case .failure:
-                return .failure
-            case .list:
-                return .list
             case .payment:
                 return .payment
             }
@@ -1702,7 +1764,67 @@ extension PaymentsTransfersViewModel.Route {
         
         enum ID {
             
-            case failure, list, payment
+            case payment
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            utilitiesRoute?.destination?.utilityPaymentState
+        }
+        
+        set(newValue) {
+            
+            utilitiesRoute?.destination?.utilityPaymentState = newValue
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            switch self {
+            case let .list(list):
+                guard case let .payment(utilityPaymentState) = list.destination
+                else { return nil }
+                
+                return utilityPaymentState
+                
+            case let .payment(utilityPaymentState):
+                return utilityPaymentState
+                
+            default:
+                return nil
+            }
+        }
+        
+        set(newValue) {
+            
+            switch self {
+            case let .list(list):
+                guard case .payment = list.destination
+                else { return }
+                
+                self = .list(.init(
+                    operator: list.`operator`,
+                    services: list.services,
+                    destination: newValue.map { .payment($0) }
+                ))
+                
+            case let .payment(utilityPaymentState):
+                self = .payment(utilityPaymentState)
+                
+            default:
+                return
+            }
         }
     }
 }

@@ -237,7 +237,7 @@ struct PaymentsTransfersView: View {
                     ),
                     content: utilitiesDestinationView
                 )
-            #warning("add nav bar")
+#warning("add nav bar")
         }
     }
     
@@ -247,41 +247,81 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         switch destination {
         case let .failure(`operator`):
-            VStack(spacing: 32) {
-
-                Text(String(describing: `operator`))
-                    .font(.title3.bold())
-                
-                Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
-                    .foregroundColor(.secondary)
-                
-                Button("Оплатить по реквизитам") {
-                    
-                    self.viewModel.event(.payByRequisites)
-                }
-            }
-            .padding()
+            failureView(`operator`)
 #warning("add nav bar")
             
-        case let .list(`operator`, utilityServices):
-            VStack(spacing: 32) {
-                
-                Text("Services for \(String(describing: `operator`))")
-                
-                UtilityServicePicker(
-                    state: utilityServices, 
-                    event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+        case let .list(list):
+            utilityServicePicker(list.operator, list.services)
+                .navigationDestination(
+                    item: .init(
+                        get: { list.destination },
+                        set: { if $0 == nil { viewModel.event(.resetUtilityListDestination)}}
+                    ),
+                    content: utilityServicePickerDestinationView
                 )
-            }
 #warning("add nav bar")
             
         case let .payment(utilityPaymentState):
-            UtilityPaymentWrapperView(
-                state: utilityPaymentState,
-                event: { viewModel.event(.utilityPayment($0)) }
-            )
+            utilityPaymentWrapperView(utilityPaymentState)
 #warning("add nav bar")
         }
+    }
+    
+    private func failureView(
+        _ `operator`: UtilitiesViewModel.Operator
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text(String(describing: `operator`))
+                .font(.title3.bold())
+            
+            Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
+                .foregroundColor(.secondary)
+            
+            Button("Оплатить по реквизитам") {
+                
+                self.viewModel.event(.payByRequisites)
+            }
+        }
+        .padding()
+    }
+    
+    private func utilityServicePicker(
+        _ `operator`: UtilitiesViewModel.Operator,
+        _ utilityServices: [UtilityService]
+    ) -> some View {
+        VStack(spacing: 32) {
+            
+            Text("Services for \(String(describing: `operator`))")
+                .font(.title3.bold())
+            
+            UtilityServicePicker(
+                state: utilityServices,
+                event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+            )
+        }
+    }
+    
+    private func utilityPaymentWrapperView(
+        _ utilityPaymentState: UtilityPaymentState
+    ) -> some View {
+        UtilityPaymentWrapperView(
+            state: utilityPaymentState,
+            event: { viewModel.event(.utilityPayment($0)) }
+        )
+    }
+    
+    @ViewBuilder
+    private func utilityServicePickerDestinationView(
+        _ utilityListDestination: PaymentsTransfersViewModel.Route.UtilitiesDestination.UtilityServicePickerDestination
+    ) -> some View {
+        
+        switch utilityListDestination {
+        case let .payment(utilityPaymentState):
+            utilityPaymentWrapperView(utilityPaymentState)
+        }
+#warning("add nav bar")
     }
     
     private func transportPaymentsView(
@@ -342,14 +382,14 @@ struct PaymentsTransfersView: View {
             footer: { isExpanded in
                 
                 VStack(spacing: 32) {
-                 
+                    
                     Button("Оплатить по реквизитам") {
                         
                         self.viewModel.event(.payByRequisites)
                     }
                     
                     if isExpanded {
-
+                        
                         Button("Добавить организацию") {
                             
                             self.viewModel.event(.addCompany)
