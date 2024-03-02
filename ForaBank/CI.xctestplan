@@ -324,6 +324,13 @@
         "identifier" : "PrePaymentPickerTests",
         "name" : "PrePaymentPickerTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
+      }
     }
   ],
   "version" : 1

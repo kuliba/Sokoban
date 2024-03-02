@@ -26,6 +26,8 @@ let package = Package(
         // Infra
         .fetcher,
         .keyChainStore,
+        // Payments
+        .utilityPayment,
         // Services
         .cardStatementAPI,
         .cryptoSwaddler,
@@ -108,6 +110,9 @@ let package = Package(
         .fetcherTests,
         .keyChainStore,
         .keyChainStoreTests,
+        // Payments
+        .utilityPayment,
+        .utilityPaymentTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -464,6 +469,15 @@ private extension Product {
         ]
     )
     
+    // MARK: - Payments
+    
+    static let utilityPayment = library(
+        name: .utilityPayment,
+        targets: [
+            .utilityPayment,
+        ]
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -844,6 +858,28 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    // MARK: - Payments
+    
+    static let utilityPayment = target(
+        name: .utilityPayment,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Payments/\(String.utilityPayment)"
+    )
+    static let utilityPaymentTests = testTarget(
+        name: .utilityPaymentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .utilityPayment,
+        ],
+        path: "Tests/Payments/\(String.utilityPaymentTests)"
     )
     
     // MARK: - Services
@@ -1715,6 +1751,12 @@ private extension Target.Dependency {
         name: .keyChainStore
     )
     
+    // MARK: - Payments
+
+    static let utilityPayment = byName(
+        name: .utilityPayment
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -1898,6 +1940,11 @@ private extension String {
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
     
+    // MARK: - Payments
+    
+    static let utilityPayment = "UtilityPayment"
+    static let utilityPaymentTests = "UtilityPaymentTests"
+
     // MARK: - Services
     
     static let cardStatementAPI = "CardStatementAPI"
