@@ -14,7 +14,7 @@ where Operator: Identifiable {
 
 public extension PrePaymentPickerEvent {
     
-    typealias OptionsEvent = UtilityPaymentsEvent<LastPayment, Operator>
+    typealias OptionsEvent = PrePaymentOptionsEvent<LastPayment, Operator>
     
     enum SelectEvent {
         

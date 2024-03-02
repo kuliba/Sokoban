@@ -13,5 +13,5 @@ public enum ComposedOperatorsEvent {
     case selectLastOperation(LatestPayment.ID)
     case selectOperator(Operator.ID)
     
-    case utility(UtilityPaymentsEvent<LatestPayment, Operator>)
+    case utility(PrePaymentOptionsEvent<LatestPayment, Operator>)
 }

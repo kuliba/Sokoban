@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentsState.swift
+//  PrePaymentOptionsState.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public struct UtilityPaymentsState<LastPayment, Operator> {
+public struct PrePaymentOptionsState<LastPayment, Operator> {
     
     public var lastPayments: [LastPayment]?
     public var operators: [Operator]?
@@ -25,4 +25,4 @@ public struct UtilityPaymentsState<LastPayment, Operator> {
     }
 }
 
-extension UtilityPaymentsState: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentOptionsState: Equatable where LastPayment: Equatable, Operator: Equatable {}

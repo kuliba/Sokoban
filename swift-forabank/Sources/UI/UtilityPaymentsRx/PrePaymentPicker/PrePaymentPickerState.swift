@@ -13,7 +13,7 @@ public enum PrePaymentPickerState<LastPayment, Operator> {
 
 public extension PrePaymentPickerState {
     
-    typealias OptionsState = UtilityPaymentsState<LastPayment, Operator>
+    typealias OptionsState = PrePaymentOptionsState<LastPayment, Operator>
     
     enum Selection {
         

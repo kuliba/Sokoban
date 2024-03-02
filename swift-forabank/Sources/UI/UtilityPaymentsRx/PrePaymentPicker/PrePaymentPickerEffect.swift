@@ -13,7 +13,7 @@ where Operator: Identifiable {
 
 public extension PrePaymentPickerEffect {
     
-    typealias OptionsEffect = UtilityPaymentsEffect<Operator>
+    typealias OptionsEffect = PrePaymentOptionsEffect<Operator>
 }
 
 extension PrePaymentPickerEffect: Equatable where Operator: Equatable {}

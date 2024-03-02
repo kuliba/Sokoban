@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentsEffectHandlerTests.swift
+//  PrePaymentOptionsEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 20.02.2024.
@@ -8,7 +8,7 @@
 import UtilityPaymentsRx
 import XCTest
 
-final class UtilityPaymentsEffectHandlerTests: XCTestCase {
+final class PrePaymentOptionsEffectHandlerTests: XCTestCase {
     
     // MARK: - init
     
@@ -155,7 +155,7 @@ final class UtilityPaymentsEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentsEffectHandler<TestLastPayment, TestOperator>
+    private typealias SUT = PrePaymentOptionsEffectHandler<TestLastPayment, TestOperator>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     

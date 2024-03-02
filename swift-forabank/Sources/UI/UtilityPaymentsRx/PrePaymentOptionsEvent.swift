@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentsEvent.swift
+//  PrePaymentOptionsEvent.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public enum UtilityPaymentsEvent<LastPayment, Operator>
+public enum PrePaymentOptionsEvent<LastPayment, Operator>
 where Operator: Identifiable {
     
     case didScrollTo(Operator.ID)
@@ -15,7 +15,7 @@ where Operator: Identifiable {
     case search(Search)
 }
 
-public extension UtilityPaymentsEvent {
+public extension PrePaymentOptionsEvent {
     
     typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
     typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
@@ -27,4 +27,4 @@ public extension UtilityPaymentsEvent {
     }
 }
 
-extension UtilityPaymentsEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentOptionsEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}

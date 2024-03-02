@@ -51,9 +51,9 @@ public extension PrePaymentPickerReducer {
 
 public extension PrePaymentPickerReducer {
     
-    typealias OptionsState = UtilityPaymentsState<LastPayment, Operator>
-    typealias OptionsEvent =  UtilityPaymentsEvent<LastPayment, Operator>
-    typealias OptionsEffect = UtilityPaymentsEffect<Operator>
+    typealias OptionsState = PrePaymentOptionsState<LastPayment, Operator>
+    typealias OptionsEvent =  PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias OptionsEffect = PrePaymentOptionsEffect<Operator>
     
     typealias OptionsReduce = (OptionsState, OptionsEvent) -> (OptionsState, OptionsEffect?)
     

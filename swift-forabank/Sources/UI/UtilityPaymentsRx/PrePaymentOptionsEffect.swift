@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentsEffect.swift
+//  PrePaymentOptionsEffect.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-public enum UtilityPaymentsEffect<Operator>
+public enum PrePaymentOptionsEffect<Operator>
 where Operator: Identifiable {
     
     case initiate
@@ -13,9 +13,9 @@ where Operator: Identifiable {
     case search(String)
 }
 
-public extension UtilityPaymentsEffect {
+public extension PrePaymentOptionsEffect {
     
     typealias PageSize = Int
 }
 
-extension UtilityPaymentsEffect: Equatable where Operator: Equatable {}
+extension PrePaymentOptionsEffect: Equatable where Operator: Equatable {}
