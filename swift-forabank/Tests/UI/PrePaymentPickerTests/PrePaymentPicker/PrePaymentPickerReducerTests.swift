@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-import UtilityPaymentsRx
+import PrePaymentPicker
 import XCTest
 
 final class PrePaymentPickerReducerTests: XCTestCase {

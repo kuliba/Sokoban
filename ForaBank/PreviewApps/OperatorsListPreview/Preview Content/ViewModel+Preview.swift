@@ -7,7 +7,7 @@
 
 import Foundation
 import RxViewModel
-import UtilityPaymentsRx
+import PrePaymentPicker
 import OperatorsListComponents
 
 typealias PrePaymentOptionsViewModel = RxViewModel<PrePaymentOptionsState<LatestPayment, Operator>, PrePaymentOptionsEvent<LatestPayment, Operator>, PrePaymentOptionsEffect<Operator>>
@@ -86,7 +86,7 @@ extension StubbedOperatorLoader {
     }
 }
 
-private extension UtilityPaymentsRx.ServiceFailure {
+private extension PrePaymentPicker.ServiceFailure {
 
     init(_ error: ServiceFailure) {
         

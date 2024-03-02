@@ -6,7 +6,7 @@
 //
 
 import RxViewModel
-import UtilityPaymentsRx
+import PrePaymentPicker
 import XCTest
 
 final class PrePaymentOptionsIntegrationTests: XCTestCase {

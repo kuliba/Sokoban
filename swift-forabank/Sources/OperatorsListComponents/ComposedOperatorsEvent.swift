@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UtilityPaymentsRx
+import PrePaymentPicker
 
 public enum ComposedOperatorsEvent {
 

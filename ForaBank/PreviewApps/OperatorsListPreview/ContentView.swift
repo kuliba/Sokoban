@@ -10,7 +10,7 @@ import OperatorsListComponents
 import SearchBarComponent
 import TextFieldUI
 import TextFieldComponent
-import UtilityPaymentsRx
+import PrePaymentPicker
 import TextFieldComponent
 
 typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>

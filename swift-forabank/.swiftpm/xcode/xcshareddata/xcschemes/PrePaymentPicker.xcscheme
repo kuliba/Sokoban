@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityPaymentsRx"
-               BuildableName = "UtilityPaymentsRx"
-               BlueprintName = "UtilityPaymentsRx"
+               BlueprintIdentifier = "PrePaymentPicker"
+               BuildableName = "PrePaymentPicker"
+               BlueprintName = "PrePaymentPicker"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -24,10 +24,15 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:../ForaBank/TestPlans/PrePaymentPicker.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -61,9 +66,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "UtilityPaymentsRx"
-            BuildableName = "UtilityPaymentsRx"
-            BlueprintName = "UtilityPaymentsRx"
+            BlueprintIdentifier = "PrePaymentPicker"
+            BuildableName = "PrePaymentPicker"
+            BlueprintName = "PrePaymentPicker"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

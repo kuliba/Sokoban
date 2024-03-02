@@ -293,13 +293,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "UtilityPaymentsRxTests",
-        "name" : "UtilityPaymentsRxTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CardGuardianUITests",
         "name" : "CardGuardianUITests"
       }
@@ -323,6 +316,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "TopUpCardUITests",
         "name" : "TopUpCardUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PrePaymentPickerTests",
+        "name" : "PrePaymentPickerTests"
       }
     }
   ],
