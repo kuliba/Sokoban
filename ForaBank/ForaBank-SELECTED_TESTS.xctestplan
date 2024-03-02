@@ -13,7 +13,8 @@
       "containerPath" : "container:ForaBank.xcodeproj",
       "identifier" : "EDB1437C265FDA410028EF5A",
       "name" : "ForaBank"
-    }
+    },
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
