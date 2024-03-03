@@ -22,7 +22,7 @@ struct PrePaymentMockView: View {
             
             Section(header: Text("Last Payments")) {
                 
-                ForEach(["a", "b"], id: \.self, content: lastPaymentView)
+                ForEach(["success", "error", "failure"], id: \.self, content: lastPaymentView)
             }
             
             Section(header: Text("Operators")) {

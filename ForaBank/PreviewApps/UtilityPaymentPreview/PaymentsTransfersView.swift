@@ -18,27 +18,26 @@ struct PaymentsTransfersView: View {
         
         ZStack {
             
-            Button("Utility Payment") { viewModel.event(.openPrePayment) }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            if viewModel.state.status == .inflight {
+            NavigationView {
                 
-                ZStack {
-                    
-                    Color.black.opacity(0.5)
-                    
-                    ProgressView()
-                }
-                .ignoresSafeArea()
+                utilityPaymentButton()
             }
+            
+            spinner()
         }
-        .navigationDestination(
-            item: .init(
-                get: { viewModel.state.navigationState },
-                set: { if $0 == nil { viewModel.event(.resetDestination) }}
-            ),
-            content: destinationView
-        )
+    }
+    
+    private func utilityPaymentButton() -> some View {
+        
+        Button("Utility Payment") { viewModel.event(.openPrePayment) }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .navigationDestination(
+                item: .init(
+                    get: { viewModel.state.navigationState },
+                    set: { if $0 == nil { viewModel.event(.resetDestination) }}
+                ),
+                content: destinationView
+            )
     }
     
     @ViewBuilder
@@ -51,11 +50,23 @@ struct PaymentsTransfersView: View {
             switch prePayment {
             case .failure:
                 factory.prePaymentFailureView { viewModel.event(.payByInstruction) }
-            
+                
             case .success:
                 factory.prePaymentView { viewModel.event(.prePayment($0)) }
             }
         }
+    }
+    
+    private func spinner() -> some View {
+        
+        ZStack {
+            
+            Color.black.opacity(0.5)
+            
+            ProgressView()
+        }
+        .ignoresSafeArea()
+        .opacity(viewModel.state.status == .inflight ? 1 : 0)
     }
 }
 

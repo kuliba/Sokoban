@@ -29,8 +29,17 @@ extension PaymentsTransfersViewModel {
             }
         }
         
+        let startPayment: PaymentsTransfersEffectHandler.StartPayment = { payload, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(payload.response)
+            }
+        }
+        
         let effectHandler = PaymentsTransfersEffectHandler(
-            loadPrePayment: loadPrePayment
+            loadPrePayment: loadPrePayment,
+            startPayment: startPayment
         )
         
         return .init(
@@ -51,6 +60,45 @@ private extension Flow.LoadPrePayment {
             
         case .failure:
             return .failure(.init())
+        }
+    }
+}
+
+private extension PaymentsTransfersEffect.StartPaymentPayload {
+    
+    var response: PaymentsTransfersEffectHandler.Event.StartPaymentResponse {
+        
+        switch self {
+        case let .last(lastPayment):
+            switch lastPayment.id {
+            case "error":
+                return .failure(.serverError("Error #12345"))
+                
+            case "failure":
+                return .failure(.connectivityError)
+                
+            case "success":
+                return .success(.init())
+                
+            default:
+                return .success(.init())
+            }
+            
+        case let .service(`operator`, utilityService):
+            switch `operator`.id {
+            case "list":
+#warning("need a list!!")
+                return .success(.init())
+                
+            case "single":
+                return .success(.init())
+                
+            case "failure":
+                return .failure(.connectivityError)
+                
+            default:
+                return .success(.init())
+            }
         }
     }
 }

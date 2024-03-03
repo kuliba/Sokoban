@@ -49,15 +49,39 @@ extension PaymentsTransfersReducer {
             
         case let .prePayment(prePaymentEvent):
             print("prePaymentEvent event: \(prePaymentEvent)")
+            #warning("what if it's failure case?")
             guard case let .success(prePaymentState) = state.prePayment
             else { break }
             
-            let (newPrePaymentState, prePaymentEffect) = prePaymentReduce(prePaymentState, prePaymentEvent)
-#warning("FIX ME")
+            let (newPrePaymentState, _) = prePaymentReduce(prePaymentState, prePaymentEvent)
+            state.prePayment = .success(newPrePaymentState)
+            switch newPrePaymentState {
+            case let .selected(.last(lastPayment)):
+                state.status = .inflight
+                effect = .startPayment(.last(lastPayment))
+                
+            case let .selected(.operator(`operator`)):
+                state.status = .inflight
+                print("effect = .loadServices(for: \(`operator`))")
+                
+            default:
+                break
+            }
             
         case .resetDestination:
             if state.prePayment != nil {
                 state.prePayment = nil
+            }
+            
+        case let .startPaymentResponse(response):
+            state.status = nil
+            #warning("FIX ME")
+            switch response {
+            case let .failure(serviceFailure):
+                print("startPaymentResponse: \(serviceFailure)")
+                
+            case let .success(startPayment):
+                print("startPaymentResponse: \(startPayment)")
             }
         }
         

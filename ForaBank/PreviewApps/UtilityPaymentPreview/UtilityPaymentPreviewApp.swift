@@ -14,10 +14,7 @@ struct UtilityPaymentPreviewApp: App {
         
         WindowGroup {
             
-            NavigationView {
-                
-                ContentView()
-            }
+            ContentView()
         }
     }
 }

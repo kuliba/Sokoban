@@ -10,13 +10,13 @@ public enum PrePaymentState: Equatable {
     case addingCompany
     case payingByInstruction
     case scanning
-    case selected(Select)
+    case selected(Selected)
     case selecting
 }
 
 public extension PrePaymentState {
  
-    enum Select: Equatable {
+    enum Selected: Equatable {
         
         case last(LastPayment)
         case `operator`(Operator)
