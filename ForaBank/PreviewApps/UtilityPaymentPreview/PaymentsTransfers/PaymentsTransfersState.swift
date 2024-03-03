@@ -9,9 +9,17 @@ import UtilityPayment
 
 struct PaymentsTransfersState: Equatable {
     
-    #warning("seems like enum case")
-    var prePayment: Result<PrePaymentState, SimpleServiceFailure>?
+    var route: Route?
     var status: Status?
+}
+
+extension PaymentsTransfersState {
+    
+    enum Route: Equatable {
+        
+        case prePayment(Result<PrePaymentState, SimpleServiceFailure>)
+        // case utilityPayment(UtilityPayment, PrePaymentState)
+    }
     
     enum Status: Equatable {
         

@@ -37,10 +37,10 @@ extension PaymentsTransfersReducer {
             
             switch prePaymentResult {
             case let .failure(failure):
-                state.prePayment = .failure(failure)
+                state.route = .prePayment(.failure(failure))
                 
             case let .success(success):
-                state.prePayment = .success(.selecting)
+                state.route = .prePayment(.success(.selecting))
             }
             
         case let .loadedServices(response, for: `operator`):
@@ -64,11 +64,11 @@ extension PaymentsTransfersReducer {
         case let .prePayment(prePaymentEvent):
             print("prePaymentEvent event: \(prePaymentEvent)")
             #warning("what if it's failure case?")
-            guard case let .success(prePaymentState) = state.prePayment
+            guard case let .prePayment(.success(prePaymentState)) = state.route
             else { break }
             
             let (newPrePaymentState, _) = prePaymentReduce(prePaymentState, prePaymentEvent)
-            state.prePayment = .success(newPrePaymentState)
+            state.route = .prePayment(.success(newPrePaymentState))
             
             switch newPrePaymentState {
             case let .selected(.last(lastPayment)):
@@ -84,9 +84,7 @@ extension PaymentsTransfersReducer {
             }
             
         case .resetDestination:
-            if state.prePayment != nil {
-                state.prePayment = nil
-            }
+            state.route = nil
             
         case let .startPaymentResponse(response):
             state.status = nil

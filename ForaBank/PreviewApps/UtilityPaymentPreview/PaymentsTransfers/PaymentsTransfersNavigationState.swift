@@ -9,15 +9,18 @@ extension PaymentsTransfersState {
     
     var navigationState: NavigationState? {
         
-        switch prePayment {
+        switch route {
         case .none:
             return .none
             
-        case .failure:
-            return .prePayment(.failure)
-            
-        case .success:
-            return .prePayment(.success)
+        case let .prePayment(prePayment):
+            switch prePayment {
+            case .failure:
+                return .prePayment(.failure)
+                
+            case .success:
+                return .prePayment(.success)
+            }
         }
     }
 }
