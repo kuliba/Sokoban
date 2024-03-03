@@ -10,4 +10,10 @@ import UtilityPayment
 struct PaymentsTransfersState: Equatable {
     
     var prePayment: PrePaymentState?
+    var status: Status?
+    
+    enum Status: Equatable {
+        
+        case inflight
+    }
 }

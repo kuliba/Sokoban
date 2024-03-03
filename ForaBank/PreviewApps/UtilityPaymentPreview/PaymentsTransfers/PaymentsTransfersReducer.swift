@@ -19,6 +19,23 @@ extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
+        switch event {
+        case .openPrePayment:
+            state.status = .inflight
+            effect = .loadPrePayment
+            
+        case let .loaded(prePaymentResult):
+            state.status = nil
+            
+            switch prePaymentResult {
+            case let .failure(failure):
+                print(failure)
+
+            case let .success(success):
+                print(success)
+            }
+        }
+        
         return (state, effect)
     }
 }

@@ -10,4 +10,10 @@ import UtilityPayment
 enum PaymentsTransfersEvent: Equatable {
     
     case openPrePayment
+    case loaded(Result<PrePayment, ServiceFailure>)
+}
+
+extension PaymentsTransfersEvent {
+    
+    struct PrePayment: Equatable {}
 }

@@ -7,6 +7,11 @@
 
 final class PaymentsTransfersEffectHandler {
     
+    private let loadPrePayment: LoadPrePayment
+    
+    init(loadPrePayment: @escaping LoadPrePayment) {
+        self.loadPrePayment = loadPrePayment
+    }
 }
 
 extension PaymentsTransfersEffectHandler {
@@ -15,11 +20,21 @@ extension PaymentsTransfersEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        
+        switch effect {
+        case .loadPrePayment:
+            loadPrePayment {
+                
+                dispatch(.loaded($0))
+            }
+        }
     }
 }
 
 extension PaymentsTransfersEffectHandler {
+    
+    typealias LoadPrePaymentResult = Result<Event.PrePayment, ServiceFailure>
+    typealias LoadPrePaymentCompletion = (LoadPrePaymentResult) -> Void
+    typealias LoadPrePayment = (@escaping LoadPrePaymentCompletion) -> Void
 
     typealias Dispatch = (Event) -> Void
     

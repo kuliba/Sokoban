@@ -13,7 +13,22 @@ struct PaymentsTransfersView: View {
     
     var body: some View {
         
-        Button("Utility Payment") { viewModel.event(.openPrePayment) }
+        ZStack {
+            
+            Button("Utility Payment") { viewModel.event(.openPrePayment) }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            if viewModel.state.status == .inflight {
+                
+                ZStack {
+                    
+                    Color.black.opacity(0.2)
+                    
+                    ProgressView()
+                }
+                .ignoresSafeArea()
+            }
+        }
     }
 }
 
