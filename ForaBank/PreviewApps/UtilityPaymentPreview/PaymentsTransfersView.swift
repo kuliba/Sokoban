@@ -56,8 +56,26 @@ struct PaymentsTransfersView: View {
                 
             case .success:
                 factory.prePaymentView { viewModel.event(.prePayment($0)) }
+                    .navigationDestination(
+                        item: .init(
+                            get: {
+                                let state = viewModel.state.prePaymentNavigationState
+                                print(state ?? "nil")
+                                return state
+                            },
+                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
+                        ),
+                        content: prePaymentDestinationView
+                    )
             }
         }
+    }
+    
+    private func prePaymentDestinationView(
+        prePaymentNavigationState: PaymentsTransfersState.PrePaymentNavigationState
+    ) -> some View {
+        
+        Text("Utility Payment View")
     }
     
     private func spinner() -> some View {

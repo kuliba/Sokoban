@@ -58,11 +58,17 @@ extension PaymentsTransfersReducer {
             }
             
         case .payByInstruction:
-            print("payByInstruction event")
 #warning("FIX ME")
             
         case let .prePayment(prePaymentEvent):
-            print("prePaymentEvent event: \(prePaymentEvent)")
+            
+            if prePaymentEvent == .back,
+                case let .utilityPayment(utilityPayment) = state.route {
+                
+                state.route = .prePayment(.success(utilityPayment.prePayment))
+                break
+            }
+            
             #warning("what if it's failure case?")
             guard case let .prePayment(.success(prePaymentState)) = state.route
             else { break }
@@ -87,14 +93,18 @@ extension PaymentsTransfersReducer {
             state.route = nil
             
         case let .startPaymentResponse(response):
+            guard case let .prePayment(.success(prePayment)) = state.route
+            else { break }
+            
             state.status = nil
             #warning("FIX ME")
             switch response {
             case let .failure(serviceFailure):
+                #warning("move to mainScreen")
                 print("startPaymentResponse: \(serviceFailure)")
                 
             case let .success(startPayment):
-                print("startPaymentResponse: \(startPayment)")
+                state.route = .utilityPayment(.init(prePayment: prePayment))
             }
         }
         

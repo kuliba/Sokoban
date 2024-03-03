@@ -7,10 +7,10 @@
 
 public struct UtilityPaymentState: Equatable {
     
-    public var prePayment: PrePaymentState?
+    public var prePayment: PrePaymentState
     
     public init(
-        prePayment: PrePaymentState? = nil
+        prePayment: PrePaymentState = .selecting
     ) {
         self.prePayment = prePayment
     }
