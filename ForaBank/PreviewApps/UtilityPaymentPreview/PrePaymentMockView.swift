@@ -14,6 +14,7 @@ struct PrePaymentMockView: View {
     var body: some View {
         
         TextField("Text", text: $text)
+            .padding()
     }
 }
 

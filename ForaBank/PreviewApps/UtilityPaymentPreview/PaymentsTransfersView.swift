@@ -12,8 +12,6 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
-    @State private var item: Item?
-    
     let factory: PaymentsTransfersViewFactory
     
     var body: some View {
@@ -35,17 +33,28 @@ struct PaymentsTransfersView: View {
             }
         }
         .navigationDestination(
-            item: $item,
+            item: .init(
+                get: { viewModel.state.navigationState },
+                set: { if $0 == nil { viewModel.event(.resetDestination) }}
+            ),
             content: destinationView
         )
     }
     
+    @ViewBuilder
     private func destinationView(
-        item: Item
+        navigationState: PaymentsTransfersState.NavigationState
     ) -> some View {
-        // switch???
         
-        factory.prePaymentView()
+        switch navigationState {
+        case let .prePayment(prePayment):
+            switch prePayment {
+            case .failure:
+                factory.prePaymentFailureView({ viewModel.event(.payByInstruction) })
+            case .success:
+                factory.prePaymentView()
+            }
+        }
     }
 }
 

@@ -9,6 +9,7 @@ import UtilityPayment
 
 struct PaymentsTransfersState: Equatable {
     
+    #warning("seems like enum case")
     var prePayment: Result<PrePaymentState, ServiceFailure>?
     var status: Status?
     

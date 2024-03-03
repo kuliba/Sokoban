@@ -34,6 +34,14 @@ extension PaymentsTransfersReducer {
             case let .success(success):
                 state.prePayment = .success(.selecting)
             }
+            
+        case .payByInstruction:
+            break
+            
+        case .resetDestination:
+            if state.prePayment != nil {
+                state.prePayment = nil
+            }
         }
         
         return (state, effect)

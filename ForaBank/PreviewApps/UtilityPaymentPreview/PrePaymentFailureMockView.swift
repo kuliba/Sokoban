@@ -19,6 +19,7 @@ struct PrePaymentFailureMockView: View {
             
             Button("Pay by Instruction", action: payByInstruction)
         }
+        .padding()
     }
 }
 

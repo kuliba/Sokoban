@@ -11,6 +11,8 @@ enum PaymentsTransfersEvent: Equatable {
     
     case openPrePayment
     case loaded(Result<PrePayment, ServiceFailure>)
+    case payByInstruction
+    case resetDestination
 }
 
 extension PaymentsTransfersEvent {
