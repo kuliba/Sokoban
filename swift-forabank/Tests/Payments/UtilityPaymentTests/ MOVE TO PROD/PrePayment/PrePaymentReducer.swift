@@ -49,5 +49,5 @@ extension PrePaymentReducer {
     
     typealias State = PrePaymentState
     typealias Event = PrePaymentEvent
-    typealias Effect = Never
+    typealias Effect = PrePaymentEffect
 }
