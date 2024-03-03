@@ -49,7 +49,10 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         sut: SUT,
         stateSpy: StateSpy
     ) {
-        let reducer = UtilityPaymentReducer()
+        let prePaymentReducer = PrePaymentReducer()
+        let reducer = UtilityPaymentReducer(
+            prePaymentReduce: prePaymentReducer.reduce
+        )
         let effectHandler = UtilityPaymentEffectHandler()
         
         let sut = SUT(
