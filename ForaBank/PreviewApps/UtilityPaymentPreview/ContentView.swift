@@ -11,26 +11,49 @@ import UIPrimitives
 struct ContentView: View {
     
     @State private var flow: Flow = .happy
+    @State private var isShowingSettings = false
     
     var body: some View {
         
-        VStack(spacing: 16) {
-            
-            PaymentsTransfersView(
-                viewModel: .default(flow: flow)
+        PaymentsTransfersView(
+            viewModel: .default(flow: flow)
+        )
+        .toolbar {
+            ToolbarItem(
+                placement: .topBarLeading,
+                content: settingsButton
             )
-            .padding(.top)
-            
-            Divider()
-            
-            Text("Settings")
-                .font(.headline.bold())
+        }
+        .fullScreenCover(
+            isPresented: $isShowingSettings,
+            content: fullScreenCover
+        )
+    }
+    
+    private func settingsButton() -> some View {
+        
+        Button {
+            isShowingSettings = true
+        } label: {
+            Image(systemName: "slider.horizontal.3")
+        }
+        .padding(.horizontal)
+    }
+    
+    private func fullScreenCover() -> some View {
+        
+        NavigationView {
             
             List {
                 
                 pickerSection("Load PrePayment", $flow.loadPrePayment)
             }
             .listStyle(.plain)
+            .navigationTitle("Flow Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(content: closeSettingsButton)
+            }
         }
     }
     
@@ -51,6 +74,16 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
         }
+    }
+    
+    private func closeSettingsButton() -> some View {
+        
+        Button {
+            isShowingSettings = false
+        } label: {
+            Image(systemName: "xmark")
+        }
+        .padding(.horizontal)
     }
 }
 

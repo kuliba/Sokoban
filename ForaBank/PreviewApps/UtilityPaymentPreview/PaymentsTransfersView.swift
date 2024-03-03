@@ -22,7 +22,7 @@ struct PaymentsTransfersView: View {
                 
                 ZStack {
                     
-                    Color.black.opacity(0.2)
+                    Color.black.opacity(0.3)
                     
                     ProgressView()
                 }
