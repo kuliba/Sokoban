@@ -575,6 +575,9 @@
 		2A5097EA2B946A3C00CE3242 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5097E92B946A3C00CE3242 /* ContentView.swift */; };
 		2A5097EC2B946A3D00CE3242 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A5097EB2B946A3D00CE3242 /* Assets.xcassets */; };
 		2A5097EF2B946A3D00CE3242 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A5097EE2B946A3D00CE3242 /* Preview Assets.xcassets */; };
+		2A5097F62B946ADF00CE3242 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5097F52B946ADF00CE3242 /* RxViewModel */; };
+		2A5097F82B946AE800CE3242 /* UtilityPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5097F72B946AE800CE3242 /* UtilityPayment */; };
+		2A5097FA2B946B0900CE3242 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5097F92B946B0900CE3242 /* UIPrimitives */; };
 		2A5190342A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190332A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift */; };
 		2A5190362A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190352A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift */; };
 		2A5190392A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190382A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift */; };
@@ -4894,6 +4897,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A5097FA2B946B0900CE3242 /* UIPrimitives in Frameworks */,
+				2A5097F82B946AE800CE3242 /* UtilityPayment in Frameworks */,
+				2A5097F62B946ADF00CE3242 /* RxViewModel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12921,6 +12927,11 @@
 			dependencies = (
 			);
 			name = UtilityPaymentPreview;
+			packageProductDependencies = (
+				2A5097F52B946ADF00CE3242 /* RxViewModel */,
+				2A5097F72B946AE800CE3242 /* UtilityPayment */,
+				2A5097F92B946B0900CE3242 /* UIPrimitives */,
+			);
 			productName = UtilityPaymentPreview;
 			productReference = 2A5097E52B946A3C00CE3242 /* UtilityPaymentPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -19154,6 +19165,18 @@
 		2A46300A2AC4550500020B73 /* ServerAgent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServerAgent;
+		};
+		2A5097F52B946ADF00CE3242 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2A5097F72B946AE800CE3242 /* UtilityPayment */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UtilityPayment;
+		};
+		2A5097F92B946B0900CE3242 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2A5190302A7E0BE80014B0B7 /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
