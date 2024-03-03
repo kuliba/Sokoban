@@ -37,17 +37,14 @@ extension PaymentsTransfersViewModel {
 
 private extension Flow.LoadPrePayment {
     
-    var result: Result<PaymentsTransfersEvent.PrePayment, ServiceFailure> {
+    var result: Result<PaymentsTransfersEvent.PrePayment, SimpleServiceFailure> {
         
         switch self {
         case .success:
             return .success(.init())
 
-        case .connectivity:
-            return .failure(.connectivityError)
-
-        case .serverError:
-            return .failure(.serverError("Error #12345."))
+        case .failure:
+            return .failure(.init())
         }
     }
 }

@@ -51,6 +51,7 @@ struct PaymentsTransfersView: View {
             switch prePayment {
             case .failure:
                 factory.prePaymentFailureView({ viewModel.event(.payByInstruction) })
+            
             case .success:
                 factory.prePaymentView()
             }

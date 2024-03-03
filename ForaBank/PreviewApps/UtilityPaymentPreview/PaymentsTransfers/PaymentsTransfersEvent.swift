@@ -10,7 +10,7 @@ import UtilityPayment
 enum PaymentsTransfersEvent: Equatable {
     
     case openPrePayment
-    case loaded(Result<PrePayment, ServiceFailure>)
+    case loaded(Result<PrePayment, SimpleServiceFailure>)
     case payByInstruction
     case resetDestination
 }

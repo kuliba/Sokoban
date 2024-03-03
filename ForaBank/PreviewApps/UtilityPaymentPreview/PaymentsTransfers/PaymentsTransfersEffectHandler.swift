@@ -32,7 +32,7 @@ extension PaymentsTransfersEffectHandler {
 
 extension PaymentsTransfersEffectHandler {
     
-    typealias LoadPrePaymentResult = Result<Event.PrePayment, ServiceFailure>
+    typealias LoadPrePaymentResult = Result<Event.PrePayment, SimpleServiceFailure>
     typealias LoadPrePaymentCompletion = (LoadPrePaymentResult) -> Void
     typealias LoadPrePayment = (@escaping LoadPrePaymentCompletion) -> Void
 

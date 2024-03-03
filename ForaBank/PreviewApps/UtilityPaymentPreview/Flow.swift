@@ -14,6 +14,6 @@ extension Flow {
 
     enum LoadPrePayment: String, CaseIterable {
         
-        case success, connectivity, serverError
+        case success, failure
     }
 }

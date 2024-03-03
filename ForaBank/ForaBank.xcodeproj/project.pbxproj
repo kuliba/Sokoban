@@ -637,6 +637,7 @@
 		2A625CF32B9484AA0017237F /* PrePaymentFailureMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF22B9484AA0017237F /* PrePaymentFailureMockView.swift */; };
 		2A625CF52B9485B60017237F /* Flow+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF42B9485B60017237F /* Flow+ext.swift */; };
 		2A625CF72B948E8A0017237F /* PaymentsTransfersNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */; };
+		2A625CF92B949C3C0017237F /* SimpleServiceFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
 		2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */; };
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
@@ -3147,6 +3148,7 @@
 		2A625CF22B9484AA0017237F /* PrePaymentFailureMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePaymentFailureMockView.swift; sourceTree = "<group>"; };
 		2A625CF42B9485B60017237F /* Flow+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Flow+ext.swift"; sourceTree = "<group>"; };
 		2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationState.swift; sourceTree = "<group>"; };
+		2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleServiceFailure.swift; sourceTree = "<group>"; };
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
@@ -7026,6 +7028,7 @@
 				2A625CE02B9470E70017237F /* PaymentsTransfersReducer.swift */,
 				2A625CE22B94715F0017237F /* PaymentsTransfersEffectHandler.swift */,
 				2A625CEA2B947B870017237F /* ServiceFailure.swift */,
+				2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */,
 				2A625CD42B946FD50017237F /* PaymentsTransfersViewModel.swift */,
 				2A625CE82B9473DA0017237F /* PaymentsTransfersViewModel+ext.swift */,
 			);
@@ -14091,6 +14094,7 @@
 				2A625CE32B94715F0017237F /* PaymentsTransfersEffectHandler.swift in Sources */,
 				2A625CDE2B9470610017237F /* PaymentsTransfersState.swift in Sources */,
 				2A625CDC2B9470610017237F /* PaymentsTransfersEffect.swift in Sources */,
+				2A625CF92B949C3C0017237F /* SimpleServiceFailure.swift in Sources */,
 				2A625CDD2B9470610017237F /* PaymentsTransfersEvent.swift in Sources */,
 				2A625CE92B9473DA0017237F /* PaymentsTransfersViewModel+ext.swift in Sources */,
 				2A625CF32B9484AA0017237F /* PrePaymentFailureMockView.swift in Sources */,
