@@ -7,7 +7,7 @@
 
 enum PrePaymentEvent: Equatable {
     
-    case select(Select)
+    case select(SelectEvent)
     case scan
     case addCompany
     case payByInstruction
@@ -15,7 +15,7 @@ enum PrePaymentEvent: Equatable {
 
 extension PrePaymentEvent {
     
-    enum Select: Equatable {
+    enum SelectEvent: Equatable {
         
         case last(LastPayment)
         case `operator`(Operator)

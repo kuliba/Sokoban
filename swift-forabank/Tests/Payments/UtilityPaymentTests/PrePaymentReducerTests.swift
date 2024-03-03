@@ -9,6 +9,60 @@ import XCTest
 
 final class PrePaymentReducerTests: XCTestCase {
     
+    // MARK: - select
+    
+    func test_select_shouldChangeSelectingStateToSelected_last() {
+        
+        let lastPayment = makeLastPayment()
+        
+        assertState(.select(.last(lastPayment)), on: .selecting) {
+            
+            $0 = .selected(.last(lastPayment))
+        }
+    }
+    
+    func test_select_shouldChangeSelectingStateToSelected_operator() {
+        
+        let `operator` = makeOperator()
+        
+        assertState(.select(.operator(`operator`)), on: .selecting) {
+            
+            $0 = .selected(.operator(`operator`))
+        }
+    }
+    
+    func test_select_shouldNotChangeSelectedState_last_last() {
+        
+        assertState(
+            .select(.last(makeLastPayment())),
+            on: .selected(.last(makeLastPayment()))
+        )
+    }
+    
+    func test_select_shouldNotChangeSelectedState_last_operator() {
+        
+        assertState(
+            .select(.last(makeLastPayment())),
+            on: .selected(.operator(makeOperator()))
+        )
+    }
+    
+    func test_select_shouldNotChangeSelectedState_operator_operator() {
+        
+        assertState(
+            .select(.operator(makeOperator())),
+            on: .selected(.operator(makeOperator()))
+        )
+    }
+    
+    func test_select_shouldNotChangeSelectedState_operator_last() {
+        
+        assertState(
+            .select(.operator(makeOperator())),
+            on: .selected(.last(makeLastPayment()))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PrePaymentReducer
@@ -29,10 +83,24 @@ final class PrePaymentReducerTests: XCTestCase {
         return sut
     }
     
+    private func makeLastPayment(
+        _ id: String = UUID().uuidString
+    ) -> LastPayment {
+        
+        .init(id: id)
+    }
+    
+    private func makeOperator(
+        _ id: String = UUID().uuidString
+    ) -> Operator {
+        
+        .init(id: id)
+    }
+    
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
     
     private func assertState(
-        _ sut: SUT? = nil,
+        sut: SUT? = nil,
         _ event: Event,
         on state: State,
         updateStateToExpected: UpdateStateToExpected<State>? = nil,

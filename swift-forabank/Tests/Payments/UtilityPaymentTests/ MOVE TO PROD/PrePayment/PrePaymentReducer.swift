@@ -17,9 +17,22 @@ extension PrePaymentReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        var effect: Effect?
         
-        return (state, effect)
+        switch (state, event) {
+        case let (.selecting, .select(select)):
+            switch select {
+            case let .last(lastPayment):
+                state = .selected(.last(lastPayment))
+                
+            case let .operator(`operator`):
+                state = .selected(.operator(`operator`))
+            }
+            
+        default:
+            break
+        }
+        
+        return (state, nil)
     }
 }
 
