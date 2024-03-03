@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UtilityPayment
 
 struct PaymentsTransfersViewFactory {
     
@@ -16,14 +17,6 @@ struct PaymentsTransfersViewFactory {
         self.mode = mode
     }
     
-    func prePaymentView() -> some View {
-        
-        switch mode {
-        case .mock:
-            return PrePaymentMockView()
-        }
-    }
-    
     func prePaymentFailureView(
         _ payByInstruction: @escaping PayByInstruction
     ) -> some View {
@@ -31,6 +24,16 @@ struct PaymentsTransfersViewFactory {
         switch mode {
         case .mock:
             PrePaymentFailureMockView(payByInstruction: payByInstruction)
+        }
+    }
+    
+    func prePaymentView(
+        _ event: @escaping (PrePaymentEvent) -> Void
+    ) -> some View {
+        
+        switch mode {
+        case .mock:
+            return PrePaymentMockView(event: event)
         }
     }
 }

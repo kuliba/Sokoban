@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UtilityPayment
 
 extension PaymentsTransfersViewModel {
     
@@ -13,6 +14,12 @@ extension PaymentsTransfersViewModel {
         initialState: PaymentsTransfersState = .init(),
         flow: Flow = .happy
     ) -> PaymentsTransfersViewModel {
+        
+        let prePaymentReducer = PrePaymentReducer()
+        
+        let reducer = PaymentsTransfersReducer(
+            prePaymentReduce: prePaymentReducer.reduce
+        )
         
         let loadPrePayment: PaymentsTransfersEffectHandler.LoadPrePayment = { completion in
             
@@ -22,7 +29,6 @@ extension PaymentsTransfersViewModel {
             }
         }
         
-        let reducer = PaymentsTransfersReducer()
         let effectHandler = PaymentsTransfersEffectHandler(
             loadPrePayment: loadPrePayment
         )
@@ -42,7 +48,7 @@ private extension Flow.LoadPrePayment {
         switch self {
         case .success:
             return .success(.init())
-
+            
         case .failure:
             return .failure(.init())
         }

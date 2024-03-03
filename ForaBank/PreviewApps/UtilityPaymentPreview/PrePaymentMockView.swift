@@ -6,15 +6,52 @@
 //
 
 import SwiftUI
+import UtilityPayment
 
 struct PrePaymentMockView: View {
+    
+    let event: (PrePaymentEvent) -> Void
     
     @State private var text = ""
     
     var body: some View {
         
-        TextField("Text", text: $text)
-            .padding()
+        List {
+            
+            TextField("Enter Text", text: $text)
+            
+            Section(header: Text("Last Payments")) {
+                
+                ForEach(["a", "b"], id: \.self, content: lastPaymentView)
+            }
+            
+            Section(header: Text("Operators")) {
+                
+                ForEach(["list", "single", "failure"], id: \.self, content: operatorView)
+            }
+            
+            Section(header: Text("Footer")) {
+                
+                Button("Scan QR") { event(.scan) }
+                Button("Add Company") { event(.addCompany) }
+                Button("Pay by Instruction") { event(.payByInstruction) }
+            }
+        }
+        .listStyle(.plain)
+    }
+    
+    private func lastPaymentView(
+        id: String
+    ) -> some View {
+        
+        Button("Last Payment \"\(id)\"") { event(.select(.last(.init(id: id)))) }
+    }
+    
+    private func operatorView(
+        id: String
+    ) -> some View {
+        
+        Button("Operator \"\(id)\"") { event(.select(.operator(.init(id: id)))) }
     }
 }
 
@@ -22,6 +59,6 @@ struct PrePaymentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PrePaymentMockView()
+        PrePaymentMockView(event: { _ in })
     }
 }

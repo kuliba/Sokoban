@@ -25,7 +25,7 @@ struct PaymentsTransfersView: View {
                 
                 ZStack {
                     
-                    Color.black.opacity(0.3)
+                    Color.black.opacity(0.5)
                     
                     ProgressView()
                 }
@@ -50,10 +50,10 @@ struct PaymentsTransfersView: View {
         case let .prePayment(prePayment):
             switch prePayment {
             case .failure:
-                factory.prePaymentFailureView({ viewModel.event(.payByInstruction) })
+                factory.prePaymentFailureView { viewModel.event(.payByInstruction) }
             
             case .success:
-                factory.prePaymentView()
+                factory.prePaymentView { viewModel.event(.prePayment($0)) }
             }
         }
     }

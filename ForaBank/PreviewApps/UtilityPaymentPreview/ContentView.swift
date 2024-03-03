@@ -11,7 +11,7 @@ import UIPrimitives
 struct ContentView: View {
     
     @State private var flow: Flow = .happy
-    @State private var isShowingSettings = true
+    @State private var isShowingSettings = false
     
     var body: some View {
         
