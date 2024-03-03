@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-import CardGuardianUI
+import ProductProfileComponents
 import ProductProfile
 import RxViewModel
-import ActivateSlider
-import TopUpCardUI
 
 typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 

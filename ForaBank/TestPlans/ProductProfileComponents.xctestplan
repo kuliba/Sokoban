@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "3A059D07-628E-4AE4-8EAF-64E58363FB06",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ActivateSliderTests",
+        "name" : "ActivateSliderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

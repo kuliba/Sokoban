@@ -6,11 +6,9 @@
 //
 
 import Foundation
-import CardGuardianUI
+import ProductProfileComponents
 import ProductProfile
 import RxViewModel
-import ActivateSlider
-import TopUpCardUI
 
 extension ProductProfileViewModel {
     

@@ -5,10 +5,9 @@
 //  Created by Andryusina Nataly on 23.01.2024.
 //
 
-import CardGuardianUI
+import ProductProfileComponents
 import UIPrimitives
 import Foundation
-import TopUpCardUI
 
 public extension ProductProfileNavigation.State {
     

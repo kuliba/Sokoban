@@ -7,7 +7,6 @@
 
 import Foundation
 import UIPrimitives
-import CardGuardianUI
 
 public final class ProductProfileNavigationReducer {
     
