@@ -7,6 +7,8 @@
 
 enum PrePaymentState: Equatable {
     
+    case addingCompany
+    case payingByInstruction
     case scanning
     case selected(Select)
     case selecting

@@ -19,6 +19,12 @@ extension PrePaymentReducer {
         var state = state
         
         switch (state, event) {
+        case (.selecting, .addCompany):
+            state = .addingCompany
+            
+        case (.selecting, .payByInstruction):
+            state = .payingByInstruction
+            
         case (.selecting, .scan):
             state = .scanning
             
