@@ -8,20 +8,3 @@
 import RxViewModel
 
 typealias PaymentsTransfersViewModel = RxViewModel<PaymentsTransfersState, PaymentsTransfersEvent, PaymentsTransfersEffect>
-
-extension PaymentsTransfersViewModel {
-    
-    static func `default`(
-        initialState: PaymentsTransfersState = .init()
-    ) -> PaymentsTransfersViewModel {
-        
-        let reducer = PaymentsTransfersReducer()
-        let effectHandler = PaymentsTransfersEffectHandler()
-        
-        return .init(
-            initialState: initialState,
-            reduce: reducer.reduce,
-            handleEffect: effectHandler.handleEffect
-        )
-    }
-}

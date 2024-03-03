@@ -10,17 +10,38 @@ import UIPrimitives
 
 struct ContentView: View {
     
-    @StateObject private var viewModel = PaymentsTransfersViewModel.default()
+    @State private var flow: Flow = .happy
     
     var body: some View {
         
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
+        VStack(spacing: 16) {
             
-            Text("Hello, world!")
+            PaymentsTransfersView(
+                viewModel: .default(flow: flow)
+            )
+            .padding(.top)
+            
+            Divider()
+            
+            Text("Settings")
+                .font(.headline.bold())
+            
+            List {
+                
+                Section(header: Text("Load PrePayment")) {
+                    
+                    Picker("Load PrePayment", selection: .constant("")) {
+                        
+                        ForEach(["Success", "Failure", "Error #"], id: \.self) {
+                            
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            .listStyle(.plain)
         }
-        .padding()
     }
 }
 
@@ -28,6 +49,11 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView()
+        NavigationView {
+            
+            ContentView()
+                .navigationTitle("Payments Transfers")
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }

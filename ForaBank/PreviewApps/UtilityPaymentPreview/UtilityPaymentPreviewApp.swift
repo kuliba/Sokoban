@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct UtilityPaymentPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            NavigationView {
+                
+                ContentView()
+            }
         }
     }
 }
