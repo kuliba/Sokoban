@@ -5,16 +5,21 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
+import UtilityPayment
+
 final class PaymentsTransfersEffectHandler {
     
     private let loadPrePayment: LoadPrePayment
+    private let loadServices: LoadServices
     private let startPayment: StartPayment
     
     init(
         loadPrePayment: @escaping LoadPrePayment,
+        loadServices: @escaping LoadServices,
         startPayment: @escaping StartPayment
     ) {
         self.loadPrePayment = loadPrePayment
+        self.loadServices = loadServices
         self.startPayment = startPayment
     }
 }
@@ -32,6 +37,12 @@ extension PaymentsTransfersEffectHandler {
                 dispatch(.loaded($0))
             }
             
+        case let .loadServices(for: `operator`):
+            loadServices(`operator`) {
+                
+                dispatch(.loadedServices($0, for: `operator`))
+            }
+            
         case let .startPayment(payload):
             startPayment(payload) {
                 
@@ -46,6 +57,10 @@ extension PaymentsTransfersEffectHandler {
     typealias LoadPrePaymentResult = Result<Event.PrePayment, SimpleServiceFailure>
     typealias LoadPrePaymentCompletion = (LoadPrePaymentResult) -> Void
     typealias LoadPrePayment = (@escaping LoadPrePaymentCompletion) -> Void
+    
+    typealias LoadServicesPayload = Operator
+    typealias LoadServicesCompletion = (Event.LoadServicesResponse) -> Void
+    typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
     
     typealias StartPaymentPayload = Effect.StartPaymentPayload
     typealias StartPaymentCompletion = (Event.StartPaymentResponse) -> Void

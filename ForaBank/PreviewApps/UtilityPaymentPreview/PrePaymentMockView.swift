@@ -22,19 +22,19 @@ struct PrePaymentMockView: View {
             
             Section(header: Text("Last Payments")) {
                 
-                ForEach(["success", "error", "failure"], id: \.self, content: lastPaymentView)
+                ForEach(["failure", "error", "success"], id: \.self, content: lastPaymentView)
             }
             
             Section(header: Text("Operators")) {
                 
-                ForEach(["list", "single", "failure"], id: \.self, content: operatorView)
+                ForEach(["failure", "list", "single"], id: \.self, content: operatorView)
             }
             
             Section(header: Text("Footer")) {
                 
-                Button("Scan QR") { event(.scan) }
                 Button("Add Company") { event(.addCompany) }
                 Button("Pay by Instruction") { event(.payByInstruction) }
+                Button("Scan QR") { event(.scan) }
             }
         }
         .listStyle(.plain)

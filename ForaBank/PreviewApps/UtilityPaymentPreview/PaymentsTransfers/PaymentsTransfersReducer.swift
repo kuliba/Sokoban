@@ -43,6 +43,20 @@ extension PaymentsTransfersReducer {
                 state.prePayment = .success(.selecting)
             }
             
+        case let .loadedServices(response, for: `operator`):
+            switch response {
+                
+            case .failure:
+                fatalError()
+                
+            case let .list(utilityServices):
+                fatalError()
+                
+            case let .single(utilityService):
+                state.status = .inflight
+                effect = .startPayment(.service(`operator`, utilityService))
+            }
+            
         case .payByInstruction:
             print("payByInstruction event")
 #warning("FIX ME")
@@ -55,6 +69,7 @@ extension PaymentsTransfersReducer {
             
             let (newPrePaymentState, _) = prePaymentReduce(prePaymentState, prePaymentEvent)
             state.prePayment = .success(newPrePaymentState)
+            
             switch newPrePaymentState {
             case let .selected(.last(lastPayment)):
                 state.status = .inflight
@@ -62,7 +77,7 @@ extension PaymentsTransfersReducer {
                 
             case let .selected(.operator(`operator`)):
                 state.status = .inflight
-                print("effect = .loadServices(for: \(`operator`))")
+                effect = .loadServices(for: `operator`)
                 
             default:
                 break

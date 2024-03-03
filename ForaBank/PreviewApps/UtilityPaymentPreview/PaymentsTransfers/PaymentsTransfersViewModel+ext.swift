@@ -29,6 +29,14 @@ extension PaymentsTransfersViewModel {
             }
         }
         
+        let loadServices: PaymentsTransfersEffectHandler.LoadServices = { payload, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(payload.response)
+            }
+        }
+        
         let startPayment: PaymentsTransfersEffectHandler.StartPayment = { payload, completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -39,6 +47,7 @@ extension PaymentsTransfersViewModel {
         
         let effectHandler = PaymentsTransfersEffectHandler(
             loadPrePayment: loadPrePayment,
+            loadServices: loadServices,
             startPayment: startPayment
         )
         
@@ -85,20 +94,39 @@ private extension PaymentsTransfersEffect.StartPaymentPayload {
             }
             
         case let .service(`operator`, utilityService):
-            switch `operator`.id {
-            case "list":
-#warning("need a list!!")
-                return .success(.init())
-                
-            case "single":
-                return .success(.init())
+            switch utilityService.id {
+            case "error":
+                return .failure(.serverError("Error #12345"))
                 
             case "failure":
                 return .failure(.connectivityError)
                 
+            case "success":
+                return .success(.init())
+                
             default:
                 return .success(.init())
             }
+        }
+    }
+}
+
+private extension Operator {
+    
+    var response: PaymentsTransfersEvent.LoadServicesResponse {
+        
+        switch id {
+        case "list":
+            return .list([.init(), .init(), .init()])
+            
+        case "single":
+            return .single(.init())
+            
+        case "failure":
+            return .failure
+            
+        default:
+            return .single(.init())
         }
     }
 }

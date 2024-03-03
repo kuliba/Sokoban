@@ -11,6 +11,7 @@ import UtilityPayment
 enum PaymentsTransfersEffect: Equatable {
     
     case loadPrePayment
+    case loadServices(for: Operator)
     case startPayment(StartPaymentPayload)
 }
 
