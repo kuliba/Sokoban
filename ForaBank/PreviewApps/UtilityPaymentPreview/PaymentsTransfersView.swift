@@ -15,8 +15,8 @@ struct PaymentsTransfersView: View {
     let factory: PaymentsTransfersViewFactory
     
     var body: some View {
-        
         ZStack {
+#warning("remodel spinner and NavigationView position to resemble app")
             
             NavigationView {
                 
@@ -29,15 +29,18 @@ struct PaymentsTransfersView: View {
     
     private func utilityPaymentButton() -> some View {
         
-        Button("Utility Payment") { viewModel.event(.openPrePayment) }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .navigationDestination(
-                item: .init(
-                    get: { viewModel.state.navigationState },
-                    set: { if $0 == nil { viewModel.event(.resetDestination) }}
-                ),
-                content: destinationView
-            )
+        Button(
+            "Utility Payment",
+            action: { viewModel.event(.openPrePayment) }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.state.navigationState },
+                set: { if $0 == nil { viewModel.event(.resetDestination) }}
+            ),
+            content: destinationView
+        )
     }
     
     @ViewBuilder
@@ -68,10 +71,6 @@ struct PaymentsTransfersView: View {
         .ignoresSafeArea()
         .opacity(viewModel.state.status == .inflight ? 1 : 0)
     }
-}
-
-struct Item: Identifiable {
-    let id: String
 }
 
 struct PaymentsTransfersView_Previews: PreviewProvider {
