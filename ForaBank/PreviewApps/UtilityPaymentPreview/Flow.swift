@@ -17,10 +17,3 @@ extension Flow {
         case success, connectivity, serverError
     }
 }
-
-extension Flow {
-    
-    static let happy: Self = .init(
-        loadPrePayment: .success
-    )
-}

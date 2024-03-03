@@ -16,7 +16,8 @@ struct ContentView: View {
     var body: some View {
         
         PaymentsTransfersView(
-            viewModel: .default(flow: flow)
+            viewModel: .default(flow: flow),
+            factory: .init()
         )
         .toolbar {
             ToolbarItem(

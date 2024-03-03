@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
+    
+    @State private var item: Item?
+    
+    let factory: PaymentsTransfersViewFactory
     
     var body: some View {
         
@@ -29,13 +34,32 @@ struct PaymentsTransfersView: View {
                 .ignoresSafeArea()
             }
         }
+        .navigationDestination(
+            item: $item,
+            content: destinationView
+        )
     }
+    
+    private func destinationView(
+        item: Item
+    ) -> some View {
+        // switch???
+        
+        factory.prePaymentView()
+    }
+}
+
+struct Item: Identifiable {
+    let id: String
 }
 
 struct PaymentsTransfersView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsTransfersView(viewModel: .default())
+        PaymentsTransfersView(
+            viewModel: .default(),
+            factory: .init()
+        )
     }
 }
