@@ -7,9 +7,20 @@
 
 struct Flow {
     
+    var loadPrePayment: LoadPrePayment
+}
+
+extension Flow {
+
+    enum LoadPrePayment: String, CaseIterable {
+        
+        case success, connectivity, serverError
+    }
 }
 
 extension Flow {
     
-    static let happy: Self = .init()
+    static let happy: Self = .init(
+        loadPrePayment: .success
+    )
 }

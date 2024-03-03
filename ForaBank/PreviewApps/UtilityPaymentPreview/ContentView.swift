@@ -28,19 +28,28 @@ struct ContentView: View {
             
             List {
                 
-                Section(header: Text("Load PrePayment")) {
-                    
-                    Picker("Load PrePayment", selection: .constant("")) {
-                        
-                        ForEach(["Success", "Failure", "Error #"], id: \.self) {
-                            
-                            Text($0)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
+                pickerSection("Load PrePayment", $flow.loadPrePayment)
             }
             .listStyle(.plain)
+        }
+    }
+    
+    private func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
+        _ title: String,
+        _ selection: Binding<T>
+    ) -> some View where T.AllCases: RandomAccessCollection, T.RawValue == String {
+        
+        Section(header: Text(title)) {
+            
+            Picker(title, selection: selection) {
+                
+                ForEach(T.allCases, id: \.self) {
+                    
+                    Text($0.rawValue)
+                        .tag($0)
+                }
+            }
+            .pickerStyle(.segmented)
         }
     }
 }
