@@ -9,6 +9,26 @@ import XCTest
 
 final class PrePaymentReducerTests: XCTestCase {
     
+    // MARK: - scan
+    
+    func test_scan_shouldChangeSelectingStateToScanning() {
+        
+        assertState(.scan, on: .selecting) {
+            
+            $0 = .scanning
+        }
+    }
+    
+    func test_scan_shouldNotChangeSelectedState_last() {
+        
+        assertState(.scan, on: .selected(.last(makeLastPayment())))
+    }
+    
+    func test_scan_shouldNotChangeSelectedState_operator() {
+        
+        assertState(.scan, on: .selected(.operator(makeOperator())))
+    }
+    
     // MARK: - select
     
     func test_select_shouldChangeSelectingStateToSelected_last() {
@@ -29,6 +49,22 @@ final class PrePaymentReducerTests: XCTestCase {
             
             $0 = .selected(.operator(`operator`))
         }
+    }
+    
+    func test_select_shouldNotChangeScanningState_last() {
+        
+        assertState(
+            .select(.last(makeLastPayment())),
+            on: .scanning
+        )
+    }
+    
+    func test_select_shouldNotChangeScanningState_operator() {
+        
+        assertState(
+            .select(.operator(makeOperator())),
+            on: .scanning
+        )
     }
     
     func test_select_shouldNotChangeSelectedState_last_last() {

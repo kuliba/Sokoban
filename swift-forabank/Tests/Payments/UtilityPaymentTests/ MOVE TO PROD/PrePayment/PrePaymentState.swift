@@ -7,6 +7,7 @@
 
 enum PrePaymentState: Equatable {
     
+    case scanning
     case selected(Select)
     case selecting
 }

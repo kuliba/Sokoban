@@ -19,6 +19,9 @@ extension PrePaymentReducer {
         var state = state
         
         switch (state, event) {
+        case (.selecting, .scan):
+            state = .scanning
+            
         case let (.selecting, .select(select)):
             switch select {
             case let .last(lastPayment):
