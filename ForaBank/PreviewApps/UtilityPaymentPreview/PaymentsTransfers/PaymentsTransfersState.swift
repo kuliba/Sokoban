@@ -9,7 +9,7 @@ import UtilityPayment
 
 struct PaymentsTransfersState: Equatable {
     
-    var prePayment: PrePaymentState?
+    var prePayment: Result<PrePaymentState, ServiceFailure>?
     var status: Status?
     
     enum Status: Equatable {

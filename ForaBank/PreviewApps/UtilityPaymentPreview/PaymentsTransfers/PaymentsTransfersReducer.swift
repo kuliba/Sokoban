@@ -29,10 +29,10 @@ extension PaymentsTransfersReducer {
             
             switch prePaymentResult {
             case let .failure(failure):
-                print(failure)
+                state.prePayment = .failure(failure)
 
             case let .success(success):
-                print(success)
+                state.prePayment = .success(.selecting)
             }
         }
         
