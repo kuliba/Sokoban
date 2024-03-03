@@ -5,18 +5,18 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-final class UtilityPaymentReducer {
+public final class UtilityPaymentReducer {
     
     private let prePaymentReduce: PrePaymentReduce
     
-    init(
+    public init(
         prePaymentReduce: @escaping PrePaymentReduce
     ) {
         self.prePaymentReduce = prePaymentReduce
     }
 }
 
-extension UtilityPaymentReducer {
+public extension UtilityPaymentReducer {
     
     func reduce(
         _ state: State,
@@ -37,7 +37,7 @@ extension UtilityPaymentReducer {
     }
 }
 
-extension UtilityPaymentReducer {
+public extension UtilityPaymentReducer {
     
     typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
     
@@ -53,7 +53,7 @@ private extension UtilityPaymentReducer {
         _ event: PrePaymentEvent
     ) -> (State, Effect?) {
         
-        unimplemented()
+        fatalError()
 //        var state = state
 //        var effect: Effect?
 //        

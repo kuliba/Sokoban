@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-enum PrePaymentEvent: Equatable {
+public enum PrePaymentEvent: Equatable {
     
     case addCompany
     case scan
@@ -13,7 +13,7 @@ enum PrePaymentEvent: Equatable {
     case payByInstruction
 }
 
-extension PrePaymentEvent {
+public extension PrePaymentEvent {
     
     enum SelectEvent: Equatable {
         

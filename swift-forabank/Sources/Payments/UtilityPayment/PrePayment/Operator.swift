@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Operator: Equatable, Identifiable {
+public struct Operator: Equatable, Identifiable {
     
-    let id: String
+    public let id: String
     
-    init(id: String = UUID().uuidString) {
+    public init(id: String = UUID().uuidString) {
         
         self.id = id
     }

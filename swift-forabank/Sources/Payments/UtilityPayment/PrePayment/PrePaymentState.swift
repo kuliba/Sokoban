@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-enum PrePaymentState: Equatable {
+public enum PrePaymentState: Equatable {
     
     case addingCompany
     case payingByInstruction
@@ -14,7 +14,7 @@ enum PrePaymentState: Equatable {
     case selecting
 }
 
-extension PrePaymentState {
+public extension PrePaymentState {
  
     enum Select: Equatable {
         
