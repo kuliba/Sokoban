@@ -16,19 +16,21 @@ struct PaymentsTransfersViewFactory {
         self.mode = mode
     }
     
-    var prePaymentView: () -> some View {
+    func prePaymentView() -> some View {
         
         switch mode {
         case .mock:
-            PrePaymentMockView.init
+            return PrePaymentMockView()
         }
     }
     
-    var prePaymentFailureView: (@escaping PayByInstruction) -> some View {
+    func prePaymentFailureView(
+        _ payByInstruction: @escaping PayByInstruction
+    ) -> some View {
         
         switch mode {
         case .mock:
-            PrePaymentFailureMockView.init
+            PrePaymentFailureMockView(payByInstruction: payByInstruction)
         }
     }
 }

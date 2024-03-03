@@ -36,6 +36,7 @@ extension PaymentsTransfersReducer {
             }
             
         case .payByInstruction:
+            #warning("FIX ME")
             break
             
         case .resetDestination:
