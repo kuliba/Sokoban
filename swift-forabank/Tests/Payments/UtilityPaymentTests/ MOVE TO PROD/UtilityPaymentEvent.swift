@@ -1,8 +1,15 @@
 //
 //  UtilityPaymentEvent.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-enum UtilityPaymentEvent: Equatable {}
+enum UtilityPaymentEvent: Equatable {
+    
+    case prePayment(PrePaymentEvent)
+}
+
+extension UtilityPaymentEvent {
+    
+}

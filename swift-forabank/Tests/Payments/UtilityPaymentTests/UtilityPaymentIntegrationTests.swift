@@ -16,6 +16,22 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         _ = makeSUT()
     }
     
+//    func test_flow() {
+//        
+//        let initialState: State = .init()
+//        let (sut, stateSpy) = makeSUT()
+//        
+//        sut.event(<#T##event: Event##Event#>)
+//        
+//        assert(
+//            stateSpy,
+//            initialState,
+//            {
+//                _ in
+//            }
+//        )
+//    }
+    
     // MARK: - Helpers
     
     private typealias State = UtilityPaymentState
