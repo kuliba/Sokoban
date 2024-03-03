@@ -8,6 +8,7 @@
 public enum PrePaymentEvent: Equatable {
     
     case addCompany
+    case back
     case scan
     case select(SelectEvent)
     case payByInstruction

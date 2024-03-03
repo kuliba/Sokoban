@@ -38,6 +38,9 @@ public extension PrePaymentReducer {
                 state = .selected(.operator(`operator`))
             }
             
+        case (_, .back):
+            state = .selecting
+            
         default:
             break
         }
