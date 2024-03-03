@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-import RxViewModel
 import SwiftUI
-import UtilityPayment
 import UIPrimitives
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel = PaymentsTransfersViewModel.default()
     
     var body: some View {
         
