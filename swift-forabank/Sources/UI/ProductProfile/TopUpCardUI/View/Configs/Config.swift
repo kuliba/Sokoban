@@ -126,10 +126,16 @@ public extension Config {
     struct Fonts {
         let title: Font
         let subtitle: Font
+        let panelTitle: Font
         
-        public init(title: Font, subtitle: Font) {
+        public init(
+            title: Font,
+            subtitle: Font,
+            panelTitle: Font
+        ) {
             self.title = title
             self.subtitle = subtitle
+            self.panelTitle = panelTitle
         }
     }
 }

@@ -26,6 +26,8 @@ let package = Package(
         // Infra
         .fetcher,
         .keyChainStore,
+        // Payments
+        .utilityPayment,
         // Services
         .cardStatementAPI,
         .cryptoSwaddler,
@@ -47,6 +49,7 @@ let package = Package(
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
+        .prePaymentPicker,
         .productUI,
         .rxViewModel,
         .searchBarComponent,
@@ -54,7 +57,6 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
-        .utilityPaymentsRx,
         // UI Components
         .paymentComponents,
         .productProfileComponents,
@@ -106,6 +108,9 @@ let package = Package(
         .fetcherTests,
         .keyChainStore,
         .keyChainStoreTests,
+        // Payments
+        .utilityPayment,
+        .utilityPaymentTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -149,6 +154,8 @@ let package = Package(
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
         .pinCodeUITests,
+        .prePaymentPicker,
+        .prePaymentPickerTests,
         .productUI,
         .rxViewModel,
         .rxViewModelTests,
@@ -163,8 +170,6 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
-        .utilityPaymentsRx,
-        .utilityPaymentsRxTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
@@ -355,6 +360,13 @@ private extension Product {
         ]
     )
     
+    static let prePaymentPicker = library(
+        name: .prePaymentPicker,
+        targets: [
+            .prePaymentPicker,
+        ]
+    )
+    
     static let productUI = library(
         name: .productUI,
         targets: [
@@ -407,13 +419,6 @@ private extension Product {
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
-        ]
-    )
-    
-    static let utilityPaymentsRx = library(
-        name: .utilityPaymentsRx,
-        targets: [
-            .utilityPaymentsRx,
         ]
     )
     
@@ -473,6 +478,15 @@ private extension Product {
         ]
     )
     
+    // MARK: - Payments
+    
+    static let utilityPayment = library(
+        name: .utilityPayment,
+        targets: [
+            .utilityPayment,
+        ]
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -853,6 +867,29 @@ private extension Target {
         path: "Tests/Infra/\(String.keyChainStoreTests)"
     )
     
+    // MARK: - Payments
+    
+    static let utilityPayment = target(
+        name: .utilityPayment,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Payments/\(String.utilityPayment)"
+    )
+    static let utilityPaymentTests = testTarget(
+        name: .utilityPaymentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .utilityPayment,
+        ],
+        path: "Tests/Payments/\(String.utilityPaymentTests)"
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = target(
@@ -921,7 +958,7 @@ private extension Target {
         name: .operatorsListComponents,
         dependencies: [
             // external packages
-            .utilityPaymentsRx,
+            .prePaymentPicker,
             .genericRemoteService,
             .services
         ]
@@ -1213,6 +1250,30 @@ private extension Target {
         ]
     )
     
+    static let prePaymentPicker = target(
+        name: .prePaymentPicker,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/UI/\(String.prePaymentPicker)"
+    )
+    
+    static let prePaymentPickerTests = testTarget(
+        name: .prePaymentPickerTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+            .prePaymentPicker,
+        ],
+        path: "Tests/UI/\(String.prePaymentPickerTests)"
+    )
+    
     static let productUI = target(
         name: .productUI
     )
@@ -1342,30 +1403,6 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
-    static let utilityPaymentsRx = target(
-        name: .utilityPaymentsRx,
-        dependencies: [
-            // external packages
-            .combineSchedulers,
-            .tagged,
-            // internal modules
-        ],
-        path: "Sources/UI/\(String.utilityPaymentsRx)"
-    )
-    
-    static let utilityPaymentsRxTests = testTarget(
-        name: .utilityPaymentsRxTests,
-        dependencies: [
-            // external packages
-            .combineSchedulers,
-            .customDump,
-            // internal modules
-            .rxViewModel,
-            .utilityPaymentsRx,
-        ],
-        path: "Tests/UI/\(String.utilityPaymentsRxTests)"
-    )
-    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1449,7 +1486,7 @@ private extension Target {
             .foraTools,
             .paymentComponents,
             .productSelectComponent,
-            .utilityPaymentsRx
+            .prePaymentPicker
         ]
     )
     
@@ -1654,6 +1691,10 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
     
+    static let prePaymentPicker = byName(
+        name: .prePaymentPicker
+    )
+    
     static let rxViewModel = byName(
         name: .rxViewModel
     )
@@ -1680,10 +1721,6 @@ private extension Target.Dependency {
     
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
-    )
-    
-    static let utilityPaymentsRx = byName(
-        name: .utilityPaymentsRx
     )
     
     // MARK: - UI Components
@@ -1736,6 +1773,12 @@ private extension Target.Dependency {
         name: .keyChainStore
     )
     
+    // MARK: - Payments
+
+    static let utilityPayment = byName(
+        name: .utilityPayment
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -1865,6 +1908,9 @@ private extension String {
     
     static let productUI = "ProductUI"
     
+    static let prePaymentPicker = "PrePaymentPicker"
+    static let prePaymentPickerTests = "PrePaymentPickerTests"
+    
     static let rxViewModel = "RxViewModel"
     static let rxViewModelTests = "RxViewModelTests"
     
@@ -1882,9 +1928,6 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-    
-    static let utilityPaymentsRx = "UtilityPaymentsRx"
-    static let utilityPaymentsRxTests = "UtilityPaymentsRxTests"
     
     // MARK: - UI Components
 
@@ -1921,6 +1964,11 @@ private extension String {
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
     
+    // MARK: - Payments
+    
+    static let utilityPayment = "UtilityPayment"
+    static let utilityPaymentTests = "UtilityPaymentTests"
+
     // MARK: - Services
     
     static let cardStatementAPI = "CardStatementAPI"

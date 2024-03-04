@@ -270,7 +270,22 @@ extension RootViewModelFactory {
 #warning("replace with NanoService.createAnywayTransfer")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 
-                completion(.details(.init()))
+                switch payload {
+                case let .latestPayment(latestPayment):
+                    completion(.details(.init()))
+                    
+                case let .service(`operator`, utilityService):
+                    switch utilityService.id {
+                    case "server error":
+                        completion(.serverError("Error [#12345]."))
+                        
+                    case "empty", "just sad":
+                        completion(.failure)
+                        
+                    default:
+                        completion(.details(.init()))
+                    }
+                }
             }
         }
         
@@ -282,7 +297,12 @@ extension RootViewModelFactory {
                 
                 switch payload {
                 case "list":
-                    completion(.list([.init(), .init()]))
+                    completion(.list([
+                        .init(id: "happy"),
+                        .init(id: "server error"),
+                        .init(id: "empty"),
+                        .init(id: "just sad"),
+                    ]))
                     
                 case "single":
                     completion(.single(.init()))
@@ -298,7 +318,10 @@ extension RootViewModelFactory {
             getOperatorsListByParam: getOperatorsListByParam
         )
         
+        let utilityPaymentReducer = UtilityPaymentReducer()
+        
         return .init(
+            utilityPaymentReduce: utilityPaymentReducer.reduce(_:_:),
             reduce: { _,_ in fatalError() },
             handleEffect: effectHandler.handleEffect
         )
