@@ -6,15 +6,14 @@
 //
 
 import Tagged
-import CardGuardianUI
-import TopUpCardUI
+import ProductProfileComponents
 
 public enum ProductProfileEffect: Equatable {
     
-    case guardCard(CardGuardianUI.Card)
-    case toggleVisibilityOnMain(Product)
-    case changePin(CardGuardianUI.Card)
+    case guardCard(ProductProfileComponents.CardGuardianCard)
+    case toggleVisibilityOnMain(ProductProfileComponents.CardGuardianProduct)
+    case changePin(ProductProfileComponents.CardGuardianCard)
     case showContacts
-    case accountOurBank(TopUpCardUI.Card)
-    case accountAnotherBank(TopUpCardUI.Card)
+    case accountOurBank(ProductProfileComponents.TopUpCard)
+    case accountAnotherBank(ProductProfileComponents.TopUpCard)
 }

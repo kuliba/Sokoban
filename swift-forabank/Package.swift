@@ -42,10 +42,8 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         // UI
-        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -56,12 +54,12 @@ let package = Package(
         .rxViewModel,
         .searchBarComponent,
         .textFieldComponent,
-        .topUpCardUI,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
         .paymentComponents,
+        .productProfileComponents,
         .carouselComponent,
         // Utilities
         .services,
@@ -177,6 +175,7 @@ let package = Package(
         .buttonComponent,
         .infoComponent,
         .paymentComponents,
+        .productProfileComponents,
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
@@ -437,6 +436,16 @@ private extension Product {
         ]
     )
     
+    static let productProfileComponents = library(
+        name: .productProfileComponents,
+        targets: [
+            .activateSlider,
+            .cardGuardianUI,
+            .productProfileComponents,
+            .topUpCardUI,
+        ]
+    )
+
     static let carouselComponent = library(
         name: .carouselComponent,
         targets: [
@@ -681,10 +690,8 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
-            .activateSlider,
             .rxViewModel,
-            .cardGuardianUI,
-            .topUpCardUI,
+            .productProfileComponents,
             .uiPrimitives,
             .services
         ]
@@ -1114,7 +1121,7 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.activateSlider)"
+        path: "Sources/UI/ProductProfile/\(String.activateSlider)"
     )
     
     static let activateSliderTests = testTarget(
@@ -1125,7 +1132,7 @@ private extension Target {
             // internal modules
             .activateSlider,
         ],
-        path: "Tests/UI/\(String.activateSliderTests)"
+        path: "Tests/UI/ProductProfileTests/\(String.activateSliderTests)"
     )
 
     static let buttonWithSheet = target(
@@ -1156,7 +1163,7 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.cardGuardianUI)"
+        path: "Sources/UI/ProductProfile/\(String.cardGuardianUI)"
     )
     
     static let cardGuardianUITests = testTarget(
@@ -1167,7 +1174,7 @@ private extension Target {
             // internal modules
             .cardGuardianUI,
         ],
-        path: "Tests/UI/\(String.cardGuardianUITests)"
+        path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
     static let linkableText = target(
@@ -1345,7 +1352,7 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.topUpCardUI)"
+        path: "Sources/UI/ProductProfile/\(String.topUpCardUI)"
     )
     
     static let topUpCardUITests = testTarget(
@@ -1356,7 +1363,7 @@ private extension Target {
             // internal modules
             .topUpCardUI,
         ],
-        path: "Tests/UI/\(String.topUpCardUITests)"
+        path: "Tests/UI/ProductProfileTests/\(String.topUpCardUITests)"
     )
 
     static let uiKitHelpers = target(name: .uiKitHelpers)
@@ -1438,6 +1445,16 @@ private extension Target {
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
+    )
+    
+    static let productProfileComponents = target(
+        name: .productProfileComponents,
+        dependencies: [
+            .activateSlider,
+            .cardGuardianUI,
+            .topUpCardUI,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
     
     static let carouselComponent = target(
@@ -1724,6 +1741,10 @@ private extension Target.Dependency {
         name: .paymentComponents
     )
     
+    static let productProfileComponents = byName(
+        name: .productProfileComponents
+    )
+    
     static let productSelectComponent = byName(
         name: .productSelectComponent
     )
@@ -1917,6 +1938,8 @@ private extension String {
     static let infoComponent = "InfoComponent"
     
     static let paymentComponents = "PaymentComponents"
+    
+    static let productProfileComponents = "ProductProfileComponents"
 
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"

@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import CardGuardianUI
-import TopUpCardUI
+import ProductProfileComponents
 import RxViewModel
 
 public final class ProductProfileNavigationEffectHandler {
