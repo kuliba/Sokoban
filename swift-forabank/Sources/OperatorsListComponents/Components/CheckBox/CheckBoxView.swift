@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CheckBoxView: View {
     
-    let viewModel: CheckBoxViewModel
+    let checkBoxState: CheckBoxState
+    let checkBoxEvent: (CheckBoxEvent) -> Void
     let config: CheckBoxViewConfig
     
     var body: some View {
@@ -24,23 +25,22 @@ struct CheckBoxView: View {
                     .foregroundColor(config.strokeColor)
                     .frame(width: 18, height: 18)
                 
-                if viewModel.state == .checked {
+                if checkBoxState == .checked {
                     
                     CheckView(
-                        viewModel: viewModel,
                         config: config
                     )
                 }
             }
-            .animation(nil, value: viewModel.state == .checked)
+            .animation(nil, value: checkBoxState == .checked)
             .frame(width: 24, height: 24)
             
-            Text(viewModel.title)
+            Text(config.title)
         }
         .contentShape(Rectangle())
         .onTapGesture {
             
-            viewModel.tapAction()
+            checkBoxEvent(.buttonTapped)
             
         }
     }
@@ -50,7 +50,6 @@ extension CheckBoxView {
     
     struct CheckView: View {
         
-        let viewModel: CheckBoxViewModel
         let config: CheckBoxViewConfig
         
         var body: some View {
@@ -83,6 +82,8 @@ extension CheckBoxView {
     
     struct CheckBoxViewConfig {
         
+        let title: String
+        
         let lineWidth: CGFloat
         let strokeColor: Color
         let dashPhase: CGFloat
@@ -106,12 +107,10 @@ struct CheckBoxView_Previews: PreviewProvider {
     static var previews: some View {
         
         CheckBoxView(
-            viewModel: .init(
-                state: .checked,
-                title: "Оплата ЖКХ",
-                tapAction: {}
-            ),
+            checkBoxState: .checked,
+            checkBoxEvent: { _ in },
             config: .init(
+                title: "Оплата ЖКХ",
                 lineWidth: 2,
                 strokeColor: .green,
                 dashPhase: 70
