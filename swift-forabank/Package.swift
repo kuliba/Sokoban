@@ -877,6 +877,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .rxViewModel,
             .utilityPayment,
         ],
         path: "Tests/Payments/\(String.utilityPaymentTests)"
