@@ -60,7 +60,7 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         createAnywayTransferSpy: CreateAnywayTransferSpy,
         makeTransferSpy: MakeTransferSpy
     ) {
-        let reducer = Reducer()
+        let reducer = Reducer(update: { _,_ in fatalError() })
         
         let createAnywayTransferSpy = CreateAnywayTransferSpy()
         let makeTransferSpy = MakeTransferSpy()

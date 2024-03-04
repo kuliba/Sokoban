@@ -7,7 +7,12 @@
 
 public final class UtilityPaymentReducer<UtilityPayment: Payment> {
     
-    public init() {}
+    private let update: Update
+    
+    public init(update: @escaping Update) {
+        
+        self.update = update
+    }
 }
 
 public extension UtilityPaymentReducer {
@@ -55,9 +60,8 @@ public extension UtilityPaymentReducer {
                 state = .result(.failure(.serverError(message)))
                 
             case let .success(response):
+                update(&utilityPayment, response)
                 utilityPayment.status = .none
-#warning("fix this update(utilityPayment, with: response) // protocol?")
-                // update(utilityPayment, with: response)
                 state = .payment(utilityPayment)
             }
             
@@ -73,7 +77,9 @@ public extension UtilityPaymentReducer {
 }
 
 public extension UtilityPaymentReducer {
-        
+    
+    typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
+    
     typealias State = UtilityPaymentState<UtilityPayment>
     typealias Event = UtilityPaymentEvent
     typealias Effect = UtilityPaymentEffect<UtilityPayment>

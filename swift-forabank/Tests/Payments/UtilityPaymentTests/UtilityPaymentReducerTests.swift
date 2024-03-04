@@ -291,16 +291,27 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     func test_receivedAnywayResult_shouldUpdatePaymentStateOnSuccessResponse() {
         
-        let payment = makeUtilityPayment()
+        let payment = makeUtilityPayment(
+            isFinalStep: false,
+            verificationCode: nil,
+            status: .inflight
+        )
         let response = makeCreateAnywayTransferResponse()
+        let sut = makeSUT { payment, response in
+            
+            payment.isFinalStep = true
+            payment.verificationCode = "987654"
+        }
         
         assertState(
+            sut: sut,
             .receivedAnywayResult(.success(response)),
             on: .payment(payment)
         ) {
             var payment = payment
             payment.status = .none
-#warning("add assertion confirming payment change")
+            payment.isFinalStep = true
+            payment.verificationCode = "987654"
             $0 = .payment(payment)
         }
     }
@@ -777,11 +788,12 @@ final class UtilityPaymentReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        update: @escaping (inout TestPayment, CreateAnywayTransferResponse) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(update: update)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -798,7 +810,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(update: { _,_ in }, file: file, line: line)
         
         var expectedState = state
         updateStateToExpected?(&expectedState)
@@ -821,7 +833,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(update: { _,_ in }, file: file, line: line)
         let (_, receivedEffect) = sut.reduce(state, event)
         
         XCTAssertNoDiff(

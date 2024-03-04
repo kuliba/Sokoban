@@ -54,9 +54,16 @@ func makeTransaction(
 }
 
 func makeUtilityPayment(
+    isFinalStep: Bool = false,
+    verificationCode: VerificationCode? = nil,
+    status: PaymentStatus? = nil
 ) -> TestPayment {
     
-    .init()
+    .init(
+        isFinalStep: isFinalStep, 
+        verificationCode: verificationCode,
+        status: status
+    )
 }
 
 struct TestPayment: Payment {
