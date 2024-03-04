@@ -10,6 +10,48 @@ import XCTest
 
 final class UtilityPaymentReducerTests: XCTestCase {
     
+    // MARK: - continue
+    
+    func test_continue_shouldNotChangeSuccessResultState() {
+        
+        assertState(.continue, on: .result(.success(makeTransaction())))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnSuccessResultState() {
+        
+        assert(.continue, on: .result(.success(makeTransaction())), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeFraudCancelledResultState() {
+        
+        assertState(.continue, on: .result(.failure(.fraud(.cancelled))))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnFraudCancelledResultState() {
+        
+        assert(.continue, on: .result(.failure(.fraud(.cancelled))), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeFraudExpiredResultState() {
+        
+        assertState(.continue, on: .result(.failure(.fraud(.expired))))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnFraudExpiredResultState() {
+        
+        assert(.continue, on: .result(.failure(.fraud(.expired))), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeTransferErrorResultState() {
+        
+        assertState(.continue, on: .result(.failure(.transferError)))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnTransferErrorResultState() {
+        
+        assert(.continue, on: .result(.failure(.transferError)), effect: nil)
+    }
+    
     // MARK: - fraudEvent
     
     func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudCancelled() {

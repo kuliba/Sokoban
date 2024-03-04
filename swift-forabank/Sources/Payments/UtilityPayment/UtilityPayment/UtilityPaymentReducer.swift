@@ -22,6 +22,9 @@ public extension UtilityPaymentReducer {
                
         switch (state, event) {
             
+        case (_, .continue):
+            break
+            
         case (.result, .fraud):
             break
             

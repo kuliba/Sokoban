@@ -7,6 +7,7 @@
 
 public enum UtilityPaymentEvent: Equatable {
     
+    case `continue`
     case fraud(FraudEvent)
     case receivedTransferResult(TransferResult)
 }
