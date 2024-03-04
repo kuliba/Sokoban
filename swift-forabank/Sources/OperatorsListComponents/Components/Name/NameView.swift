@@ -63,7 +63,8 @@ struct NameView: View {
         HStack {
             
             InputView(
-                inputState: .init(image: { .init(systemName: "person") }, event: .loadImage),
+                inputState: .init(image: { .init(systemName: "person") }),
+                inputEvent: { event in },
                 config: setupConfig(title: title, placeholder: placeholder)
             )
             

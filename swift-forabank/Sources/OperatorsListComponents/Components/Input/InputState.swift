@@ -10,5 +10,4 @@ import SwiftUI
 public struct InputState {
 
     let image: () -> Image
-    let event: InputEvent 
 }

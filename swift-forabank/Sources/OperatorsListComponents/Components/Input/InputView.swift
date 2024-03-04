@@ -7,12 +7,11 @@
 
 import SwiftUI
 
-//state, event, config
-
 struct InputView: View {
     
     @State private var text: String = ""
     let inputState: InputState
+    let inputEvent: (InputEvent) -> Void
     let config: InputConfigView
     
     var body: some View {
@@ -102,14 +101,15 @@ struct InputView_Previews: PreviewProvider {
         Group {
             
             InputView(
-                inputState: .init(image: { .init(systemName: "photo.artframe"
-                ) }, event: .loadImage),
+                inputState: .init(image: { .init(systemName: "photo.artframe") }),
+                inputEvent: { _ in },
                 config: .preview
             )
             .padding(20)
             
             InputView(
-                inputState: .init(image: { .init(systemName: "photo.artframe") }, event: .loadImage),
+                inputState: .init(image: { .init(systemName: "photo.artframe") }),
+                inputEvent: { _ in },
                 config: .preview
             )
             .padding(20)
