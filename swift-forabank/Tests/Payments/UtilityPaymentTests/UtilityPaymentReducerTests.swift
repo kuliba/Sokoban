@@ -152,7 +152,6 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     func test_fraudEvent_shouldNotDeliverEffectOnFraudCancelled() {
         
-        
         assert(
             .fraud(.cancelled),
             on: .payment(makeUtilityPayment()),
@@ -172,7 +171,6 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     func test_fraudEvent_shouldNotDeliverEffectOnFraudExpired() {
         
-        
         assert(
             .fraud(.expired),
             on: .payment(makeUtilityPayment()),
@@ -189,7 +187,6 @@ final class UtilityPaymentReducerTests: XCTestCase {
     }
     
     func test_fraudEvent_shouldNotDeliverEffectOnSuccessResultState() {
-        
         
         assert(
             .fraud(.cancelled),
@@ -245,6 +242,278 @@ final class UtilityPaymentReducerTests: XCTestCase {
         assert(
             .fraud(.cancelled),
             on: .result(.failure(.fraud(.expired))),
+            effect: nil
+        )
+    }
+    
+    // MARK: - receivedAnywayResult
+    
+    func test_receivedAnywayResult_shouldChangePaymentStateToConnectivityErrorResultOnConnectivityError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.transferError))
+        }
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnPaymentStateOnConnectivityError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldChangePaymentStateToServerErrorResultOnServerError() {
+        
+        let payment = makeUtilityPayment()
+        let message = anyMessage()
+        
+        assertState(
+            .receivedAnywayResult(.failure(.serverError(message))),
+            on: .payment(payment)
+        ) {
+            $0 = .result(.failure(.serverError(message)))
+        }
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnPaymentStateOnServerError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldUpdatePaymentStateOnSuccessResponse() {
+        
+        let payment = makeUtilityPayment()
+        let response = makeCreateAnywayTransferResponse()
+        
+        assertState(
+            .receivedAnywayResult(.success(response)),
+            on: .payment(payment)
+        ) {
+            var payment = payment
+            payment.status = .none
+#warning("add assertion confirming payment change")
+            $0 = .payment(payment)
+        }
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnPaymentStateOnSuccessResponse() {
+        
+        assert(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeSuccessResultStateOnConnectivityError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldDeliverEffectOnSuccessResultStateOnConnectivityError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeSuccessResultStateOnServerError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnSuccessResultStateOnServerError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeSuccessResultStateOnSuccessResponse() {
+        
+        assertState(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnSuccessResultStateOnSuccessResponse() {
+        
+        assert(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudCancelledFailureResultStateOnConnectivityError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.fraud(.cancelled)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudCancelledFailureResultStateOnConnectivityError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.fraud(.cancelled))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudCancelledFailureResultStateOnServerError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.fraud(.cancelled)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudCancelledFailureResultStateOnServerError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.fraud(.cancelled))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudCancelledFailureResultStateOnSuccessResponse() {
+        
+        assertState(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.fraud(.cancelled)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudCancelledFailureResultStateOnSuccessResponse() {
+        
+        assert(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.fraud(.cancelled))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudExpiredFailureResultStateOnConnectivityError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudExpiredFailureResultStateOnConnectivityError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.fraud(.expired))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudExpiredFailureResultStateServerError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudExpiredFailureResultStateServerError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.fraud(.expired))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeFraudExpiredFailureResultStateOnSuccessResponse() {
+        
+        assertState(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnFraudExpiredFailureResultStateOnSuccessResponse() {
+        
+        assert(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.fraud(.expired))),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeTransferErrorFailureResultStateOnConnectivityError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.transferError))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnTransferErrorFailureResultStateOnConnectivityError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.connectivityError)),
+            on: .result(.failure(.transferError)),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeTransferErrorFailureResultStateOnServerError() {
+        
+        assertState(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.transferError))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnTransferErrorFailureResultStateOnServerError() {
+        
+        assert(
+            .receivedAnywayResult(.failure(.serverError(anyMessage()))),
+            on: .result(.failure(.transferError)),
+            effect: nil
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotChangeTransferErrorFailureResultStateOnSuccessResponse() {
+        
+        assertState(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.transferError))
+        )
+    }
+    
+    func test_receivedAnywayResult_shouldNotDeliverEffectOnTransferErrorFailureResultStateOnSuccessResponse() {
+        
+        assert(
+            .receivedAnywayResult(.success(makeCreateAnywayTransferResponse())),
+            on: .result(.failure(.transferError)),
             effect: nil
         )
     }
@@ -557,6 +826,12 @@ final class UtilityPaymentReducerTests: XCTestCase {
     ) -> VerificationCode {
         
         .init(value)
+    }
+    
+    private func makeCreateAnywayTransferResponse(
+    ) -> CreateAnywayTransferResponse {
+        
+        .init()
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

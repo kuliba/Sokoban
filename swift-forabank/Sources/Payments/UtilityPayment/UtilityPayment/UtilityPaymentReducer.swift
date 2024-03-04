@@ -43,17 +43,20 @@ public extension UtilityPaymentReducer {
                 state = .result(.failure(.fraud(.expired)))
             }
             
-        case var (.payment(utilityPayment), .receivedAnywayResult(anywayResult)):
+        case (
+            var .payment(utilityPayment),
+            let .receivedAnywayResult(anywayResult)
+        ):
             switch anywayResult {
             case .failure(.connectivityError):
                 state = .result(.failure(.transferError))
-    
+                
             case let .failure(.serverError(message)):
                 state = .result(.failure(.serverError(message)))
-
+                
             case let .success(response):
                 utilityPayment.status = .none
-                #warning("fix this // protocol?")
+#warning("fix this update(utilityPayment, with: response) // protocol?")
                 // update(utilityPayment, with: response)
                 state = .payment(utilityPayment)
             }
