@@ -66,6 +66,8 @@ func makeUtilityPayment(
     )
 }
 
+struct CreateAnywayTransferResponse: Equatable {}
+
 struct TestPayment: Payment {
     
 #warning("TBD")

@@ -38,15 +38,15 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias State = UtilityPaymentState<TestPayment>
-    private typealias Event = UtilityPaymentEvent
+    private typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
     private typealias Effect = UtilityPaymentEffect<TestPayment>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias Reducer = UtilityPaymentReducer<TestPayment>
+    private typealias Reducer = UtilityPaymentReducer<TestPayment, CreateAnywayTransferResponse>
     
-    private typealias EffectHandler = UtilityPaymentEffectHandler<TestPayment>
+    private typealias EffectHandler = UtilityPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
     private typealias CreateAnywayTransferSpy = Spy<EffectHandler.CreateAnywayTransferPayload, EffectHandler.CreateAnywayTransferResult>
     private typealias MakeTransferSpy = Spy<EffectHandler.MakeTransferPayload, EffectHandler.MakeTransferResult>
 

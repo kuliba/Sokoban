@@ -781,7 +781,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentReducer<TestPayment>
+    private typealias SUT = UtilityPaymentReducer<TestPayment, CreateAnywayTransferResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event

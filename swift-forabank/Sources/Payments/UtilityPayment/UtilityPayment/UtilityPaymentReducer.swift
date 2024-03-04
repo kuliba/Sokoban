@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer<UtilityPayment: Payment> {
+public final class UtilityPaymentReducer<UtilityPayment, CreateAnywayTransferResponse>
+where UtilityPayment: Payment,
+      CreateAnywayTransferResponse: Equatable {
     
     private let update: Update
     
@@ -81,6 +83,6 @@ public extension UtilityPaymentReducer {
     typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
     
     typealias State = UtilityPaymentState<UtilityPayment>
-    typealias Event = UtilityPaymentEvent
+    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
     typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }
