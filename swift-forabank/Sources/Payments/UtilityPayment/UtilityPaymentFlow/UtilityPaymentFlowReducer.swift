@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentReducer.swift
+//  UtilityPaymentFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer {
+public final class UtilityPaymentFlowReducer {
     
     private let prePaymentReduce: PrePaymentReduce
     
@@ -16,7 +16,7 @@ public final class UtilityPaymentReducer {
     }
 }
 
-public extension UtilityPaymentReducer {
+public extension UtilityPaymentFlowReducer {
     
     func reduce(
         _ state: State,
@@ -37,16 +37,16 @@ public extension UtilityPaymentReducer {
     }
 }
 
-public extension UtilityPaymentReducer {
+public extension UtilityPaymentFlowReducer {
     
     typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
     
-    typealias State = UtilityPaymentState
-    typealias Event = UtilityPaymentEvent
-    typealias Effect = UtilityPaymentEffect
+    typealias State = UtilityPaymentFlowState
+    typealias Event = UtilityPaymentFlowEvent
+    typealias Effect = UtilityPaymentFlowEffect
 }
 
-private extension UtilityPaymentReducer {
+private extension UtilityPaymentFlowReducer {
     
     func reduce(
         _ state: State,

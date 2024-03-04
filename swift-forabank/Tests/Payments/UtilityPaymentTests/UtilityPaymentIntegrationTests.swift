@@ -42,17 +42,14 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     
     private func makeSUT(
-        initialState: State = .init(),
+        initialState: State = .payment(.init()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         stateSpy: StateSpy
     ) {
-        let prePaymentReducer = PrePaymentReducer()
-        let reducer = UtilityPaymentReducer(
-            prePaymentReduce: prePaymentReducer.reduce
-        )
+        let reducer = UtilityPaymentReducer()
         let effectHandler = UtilityPaymentEffectHandler()
         
         let sut = SUT(

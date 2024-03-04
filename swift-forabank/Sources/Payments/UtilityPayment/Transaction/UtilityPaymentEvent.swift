@@ -7,7 +7,6 @@
 
 public enum UtilityPaymentEvent: Equatable {
     
-    case prePayment(PrePaymentEvent)
 }
 
 public extension UtilityPaymentEvent {

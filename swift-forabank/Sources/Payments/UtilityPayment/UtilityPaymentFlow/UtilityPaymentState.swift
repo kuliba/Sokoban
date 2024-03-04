@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public struct UtilityPaymentState: Equatable {
+public struct UtilityPaymentFlowState: Equatable {
     
     public var prePayment: PrePaymentState
     
