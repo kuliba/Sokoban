@@ -26,49 +26,10 @@ public extension UtilityPaymentReducer {
         
         var state = state
         var effect: Effect?
-               
+        
         switch (state, event) {
-            
-        case var (.payment(utilityPayment), .continue):
-            if utilityPayment.isFinalStep {
-                if let verificationCode = utilityPayment.verificationCode {
-                    utilityPayment.status = .inflight
-                    state = .payment(utilityPayment)
-                    effect = .makeTransfer(verificationCode)
-                }
-            } else {
-                utilityPayment.status = .inflight
-                state = .payment(utilityPayment)
-                effect = .createAnywayTransfer(utilityPayment)
-            }
-            
-        case let (.payment, .fraud(fraudEvent)):
-            switch fraudEvent {
-            case .cancelled:
-                state = .result(.failure(.fraud(.cancelled)))
-            case .expired:
-                state = .result(.failure(.fraud(.expired)))
-            }
-            
-        case (
-            var .payment(utilityPayment),
-            let .receivedAnywayResult(anywayResult)
-        ):
-            switch anywayResult {
-            case .failure(.connectivityError):
-                state = .result(.failure(.transferError))
-                
-            case let .failure(.serverError(message)):
-                state = .result(.failure(.serverError(message)))
-                
-            case let .success(response):
-                update(&utilityPayment, response)
-                utilityPayment.status = .none
-                state = .payment(utilityPayment)
-            }
-            
-        case let (.payment, .receivedTransferResult(transferResult)):
-            state = .result(transferResult)
+        case let (.payment(utilityPayment), _):
+            (state, effect) = reduce(utilityPayment, event)
             
         case (.result, _):
             break
@@ -85,4 +46,59 @@ public extension UtilityPaymentReducer {
     typealias State = UtilityPaymentState<UtilityPayment>
     typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
     typealias Effect = UtilityPaymentEffect<UtilityPayment>
+}
+
+private extension UtilityPaymentReducer {
+    
+    func reduce(
+        _ utilityPayment: UtilityPayment,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state: State = .payment(utilityPayment)
+        var utilityPayment = utilityPayment
+        var effect: Effect?
+        
+        switch event {
+        case .continue:
+            if utilityPayment.isFinalStep {
+                if let verificationCode = utilityPayment.verificationCode {
+                    utilityPayment.status = .inflight
+                    state = .payment(utilityPayment)
+                    effect = .makeTransfer(verificationCode)
+                }
+            } else {
+                utilityPayment.status = .inflight
+                state = .payment(utilityPayment)
+                effect = .createAnywayTransfer(utilityPayment)
+            }
+            
+        case let .fraud(fraudEvent):
+            switch fraudEvent {
+            case .cancelled:
+                state = .result(.failure(.fraud(.cancelled)))
+            case .expired:
+                state = .result(.failure(.fraud(.expired)))
+            }
+            
+        case let .receivedAnywayResult(anywayResult):
+            switch anywayResult {
+            case .failure(.connectivityError):
+                state = .result(.failure(.transferError))
+                
+            case let .failure(.serverError(message)):
+                state = .result(.failure(.serverError(message)))
+                
+            case let .success(response):
+                update(&utilityPayment, response)
+                utilityPayment.status = .none
+                state = .payment(utilityPayment)
+            }
+            
+        case let .receivedTransferResult(transferResult):
+            state = .result(transferResult)
+        }
+        
+        return (state, effect)
+    }
 }
