@@ -10,6 +10,7 @@ import CardGuardianUI
 import RxViewModel
 import UIPrimitives
 import XCTest
+import TopUpCardUI
 
 extension ProductProfileNavigationEffectHandler: EffectHandler {}
 
@@ -54,16 +55,21 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-        
+     
+    private typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
+
     private typealias OpenPanelSpy = () -> Void
     
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
+        topUpCardButtons: [TopUpCardState.PanelButton] = .previewRegular,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.GuardCard = {_ in },
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
         showContacts: @escaping SUT.ShowContacts = {},
         changePin: @escaping SUT.GuardCard = {_ in },
+        topUpCardFromOurBank: @escaping SUT.TopUpCardFromOurBank = {_ in },
+        topUpCardFromOtherBank: @escaping SUT.TopUpCardFromOtherBank = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -83,28 +89,52 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let topUpCardReduce = TopUpCardReducer()
+        
+        let topUpCardHandleEffect = TopUpCardEffectHandler()
+        
+        let makeTopUpCardViewModel: MakeTopUpCardViewModel =  {
+            
+            .init(
+                initialState: .init(buttons: topUpCardButtons),
+                reduce: topUpCardReduce.reduce(_:_:),
+                handleEffect: topUpCardHandleEffect.handleEffect(_:_:),
+                scheduler: $0
+            )
+        }
+        
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
-            guardianCard: guardianCard,
-            toggleVisibilityOnMain: toggleVisibilityOnMain,
-            showContacts: showContacts,
-            changePin: changePin,
+            cardGuardianActions: .init(
+                guardCard: guardianCard,
+                toggleVisibilityOnMain: toggleVisibilityOnMain,
+                showContacts: showContacts,
+                changePin: changePin
+            ),
+            makeTopUpCardViewModel: makeTopUpCardViewModel,
+            topUpCardActions: .init(
+                topUpCardFromOtherBank: topUpCardFromOtherBank,
+                topUpCardFromOurBank: topUpCardFromOurBank
+            ),
             scheduler: scheduler
         )
         
         trackForMemoryLeaks(cardGuardianReduce, file: file, line: line)
         trackForMemoryLeaks(cardGuardianHandleEffect, file: file, line: line)
+        trackForMemoryLeaks(topUpCardReduce, file: file, line: line)
+        trackForMemoryLeaks(topUpCardHandleEffect, file: file, line: line)
+
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
     }
 }
 
-private extension Card {
+private extension CardGuardianUI.Card {
     
     static func card(
         status: CardGuardianStatus = .active
-    ) -> Card {
+    ) -> CardGuardianUI.Card {
         
         .init(
             cardId: 1,

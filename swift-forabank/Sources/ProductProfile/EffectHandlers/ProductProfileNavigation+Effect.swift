@@ -13,7 +13,7 @@ public extension ProductProfileNavigation {
     
     enum Effect: Equatable {
         
-        case create
+        case create(PanelKind)
         case delayAlert(AlertModelOf<ProductProfileNavigation.Event>, DispatchTimeInterval)
         case productProfile(ProductProfileEffect)
     }

@@ -1,29 +1,29 @@
 //
-//  ControlButtonView.swift
+//  TopUpCardView.swift
 //  ForaBank
 //
-//  Created by Andryusina Nataly on 02.02.2024.
+//  Created by Andryusina Nataly on 01.03.2024.
 //
 
 import SwiftUI
-import CardGuardianUI
 import ProductProfile
+import TopUpCardUI
 
-struct ControlButtonView: View {
+struct TopUpCardView: View {
     
     let state: ProductProfileNavigation.State
     let event: (ProductProfileNavigation.Event) -> Void
     
     var body: some View {
         
-        openCardGuardianButton()
+        topUpCardButton()
     }
     
-    private func openCardGuardianButton() -> some View {
+    private func topUpCardButton() -> some View {
         
         Button(
-            "Управление",
-            action: { self.event(.create(.cardGuardian)) }
+            "Пополнить",
+            action: { self.event(.create(.topUpCard)) }
         )
         .buttonStyle(.bordered)
         .controlSize(.large)
@@ -38,7 +38,7 @@ struct ControlButtonView: View {
         .sheet(
             item: .init(
                 get: {
-                    if case let .cardGuardian(route) = state.modal {
+                    if case let .topUpCard(route) = state.modal {
                         return route
                     } else { return nil }
                 },
@@ -49,10 +49,10 @@ struct ControlButtonView: View {
     }
     
     private func destinationView(
-        route: ProductProfileNavigation.State.CardGuardianRoute
+        route: ProductProfileNavigation.State.TopUpCardRoute
     ) -> some View {
         
-        CardGuardianUI.ThreeButtonsWrappedView(
+        TopUpCardWrappedView(
             viewModel: route.viewModel,
             config: .preview)
         .padding(.top, 26)

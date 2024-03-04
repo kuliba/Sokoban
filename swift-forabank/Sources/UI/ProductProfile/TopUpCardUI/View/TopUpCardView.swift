@@ -15,7 +15,8 @@ struct TopUpCardView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Пополнить").font(config.fonts.panelTitle)
             ForEach(buttons, id: \.self, content: buttonView)
         }
         .padding(.vertical, config.paddings.vertical)

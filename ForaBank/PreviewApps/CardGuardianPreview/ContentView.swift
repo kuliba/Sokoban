@@ -2,20 +2,35 @@
 //  ContentView.swift
 //  CardGuardianPreview
 //
-//  Created by Andryusina Nataly on 02.02.2024.
+//  Created by Andryusina Nataly on 01.03.2024.
 //
 
 import SwiftUI
-import CardGuardianUI
+import ProductProfileComponents
 import ProductProfile
 import RxViewModel
-import ActivateSlider
 
 typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 
 struct ContentView: View {
     
-    @StateObject private var viewModel: ProductProfileViewModel = .preview(buttons: .preview)
+    let buttons: [CardGuardianState._Button]
+    let topUpCardButtons: [TopUpCardState.PanelButton]
+    @StateObject private var viewModel: ProductProfileViewModel
+    
+    init(
+        buttons: [CardGuardianState._Button],
+        topUpCardButtons: [TopUpCardState.PanelButton]
+    ) {
+        self.buttons = buttons
+        self.topUpCardButtons = topUpCardButtons
+        self._viewModel = .init(
+            wrappedValue: .preview(
+                buttons: buttons,
+                topUpCardButtons: topUpCardButtons
+            )
+        )
+    }
     
     var body: some View {
         
@@ -46,7 +61,6 @@ struct ContentView: View {
                     .padding()
                 }
                 .background(.gray)
-
                 
                 ZStack {
                     
@@ -94,42 +108,24 @@ struct ContentView: View {
     
     private func destination() -> some View {
         
-        VStack(alignment: .leading) {
+        VStack() {
             
-            HStack {
-                Text("Aктивна, на главном")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.init(
-                    state: viewModel.state,
-                    event: viewModel.event
-                )
-            }
+            ControlButtonView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
             
-            HStack {
-                Text("Заблокирована (можно разблокировать)")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.init(
-                    state: viewModel.state,
-                    event: viewModel.event
-                )
-            }
-            
-            HStack {
-                Text("Заблокирована (нельзя разблокировать)")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.init(
-                    state: viewModel.state,
-                    event: viewModel.event
-                )
-            }
+            TopUpCardView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(
+        buttons: .preview,
+        topUpCardButtons: .previewRegular)
 }

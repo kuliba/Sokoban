@@ -6,7 +6,7 @@
 //
 
 import UIPrimitives
-import CardGuardianUI
+import ProductProfileComponents
 import Combine
 
 public extension ProductProfileNavigation {
@@ -31,18 +31,22 @@ public extension ProductProfileNavigation.State {
     enum CGDestination: Equatable, Identifiable {
         
         case showPanel(CardGuardianViewModel, AnyCancellable)
-        
+        case showTopUpCardPanel(TopUpCardViewModel, AnyCancellable)
+
         public var id: Case {
             
             switch self {
             case .showPanel:
                 return .showPanel
+            case .showTopUpCardPanel:
+                return .showTopUpCardPanel
             }
         }
         
         public enum Case {
             
             case showPanel
+            case showTopUpCardPanel
         }
     }
 }
@@ -56,6 +60,10 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch (lhs, rhs) {
         case let (.showPanel(lhs, _), .showPanel(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        case let (.showTopUpCardPanel(lhs, _), .showTopUpCardPanel(rhs, _)):
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        default:
+            return false
         }
     }
     
@@ -64,6 +72,9 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
         switch self {
         case let .showPanel(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
+        case let .showTopUpCardPanel(viewModel, _):
+            hasher.combine(ObjectIdentifier(viewModel))
+
         }
     }
 }

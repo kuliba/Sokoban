@@ -10,25 +10,60 @@ import XCTest
 import UIPrimitives
 import CardGuardianUI
 import RxViewModel
+import TopUpCardUI
 
 final class ProductProfileNavigationReducerTests: XCTestCase {
     
     // MARK: test create
     
-    func test_create_shouldDeliverEffectCreate() {
+    func test_createCardGuardian_shouldDeliverEffectCreateCardGuardian() {
         
         assert(
-            .create,
+            .create(.cardGuardian),
             on: productProfileState(),
-            effect: .create)
+            effect: .create(.cardGuardian))
+    }
+    
+    func test_createCardGuardian_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.create(.cardGuardian), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
+    func test_createTopUpCard_shouldDeliverEffectCreateTopUpCard() {
+        
+        assert(
+            .create(.topUpCard),
+            on: productProfileState(),
+            effect: .create(.topUpCard))
+    }
+    
+    func test_createTopUpCard_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.create(.topUpCard), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
     }
     
     // MARK: test open
     
-    func test_open_shouldNotDeliverEffect() {
+    func test_openCardGuardian_shouldNotDeliverEffect() {
         
         assert(
-            .open(createCardGuardianRoute()),
+            .open(.cardGuardianRoute(createCardGuardianRoute())),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    func test_openTopUpCard_shouldNotDeliverEffect() {
+        
+        assert(
+            .open(.topUpCardRoute(createTopUpCardRoute())),
             on: productProfileState(),
             effect: nil)
     }
@@ -41,6 +76,15 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .closeAlert,
             on: productProfileState(),
             effect: nil)
+    }
+    
+    func test_closeAlert_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.closeAlert, on: productProfileState(.none, .alertCVV())) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
     }
     
     // MARK: test dismissDestination
@@ -63,6 +107,15 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             effect: nil)
     }
     
+    func test_appear_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.cardGuardianInput(.appear), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
     // MARK: test showAlert
     
     func test_showAlert_shouldNotDeliverEffect() {
@@ -71,6 +124,17 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .showAlert(AlertModelOf.alertBlockCard(.newCard(status: .active))),
             on: productProfileState(),
             effect: nil)
+    }
+    
+    func test_showAlert_shouldSetStatusOnModalNilAlertNotNil() {
+        
+        let alert = AlertModelOf.alertBlockCard(.newCard(status: .active))
+
+        assert(.showAlert(alert), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = alert
+        }
     }
 
     // MARK: test alertInput
@@ -88,6 +152,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    private typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     
     private func makeSUT(
         file: StaticString = #file,
@@ -139,6 +204,25 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         )
     }
     
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: UpdateStateToExpected<State>? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT()
+        
+        _assertState(
+            sut,
+            event,
+            on: state,
+            updateStateToExpected: updateStateToExpected,
+            file: file, line: line
+        )
+    }
+    
     private func createCardGuardianRoute(
     ) -> ProductProfileNavigation.CardGuardianRoute {
         
@@ -153,19 +237,40 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             )
         }
         
-        let cardGuardianViewModel = makeCardGuardianViewModel(.main)
+        let cardGuardianViewModel = makeCardGuardianViewModel(.immediate)
         let cancellable = cardGuardianViewModel.$state
             .sink { _ in }
         
         return .init(cardGuardianViewModel, cancellable)
     }
+    
+    private func createTopUpCardRoute(
+    ) -> ProductProfileNavigation.TopUpCardRoute {
+        
+        let topUpCardReduce = TopUpCardReducer().reduce(_:_:)
+        
+        let makeTopUpCardViewModel: MakeTopUpCardViewModel =  {
+            .init(
+                initialState: .init(buttons: .previewRegular),
+                reduce: topUpCardReduce,
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
+        }
+        
+        let topUpCardViewModel = makeTopUpCardViewModel(.immediate)
+        let cancellable = topUpCardViewModel.$state
+            .sink { _ in }
+        
+        return .init(topUpCardViewModel, cancellable)
+    }
 }
 
-private extension Card {
+private extension CardGuardianUI.Card {
     
     static func newCard(
         status: CardGuardianStatus
-    ) -> Card {
+    ) -> CardGuardianUI.Card {
         
         .init(
             cardId: 1,
@@ -174,3 +279,5 @@ private extension Card {
         )
     }
 }
+
+extension ProductProfileNavigationReducer: Reducer { }

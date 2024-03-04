@@ -6,36 +6,68 @@
 //
 
 import Foundation
-import CardGuardianUI
+import ProductProfileComponents
 import RxViewModel
 
 public final class ProductProfileNavigationEffectHandler {
-         
-    public typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
-    
+            
     private let makeCardGuardianViewModel: MakeCardGuardianViewModel
+    private let cardGuardianActions: CardGuardianActions
 
-    private let guardCard: GuardCard
-    private let toggleVisibilityOnMain: ToggleVisibilityOnMain
-    private let showContacts: ShowContacts
-    private let changePin: ChangePin
-    
+    private let makeTopUpCardViewModel: MakeTopUpCardViewModel
+    private let topUpCardActions: TopUpCardActions
+
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         makeCardGuardianViewModel: @escaping MakeCardGuardianViewModel,
-        guardianCard: @escaping GuardCard,
-        toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
-        showContacts: @escaping ShowContacts,
-        changePin: @escaping ChangePin,
+        cardGuardianActions: CardGuardianActions,
+        makeTopUpCardViewModel: @escaping MakeTopUpCardViewModel,
+        topUpCardActions: TopUpCardActions,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
-        self.guardCard = guardianCard
-        self.toggleVisibilityOnMain = toggleVisibilityOnMain
-        self.showContacts = showContacts
-        self.changePin = changePin
+        self.cardGuardianActions = cardGuardianActions
+        self.makeTopUpCardViewModel = makeTopUpCardViewModel
+        self.topUpCardActions = topUpCardActions
         self.scheduler = scheduler
+    }
+}
+
+public extension ProductProfileNavigationEffectHandler {
+    
+    struct CardGuardianActions {
+        
+        let guardCard: GuardCard
+        let toggleVisibilityOnMain: ToggleVisibilityOnMain
+        let showContacts: ShowContacts
+        let changePin: ChangePin
+        
+        public init(
+            guardCard: @escaping GuardCard,
+            toggleVisibilityOnMain: @escaping ToggleVisibilityOnMain,
+            showContacts: @escaping ShowContacts,
+            changePin: @escaping ChangePin
+        ) {
+            self.guardCard = guardCard
+            self.toggleVisibilityOnMain = toggleVisibilityOnMain
+            self.showContacts = showContacts
+            self.changePin = changePin
+        }
+    }
+    
+    struct TopUpCardActions {
+        
+        let topUpCardFromOtherBank: TopUpCardFromOtherBank
+        let topUpCardFromOurBank: TopUpCardFromOurBank
+        
+        public init(
+            topUpCardFromOtherBank: @escaping TopUpCardFromOtherBank,
+            topUpCardFromOurBank: @escaping TopUpCardFromOurBank
+        ) {
+            self.topUpCardFromOtherBank = topUpCardFromOtherBank
+            self.topUpCardFromOurBank = topUpCardFromOurBank
+        }
     }
 }
 
@@ -51,8 +83,13 @@ public extension ProductProfileNavigationEffectHandler {
                 
                 dispatch(.showAlert(alert))
             }
-        case .create:
-            dispatch(makeDestination(dispatch))
+        case let .create(panelKind):
+            switch panelKind {
+            case .cardGuardian:
+                dispatch(makeDestination(dispatch))
+            case .topUpCard:
+                dispatch(makeDestinationTopUpCard(dispatch))
+            }
         case let .productProfile(effect):
             // fire and forget
             handleEffect(effect)
@@ -64,13 +101,17 @@ public extension ProductProfileNavigationEffectHandler {
     ) {
         switch effect {
         case let .guardCard(card):
-            guardCard(card)
+            cardGuardianActions.guardCard(card)
         case let .toggleVisibilityOnMain(product):
-            toggleVisibilityOnMain(product)
+            cardGuardianActions.toggleVisibilityOnMain(product)
         case let .changePin(card):
-            changePin(card)
+            cardGuardianActions.changePin(card)
         case .showContacts:
-            showContacts()
+            cardGuardianActions.showContacts()
+        case let .accountOurBank(card):
+            topUpCardActions.topUpCardFromOurBank(card)
+        case let .accountAnotherBank(card):
+            topUpCardActions.topUpCardFromOtherBank(card)
         }
     }
 }
@@ -90,7 +131,26 @@ private extension ProductProfileNavigationEffectHandler {
             .receive(on: scheduler)
             .sink { dispatch($0) }
         
-        return .open(.init(cardGuardianViewModel, cancellable))
+        return .open(.cardGuardianRoute(.init(cardGuardianViewModel, cancellable)))
+    }
+}
+
+private extension ProductProfileNavigationEffectHandler {
+    
+    func makeDestinationTopUpCard(
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let topUpCardViewModel = makeTopUpCardViewModel(scheduler)
+        let cancellable = topUpCardViewModel.$state
+            .dropFirst()
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.topUpCardInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .open(.topUpCardRoute(.init(topUpCardViewModel, cancellable)))
     }
 }
 
@@ -102,10 +162,16 @@ public extension ProductProfileNavigationEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     // fire and forget
-    typealias GuardCard = (Card) -> Void
-    typealias ChangePin = (Card) -> Void
+    typealias GuardCard = (CardGuardianUI.Card) -> Void
+    typealias ChangePin = (CardGuardianUI.Card) -> Void
     typealias ToggleVisibilityOnMain = (Product) -> Void
     typealias ShowContacts = () -> Void
+    
+    typealias TopUpCardFromOtherBank = (TopUpCardUI.Card) -> Void
+    typealias TopUpCardFromOurBank = (TopUpCardUI.Card) -> Void
+    
+    typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
+    typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
 }
 
 // MARK: - CardGuardian
@@ -129,3 +195,26 @@ public enum CardGuardianStateProjection: Equatable {
     case appear
     case buttonTapped(CardGuardian.ButtonEvent)
 }
+
+// MARK: - TopUpCard
+private extension TopUpCardState {
+    
+    var projection: TopUpCardStateProjection? {
+        
+        switch self.event {
+            
+        case .none:
+            return .none
+        case let .buttonTapped(tap):
+            return .buttonTapped(tap)
+        case .appear:
+            return .appear
+        }
+    }
+}
+
+public enum TopUpCardStateProjection: Equatable {
+    case appear
+    case buttonTapped(ButtonEvent)
+}
+

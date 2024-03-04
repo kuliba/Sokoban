@@ -7,7 +7,6 @@
 
 import Foundation
 import UIPrimitives
-import CardGuardianUI
 
 public final class ProductProfileNavigationReducer {
     
@@ -33,17 +32,30 @@ public extension ProductProfileNavigationReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-        case .create:
+        case let .create(panelKind):
             state.modal = nil
-            effect = .create
+            switch panelKind {
+            case .cardGuardian:
+                effect = .create(.cardGuardian)
+            case .topUpCard:
+                effect = .create(.topUpCard)
+            }
         case .dismissDestination:
             state.modal = nil
         case let .showAlert(alert):
             state.alert = alert
-        case let .open(modal):
-            state.modal = .init(modal.viewModel, modal.cancellable)
+        case let .open(panel):
+            switch panel {
+            case let .cardGuardianRoute(route):
+                state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
+            case let .topUpCardRoute(route):
+                state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
+            }
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)
+        case let .topUpCardInput(topUpCardInput):
+            (state, effect) = reduce(state, topUpCardInput)
+
         case let .productProfile(event):
             (state, effect) = reduce(state, event)
         }
@@ -92,6 +104,40 @@ private extension ProductProfileNavigationReducer {
         return (state, effect)
     }
 }
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ topUpCardInput: TopUpCardStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.alert = nil
+        
+        switch topUpCardInput {
+        
+        case .appear:
+            break
+        case let .buttonTapped(tap):
+            switch tap {
+                
+            case let .accountAnotherBank(card):
+                state.modal = nil
+                effect = .productProfile(.accountAnotherBank(card))
+
+            case let .accountOurBank(card):
+                state.modal = nil
+                effect = .productProfile(.accountOurBank(card))
+            }
+        }
+        
+        return (state, effect)
+    }
+}
+
 
 private extension ProductProfileNavigationReducer {
     

@@ -11,5 +11,6 @@ extension Config.Fonts {
     
     static let preview: Self = .init(
         title: .callout,
-        subtitle: .footnote)
+        subtitle: .footnote, 
+        panelTitle: .title) //textH3Sb18240
 }
