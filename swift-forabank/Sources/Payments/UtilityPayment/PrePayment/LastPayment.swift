@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct LastPayment: Equatable, Identifiable {
+public struct LastPayment: Equatable, Identifiable {
     
-    let id: String
+    public let id: String
     
-    init(id: String = UUID().uuidString) {
+    public init(id: String = UUID().uuidString) {
         
         self.id = id
     }

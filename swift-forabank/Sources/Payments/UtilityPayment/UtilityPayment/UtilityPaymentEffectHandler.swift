@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-final class UtilityPaymentEffectHandler {}
+public final class UtilityPaymentEffectHandler {
+    
+    public init() {}
+}
 
-extension UtilityPaymentEffectHandler {
+public extension UtilityPaymentEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -17,7 +20,7 @@ extension UtilityPaymentEffectHandler {
     }
 }
 
-extension UtilityPaymentEffectHandler {
+public extension UtilityPaymentEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     

@@ -5,11 +5,12 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-final class PrePaymentReducer {
+public final class PrePaymentReducer {
     
+    public init() {}
 }
 
-extension PrePaymentReducer {
+public extension PrePaymentReducer {
     
     func reduce(
         _ state: State,
@@ -37,6 +38,9 @@ extension PrePaymentReducer {
                 state = .selected(.operator(`operator`))
             }
             
+        case (_, .back):
+            state = .selecting
+            
         default:
             break
         }
@@ -45,7 +49,7 @@ extension PrePaymentReducer {
     }
 }
 
-extension PrePaymentReducer {
+public extension PrePaymentReducer {
     
     typealias State = PrePaymentState
     typealias Event = PrePaymentEvent
