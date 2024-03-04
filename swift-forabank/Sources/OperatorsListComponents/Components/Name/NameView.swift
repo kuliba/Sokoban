@@ -90,20 +90,45 @@ struct NameView: View {
         }
         .padding(.trailing, 16)
     }
+}
+
+private extension NameView {
     
-    private func setupConfig() ->  InputView.InputConfigView {
+    enum FieldTitle: String {
+    
+        case name = "Имя получателя*"
+        case surname = "Фамилия получателя*"
+        case patronymic = "Отчество получателя (если есть)"
+        case general = "ФИО Получателя"
+    }
+    
+    enum FieldPlaceholder: String {
+        
+        case name = "Введите Имя Получателя"
+        case surname = "Введите Фамилию Получателя"
+        case patronymic = "Введите Отчество Получателя"
+        case general = "Введите ФИО Получателя"
+    }
+    
+    private func setupConfig(
+        title: String,
+        placeholder: String
+    ) ->  InputView.InputConfigView {
         
         .init(
+            title: title,
             titleFont: config.titleFont,
             titleColor: config.titleColor,
             textFieldFont: config.textFieldFont,
+            placeholder: placeholder,
+            hint: nil,
             hintFont: config.hintFont,
             hintColor: config.hintColor,
-            backgroundColor: config.backgroundColor
+            backgroundColor: config.backgroundColor,
+            imageSize: .small
         )
     }
 }
-
 
 struct NameView_Previews: PreviewProvider {
     static var previews: some View {
