@@ -35,9 +35,6 @@ public extension UtilityPaymentReducer {
                 effect = .createAnywayTransfer(utilityPayment)
             }
             
-        case (.result, .continue):
-            break
-            
         case let (.payment, .fraud(fraudEvent)):
             switch fraudEvent {
             case .cancelled:
@@ -46,13 +43,10 @@ public extension UtilityPaymentReducer {
                 state = .result(.failure(.fraud(.expired)))
             }
             
-        case (.result, .fraud):
-            break
-            
         case let (.payment, .receivedTransferResult(transferResult)):
             state = .result(transferResult)
             
-        case (.result, .receivedTransferResult):
+        case (.result, _):
             break
         }
         
