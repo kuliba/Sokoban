@@ -25,10 +25,7 @@ struct UtilityServicePicker: View {
         service: UtilityService
     ) -> some View {
         
-        Button(String(describing: service)) {
-            
-            event(service)
-        }
+        Button(service.id) { event(service) }
     }
 }
 
