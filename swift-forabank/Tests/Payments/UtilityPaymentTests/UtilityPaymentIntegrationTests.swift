@@ -13,7 +13,9 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        _ = makeSUT()
+        let (_,_, makeTransferSpy) = makeSUT()
+        
+        XCTAssertEqual(makeTransferSpy.callCount, 0)
     }
     
 //    func test_flow() {
@@ -41,16 +43,23 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
+    private typealias MakeTransferSpy = Spy<UtilityPaymentEffectHandler.MakeTransferPayload, UtilityPaymentEffectHandler.MakeTransferResult>
+
     private func makeSUT(
         initialState: State = .payment(.init()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        stateSpy: StateSpy
+        stateSpy: StateSpy,
+        makeTransferSpy: MakeTransferSpy
     ) {
         let reducer = UtilityPaymentReducer()
-        let effectHandler = UtilityPaymentEffectHandler()
+        
+        let makeTransferSpy = MakeTransferSpy()
+        let effectHandler = UtilityPaymentEffectHandler(
+            makeTransfer: makeTransferSpy.process
+        )
         
         let sut = SUT(
             initialState: initialState,
@@ -64,8 +73,9 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
+        trackForMemoryLeaks(makeTransferSpy, file: file, line: line)
         
-        return (sut, stateSpy)
+        return (sut, stateSpy, makeTransferSpy)
     }
     
     private func assert(

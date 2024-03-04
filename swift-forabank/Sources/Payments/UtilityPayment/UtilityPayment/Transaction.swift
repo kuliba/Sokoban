@@ -7,23 +7,6 @@
 
 import Tagged
 
-public enum UtilityPaymentState: Equatable {
-    
-    case payment(UtilityPayment)
-    case result(TransferResult)
-}
-
-public struct UtilityPayment: Equatable {
-    
-    #warning("TBD")
-    // snapshots stack
-    // fields
-    
-    public init() {}
-}
-
-public typealias TransferResult = Result<Transaction, TransactionFailure>
-
 // `g1`
 public struct Transaction: Equatable {
     
@@ -47,20 +30,5 @@ public extension Transaction {
     enum DocumentStatus {
         
         case complete, inProgress, rejected
-    }
-}
-
-public enum TransactionFailure: Error, Equatable {
-    
-    case fraud(Fraud)
-    // `g2/g3/g4`
-    case transferError
-}
-
-public extension TransactionFailure {
-    
-    enum Fraud {
-        
-        case cancelled, expired
     }
 }
