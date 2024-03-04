@@ -7,11 +7,14 @@
 
 public final class UtilityPaymentEffectHandler {
     
+    private let createAnywayTransfer: CreateAnywayTransfer
     private let makeTransfer: MakeTransfer
     
     public init(
+        createAnywayTransfer: @escaping CreateAnywayTransfer,
         makeTransfer: @escaping MakeTransfer
     ) {
+        self.createAnywayTransfer = createAnywayTransfer
         self.makeTransfer = makeTransfer
     }
 }
@@ -23,6 +26,13 @@ public extension UtilityPaymentEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+        case let .createAnywayTransfer(utilityPayment):
+            createAnywayTransfer(utilityPayment) {
+                
+                // dispatch(...............)
+                fatalError($0)
+            }
+            
         case let .makeTransfer(verificationCode):
             makeTransfer(verificationCode) {
                 
@@ -38,6 +48,11 @@ public extension UtilityPaymentEffectHandler {
 }
 
 public extension UtilityPaymentEffectHandler {
+    
+    typealias CreateAnywayTransferPayload = UtilityPayment
+    typealias CreateAnywayTransferResult = String
+    typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void
+    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
     
     typealias MakeTransferPayload = VerificationCode
     typealias MakeTransferResult = Result<Transaction, Error>

@@ -7,5 +7,6 @@
 
 public enum UtilityPaymentEffect: Equatable {
     
+    case createAnywayTransfer(UtilityPayment)
     case makeTransfer(VerificationCode)
 }

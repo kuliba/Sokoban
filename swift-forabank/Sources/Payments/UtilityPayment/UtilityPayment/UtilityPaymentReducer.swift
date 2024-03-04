@@ -22,10 +22,20 @@ public extension UtilityPaymentReducer {
                
         switch (state, event) {
             
-        case (_, .continue):
-            break
+        case var (.payment(utilityPayment), .continue):
+            if utilityPayment.isFinalStep {
+                if let verificationCode = utilityPayment.verificationCode {
+                    utilityPayment.status = .inflight
+                    state = .payment(utilityPayment)
+                    effect = .makeTransfer(verificationCode)
+                }
+            } else {
+                utilityPayment.status = .inflight
+                state = .payment(utilityPayment)
+                effect = .createAnywayTransfer(utilityPayment)
+            }
             
-        case (.result, .fraud):
+        case (.result, .continue):
             break
             
         case let (.payment, .fraud(fraudEvent)):
@@ -35,6 +45,9 @@ public extension UtilityPaymentReducer {
             case .expired:
                 state = .result(.failure(.fraud(.expired)))
             }
+            
+        case (.result, .fraud):
+            break
             
         case let (.payment, .receivedTransferResult(transferResult)):
             state = .result(transferResult)

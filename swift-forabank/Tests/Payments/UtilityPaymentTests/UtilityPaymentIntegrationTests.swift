@@ -13,8 +13,9 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, makeTransferSpy) = makeSUT()
+        let (_,_, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
         
+        XCTAssertEqual(createAnywayTransferSpy.callCount, 0)
         XCTAssertEqual(makeTransferSpy.callCount, 0)
     }
     
@@ -43,6 +44,7 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
+    private typealias CreateAnywayTransferSpy = Spy<UtilityPaymentEffectHandler.CreateAnywayTransferPayload, UtilityPaymentEffectHandler.CreateAnywayTransferResult>
     private typealias MakeTransferSpy = Spy<UtilityPaymentEffectHandler.MakeTransferPayload, UtilityPaymentEffectHandler.MakeTransferResult>
 
     private func makeSUT(
@@ -52,12 +54,15 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
+        createAnywayTransferSpy: CreateAnywayTransferSpy,
         makeTransferSpy: MakeTransferSpy
     ) {
         let reducer = UtilityPaymentReducer()
         
+        let createAnywayTransferSpy = CreateAnywayTransferSpy()
         let makeTransferSpy = MakeTransferSpy()
         let effectHandler = UtilityPaymentEffectHandler(
+            createAnywayTransfer: createAnywayTransferSpy.process,
             makeTransfer: makeTransferSpy.process
         )
         
@@ -73,9 +78,10 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
+        trackForMemoryLeaks(createAnywayTransferSpy, file: file, line: line)
         trackForMemoryLeaks(makeTransferSpy, file: file, line: line)
         
-        return (sut, stateSpy, makeTransferSpy)
+        return (sut, stateSpy, createAnywayTransferSpy, makeTransferSpy)
     }
     
     private func assert(

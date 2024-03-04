@@ -14,8 +14,9 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, makeTransferSpy) = makeSUT()
+        let (_, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
         
+        XCTAssertEqual(createAnywayTransferSpy.callCount, 0)
         XCTAssertEqual(makeTransferSpy.callCount, 0)
     }
     
@@ -24,7 +25,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     func test_makeTransfer_shouldCallMakeTransferWithVerificationCode() {
         
         let verificationCode = makeVerificationCode()
-        let (sut, makeTransferSpy) = makeSUT()
+        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.handleEffect(
@@ -39,7 +40,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     
     func test_makeTransfer_shouldDeliverReceivedTransferResultEventWithTransferErrorOnFailure() {
         
-        let (sut, makeTransferSpy) = makeSUT()
+        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
         
         expect(sut, with: .makeTransfer(makeVerificationCode()), toDeliver: .receivedTransferResult(.failure(.transferError))) {
             
@@ -50,7 +51,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     func test_makeTransfer_shouldDeliverReceivedTransferResultSuccessOnSuccess() {
         
         let transaction = makeTransaction()
-        let (sut, makeTransferSpy) = makeSUT()
+        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
         
         expect(sut, with: .makeTransfer(makeVerificationCode()), toDeliver: .receivedTransferResult(.success(transaction))) {
             
@@ -64,6 +65,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias CreateAnywayTransferSpy = Spy<SUT.CreateAnywayTransferPayload, SUT.CreateAnywayTransferResult>
     private typealias MakeTransferSpy = Spy<SUT.MakeTransferPayload, SUT.MakeTransferResult>
     
     private func makeSUT(
@@ -72,17 +74,21 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
+        createAnywayTransferSpy: CreateAnywayTransferSpy,
         makeTransferSpy: MakeTransferSpy
     ) {
+        let createAnywayTransferSpy = CreateAnywayTransferSpy()
         let makeTransferSpy = MakeTransferSpy()
         let sut = SUT(
+            createAnywayTransfer: createAnywayTransferSpy.process(_:completion:),
             makeTransfer: makeTransferSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(createAnywayTransferSpy, file: file, line: line)
         trackForMemoryLeaks(makeTransferSpy, file: file, line: line)
         
-        return (sut, makeTransferSpy)
+        return (sut, createAnywayTransferSpy, makeTransferSpy)
     }
     
     private func expect(

@@ -1,6 +1,6 @@
 //
 //  UtilityPaymentReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 04.03.2024.
 //
@@ -11,6 +11,92 @@ import XCTest
 final class UtilityPaymentReducerTests: XCTestCase {
     
     // MARK: - continue
+    
+    func test_continue_shouldChangeStatusToInflightOnNonFinalStepPaymentState() {
+        
+        let nonFinalStepPayment = makeNonFinalStepUtilityPayment()
+        
+        assertState(.continue, on: .payment(nonFinalStepPayment)) {
+            
+            var inflight = nonFinalStepPayment
+            inflight.status = .inflight
+            $0 = .payment(inflight)
+        }
+        
+        XCTAssertFalse(nonFinalStepPayment.isFinalStep)
+    }
+    
+    func test_continue_shouldDeliverCreateAnywayTransferEffectOnNonFinalStep() {
+        
+        let nonFinalStepPayment = makeNonFinalStepUtilityPayment()
+        
+        var inflight = nonFinalStepPayment
+        inflight.status = .inflight
+        
+        assert(
+            .continue,
+            on: .payment(nonFinalStepPayment),
+            effect: .createAnywayTransfer(inflight)
+        )
+    }
+    
+    func test_continue_shouldNotChangeStateOnFinalStepPaymentStateWithoutVerificationCode() {
+        
+        let finalStepPayment = makeFinalStepUtilityPayment(
+            verificationCode: nil
+        )
+        
+        assertState(.continue, on: .payment(finalStepPayment))
+        
+        XCTAssert(finalStepPayment.isFinalStep)
+        XCTAssertNil(finalStepPayment.verificationCode)
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnFinalStepPaymentStateWithoutVerificationCode() {
+        
+        let finalStepPayment = makeFinalStepUtilityPayment(
+            verificationCode: nil
+        )
+        
+        assert(.continue, on: .payment(finalStepPayment), effect: nil)
+        
+        XCTAssert(finalStepPayment.isFinalStep)
+        XCTAssertNil(finalStepPayment.verificationCode)
+    }
+    
+    func test_continue_shouldChangeStatusToInflightOnFinalStepPaymentStateWithVerificationCode() {
+        
+        let finalStepPayment = makeFinalStepUtilityPayment(
+            verificationCode: "12345"
+        )
+        
+        assertState(.continue, on: .payment(finalStepPayment)) {
+            
+            var inflight = finalStepPayment
+            inflight.status = .inflight
+            $0 = .payment(inflight)
+        }
+        
+        XCTAssert(finalStepPayment.isFinalStep)
+        XCTAssertNotNil(finalStepPayment.verificationCode)
+    }
+    
+    func test_continue_shouldDeliverMakeTransferEffectOnFinalStepWithVerificationCode() {
+        
+        let verificationCode = makeVerificationCode()
+        let finalStepPayment = makeFinalStepUtilityPayment(
+            verificationCode: verificationCode
+        )
+        
+        assert(
+            .continue,
+            on: .payment(finalStepPayment),
+            effect: .makeTransfer(verificationCode)
+        )
+        
+        XCTAssert(finalStepPayment.isFinalStep)
+        XCTAssertNotNil(finalStepPayment.verificationCode)
+    }
     
     func test_continue_shouldNotChangeSuccessResultState() {
         
@@ -57,7 +143,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudCancelled() {
         
         assertState(
-            .fraud(.cancelled), 
+            .fraud(.cancelled),
             on: .payment(makeUtilityPayment())
         ) {
             $0 = .result(.failure(.fraud(.cancelled)))
@@ -65,7 +151,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     }
     
     func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudExpired() {
-                
+        
         assertState(
             .fraud(.expired),
             on: .payment(makeUtilityPayment())
@@ -77,7 +163,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     func test_fraudEvent_shouldNotChangeSuccessResultState() {
         
         assertState(
-            .fraud(.cancelled), 
+            .fraud(.cancelled),
             on: .result(.success(makeTransaction()))
         )
     }
@@ -85,7 +171,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     func test_fraudEvent_shouldNotChangeTransferErrorResultState() {
         
         assertState(
-            .fraud(.cancelled), 
+            .fraud(.cancelled),
             on: .result(.failure(.transferError))
         )
     }
@@ -93,7 +179,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     func test_fraudEvent_shouldNotChangeFraudCancelledResultState() {
         
         assertState(
-            .fraud(.cancelled), 
+            .fraud(.cancelled),
             on: .result(.failure(.fraud(.cancelled)))
         )
     }
@@ -101,7 +187,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     func test_fraudEvent_shouldNotChangeFraudExpiredResultState() {
         
         assertState(
-            .fraud(.cancelled), 
+            .fraud(.cancelled),
             on: .result(.failure(.fraud(.expired)))
         )
     }
@@ -266,7 +352,30 @@ final class UtilityPaymentReducerTests: XCTestCase {
             documentStatus: documentStatus
         )
     }
+    
+    private func makeFinalStepUtilityPayment(
+        verificationCode: VerificationCode? = "654321"
+    ) -> UtilityPayment {
         
+        .init(
+            isFinalStep: true,
+            verificationCode: verificationCode
+        )
+    }
+    
+    private func makeNonFinalStepUtilityPayment(
+    ) -> UtilityPayment {
+        
+        .init(isFinalStep: false)
+    }
+    
+    func makeVerificationCode(
+        _ value: String = UUID().uuidString
+    ) -> VerificationCode {
+        
+        .init(value)
+    }
+    
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
     
     private func assertState(
@@ -278,7 +387,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
         line: UInt = #line
     ) {
         let sut = sut ?? makeSUT(file: file, line: line)
-
+        
         var expectedState = state
         updateStateToExpected?(&expectedState)
         
