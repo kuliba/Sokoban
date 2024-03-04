@@ -7,6 +7,7 @@
 
 public enum UtilityPaymentEvent: Equatable {
     
+    case receivedTransferResult(TransferResult)
 }
 
 public extension UtilityPaymentEvent {

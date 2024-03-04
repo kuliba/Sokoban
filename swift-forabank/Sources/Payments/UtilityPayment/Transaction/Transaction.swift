@@ -10,7 +10,7 @@ import Tagged
 public enum UtilityPaymentState: Equatable {
     
     case payment(UtilityPayment)
-    case result(TransactionResult)
+    case result(TransferResult)
 }
 
 public struct UtilityPayment: Equatable {
@@ -22,7 +22,7 @@ public struct UtilityPayment: Equatable {
     public init() {}
 }
 
-public typealias TransactionResult = Result<Transaction, TransactionFailure>
+public typealias TransferResult = Result<Transaction, TransactionFailure>
 
 // `g1`
 public struct Transaction: Equatable {
