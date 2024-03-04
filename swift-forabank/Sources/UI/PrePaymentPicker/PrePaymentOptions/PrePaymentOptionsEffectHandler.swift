@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentsEffectHandler.swift
+//  PrePaymentOptionsEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class UtilityPaymentsEffectHandler<LastPayment, Operator>
+public final class PrePaymentOptionsEffectHandler<LastPayment, Operator>
 where LastPayment: Equatable & Identifiable,
       Operator: Equatable & Identifiable {
     
@@ -29,7 +29,7 @@ where LastPayment: Equatable & Identifiable,
     }
 }
 
-public extension UtilityPaymentsEffectHandler {
+public extension PrePaymentOptionsEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -48,7 +48,7 @@ public extension UtilityPaymentsEffectHandler {
     }
 }
 
-public extension UtilityPaymentsEffectHandler {
+public extension PrePaymentOptionsEffectHandler {
     
     typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
     typealias LoadLastPaymentsCompletion = (LoadLastPaymentsResult) -> Void
@@ -62,11 +62,11 @@ public extension UtilityPaymentsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentsEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentsEffect<Operator>
+    typealias Event = PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias Effect = PrePaymentOptionsEffect<Operator>
 }
 
-private extension UtilityPaymentsEffectHandler {
+private extension PrePaymentOptionsEffectHandler {
     
     func initiate(
         _ dispatch: @escaping Dispatch

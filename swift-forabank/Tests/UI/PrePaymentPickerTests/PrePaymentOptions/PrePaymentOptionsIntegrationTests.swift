@@ -1,15 +1,15 @@
 //
-//  UtilityPaymentsRxIntegrationTests.swift
+//  PrePaymentOptionsIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
 import RxViewModel
-import UtilityPaymentsRx
+import PrePaymentPicker
 import XCTest
 
-final class UtilityPaymentsRxIntegrationTests: XCTestCase {
+final class PrePaymentOptionsIntegrationTests: XCTestCase {
     
     // MARK: - init
     
@@ -225,13 +225,13 @@ final class UtilityPaymentsRxIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = UtilityPaymentsState<TestLastPayment, TestOperator>
-    private typealias Event = UtilityPaymentsEvent<TestLastPayment, TestOperator>
-    private typealias Effect = UtilityPaymentsEffect<TestOperator>
+    private typealias State = PrePaymentOptionsState<TestLastPayment, TestOperator>
+    private typealias Event = PrePaymentOptionsEvent<TestLastPayment, TestOperator>
+    private typealias Effect = PrePaymentOptionsEffect<TestOperator>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
-    private typealias Reducer = UtilityPaymentsReducer<TestLastPayment, TestOperator>
-    private typealias EffectHandler = UtilityPaymentsEffectHandler<TestLastPayment, TestOperator>
+    private typealias Reducer = PrePaymentOptionsReducer<TestLastPayment, TestOperator>
+    private typealias EffectHandler = PrePaymentOptionsEffectHandler<TestLastPayment, TestOperator>
     
     private typealias StateSpy = ValueSpy<State>
     private typealias LoadLastPaymentsSpy = Spy<Void, Event.LoadLastPaymentsResult>

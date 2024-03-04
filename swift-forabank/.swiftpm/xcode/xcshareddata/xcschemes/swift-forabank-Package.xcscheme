@@ -1084,6 +1084,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PrePaymentPicker"
+               BuildableName = "PrePaymentPicker"
+               BlueprintName = "PrePaymentPicker"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityPayment"
+               BuildableName = "UtilityPayment"
+               BlueprintName = "UtilityPayment"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1365,6 +1393,26 @@
                BlueprintIdentifier = "OperatorsListComponentsTests"
                BuildableName = "OperatorsListComponentsTests"
                BlueprintName = "OperatorsListComponentsTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "WIPTests"
+               BuildableName = "WIPTests"
+               BlueprintName = "WIPTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityPaymentTests"
+               BuildableName = "UtilityPaymentTests"
+               BlueprintName = "UtilityPaymentTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

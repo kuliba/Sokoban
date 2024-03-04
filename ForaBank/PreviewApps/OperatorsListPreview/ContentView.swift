@@ -10,7 +10,7 @@ import OperatorsListComponents
 import SearchBarComponent
 import TextFieldUI
 import TextFieldComponent
-import UtilityPaymentsRx
+import PrePaymentPicker
 import TextFieldComponent
 
 typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
@@ -18,7 +18,7 @@ typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, Keyboard
 struct ComposedOperatorsWrapperView: View {
     
     @StateObject var searchViewModel: SearchViewModel
-    @StateObject var viewModel: UtilityPaymentsViewModel = .preview(initialState: .init())
+    @StateObject var viewModel: PrePaymentOptionsViewModel = .preview(initialState: .init())
  
     let selectLast: (LatestPayment.ID) -> Void
     let selectOperator: (OperatorsListComponents.Operator.ID) -> Void
@@ -27,7 +27,7 @@ struct ComposedOperatorsWrapperView: View {
     
     init(
         searchViewModel: SearchViewModel,
-        viewModel: UtilityPaymentsViewModel,
+        viewModel: PrePaymentOptionsViewModel,
         selectLast: @escaping (LatestPayment.ID) -> Void,
         selectOperator: @escaping (OperatorsListComponents.Operator.ID) -> Void,
         configView: ConfigView

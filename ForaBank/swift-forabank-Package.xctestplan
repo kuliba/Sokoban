@@ -309,8 +309,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "UtilityPaymentsRxTests",
-        "name" : "UtilityPaymentsRxTests"
+        "identifier" : "PrePaymentPickerTests",
+        "name" : "PrePaymentPickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
       }
     }
   ],
