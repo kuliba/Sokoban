@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentEffectHandler {
+public final class UtilityPaymentEffectHandler<UtilityPayment: Payment> {
     
     private let createAnywayTransfer: CreateAnywayTransfer
     private let makeTransfer: MakeTransfer
@@ -58,5 +58,5 @@ public extension UtilityPaymentEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityPaymentEvent
-    typealias Effect = UtilityPaymentEffect
+    typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }

@@ -37,15 +37,18 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = UtilityPaymentState
+    private typealias State = UtilityPaymentState<TestPayment>
     private typealias Event = UtilityPaymentEvent
-    private typealias Effect = UtilityPaymentEffect
+    private typealias Effect = UtilityPaymentEffect<TestPayment>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias CreateAnywayTransferSpy = Spy<UtilityPaymentEffectHandler.CreateAnywayTransferPayload, UtilityPaymentEffectHandler.CreateAnywayTransferResult>
-    private typealias MakeTransferSpy = Spy<UtilityPaymentEffectHandler.MakeTransferPayload, UtilityPaymentEffectHandler.MakeTransferResult>
+    private typealias Reducer = UtilityPaymentReducer<TestPayment>
+    
+    private typealias EffectHandler = UtilityPaymentEffectHandler<TestPayment>
+    private typealias CreateAnywayTransferSpy = Spy<EffectHandler.CreateAnywayTransferPayload, EffectHandler.CreateAnywayTransferResult>
+    private typealias MakeTransferSpy = Spy<EffectHandler.MakeTransferPayload, EffectHandler.MakeTransferResult>
 
     private func makeSUT(
         initialState: State = .payment(.init()),
@@ -57,11 +60,11 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
         createAnywayTransferSpy: CreateAnywayTransferSpy,
         makeTransferSpy: MakeTransferSpy
     ) {
-        let reducer = UtilityPaymentReducer()
+        let reducer = Reducer()
         
         let createAnywayTransferSpy = CreateAnywayTransferSpy()
         let makeTransferSpy = MakeTransferSpy()
-        let effectHandler = UtilityPaymentEffectHandler(
+        let effectHandler = EffectHandler(
             createAnywayTransfer: createAnywayTransferSpy.process,
             makeTransfer: makeTransferSpy.process
         )

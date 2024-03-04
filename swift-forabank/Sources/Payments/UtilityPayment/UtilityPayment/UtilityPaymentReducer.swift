@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer {
+public final class UtilityPaymentReducer<UtilityPayment: Payment> {
     
     public init() {}
 }
@@ -73,10 +73,8 @@ public extension UtilityPaymentReducer {
 }
 
 public extension UtilityPaymentReducer {
-    
-    typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
-    
-    typealias State = UtilityPaymentState
+        
+    typealias State = UtilityPaymentState<UtilityPayment>
     typealias Event = UtilityPaymentEvent
-    typealias Effect = UtilityPaymentEffect
+    typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }
