@@ -22,11 +22,22 @@ public extension UtilityPaymentReducer {
                
         switch (state, event) {
             
-        case (.result, .receivedTransferResult):
+        case (.result, .fraud):
             break
+            
+        case let (.payment, .fraud(fraudEvent)):
+            switch fraudEvent {
+            case .cancelled:
+                state = .result(.failure(.fraud(.cancelled)))
+            case .expired:
+                state = .result(.failure(.fraud(.expired)))
+            }
             
         case let (.payment, .receivedTransferResult(transferResult)):
             state = .result(transferResult)
+            
+        case (.result, .receivedTransferResult):
+            break
         }
         
         return (state, effect)

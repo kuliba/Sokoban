@@ -10,6 +10,60 @@ import XCTest
 
 final class UtilityPaymentReducerTests: XCTestCase {
     
+    // MARK: - fraudEvent
+    
+    func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudCancelled() {
+        
+        assertState(
+            .fraud(.cancelled), 
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.fraud(.cancelled)))
+        }
+    }
+    
+    func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudExpired() {
+                
+        assertState(
+            .fraud(.expired),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.fraud(.expired)))
+        }
+    }
+    
+    func test_fraudEvent_shouldNotChangeSuccessResultState() {
+        
+        assertState(
+            .fraud(.cancelled), 
+            on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_fraudEvent_shouldNotChangeTransferErrorResultState() {
+        
+        assertState(
+            .fraud(.cancelled), 
+            on: .result(.failure(.transferError))
+        )
+    }
+    
+    func test_fraudEvent_shouldNotChangeFraudCancelledResultState() {
+        
+        assertState(
+            .fraud(.cancelled), 
+            on: .result(.failure(.fraud(.cancelled)))
+        )
+    }
+    
+    func test_fraudEvent_shouldNotChangeFraudExpiredResultState() {
+        
+        assertState(
+            .fraud(.cancelled), 
+            on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
     // MARK: - receivedTransferResult
     
     func test_receivedTransferResult_shouldChangePaymentStateToResultOnSuccess() {
