@@ -149,8 +149,9 @@ extension PaymentsTransfersViewModel {
         
         switch event {
         case .addCompany:
-#warning("side effect, should be moved to the effect handler")
-            rootActions?.switchTab(.chat)
+            state.destination = nil
+#warning("side effect, should be moved to the effect handler - how to put rootActions into effect handler?")
+            switchToChat()
             
         case let .latestPaymentTapped(latestPayment):
             // flow `e`
@@ -161,8 +162,12 @@ extension PaymentsTransfersViewModel {
             case .failure:
                 state.utilitiesRoute?.destination = .failure(`operator`)
                 
-            case let .list(utilityServices):
-                state.utilitiesRoute?.destination = .list(`operator`, utilityServices)
+            case let .list(services):
+                state.utilitiesRoute?.destination = .list(.init(
+                    operator: `operator`,
+                    services: services,
+                    destination: nil
+                ))
                 
             case let .single(utilityService):
                 // flow `e`
@@ -175,26 +180,48 @@ extension PaymentsTransfersViewModel {
             
         case .payByRequisites:
 #warning("side effect, should be moved to the effect handler")
-            payByRequisites()
+            state.destination = .payments(makeByRequisitesPaymentsViewModel())
             
         case let .paymentStarted(paymentStarted):
             switch paymentStarted {
             case let .details(paymentDetails):
-                state.utilitiesRoute?.destination = .payment(paymentDetails)
+                guard let utilitiesRoute = state.utilitiesRoute
+                else { break }
+                
+                switch utilitiesRoute.destination {
+                case .none:
+                    state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
+                    
+                case let .some(destination):
+                    switch destination {
+                    case let .list(list):
+                        // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
+                        state.utilitiesRoute?.destination = .list(.init(
+                            operator: list.operator,
+                            services: list.services,
+                            destination: .payment(.init(paymentDetails))
+                        ))
+                        
+                    default:
+                        break
+                    }
+                }
                 
             case .failure:
-                state.modal = .alert(.techError {
-                    fatalError()
-                })
+                state.modal = .alert(.techError(
+                    message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+                    primaryAction: { [weak self] in self?.switchToMain() }
+                ))
                 
             case let .serverError(message):
                 state.modal = .alert(.techError(
                     message: message,
-                    primaryAction: { fatalError() }
+                    primaryAction: { [weak self] in self?.switchToMain() }
                 ))
             }
             
         case .resetDestination:
+            state.utilitiesRoute?.destination = nil
             state.destination = nil
             
         case .resetModal:
@@ -202,6 +229,24 @@ extension PaymentsTransfersViewModel {
             
         case .resetUtilityDestination:
             state.utilitiesRoute?.destination = nil
+            
+        case .resetUtilityListDestination:
+            guard case let .list(list) = route.utilitiesRoute?.destination
+            else { break }
+            
+            state.utilitiesRoute?.destination = .list(.init(
+                operator: list.`operator`, 
+                services: list.services,
+                destination: nil
+            ))
+            
+        case let .utilityPayment(utilityPaymentEvent):
+            guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
+            else { break }
+            
+            let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
+            state.utilitiesRoute?.destination = .payment(utilityPaymentState)
+            effect = utilityPaymentEffect.map { .utilityPayment($0) }
             
         case let .utilityServiceTap(`operator`, utilityService):
             // flow `e`
@@ -214,6 +259,28 @@ extension PaymentsTransfersViewModel {
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
+    
+    private func switchToChat() {
+        
+        rootActions?.spinner.show()
+        
+        scheduler.schedule(
+            after: .init(.now() + .milliseconds(300))
+        ) { [weak self] in
+            
+            self?.rootActions?.spinner.hide()
+            self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    private func switchToMain() {
+        
+        withAnimation { [weak self] in
+            
+            self?.event(.resetDestination)
+            self?.rootActions?.switchTab(.main)
+        }
+    }
 }
 
 extension PaymentsTransfersViewModel.Route {
@@ -576,19 +643,23 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    private func payByRequisites() {
+    private func makeByRequisitesPaymentsViewModel() -> PaymentsViewModel {
         
         let paymentsViewModel = PaymentsViewModel(
             model,
             service: .requisites,
-            closeAction: { [weak self] in
-                
-                self?.event(.resetDestination)
-            }
+            closeAction: { [weak self] in self?.event(.resetDestination) }
         )
         bind(paymentsViewModel)
         
-        action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        return paymentsViewModel
+    }
+
+    private func payByRequisites() {
+        
+        action.send(PaymentsTransfersViewModelAction.Show.Payment(
+            viewModel: makeByRequisitesPaymentsViewModel()
+        ))
     }
     
     private func makeUtilitiesPayload(
@@ -602,13 +673,7 @@ extension PaymentsTransfersViewModel {
                 self?.event(.resetDestination)
                 self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
             },
-            addCompany: { [weak self] in
-                
-                self?.event(.resetDestination)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                    self?.rootActions?.switchTab(.chat)
-                }
-            },
+            addCompany: { [weak self] in self?.event(.addCompany) },
             requisites: { [weak self] in
                 
                 self?.event(.resetDestination)
@@ -992,13 +1057,9 @@ extension PaymentsTransfersViewModel {
                     let operatorsViewModel = QRSearchOperatorViewModel(
                         searchBar: .nameOrTaxCode(),
                         navigationBar: navigationBarViewModel, model: self.model,
-                        operators: operators, addCompanyAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                self?.rootActions?.switchTab(.chat)
-                            }
-                        }, requisitesAction: { [weak self] in
+                        operators: operators, 
+                        addCompanyAction: { [weak self] in self?.event(.addCompany) },
+                        requisitesAction: { [weak self] in
                             
                             self?.event(.resetDestination)
                             self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
@@ -1023,13 +1084,7 @@ extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in
-                    
-                    self?.event(.resetDestination)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                        self?.rootActions?.switchTab(.chat)
-                    }
-                },
+                addCompanyAction: { [weak self] in self?.event(.addCompany) },
                 requisitsAction: { [weak self] in
                     
                     guard let self else { return }
@@ -1062,13 +1117,7 @@ extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in
-                    
-                    self?.event(.resetDestination)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                        self?.rootActions?.switchTab(.chat)
-                    }
-                },
+                addCompanyAction: { [weak self] in self?.event(.addCompany) },
                 requisitsAction: { [weak self] in
                     
                     self?.event(.resetModal)
@@ -1206,14 +1255,7 @@ extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in
-                    
-                    self?.event(.resetDestination)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                        
-                        self?.rootActions?.switchTab(.chat)
-                    }
-                },
+                addCompanyAction: { [weak self] in self?.event(.addCompany) },
                 requisitsAction: { [weak self] in
                     
                     guard let self else { return }
@@ -1679,15 +1721,43 @@ extension PaymentsTransfersViewModel.Route {
     enum UtilitiesDestination: Identifiable {
         
         case failure(UtilitiesViewModel.Operator)
-        case list(UtilitiesViewModel.Operator, [UtilityService])
-        case payment(PaymentsTransfersEvent.PaymentStarted.PaymentDetails)
+        case list(List)
+        case payment(UtilityPaymentState)
+    }
+}
+ 
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    struct List {
+        
+        let `operator`: UtilitiesViewModel.Operator
+        let services: [UtilityService]
+        let destination: UtilityServicePickerDestination?
+    }
+    
+    var id: ID {
+        
+        switch self {
+        case .failure:
+            return .failure
+        case .list:
+            return .list
+        case .payment:
+            return .payment
+        }
+    }
+    
+    enum ID {
+        
+        case failure, list, payment
+    }
+    
+    enum UtilityServicePickerDestination: Identifiable {
+        
+        case payment(UtilityPaymentState)
         
         var id: ID {
             switch self {
-            case .failure:
-                return .failure
-            case .list:
-                return .list
             case .payment:
                 return .payment
             }
@@ -1695,7 +1765,67 @@ extension PaymentsTransfersViewModel.Route {
         
         enum ID {
             
-            case failure, list, payment
+            case payment
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            utilitiesRoute?.destination?.utilityPaymentState
+        }
+        
+        set(newValue) {
+            
+            utilitiesRoute?.destination?.utilityPaymentState = newValue
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            switch self {
+            case let .list(list):
+                guard case let .payment(utilityPaymentState) = list.destination
+                else { return nil }
+                
+                return utilityPaymentState
+                
+            case let .payment(utilityPaymentState):
+                return utilityPaymentState
+                
+            default:
+                return nil
+            }
+        }
+        
+        set(newValue) {
+            
+            switch self {
+            case let .list(list):
+                guard case .payment = list.destination
+                else { return }
+                
+                self = .list(.init(
+                    operator: list.`operator`,
+                    services: list.services,
+                    destination: newValue.map { .payment($0) }
+                ))
+                
+            case let .payment(utilityPaymentState):
+                self = .payment(utilityPaymentState)
+                
+            default:
+                return
+            }
         }
     }
 }

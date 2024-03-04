@@ -310,6 +310,20 @@
         "identifier" : "OperatorsListComponentsTests",
         "name" : "OperatorsListComponentsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ActivateSliderTests",
+        "name" : "ActivateSliderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
     }
   ],
   "version" : 1
