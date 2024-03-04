@@ -81,7 +81,7 @@ struct InputView: View {
 }
 
 private extension InputView.InputConfigView {
-
+    
     static let preview: Self = .init(
         title: "Лицевой счет",
         titleFont: .title3,

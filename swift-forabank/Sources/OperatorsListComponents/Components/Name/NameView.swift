@@ -59,7 +59,7 @@ struct NameView: View {
         placeholder: String,
         collapseButton: Bool
     ) -> some View {
-    
+        
         HStack {
             
             InputView(
@@ -86,7 +86,7 @@ struct NameView: View {
 private extension NameView {
     
     enum FieldTitle: String {
-    
+        
         case name = "Имя получателя*"
         case surname = "Фамилия получателя*"
         case patronymic = "Отчество получателя (если есть)"
