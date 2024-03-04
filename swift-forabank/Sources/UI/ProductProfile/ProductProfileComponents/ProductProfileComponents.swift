@@ -10,6 +10,7 @@ import Foundation
 @_exported import ActivateSlider
 @_exported import CardGuardianUI
 @_exported import TopUpCardUI
+@_exported import AccountInfoPanel
 
 /// A namespace
 ///
