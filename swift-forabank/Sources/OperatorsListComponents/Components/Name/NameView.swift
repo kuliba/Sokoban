@@ -11,7 +11,7 @@ struct NameView: View {
     
     let state: NameViewState
     @State private var text: String = ""
-    let nameEvent: NameEvent
+    let nameEvent: (NameEvent) -> Void
     let config: InputView.InputConfigView
     
     var body: some View {
@@ -70,7 +70,7 @@ struct NameView: View {
             if collapseButton {
                 
                 Button(
-                    action: changeState,
+                    action: { },
                     label: {
                         
                         Image(systemName: "chevron.up")
@@ -129,32 +129,36 @@ struct NameView_Previews: PreviewProvider {
             VStack(spacing: 20) {
                 
                 NameView(
-                    viewModel: .init(state: .collapse),
-                    changeState: {},
+                    state: .init(state: .collapse),
+                    nameEvent: { state in },
                     config: .init(
-                        title: <#T##String#>,
-                        titleFont: <#T##Font#>,
-                        titleColor: <#T##Color#>, textFieldFont: <#T##Font#>, placeholder: <#T##String#>, hint: <#T##String?#>, hintFont: <#T##Font#>, hintColor: <#T##Color#>, backgroundColor: <#T##Color#>, imageSize: <#T##InputView.InputConfigView.ImageSize#>)
-                            .init(
+                        title: "title",
                         titleFont: .system(size: 12),
                         titleColor: .gray.opacity(0.8),
                         textFieldFont: .system(size: 14),
+                        placeholder: "placeholder",
+                        hint: nil,
                         hintFont: .system(size: 10),
                         hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear
+                        backgroundColor: .clear,
+                        imageSize: .small
                     )
                 )
                 
                 NameView(
-                    viewModel: .init(state: .expended),
-                    changeState: {},
+                    state: .init(state: .expended),
+                    nameEvent: { state in },
                     config: .init(
+                        title: "title",
                         titleFont: .system(size: 12),
                         titleColor: .gray.opacity(0.8),
                         textFieldFont: .system(size: 14),
+                        placeholder: "placeholder",
+                        hint: nil,
                         hintFont: .system(size: 10),
                         hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear
+                        backgroundColor: .clear,
+                        imageSize: .small
                     )
                 )
             }
