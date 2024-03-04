@@ -150,6 +150,16 @@ final class UtilityPaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_fraudEvent_shouldNotDeliverEffectOnFraudCancelled() {
+        
+        
+        assert(
+            .fraud(.cancelled),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
     func test_fraudEvent_shouldChangePaymentToFraudCancelledOnFraudExpired() {
         
         assertState(
@@ -160,11 +170,31 @@ final class UtilityPaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_fraudEvent_shouldNotDeliverEffectOnFraudExpired() {
+        
+        
+        assert(
+            .fraud(.expired),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
     func test_fraudEvent_shouldNotChangeSuccessResultState() {
         
         assertState(
             .fraud(.cancelled),
             on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_fraudEvent_shouldNotDeliverEffectOnSuccessResultState() {
+        
+        
+        assert(
+            .fraud(.cancelled),
+            on: .result(.success(makeTransaction())),
+            effect: nil
         )
     }
     
@@ -176,6 +206,15 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_fraudEvent_shouldNotDeliverEffectOnTransferErrorResultState() {
+        
+        assert(
+            .fraud(.cancelled),
+            on: .result(.failure(.transferError)),
+            effect: nil
+        )
+    }
+    
     func test_fraudEvent_shouldNotChangeFraudCancelledResultState() {
         
         assertState(
@@ -184,11 +223,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_fraudEvent_shouldNotDeliverEffectOnFraudCancelledResultState() {
+        
+        assert(
+            .fraud(.cancelled),
+            on: .result(.failure(.fraud(.cancelled))),
+            effect: nil
+        )
+    }
+    
     func test_fraudEvent_shouldNotChangeFraudExpiredResultState() {
         
         assertState(
             .fraud(.cancelled),
             on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
+    func test_fraudEvent_shouldNotDeliverEffectOnFraudExpiredResultState() {
+        
+        assert(
+            .fraud(.cancelled),
+            on: .result(.failure(.fraud(.expired))),
+            effect: nil
         )
     }
     
@@ -206,6 +263,15 @@ final class UtilityPaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_receivedTransferResult_shouldNotDeliverEffectAtPaymentStateOnSuccess() {
+        
+        assert(
+            .receivedTransferResult(.success(makeTransaction())),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldChangePaymentStateToResultOnFraudCancelledFailure() {
         
         assertState(
@@ -214,6 +280,15 @@ final class UtilityPaymentReducerTests: XCTestCase {
         ) {
             $0 = .result(.failure(.fraud(.cancelled)))
         }
+    }
+    
+    func test_receivedTransferResult_shouldNotDeliverEffectAtPaymentStateOnFraudCancelledFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.cancelled))),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
     }
     
     func test_receivedTransferResult_shouldChangePaymentStateToResultOnFraudExpiredFailure() {
@@ -226,6 +301,15 @@ final class UtilityPaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_receivedTransferResult_shouldNotDeliverEffectAtPaymentStateOnFraudExpiredFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.expired))),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldChangePaymentStateToResultOnTransferErrorFailure() {
         
         assertState(
@@ -236,11 +320,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_receivedTransferResult_shouldNotDeliverEffectAtPaymentStateOnTransferErrorFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.transferError)),
+            on: .payment(makeUtilityPayment()),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeSuccessResultStateOnSuccess() {
         
         assertState(
             .receivedTransferResult(.success(makeTransaction())),
             on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtSuccessResultStateOnSuccess() {
+        
+        assert(
+            .receivedTransferResult(.success(makeTransaction())),
+            on: .result(.success(makeTransaction())),
+            effect: nil
         )
     }
     
@@ -252,11 +354,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtTransferErrorFailureResultStateOnSuccess() {
+        
+        assert(
+            .receivedTransferResult(.failure(.transferError)),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeFraudCancelledFailureResultStateOnSuccess() {
         
         assertState(
             .receivedTransferResult(.failure(.fraud(.cancelled))),
             on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtFraudCancelledFailureResultStateOnSuccess() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.cancelled))),
+            on: .result(.success(makeTransaction())),
+            effect: nil
         )
     }
     
@@ -268,11 +388,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtFraudExpiredFailureResultStateOnSuccess() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.expired))),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeSuccessResultStateOnTransferErrorFailure() {
         
         assertState(
             .receivedTransferResult(.failure(.transferError)),
             on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtSuccessResultStateOnTransferErrorFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.transferError)),
+            on: .result(.success(makeTransaction())),
+            effect: nil
         )
     }
     
@@ -284,11 +422,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtTransferErrorFailureResultStateOnTransferErrorFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.transferError)),
+            on: .result(.failure(.transferError)),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeSuccessResultStateOnFraudCancelledFailure() {
         
         assertState(
             .receivedTransferResult(.failure(.fraud(.cancelled))),
             on: .result(.success(makeTransaction()))
+        )
+    }
+    
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtSuccessResultStateOnFraudCancelledFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.cancelled))),
+            on: .result(.success(makeTransaction())),
+            effect: nil
         )
     }
     
@@ -300,6 +456,15 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_receivedTransferResult_shouldNotNotDeliverEffectAtSuccessResultStateOnFraudExpiredFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.expired))),
+            on: .result(.success(makeTransaction())),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeFraudCancelledFailureResultStateOnFraudCancelledFailure() {
         
         assertState(
@@ -308,11 +473,29 @@ final class UtilityPaymentReducerTests: XCTestCase {
         )
     }
     
+    func test_receivedTransferResult_shouldNotDeliverEffectAtFraudCancelledFailureResultStateOnFraudCancelledFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.cancelled))),
+            on: .result(.failure(.fraud(.cancelled))),
+            effect: nil
+        )
+    }
+    
     func test_receivedTransferResult_shouldNotChangeFraudExpiredFailureResultStateOnFraudExpiredFailure() {
         
         assertState(
             .receivedTransferResult(.failure(.fraud(.expired))),
             on: .result(.failure(.fraud(.expired)))
+        )
+    }
+    
+    func test_receivedTransferResult_shouldNotDeliverEffectAtFraudExpiredFailureResultStateOnFraudExpiredFailure() {
+        
+        assert(
+            .receivedTransferResult(.failure(.fraud(.expired))),
+            on: .result(.failure(.fraud(.expired))),
+            effect: nil
         )
     }
     
