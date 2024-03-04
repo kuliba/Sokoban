@@ -29,18 +29,14 @@ public extension UtilityPaymentEffectHandler {
         case let .createAnywayTransfer(utilityPayment):
             createAnywayTransfer(utilityPayment) {
                 
-                // dispatch(...............)
-                fatalError($0)
+                dispatch(.receivedAnywayResult($0))
             }
             
         case let .makeTransfer(verificationCode):
             makeTransfer(verificationCode) {
                 
                 dispatch(.receivedTransferResult(
-                    $0.mapError { _ in
-                        
-                        TransactionFailure.transferError
-                    }
+                    $0.mapError { _ in TransactionFailure.transferError }
                 ))
             }
         }
@@ -50,7 +46,7 @@ public extension UtilityPaymentEffectHandler {
 public extension UtilityPaymentEffectHandler {
     
     typealias CreateAnywayTransferPayload = UtilityPayment
-    typealias CreateAnywayTransferResult = String
+    typealias CreateAnywayTransferResult = Event.AnywayResult
     typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
     

@@ -9,11 +9,14 @@ public enum UtilityPaymentEvent: Equatable {
     
     case `continue`
     case fraud(FraudEvent)
+    case receivedAnywayResult(AnywayResult)
     case receivedTransferResult(TransferResult)
 }
 
 public extension UtilityPaymentEvent {
     
+    typealias AnywayResult = Result<CreateAnywayTransferResponse, ServiceFailure>
+
     enum FraudEvent: Equatable {
         
         case cancelled, expired

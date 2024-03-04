@@ -20,12 +20,74 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
         XCTAssertEqual(makeTransferSpy.callCount, 0)
     }
     
+    // MARK: - createAnywayTransfer
+    
+    func test_createAnywayTransfer_shouldCallCreateAnywayTransferWithPayload() {
+        
+        let utilityPayment = makeNonFinalStepUtilityPayment()
+        let (sut, createAnywayTransferSpy, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.handleEffect(
+            .createAnywayTransfer(utilityPayment)
+        ) { _ in exp.fulfill() }
+        
+        createAnywayTransferSpy.complete(with: .failure(.connectivityError))
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(createAnywayTransferSpy.payloads, [utilityPayment])
+    }
+    
+    func test_createAnywayTransfer_shouldDeliverResponseOnSuccess() {
+        
+        let utilityPayment = makeNonFinalStepUtilityPayment()
+        let response = makeCreateAnywayTransferResponse()
+        let (sut, createAnywayTransferSpy, _) = makeSUT()
+        
+        expect(
+            sut,
+            with: .createAnywayTransfer(utilityPayment),
+            toDeliver: .receivedAnywayResult(.success(response))
+        ) {
+            createAnywayTransferSpy.complete(with: .success(response))
+        }
+    }
+    
+    func test_createAnywayTransfer_shouldDeliverConnectivityErrorOnConnectivityError() {
+        
+        let utilityPayment = makeNonFinalStepUtilityPayment()
+        let (sut, createAnywayTransferSpy, _) = makeSUT()
+        
+        expect(
+            sut,
+            with: .createAnywayTransfer(utilityPayment),
+            toDeliver: .receivedAnywayResult(.failure(.connectivityError))
+        ) {
+            createAnywayTransferSpy.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_createAnywayTransfer_shouldDeliverServerErrorOnServerError() {
+        
+        let utilityPayment = makeNonFinalStepUtilityPayment()
+        let message = anyMessage()
+        let (sut, createAnywayTransferSpy, _) = makeSUT()
+        
+        expect(
+            sut,
+            with: .createAnywayTransfer(utilityPayment),
+            toDeliver: .receivedAnywayResult(.failure(.serverError(message)))
+        ) {
+            createAnywayTransferSpy.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
     // MARK: - makeTransfer
     
     func test_makeTransfer_shouldCallMakeTransferWithVerificationCode() {
         
         let verificationCode = makeVerificationCode()
-        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
+        let (sut, _, makeTransferSpy) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.handleEffect(
@@ -40,10 +102,13 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     
     func test_makeTransfer_shouldDeliverReceivedTransferResultEventWithTransferErrorOnFailure() {
         
-        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
+        let (sut, _, makeTransferSpy) = makeSUT()
         
-        expect(sut, with: .makeTransfer(makeVerificationCode()), toDeliver: .receivedTransferResult(.failure(.transferError))) {
-            
+        expect(
+            sut,
+            with: .makeTransfer(makeVerificationCode()),
+            toDeliver: .receivedTransferResult(.failure(.transferError))
+        ) {
             makeTransferSpy.complete(with: .failure(anyError()))
         }
     }
@@ -51,10 +116,13 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     func test_makeTransfer_shouldDeliverReceivedTransferResultSuccessOnSuccess() {
         
         let transaction = makeTransaction()
-        let (sut, createAnywayTransferSpy, makeTransferSpy) = makeSUT()
+        let (sut, _, makeTransferSpy) = makeSUT()
         
-        expect(sut, with: .makeTransfer(makeVerificationCode()), toDeliver: .receivedTransferResult(.success(transaction))) {
-            
+        expect(
+            sut,
+            with: .makeTransfer(makeVerificationCode()),
+            toDeliver: .receivedTransferResult(.success(transaction))
+        ) {
             makeTransferSpy.complete(with: .success(transaction))
         }
     }
@@ -89,6 +157,18 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(makeTransferSpy, file: file, line: line)
         
         return (sut, createAnywayTransferSpy, makeTransferSpy)
+    }
+    
+    private func makeNonFinalStepUtilityPayment(
+    ) -> UtilityPayment {
+        
+        .init(isFinalStep: false)
+    }
+    
+    private func makeCreateAnywayTransferResponse(
+    ) -> CreateAnywayTransferResponse {
+        
+        .init()
     }
     
     private func expect(
