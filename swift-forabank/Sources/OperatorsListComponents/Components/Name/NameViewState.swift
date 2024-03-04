@@ -1,5 +1,5 @@
 //
-//  NameViewModel.swift
+//  NameViewState.swift
 //
 //
 //  Created by Дмитрий Савушкин on 01.03.2024.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct NameViewModel {
+struct NameViewState {
     
-    var state: NameState
+    let state: NameState
     
     init(state: NameState) {
         self.state = state
