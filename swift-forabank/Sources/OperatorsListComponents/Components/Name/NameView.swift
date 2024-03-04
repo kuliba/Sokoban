@@ -9,46 +9,43 @@ import SwiftUI
 
 struct NameView: View {
     
-    var viewModel: NameViewModel
-    
+    let state: NameViewState
     @State private var text: String = ""
-    let changeState: () -> Void
-    
+    let nameEvent: NameEvent
     let config: InputView.InputConfigView
     
     var body: some View {
         
-        switch viewModel.state {
+        switch state.state {
         case .collapse:
             
             fieldView(
-                title: "ФИО Получателя",
-                placeholder: "Введите ФИО Получателя",
+                title: FieldTitle.general.rawValue,
+                placeholder: FieldPlaceholder.general.rawValue,
                 collapseButton: true
             )
             .background(Color.gray.opacity(0.1))
             .cornerRadius(12)
-            
             
         case .expended:
             
             VStack {
                 
                 fieldView(
-                    title: "Фамилия получателя*",
-                    placeholder: "Введите Фамилию Получателя",
+                    title: FieldTitle.surname.rawValue,
+                    placeholder: FieldPlaceholder.surname.rawValue,
                     collapseButton: true
                 )
                 
                 fieldView(
-                    title: "Имя получателя*",
-                    placeholder: "Введите Имя Получателя",
+                    title: FieldTitle.name.rawValue,
+                    placeholder: FieldPlaceholder.name.rawValue,
                     collapseButton: false
                 )
                 
                 fieldView(
-                    title: "Отчество получателя (если есть)",
-                    placeholder: "Введите Отчество Получателя",
+                    title: FieldTitle.patronymic.rawValue,
+                    placeholder: FieldPlaceholder.patronymic.rawValue,
                     collapseButton: false
                 )
             }
@@ -66,14 +63,8 @@ struct NameView: View {
         HStack {
             
             InputView(
-                viewModel: .init(
-                    icon: .small,
-                    image: .init(systemName: "person"),
-                    title: title,
-                    placeholder: placeholder,
-                    hint: nil
-                ),
-                config: setupConfig()
+                inputState: .init(image: { .init(systemName: "person") }, event: .loadImage),
+                config: setupConfig(title: title, placeholder: placeholder)
             )
             
             if collapseButton {
@@ -141,6 +132,10 @@ struct NameView_Previews: PreviewProvider {
                     viewModel: .init(state: .collapse),
                     changeState: {},
                     config: .init(
+                        title: <#T##String#>,
+                        titleFont: <#T##Font#>,
+                        titleColor: <#T##Color#>, textFieldFont: <#T##Font#>, placeholder: <#T##String#>, hint: <#T##String?#>, hintFont: <#T##Font#>, hintColor: <#T##Color#>, backgroundColor: <#T##Color#>, imageSize: <#T##InputView.InputConfigView.ImageSize#>)
+                            .init(
                         titleFont: .system(size: 12),
                         titleColor: .gray.opacity(0.8),
                         textFieldFont: .system(size: 14),
