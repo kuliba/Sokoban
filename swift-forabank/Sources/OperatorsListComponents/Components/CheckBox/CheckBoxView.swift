@@ -36,6 +36,8 @@ struct CheckBoxView: View {
             .frame(width: 24, height: 24)
             
             Text(config.title)
+                .foregroundColor(config.titleForeground)
+                .font(config.titleFont)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -83,6 +85,8 @@ extension CheckBoxView {
     struct CheckBoxViewConfig {
         
         let title: String
+        let titleFont: Font
+        let titleForeground: Color
         
         let lineWidth: CGFloat
         let strokeColor: Color
@@ -111,6 +115,8 @@ struct CheckBoxView_Previews: PreviewProvider {
             checkBoxEvent: { _ in },
             config: .init(
                 title: "Оплата ЖКХ",
+                titleFont: .body,
+                titleForeground: .black,
                 lineWidth: 2,
                 strokeColor: .green,
                 dashPhase: 70
