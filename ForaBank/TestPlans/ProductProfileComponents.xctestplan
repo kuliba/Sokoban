@@ -32,6 +32,13 @@
         "identifier" : "TopUpCardUITests",
         "name" : "TopUpCardUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AccountInfoPanelTests",
+        "name" : "AccountInfoPanelTests"
+      }
     }
   ],
   "version" : 1
