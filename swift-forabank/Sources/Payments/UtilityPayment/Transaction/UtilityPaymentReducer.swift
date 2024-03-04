@@ -19,7 +19,15 @@ public extension UtilityPaymentReducer {
         
         var state = state
         var effect: Effect?
-                    
+               
+        switch (state, event) {
+            
+        case (.result, .receivedTransferResult):
+            break
+            
+        case let (.payment, .receivedTransferResult(transferResult)):
+            state = .result(transferResult)
+        }
         
         return (state, effect)
     }

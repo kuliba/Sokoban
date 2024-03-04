@@ -12,6 +12,48 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     // MARK: - receivedTransferResult
     
+    func test_receivedTransferResult_shouldChangePaymentStateToResultOnSuccess() {
+        
+        let transaction = makeTransaction()
+        
+        assertState(
+            .receivedTransferResult(.success(transaction)),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.success(transaction))
+        }
+    }
+    
+    func test_receivedTransferResult_shouldChangePaymentStateToResultOnFraudCancelledFailure() {
+        
+        assertState(
+            .receivedTransferResult(.failure(.fraud(.cancelled))),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.fraud(.cancelled)))
+        }
+    }
+    
+    func test_receivedTransferResult_shouldChangePaymentStateToResultOnFraudExpiredFailure() {
+        
+        assertState(
+            .receivedTransferResult(.failure(.fraud(.expired))),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.fraud(.expired)))
+        }
+    }
+    
+    func test_receivedTransferResult_shouldChangePaymentStateToResultOnTransferErrorFailure() {
+        
+        assertState(
+            .receivedTransferResult(.failure(.transferError)),
+            on: .payment(makeUtilityPayment())
+        ) {
+            $0 = .result(.failure(.transferError))
+        }
+    }
+    
     func test_receivedTransferResult_shouldNotChangeSuccessResultStateOnSuccess() {
         
         assertState(
@@ -110,6 +152,12 @@ final class UtilityPaymentReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeUtilityPayment(
+    ) -> UtilityPayment {
+        
+        .init()
     }
     
     private func makeTransaction(
