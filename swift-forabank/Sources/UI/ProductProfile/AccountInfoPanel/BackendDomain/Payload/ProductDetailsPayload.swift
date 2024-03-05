@@ -32,7 +32,34 @@ public extension ProductDetailsPayload {
     
     typealias CardId = Tagged<_CardId, Int>
     enum _CardId {}
-
+    
     typealias DepositId = Tagged<_DepositId, Int>
     enum _DepositId {}
+}
+
+extension ProductDetailsPayload {
+    
+    var httpBody: Data {
+        
+        get throws {
+            
+            var parameters: [String: Int] = [:]
+            
+            if let accountId {
+                
+                parameters["accountId"] = accountId.rawValue
+            }
+            
+            if let cardId {
+                
+                parameters["cardId"] = cardId.rawValue
+            }
+
+            if let depositId {
+                
+                parameters["depositId"] = depositId.rawValue
+            }
+            return try JSONSerialization.data(withJSONObject: parameters as [String: Int])
+        }
+    }
 }
