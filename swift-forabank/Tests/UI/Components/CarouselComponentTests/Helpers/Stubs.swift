@@ -1,12 +1,11 @@
 //
-//  ContentView_Preview.swift
-//  CarouselPreview
+//  Stubs.swift
 //
-//  Created by Disman Dmitry on 26.02.2024.
+//
+//  Created by Disman Dmitry on 27.02.2024.
 //
 
 import CarouselComponent
-import SwiftUI
 
 typealias ProductSeparators = [Product.ID.ProductType: [Product.ID]]
 
@@ -25,12 +24,20 @@ extension Array where Element == Product {
         .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
     ]
     
-    static let allProducts: Self = [
-        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
-        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3,
-        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4,
-        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
-        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
+    static let nonCardProducts: Self = [
+        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4
+    ]
+    
+    static let mainWithAdditionalCards: Self = [
+        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
+    ]
+    
+    static let regularWithAdditionalCards: Self = [
+        .cardRegular, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
+    ]
+    
+    static let additionalCards: Self = [
+        .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
     ]
 }
 
@@ -106,9 +113,39 @@ extension Array where Element == ProductGroup {
         .init(id: .deposit, products: [.deposit1, .deposit2]),
         .init(id: .loan, products: [.loan1, .loan2])
     ]
+    
+    static let nonCardProducts: Self = [
+        
+        .init(id: .account, products: [.account1, .account2, .account3, .account4]),
+        .init(id: .deposit, products: [.deposit1, .deposit2]),
+        .init(id: .loan, products: [.loan1, .loan2])
+    ]
+    
+    static let mainWithAdditionalCards: Self = [
+        
+        .init(id: .card, products: [
+            .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
+        ])
+    ]
+    
+    static let regularWithAdditionalCards: Self = [
+        
+        .init(id: .card, products: [
+            .cardRegular, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
+        ])
+    ]
+    
+    static let additionalCards: Self = [
+        
+        .init(id: .card, products: [
+            .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
+        ])
+    ]
 }
 
 extension ProductSeparators {
+    
+    static let emptySeparators: Self = [:]
     
     static let separatorsForPreviewProducts: Self = [.card: [
         Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id]
