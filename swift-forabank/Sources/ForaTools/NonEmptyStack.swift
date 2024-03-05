@@ -7,12 +7,29 @@
 
 public struct NonEmptyStack<Element> {
     
-    private let baseElement: Element
+    private var baseElement: Element
     private var elements = [Element]()
     
     public init(_ element: Element) {
         
         baseElement = element
+    }
+}
+
+public extension NonEmptyStack {
+    
+    var last: Element {
+        
+        get { peek() }
+        
+        set(newValue) {
+            
+            if elements.endIndex > 0 {
+                elements[elements.endIndex - 1] = newValue
+            } else {
+                baseElement = newValue
+            }
+        }
     }
 }
 

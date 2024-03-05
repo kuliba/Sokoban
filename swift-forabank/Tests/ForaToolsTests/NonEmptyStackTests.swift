@@ -58,6 +58,63 @@ final class NonEmptyStackTests: XCTestCase {
         XCTAssertNotEqual(first, last)
         XCTAssertNotEqual(second, last)
     }
+    
+    func test_last_shouldDeliverLastElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        XCTAssertNoDiff(sut.last, first)
+        
+        let second = Item()
+        sut.push(second)
+        XCTAssertNoDiff(sut.last, second)
+
+        let last = Item()
+        sut.push(last)
+        XCTAssertNoDiff(sut.last, last)
+
+        sut.pop()
+        XCTAssertNoDiff(sut.last, second)
+
+        sut.pop()
+        XCTAssertNoDiff(sut.last, first)
+
+        sut.pop()
+        XCTAssertNoDiff(sut.last, first)
+    }
+    
+    func test_last_set_shouldChangeFirstElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.pop(), first)
+        
+        let new = Item()
+        sut.last = new
+        XCTAssertNoDiff(sut.last, new)
+        XCTAssertNoDiff(sut.pop(), new)
+        
+        XCTAssertNotEqual(new, first)
+    }
+    
+    func test_last_set_shouldChangeLastElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        let second = Item()
+        sut.push(second)
+                
+        let new = Item()
+        sut.last = new
+        XCTAssertNoDiff(sut.last, new)
+        XCTAssertNoDiff(sut.pop(), new)
+        
+        XCTAssertNotEqual(first, second)
+        XCTAssertNotEqual(first, new)
+        XCTAssertNotEqual(second, new)
     }
     
     func test_count_shouldDeliverNumberOfElement() {
