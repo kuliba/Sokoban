@@ -148,6 +148,36 @@ public extension CarouselState {
     }
 }
 
+extension CarouselState {
+    
+    func productType(with offset: CGFloat) -> ProductGroup.ID? {
+        
+        guard offset > 0 else { return nil }
+        
+        var currentLength: CGFloat = 0
+        
+        for group in productGroups {
+            
+            // TODO: - Вынести в конфигурацию
+            let productWidth = 120
+            let productInset = 0
+            let separatorWidth = 10
+            
+            let visibleProductsWidth = group.visibleProducts.count * productWidth
+            let separatorsWidth = (separators[group.id]?.count ?? 0) * separatorWidth
+            let productsInsets = group.visibleProducts.count * productInset * 2
+            
+            currentLength += CGFloat(visibleProductsWidth + separatorsWidth + productsInsets)
+            
+            guard currentLength >= offset else { continue }
+            
+            return group.id
+        }
+        
+        return nil
+    }
+}
+
 public extension CarouselState {
     
     subscript(_ groupID: ProductGroup.ID) -> ProductGroup? {
