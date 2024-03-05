@@ -126,7 +126,6 @@ struct ContentView: View {
                 state: viewModel.state,
                 event: viewModel.event
             )
-
         }
         .padding()
     }
