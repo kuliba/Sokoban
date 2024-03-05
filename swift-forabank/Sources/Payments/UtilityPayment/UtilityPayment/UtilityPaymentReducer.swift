@@ -39,6 +39,13 @@ public extension UtilityPaymentReducer {
     }
 }
 
+public protocol Payment: Equatable {
+    
+    var isFinalStep: Bool { get }
+    var verificationCode: VerificationCode? { get }
+    var status: PaymentStatus? { get set }
+}
+
 public extension UtilityPaymentReducer {
     
     typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
