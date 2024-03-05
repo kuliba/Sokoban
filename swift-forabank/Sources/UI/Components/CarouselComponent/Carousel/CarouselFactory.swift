@@ -8,13 +8,11 @@
 import SwiftUI
 import RxViewModel
 
-public typealias CarouselViewModel = RxViewModel<CarouselState, CarouselEvent, CarouselEffect>
-
 final public class CarouselFactory {
     
     private let scheduler: AnySchedulerOfDispatchQueue
     
-    init(
+    public init(
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.scheduler = scheduler
@@ -23,13 +21,14 @@ final public class CarouselFactory {
 
 public extension CarouselFactory {
     
-    func makeViewModel() -> CarouselViewModel {
+    func makeViewModel(
+        initialState: CarouselState = .init(products: []),
+        reducer: CarouselReducer = CarouselReducer(),
+        effectHandler: CarouselEffectHandler = CarouselEffectHandler()
+    ) -> CarouselViewModel {
         
-        let reducer = CarouselReducer()
-        let effectHandler = CarouselEffectHandler()
-        
-        return CarouselViewModel(
-            initialState: .initial(.init()),
+        CarouselViewModel(
+            initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
