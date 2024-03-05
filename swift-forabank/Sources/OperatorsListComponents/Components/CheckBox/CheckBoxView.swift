@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CheckBoxView: View {
     
-    let checkBoxState: CheckBoxState
+    let isChecked: Bool
     let checkBoxEvent: (CheckBoxEvent) -> Void
     let config: CheckBoxViewConfig
     
@@ -19,20 +19,12 @@ struct CheckBoxView: View {
             
             ZStack {
                 
-                RoundedRectangle(cornerRadius: 3)
-                    .trim(from: 0, to: 1)
-                    .stroke(style: config.strokeStyle)
-                    .foregroundColor(config.strokeColor)
-                    .frame(width: 18, height: 18)
-                
-                if checkBoxState == .checked {
-                    
-                    CheckView(
-                        config: config
-                    )
-                }
+                CheckView(
+                    isChecked: isChecked,
+                    config: config
+                )
             }
-            .animation(nil, value: checkBoxState == .checked)
+            .animation(nil, value: isChecked)
             .frame(width: 24, height: 24)
             
             Text(config.title)
@@ -52,30 +44,43 @@ extension CheckBoxView {
     
     struct CheckView: View {
         
+        let isChecked: Bool
         let config: CheckBoxViewConfig
         
         var body: some View {
             
-            GeometryReader { proxy in
+            if isChecked {
                 
-                Path { path in
+                GeometryReader { proxy in
                     
-                    let frame = proxy.frame(in: .global)
-                    let center = frame.height / 2
-                    
-                    let centerPoint: CGPoint = .init(x: center, y: center)
-                    let point: CGPoint = .init(x: center - 3, y: center - 3)
-                    let endPoint: CGPoint = .init(x: frame.width, y: 0)
-                    
-                    path.move(to: point)
-                    path.addLine(to: centerPoint)
-                    path.addLine(to: endPoint)
+                    Path { path in
+                        
+                        let frame = proxy.frame(in: .global)
+                        let center = frame.height / 2
+                        
+                        let centerPoint: CGPoint = .init(x: center, y: center)
+                        let point: CGPoint = .init(x: center - 3, y: center - 3)
+                        let endPoint: CGPoint = .init(x: frame.width, y: 0)
+                        
+                        path.move(to: point)
+                        path.addLine(to: centerPoint)
+                        path.addLine(to: endPoint)
+                    }
+                    .stroke(lineWidth: config.lineWidth)
+                    .foregroundColor(config.strokeColor)
                 }
-                .stroke(lineWidth: config.lineWidth)
-                .foregroundColor(config.strokeColor)
+                .offset(x: 0, y: 1.5)
+                .frame(width: 20, height: 20)
+                
+            } else {
+             
+                RoundedRectangle(cornerRadius: 3)
+                    .trim(from: 0, to: 1)
+                    .stroke(style: config.strokeStyle)
+                    .foregroundColor(config.strokeColor)
+                    .frame(width: 18, height: 18)
+                
             }
-            .offset(x: 0, y: 1.5)
-            .frame(width: 20, height: 20)
         }
     }
 }
@@ -111,7 +116,7 @@ struct CheckBoxView_Previews: PreviewProvider {
     static var previews: some View {
         
         CheckBoxView(
-            checkBoxState: .checked,
+            isChecked: true,
             checkBoxEvent: { _ in },
             config: .init(
                 title: "Оплата ЖКХ",
