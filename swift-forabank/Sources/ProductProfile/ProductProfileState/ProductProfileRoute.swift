@@ -32,8 +32,8 @@ public extension ProductProfileNavigation.State {
             }
         }
 
+        case accountInfo(AccountInfoRoute)
         case cardGuardian(CardGuardianRoute)
         case topUpCard(TopUpCardRoute)
-        case accountInfo(AccountInfoRoute)
     }
 }
