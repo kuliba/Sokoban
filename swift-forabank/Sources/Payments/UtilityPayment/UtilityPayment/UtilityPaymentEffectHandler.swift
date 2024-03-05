@@ -6,7 +6,7 @@
 //
 
 public final class UtilityPaymentEffectHandler<UtilityPayment, CreateAnywayTransferResponse>
-where UtilityPayment: Payment,
+where UtilityPayment: Equatable,
       CreateAnywayTransferResponse: Equatable {
     
     private let createAnywayTransfer: CreateAnywayTransfer
