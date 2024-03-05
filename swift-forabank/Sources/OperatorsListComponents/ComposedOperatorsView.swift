@@ -91,12 +91,12 @@ extension ComposedOperatorsView {
     
     public struct Configuration {
         
-        let noCompanyListConfiguration: NoCompanyInListViewConfig
+        let footerViewConfig: FooterViewConfig
         
         public init(
-            noCompanyListConfiguration: NoCompanyInListViewConfig
+            footerViewConfig: FooterViewConfig
         ) {
-            self.noCompanyListConfiguration = noCompanyListConfiguration
+            self.footerViewConfig = footerViewConfig
         }
     }
 }
