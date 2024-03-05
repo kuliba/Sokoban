@@ -10,13 +10,8 @@ import SwiftUI
 struct InputView: View {
     
     @State private var text: String = ""
-    let icon: Icon
-    let image: Image
-    
-    let title: String
-    let placeholder: String
-    let hint: String?
-    
+    let inputState: InputState
+    let inputEvent: (InputEvent) -> Void
     let config: InputConfigView
     
     var body: some View {
@@ -25,26 +20,26 @@ struct InputView: View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                image
+                inputState.image()
                     .resizable()
-                    .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .center)
+                    .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .center)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    Text(title)
+                    Text(config.title)
                         .font(config.titleFont)
                         .foregroundColor(config.titleColor)
                     
-                    TextField(placeholder, text: $text)
+                    TextField(config.placeholder, text: $text)
                 }
             }
             
-            if let hint {
+            if let hint = config.hint {
                 
                 HStack(alignment: .center, spacing: 16) {
                     
                     Color.clear
-                        .frame(width: icon == .small ? 24 : 32, height: icon == .small ? 24 : 32, alignment: .leading)
+                        .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .leading)
                     
                     Text(hint)
                         .font(config.hintFont)
@@ -52,30 +47,52 @@ struct InputView: View {
                 }
             }
         }
-        .padding(.horizontal, icon == .small ? 16 : 12)
+        .padding(.horizontal, config.imageSize == .small ? 16 : 12)
         .padding(.vertical, 13)
         .background(config.backgroundColor)
         .cornerRadius(12)
     }
     
-    enum Icon {
-        
-        case small
-        case large
-    }
-    
     struct InputConfigView {
         
+        let title: String
         let titleFont: Font
         let titleColor: Color
         
         let textFieldFont: Font
         
+        let placeholder: String
+        
+        let hint: String?
         let hintFont: Font
         let hintColor: Color
         
         let backgroundColor: Color
+        
+        let imageSize: ImageSize
+        
+        enum ImageSize: CGFloat {
+            
+            case small = 24
+            case large = 32
+        }
     }
+}
+
+private extension InputView.InputConfigView {
+    
+    static let preview: Self = .init(
+        title: "Лицевой счет",
+        titleFont: .title3,
+        titleColor: .gray,
+        textFieldFont: .body,
+        placeholder: "Введите лицевой счет",
+        hint: nil,
+        hintFont: .body,
+        hintColor: .gray,
+        backgroundColor: .gray.opacity(0.1),
+        imageSize: .large
+    )
 }
 
 struct InputView_Previews: PreviewProvider {
@@ -84,36 +101,16 @@ struct InputView_Previews: PreviewProvider {
         Group {
             
             InputView(
-                icon: .large,
-                image: .init(systemName: "photo.artframe"),
-                title: "Лицевой счет",
-                placeholder: "Введите лицевой счет",
-                hint: nil,
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .gray.opacity(0.3)
-                )
+                inputState: .init(image: { .init(systemName: "photo.artframe") }),
+                inputEvent: { _ in },
+                config: .preview
             )
             .padding(20)
             
             InputView(
-                icon: .small,
-                image: .init(systemName: "photo.artframe"),
-                title: "Лицевой счет",
-                placeholder: "Введите лицевой счет",
-                hint: "Сумма пени (в руб.) либо 0 если нет, если только копейки, то писать через 0, например: 0.30 - 30 копеек",
-                config: .init(
-                    titleFont: .system(size: 12),
-                    titleColor: .gray.opacity(0.8),
-                    textFieldFont: .system(size: 14),
-                    hintFont: .system(size: 10),
-                    hintColor: .gray.opacity(0.7),
-                    backgroundColor: .gray.opacity(0.3)
-                )
+                inputState: .init(image: { .init(systemName: "photo.artframe") }),
+                inputEvent: { _ in },
+                config: .preview
             )
             .padding(20)
         }

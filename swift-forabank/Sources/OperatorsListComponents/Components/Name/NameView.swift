@@ -7,63 +7,45 @@
 
 import SwiftUI
 
-class NameViewModel: ObservableObject {
-    
-    var state: NameState
-    
-    init(state: NameState) {
-        self.state = state
-    }
-    
-    enum NameState {
-        
-        case collapse
-        case expended
-    }
-}
-
 struct NameView: View {
     
-    var viewModel: NameViewModel
-    
+    let state: NameViewState
     @State private var text: String = ""
-    let changeState: () -> Void
-    
+    let nameEvent: (NameEvent) -> Void
     let config: InputView.InputConfigView
     
     var body: some View {
         
-        switch viewModel.state {
+        switch state.state {
         case .collapse:
             
             fieldView(
-                title: "ФИО Получателя",
-                placeholder: "Введите ФИО Получателя",
+                title: FieldTitle.general.rawValue,
+                placeholder: FieldPlaceholder.general.rawValue,
                 collapseButton: true
             )
             .background(Color.gray.opacity(0.1))
             .cornerRadius(12)
-            
             
         case .expended:
             
             VStack {
                 
                 fieldView(
-                    title: "Фамилия получателя*",
-                    placeholder: "Введите Фамилию Получателя",
+                    title: FieldTitle.surname.rawValue,
+                    placeholder: FieldPlaceholder.surname.rawValue,
                     collapseButton: true
                 )
                 
                 fieldView(
-                    title: "Имя получателя*",
-                    placeholder: "Введите Имя Получателя",
+                    title: FieldTitle.name.rawValue,
+                    placeholder: FieldPlaceholder.name.rawValue,
                     collapseButton: false
                 )
                 
                 fieldView(
-                    title: "Отчество получателя (если есть)",
-                    placeholder: "Введите Отчество Получателя",
+                    title: FieldTitle.patronymic.rawValue,
+                    placeholder: FieldPlaceholder.patronymic.rawValue,
                     collapseButton: false
                 )
             }
@@ -77,22 +59,19 @@ struct NameView: View {
         placeholder: String,
         collapseButton: Bool
     ) -> some View {
-    
+        
         HStack {
             
             InputView(
-                icon: .small,
-                image: .init(systemName: "person"),
-                title: title,
-                placeholder: placeholder,
-                hint: nil,
-                config: setupConfig()
+                inputState: .init(image: { .init(systemName: "person") }),
+                inputEvent: { event in },
+                config: setupConfig(title: title, placeholder: placeholder)
             )
             
             if collapseButton {
                 
                 Button(
-                    action: changeState,
+                    action: { },
                     label: {
                         
                         Image(systemName: "chevron.up")
@@ -103,20 +82,45 @@ struct NameView: View {
         }
         .padding(.trailing, 16)
     }
+}
+
+private extension NameView {
     
-    private func setupConfig() ->  InputView.InputConfigView {
+    enum FieldTitle: String {
+        
+        case name = "Имя получателя*"
+        case surname = "Фамилия получателя*"
+        case patronymic = "Отчество получателя (если есть)"
+        case general = "ФИО Получателя"
+    }
+    
+    enum FieldPlaceholder: String {
+        
+        case name = "Введите Имя Получателя"
+        case surname = "Введите Фамилию Получателя"
+        case patronymic = "Введите Отчество Получателя"
+        case general = "Введите ФИО Получателя"
+    }
+    
+    private func setupConfig(
+        title: String,
+        placeholder: String
+    ) ->  InputView.InputConfigView {
         
         .init(
+            title: title,
             titleFont: config.titleFont,
             titleColor: config.titleColor,
             textFieldFont: config.textFieldFont,
+            placeholder: placeholder,
+            hint: nil,
             hintFont: config.hintFont,
             hintColor: config.hintColor,
-            backgroundColor: config.backgroundColor
+            backgroundColor: config.backgroundColor,
+            imageSize: .small
         )
     }
 }
-
 
 struct NameView_Previews: PreviewProvider {
     static var previews: some View {
@@ -126,28 +130,36 @@ struct NameView_Previews: PreviewProvider {
             VStack(spacing: 20) {
                 
                 NameView(
-                    viewModel: .init(state: .collapse),
-                    changeState: {},
+                    state: .init(state: .collapse),
+                    nameEvent: { state in },
                     config: .init(
+                        title: "title",
                         titleFont: .system(size: 12),
                         titleColor: .gray.opacity(0.8),
                         textFieldFont: .system(size: 14),
+                        placeholder: "placeholder",
+                        hint: nil,
                         hintFont: .system(size: 10),
                         hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear
+                        backgroundColor: .clear,
+                        imageSize: .small
                     )
                 )
                 
                 NameView(
-                    viewModel: .init(state: .expended),
-                    changeState: {},
+                    state: .init(state: .expended),
+                    nameEvent: { state in },
                     config: .init(
+                        title: "title",
                         titleFont: .system(size: 12),
                         titleColor: .gray.opacity(0.8),
                         textFieldFont: .system(size: 14),
+                        placeholder: "placeholder",
+                        hint: nil,
                         hintFont: .system(size: 10),
                         hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear
+                        backgroundColor: .clear,
+                        imageSize: .small
                     )
                 )
             }
