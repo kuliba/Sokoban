@@ -17,6 +17,12 @@ public extension UtilityPaymentEvent {
     
     typealias AnywayResult = Result<CreateAnywayTransferResponse, ServiceFailure>
     
+    enum ServiceFailure: Error, Equatable {
+        
+        case connectivityError
+        case serverError(String)
+    }
+    
     enum FraudEvent: Equatable {
         
         case cancelled, expired
