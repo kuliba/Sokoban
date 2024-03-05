@@ -1,6 +1,7 @@
 {
-  "colors" : [
+  "images" : [
     {
+      "filename" : "ic24Lock.svg",
       "idiom" : "universal"
     }
   ],
