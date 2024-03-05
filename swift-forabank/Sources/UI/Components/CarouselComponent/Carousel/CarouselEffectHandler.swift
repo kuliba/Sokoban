@@ -6,8 +6,12 @@
 //
 
 import RxViewModel
+import Foundation
 
-public final class CarouselEffectHandler {}
+public final class CarouselEffectHandler {
+    
+    public init() { }
+}
 
 extension CarouselEffectHandler: EffectHandler {
     
@@ -17,6 +21,13 @@ extension CarouselEffectHandler: EffectHandler {
         _ effect: CarouselEffect,
         _ dispatch: @escaping Dispatch
     ) {
-        
+        switch effect {
+        case .scrollTo(let id, let timeInterval):
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval, execute: {
+                
+                dispatch(.scrolledTo(id))
+            })
+        }
     }
 }
