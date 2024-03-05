@@ -46,6 +46,11 @@ public protocol Payment: Equatable {
     var status: PaymentStatus? { get set }
 }
 
+public enum PaymentStatus {
+    
+    case inflight
+}
+
 public extension UtilityPaymentReducer {
     
     typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
