@@ -1,0 +1,130 @@
+//
+//  NonEmptyStackTests.swift
+//
+//
+//  Created by Igor Malyarov on 05.03.2024.
+//
+
+import ForaTools
+import XCTest
+
+final class NonEmptyStackTests: XCTestCase {
+    
+    func test_pop_shouldDeliverFirstElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        XCTAssertNoDiff(sut.pop(), first)
+        XCTAssertNoDiff(sut.pop(), first)
+        XCTAssertNoDiff(sut.pop(), first)
+    }
+    
+    func test_pop_shouldDeliverLastElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        let second = Item()
+        sut.push(second)
+        
+        let last = Item()
+        sut.push(last)
+        
+        XCTAssertNoDiff(sut.pop(), last)
+        XCTAssertNoDiff(sut.pop(), second)
+        XCTAssertNoDiff(sut.pop(), first)
+        
+        XCTAssertNotEqual(first, second)
+        XCTAssertNotEqual(first, last)
+        XCTAssertNotEqual(second, last)
+    }
+    
+    func test_peek_shouldDeliverLastElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        XCTAssertNoDiff(sut.pop(), first)
+        
+        let last = Item()
+        sut.push(last)
+        
+        XCTAssertNoDiff(sut.peek(), last)
+        XCTAssertNotEqual(first, last)
+    }
+    
+    func test_count_shouldDeliverNumberOfElement() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        XCTAssertEqual(sut.count, 1)
+        
+        let second = Item()
+        sut.push(second)
+        XCTAssertEqual(sut.count, 2)
+        
+        let last = Item()
+        sut.push(last)
+        XCTAssertEqual(sut.count, 3)
+        
+        sut.pop()
+        XCTAssertEqual(sut.count, 2)
+        
+        sut.pop()
+        XCTAssertEqual(sut.count, 1)
+        
+        sut.pop()
+        XCTAssertEqual(sut.count, 1)
+    }
+    
+    func test_isEmpty_shouldDeliverFalse() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        XCTAssertFalse(sut.isEmpty)
+        
+        let second = Item()
+        sut.push(second)
+        XCTAssertFalse(sut.isEmpty)
+        
+        let last = Item()
+        sut.push(last)
+        XCTAssertFalse(sut.isEmpty)
+        
+        sut.pop()
+        XCTAssertFalse(sut.isEmpty)
+        
+        sut.pop()
+        XCTAssertFalse(sut.isEmpty)
+        
+        sut.pop()
+        XCTAssertFalse(sut.isEmpty)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = NonEmptyStack<Item>
+    
+    private struct Item: Equatable {
+        
+        let value: String
+        
+        init(value: String = UUID().uuidString) {
+            
+            self.value = value
+        }
+    }
+    
+    private func makeSUT(
+        _ item: Item,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let sut = SUT(item)
+        
+        return sut
+    }
+}
+
