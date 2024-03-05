@@ -5,9 +5,20 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentEffectHandler {
+public final class UtilityPaymentEffectHandler<UtilityPayment, CreateAnywayTransferResponse>
+where UtilityPayment: Equatable,
+      CreateAnywayTransferResponse: Equatable {
     
-    public init() {}
+    private let createAnywayTransfer: CreateAnywayTransfer
+    private let makeTransfer: MakeTransfer
+    
+    public init(
+        createAnywayTransfer: @escaping CreateAnywayTransfer,
+        makeTransfer: @escaping MakeTransfer
+    ) {
+        self.createAnywayTransfer = createAnywayTransfer
+        self.makeTransfer = makeTransfer
+    }
 }
 
 public extension UtilityPaymentEffectHandler {
@@ -16,14 +27,38 @@ public extension UtilityPaymentEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        
+        switch effect {
+        case let .createAnywayTransfer(utilityPayment):
+            createAnywayTransfer(utilityPayment) {
+                
+                dispatch(.receivedAnywayResult($0))
+            }
+            
+        case let .makeTransfer(verificationCode):
+            makeTransfer(verificationCode) {
+                
+                dispatch(.receivedTransferResult(
+                    $0.mapError { _ in TransactionFailure.transferError }
+                ))
+            }
+        }
     }
 }
 
 public extension UtilityPaymentEffectHandler {
     
+    typealias CreateAnywayTransferPayload = UtilityPayment
+    typealias CreateAnywayTransferResult = Event.AnywayResult
+    typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void
+    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
+    
+    typealias MakeTransferPayload = VerificationCode
+    typealias MakeTransferResult = Result<Transaction, Error>
+    typealias MakeTransferCompletion = (MakeTransferResult) -> Void
+    typealias MakeTransfer = (MakeTransferPayload, @escaping MakeTransferCompletion) -> Void
+    
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentEvent
-    typealias Effect = UtilityPaymentEffect
+    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
+    typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }
