@@ -1,17 +1,17 @@
 //
 //  UtilityPaymentState.swift
+//  
 //
-//
-//  Created by Igor Malyarov on 02.03.2024.
+//  Created by Igor Malyarov on 04.03.2024.
 //
 
-public struct UtilityPaymentState: Equatable {
+public enum UtilityPaymentState<UtilityPayment: Equatable>: Equatable {
     
-    public var prePayment: PrePaymentState
+    case payment(UtilityPayment)
+    case result(TransferResult)
+}
+
+public extension UtilityPaymentState {
     
-    public init(
-        prePayment: PrePaymentState = .selecting
-    ) {
-        self.prePayment = prePayment
-    }
+    typealias TransferResult = Result<Transaction, TransactionFailure>
 }

@@ -1617,6 +1617,7 @@ private extension Target {
     static let foraToolsTests = testTarget(
         name: .foraToolsTests,
         dependencies: [
+            .customDump,
             .foraTools
         ]
     )
