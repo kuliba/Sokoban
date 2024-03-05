@@ -14,11 +14,13 @@ extension ProductProfileViewModel {
     
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
-    
+    typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
+        accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -52,6 +54,20 @@ extension ProductProfileViewModel {
             )
         }
         
+        let accountInfoPanelReduce = AccountInfoPanelReducer().reduce(_:_:)
+        
+        let accountInfoPanelHandleEffect = AccountInfoPanelEffectHandler().handleEffect(_:_:)
+        
+        let makeAccountInfoPanelViewModel: MakeAccountInfoPanelViewModel =  {
+            
+            .init(
+                initialState: .init(buttons: accountInfoPanelButtons),
+                reduce: accountInfoPanelReduce,
+                handleEffect: accountInfoPanelHandleEffect,
+                scheduler: $0
+            )
+        }
+        
         let guardianCard: ProductProfileNavigationEffectHandler.GuardCard = {
             print("block/unblock card \($0.status)")
         }
@@ -76,6 +92,13 @@ extension ProductProfileViewModel {
             print("top up card \($0.status)")
         }
         
+        let accountDetails: ProductProfileNavigationEffectHandler.AccountDetails = {
+            print("account details: card \($0.status)")
+        }
+        
+        let accountStatement: ProductProfileNavigationEffectHandler.AccountStatement = {
+            print("account statement: card \($0.status)")
+        }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
@@ -88,6 +111,10 @@ extension ProductProfileViewModel {
             topUpCardActions: .init(
                 topUpCardFromOtherBank: topUpCardFromOtherBank,
                 topUpCardFromOurBank: topUpCardFromOurBank),
+            makeAccountInfoPanelViewModel: makeAccountInfoPanelViewModel,
+            accountInfoPanelActions: .init(
+                accountDetails: accountDetails,
+                accountStatement: accountStatement),
             scheduler: scheduler
         ).handleEffect(_:_:)
         

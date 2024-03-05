@@ -1,29 +1,29 @@
 //
-//  TopUpCardView.swift
-//  ForaBank
+//  AccountInfoPanelView.swift
+//  CardGuardianPreview
 //
-//  Created by Andryusina Nataly on 01.03.2024.
+//  Created by Andryusina Nataly on 05.03.2024.
 //
 
 import SwiftUI
 import ProductProfile
-import TopUpCardUI
+import AccountInfoPanel
 
-struct TopUpCardView: View {
+struct AccountInfoPanelView: View {
     
     let state: ProductProfileNavigation.State
     let event: (ProductProfileNavigation.Event) -> Void
     
     var body: some View {
         
-        topUpCardButton()
+        accountInfoButton()
     }
     
-    private func topUpCardButton() -> some View {
+    private func accountInfoButton() -> some View {
         
         Button(
-            "Пополнить",
-            action: { self.event(.create(.topUpCard)) }
+            "Реквизиты\nи выписки",
+            action: { self.event(.create(.accountInfo)) }
         )
         .buttonStyle(.bordered)
         .controlSize(.large)
@@ -38,7 +38,7 @@ struct TopUpCardView: View {
         .sheet(
             item: .init(
                 get: {
-                    if case let .topUpCard(route) = state.modal {
+                    if case let .accountInfo(route) = state.modal {
                         return route
                     } else { return nil }
                 },
@@ -49,10 +49,10 @@ struct TopUpCardView: View {
     }
     
     private func destinationView(
-        route: ProductProfileNavigation.State.TopUpCardRoute
+        route: ProductProfileNavigation.State.AccountInfoRoute
     ) -> some View {
         
-        TopUpCardWrappedView(
+        AccountInfoPanelWrappedView(
             viewModel: route.viewModel,
             config: .preview)
         .padding(.top, 26)
@@ -62,7 +62,7 @@ struct TopUpCardView: View {
 }
 
 #Preview {
-    TopUpCardView.init(
+    AccountInfoPanelView.init(
         state: .init(),
         event: { _ in })
 }

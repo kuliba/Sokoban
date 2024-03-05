@@ -30,4 +30,8 @@ public extension ProductProfileComponents {
     typealias TopUpCard = TopUpCardUI.Card
     typealias TopUpCardConfig = TopUpCardUI.Config
     typealias TopUpCardView = TopUpCardUI.TopUpCardWrappedView
+    
+    typealias AccountInfoPanelCard = AccountInfoPanel.Card
+    typealias AccountInfoPanelConfig = AccountInfoPanel.Config
+    typealias AccountInfoPanelView = AccountInfoPanel.AccountInfoPanelWrappedView
 }

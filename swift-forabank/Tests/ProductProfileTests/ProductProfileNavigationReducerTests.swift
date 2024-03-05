@@ -8,9 +8,8 @@
 @testable import ProductProfile
 import XCTest
 import UIPrimitives
-import CardGuardianUI
 import RxViewModel
-import TopUpCardUI
+import ProductProfileComponents
 
 final class ProductProfileNavigationReducerTests: XCTestCase {
     
@@ -50,6 +49,23 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         }
     }
     
+    func test_createAccountInfo_shouldDeliverEffectCreateAccountInfoPanel() {
+        
+        assert(
+            .create(.accountInfo),
+            on: productProfileState(),
+            effect: .create(.accountInfo))
+    }
+    
+    func test_createAccountInfo_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.create(.accountInfo), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
     // MARK: test open
     
     func test_openCardGuardian_shouldNotDeliverEffect() {
@@ -64,6 +80,14 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         
         assert(
             .open(.topUpCardRoute(createTopUpCardRoute())),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    func test_openAccountInfo_shouldNotDeliverEffect() {
+        
+        assert(
+            .open(.accountInfoPanelRoute(createAccountInfoRoute())),
             on: productProfileState(),
             effect: nil)
     }
@@ -153,7 +177,8 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     private typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
-    
+    private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -263,6 +288,29 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .sink { _ in }
         
         return .init(topUpCardViewModel, cancellable)
+    }
+    
+    private func createAccountInfoRoute(
+    ) -> ProductProfileNavigation.AccountInfoRoute {
+        
+        let accountInfoReduce = AccountInfoPanelReducer().reduce(_:_:)
+        
+        let accountInfoHandleEffect = AccountInfoPanelEffectHandler().handleEffect(_:_:)
+
+        let makeAccountInfoPanelViewModel: MakeAccountInfoPanelViewModel =  {
+            .init(
+                initialState: .init(buttons: .previewRegular),
+                reduce: accountInfoReduce,
+                handleEffect: accountInfoHandleEffect,
+                scheduler: $0
+            )
+        }
+        
+        let accountInfoViewModel = makeAccountInfoPanelViewModel(.immediate)
+        let cancellable = accountInfoViewModel.$state
+            .sink { _ in }
+        
+        return .init(accountInfoViewModel, cancellable)
     }
 }
 

@@ -6,11 +6,10 @@
 //
 
 @testable import ProductProfile
-import CardGuardianUI
+import ProductProfileComponents
 import RxViewModel
 import UIPrimitives
 import XCTest
-import TopUpCardUI
 
 extension ProductProfileNavigationEffectHandler: EffectHandler {}
 
@@ -57,12 +56,15 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
      
     private typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
+    
+    private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
 
     private typealias OpenPanelSpy = () -> Void
     
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
         topUpCardButtons: [TopUpCardState.PanelButton] = .previewRegular,
+        accountInfoPanelButtons: [AccountInfoPanelState.PanelButton] = .previewRegular,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.GuardCard = {_ in },
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
@@ -70,6 +72,8 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         changePin: @escaping SUT.GuardCard = {_ in },
         topUpCardFromOurBank: @escaping SUT.TopUpCardFromOurBank = {_ in },
         topUpCardFromOtherBank: @escaping SUT.TopUpCardFromOtherBank = {_ in },
+        accountDetails: @escaping SUT.AccountDetails = {_ in },
+        accountStatement: @escaping SUT.AccountStatement = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -103,6 +107,20 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let accountInfoPanelReduce = AccountInfoPanelReducer()
+        
+        let accountInfoPanelHandleEffect = AccountInfoPanelEffectHandler()
+        
+        let makeAccountInfoPanelViewModel: MakeAccountInfoPanelViewModel =  {
+            
+            .init(
+                initialState: .init(buttons: accountInfoPanelButtons),
+                reduce: accountInfoPanelReduce.reduce(_:_:),
+                handleEffect: accountInfoPanelHandleEffect.handleEffect(_:_:),
+                scheduler: $0
+            )
+        }
+        
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -115,6 +133,11 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             topUpCardActions: .init(
                 topUpCardFromOtherBank: topUpCardFromOtherBank,
                 topUpCardFromOurBank: topUpCardFromOurBank
+            ),
+            makeAccountInfoPanelViewModel: makeAccountInfoPanelViewModel,
+            accountInfoPanelActions: .init(
+                accountDetails: accountDetails,
+                accountStatement: accountStatement
             ),
             scheduler: scheduler
         )

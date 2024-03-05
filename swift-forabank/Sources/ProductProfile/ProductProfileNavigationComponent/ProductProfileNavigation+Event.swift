@@ -13,6 +13,8 @@ public extension ProductProfileNavigation {
     typealias CardGuardianRoute = GenericRoute<CardGuardianViewModel, Never, Never, Never>
 
     typealias TopUpCardRoute = GenericRoute<TopUpCardViewModel, Never, Never, Never>
+    
+    typealias AccountInfoRoute = GenericRoute<AccountInfoPanelViewModel, Never, Never, Never>
 
     indirect enum Event: Equatable {
         
@@ -21,6 +23,7 @@ public extension ProductProfileNavigation {
         case open(Panel)
         case cardGuardianInput(CardGuardianStateProjection)
         case topUpCardInput(TopUpCardStateProjection)
+        case accountInfoPanelInput(AccountInfoPanelStateProjection)
 
         case dismissDestination
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)
@@ -30,6 +33,7 @@ public extension ProductProfileNavigation {
     
     enum Panel: Equatable {
         
+        case accountInfoPanelRoute(AccountInfoRoute)
         case cardGuardianRoute(CardGuardianRoute)
         case topUpCardRoute(TopUpCardRoute)
     }
