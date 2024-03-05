@@ -215,6 +215,6 @@ private extension TopUpCardState {
 
 public enum TopUpCardStateProjection: Equatable {
     case appear
-    case buttonTapped(ButtonEvent)
+    case buttonTapped(TopUpCardUI.ButtonEvent)
 }
 
