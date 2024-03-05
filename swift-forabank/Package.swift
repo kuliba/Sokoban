@@ -967,9 +967,8 @@ private extension Target {
     static let operatorsComponent = target(
         name: .operatorsListComponents,
         dependencies: [
-            // external packages
+            // internal packages
             .prePaymentPicker,
-            .genericRemoteService,
             .services
         ]
     )
