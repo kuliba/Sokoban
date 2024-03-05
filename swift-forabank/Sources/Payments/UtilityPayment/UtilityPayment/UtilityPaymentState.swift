@@ -10,3 +10,8 @@ public enum UtilityPaymentState<UtilityPayment: Equatable>: Equatable {
     case payment(UtilityPayment)
     case result(TransferResult)
 }
+
+public extension UtilityPaymentState {
+    
+    typealias TransferResult = Result<Transaction, TransactionFailure>
+}

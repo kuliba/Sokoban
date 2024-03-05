@@ -16,9 +16,11 @@ public enum UtilityPaymentEvent<CreateAnywayTransferResponse: Equatable>: Equata
 public extension UtilityPaymentEvent {
     
     typealias AnywayResult = Result<CreateAnywayTransferResponse, ServiceFailure>
-
+    
     enum FraudEvent: Equatable {
         
         case cancelled, expired
     }
+    
+    typealias TransferResult = Result<Transaction, TransactionFailure>
 }
