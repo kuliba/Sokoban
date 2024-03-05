@@ -32,6 +32,8 @@ public extension ProductProfileNavigation.State {
         
         case showPanel(CardGuardianViewModel, AnyCancellable)
         case showTopUpCardPanel(TopUpCardViewModel, AnyCancellable)
+        case showAccountInfoPanel(AccountInfoPanelViewModel, AnyCancellable)
+
 
         public var id: Case {
             
@@ -40,6 +42,8 @@ public extension ProductProfileNavigation.State {
                 return .showPanel
             case .showTopUpCardPanel:
                 return .showTopUpCardPanel
+            case .showAccountInfoPanel:
+                return .showAccountInfoPanel
             }
         }
         
@@ -47,6 +51,7 @@ public extension ProductProfileNavigation.State {
             
             case showPanel
             case showTopUpCardPanel
+            case showAccountInfoPanel
         }
     }
 }
@@ -62,6 +67,8 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
         case let (.showTopUpCardPanel(lhs, _), .showTopUpCardPanel(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        case let (.showAccountInfoPanel(lhs, _), .showAccountInfoPanel(rhs, _)):
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
         default:
             return false
         }
@@ -74,7 +81,8 @@ extension ProductProfileNavigation.State.CGDestination: Hashable {
             hasher.combine(ObjectIdentifier(viewModel))
         case let .showTopUpCardPanel(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
-
+        case let .showAccountInfoPanel(viewModel, _):
+            hasher.combine(ObjectIdentifier(viewModel))
         }
     }
 }

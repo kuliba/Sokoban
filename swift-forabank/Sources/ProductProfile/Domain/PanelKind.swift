@@ -9,6 +9,7 @@ import Foundation
 
 public enum PanelKind: Equatable {
     
+    case accountInfo
     case cardGuardian
     case topUpCard
 }

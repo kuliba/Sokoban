@@ -35,6 +35,8 @@ public extension ProductProfileNavigationReducer {
         case let .create(panelKind):
             state.modal = nil
             switch panelKind {
+            case .accountInfo:
+                effect = .create(.accountInfo)
             case .cardGuardian:
                 effect = .create(.cardGuardian)
             case .topUpCard:
@@ -46,11 +48,15 @@ public extension ProductProfileNavigationReducer {
             state.alert = alert
         case let .open(panel):
             switch panel {
+            case let .accountInfoPanelRoute(route):
+                state.modal = .accountInfo( .init(route.viewModel, route.cancellable))
             case let .cardGuardianRoute(route):
                 state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
             case let .topUpCardRoute(route):
                 state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
             }
+        case let .accountInfoPanelInput(accountInfoPanelInput):
+            (state, effect) = reduce(state, accountInfoPanelInput)
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)
         case let .topUpCardInput(topUpCardInput):
@@ -131,6 +137,39 @@ private extension ProductProfileNavigationReducer {
             case let .accountOurBank(card):
                 state.modal = nil
                 effect = .productProfile(.accountOurBank(card))
+            }
+        }
+        
+        return (state, effect)
+    }
+}
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ topUpCardInput: AccountInfoPanelStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.alert = nil
+        
+        switch topUpCardInput {
+        
+        case .appear:
+            break
+        case let .buttonTapped(tap):
+            switch tap {
+                
+            case let .accountDetails(card):
+                state.modal = nil
+                effect = .productProfile(.accountDetails(card))
+
+            case let .accountStatement(card):
+                state.modal = nil
+                effect = .productProfile(.accountStatement(card))
             }
         }
         
