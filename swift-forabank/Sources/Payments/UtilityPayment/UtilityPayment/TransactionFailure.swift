@@ -8,7 +8,7 @@
 public enum TransactionFailure: Error, Equatable {
     
     case fraud(Fraud)
-    // `g2/g3/g4`
+    case serverError(String)
     case transferError
 }
 
