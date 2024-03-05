@@ -44,14 +44,20 @@ final class NonEmptyStackTests: XCTestCase {
         
         let first = Item()
         var sut = makeSUT(first)
-        
         XCTAssertNoDiff(sut.pop(), first)
+        
+        let second = Item()
+        sut.push(second)
+        XCTAssertNoDiff(sut.peek(), second)
         
         let last = Item()
         sut.push(last)
-        
         XCTAssertNoDiff(sut.peek(), last)
+        
+        XCTAssertNotEqual(first, second)
         XCTAssertNotEqual(first, last)
+        XCTAssertNotEqual(second, last)
+    }
     }
     
     func test_count_shouldDeliverNumberOfElement() {
