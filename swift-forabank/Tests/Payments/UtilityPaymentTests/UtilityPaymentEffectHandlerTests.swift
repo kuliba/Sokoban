@@ -129,7 +129,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentEffectHandler
+    private typealias SUT = UtilityPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
@@ -159,18 +159,6 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
         return (sut, createAnywayTransferSpy, makeTransferSpy)
     }
     
-    private func makeNonFinalStepUtilityPayment(
-    ) -> UtilityPayment {
-        
-        .init(isFinalStep: false)
-    }
-    
-    private func makeCreateAnywayTransferResponse(
-    ) -> CreateAnywayTransferResponse {
-        
-        .init()
-    }
-    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
@@ -194,23 +182,5 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
         
         wait(for: [exp], timeout: 1)
-    }
-    
-    func makeVerificationCode(
-        _ value: String = UUID().uuidString
-    ) -> VerificationCode {
-        
-        .init(value)
-    }
-    
-    private func makeTransaction(
-        _ detailID: Int = generateRandom11DigitNumber(),
-        documentStatus: Transaction.DocumentStatus = .complete
-    ) -> Transaction {
-        
-        .init(
-            paymentOperationDetailID: .init(detailID),
-            documentStatus: documentStatus
-        )
     }
 }
