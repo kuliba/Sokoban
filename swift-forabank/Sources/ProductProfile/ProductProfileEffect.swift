@@ -16,4 +16,6 @@ public enum ProductProfileEffect: Equatable {
     case showContacts
     case accountOurBank(ProductProfileComponents.TopUpCard)
     case accountAnotherBank(ProductProfileComponents.TopUpCard)
+    case accountDetails(ProductProfileComponents.AccountInfoPanelCard)
+    case accountStatement(ProductProfileComponents.AccountInfoPanelCard)
 }

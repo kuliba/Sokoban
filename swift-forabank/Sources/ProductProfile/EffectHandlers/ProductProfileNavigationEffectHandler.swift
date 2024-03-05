@@ -16,6 +16,9 @@ public final class ProductProfileNavigationEffectHandler {
 
     private let makeTopUpCardViewModel: MakeTopUpCardViewModel
     private let topUpCardActions: TopUpCardActions
+    
+    private let makeAccountInfoPanelViewModel: MakeAccountInfoPanelViewModel
+    private let accountInfoPanelActions: AccountInfoPanelActions
 
     private let scheduler: AnySchedulerOfDispatchQueue
     
@@ -24,12 +27,16 @@ public final class ProductProfileNavigationEffectHandler {
         cardGuardianActions: CardGuardianActions,
         makeTopUpCardViewModel: @escaping MakeTopUpCardViewModel,
         topUpCardActions: TopUpCardActions,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        makeAccountInfoPanelViewModel: @escaping MakeAccountInfoPanelViewModel,
+        accountInfoPanelActions: AccountInfoPanelActions,
+        scheduler: AnySchedulerOfDispatchQueue
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
         self.cardGuardianActions = cardGuardianActions
         self.makeTopUpCardViewModel = makeTopUpCardViewModel
         self.topUpCardActions = topUpCardActions
+        self.makeAccountInfoPanelViewModel = makeAccountInfoPanelViewModel
+        self.accountInfoPanelActions = accountInfoPanelActions
         self.scheduler = scheduler
     }
 }
@@ -69,6 +76,20 @@ public extension ProductProfileNavigationEffectHandler {
             self.topUpCardFromOurBank = topUpCardFromOurBank
         }
     }
+    
+    struct AccountInfoPanelActions {
+        
+        let accountDetails: AccountDetails
+        let accountStatement: AccountStatement
+        
+        public init(
+            accountDetails: @escaping AccountDetails,
+            accountStatement: @escaping AccountStatement
+        ) {
+            self.accountDetails = accountDetails
+            self.accountStatement = accountStatement
+        }
+    }
 }
 
 public extension ProductProfileNavigationEffectHandler {
@@ -85,6 +106,8 @@ public extension ProductProfileNavigationEffectHandler {
             }
         case let .create(panelKind):
             switch panelKind {
+            case .accountInfo:
+                dispatch(makeDestinationAccountInfoPanel(dispatch))
             case .cardGuardian:
                 dispatch(makeDestination(dispatch))
             case .topUpCard:
@@ -112,6 +135,10 @@ public extension ProductProfileNavigationEffectHandler {
             topUpCardActions.topUpCardFromOurBank(card)
         case let .accountAnotherBank(card):
             topUpCardActions.topUpCardFromOtherBank(card)
+        case let .accountDetails(card):
+            accountInfoPanelActions.accountDetails(card)
+        case let .accountStatement(card):
+            accountInfoPanelActions.accountStatement(card)
         }
     }
 }
@@ -154,6 +181,25 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
+private extension ProductProfileNavigationEffectHandler {
+    
+    func makeDestinationAccountInfoPanel(
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let accountInfoPanelViewModel = makeAccountInfoPanelViewModel(scheduler)
+        let cancellable = accountInfoPanelViewModel.$state
+            .dropFirst()
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.accountInfoPanelInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .open(.accountInfoPanelRoute(.init(accountInfoPanelViewModel, cancellable)))
+    }
+}
+
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -170,8 +216,12 @@ public extension ProductProfileNavigationEffectHandler {
     typealias TopUpCardFromOtherBank = (TopUpCardUI.Card) -> Void
     typealias TopUpCardFromOurBank = (TopUpCardUI.Card) -> Void
     
+    typealias AccountDetails = (AccountInfoPanel.Card) -> Void
+    typealias AccountStatement = (AccountInfoPanel.Card) -> Void
+    
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
+    typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
 }
 
 // MARK: - CardGuardian
@@ -218,3 +268,25 @@ public enum TopUpCardStateProjection: Equatable {
     case buttonTapped(TopUpCardUI.ButtonEvent)
 }
 
+// MARK: - AccountInfoPanel
+
+private extension AccountInfoPanelState {
+    
+    var projection: AccountInfoPanelStateProjection? {
+        
+        switch self.event {
+            
+        case .none:
+            return .none
+        case let .buttonTapped(tap):
+            return .buttonTapped(tap)
+        case .appear:
+            return .appear
+        }
+    }
+}
+
+public enum AccountInfoPanelStateProjection: Equatable {
+    case appear
+    case buttonTapped(AccountInfoPanel.ButtonEvent)
+}
