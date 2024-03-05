@@ -2,7 +2,7 @@
 //  CarouselPreviewApp.swift
 //  CarouselPreview
 //
-//  Created by Disman Dmitry on 05.03.2024.
+//  Created by Igor Malyarov on 15.02.2024.
 //
 
 import SwiftUI
