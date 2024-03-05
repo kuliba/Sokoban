@@ -459,7 +459,8 @@ private extension Product {
     static let carouselComponent = library(
         name: .carouselComponent,
         targets: [
-            .carouselComponent
+            .carouselComponent,
+            .rxViewModel
         ]
     )
     
@@ -1504,7 +1505,8 @@ private extension Target {
     static let carouselComponentTests = testTarget(
         name: .carouselComponentTests,
         dependencies: [
-            .carouselComponent
+            .carouselComponent,
+            .customDump
         ],
         path: "Tests/UI/Components/\(String.carouselComponentTests)"
     )
