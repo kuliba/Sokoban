@@ -42,13 +42,16 @@ public struct FooterView: View {
                 
                 VStack(spacing: 16) {
                     
-                    VStack(spacing: 8) {
-                        
-                        ForEach(buttons) { button in
+                    if let buttons {
+                     
+                        VStack(spacing: 8) {
                             
-                            ButtonSimpleView(viewModel: button)
-                                .frame(height: 56)
-                                .padding(.horizontal, 16)
+                            ForEach(buttons) { button in
+                                
+                                ButtonSimpleView(viewModel: button)
+                                    .frame(height: 56)
+                                    .padding(.horizontal, 16)
+                            }
                         }
                     }
                     
@@ -60,7 +63,7 @@ public struct FooterView: View {
                 }
             }
             
-        case let .searchResult(image, description, button):
+        case let .failure(image, description, button):
             
             VStack(spacing: 24) {
                 
@@ -131,7 +134,7 @@ struct NoCompanyInListView_Previews: PreviewProvider {
     static var previews: some View {
         
         FooterView(
-            footerState: .searchResult(
+            footerState: .failure(
                 image: .init(systemName: "magnifyingglass"),
                 description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты.",
                 button: .init(
