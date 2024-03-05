@@ -45,9 +45,10 @@ public struct ComposedOperatorsView<
             
             ScrollView(.vertical, showsIndicators: false) {
                 
-                LazyVStack(spacing: 16) {
+                VStack(spacing: 16) {
                     
-                    if let latestPayments = state.latestPayments {
+                    if let latestPayments = state.latestPayments,
+                        !latestPayments.isEmpty {
                         
                         ScrollView(.horizontal) {
                             
@@ -57,9 +58,9 @@ public struct ComposedOperatorsView<
                             }
                         }
                     }
-
                     
-                    if let operators = state.operators {
+                    if let operators = state.operators,
+                       !operators.isEmpty {
                         
                         LazyVStack(alignment: .leading, spacing: 8) {
                             
