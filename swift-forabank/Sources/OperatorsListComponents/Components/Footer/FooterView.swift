@@ -92,13 +92,6 @@ public struct FooterView: View {
     }
 }
 
-extension FooterView {
-    
-    static let title = "Нет компании в списке?"
-    static let description = "Воспользуйтесь другими способами оплаты"
-    static let subtitle = "Сообщите нам, и мы подключим новую организацию"
-}
-
 public struct FooterViewConfig {
     
     let titleFont: Font
