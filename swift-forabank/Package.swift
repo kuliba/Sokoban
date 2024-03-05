@@ -1154,6 +1154,7 @@ private extension Target {
             // internal modules
             .rxViewModel,
             .uiPrimitives,
+            .services,
         ],
         path: "Sources/UI/ProductProfile/\(String.accountInfoPanel)"
     )
@@ -1165,6 +1166,7 @@ private extension Target {
             .customDump,
             // internal modules
             .accountInfoPanel,
+            .services,
         ],
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
     )
