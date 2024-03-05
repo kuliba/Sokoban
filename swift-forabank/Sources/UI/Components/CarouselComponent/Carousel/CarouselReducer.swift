@@ -28,7 +28,15 @@ extension CarouselReducer {
         
         switch event {
         case let .toggle(id: groupID, screenwidth: screenWidth, xOffset: xOffset):
-            break
+            state[groupID]?.state.toggle()
+            
+            if state[groupID]?.state == .collapsed {
+                
+                state.spoilerUnitPoints = GeometryHelpers.getSpoilerUnitPoint(
+                    screenWidth: screenWidth,
+                    xOffset: xOffset
+                )
+            }
             
         case let .scrolledTo(groupID):
             state.selectedProductType = groupID
@@ -38,7 +46,9 @@ extension CarouselReducer {
             effect = .scrollTo(productType, delay)
         
         case let .didScrollTo(xOffset):
-            break
+            if let groupID = state.productType(with: xOffset) {
+                state.selector.selected = groupID
+            }
             
         case let .update(products):
             state = .init(products: products)
