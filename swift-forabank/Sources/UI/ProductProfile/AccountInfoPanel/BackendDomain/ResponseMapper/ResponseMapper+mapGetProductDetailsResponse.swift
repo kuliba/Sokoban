@@ -29,7 +29,7 @@ public extension ResponseMapper {
 private extension ResponseMapper._DTO {
     
     var data: ProductDetails {
-                
+        
         return .init(details: details.data)
     }
 }
@@ -40,15 +40,24 @@ private extension ResponseMapper {
         
         let details: _Details
         
-        enum CodingKeys: String, CodingKey {
-            case data
-        }
-        
         init(from decoder: Decoder) throws {
             
-            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let container = try decoder.singleValueContainer()
             
-            details = try container.decode(_Details.self, forKey: .data)
+            if let cardValue = try? container.decode(_CardDetails.self) {
+                
+                self.details = .cardDetails(cardValue)
+                return
+            }
+            if let depositValue = try? container.decode(_DepositDetails.self) {
+                
+                self.details = .depositDetails(depositValue)
+                return
+            }
+            
+            let value = try container.decode(_AccountDetails.self)
+            
+            self.details = .accountDetails(value)
         }
     }
     
