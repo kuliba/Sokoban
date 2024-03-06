@@ -8,26 +8,16 @@
 import Foundation
 import Tagged
 
-public struct ProductDetailsPayload {
+public typealias ProductDetailsPayload = ProductId
+
+public enum ProductId {
     
-    let productId: ProductId
-    
-    public init(productId: ProductId) {
-        self.productId = productId
-    }
+    case accountId(AccountId)
+    case cardId(CardId)
+    case depositId(DepositId)
 }
 
-public extension ProductDetailsPayload {
-    
-    enum ProductId {
-        
-        case accountId(AccountId)
-        case cardId(CardId)
-        case depositId(DepositId)
-    }
-}
-
-public extension ProductDetailsPayload {
+public extension ProductId {
     
     typealias AccountId = Tagged<_AccountId, Int>
     enum _AccountId {}
@@ -47,13 +37,13 @@ extension ProductDetailsPayload {
             
             var parameters: [String: Int] = [:]
             
-            switch productId {
+            switch self {
             case let .accountId(accountId):
                 parameters["accountId"] = accountId.rawValue
-
+                
             case let .cardId(cardId):
                 parameters["cardId"] = cardId.rawValue
-
+                
             case let .depositId(depositId):
                 parameters["depositId"] = depositId.rawValue
             }
