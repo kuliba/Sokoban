@@ -9,169 +9,152 @@ import SwiftUI
 
 public struct FooterView: View {
     
-    let footerState: FooterState
-    let config: FooterViewConfig
+    let state: FooterState
+    let event: (FooterEvent) -> Void
+    let config: FooterView.Config
     
     public init(
-        footerState: FooterState,
-        config: FooterViewConfig
+        state: FooterState,
+        event: @escaping (FooterEvent) -> Void,
+        config: FooterView.Config
     ) {
-        self.footerState = footerState
+        self.state = state
+        self.event = event
         self.config = config
     }
     
     public var body: some View {
         
-        switch footerState {
-        case let .footer(title, description, buttons, subtitle):
-         
-            VStack(spacing: 24) {
+        switch state {
+        case let .footer(footer):
+            footerView(footer)
+            
+        case let .failure(failure):
+            failureView(failure)
+        }
+    }
+    
+    private func footerView(
+        _ footer: FooterState.Footer
+    ) -> some View {
+        
+        VStack(spacing: 24) {
+            
+            VStack(spacing: 16) {
                 
-                VStack(spacing: 16) {
-                    
-                    Text(title)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleColor)
-                    
-                    Text(description)
-                        .multilineTextAlignment(.center)
-                        .font(config.descriptionFont)
-                        .foregroundColor(config.descriptionColor)
-                }
-                .padding(.horizontal, 16)
+                footer.title.text(withConfig: config.titleConfig)
                 
-                VStack(spacing: 16) {
-                    
-                    if let buttons {
-                     
-                        VStack(spacing: 8) {
-                            
-                            ForEach(buttons) { button in
-                                
-                                ButtonSimpleView(viewModel: button)
-                                    .frame(height: 56)
-                                    .padding(.horizontal, 16)
-                            }
-                        }
-                    }
-                    
-                    Text(subtitle)
-                        .font(config.subtitleFont)
-                        .foregroundColor(config.subtitleColor)
-                        .padding(.horizontal, 16)
-                        .multilineTextAlignment(.center)
-                }
+                descriptionView(footer.description)
             }
+            .padding(.horizontal, 16)
             
-        case let .failure(image, description, button):
-            
-            VStack(spacing: 24) {
+            VStack(spacing: 16) {
                 
-                Image.defaultIcon(
-                    backgroundColor: .gray.opacity(0.1),
-                    icon: image
-                )
-                
-                VStack(spacing: 16) {
+                VStack(spacing: 8) {
                     
-                    Text(description)
-                        .multilineTextAlignment(.center)
-                        .font(config.descriptionFont)
-                        .foregroundColor(config.descriptionColor)
-                }
-                .padding(.horizontal, 16)
-                
-                VStack(spacing: 16) {
-                    
-                    VStack(spacing: 8) {
+                    Group {
                         
-                        ButtonSimpleView(viewModel: button)
-                            .frame(height: 56)
-                            .padding(.horizontal, 16)
+                        addCompanyButton()
+                        
+                        payByInstructionButton()
                     }
+                    .frame(height: 56)
+                    .padding(.horizontal, 16)
                 }
+                
+                footer.subtitle.text(withConfig: config.subtitleConfig)
+                    .padding(.horizontal, 16)
+                    .multilineTextAlignment(.center)
             }
         }
     }
-}
-
-public struct FooterViewConfig {
     
-    let titleFont: Font
-    let titleColor: Color
+    private func failureView(
+        _ failure: FooterState.Failure
+    ) -> some View {
+        
+        VStack(spacing: 24) {
+            
+            Image.defaultIcon(
+                backgroundColor: config.backgroundIcon,
+                icon: failure.image
+            )
+            
+            descriptionView(failure.description)
+                .padding(.horizontal, 16)
+            
+            addCompanyButton()
+                .frame(height: 56)
+                .padding(.horizontal, 16)
+        }
+    }
     
-    let descriptionFont: Font
-    let descriptionColor: Color
+    private func descriptionView(
+        _ description: String
+    ) -> some View {
+        
+        description.text(withConfig: config.descriptionConfig)
+            .multilineTextAlignment(.center)
+    }
     
-    let subtitleFont: Font
-    let subtitleColor: Color
+    private func addCompanyButton() -> some View {
+        
+        ButtonSimpleView(
+            viewModel: .init(
+                title: config.requisitesButtonTitle,
+                buttonConfiguration: config.requisitesButtonConfig,
+                action: { event(.addCompany) }
+            ))
+    }
     
-    public init(
-        titleFont: Font,
-        titleColor: Color,
-        descriptionFont: Font,
-        descriptionColor: Color,
-        subtitleFont: Font,
-        subtitleColor: Color
-    ) {
-        self.titleFont = titleFont
-        self.titleColor = titleColor
-        self.descriptionFont = descriptionFont
-        self.descriptionColor = descriptionColor
-        self.subtitleFont = subtitleFont
-        self.subtitleColor = subtitleColor
+    private func payByInstructionButton() -> some View {
+        
+        ButtonSimpleView(
+            viewModel: .init(
+                title: config.requisitesButtonTitle,
+                buttonConfiguration: config.requisitesButtonConfig,
+                action: { event(.payByInstruction) }
+            ))
     }
 }
 
-private extension FooterViewConfig {
-
+private extension FooterView.Config {
+    
     static let previewConfig: Self = .init(
-        titleFont: .title3, titleColor: .black, descriptionFont: .body, descriptionColor: .gray, subtitleFont: .body, subtitleColor: .black
+        titleConfig: .init(textFont: .title3, textColor: .black),
+        descriptionConfig: .init(textFont: .body, textColor: .gray),
+        subtitleConfig: .init(textFont: .body, textColor: .black),
+        backgroundIcon: .gray,
+        requisitesButtonTitle: "Оплатить по реквизитам",
+        requisitesButtonConfig: .init(titleFont: .body, titleForeground: .black, backgroundColor: .gray),
+        addCompanyButtonTitle: "Добавить организацию",
+        addCompanyButtonConfiguration: .init(
+            titleFont: .body,
+            titleForeground: .blue,
+            backgroundColor: .gray
+        )
     )
 }
 
-struct NoCompanyInListView_Previews: PreviewProvider {
+struct FooterView_Previews: PreviewProvider {
     static var previews: some View {
         
         FooterView(
-            footerState: .failure(
+            state: .failure(.init(
                 image: .init(systemName: "magnifyingglass"),
-                description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты.",
-                button: .init(
-                    title: "Оплатить по реквизитам",
-                    buttonConfiguration: .init(titleFont: .body, titleForeground: .black, backgroundColor: .gray),
-                    action: {}
-                )
-            ),
+                description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты."
+            )),
+            event: { _ in },
             config: .previewConfig
         )
         
         FooterView(
-            footerState: .footer(
+            state: .footer(.init(
                 title: "Нет компании в списке?",
                 description: "Воспользуйтесь другими способами оплаты",
-                buttons: [
-                    .init(
-                        title: "Оплатить по реквизитам",
-                        buttonConfiguration: .init(
-                            titleFont: .body,
-                            titleForeground: .red,
-                            backgroundColor: .gray
-                        ),
-                        action: {}
-                    ),
-                    .init(
-                        title: "Добавить организацию",
-                        buttonConfiguration: .init(
-                            titleFont: .body,
-                            titleForeground: .blue,
-                            backgroundColor: .gray
-                        ),
-                        action: {}
-                    )
-                ],
                 subtitle: "Сообщите нам, и мы подключим новую организацию"
-            ),
+            )),
+            event: { _ in },
             config: .previewConfig
         )
     }

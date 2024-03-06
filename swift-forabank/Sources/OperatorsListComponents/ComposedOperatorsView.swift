@@ -87,20 +87,6 @@ public struct ComposedOperatorsView<
     }
 }
 
-extension ComposedOperatorsView {
-    
-    public struct Configuration {
-        
-        let footerViewConfig: FooterViewConfig
-        
-        public init(
-            footerViewConfig: FooterViewConfig
-        ) {
-            self.footerViewConfig = footerViewConfig
-        }
-    }
-}
-
 public struct Operator: Equatable, Identifiable {
     
     public var id: String
