@@ -57,7 +57,7 @@ struct TopUpCardView: View {
             config: .preview)
         .padding(.top, 26)
         .padding(.bottom, 72)
-        .presentationDetents([.height(300)])
+        .presentationDetents([.height(400)])
     }
 }
 
