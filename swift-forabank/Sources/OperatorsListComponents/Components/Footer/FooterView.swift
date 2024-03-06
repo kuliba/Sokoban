@@ -26,36 +26,27 @@ public struct FooterView: View {
     public var body: some View {
         
         switch state {
-        case let .footer(title, description, subtitle):
-            footerView(
-                title,
-                description,
-                subtitle
-            )
+        case let .footer(footer):
+            footerView(footer)
             
-        case let .failure(image, description):
-            failureView(
-                image,
-                description
-            )
+        case let .failure(failure):
+            failureView(failure)
         }
     }
     
     private func footerView(
-        _ title: String,
-        _ description: String,
-        _ subtitle: String
+        _ footer: FooterState.Footer
     ) -> some View {
         
         VStack(spacing: 24) {
             
             VStack(spacing: 16) {
                 
-                Text(title)
+                Text(footer.title)
                     .font(config.titleFont)
                     .foregroundColor(config.titleColor)
                 
-                descriptionView(description)
+                descriptionView(footer.description)
             }
             .padding(.horizontal, 16)
             
@@ -73,7 +64,7 @@ public struct FooterView: View {
                     .padding(.horizontal, 16)
                 }
                 
-                Text(subtitle)
+                Text(footer.subtitle)
                     .font(config.subtitleFont)
                     .foregroundColor(config.subtitleColor)
                     .padding(.horizontal, 16)
@@ -83,18 +74,17 @@ public struct FooterView: View {
     }
     
     private func failureView(
-        _ image: Image,
-        _ description: String
+        _ failure: FooterState.Failure
     ) -> some View {
         
         VStack(spacing: 24) {
             
             Image.defaultIcon(
                 backgroundColor: config.backgroundIcon,
-                icon: image
+                icon: failure.image
             )
             
-            descriptionView(description)
+            descriptionView(failure.description)
                 .padding(.horizontal, 16)
             
             addCompanyButton()
@@ -159,20 +149,20 @@ struct FooterView_Previews: PreviewProvider {
     static var previews: some View {
         
         FooterView(
-            state: .failure(
+            state: .failure(.init(
                 image: .init(systemName: "magnifyingglass"),
                 description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты."
-            ),
+            )),
             event: { _ in },
             config: .previewConfig
         )
         
         FooterView(
-            state: .footer(
+            state: .footer(.init(
                 title: "Нет компании в списке?",
                 description: "Воспользуйтесь другими способами оплаты",
                 subtitle: "Сообщите нам, и мы подключим новую организацию"
-            ),
+            )),
             event: { _ in },
             config: .previewConfig
         )
