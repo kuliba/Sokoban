@@ -141,6 +141,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .accountDetails,
+        .accountDetailsTests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianUI,
@@ -306,6 +308,13 @@ private extension Product {
         ]
     )
     
+    static let accountDetails = library(
+        name: .accountDetails,
+        targets: [
+            .accountDetails
+        ]
+    )
+
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -450,6 +459,7 @@ private extension Product {
         targets: [
             .activateSlider,
             .accountInfoPanel,
+            .accountDetails,
             .cardGuardianUI,
             .productProfileComponents,
             .topUpCardUI,
@@ -1171,6 +1181,32 @@ private extension Target {
         ],
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
     )
+    
+    static let accountDetails = target(
+        name: .accountDetails,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+            .services,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.accountDetails)"
+    )
+    
+    static let accountDetailsTests = testTarget(
+        name: .accountDetailsTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .accountDetails,
+            .services,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.accountDetailsTests)"
+    )
 
     static let buttonWithSheet = target(
         name: .buttonWithSheet,
@@ -1489,6 +1525,7 @@ private extension Target {
         dependencies: [
             .activateSlider,
             .accountInfoPanel,
+            .accountDetails,
             .cardGuardianUI,
             .topUpCardUI,
         ],
@@ -1705,6 +1742,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let accountDetails = byName(
+        name: .accountDetails
     )
     
     static let buttonWithSheet = byName(
@@ -1931,6 +1972,9 @@ private extension String {
 
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
+
+    static let accountDetails = "AccountDetails"
+    static let accountDetailsTests = "AccountDetailsTests"
 
     static let buttonWithSheet = "ButtonWithSheet"
     
