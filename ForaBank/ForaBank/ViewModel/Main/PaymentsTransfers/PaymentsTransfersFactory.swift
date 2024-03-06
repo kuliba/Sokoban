@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OperatorsListComponents
 
 #warning("replace with type from module")
 final class UtilitiesViewModel: ObservableObject {
@@ -21,34 +22,20 @@ final class UtilitiesViewModel: ObservableObject {
         self.state = initialState
         self.loadOperators = loadOperators
     }
+    
     // MARK: - types
     
     struct State {
         
-        let latestPayments: [LatestPayment]
-        let operators: [Operator]
+        let latestPayments: [OperatorsListComponents.LatestPayment]?
+        let operators: [OperatorsListComponents.Operator]?
+        let searchText: String
     }
-    struct LatestPayment: Equatable, Identifiable {
-        
-        let id: String
-        
-        init(id: String = UUID().uuidString) {
-         
-            self.id = id
-        }
-    }
-    struct Operator: Equatable, Identifiable {
-        let id: String
-        
-        init(id: String = UUID().uuidString) {
-            self.id = id
-        }
-    }
+    
     struct Payload {}
     
-    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperatorsCompletion = ([OperatorsListComponents.Operator]) -> Void
     typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
-
 }
 
 struct PaymentsTransfersFactory {
