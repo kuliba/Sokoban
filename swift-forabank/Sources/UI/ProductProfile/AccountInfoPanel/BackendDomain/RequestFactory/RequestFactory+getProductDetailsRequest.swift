@@ -8,6 +8,8 @@
 import Foundation
 import Services
 
+public typealias GetProductDetailsRequestFactory = RequestFactory
+
 public extension RequestFactory {
         
     static func getProductDetailsRequest(
@@ -15,7 +17,7 @@ public extension RequestFactory {
         payload: ProductDetailsPayload
     ) throws -> URLRequest {
         
-        var request = createEmptyRequest(.post, with: url)
+        var request = Services.RequestFactory.createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody
         return request
     }

@@ -9,16 +9,16 @@ import Foundation
 
 public struct CardDetails: Equatable {
     
-    let accountNumber: String
-    let bic: String
-    let cardNumber: String
-    let corrAccount: String
-    let expireDate: String
-    let holderName: String
-    let inn: String
-    let kpp: String
-    let maskCardNumber: String
-    let payeeName: String
+    public let accountNumber: String
+    public let bic: String
+    public let cardNumber: String
+    public let corrAccount: String
+    public let expireDate: String
+    public let holderName: String
+    public let inn: String
+    public let kpp: String
+    public let maskCardNumber: String
+    public let payeeName: String
     
     public init(
         accountNumber: String,

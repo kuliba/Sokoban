@@ -8,14 +8,18 @@
 import Foundation
 import Services
 
+public typealias GetProductDetailsResponseMapper = Services.ResponseMapper
+
+public typealias GetProductDetailsMappingError = Services.ResponseMapper.MappingError
+
 public extension ResponseMapper {
     
     static func mapGetProductDetailsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<ProductDetails> {
+    ) -> Services.ResponseMapper.MappingResult<ProductDetails> {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        Services.ResponseMapper.map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(

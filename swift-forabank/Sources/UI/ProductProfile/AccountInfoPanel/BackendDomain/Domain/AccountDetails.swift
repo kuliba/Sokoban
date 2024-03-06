@@ -9,12 +9,12 @@ import Foundation
 
 public struct AccountDetails: Equatable {
     
-    let accountNumber: String
-    let bic: String
-    let corrAccount: String
-    let inn: String
-    let kpp: String
-    let payeeName: String
+    public let accountNumber: String
+    public let bic: String
+    public let corrAccount: String
+    public let inn: String
+    public let kpp: String
+    public let payeeName: String
     
     public init(
         accountNumber: String,
