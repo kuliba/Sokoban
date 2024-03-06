@@ -119,17 +119,15 @@ final class ResponseMapper_mapGetProductDetailsResponseTests: XCTestCase {
 
 private extension ProductDetails {
     
-    static let accountDetails: Self = .init(
-        details: .accountDetails(.init(
+    static let accountDetails: Self = .accountDetails(.init(
             accountNumber: "4081781000000000001",
             bic: "044525341",
             corrAccount: "30101810300000000341",
             inn: "7704113772",
             kpp: "770401001",
-            payeeName: "Иванов Иван Иванович")))
+            payeeName: "Иванов Иван Иванович"))
     
-    static let cardDetails: Self = .init(
-        details: .cardDetails(.init(
+    static let cardDetails: Self = .cardDetails(.init(
             accountNumber: "4081781000000000001",
             bic: "044525341",
             cardNumber: "4444555566661122",
@@ -139,15 +137,14 @@ private extension ProductDetails {
             inn: "7704113772",
             kpp: "770401001",
             maskCardNumber: "4444 55** **** 1122",
-            payeeName: "Иванов Иван Иванович")))
+            payeeName: "Иванов Иван Иванович"))
     
-    static let depositDetails: Self = .init(
-        details: .depositDetails(.init(
+    static let depositDetails: Self = .depositDetails(.init(
             accountNumber: "4081781000000000001",
             bic: "044525341",
             corrAccount: "30101810300000000341",
             expireDate: "08/25",
             inn: "7704113772",
             kpp: "770401001",
-            payeeName: "Иванов Иван Иванович")))
+            payeeName: "Иванов Иван Иванович"))
 }

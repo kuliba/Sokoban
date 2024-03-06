@@ -2,18 +2,14 @@
 //  ProductDetails.swift
 //
 //
-//  Created by Andryusina Nataly on 05.03.2024.
+//  Created by Andryusina Nataly on 06.03.2024.
 //
 
 import Foundation
 
-public struct ProductDetails: Equatable {
+public enum ProductDetails: Equatable {
     
-    let details: Details
-    
-    public init(
-        details: Details
-    ) {
-        self.details = details
-    }
+    case accountDetails(AccountDetails)
+    case cardDetails(CardDetails)
+    case depositDetails(DepositDetails)
 }

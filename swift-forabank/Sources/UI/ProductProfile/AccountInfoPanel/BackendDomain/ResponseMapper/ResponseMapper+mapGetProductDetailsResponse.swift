@@ -30,7 +30,7 @@ private extension ResponseMapper._DTO {
     
     var data: ProductDetails {
         
-        return .init(details: details.data)
+        return details.data
     }
 }
 
@@ -67,7 +67,7 @@ private extension ResponseMapper {
         case cardDetails(_CardDetails)
         case depositDetails(_DepositDetails)
         
-        var data: Details {
+        var data: ProductDetails {
             
             switch self {
                 
