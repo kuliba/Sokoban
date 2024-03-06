@@ -26,11 +26,10 @@ private extension String {
     func convertToDictionary(
     ) -> [String: String]? {
         
-        if let data = data(using: .utf8) {
-            return try? JSONSerialization.jsonObject(
-                with: data,
-                options: []) as? [String: String]
-        }
-        return nil
+        guard let data = data(using: .utf8) else { return nil }
+        
+        return try? JSONSerialization.jsonObject(
+            with: data,
+            options: []) as? [String: String]
     }
 }
