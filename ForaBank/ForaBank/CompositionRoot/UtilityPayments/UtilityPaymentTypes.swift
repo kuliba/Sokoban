@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OperatorsListComponents
 
 #warning("replace with `UtilityPayment` types from module, like `typealias UtilityPaymentState = UtilityPayment.UtilityPaymentState`, etc")
 
@@ -14,7 +15,13 @@ struct UtilityPaymentState: Equatable {
 }
 
 
-enum UtilityPaymentEvent: Equatable {}
+enum UtilityPaymentEvent: Equatable {
+    
+    case addCompany
+    case composed(ComposedOperatorsEvent)
+    case payByInstruction
+}
+
 enum UtilityPaymentEffect: Equatable {}
 
 final class UtilityPaymentReducer {}
@@ -26,6 +33,7 @@ extension UtilityPaymentReducer {
         _ event: Event
     ) -> (State, Effect?) {
         
+        fatalError()
     }
 }
 

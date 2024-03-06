@@ -10,12 +10,12 @@ import SwiftUI
 public struct OperatorView: View {
     
     let `operator`: Operator
-    let event: (Operator.ID) -> Void
+    let event: (Operator) -> Void
     let config: OperatorViewConfig
     
     public init(
         `operator`: Operator,
-        event: @escaping (Operator.ID) -> Void,
+        event: @escaping (Operator) -> Void,
         config: OperatorViewConfig
     ) {
         self.`operator` = `operator`
@@ -25,7 +25,7 @@ public struct OperatorView: View {
     
     public var body: some View {
         
-        Button(action: { event(`operator`.id) }) {
+        Button(action: { event(`operator`) }) {
             
             HStack(spacing: 16) {
                  

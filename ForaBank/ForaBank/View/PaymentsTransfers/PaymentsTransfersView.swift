@@ -230,7 +230,7 @@ struct PaymentsTransfersView: View {
                 )
             
         case let .utilities(utilitiesRoute):
-            utilitiesView(utilitiesRoute.viewModel)
+            utilityOperatorPicker(utilitiesRoute.viewModel)
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.utilitiesRoute?.destination },
@@ -270,7 +270,7 @@ struct PaymentsTransfersView: View {
     }
     
     private func failureView(
-        _ `operator`: UtilitiesViewModel.Operator
+        _ `operator`: OperatorsListComponents.Operator
     ) -> some View {
         
         VStack(spacing: 32) {
@@ -290,7 +290,7 @@ struct PaymentsTransfersView: View {
     }
     
     private func utilityServicePicker(
-        _ `operator`: UtilitiesViewModel.Operator,
+        _ `operator`: OperatorsListComponents.Operator,
         _ utilityServices: [UtilityService]
     ) -> some View {
         VStack(spacing: 32) {
@@ -373,32 +373,13 @@ struct PaymentsTransfersView: View {
         )
     }
     
-    private func utilitiesView(
+    private func utilityOperatorPicker(
         _ viewModel: UtilitiesViewModel
     ) -> some View {
         
-        UtilitiesView(
+        UtilityOperatorPicker(
             state: viewModel.state,
-            onLatestPaymentTap: { self.viewModel.event(.latestPaymentTapped($0)) },
-            onOperatorTap: { self.viewModel.event(.operatorTapped($0)) },
-            footer: { isExpanded in
-                
-                VStack(spacing: 32) {
-                    
-                    Button("Оплатить по реквизитам") {
-                        
-                        self.viewModel.event(.payByRequisites)
-                    }
-                    
-                    if isExpanded {
-                        
-                        Button("Добавить организацию") {
-                            
-                            self.viewModel.event(.addCompany)
-                        }
-                    }
-                }
-            }
+            event: { self.viewModel.event(.utilityPayment($0)) }
         )
     }
     
