@@ -1949,6 +1949,9 @@
 		83E82B732A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */; };
 		83E84BC429E42CD800E1A445 /* PaymentsServicesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */; };
 		83F686362B988A0F00B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */; };
+		83F686382B98D49000B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */; };
+		83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */; };
+		83F6863C2B98D59900B87AAB /* GetProductDetailsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F6863B2B98D59900B87AAB /* GetProductDetailsFactory.swift */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
 		83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */; };
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
@@ -4450,6 +4453,9 @@
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
 		83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesData.swift; sourceTree = "<group>"; };
 		83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
+		83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
+		83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDetailsRequest.swift"; sourceTree = "<group>"; };
+		83F6863B2B98D59900B87AAB /* GetProductDetailsFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetProductDetailsFactory.swift; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -6912,6 +6918,7 @@
 				C15CB8E52B7EF2BF00718B49 /* OperatorsList */,
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
 				2A58FABE2AD7355700BD1967 /* SessionID.swift */,
+				83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */,
 				2A5190352A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift */,
 				2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */,
 				2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */,
@@ -10781,6 +10788,7 @@
 			isa = PBXGroup;
 			children = (
 				8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */,
+				83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */,
 				8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */,
 				83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */,
 			);
@@ -10798,6 +10806,7 @@
 		8353CD5F2B57F65A005F7D1A /* CardStatement */ = {
 			isa = PBXGroup;
 			children = (
+				83F6863B2B98D59900B87AAB /* GetProductDetailsFactory.swift */,
 				8353CD602B57F699005F7D1A /* CardStatementFactory.swift */,
 				83D962B02B63C3570092C61C /* GetProductDynamicParamsListFactory.swift */,
 				83BCA20E2B9887E4002CD83D /* GetProductDetailsFactory.swift */,
@@ -14955,6 +14964,7 @@
 				5065D9CB28F2BC5000529884 /* PaymentsSuccessViewModel.swift in Sources */,
 				77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
+				83F6863C2B98D59900B87AAB /* GetProductDetailsFactory.swift in Sources */,
 				2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */,
 				7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */,
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
@@ -14993,6 +15003,7 @@
 				2A5AEF2C2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
+				83F686382B98D49000B87AAB /* Services+getProductDetails.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */,
 				5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */,
@@ -15349,6 +15360,7 @@
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */,
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,
+				83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				2A7688D32AF3914C00045293 /* Store.swift in Sources */,

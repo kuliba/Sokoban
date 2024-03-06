@@ -1,5 +1,5 @@
 //
-//  RequestFactory+.swift
+//  RequestFactory+getProductDetailsRequest.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 06.03.2024.
