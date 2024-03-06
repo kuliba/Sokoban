@@ -9,7 +9,6 @@ import CloudKit
 import Foundation
 import ServerAgent
 import CardStatementAPI
-import AccountInfoPanel
 
 //MARK: - Actions
 
@@ -930,78 +929,50 @@ extension Model {
     }
     
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
-        Task { try? await handleProductDetailsAsync(payload) }
-    }
-
-    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws {
         
-        let requestPayload: ProductDetailsPayload? = {
-            
-            switch payload.type {
-                
-            case .card:
-                return .cardId(.init(payload.id))
-            case .account:
-                return .accountId(.init(payload.id))
-            case .deposit:
-                return .depositId(.init(payload.id))
-            case .loan:
-                if let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData  {
-                    return .accountId(.init(product.settlementAccountId))
-                }
-                return nil
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        var command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: nil))
+        
+        switch payload.type {
+        case .card:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: payload.id, depositId: nil))
+        case .deposit:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.id))
+        case .account:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
+        case .loan:
+            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
+                return
             }
-        }()
+            
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
+        }
         
-        if let requestPayload {
+        serverAgent.executeCommand(command: command) { result in
             
-            let details = try await Services.makeGetProductDetails(
-                httpClient: self.authenticatedHTTPClient(),
-                logger: LoggerAgent.shared,
-                payload: requestPayload
-            )
-            
-            // TODO: убрать!!!!! заменить на ProductDetails из AccountInfoPanel
-            let productDetailsData: ProductDetailsData = {
-                
-                switch details {
-                case let .accountDetails(value):
-                     return .init(
-                        accountNumber: value.accountNumber,
-                        bic: value.bic,
-                        corrAccount: value.corrAccount,
-                        inn: value.inn,
-                        kpp: value.kpp,
-                        payeeName: value.payeeName,
-                        maskCardNumber: .none,
-                        cardNumber: .none
-                        )
-                case let .cardDetails(value):
-                    return .init(
-                       accountNumber: value.accountNumber,
-                       bic: value.bic,
-                       corrAccount: value.corrAccount,
-                       inn: value.inn,
-                       kpp: value.kpp,
-                       payeeName: value.payeeName,
-                       maskCardNumber: value.maskCardNumber,
-                       cardNumber: value.cardNumber
-                       )
-
-                case let .depositDetails(value):
-                       return .init(
-                           accountNumber: value.accountNumber,
-                           bic: value.bic,
-                           corrAccount: value.corrAccount,
-                           inn: value.inn,
-                           kpp: value.kpp,
-                           payeeName: value.payeeName,
-                           maskCardNumber: .none,
-                           cardNumber: .none
-                           )
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let details = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: details))
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
-            }()
-            self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetailsData))
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
         }
     }
     
