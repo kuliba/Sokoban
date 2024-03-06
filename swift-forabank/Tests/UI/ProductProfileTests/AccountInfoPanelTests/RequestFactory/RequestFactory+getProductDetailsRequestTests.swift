@@ -33,30 +33,73 @@ final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_createRequest_shouldSetHTTPBody() throws {
+    func test_createRequestAccountId_shouldSetHTTPBody() throws {
         
-        let payload = anyPayload()
+        let payload = anyPayload(.accountId(1))
         let request = try createRequest(payload: payload)
      
         let body = try request.decodedBody(as: Body.self)
         
-        XCTAssertNoDiff(body.accountId, payload.accountId?.rawValue)
-        XCTAssertNoDiff(body.cardId, payload.cardId?.rawValue)
-        XCTAssertNoDiff(body.depositId, payload.depositId?.rawValue)
+        XCTAssertNoDiff(body.accountId, payload.productId.value)
+        XCTAssertNil(body.cardId)
+        XCTAssertNil(body.depositId)
     }
     
-    func test_createRequest_shouldSetHTTPBody_JSON() throws {
+    func test_createRequestCardId_shouldSetHTTPBody() throws {
         
-        let request = try createRequest(payload: .init(
-            accountId: 111,
-            cardId: 222,
-            depositId: 333))
+        let payload = anyPayload(.cardId(2))
+        let request = try createRequest(payload: payload)
+     
+        let body = try request.decodedBody(as: Body.self)
+        
+        XCTAssertNoDiff(body.cardId, payload.productId.value)
+        XCTAssertNil(body.accountId)
+        XCTAssertNil(body.depositId)
+    }
+
+    func test_createRequestDepositId_shouldSetHTTPBody() throws {
+        
+        let payload = anyPayload(.depositId(3))
+        let request = try createRequest(payload: payload)
+     
+        let body = try request.decodedBody(as: Body.self)
+        
+        XCTAssertNoDiff(body.depositId, payload.productId.value)
+        XCTAssertNil(body.accountId)
+        XCTAssertNil(body.cardId)
+    }
+
+    func test_createRequestAccountId_shouldSetHTTPBody_JSON() throws {
+        
+        let request = try createRequest(payload: .init(productId: .accountId(1)))
         
         try assertBody(of: request, hasJSON: """
         {
-            "accountId": \(111),
-            "cardId": \(222),
-            "depositId": \(333)
+            "accountId": \(1)
+        }
+        """
+        )
+    }
+    
+    func test_createRequestCardId_shouldSetHTTPBody_JSON() throws {
+        
+        let request = try createRequest(payload: .init(productId: .cardId(2)))
+        
+        try assertBody(of: request, hasJSON: """
+        {
+            "cardId": \(2)
+        }
+        """
+        )
+    }
+
+    func test_createRequestDepositId_shouldSetHTTPBody_JSON() throws {
+        
+        let request = try createRequest(payload: .init(productId: .depositId(3)))
+        
+        try assertBody(of: request, hasJSON: """
+        {
+            "depositId": \(3)
         }
         """
         )
@@ -66,10 +109,7 @@ final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: ProductDetailsPayload = .init(
-            accountId: 1,
-            cardId: 2,
-            depositId: 3)
+        payload: ProductDetailsPayload = .init(productId: .accountId(1))
     ) throws -> URLRequest {
         
         return try RequestFactory.getProductDetailsRequest(
@@ -79,16 +119,10 @@ final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
     }
     
     private func anyPayload(
-        _ accountId: ProductDetailsPayload.AccountId? = 1,
-        _ cardId: ProductDetailsPayload.CardId? = 2,
-        _ depositId: ProductDetailsPayload.DepositId? = 3
+        _ productId: ProductDetailsPayload.ProductId
     ) -> ProductDetailsPayload {
         
-        .init(
-            accountId: accountId,
-            cardId: cardId,
-            depositId: depositId
-        )
+        .init(productId: productId)
     }
     
     private struct Body: Decodable {
@@ -97,4 +131,20 @@ final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
         let cardId: Int?
         let depositId: Int?
     }
+}
+
+private extension ProductDetailsPayload.ProductId {
+    
+    var value: Int {
+        
+        switch self {
+        case let .accountId(accountId):
+            return accountId.rawValue
+        case let .cardId(cardId):
+            return cardId.rawValue
+        case let .depositId(depositId):
+            return depositId.rawValue
+        }
+    }
+
 }

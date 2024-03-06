@@ -10,18 +10,20 @@ import Tagged
 
 public struct ProductDetailsPayload {
     
-    let accountId: AccountId?
-    let cardId: CardId?
-    let depositId: DepositId?
+    let productId: ProductId
     
-    public init(
-        accountId: AccountId?,
-        cardId: CardId?,
-        depositId: DepositId?
-    ) {
-        self.accountId = accountId
-        self.cardId = cardId
-        self.depositId = depositId
+    public init(productId: ProductId) {
+        self.productId = productId
+    }
+}
+
+public extension ProductDetailsPayload {
+    
+    enum ProductId {
+        
+        case accountId(AccountId)
+        case cardId(CardId)
+        case depositId(DepositId)
     }
 }
 
@@ -45,20 +47,17 @@ extension ProductDetailsPayload {
             
             var parameters: [String: Int] = [:]
             
-            if let accountId {
-                
+            switch productId {
+            case let .accountId(accountId):
                 parameters["accountId"] = accountId.rawValue
-            }
-            
-            if let cardId {
-                
-                parameters["cardId"] = cardId.rawValue
-            }
 
-            if let depositId {
-                
+            case let .cardId(cardId):
+                parameters["cardId"] = cardId.rawValue
+
+            case let .depositId(depositId):
                 parameters["depositId"] = depositId.rawValue
             }
+            
             return try JSONSerialization.data(withJSONObject: parameters as [String: Int])
         }
     }
