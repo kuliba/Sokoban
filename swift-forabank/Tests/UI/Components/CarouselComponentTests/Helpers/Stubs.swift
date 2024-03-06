@@ -18,10 +18,21 @@ extension Array where Element == Product {
         .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3
     ]
     
+    static let cardsWithSticker: Self = [
+        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
+        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3, .sticker
+    ]
+    
     static let moreProducts: Self = [
         .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4,
         .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
         .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
+    ]
+    
+    static let moreProductsWithSticker: Self = [
+        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4,
+        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
+        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7, .sticker
     ]
     
     static let nonCardProducts: Self = [
@@ -81,12 +92,18 @@ extension Product {
     static let cardAdditionalOther6: Self = .init(id: 22, .card, .additionalOther, 13)
     static let cardAdditionalSelf4: Self = .init(id: 23, .card, .additionalSelf, 14)
     static let cardAdditionalOther7: Self = .init(id: 24, .card, .additionalOther, 15)
+    
+    static let sticker: Self = .init(id: 25, .card, .sticker, 16)
 }
 
 extension Array where Element == ProductGroup {
     
     static let cards: Self = [
         .init(id: .card, products: .cards)
+    ]
+    
+    static let cardsWithSticker: Self = [
+        .init(id: .card, products: .cardsWithSticker)
     ]
     
     static let moreProducts: Self = [
@@ -149,6 +166,10 @@ extension ProductSeparators {
     
     static let separatorsForPreviewProducts: Self = [.card: [
         Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id]
+    ]
+    
+    static let separatorsForPreviewProductsWithSticker: Self = [.card: [
+        Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id, Product.cardAdditionalOther3.id]
     ]
     
     static let separatorsForMoreProducts: Self = [.card: [
