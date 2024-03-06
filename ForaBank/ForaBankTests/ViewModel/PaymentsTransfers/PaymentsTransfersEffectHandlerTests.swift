@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import OperatorsListComponents
 import XCTest
 
 final class PaymentsTransfersEffectHandlerTests: XCTestCase {
@@ -167,16 +168,16 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private func makeOperator(
         _ id: String = UUID().uuidString
-    ) -> UtilitiesViewModel.Operator {
+    ) -> OperatorsListComponents.Operator {
         
-        .init(id: id)
+        .init(id: id, title: id, subtitle: nil, image: nil)
     }
     
     private func makeLatestPayment(
-        _ id: String = UUID().uuidString
-    ) -> UtilitiesViewModel.LatestPayment {
+        _ title: String = UUID().uuidString
+    ) -> OperatorsListComponents.LatestPayment {
         
-        .init(id: id)
+        .init(image: nil, title: title, amount: "")
     }
     
     private func makeStartPaymentPayload(
