@@ -47,20 +47,16 @@ final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
-        let accountId = 1111
-        let cardId = 2222
-        let depositId = 3333
-
         let request = try createRequest(payload: .init(
-            accountId: .init(accountId),
-            cardId: .init(cardId),
-            depositId: .init(depositId)))
+            accountId: 111,
+            cardId: 222,
+            depositId: 333))
         
         try assertBody(of: request, hasJSON: """
         {
-            "accountId": \(Int(accountId)),
-            "cardId": \(Int(cardId)),
-            "depositId": \(Int(depositId))
+            "accountId": \(111),
+            "cardId": \(222),
+            "depositId": \(333)
         }
         """
         )
