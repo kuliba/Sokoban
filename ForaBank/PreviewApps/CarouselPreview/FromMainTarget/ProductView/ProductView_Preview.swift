@@ -190,6 +190,82 @@ extension ProductView.ViewModel {
         productType: .card,
         cardAction: { _ in }
     )
+    
+    static let additionalMain = ProductView.ViewModel(
+        id: 9,
+        header: .make(period: nil),
+        cardInfo: .init(
+            name: "Основная",
+            owner: "Иванов",
+            cvvTitle: .cvvTitle,
+            cardWiggle: false,
+            fullNumber: .number,
+            numberMasked: .maskedNumber
+        ),
+        footer: .visa,
+        statusAction: nil,
+        appearance: .whiteSample(),
+        isUpdating: false,
+        productType: .card,
+        cardAction: { _ in }
+    )
+    
+    static let additionalRegular = ProductView.ViewModel(
+        id: 9,
+        header: .make(period: nil),
+        cardInfo: .init(
+            name: "Regular",
+            owner: "Иванов",
+            cvvTitle: .cvvTitle,
+            cardWiggle: false,
+            fullNumber: .number,
+            numberMasked: .maskedNumber
+        ),
+        footer: .visa,
+        statusAction: nil,
+        appearance: .whiteSample(),
+        isUpdating: false,
+        productType: .card,
+        cardAction: { _ in }
+    )
+    
+    static let additionalCard = ProductView.ViewModel(
+        id: 10,
+        header: .make(period: nil),
+        cardInfo: .init(
+            name: "Дополнительная",
+            owner: "Иванов",
+            cvvTitle: .cvvTitle,
+            cardWiggle: false,
+            fullNumber: .number,
+            numberMasked: .maskedNumber
+        ),
+        footer: .visa,
+        statusAction: nil,
+        appearance: .whiteRIO(),
+        isUpdating: false,
+        productType: .card,
+        cardAction: { _ in }
+    )
+    
+    static let stickerCard = ProductView.ViewModel(
+        id: 10,
+        header: .make(period: nil),
+        cardInfo: .init(
+            name: "Дополнительная",
+            owner: "Иванов",
+            cvvTitle: .cvvTitle,
+            cardWiggle: false,
+            fullNumber: .number,
+            numberMasked: .maskedNumber
+        ),
+        footer: .visa,
+        statusAction: nil,
+        appearance: .whiteRIO(),
+        isUpdating: false,
+        productType: .card,
+        cardAction: { _ in }
+    )
 }
 
 extension Image {

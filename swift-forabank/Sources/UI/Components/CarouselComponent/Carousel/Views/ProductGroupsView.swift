@@ -7,28 +7,33 @@
 
 import SwiftUI
 
-struct ProductGroupsView<ProductView: View>: View {
-        
+struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView: View>: View {
+    
     var state: CarouselState
     let groups: CarouselState.ProductGroups
     let event: (CarouselEvent) -> Void
+    
     let productView: (Product) -> ProductView
+    let stickerView: (Product) -> StickerView?
+    let buttonNewProduct: () -> ButtonNewProduct?
+    
+    let carouselConfiguration: CarouselConfiguration
     
     private let coordinateSpaceName = "scrollingEndedView_coordinateSpace"
     
     var body: some View {
-     
+        
         groupView(groups: groups)
     }
     
     private func groupView(groups: CarouselState.ProductGroups) -> some View {
-                
+        
         ScrollView(.horizontal, showsIndicators: false) {
-                        
+            
             ScrollViewReader { scrollProxy in
                 
-                HStack {
-                                        
+                HStack(alignment: .top, spacing: carouselConfiguration.productDimensions.spacing) {
+                    
                     ForEach(groups) { group in
                         
                         visibleProducts(for: group)
@@ -37,6 +42,9 @@ struct ProductGroupsView<ProductView: View>: View {
                         
                         productGroupSeparator(for: group)
                     }
+                    
+                    buttonNewProduct()
+                        .frame(carouselConfiguration.productDimensions, for: \.new)
                 }
                 .onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })
                 .onChange(of: state.selectedProductType) { productType in
@@ -44,6 +52,7 @@ struct ProductGroupsView<ProductView: View>: View {
                     guard let productType else { return }
                     
                     withAnimation {
+                        
                         scrollProxy.scrollTo(productType, anchor: .leading)
                     }
                 }
@@ -65,35 +74,60 @@ struct ProductGroupsView<ProductView: View>: View {
     
     private func visibleProducts(for group: ProductGroup) -> some View {
         
-        ForEach(group.visibleProducts, content: { product in
-            
-            productView(product)
-                .id(group.id)
-            
-            if state.shouldAddSeparator(for: product) {
+        ForEach(
+            state.visibleProducts(for: group),
+            content: { product in
                 
-                // TODO: - Отрисовка разделителей
-                Divider()
-                    .frame(width: 10, height: 100)
-                    .overlay(Color.green)
-            }
-        })
+                ZStack {
+                    
+                    shadow()
+                    
+                    if product.id.cardType?.isSticker == true {
+                        
+                        stickerView(product)
+                            .id(group.id)
+                            .frame(carouselConfiguration.productDimensions, for: \.product)
+                            .accessibilityIdentifier("mainProduct")
+                    }
+                    else {
+                        
+                        productView(product)
+                            .id(group.id)
+                            .frame(carouselConfiguration.productDimensions, for: \.product)
+                            .accessibilityIdentifier("mainProduct")
+                    }
+                }
+                
+                if state.shouldAddSeparator(for: product) { separator() }
+            })
+    }
+    
+    private func shadow() -> some View {
+        
+        RoundedRectangle(cornerRadius: 12)
+            .frame(carouselConfiguration.productDimensions, for: \.productShadow)
+            .foregroundColor(carouselConfiguration.style.colors.groupShadowForeground)
+            .opacity(0.15)
+            .offset(x: 0, y: 13)
+            .blur(radius: 8)
     }
     
     @ViewBuilder
     private func spoiler(for group: ProductGroup) -> some View {
-        
-        if group.products.count > 3 {
-                
+                        
+        if state.shouldAddSpoiler(for: group) {
+            
             HStack {
                 
                 GeometryReader { geometry in
                     
-                    Button(group.toggleTitle) {
-                        
+                    spoilerInnerView(
+                        isCollapsed: state.productGroupIsCollapsed(group),
+                        spoilerTitle: state.spoilerTitle(for: group)
+                    ) {
                         let xOffset = geometry.frame(in: .global).origin.x
                         let screenWidth = UIScreen.main.bounds.width
-                                                                
+                        
                         event(.toggle(
                             id: group.id,
                             screenwidth: screenWidth,
@@ -101,9 +135,8 @@ struct ProductGroupsView<ProductView: View>: View {
                         )
                     }
                 }
+                .frame(carouselConfiguration.productDimensions, for: \.button)
             }
-            // TODO: - Размеры кнопки в конфигурацию
-            .frame(width: 30, height: 20)
             .id("spoiler\(group.id)")
         }
     }
@@ -111,38 +144,62 @@ struct ProductGroupsView<ProductView: View>: View {
     @ViewBuilder
     private func productGroupSeparator(for group: ProductGroup) -> some View {
         
-        if state.shouldAddGroupSeparator(for: group) {
-            // TODO: - Отрисовка разделителей
-            Divider()
-                .frame(width: 10, height: 100)
-                .overlay(Color.blue)
+        if state.shouldAddGroupSeparator(for: group) { separator() }
+    }
+    
+    func separator() -> some View {
+        
+        Capsule(style: .continuous)
+            .foregroundColor(carouselConfiguration.style.colors.separatorForeground)
+            .frame(carouselConfiguration.productDimensions, for: \.separator)
+            // wrap in another frame to center align
+            .frame(height: carouselConfiguration.productDimensions.sizes.product.height)
+    }
+    
+    func spoilerInnerView(
+        isCollapsed: Bool,
+        spoilerTitle: String?,
+        onTap: @escaping() -> Void
+    ) -> some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(carouselConfiguration.style.colors.groupButtonForegroundPrimary)
+            
+            if isCollapsed {
+                
+                Text(spoilerTitle ?? "")
+                    .font(carouselConfiguration.style.fonts.groupButton)
+                    .foregroundColor(carouselConfiguration.style.colors.groupButtonForegroundSecondary)
+            } else {
+                
+                carouselConfiguration.style.images.spoilerImage
+                    .foregroundColor(carouselConfiguration.style.colors.groupButtonIconForeground)
+            }
+            
+        }.onTapGesture {
+            
+            onTap()
         }
     }
 }
 
-extension ProductGroup {
+private extension View {
     
-    var visibleProducts: [Product] {
+    typealias Dimensions = CarouselConfiguration.ProductDimensions
+
+    @ViewBuilder
+    func frame(
+        _ dimensions: Dimensions,
+        for keyPath: KeyPath<Dimensions.Sizes, CGSize>
+    ) -> some View {
         
-        switch state {
-        case .collapsed:
-            // TODO: - Перенести в конфигурацию
-            return .init(products.prefix(3))
-            
-        case .expanded:
-            return products
-        }
-    }
-    
-    #warning("Убрать при интеграции в основной таргет")
-    var toggleTitle: String {
-        
-        switch state {
-        case .collapsed:
-            return "Exp"
-            
-        case .expanded:
-            return "Col"
-        }
+        EmptyView()
+        let size: CGSize = dimensions.sizes[keyPath: keyPath]
+        self.frame(
+            width: size.width,
+            height: size.height
+        )
     }
 }

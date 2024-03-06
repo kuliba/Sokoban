@@ -2167,6 +2167,9 @@
 		D4BD608D2B97511100909F43 /* ProductCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60802B97511000909F43 /* ProductCardData.swift */; };
 		D4BD608E2B97511100909F43 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4BD60822B97511000909F43 /* Media.xcassets */; };
 		D4BD60902B97512400909F43 /* PinCodeUI in Frameworks */ = {isa = PBXBuildFile; productRef = D4BD608F2B97512400909F43 /* PinCodeUI */; };
+		D4BD60922B97DF5500909F43 /* ButtonNewProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60912B97DF5500909F43 /* ButtonNewProduct.swift */; };
+		D4BD60962B98920D00909F43 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = D4BD60952B98920D00909F43 /* PaymentSticker */; };
+		D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60972B98A24E00909F43 /* StickerView.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
@@ -4646,6 +4649,8 @@
 		D4BD607F2B97511000909F43 /* ProductData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductData.swift; sourceTree = "<group>"; };
 		D4BD60802B97511000909F43 /* ProductCardData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCardData.swift; sourceTree = "<group>"; };
 		D4BD60822B97511000909F43 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		D4BD60912B97DF5500909F43 /* ButtonNewProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNewProduct.swift; sourceTree = "<group>"; };
+		D4BD60972B98A24E00909F43 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -5094,6 +5099,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4BD60902B97512400909F43 /* PinCodeUI in Frameworks */,
+				D4BD60962B98920D00909F43 /* PaymentSticker in Frameworks */,
 				D47C7EE22B97166A00A35A25 /* CarouselComponent in Frameworks */,
 				D47C7EE42B97167100A35A25 /* RxViewModel in Frameworks */,
 			);
@@ -11433,6 +11439,8 @@
 			children = (
 				D4BD607B2B97511000909F43 /* ProductFrontView.swift */,
 				D4BD607C2B97511000909F43 /* CardActivateSliderView.swift */,
+				D4BD60912B97DF5500909F43 /* ButtonNewProduct.swift */,
+				D4BD60972B98A24E00909F43 /* StickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -13385,6 +13393,7 @@
 				D47C7EE12B97166A00A35A25 /* CarouselComponent */,
 				D47C7EE32B97167100A35A25 /* RxViewModel */,
 				D4BD608F2B97512400909F43 /* PinCodeUI */,
+				D4BD60952B98920D00909F43 /* PaymentSticker */,
 			);
 			productName = CarouselPreview;
 			productReference = D47C7ECF2B9715F700A35A25 /* CarouselPreview.app */;
@@ -14420,11 +14429,13 @@
 				D47C7ED42B9715F700A35A25 /* ContentView.swift in Sources */,
 				D4BD608A2B97511100909F43 /* CardActivateSliderView.swift in Sources */,
 				D47C7ED22B9715F700A35A25 /* CarouselPreviewApp.swift in Sources */,
+				D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */,
 				D4BD608D2B97511100909F43 /* ProductCardData.swift in Sources */,
 				D4BD60842B97511100909F43 /* Date+Extensions.swift in Sources */,
 				D4BD60872B97511100909F43 /* ProductViewComponent.swift in Sources */,
 				D4BD60892B97511100909F43 /* ProductFrontView.swift in Sources */,
 				D4BD60852B97511100909F43 /* View+Extension.swift in Sources */,
+				D4BD60922B97DF5500909F43 /* ButtonNewProduct.swift in Sources */,
 				D4BD60832B97511100909F43 /* ColorData.swift in Sources */,
 				D4BD60862B97511100909F43 /* ProductView_Preview.swift in Sources */,
 				D4BD608B2B97511100909F43 /* ProductType.swift in Sources */,
@@ -19863,6 +19874,10 @@
 		D4BD608F2B97512400909F43 /* PinCodeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PinCodeUI;
+		};
+		D4BD60952B98920D00909F43 /* PaymentSticker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentSticker;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;

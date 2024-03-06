@@ -13,20 +13,83 @@ struct SelectorView: View {
     
     let state: Selector
     let event: (Product.ID.ProductType) -> Void
-    
+    let configuration: SelectorConfiguration
+        
     var body: some View {
         
-        HStack {
-            ForEach(state.items.uniqueValues, id: \.self, content: productTypeView)
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: configuration.appearance.itemSpacing) {
+                                
+                ForEach(state.items.uniqueValues, id: \.self) { productType in
+                    
+                    Group {
+                        
+                        labelView(
+                            title: productType.pluralName,
+                            shouldSelect: productType == state.selected,
+                            appearance: configuration.appearance,
+                            style: configuration.style) {
+                                
+                                event(productType)
+                            }
+
+                    }
+                    .frame(height: configuration.carouselSizing.selectorOptionsFrameHeight)
+                    .accessibilityIdentifier("optionProductTypeSelection")
+                }
+            }
         }
     }
+}
+
+extension SelectorView {
     
-    private func productTypeView(
-        productType: Product.ID.ProductType
+    @ViewBuilder
+    private func labelView(
+        title: String,
+        shouldSelect: Bool,
+        appearance: SelectorConfiguration.Appearance,
+        style: SelectorConfiguration.Style,
+        action: @escaping () -> Void
     ) -> some View {
         
-        Text(productType.pluralName)
-            .foregroundColor(productType == state.selected ? .orange : .gray)
-            .onTapGesture { event(productType) }
+        let optionTextForeground = shouldSelect
+            ? style.colors.optionTextForeground.selected
+            : style.colors.optionTextForeground.default
+        
+        let optionShapeForeground = shouldSelect
+            ? style.colors.optionShapeForeground.selected
+            : style.colors.optionShapeForeground.default
+        
+        Group {
+            switch appearance {
+            case .template:
+                
+                Text(title)
+                    .font(style.fonts.optionTextFont)
+                    .foregroundColor(optionTextForeground)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Capsule().foregroundColor(optionShapeForeground))
+                
+            case .products, .productsSmall:
+                
+                HStack(spacing: 4) {
+                    
+                    Circle()
+                        .frame(width: 4, height: 4, alignment: .center)
+                        .foregroundColor(optionShapeForeground)
+                    
+                    Text(title)
+                        .font(style.fonts.optionTextFont)
+                        .foregroundColor(optionTextForeground)
+                        .padding(.vertical, 6)
+                }
+            }
+        }
+        .onTapGesture {
+            action()
+        }
     }
 }

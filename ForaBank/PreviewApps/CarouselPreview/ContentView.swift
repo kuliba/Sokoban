@@ -8,20 +8,32 @@
 import RxViewModel
 import SwiftUI
 import CarouselComponent
+import PaymentSticker
 
 struct ContentView: View {
         
     var body: some View {
     
+        
         CarouselMainView(
-            viewModel: .init(initialState: .init(products: .allProducts))) { product in
+            viewModel: .init(initialState: .init(products: .allProductsWithSticker))) { product in
                 
                 switch product.id.type {
                 case .account:
                     return ProductView(viewModel: .account)
                     
                 case .card:
-                    return ProductView(viewModel: .classic)
+                    if product.id.cardType?.isAdditional == true {
+                        return ProductView(viewModel: .additionalCard)
+                    }
+                    else {
+                        if product.id.cardType == .main {
+                            return ProductView(viewModel: .additionalMain)
+                        }
+                        else {
+                            return ProductView(viewModel: .additionalRegular)
+                        }
+                    }
                     
                 case .deposit:
                     return ProductView(viewModel: .depositProfile)
@@ -52,8 +64,46 @@ struct CarouselMainView: View {
         
         CarouselWrapperView(
             viewModel: viewModel,
-            productView: productView
+            productView: productView, 
+            stickerView: 
+                { _ in
+                    StickerView(
+                        viewModel: .init(
+                            title: "Cтикер",
+                            subTitle: "Тест",
+                            backgroundImage: Image("StickerPreview"),
+                            onTap: { },
+                            onHide: { }
+                        )
+                    )
+                },
+            buttonNewProduct: { ButtonNewProduct(viewModel: .sample) },
+            carouselComponentConfiguration: carouselComponentConfiguration
         )
+    }
+    
+    var carouselComponentConfiguration: CarouselComponentConfiguration {
+        
+        .init(
+            carouselConfiguration: .init(
+                style: .init(colors: .init(
+                    groupShadowForeground: Color(hex: "#1C1C1C"),
+                    groupButtonForegroundPrimary: Color.bordersDivider,
+                    groupButtonForegroundSecondary: Color.textSecondary,
+                    groupButtonIconForeground: Color.bordersDivider,
+                    separatorForeground: Color.bordersDivider),
+                             fonts: .init(groupButton: Font.custom("Inter-Medium", size: 14.0)),
+                             images: .init(spoilerImage: Image("shevronDown"))), productDimensions: .regular),
+            selectorConfiguration: .init(
+                appearance: .template,
+                style:
+                    .init(
+                        colors: .init(
+                            optionTextForeground: .init(default: Color.textPlaceholder, selected: Color.textSecondary),
+                            optionShapeForeground: .init(default: .white, selected: Color.grayLightest)),
+                        fonts: .init(optionTextFont: Font.custom("Inter", size: 12.0))),
+                carouselSizing: .small)
+            )
     }
 }
 

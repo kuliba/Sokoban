@@ -31,3 +31,33 @@ public struct ProductGroup: Equatable, Identifiable {
         case collapsed, expanded
     }
 }
+
+extension ProductGroup {
+    
+    func visibleProducts(with prefix: Int) -> [Product] {
+        
+        switch state {
+        case .collapsed:
+            return .init(products.prefix(prefix))
+            
+        case .expanded:
+            return products
+        }
+    }
+    
+    func spoilerTitle(with prefix: Int) -> String? {
+        
+        switch state {
+        case .collapsed:
+            let numberIfItemsUnderSpoiler = products.count - prefix
+            
+            guard numberIfItemsUnderSpoiler > 0
+            else { return nil }
+            
+            return "+ \(numberIfItemsUnderSpoiler)"
+            
+        case .expanded:
+            return nil
+        }
+    }
+}
