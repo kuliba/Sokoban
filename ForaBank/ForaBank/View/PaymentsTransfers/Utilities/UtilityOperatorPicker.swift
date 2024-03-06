@@ -1,5 +1,5 @@
 //
-//  UtilitiesView.swift
+//  UtilityOperatorPicker.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 27.02.2024.
@@ -8,7 +8,7 @@
 import OperatorsListComponents
 import SwiftUI
 
-struct UtilitiesView: View {
+struct UtilityOperatorPicker: View {
     
     let state: UtilitiesViewModel.State
     let event: (UtilityPaymentEvent) -> Void
@@ -77,7 +77,7 @@ struct UtilitiesView: View {
 //    
 //    static var previews: some View {
 //        
-//        UtilitiesView(
+//        UtilityOperatorPicker(
 //            state: .init(
 //                latestPayments: [],
 //                operators: []

@@ -230,7 +230,7 @@ struct PaymentsTransfersView: View {
                 )
             
         case let .utilities(utilitiesRoute):
-            utilitiesView(utilitiesRoute.viewModel)
+            utilityOperatorPicker(utilitiesRoute.viewModel)
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.utilitiesRoute?.destination },
@@ -373,11 +373,11 @@ struct PaymentsTransfersView: View {
         )
     }
     
-    private func utilitiesView(
+    private func utilityOperatorPicker(
         _ viewModel: UtilitiesViewModel
     ) -> some View {
         
-        UtilitiesView(
+        UtilityOperatorPicker(
             state: viewModel.state,
             event: { self.viewModel.event(.utilityPayment($0)) }
         )
