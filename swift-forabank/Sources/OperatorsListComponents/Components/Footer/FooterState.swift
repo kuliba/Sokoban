@@ -9,6 +9,6 @@ import SwiftUI
 
 public enum FooterState {
      
-    case footer(title: String, description: String, buttons: [ButtonSimpleViewModel]?, subtitle: String)
-    case failure(image: Image, description: String, button: ButtonSimpleViewModel)
+    case footer(title: String, description: String, subtitle: String)
+    case failure(image: Image, description: String)
 }
