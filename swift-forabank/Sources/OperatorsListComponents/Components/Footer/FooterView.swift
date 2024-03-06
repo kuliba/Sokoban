@@ -42,9 +42,7 @@ public struct FooterView: View {
             
             VStack(spacing: 16) {
                 
-                Text(footer.title)
-                    .font(config.titleConfig.textFont)
-                    .foregroundColor(config.titleConfig.textColor)
+                footer.title.text(withConfig: config.titleConfig)
                 
                 descriptionView(footer.description)
             }
@@ -64,9 +62,7 @@ public struct FooterView: View {
                     .padding(.horizontal, 16)
                 }
                 
-                Text(footer.subtitle)
-                    .font(config.subtitleConfig.textFont)
-                    .foregroundColor(config.subtitleConfig.textColor)
+                footer.subtitle.text(withConfig: config.subtitleConfig)
                     .padding(.horizontal, 16)
                     .multilineTextAlignment(.center)
             }
@@ -97,10 +93,8 @@ public struct FooterView: View {
         _ description: String
     ) -> some View {
         
-        Text(description)
+        description.text(withConfig: config.descriptionConfig)
             .multilineTextAlignment(.center)
-            .font(config.descriptionConfig.textFont)
-            .foregroundColor(config.descriptionConfig.textColor)
     }
     
     private func addCompanyButton() -> some View {
