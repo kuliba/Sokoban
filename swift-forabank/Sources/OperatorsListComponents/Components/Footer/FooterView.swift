@@ -43,8 +43,8 @@ public struct FooterView: View {
             VStack(spacing: 16) {
                 
                 Text(footer.title)
-                    .font(config.titleFont)
-                    .foregroundColor(config.titleColor)
+                    .font(config.titleConfig.textFont)
+                    .foregroundColor(config.titleConfig.textColor)
                 
                 descriptionView(footer.description)
             }
@@ -65,8 +65,8 @@ public struct FooterView: View {
                 }
                 
                 Text(footer.subtitle)
-                    .font(config.subtitleFont)
-                    .foregroundColor(config.subtitleColor)
+                    .font(config.subtitleConfig.textFont)
+                    .foregroundColor(config.subtitleConfig.textColor)
                     .padding(.horizontal, 16)
                     .multilineTextAlignment(.center)
             }
@@ -99,8 +99,8 @@ public struct FooterView: View {
         
         Text(description)
             .multilineTextAlignment(.center)
-            .font(config.descriptionFont)
-            .foregroundColor(config.descriptionColor)
+            .font(config.descriptionConfig.textFont)
+            .foregroundColor(config.descriptionConfig.textColor)
     }
     
     private func addCompanyButton() -> some View {
@@ -127,12 +127,9 @@ public struct FooterView: View {
 private extension FooterView.Config {
     
     static let previewConfig: Self = .init(
-        titleFont: .title3,
-        titleColor: .black,
-        descriptionFont: .body,
-        descriptionColor: .gray,
-        subtitleFont: .body,
-        subtitleColor: .black,
+        titleConfig: .init(textFont: .title3, textColor: .black),
+        descriptionConfig: .init(textFont: .body, textColor: .gray),
+        subtitleConfig: .init(textFont: .body, textColor: .black),
         backgroundIcon: .gray,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(titleFont: .body, titleForeground: .black, backgroundColor: .gray),
