@@ -73,21 +73,20 @@ struct UtilityOperatorPicker: View {
     }
 }
 
-//struct UtilitiesView_Previews: PreviewProvider {
-//    
-//    static var previews: some View {
-//        
-//        UtilityOperatorPicker(
-//            state: .init(
-//                latestPayments: [],
-//                operators: []
-//            ),
-//            onLatestPaymentTap: { _ in },
-//            onOperatorTap: { _ in },
-//            footer: { _ in EmptyView() }
-//        )
-//    }
-//}
+struct UtilityOperatorPicker_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        UtilityOperatorPicker(
+            state: .init(
+                latestPayments: [],
+                operators: [],
+                searchText: ""
+            ),
+            event: { _ in }
+        )
+    }
+}
 
 private extension OperatorView.OperatorViewConfig {
     
