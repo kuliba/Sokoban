@@ -10,26 +10,22 @@ import SwiftUI
 public struct LatestPaymentView: View {
     
     let latestPayment: LatestPayment
-    let latestPaymentConfigView: LatestPayment.LatestPaymentConfig
-    let event: (ComposedOperatorsEvent) -> Void
+    let event: (LatestPayment) -> Void
+    let config: LatestPayment.LatestPaymentConfig
     
     public init(
         latestPayment: LatestPayment,
-        latestPaymentConfigView: LatestPayment.LatestPaymentConfig,
-        event: @escaping (ComposedOperatorsEvent) -> Void
+        event: @escaping (LatestPayment) -> Void,
+        config: LatestPayment.LatestPaymentConfig
     ) {
         self.latestPayment = latestPayment
-        self.latestPaymentConfigView = latestPaymentConfigView
+        self.config = config
         self.event = event
     }
     
     public var body: some View {
         
-        Button {
-            
-            event(.selectLastOperation(latestPayment.id))
-            
-        } label: {
+        Button(action: { event(latestPayment) }) {
             
             VStack {
              
@@ -41,8 +37,8 @@ public struct LatestPaymentView: View {
                 } else {
                     
                     Image.defaultIcon(
-                        backgroundColor: latestPaymentConfigView.backgroundColor,
-                        icon: latestPaymentConfigView.defaultImage
+                        backgroundColor: config.backgroundColor,
+                        icon: config.defaultImage
                     )
                 }
                 
@@ -76,11 +72,11 @@ struct LatestPaymentView_Previews: PreviewProvider {
                 title: "title",
                 amount: "amount"
             ),
-            latestPaymentConfigView: .init(
+            event: { _ in },
+            config: .init(
                 defaultImage: .init(systemName: ""),
                 backgroundColor: .blue
-            ),
-            event: { _ in }
+            )
         )
     }
 }
