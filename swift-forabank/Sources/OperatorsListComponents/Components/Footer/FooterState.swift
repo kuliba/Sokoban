@@ -8,7 +8,20 @@
 import SwiftUI
 
 public enum FooterState {
-     
-    case footer(title: String, description: String, subtitle: String)
-    case failure(image: Image, description: String)
+    
+    case footer(Footer)
+    case failure(Failure)
+    
+    public struct Footer {
+        
+        let title: String
+        let description: String
+        let subtitle: String
+    }
+
+    public struct Failure {
+        
+        let image: Image
+        let description: String
+    }
 }
