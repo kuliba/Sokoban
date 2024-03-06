@@ -90,6 +90,14 @@ final class ResponseMapper_mapGetProductDetailsResponseTests: XCTestCase {
         assert(result, equals: .success(.cardDetails))
     }
     
+    func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidCardDetailsDataWithEmpty() throws {
+        
+        let validData = Data(jsonStringCardDetailsWithNull.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(.cardDetailsWithEmpty))
+    }
+    
     func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidAccountDetailsData() throws {
         
         let validData = Data(jsonStringAccountDetails.utf8)
@@ -137,7 +145,26 @@ private extension ProductDetails {
             inn: "7704113772",
             kpp: "770401001",
             maskCardNumber: "4444 55** **** 1122",
-            payeeName: "Иванов Иван Иванович"))
+            payeeName: "Иванов Иван Иванович",
+            info: "Реквизиты счета доступны владельцу основной карты. Он сможет их посмотреть в ЛК.",
+            md5hash: "72ffaeb111fbcbd37cb97e0c2886bc89"
+    ))
+    
+    static let cardDetailsWithEmpty: Self = .cardDetails(.init(
+            accountNumber: "",
+            bic: "",
+            cardNumber: "4444555566661122",
+            corrAccount: "",
+            expireDate: "08/25",
+            holderName: "IVAN IVANOV",
+            inn: "",
+            kpp: "",
+            maskCardNumber: "4444 55** **** 1122",
+            payeeName: "",
+            info: "",
+            md5hash: ""
+    ))
+
     
     static let depositDetails: Self = .depositDetails(.init(
             accountNumber: "4081781000000000001",

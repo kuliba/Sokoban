@@ -19,6 +19,8 @@ public struct CardDetails: Equatable {
     let kpp: String
     let maskCardNumber: String
     let payeeName: String
+    let info: String
+    let md5hash: String
     
     public init(
         accountNumber: String,
@@ -30,7 +32,9 @@ public struct CardDetails: Equatable {
         inn: String,
         kpp: String,
         maskCardNumber: String,
-        payeeName: String
+        payeeName: String,
+        info: String,
+        md5hash: String
     ) {
         self.accountNumber = accountNumber
         self.bic = bic
@@ -42,5 +46,7 @@ public struct CardDetails: Equatable {
         self.kpp = kpp
         self.maskCardNumber = maskCardNumber
         self.payeeName = payeeName
+        self.info = info
+        self.md5hash = md5hash
     }
 }
