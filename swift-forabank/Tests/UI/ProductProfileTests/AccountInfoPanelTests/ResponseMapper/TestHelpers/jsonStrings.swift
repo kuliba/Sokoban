@@ -35,7 +35,30 @@ let jsonStringCardDetails = """
       "cardNumber": "4444555566661122",
       "maskCardNumber": "4444 55** **** 1122",
       "expireDate": "08/25",
-      "holderName": "IVAN IVANOV"
+      "holderName": "IVAN IVANOV",
+      "info": "Реквизиты счета доступны владельцу основной карты. Он сможет их посмотреть в ЛК.",
+      "md5hash": "72ffaeb111fbcbd37cb97e0c2886bc89"
+    }
+}
+"""
+
+let jsonStringCardDetailsWithNull = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+      "corrAccount": null,
+      "accountNumber": null,
+      "payeeName": null,
+      "kpp": null,
+      "bic": null,
+      "inn": null,
+      "cardNumber": "4444555566661122",
+      "maskCardNumber": "4444 55** **** 1122",
+      "expireDate": "08/25",
+      "holderName": "IVAN IVANOV",
+      "info": null,
+      "md5hash": null
     }
 }
 """
