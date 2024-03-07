@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer<UtilityPayment, Response>
-where UtilityPayment: Payment,
+public final class UtilityPaymentReducer<Payment, Response>
+where Payment: AnywayPayment,
       Response: Equatable {
     
     private let update: Update
@@ -39,7 +39,7 @@ public extension UtilityPaymentReducer {
     }
 }
 
-public protocol Payment: Equatable {
+public protocol AnywayPayment: Equatable {
     
     var isFinalStep: Bool { get }
     var verificationCode: VerificationCode? { get }
@@ -53,22 +53,22 @@ public enum PaymentStatus {
 
 public extension UtilityPaymentReducer {
     
-    typealias Update = (inout UtilityPayment, Response) -> Void
+    typealias Update = (inout Payment, Response) -> Void
     
-    typealias State = UtilityPaymentState<UtilityPayment>
+    typealias State = UtilityPaymentState<Payment>
     typealias Event = UtilityPaymentEvent<Response>
-    typealias Effect = UtilityPaymentEffect<UtilityPayment>
+    typealias Effect = UtilityPaymentEffect<Payment>
 }
 
 private extension UtilityPaymentReducer {
     
     func reduce(
-        _ utilityPayment: UtilityPayment,
+        _ payment: Payment,
         _ event: Event
     ) -> (State, Effect?) {
         
-        var state: State = .payment(utilityPayment)
-        var utilityPayment = utilityPayment
+        var state: State = .payment(payment)
+        var utilityPayment = payment
         var effect: Effect?
         
         switch event {
