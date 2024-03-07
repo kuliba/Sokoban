@@ -37,7 +37,7 @@ final class AnywayPaymentIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = UtilityPaymentState<TestPayment>
+    private typealias State = AnywayPaymentState<TestPayment>
     private typealias Event = AnywayPaymentEvent<CreateAnywayTransferResponse>
     private typealias Effect = AnywayPaymentEffect<TestPayment>
     

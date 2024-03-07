@@ -1,17 +1,17 @@
 //
-//  UtilityPaymentState.swift
+//  AnywayPaymentState.swift
 //  
 //
 //  Created by Igor Malyarov on 04.03.2024.
 //
 
-public enum UtilityPaymentState<UtilityPayment: Equatable>: Equatable {
+public enum AnywayPaymentState<UtilityPayment: Equatable>: Equatable {
     
     case payment(UtilityPayment)
     case result(TransferResult)
 }
 
-public extension UtilityPaymentState {
+public extension AnywayPaymentState {
     
     typealias TransferResult = Result<Transaction, TransactionFailure>
 }
