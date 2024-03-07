@@ -7,7 +7,9 @@
 
 public struct PrePaymentOptionsState<LastPayment, Operator> {
     
+    // TODO: replace Array with NonEmptyArray
     public var lastPayments: [LastPayment]?
+    // TODO: replace Array with NonEmptyArray
     public var operators: [Operator]?
     public var searchText: String
     public var isInflight: Bool
