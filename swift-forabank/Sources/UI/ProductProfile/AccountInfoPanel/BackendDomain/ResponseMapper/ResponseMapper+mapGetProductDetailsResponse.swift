@@ -8,6 +8,10 @@
 import Foundation
 import Services
 
+public typealias GetProductDetailsResponseMapper = Services.ResponseMapper
+
+public typealias GetProductDetailsMappingError = Services.ResponseMapper.MappingError
+
 public extension ResponseMapper {
     
     static func mapGetProductDetailsResponse(
@@ -104,29 +108,34 @@ private extension ResponseMapper {
     
     struct _CardDetails: Decodable {
         
-        let accountNumber: String
-        let bic: String
+        let accountNumber: String?
+        let bic: String?
         let cardNumber: String
-        let corrAccount: String
+        let corrAccount: String?
         let expireDate: String
         let holderName: String
-        let inn: String
-        let kpp: String
+        let inn: String?
+        let kpp: String?
         let maskCardNumber: String
-        let payeeName: String
+        let payeeName: String?
+        let info: String?
+        let md5hash: String?
         
         var data: CardDetails {
             .init(
-                accountNumber: accountNumber,
-                bic: bic,
+                accountNumber: accountNumber ?? "",
+                bic: bic ?? "",
                 cardNumber: cardNumber,
-                corrAccount: corrAccount,
+                corrAccount: corrAccount ?? "",
                 expireDate: expireDate,
                 holderName: holderName,
-                inn: inn,
-                kpp: kpp,
+                inn: inn ?? "",
+                kpp: kpp ?? "",
                 maskCardNumber: maskCardNumber,
-                payeeName: payeeName)
+                payeeName: payeeName ?? "",
+                info: info ?? "",
+                md5hash: md5hash ?? ""
+            )
         }
     }
     
