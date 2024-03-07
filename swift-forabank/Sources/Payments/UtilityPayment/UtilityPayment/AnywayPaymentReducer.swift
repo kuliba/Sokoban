@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentReducer.swift
+//  AnywayPaymentReducer.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer<Payment, Response>
+public final class AnywayPaymentReducer<Payment, Response>
 where Payment: AnywayPayment,
       Response: Equatable {
     
@@ -17,7 +17,7 @@ where Payment: AnywayPayment,
     }
 }
 
-public extension UtilityPaymentReducer {
+public extension AnywayPaymentReducer {
     
     func reduce(
         _ state: State,
@@ -51,7 +51,7 @@ public enum PaymentStatus {
     case inflight
 }
 
-public extension UtilityPaymentReducer {
+public extension AnywayPaymentReducer {
     
     typealias Update = (inout Payment, Response) -> Void
     
@@ -60,7 +60,7 @@ public extension UtilityPaymentReducer {
     typealias Effect = AnywayPaymentEffect<Payment>
 }
 
-private extension UtilityPaymentReducer {
+private extension AnywayPaymentReducer {
     
     func reduce(
         _ payment: Payment,

@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentIntegrationTests.swift
+//  AnywayPaymentIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
@@ -9,7 +9,7 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-final class UtilityPaymentIntegrationTests: XCTestCase {
+final class AnywayPaymentIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -44,7 +44,7 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias Reducer = UtilityPaymentReducer<TestPayment, CreateAnywayTransferResponse>
+    private typealias Reducer = AnywayPaymentReducer<TestPayment, CreateAnywayTransferResponse>
     
     private typealias EffectHandler = UtilityPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
     private typealias CreateAnywayTransferSpy = Spy<EffectHandler.CreateAnywayTransferPayload, EffectHandler.CreateAnywayTransferResult>
