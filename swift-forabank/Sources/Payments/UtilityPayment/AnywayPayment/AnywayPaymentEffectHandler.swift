@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class AnywayPaymentEffectHandler<UtilityPayment, Response>
-where UtilityPayment: Equatable,
+public final class AnywayPaymentEffectHandler<Payload, Response>
+where Payload: Equatable,
       Response: Equatable {
     
     private let createAnywayTransfer: CreateAnywayTransfer
@@ -47,7 +47,7 @@ public extension AnywayPaymentEffectHandler {
 
 public extension AnywayPaymentEffectHandler {
     
-    typealias CreateAnywayTransferPayload = UtilityPayment
+    typealias CreateAnywayTransferPayload = Payload
     typealias CreateAnywayTransferResult = Event.AnywayResult
     typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
@@ -60,5 +60,5 @@ public extension AnywayPaymentEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = AnywayPaymentEvent<Response>
-    typealias Effect = AnywayPaymentEffect<UtilityPayment>
+    typealias Effect = AnywayPaymentEffect<Payload>
 }
