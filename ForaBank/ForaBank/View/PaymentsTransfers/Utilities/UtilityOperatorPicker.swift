@@ -6,6 +6,7 @@
 //
 
 import OperatorsListComponents
+import PrePaymentPicker
 import SwiftUI
 
 struct UtilityOperatorPicker: View {
@@ -15,8 +16,13 @@ struct UtilityOperatorPicker: View {
     
     var body: some View {
         
-        if state.operators != nil {
+        switch state.uiState {
             
+        case . failure:
+            // TODO: replace with `FooterView` from the module
+            Text("TBD: Footer View with pay by Instruction button")
+            
+        case let .options(state):
             ComposedOperatorsView(
                 state: .init(
                     operators: state.operators,
@@ -28,10 +34,6 @@ struct UtilityOperatorPicker: View {
                 footerView: footerView,
                 searchView: searchView
             )
-            
-        } else {
-            
-            Text("TBD: Footer View with pay by Instruction button")
         }
     }
     
@@ -77,6 +79,22 @@ struct UtilityOperatorPicker: View {
                 set: { event(.composed(.utility(.search(.entered($0))))) }
             )
         )
+    }
+}
+
+private extension PrePaymentOptionsState {
+    
+    var uiState: UIState {
+        
+        guard operators != nil else { return .failure }
+        
+        return .options(self)
+    }
+    
+    enum UIState {
+        
+        case failure
+        case options(PrePaymentOptionsState)
     }
 }
 
