@@ -1,13 +1,13 @@
 //
-//  UtilityPaymentReducer.swift
+//  AnywayPaymentReducer.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer<UtilityPayment, CreateAnywayTransferResponse>
-where UtilityPayment: Payment,
-      CreateAnywayTransferResponse: Equatable {
+public final class AnywayPaymentReducer<Payment, Response>
+where Payment: AnywayPayment,
+      Response: Equatable {
     
     private let update: Update
     
@@ -17,7 +17,7 @@ where UtilityPayment: Payment,
     }
 }
 
-public extension UtilityPaymentReducer {
+public extension AnywayPaymentReducer {
     
     func reduce(
         _ state: State,
@@ -39,36 +39,24 @@ public extension UtilityPaymentReducer {
     }
 }
 
-public protocol Payment: Equatable {
+public extension AnywayPaymentReducer {
     
-    var isFinalStep: Bool { get }
-    var verificationCode: VerificationCode? { get }
-    var status: PaymentStatus? { get set }
+    typealias Update = (inout Payment, Response) -> Void
+    
+    typealias State = AnywayPaymentState<Payment>
+    typealias Event = AnywayPaymentEvent<Response>
+    typealias Effect = AnywayPaymentEffect<Payment>
 }
 
-public enum PaymentStatus {
-    
-    case inflight
-}
-
-public extension UtilityPaymentReducer {
-    
-    typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
-    
-    typealias State = UtilityPaymentState<UtilityPayment>
-    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
-    typealias Effect = UtilityPaymentEffect<UtilityPayment>
-}
-
-private extension UtilityPaymentReducer {
+private extension AnywayPaymentReducer {
     
     func reduce(
-        _ utilityPayment: UtilityPayment,
+        _ payment: Payment,
         _ event: Event
     ) -> (State, Effect?) {
         
-        var state: State = .payment(utilityPayment)
-        var utilityPayment = utilityPayment
+        var state: State = .payment(payment)
+        var utilityPayment = payment
         var effect: Effect?
         
         switch event {
