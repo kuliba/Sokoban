@@ -39,7 +39,7 @@ final class UtilityPaymentIntegrationTests: XCTestCase {
     
     private typealias State = UtilityPaymentState<TestPayment>
     private typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
-    private typealias Effect = UtilityPaymentEffect<TestPayment>
+    private typealias Effect = AnywayPaymentEffect<TestPayment>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>

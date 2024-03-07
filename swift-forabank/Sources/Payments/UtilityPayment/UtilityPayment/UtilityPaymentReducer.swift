@@ -57,7 +57,7 @@ public extension UtilityPaymentReducer {
     
     typealias State = UtilityPaymentState<Payment>
     typealias Event = UtilityPaymentEvent<Response>
-    typealias Effect = UtilityPaymentEffect<Payment>
+    typealias Effect = AnywayPaymentEffect<Payment>
 }
 
 private extension UtilityPaymentReducer {
