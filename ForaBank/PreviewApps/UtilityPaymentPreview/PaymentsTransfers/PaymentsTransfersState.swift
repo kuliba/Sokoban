@@ -18,7 +18,7 @@ extension PaymentsTransfersState {
     enum Route: Equatable {
         
         case prePayment(Result<PrePaymentState, SimpleServiceFailure>)
-        case utilityPayment(UtilityPaymentState)
+        case utilityPayment(AnywayPaymentState)
     }
     
     enum Status: Equatable {

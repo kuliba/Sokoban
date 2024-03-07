@@ -1,13 +1,13 @@
 //
-//  UtilityPaymentEffectHandler.swift
+//  AnywayPaymentEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentEffectHandler<UtilityPayment, CreateAnywayTransferResponse>
-where UtilityPayment: Equatable,
-      CreateAnywayTransferResponse: Equatable {
+public final class AnywayPaymentEffectHandler<Payload, Response>
+where Payload: Equatable,
+      Response: Equatable {
     
     private let createAnywayTransfer: CreateAnywayTransfer
     private let makeTransfer: MakeTransfer
@@ -21,7 +21,7 @@ where UtilityPayment: Equatable,
     }
 }
 
-public extension UtilityPaymentEffectHandler {
+public extension AnywayPaymentEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -45,9 +45,9 @@ public extension UtilityPaymentEffectHandler {
     }
 }
 
-public extension UtilityPaymentEffectHandler {
+public extension AnywayPaymentEffectHandler {
     
-    typealias CreateAnywayTransferPayload = UtilityPayment
+    typealias CreateAnywayTransferPayload = Payload
     typealias CreateAnywayTransferResult = Event.AnywayResult
     typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
@@ -59,6 +59,6 @@ public extension UtilityPaymentEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
-    typealias Effect = UtilityPaymentEffect<UtilityPayment>
+    typealias Event = AnywayPaymentEvent<Response>
+    typealias Effect = AnywayPaymentEffect<Payload>
 }
