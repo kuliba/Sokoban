@@ -220,9 +220,8 @@ extension RootViewModelFactory {
                 
                 let viewModel = UtilitiesViewModel(
                     initialState: .init(
-                        latestPayments: latestPayments,
-                        operators: operators,
-                        searchText: ""
+                        lastPayments: latestPayments,
+                        operators: operators
                     ),
                     loadOperators: loadOperators
                 )

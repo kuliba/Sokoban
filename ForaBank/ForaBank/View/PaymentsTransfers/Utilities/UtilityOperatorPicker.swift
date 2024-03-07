@@ -20,7 +20,7 @@ struct UtilityOperatorPicker: View {
             ComposedOperatorsView(
                 state: .init(
                     operators: state.operators,
-                    latestPayments: state.latestPayments
+                    latestPayments: state.lastPayments
                 ),
                 event: { event(.composed($0)) },
                 lastPaymentView: lastPaymentView,
@@ -28,6 +28,7 @@ struct UtilityOperatorPicker: View {
                 footerView: footerView,
                 searchView: searchView
             )
+            
         } else {
             
             Text("TBD: Footer View with pay by Instruction button")
@@ -84,11 +85,7 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
     static var previews: some View {
         
         UtilityOperatorPicker(
-            state: .init(
-                latestPayments: [],
-                operators: [],
-                searchText: ""
-            ),
+            state: .init(lastPayments: [], operators: []),
             event: { _ in }
         )
     }

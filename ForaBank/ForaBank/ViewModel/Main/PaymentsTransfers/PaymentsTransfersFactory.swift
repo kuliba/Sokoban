@@ -7,6 +7,7 @@
 
 import Foundation
 import OperatorsListComponents
+import PrePaymentPicker
 
 #warning("replace with type from module")
 final class UtilitiesViewModel: ObservableObject {
@@ -25,12 +26,7 @@ final class UtilitiesViewModel: ObservableObject {
     
     // MARK: - types
     
-    struct State {
-        
-        let latestPayments: [OperatorsListComponents.LatestPayment]?
-        let operators: [OperatorsListComponents.Operator]?
-        let searchText: String
-    }
+    typealias State = PrePaymentOptionsState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator>
     
     struct Payload {}
     
