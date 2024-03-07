@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 04.03.2024.
 //
 
-public enum AnywayPaymentState<UtilityPayment: Equatable>: Equatable {
+public enum AnywayPaymentState<Payment: Equatable>: Equatable {
     
-    case payment(UtilityPayment)
+    case payment(Payment)
     case result(TransferResult)
 }
 
