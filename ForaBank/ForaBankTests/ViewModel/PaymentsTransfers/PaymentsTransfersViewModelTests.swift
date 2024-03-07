@@ -741,9 +741,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 completion(.utilities(.init(
                     initialState: .init(
-                        latestPayments: [],
-                        operators: [],
-                        searchText: ""
+                        lastPayments: [],
+                        operators: []
                     ),
                     loadOperators: { _,_ in }
                 )))
