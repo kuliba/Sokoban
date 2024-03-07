@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentEffectHandler<UtilityPayment, CreateAnywayTransferResponse>
+public final class UtilityPaymentEffectHandler<UtilityPayment, Response>
 where UtilityPayment: Equatable,
-      CreateAnywayTransferResponse: Equatable {
+      Response: Equatable {
     
     private let createAnywayTransfer: CreateAnywayTransfer
     private let makeTransfer: MakeTransfer
@@ -59,6 +59,6 @@ public extension UtilityPaymentEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
+    typealias Event = UtilityPaymentEvent<Response>
     typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }
