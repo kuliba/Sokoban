@@ -15,17 +15,23 @@ struct UtilityOperatorPicker: View {
     
     var body: some View {
         
-        ComposedOperatorsView(
-            state: .init(
-                operators: state.operators,
-                latestPayments: state.latestPayments
-            ),
-            event: { event(.composed($0)) },
-            lastPaymentView: lastPaymentView,
-            operatorView: operatorView,
-            footerView: footerView,
-            searchView: searchView
-        )
+        if state.operators != nil {
+            
+            ComposedOperatorsView(
+                state: .init(
+                    operators: state.operators,
+                    latestPayments: state.latestPayments
+                ),
+                event: { event(.composed($0)) },
+                lastPaymentView: lastPaymentView,
+                operatorView: operatorView,
+                footerView: footerView,
+                searchView: searchView
+            )
+        } else {
+            
+            Text("TBD: Footer View with pay by Instruction button")
+        }
     }
     
     private func lastPaymentView(

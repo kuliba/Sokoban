@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentReducerTests.swift
+//  AnywayPaymentReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class UtilityPaymentReducerTests: XCTestCase {
+final class AnywayPaymentReducerTests: XCTestCase {
     
     // MARK: - continue
     
@@ -781,7 +781,7 @@ final class UtilityPaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentReducer<TestPayment, CreateAnywayTransferResponse>
+    private typealias SUT = AnywayPaymentReducer<TestPayment, CreateAnywayTransferResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
