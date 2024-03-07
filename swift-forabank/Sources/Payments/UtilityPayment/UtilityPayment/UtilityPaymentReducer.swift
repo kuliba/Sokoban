@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentReducer<UtilityPayment, CreateAnywayTransferResponse>
+public final class UtilityPaymentReducer<UtilityPayment, Response>
 where UtilityPayment: Payment,
-      CreateAnywayTransferResponse: Equatable {
+      Response: Equatable {
     
     private let update: Update
     
@@ -53,10 +53,10 @@ public enum PaymentStatus {
 
 public extension UtilityPaymentReducer {
     
-    typealias Update = (inout UtilityPayment, CreateAnywayTransferResponse) -> Void
+    typealias Update = (inout UtilityPayment, Response) -> Void
     
     typealias State = UtilityPaymentState<UtilityPayment>
-    typealias Event = UtilityPaymentEvent<CreateAnywayTransferResponse>
+    typealias Event = UtilityPaymentEvent<Response>
     typealias Effect = UtilityPaymentEffect<UtilityPayment>
 }
 
