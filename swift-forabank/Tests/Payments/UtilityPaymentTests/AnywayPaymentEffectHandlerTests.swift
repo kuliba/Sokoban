@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentEffectHandlerTests.swift
+//  AnywayPaymentEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class UtilityPaymentEffectHandlerTests: XCTestCase {
+final class AnywayPaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - init
     
@@ -129,7 +129,7 @@ final class UtilityPaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
+    private typealias SUT = AnywayPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
