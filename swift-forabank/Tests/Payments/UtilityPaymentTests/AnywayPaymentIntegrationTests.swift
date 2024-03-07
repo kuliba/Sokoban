@@ -46,7 +46,7 @@ final class AnywayPaymentIntegrationTests: XCTestCase {
     
     private typealias Reducer = AnywayPaymentReducer<TestPayment, CreateAnywayTransferResponse>
     
-    private typealias EffectHandler = UtilityPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
+    private typealias EffectHandler = AnywayPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
     private typealias CreateAnywayTransferSpy = Spy<EffectHandler.CreateAnywayTransferPayload, EffectHandler.CreateAnywayTransferResult>
     private typealias MakeTransferSpy = Spy<EffectHandler.MakeTransferPayload, EffectHandler.MakeTransferResult>
 
