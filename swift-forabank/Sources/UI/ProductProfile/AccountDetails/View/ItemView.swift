@@ -10,7 +10,7 @@ import SwiftUI
 struct ItemView: View {
     
     let item: Item
-    let actions: ItemActions
+    let event: (ItemEvent) -> Void
     let config: Config
     
     var body: some View {
@@ -27,7 +27,7 @@ struct ItemView: View {
                     .frame(width: config.sizes.icon, height: config.sizes.icon, alignment: .center)
                     .onTapGesture {
                         
-                        actions.actionForIcon()
+                        event(.iconTap(item.id))
                     }
                     .accessibilityIdentifier("InfoProductItemButton")
             }
@@ -49,7 +49,7 @@ struct ItemView: View {
         }
         .onLongPressGesture(minimumDuration: 1) {
             
-            actions.actionForLongPress(item.valueForCopy, item.titleForInformer)
+            event(.longPress(.init(item.valueForCopy), .init(item.titleForInformer)))
         }
     }
 }
@@ -68,13 +68,13 @@ private extension Config.Images {
         
         switch id {
         case .numberMasked:
-            return numberMasked
+            return valueMasked
         case .number:
-            return number
+            return valueShown
         case .cvvMasked:
-            return cvvMasked
+            return valueMasked
         case .cvv:
-            return cvv
+            return valueShown
         default:
             return nil
         }
@@ -89,12 +89,12 @@ struct ItemView_Previews: PreviewProvider {
             
             ItemView(
                 item: .accountNumberItem,
-                actions: .actions,
+                event: { print("event - \($0)") },
                 config: .preview)
             
             ItemView(
                 item: .cvvItem,
-                actions: .actions,
+                event: { print("event - \($0)") },
                 config: .preview)
         }
     }
@@ -107,7 +107,8 @@ private extension Item {
         title: "title",
         titleForInformer: "titleForInformer",
         subtitle: "subtitle",
-        valueForCopy: "valueForCopy"
+        valueForCopy: "valueForCopy",
+        event: .iconTap(.accountNumber)
     )
     
     static let cvvItem: Self = .init(
@@ -115,21 +116,7 @@ private extension Item {
         title: "title",
         titleForInformer: "titleForInformer",
         subtitle: "subtitle",
-        valueForCopy: "valueForCopy"
-    )
-
-}
-
-private extension ItemActions {
-    
-    static let actions: Self = .init(
-        actionForLongPress: { _,_ in
-            
-            print("LongPress")
-        },
-        actionForIcon: {
-            
-            print("Tap")
-        }
+        valueForCopy: "valueForCopy",
+        event: .iconTap(.cvv)
     )
 }

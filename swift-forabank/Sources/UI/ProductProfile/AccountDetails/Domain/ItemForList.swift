@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum ItemForList: Hashable {
+public enum ItemForList: Hashable {
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         
         switch self {
         case let .single(item):

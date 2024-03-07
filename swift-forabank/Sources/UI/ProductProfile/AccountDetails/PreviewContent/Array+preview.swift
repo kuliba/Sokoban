@@ -16,7 +16,8 @@ extension Array where Element == ItemForList {
                 title: "Получатель",
                 titleForInformer: "Получатель",
                 subtitle: "Константин Войцехов",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy", 
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .single(
@@ -25,7 +26,8 @@ extension Array where Element == ItemForList {
                 title: "Номер счета",
                 titleForInformer: "Номер счета",
                 subtitle: "408178810888 005001137",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy",
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .single(
@@ -34,7 +36,8 @@ extension Array where Element == ItemForList {
                 title: "БИК",
                 titleForInformer: "БИК",
                 subtitle: "044525341",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy",
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .single(
@@ -43,7 +46,8 @@ extension Array where Element == ItemForList {
                 title: "Кореспондентский счет",
                 titleForInformer: "Кореспондентский счет",
                 subtitle: "301018103000000000341",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy",
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .multiple(
@@ -53,14 +57,16 @@ extension Array where Element == ItemForList {
                     title: "ИНН",
                     titleForInformer: "ИНН",
                     subtitle: "7704113772",
-                    valueForCopy: "valueForCopy"
+                    valueForCopy: "valueForCopy",
+                    event: .longPress("valueForCopy", "for informer")
                 ),
                 .init(
                     id: .kpp,
                     title: "КПП",
                     titleForInformer: "КПП",
                     subtitle: "770401001",
-                    valueForCopy: "valueForCopy"
+                    valueForCopy: "valueForCopy",
+                    event: .longPress("valueForCopy", "for informer")
                 )
             ]
         )
@@ -73,7 +79,8 @@ extension Array where Element == ItemForList {
                 title: "Держатель",
                 titleForInformer: "Держатель",
                 subtitle: "Константин Войцехов",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy",
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .single(
@@ -82,7 +89,8 @@ extension Array where Element == ItemForList {
                 title: "Номер карты",
                 titleForInformer: "Номер карты",
                 subtitle: "**** **** **** 0500",
-                valueForCopy: "valueForCopy"
+                valueForCopy: "valueForCopy",
+                event: .longPress("valueForCopy", "for informer")
             )
         ),
         .multiple(
@@ -92,14 +100,16 @@ extension Array where Element == ItemForList {
                     title: "Карта действует до",
                     titleForInformer: "Срок действия карты",
                     subtitle: "01/01",
-                    valueForCopy: "valueForCopy"
+                    valueForCopy: "valueForCopy",
+                    event: .longPress("valueForCopy", "for informer")
                 ),
                 .init(
                     id: .cvvMasked,
                     title: .cvvTitle,
                     titleForInformer: .cvvTitle,
                     subtitle: "111",
-                    valueForCopy: ""
+                    valueForCopy: "",
+                    event: .longPress("valueForCopy", "for informer")
                 )
             ]
         )

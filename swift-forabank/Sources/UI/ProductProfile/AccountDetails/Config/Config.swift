@@ -31,27 +31,24 @@ public extension Config {
     
     struct Images {
         
-        let numberMasked: Image
-        let cvvMasked: Image
-        let number: Image
-        let cvv: Image
+        let valueMasked: Image
+        let valueShown: Image
         let checkOn: Image
         let checkOff: Image
+        let info: Image
         
         public init(
-            numberMasked: Image,
-            cvvMasked: Image,
-            number: Image,
-            cvv: Image,
+            valueMasked: Image,
+            valueShown: Image,
             checkOn: Image,
-            checkOff: Image
+            checkOff: Image,
+            info: Image
         ) {
-            self.numberMasked = numberMasked
-            self.cvvMasked = cvvMasked
-            self.number = number
-            self.cvv = cvv
+            self.valueMasked = valueMasked
+            self.valueShown = valueShown
             self.checkOn = checkOn
             self.checkOff = checkOff
+            self.info = info
         }
     }
 }

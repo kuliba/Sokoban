@@ -7,11 +7,23 @@
 
 import Foundation
 
-struct DocumentItem {
+public struct DocumentItem {
     
     let id: ID
+    let subtitle: String
+    let valueForCopy: String
+
+    public init(
+        id: ID,
+        subtitle: String,
+        valueForCopy: String
+    ) {
+        self.id = id
+        self.subtitle = subtitle
+        self.valueForCopy = valueForCopy
+    }
     
-    enum ID {
+    public enum ID {
         
         case accountNumber
         case bic
@@ -64,9 +76,6 @@ struct DocumentItem {
             return title
         }
     }
-    
-    let subtitle: String
-    let valueForCopy: String
 }
 
 extension String {

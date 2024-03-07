@@ -10,7 +10,7 @@ import SwiftUI
 struct ItemsViewNew: View {
     
     let items: [ItemForList]
-    let actions: ItemActions
+    let event: (ItemEvent) -> Void
     let config: Config
     let title: String
     let showCheckbox: Bool
@@ -36,7 +36,7 @@ struct ItemsViewNew: View {
                 
                 ForEach(items, id: \.self) { value in
                     
-                    ItemViewNew(value: value, actions: actions, config: config)
+                    ItemViewNew(value: value, event: event, config: config)
                 }
             }
             .padding(.bottom, 13)
@@ -48,7 +48,7 @@ struct ItemsViewNew: View {
 struct ItemViewNew: View {
     
     let value: ItemForList
-    let actions: ItemActions
+    let event: (ItemEvent) -> Void
     let config: Config
     
     var body: some View {
@@ -57,7 +57,7 @@ struct ItemViewNew: View {
             
         case let .single(item):
             
-            ItemView(item: item, actions: actions, config: config)
+            ItemView(item: item, event: event, config: config)
             CustomDivider()
             
         case let .multiple(items):
@@ -68,7 +68,7 @@ struct ItemViewNew: View {
                     
                     let isFirst = item == items.first
                     
-                    ItemView(item: item, actions: actions, config: config)
+                    ItemView(item: item, event: event, config: config)
                         .padding(.leading, (isFirst ? 0 : 16))
                     
                     if isFirst {
@@ -151,12 +151,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
             
             ItemsViewNew(
                 items: .preview,
-                actions: .init(
-                    actionForLongPress: {_,_ in },
-                    actionForIcon: {
-                        print("actionForIcon")
-                    }
-                ),
+                event: { print($0) },
                 config: .preview,
                 title: "Реквизиты счета",
                 showCheckbox: false,
@@ -168,12 +163,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
             
             ItemsViewNew(
                 items: .preview,
-                actions: .init(
-                    actionForLongPress: {_,_ in },
-                    actionForIcon: {
-                        print("actionForIcon")
-                    }
-                ),
+                event: { print($0) },
                 config: .preview,
                 title: "Реквизиты счета",
                 showCheckbox: true,
@@ -185,12 +175,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
             
             ItemsViewNew(
                 items: .cardItems,
-                actions: .init(
-                    actionForLongPress: {_,_ in },
-                    actionForIcon: {
-                        print("actionForIcon")
-                    }
-                ),
+                event: { print($0) },
                 config: .preview,
                 title: "Реквизиты карты",
                 showCheckbox: true,

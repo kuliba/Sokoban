@@ -1,23 +1,32 @@
 //
 //  Item.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 06.03.2024.
 //
 
-import SwiftUI
+import Tagged
 
-struct Item: Equatable, Hashable {
-        
+public struct Item: Equatable, Hashable {
+    
     let id: DocumentItem.ID
     let title: String
     let titleForInformer: String
     var subtitle: String
     let valueForCopy: String
+    let event: ItemEvent
 }
 
-struct ItemActions {
+public enum ItemEvent: Equatable, Hashable {
+    case longPress(ValueForCopy, TextForInformer)
+    case iconTap(DocumentItem.ID)
+}
+
+public extension ItemEvent {
     
-    let actionForLongPress: (String, String) -> Void
-    let actionForIcon: () -> Void
+    typealias ValueForCopy = Tagged<_ValueForCopy, String>
+    enum _ValueForCopy {}
+    
+    typealias TextForInformer = Tagged<_TextForInformer, String>
+    enum _TextForInformer {}
 }
