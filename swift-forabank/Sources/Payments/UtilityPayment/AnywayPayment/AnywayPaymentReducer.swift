@@ -39,18 +39,6 @@ public extension AnywayPaymentReducer {
     }
 }
 
-public protocol AnywayPayment: Equatable {
-    
-    var isFinalStep: Bool { get }
-    var verificationCode: VerificationCode? { get }
-    var status: PaymentStatus? { get set }
-}
-
-public enum PaymentStatus {
-    
-    case inflight
-}
-
 public extension AnywayPaymentReducer {
     
     typealias Update = (inout Payment, Response) -> Void
