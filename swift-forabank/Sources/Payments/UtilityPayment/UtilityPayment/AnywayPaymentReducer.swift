@@ -56,7 +56,7 @@ public extension AnywayPaymentReducer {
     typealias Update = (inout Payment, Response) -> Void
     
     typealias State = UtilityPaymentState<Payment>
-    typealias Event = UtilityPaymentEvent<Response>
+    typealias Event = AnywayPaymentEvent<Response>
     typealias Effect = AnywayPaymentEffect<Payment>
 }
 

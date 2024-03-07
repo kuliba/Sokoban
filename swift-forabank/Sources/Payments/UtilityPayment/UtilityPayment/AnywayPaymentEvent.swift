@@ -1,11 +1,11 @@
 //
-//  UtilityPaymentEvent.swift
+//  AnywayPaymentEvent.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public enum UtilityPaymentEvent<AnywayResponse>: Equatable
+public enum AnywayPaymentEvent<AnywayResponse>: Equatable
 where AnywayResponse: Equatable {
     
     case `continue`
@@ -14,7 +14,7 @@ where AnywayResponse: Equatable {
     case receivedTransferResult(TransferResult)
 }
 
-public extension UtilityPaymentEvent {
+public extension AnywayPaymentEvent {
     
     typealias AnywayResult = Result<AnywayResponse, ServiceFailure>
     
