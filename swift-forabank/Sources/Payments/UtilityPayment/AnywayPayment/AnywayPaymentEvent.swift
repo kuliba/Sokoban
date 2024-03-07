@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public enum AnywayPaymentEvent<AnywayResponse>: Equatable
-where AnywayResponse: Equatable {
+public enum AnywayPaymentEvent<Response>: Equatable
+where Response: Equatable {
     
     case `continue`
     case fraud(FraudEvent)
@@ -16,7 +16,7 @@ where AnywayResponse: Equatable {
 
 public extension AnywayPaymentEvent {
     
-    typealias AnywayResult = Result<AnywayResponse, ServiceFailure>
+    typealias AnywayResult = Result<Response, ServiceFailure>
     
     enum ServiceFailure: Error, Equatable {
         
