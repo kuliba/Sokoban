@@ -19,7 +19,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         XCTAssertEqual(prePaymentReducer.callCount, 0)
     }
     
-    // MARK: - PrePaymentOptions
+    // MARK: - PrePaymentOptionsEvent
     
     func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_didScrollTo() {
         
@@ -107,12 +107,12 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let event: Event = .prePaymentOptions(.initiate)
-        let ppoStateStub = makePrePaymentOptionsState(
-            lastPayments: [makeLastPayment()],
-            operators: [makeOperator(), makeOperator()],
-            searchText: "abc"
+        let (ppoStateStub, ppoEffectStub) = makePPOStub(
+            lastPaymentsCount: 1,
+            operatorsCount: 3,
+            searchText: "abc",
+            ppoEffect: .search("abc")
         )
-        let ppoEffectStub: PPOEffect = .search("abc")
         let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
 
         assertState(sut: sut, event, on: state) {
@@ -127,8 +127,8 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let event: Event = .prePaymentOptions(.initiate)
         let ppoStateStub = makePrePaymentOptionsState(
-            lastPayments: [makeLastPayment()],
-            operators: [makeOperator(), makeOperator()],
+            lastPaymentsCount: 1,
+            operatorsCount: 3,
             searchText: "abc"
         )
         let ppoEffectStub: PPOEffect = .search("abc")
@@ -143,8 +143,8 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let event: Event = .prePaymentOptions(.initiate)
         let ppoStateStub = makePrePaymentOptionsState(
-            lastPayments: [makeLastPayment()],
-            operators: [makeOperator(), makeOperator()],
+            lastPaymentsCount: 1,
+            operatorsCount: 3,
             searchText: "abc",
             isInflight: true
         )
@@ -212,16 +212,38 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         .init(value: value)
     }
     
+    private func makePPOStub(
+        lastPaymentsCount: Int? = nil,
+        operatorsCount: Int? = nil,
+        searchText: String = "",
+        isInflight: Bool = false,
+        ppoEffect: PPOEffect? = nil
+    ) -> (PPOState, PPOEffect?) {
+        
+        let ppoState = makePrePaymentOptionsState(
+            lastPaymentsCount: lastPaymentsCount,
+            operatorsCount: operatorsCount,
+            searchText: searchText,
+            isInflight: isInflight
+        )
+        
+        return (ppoState, ppoEffect)
+    }
+    
     private func makePrePaymentOptionsState(
-        lastPayments: [LastPayment]? = nil,
-        operators: [Operator]? = nil,
+        lastPaymentsCount: Int? = nil,
+        operatorsCount: Int? = nil,
         searchText: String = "",
         isInflight: Bool = false
     ) -> PPOState {
         
         .init(
-            lastPayments: lastPayments,
-            operators: operators,
+            lastPayments: lastPaymentsCount.map {
+                (0..<$0).map { _ in makeLastPayment() }
+            },
+            operators: operatorsCount.map {
+                (0..<$0).map { _ in makeOperator() }
+            },
             searchText: searchText,
             isInflight: isInflight
         )
