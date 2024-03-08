@@ -17,7 +17,7 @@ public extension RequestFactory {
         payload: ProductDetailsPayload
     ) throws -> URLRequest {
         
-        var request = Services.RequestFactory.createEmptyRequest(.post, with: url)
+        var request = createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody
         return request
     }

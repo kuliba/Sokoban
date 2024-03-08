@@ -17,9 +17,9 @@ public extension ResponseMapper {
     static func mapGetProductDetailsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> Services.ResponseMapper.MappingResult<ProductDetails> {
+    ) -> MappingResult<ProductDetails> {
         
-        Services.ResponseMapper.map(data, httpURLResponse, mapOrThrow: map)
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
