@@ -5,13 +5,19 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentFlowReducer {
+import PrePaymentPicker
+
+public final class UtilityPaymentFlowReducer<LastPayment, Operator> 
+where Operator: Identifiable {
     
+    private let prePaymentOptionsReduce: PrePaymentOptionsReduce
     private let prePaymentReduce: PrePaymentReduce
     
     public init(
+        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce,
         prePaymentReduce: @escaping PrePaymentReduce
     ) {
+        self.prePaymentOptionsReduce = prePaymentOptionsReduce
         self.prePaymentReduce = prePaymentReduce
     }
 }
@@ -39,9 +45,10 @@ public extension UtilityPaymentFlowReducer {
 
 public extension UtilityPaymentFlowReducer {
     
+    typealias PrePaymentOptionsReduce = (PrePaymentOptionsState<LastPayment, Operator>, PrePaymentOptionsEvent<LastPayment, Operator>) -> (PrePaymentOptionsState<LastPayment, Operator>, PrePaymentOptionsEffect<Operator>?)
     typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
     
-    typealias State = UtilityPaymentFlowState
+    typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent
     typealias Effect = UtilityPaymentFlowEffect
 }

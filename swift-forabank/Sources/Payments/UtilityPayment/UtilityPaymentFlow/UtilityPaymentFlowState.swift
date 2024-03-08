@@ -5,13 +5,21 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public struct UtilityPaymentFlowState: Equatable {
+import ForaTools
+
+public struct UtilityPaymentFlowState<LastPayment, Operator> {
     
-    public var prePayment: PrePaymentState
+    private var stack: NonEmptyStack<Flow>
     
-    public init(
-        prePayment: PrePaymentState = .selecting
-    ) {
-        self.prePayment = prePayment
+    public init(initialFlow: Flow) {
+        
+        self.stack = .init(initialFlow)
     }
 }
+
+public extension UtilityPaymentFlowState {
+    
+    typealias Flow = UtilityPaymentFlow<LastPayment, Operator>
+}
+
+extension UtilityPaymentFlowState: Equatable where LastPayment: Equatable, Operator: Equatable {}
