@@ -19,7 +19,11 @@ public struct UtilityPaymentFlowState<LastPayment, Operator> {
 
 public extension UtilityPaymentFlowState {
 
-    var current: Flow { stack.last }
+    var current: Flow {
+        
+        get { stack.last }
+        set { stack.last = newValue }
+    }
 }
 
 public extension UtilityPaymentFlowState {

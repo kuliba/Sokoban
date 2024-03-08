@@ -91,19 +91,48 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
     }
     
+    func test_prePaymentOptionsEvent_shouldNotCallPrePaymentOptionsReducerOnPrePaymentState_addingCompany() {
+        
+        let state = makeState(.prePaymentState(.addingCompany))
+        let prePaymentOptionsEvent: PPOEvent = .initiate
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertEqual(ppoReducer.callCount, 0)
+    }
+    
+    func test_prePaymentOptionsEvent_shouldChangePrePaymentOptionsStateToPrePaymentOptionsReduceResult() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let ppoState = makePrePaymentOptionsState(
+            lastPayments: [makeLastPayment()],
+            operators: [makeOperator(), makeOperator()],
+            searchText: "abc"
+        )
+        let ppoEffect: PPOEffect = .search("abc")
+        let (sut, _,_) = makeSUT(ppoStub: [(ppoState, ppoEffect)])
+        
+        let (newState, newEffect) = sut.reduce(state, .prePaymentOptions(.initiate))
+
+        XCTAssertNoDiff(newState, makeState(.prePaymentOptions(ppoState)))
+        XCTAssertNoDiff(newEffect, .prePaymentOptions(ppoEffect))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
-    private typealias Flow = SUT.State.Flow
-    
     private typealias Effect = SUT.Effect
     
-    private typealias PPOState = PrePaymentOptionsState<LastPayment, Operator>
-    private typealias PPOEvent = PrePaymentOptionsEvent<LastPayment, Operator>
-    private typealias PPOEffect = PrePaymentOptionsEffect<Operator>
+    private typealias Flow = SUT.State.Flow
+    
+    private typealias PPOState = SUT.PPOState
+    private typealias PPOEvent = SUT.PPOEvent
+    private typealias PPOEffect = SUT.PPOEffect
     private typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
     
     private typealias PrePaymentReducer = ReducerSpy<PrePaymentState, PrePaymentEvent, PrePaymentEffect>
@@ -130,6 +159,20 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(prePaymentReducer, file: file, line: line)
         
         return (sut, ppoReducer, prePaymentReducer)
+    }
+    
+    private func makeLastPayment(
+        value: String = UUID().uuidString
+    ) -> LastPayment {
+        
+        .init(value: value)
+    }
+    
+    private func makeOperator(
+        value: String = UUID().uuidString
+    ) -> Operator {
+        
+        .init(value: value)
     }
     
     private func makePrePaymentOptionsState(

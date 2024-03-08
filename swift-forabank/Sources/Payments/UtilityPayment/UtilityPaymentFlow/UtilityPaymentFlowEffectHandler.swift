@@ -26,5 +26,5 @@ public extension UtilityPaymentFlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentFlowEffect
+    typealias Effect = UtilityPaymentFlowEffect<Operator>
 }

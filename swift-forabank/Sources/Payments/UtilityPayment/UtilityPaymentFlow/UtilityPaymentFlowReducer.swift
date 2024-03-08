@@ -7,7 +7,7 @@
 
 import PrePaymentPicker
 
-public final class UtilityPaymentFlowReducer<LastPayment, Operator> 
+public final class UtilityPaymentFlowReducer<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let prePaymentOptionsReduce: PrePaymentOptionsReduce
@@ -34,16 +34,8 @@ public extension UtilityPaymentFlowReducer {
         
 #warning("add state to switch do exclude impossible cases (?)")
         switch event {
-            
         case let .prePaymentOptions(prePaymentOptionsEvent):
-            switch state.current {
-            case let .prePaymentOptions(prePaymentOptionsState):
-            _ = prePaymentOptionsReduce(prePaymentOptionsState, prePaymentOptionsEvent)
-            // (state, effect) = reduce(state, prePaymentEvent)
-            default:
-                //break
-                fatalError()
-            }
+            (state, effect) = reduce(state, prePaymentOptionsEvent)
             
         case let .prePayment(prePaymentEvent):
             (state, effect) = reduce(state, prePaymentEvent)
@@ -55,15 +47,40 @@ public extension UtilityPaymentFlowReducer {
 
 public extension UtilityPaymentFlowReducer {
     
-    typealias PrePaymentOptionsReduce = (PrePaymentOptionsState<LastPayment, Operator>, PrePaymentOptionsEvent<LastPayment, Operator>) -> (PrePaymentOptionsState<LastPayment, Operator>, PrePaymentOptionsEffect<Operator>?)
+    typealias PPOState = PrePaymentOptionsState<LastPayment, Operator>
+    typealias PPOEvent = PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias PPOEffect = PrePaymentOptionsEffect<Operator>
+
+    typealias PrePaymentOptionsReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
     typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentFlowEffect
+    typealias Effect = UtilityPaymentFlowEffect<Operator>
 }
 
 private extension UtilityPaymentFlowReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: PPOEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch state.current {
+        case let .prePaymentOptions(prePaymentOptionsState):
+            let (ppoState, ppoEffect) = prePaymentOptionsReduce(prePaymentOptionsState, event)
+            state.current = .prePaymentOptions(ppoState)
+            effect = ppoEffect.map { Effect.prePaymentOptions($0) }
+
+        default:
+            break
+        }
+        
+        return (state, effect)
+    }
     
     func reduce(
         _ state: State,
@@ -71,34 +88,34 @@ private extension UtilityPaymentFlowReducer {
     ) -> (State, Effect?) {
         
         fatalError()
-//        var state = state
-//        var effect: Effect?
-//        
-//        switch state.prePayment {
-//        case .none:
-//            break
-//            
-//        case let .some(prePaymentState):
-//            let (prePaymentState, _) = prePaymentReduce(prePaymentState, event)
-//            
-//            switch prePaymentState {
-//            case .addingCompany:
-//                <#code#>
-//
-//            case .payingByInstruction:
-//                <#code#>
-//
-//            case .scanning:
-//                <#code#>
-//
-//            case let .selected(selected):
-//                <#code#>
-//
-//            case .selecting:
-//                <#code#>
-//            }
-//        }
-//
-//        return (state, effect)
+        //        var state = state
+        //        var effect: Effect?
+        //
+        //        switch state.prePayment {
+        //        case .none:
+        //            break
+        //
+        //        case let .some(prePaymentState):
+        //            let (prePaymentState, _) = prePaymentReduce(prePaymentState, event)
+        //
+        //            switch prePaymentState {
+        //            case .addingCompany:
+        //                <#code#>
+        //
+        //            case .payingByInstruction:
+        //                <#code#>
+        //
+        //            case .scanning:
+        //                <#code#>
+        //
+        //            case let .selected(selected):
+        //                <#code#>
+        //
+        //            case .selecting:
+        //                <#code#>
+        //            }
+        //        }
+        //
+        //        return (state, effect)
     }
 }
