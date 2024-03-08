@@ -9,11 +9,16 @@ import ForaTools
 
 public struct UtilityPaymentFlowState<LastPayment, Operator> {
     
+    public var isInflight: Bool
+    
     private var stack: NonEmptyStack<Flow>
     
-    public init(initialFlow: Flow) {
-        
+    public init(
+        initialFlow: Flow,
+        isInflight: Bool = false
+    ) {
         self.stack = .init(initialFlow)
+        self.isInflight = isInflight
     }
 }
 

@@ -120,6 +120,25 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         XCTAssertNoDiff(newEffect, .prePaymentOptions(ppoEffect))
     }
     
+    func test_prePaymentOptionsEvent_shouldChangeInflightOnPrePaymentOptionsInlight() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let ppoState = makePrePaymentOptionsState(
+            lastPayments: [makeLastPayment()],
+            operators: [makeOperator(), makeOperator()],
+            searchText: "abc",
+            isInflight: true
+        )
+        let ppoEffect: PPOEffect = .search("abc")
+        let (sut, _,_) = makeSUT(ppoStub: [(ppoState, ppoEffect)])
+        
+        let (newState, newEffect) = sut.reduce(state, .prePaymentOptions(.initiate))
+
+        XCTAssertNoDiff(newState, makeState(.prePaymentOptions(ppoState), isInflight: true))
+        XCTAssertNoDiff(newEffect, .prePaymentOptions(ppoEffect))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
@@ -191,10 +210,11 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makeState(
-        _ flow: Flow
+        _ flow: Flow,
+        isInflight: Bool = false
     ) -> State {
         
-        .init(initialFlow: flow)
+        .init(initialFlow: flow, isInflight: isInflight)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
