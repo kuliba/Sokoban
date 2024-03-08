@@ -19,4 +19,10 @@ public struct DetailsState: Equatable {
         self.items = items
         self.event = event
     }
+    
+    public mutating func updateEvent(
+        _ newEvent: DetailsEvent?
+    ) {
+        self.event = newEvent
+    }
 }

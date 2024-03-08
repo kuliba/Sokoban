@@ -1,5 +1,5 @@
 //
-//  ItemsViewNew.swift
+//  DetailsView.swift
 //
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ItemsViewNew: View {
+struct DetailsView: View {
     
     let items: [ItemForList]
     let event: (ItemEvent) -> Void
@@ -149,7 +149,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
         
         NavigationView {
             
-            ItemsViewNew(
+            DetailsView(
                 items: .preview,
                 event: { print($0) },
                 config: .preview,
@@ -161,7 +161,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
         
         NavigationView {
             
-            ItemsViewNew(
+            DetailsView(
                 items: .preview,
                 event: { print($0) },
                 config: .preview,
@@ -173,7 +173,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
         
         NavigationView {
             
-            ItemsViewNew(
+            DetailsView(
                 items: .cardItems,
                 event: { print($0) },
                 config: .preview,
