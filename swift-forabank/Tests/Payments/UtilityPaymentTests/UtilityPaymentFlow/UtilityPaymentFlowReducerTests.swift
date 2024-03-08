@@ -106,37 +106,55 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
-        let ppoState = makePrePaymentOptionsState(
+        let event: Event = .prePaymentOptions(.initiate)
+        let ppoStateStub = makePrePaymentOptionsState(
             lastPayments: [makeLastPayment()],
             operators: [makeOperator(), makeOperator()],
             searchText: "abc"
         )
-        let ppoEffect: PPOEffect = .search("abc")
-        let (sut, _,_) = makeSUT(ppoStub: [(ppoState, ppoEffect)])
-        
-        let (newState, newEffect) = sut.reduce(state, .prePaymentOptions(.initiate))
+        let ppoEffectStub: PPOEffect = .search("abc")
+        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
 
-        XCTAssertNoDiff(newState, makeState(.prePaymentOptions(ppoState)))
-        XCTAssertNoDiff(newEffect, .prePaymentOptions(ppoEffect))
+        assertState(sut: sut, event, on: state) {
+            
+            $0 = self.makeState(.prePaymentOptions(ppoStateStub))
+        }
+    }
+    
+    func test_prePaymentOptionsEvent_shouldDeliverPrePaymentOptionsReduceEffect() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let event: Event = .prePaymentOptions(.initiate)
+        let ppoStateStub = makePrePaymentOptionsState(
+            lastPayments: [makeLastPayment()],
+            operators: [makeOperator(), makeOperator()],
+            searchText: "abc"
+        )
+        let ppoEffectStub: PPOEffect = .search("abc")
+        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+
+        assert(sut: sut, event, on: state, effect: .prePaymentOptions(ppoEffectStub))
     }
     
     func test_prePaymentOptionsEvent_shouldChangeInflightOnPrePaymentOptionsInlight() {
         
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
-        let ppoState = makePrePaymentOptionsState(
+        let event: Event = .prePaymentOptions(.initiate)
+        let ppoStateStub = makePrePaymentOptionsState(
             lastPayments: [makeLastPayment()],
             operators: [makeOperator(), makeOperator()],
             searchText: "abc",
             isInflight: true
         )
-        let ppoEffect: PPOEffect = .search("abc")
-        let (sut, _,_) = makeSUT(ppoStub: [(ppoState, ppoEffect)])
+        let ppoEffectStub: PPOEffect = .search("abc")
+        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
         
-        let (newState, newEffect) = sut.reduce(state, .prePaymentOptions(.initiate))
-
-        XCTAssertNoDiff(newState, makeState(.prePaymentOptions(ppoState), isInflight: true))
-        XCTAssertNoDiff(newEffect, .prePaymentOptions(ppoEffect))
+        assertState(sut: sut, event, on: state) {
+            
+            $0 = self.makeState(.prePaymentOptions(ppoStateStub), isInflight: true)
+        }
     }
     
     // MARK: - Helpers
