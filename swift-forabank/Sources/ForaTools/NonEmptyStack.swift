@@ -58,3 +58,5 @@ public extension NonEmptyStack {
     
     var isEmpty: Bool { false }
 }
+
+extension NonEmptyStack: Equatable where Element: Equatable {}
