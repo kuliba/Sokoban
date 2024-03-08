@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentFlowEffectHandler {
+public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator>
+where Operator: Identifiable {
     
     public init() {}
 }
@@ -16,7 +17,7 @@ public extension UtilityPaymentFlowEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        
+        fatalError()
     }
 }
 
@@ -24,6 +25,6 @@ public extension UtilityPaymentFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
     typealias Effect = UtilityPaymentFlowEffect
 }

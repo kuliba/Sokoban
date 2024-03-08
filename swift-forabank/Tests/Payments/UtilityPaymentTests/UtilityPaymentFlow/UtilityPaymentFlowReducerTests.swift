@@ -19,9 +19,87 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         XCTAssertEqual(prePaymentReducer.callCount, 0)
     }
     
+    // MARK: - PrePaymentOptions
+    
+    func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_didScrollTo() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let prePaymentOptionsEvent: PPOEvent = .didScrollTo("abc")
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
+    }
+    
+    func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_initiate() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let prePaymentOptionsEvent: PPOEvent = .initiate
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
+    }
+    
+    func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_loaded() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let prePaymentOptionsEvent: PPOEvent = .loaded(
+            .failure(.connectivityError),
+            .failure(.connectivityError)
+        )
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
+    }
+    
+    func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_paginated() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let prePaymentOptionsEvent: PPOEvent = .paginated(
+            .failure(.connectivityError)
+        )
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
+    }
+    
+    func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_search() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let prePaymentOptionsEvent: PPOEvent = .search(.entered(""))
+        let (sut, ppoReducer, _) = makeSUT()
+        
+        _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prePaymentOptionsEvent])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
+    
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Flow = SUT.State.Flow
+    
+    private typealias Effect = SUT.Effect
     
     private typealias PPOState = PrePaymentOptionsState<LastPayment, Operator>
     private typealias PPOEvent = PrePaymentOptionsEvent<LastPayment, Operator>
@@ -31,7 +109,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     private typealias PrePaymentReducer = ReducerSpy<PrePaymentState, PrePaymentEvent, PrePaymentEffect>
     
     private func makeSUT(
-        ppoStub: [(PPOState, PPOEffect?)] = [],
+        ppoStub: [(PPOState, PPOEffect?)] = [(.init(), nil)],
         prePaymentStub: [(PrePaymentState, PrePaymentEffect?)] = [],
         file: StaticString = #file,
         line: UInt = #line
@@ -52,6 +130,72 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(prePaymentReducer, file: file, line: line)
         
         return (sut, ppoReducer, prePaymentReducer)
+    }
+    
+    private func makePrePaymentOptionsState(
+        lastPayments: [LastPayment]? = nil,
+        operators: [Operator]? = nil,
+        searchText: String = "",
+        isInflight: Bool = false
+    ) -> PPOState {
+        
+        .init(
+            lastPayments: lastPayments,
+            operators: operators,
+            searchText: searchText,
+            isInflight: isInflight
+        )
+    }
+    
+    private func makeState(
+        _ flow: Flow
+    ) -> State {
+        
+        .init(initialFlow: flow)
+    }
+    
+    private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
+    
+    private func assertState(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: UpdateStateToExpected<State>? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT(file: file, line: line).sut
+        
+        var expectedState = state
+        updateStateToExpected?(&expectedState)
+        
+        let (receivedState, _) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedState,
+            expectedState,
+            "\nExpected \(expectedState), but got \(receivedState) instead.",
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        effect expectedEffect: Effect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT(file: file, line: line).sut
+        let (_, receivedEffect) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
     }
 }
 

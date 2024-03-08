@@ -35,6 +35,16 @@ public extension UtilityPaymentFlowReducer {
 #warning("add state to switch do exclude impossible cases (?)")
         switch event {
             
+        case let .prePaymentOptions(prePaymentOptionsEvent):
+            switch state.current {
+            case let .prePaymentOptions(prePaymentOptionsState):
+            _ = prePaymentOptionsReduce(prePaymentOptionsState, prePaymentOptionsEvent)
+            // (state, effect) = reduce(state, prePaymentEvent)
+            default:
+                //break
+                fatalError()
+            }
+            
         case let .prePayment(prePaymentEvent):
             (state, effect) = reduce(state, prePaymentEvent)
         }
@@ -49,7 +59,7 @@ public extension UtilityPaymentFlowReducer {
     typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
-    typealias Event = UtilityPaymentFlowEvent
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
     typealias Effect = UtilityPaymentFlowEffect
 }
 

@@ -18,6 +18,11 @@ public struct UtilityPaymentFlowState<LastPayment, Operator> {
 }
 
 public extension UtilityPaymentFlowState {
+
+    var current: Flow { stack.last }
+}
+
+public extension UtilityPaymentFlowState {
     
     typealias Flow = UtilityPaymentFlow<LastPayment, Operator>
 }
