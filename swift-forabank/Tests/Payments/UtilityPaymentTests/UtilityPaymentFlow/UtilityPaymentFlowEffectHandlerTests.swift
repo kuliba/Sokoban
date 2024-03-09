@@ -448,7 +448,8 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
         
         wait(for: [exp], timeout: 1)
-    }}
+    }
+}
 
 private struct LastPayment: Equatable {
     
