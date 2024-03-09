@@ -85,35 +85,14 @@ struct ItemView_Previews: PreviewProvider {
         Group {
             
             DetailView(
-                item: .accountNumberItem,
+                item: .accountNumber,
                 event: { print("event - \($0)") },
                 config: .preview)
             
             DetailView(
-                item: .cvvItem,
+                item: .cvvMasked,
                 event: { print("event - \($0)") },
                 config: .preview)
         }
     }
-}
-
-private extension Detail {
-    
-    static let accountNumberItem: Self = .init(
-        id: .accountNumber,
-        title: "title",
-        titleForInformer: "titleForInformer",
-        subtitle: "subtitle",
-        valueForCopy: "valueForCopy",
-        event: .iconTap(.accountNumber)
-    )
-    
-    static let cvvItem: Self = .init(
-        id: .cvv,
-        title: "title",
-        titleForInformer: "titleForInformer",
-        subtitle: "subtitle",
-        valueForCopy: "valueForCopy",
-        event: .iconTap(.cvv)
-    )
 }
