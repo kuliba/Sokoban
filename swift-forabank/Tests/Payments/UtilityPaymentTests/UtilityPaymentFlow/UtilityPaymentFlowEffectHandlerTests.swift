@@ -388,7 +388,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
+    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse, UtilityService>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -476,3 +476,11 @@ private struct StartPaymentResponse: Equatable {
     
     var id: String { value }
 }
+
+private struct UtilityService: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+

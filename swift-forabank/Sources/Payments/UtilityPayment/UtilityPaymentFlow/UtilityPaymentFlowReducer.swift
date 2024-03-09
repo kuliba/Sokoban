@@ -7,7 +7,7 @@
 
 import PrePaymentPicker
 
-public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response>
+public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     
     private let prePaymentOptionsReduce: PrePaymentOptionsReduce
@@ -53,12 +53,12 @@ public extension UtilityPaymentFlowReducer {
     typealias PrePaymentOptionsReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
     
     typealias PPState = PrePaymentState<LastPayment, Operator>
-    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
     typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }
 
@@ -110,6 +110,9 @@ private extension UtilityPaymentFlowReducer {
             case .back:
                 state.current = nil
                 
+            case let .loaded(result):
+                fatalError("can't handle `loaded` event with \(result)")
+
             case .payByInstruction:
                 state.current = .prePaymentState(.payingByInstruction)
                 
@@ -143,6 +146,9 @@ private extension UtilityPaymentFlowReducer {
                 case .selecting:
                     fatalError("can't handle event \(event) on prePaymentState state \(prePaymentState)")
                 }
+                
+            case let .loaded(result):
+                fatalError("can't handle `loaded` event with \(result)")
                 
             case .select:
                 break

@@ -7,7 +7,7 @@
 
 import PrePaymentPicker
 
-public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, Response>
+public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     
     private let ppoHandleEffect: PPOHandleEffect
@@ -51,13 +51,13 @@ public extension UtilityPaymentFlowEffectHandler {
     typealias PPODispatch = (PPOEvent) -> Void
     typealias PPOHandleEffect = (PPOEffect, @escaping PPODispatch) -> Void
     
-    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     typealias PPDispatch = (PPEvent) -> Void
     typealias PPHandleEffect = (PPEffect, @escaping PPDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
     typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }
