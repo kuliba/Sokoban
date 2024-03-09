@@ -101,8 +101,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     
     func test_startPayment_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_lastPayment() {
         
-        let lastPayment = makeLastPayment()
-        let effect: Effect = .startPayment(.last(lastPayment))
+        let effect: Effect = .startPayment(.last(makeLastPayment()))
         let (sut, startPayment) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .startPayment(.failure(.connectivityError)), on: {
@@ -113,8 +112,30 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     
     func test_startPayment_shouldDeliverServerErrorOnStartPaymentServerErrorFailure_lastPayment() {
         
-        let lastPayment = makeLastPayment()
-        let effect: Effect = .startPayment(.last(lastPayment))
+        let effect: Effect = .startPayment(.last(makeLastPayment()))
+        let message = anyMessage()
+        let (sut, startPayment) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .startPayment(.failure(.serverError(message))), on: {
+            
+            startPayment.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
+    func test_startPayment_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_operator() {
+        
+        let effect: Effect = .startPayment(.operator(makeOperator()))
+        let (sut, startPayment) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .startPayment(.failure(.connectivityError)), on: {
+            
+            startPayment.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_startPayment_shouldDeliverServerErrorOnStartPaymentServerErrorFailure_operator() {
+        
+        let effect: Effect = .startPayment(.operator(makeOperator()))
         let message = anyMessage()
         let (sut, startPayment) = makeSUT()
         
