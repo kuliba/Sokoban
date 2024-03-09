@@ -45,7 +45,7 @@ extension PrePaymentEffectHandler {
     typealias LoadServicesCompletion = (LoadServicesResult) -> Void
     typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
     
-    enum Payload {
+    enum StartPaymentPayload {
         
         case last(LastPayment)
         case service(Operator, Service)
@@ -53,7 +53,7 @@ extension PrePaymentEffectHandler {
     
     typealias StartPaymentResult = Result<Response, ServiceFailure>
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
-    typealias StartPayment = (Payload, @escaping StartPaymentCompletion) -> Void
+    typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -61,7 +61,7 @@ extension PrePaymentEffectHandler {
     typealias Effect = PrePaymentEffect<LastPayment, Operator>
 }
 
-extension PrePaymentEffectHandler.Payload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
+extension PrePaymentEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
 
 private extension PrePaymentEffectHandler {
     
@@ -112,13 +112,12 @@ private extension PrePaymentEffectHandler {
                 dispatch(.loaded(.failure))
                 
             case let .success(services):
-                switch services.count {
-                case 0:
+                switch (services.first, services.count) {
+                case (nil, _):
                     dispatch(.loaded(.failure))
                     
-                case 1:
-#warning("remove bang")
-                    self?.startPayment(.service(`operator`, services.first!)) { [weak self] in
+                case let (.some(service), 1):
+                    self?.startPayment(.service(`operator`, service)) { [weak self] in
                         
                         self?.handleStartPayment(result: $0, dispatch)
                     }
@@ -298,7 +297,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias StartPaymentSpy = Spy<SUT.Payload, SUT.StartPaymentResult>
+    private typealias StartPaymentSpy = Spy<SUT.StartPaymentPayload, SUT.StartPaymentResult>
     private typealias LoadServicesSpy = Spy<SUT.LoadServicesPayload, SUT.LoadServicesResult>
     
     private func makeSUT(
