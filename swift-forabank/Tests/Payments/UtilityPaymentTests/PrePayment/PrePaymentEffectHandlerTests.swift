@@ -56,20 +56,34 @@ private extension PrePaymentEffectHandler {
     ) {
         switch select {
         case let .last(lastPayment):
-            startPayment(.last(lastPayment)) {
-                
-                switch $0 {
-                case let .failure(serviceFailure):
-                    dispatch(.paymentStarted(.failure(serviceFailure)))
-                    
-                case let .success(response):
-                    dispatch(.paymentStarted(.success(response)))
-                }
-            }
+            selectLastPayment(lastPayment, dispatch)
             
         case let .operator(`operator`):
-            fatalError("can't handle `operator` case with \(`operator`) - can't start payment, need to select service first")
+            selectOperator(`operator`, dispatch)
         }
+    }
+    
+    func selectLastPayment(
+        _ lastPayment: LastPayment,
+        _ dispatch: @escaping Dispatch
+    ) {
+        startPayment(.last(lastPayment)) {
+            
+            switch $0 {
+            case let .failure(serviceFailure):
+                dispatch(.paymentStarted(.failure(serviceFailure)))
+                
+            case let .success(response):
+                dispatch(.paymentStarted(.success(response)))
+            }
+        }
+    }
+    
+    func selectOperator(
+        _ `operator`: Operator,
+        _ dispatch: @escaping Dispatch
+    ) {
+        fatalError("can't handle `operator` case with \(`operator`) - can't start payment, need to select service first")
     }
 }
 
@@ -82,27 +96,27 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         XCTAssertEqual(startPayment.callCount, 0)
     }
     
-    // MARK: - select
+    // MARK: - select lastPayment
     
     func test_select_shouldCallStartPayment_lastPayment() {
         
         let lastPayment = makeLastPayment()
         let effect: Effect = .select(.last(lastPayment))
-        let (sut, startPaymentSpy) = makeSUT()
+        let (sut, startPayment) = makeSUT()
         
         sut.handleEffect(effect) { _ in }
         
-        XCTAssertNoDiff(startPaymentSpy.messages.map(\.payload), [.last(lastPayment)])
+        XCTAssertNoDiff(startPayment.messages.map(\.payload), [.last(lastPayment)])
     }
     
     func test_select_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_lastPayment() {
         
         let effect: Effect = .select(.last(makeLastPayment()))
-        let (sut, startPaymentSpy) = makeSUT()
+        let (sut, startPayment) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
             
-            startPaymentSpy.complete(with: .failure(.connectivityError))
+            startPayment.complete(with: .failure(.connectivityError))
         })
     }
     
@@ -110,11 +124,11 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let effect: Effect = .select(.last(makeLastPayment()))
         let message = anyMessage()
-        let (sut, startPaymentSpy) = makeSUT()
+        let (sut, startPayment) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.serverError(message))), on: {
             
-            startPaymentSpy.complete(with: .failure(.serverError(message)))
+            startPayment.complete(with: .failure(.serverError(message)))
         })
     }
     
@@ -122,14 +136,18 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let effect: Effect = .select(.last(makeLastPayment()))
         let response = makeResponse()
-        let (sut, startPaymentSpy) = makeSUT()
+        let (sut, startPayment) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
             
-            startPaymentSpy.complete(with: .success(response))
+            startPayment.complete(with: .success(response))
         })
     }
     
+    // MARK: - select operator
+    
+    
+
     // MARK: - Helpers
     
     private typealias SUT = PrePaymentEffectHandler<LastPayment, Operator, StartPaymentResponse>
@@ -177,7 +195,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         .init(value: value)
     }
-
+    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
