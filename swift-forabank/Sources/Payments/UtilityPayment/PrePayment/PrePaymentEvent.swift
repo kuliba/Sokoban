@@ -12,7 +12,7 @@ public enum PrePaymentEvent<LastPayment, Operator> {
     case payByInstruction
     case scan
     case select(SelectEvent)
-    case startPayment
+    case startPayment(StartPaymentResult)
 }
 
 public extension PrePaymentEvent {
@@ -22,6 +22,8 @@ public extension PrePaymentEvent {
         case last(LastPayment)
         case `operator`(Operator)
     }
+    
+    typealias StartPaymentResult = Result<Never, ServiceFailure>
 }
 
 extension PrePaymentEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}

@@ -377,7 +377,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     func test_prePaymentEffect_startPayment_shouldDeliverPrePaymentOptionsHandleEffectEvent_startPayment() {
         
         let (sut, _, ppEffectHandler) = makeSUT()
-        let event: SUT.PPEvent = .startPayment
+        let event: SUT.PPEvent = .startPayment(.failure(.connectivityError))
         let effect: SUT.PPEffect = .startPayment(.operator(makeOperator()))
         
         expect(sut, with: .prePayment(effect), toDeliver: .prePayment(event), on: {
