@@ -11,6 +11,7 @@ public enum UtilityPaymentFlowEffect<Operator>
 where Operator: Identifiable {
     
     case prePaymentOptions(PrePaymentOptionsEffect<Operator>)
+    case prePayment(PrePaymentEffect)
 }
 
 extension UtilityPaymentFlowEffect: Equatable where Operator: Equatable {}

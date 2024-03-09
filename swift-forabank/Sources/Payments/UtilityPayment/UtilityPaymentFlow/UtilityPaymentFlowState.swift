@@ -11,23 +11,33 @@ public struct UtilityPaymentFlowState<LastPayment, Operator> {
     
     public var isInflight: Bool
     
-    private var stack: NonEmptyStack<Flow>
+    private var stack: Stack<Flow>
     
     public init(
-        initialFlow: Flow,
+        _ flows: [Flow],
         isInflight: Bool = false
     ) {
-        self.stack = .init(initialFlow)
+        self.stack = .init(flows)
         self.isInflight = isInflight
     }
 }
 
 public extension UtilityPaymentFlowState {
 
-    var current: Flow {
+    var current: Flow? {
         
-        get { stack.last }
-        set { stack.last = newValue }
+        get { stack.top }
+        set { stack.top = newValue }
+    }
+    
+    mutating func push(_ flow: Flow) {
+        
+        stack.push(flow)
+    }
+    
+    mutating func pop() {
+        
+        stack.pop()
     }
 }
 

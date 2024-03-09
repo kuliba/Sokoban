@@ -234,7 +234,7 @@ final class PrePaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PrePaymentReducer
+    private typealias SUT = PrePaymentReducer<LastPayment, Operator>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -253,17 +253,17 @@ final class PrePaymentReducerTests: XCTestCase {
     }
     
     private func makeLastPayment(
-        _ id: String = UUID().uuidString
+        _ value: String = UUID().uuidString
     ) -> LastPayment {
         
-        .init(id: id)
+        .init(value: value)
     }
     
     private func makeOperator(
-        _ id: String = UUID().uuidString
+        _ value: String = UUID().uuidString
     ) -> Operator {
         
-        .init(id: id)
+        .init(value: value)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
@@ -309,4 +309,16 @@ final class PrePaymentReducerTests: XCTestCase {
             file: file, line: line
         )
     }
+}
+
+private struct LastPayment: Equatable {
+    
+    var value: String
+}
+
+private struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
 }

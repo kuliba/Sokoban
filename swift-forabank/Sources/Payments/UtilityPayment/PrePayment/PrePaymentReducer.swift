@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-public final class PrePaymentReducer {
+public final class PrePaymentReducer<LastPayment, Operator> {
     
     public init() {}
 }
@@ -51,7 +51,7 @@ public extension PrePaymentReducer {
 
 public extension PrePaymentReducer {
     
-    typealias State = PrePaymentState
-    typealias Event = PrePaymentEvent
+    typealias State = PrePaymentState<LastPayment, Operator>
+    typealias Event = PrePaymentEvent<LastPayment, Operator>
     typealias Effect = PrePaymentEffect
 }

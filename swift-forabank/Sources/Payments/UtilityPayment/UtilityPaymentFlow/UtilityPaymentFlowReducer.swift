@@ -50,9 +50,12 @@ public extension UtilityPaymentFlowReducer {
     typealias PPOState = PrePaymentOptionsState<LastPayment, Operator>
     typealias PPOEvent = PrePaymentOptionsEvent<LastPayment, Operator>
     typealias PPOEffect = PrePaymentOptionsEffect<Operator>
-
     typealias PrePaymentOptionsReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
-    typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
+    
+    typealias PPState = PrePaymentState<LastPayment, Operator>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator>
+    typealias PPEffect = PrePaymentEffect
+    typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
@@ -78,7 +81,7 @@ private extension UtilityPaymentFlowReducer {
             }
             state.current = .prePaymentOptions(ppoState)
             effect = ppoEffect.map { Effect.prePaymentOptions($0) }
-
+            
         default:
             break
         }
@@ -88,38 +91,71 @@ private extension UtilityPaymentFlowReducer {
     
     func reduce(
         _ state: State,
-        _ event: PrePaymentEvent
+        _ event: PPEvent
     ) -> (State, Effect?) {
         
-        fatalError()
-        //        var state = state
-        //        var effect: Effect?
-        //
-        //        switch state.prePayment {
-        //        case .none:
-        //            break
-        //
-        //        case let .some(prePaymentState):
-        //            let (prePaymentState, _) = prePaymentReduce(prePaymentState, event)
-        //
-        //            switch prePaymentState {
-        //            case .addingCompany:
-        //                <#code#>
-        //
-        //            case .payingByInstruction:
-        //                <#code#>
-        //
-        //            case .scanning:
-        //                <#code#>
-        //
-        //            case let .selected(selected):
-        //                <#code#>
-        //
-        //            case .selecting:
-        //                <#code#>
-        //            }
-        //        }
-        //
-        //        return (state, effect)
+        var state = state
+        var effect: Effect?
+        
+        switch state.current {
+        case .none:
+            fatalError("can't handle empty flow stack")
+            
+        case .prePaymentOptions:
+            
+            switch event {
+            case .addCompany:
+                state.current = .prePaymentState(.addingCompany)
+                
+            case .back:
+                state.current = nil
+                
+            case .payByInstruction:
+                state.current = .prePaymentState(.payingByInstruction)
+                
+            case .scan:
+                state.current = .prePaymentState(.scanning)
+                
+            case let .select(select):
+                state.isInflight = true
+                effect = .prePayment(startPayment(select))
+                
+            default:
+                fatalError("can't handle event \(event) on `prePaymentOptions` state")
+            }
+            
+        case let .prePaymentState(prePaymentState):
+            switch event {
+            case .addCompany, .payByInstruction, .scan:
+                break
+                
+            case .back:
+                switch prePaymentState {
+                case .addingCompany:
+                    break
+                
+                case .payingByInstruction, .scanning:
+                    state.pop()
+                
+                case let .selected(selected):
+                    fatalError("can't handle `selected(\(selected))` event \(event) on prePaymentState state \(prePaymentState)")
+                    
+                case .selecting:
+                    fatalError("can't handle event \(event) on prePaymentState state \(prePaymentState)")
+                }
+                
+            default:
+                fatalError("can't handle event \(event) on prePaymentState state \(prePaymentState)")
+            }
+        }
+        
+        return (state, effect)
+    }
+    
+    func startPayment(
+        _ event: PPEvent.SelectEvent
+    ) -> PPEffect {
+        
+        .startPayment
     }
 }
