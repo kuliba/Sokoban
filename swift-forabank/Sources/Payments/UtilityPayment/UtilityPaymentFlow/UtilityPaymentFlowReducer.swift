@@ -119,6 +119,9 @@ private extension UtilityPaymentFlowReducer {
             case let .select(select):
                 state.isInflight = true
                 effect = .prePayment(startPayment(select))
+                
+            case .startPayment:
+                fatalError("can't handle `startPayment` event")
             }
             
         case let .prePaymentState(prePaymentState):
@@ -143,6 +146,9 @@ private extension UtilityPaymentFlowReducer {
                 
             case .select:
                 break
+                
+            case .startPayment:
+                fatalError("can't handle `startPayment` event")
             }
         }
         

@@ -13,17 +13,32 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, ppoEffectHandler) = makeSUT()
+        let (_, ppoEffectHandler, ppEffectHandler) = makeSUT()
         
         XCTAssertEqual(ppoEffectHandler.callCount, 0)
+        XCTAssertEqual(ppEffectHandler.callCount, 0)
     }
+    
+    // MARK: - initiate
     
     func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_didScrollTo() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .didScrollTo("123")
+        let (sut, ppoEffectHandler, _) = makeSUT()
         
-        expect(sut, with: .prePaymentOptions(.initiate), toDeliver: .prePaymentOptions(event), on: {
+        let effect: SUT.PPOEffect = .initiate
+        
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_didScrollTo() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .didScrollTo("123")
+        let effect: SUT.PPOEffect = .initiate
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -31,10 +46,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_initiate() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .initiate
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .initiate
         
-        expect(sut, with: .prePaymentOptions(.initiate), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_initiate() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .initiate
+        let effect: SUT.PPOEffect = .initiate
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -42,12 +68,23 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_loaded() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .initiate
+        
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_loaded() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
         let event: SUT.PPOEvent = .loaded(
             .failure(.connectivityError), .failure(.serverError(anyMessage()))
         )
+        let effect: SUT.PPOEffect = .initiate
         
-        expect(sut, with: .prePaymentOptions(.initiate), toDeliver: .prePaymentOptions(event), on: {
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -55,10 +92,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_paginated() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .initiate
         
-        expect(sut, with: .prePaymentOptions(.initiate), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_paginated() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let effect: SUT.PPOEffect = .initiate
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -66,21 +114,45 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_search() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .initiate
         
-        expect(sut, with: .prePaymentOptions(.initiate), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_search() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let effect: SUT.PPOEffect = .initiate
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
     }
     
+    // MARK: - paginate
+    
     func test_prePaymentOptionsEffect_paginate_shouldCallPrePaymentOptionsHandleEffect_didScrollTo() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .didScrollTo("123")
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
         
-        expect(sut, with: .prePaymentOptions(.paginate("", 1)), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_paginate_shouldDeliverPrePaymentOptionsHandleEffectEvent_didScrollTo() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .didScrollTo("123")
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -88,10 +160,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_paginate_shouldCallPrePaymentOptionsHandleEffect_initiate() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .initiate
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
         
-        expect(sut, with: .prePaymentOptions(.paginate("", 1)), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_paginate_shouldDeliverPrePaymentOptionsHandleEffectEvent_initiate() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .initiate
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -99,12 +182,23 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_paginate_shouldCallPrePaymentOptionsHandleEffect_loaded() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
+        
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_paginate_shouldDeliverPrePaymentOptionsHandleEffectEvent_loaded() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
         let event: SUT.PPOEvent = .loaded(
             .failure(.connectivityError), .failure(.serverError(anyMessage()))
         )
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
         
-        expect(sut, with: .prePaymentOptions(.paginate("", 1)), toDeliver: .prePaymentOptions(event), on: {
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -112,10 +206,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_paginate_shouldCallPrePaymentOptionsHandleEffect_paginated() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
         
-        expect(sut, with: .prePaymentOptions(.paginate("", 1)), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_paginate_shouldDeliverPrePaymentOptionsHandleEffectEvent_paginated() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -123,21 +228,45 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_paginate_shouldCallPrePaymentOptionsHandleEffect_search() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
         
-        expect(sut, with: .prePaymentOptions(.paginate("", 1)), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_paginate_shouldDeliverPrePaymentOptionsHandleEffectEvent_search() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let effect: SUT.PPOEffect = .paginate("abc", 13)
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
     }
     
+    // MARK: - search
+    
     func test_prePaymentOptionsEffect_search_shouldCallPrePaymentOptionsHandleEffect_didScrollTo() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .didScrollTo("123")
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .search("abc")
         
-        expect(sut, with: .prePaymentOptions(.search("abc")), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_search_shouldDeliverPrePaymentOptionsHandleEffectEvent_didScrollTo() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .didScrollTo("123")
+        let effect: SUT.PPOEffect = .search("abc")
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -145,10 +274,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_search_shouldCallPrePaymentOptionsHandleEffect_initiate() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .initiate
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .search("abc")
         
-        expect(sut, with: .prePaymentOptions(.search("abc")), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_search_shouldDeliverPrePaymentOptionsHandleEffectEvent_initiate() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .initiate
+        let effect: SUT.PPOEffect = .search("abc")
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -156,12 +296,23 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_search_shouldCallPrePaymentOptionsHandleEffect_loaded() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .search("abc")
+        
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_search_shouldDeliverPrePaymentOptionsHandleEffectEvent_loaded() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
         let event: SUT.PPOEvent = .loaded(
             .failure(.connectivityError), .failure(.serverError(anyMessage()))
         )
+        let effect: SUT.PPOEffect = .search("abc")
         
-        expect(sut, with: .prePaymentOptions(.search("abc")), toDeliver: .prePaymentOptions(event), on: {
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -169,10 +320,21 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_search_shouldCallPrePaymentOptionsHandleEffect_paginated() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .search("abc")
         
-        expect(sut, with: .prePaymentOptions(.search("abc")), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_search_shouldDeliverPrePaymentOptionsHandleEffectEvent_paginated() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .paginated(.success([makeOperator()]))
+        let effect: SUT.PPOEffect = .search("abc")
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
         })
@@ -180,12 +342,47 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_prePaymentOptionsEffect_search_shouldCallPrePaymentOptionsHandleEffect_search() {
         
-        let (sut, ppoEffectHandler) = makeSUT()
-        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let effect: SUT.PPOEffect = .search("abc")
         
-        expect(sut, with: .prePaymentOptions(.search("abc")), toDeliver: .prePaymentOptions(event), on: {
+        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentOptionsEffect_search_shouldDeliverPrePaymentOptionsHandleEffectEvent_search() {
+        
+        let (sut, ppoEffectHandler, _) = makeSUT()
+        let event: SUT.PPOEvent = .search(.entered("abc"))
+        let effect: SUT.PPOEffect = .search("abc")
+        
+        expect(sut, with: .prePaymentOptions(effect), toDeliver: .prePaymentOptions(event), on: {
             
             ppoEffectHandler.complete(with: event)
+        })
+    }
+    
+    // MARK: - startPayment
+    
+    func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
+        
+        let (sut, _, ppEffectHandler) = makeSUT()
+        let effect: SUT.PPEffect = .startPayment
+        
+        sut.handleEffect(.prePayment(effect)) { _ in }
+        
+        XCTAssertNoDiff(ppEffectHandler.messages.map(\.effect), [effect])
+    }
+    
+    func test_prePaymentEffect_startPayment_shouldDeliverPrePaymentOptionsHandleEffectEvent_startPayment() {
+        
+        let (sut, _, ppEffectHandler) = makeSUT()
+        let event: SUT.PPEvent = .startPayment
+        let effect: SUT.PPEffect = .startPayment
+        
+        expect(sut, with: .prePayment(effect), toDeliver: .prePayment(event), on: {
+            
+            ppEffectHandler.complete(with: event)
         })
     }
     
@@ -197,23 +394,28 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias PPOEffectHandlerSpy = EffectHandlerSpy<SUT.PPOEvent, SUT.PPOEffect>
+    private typealias PPEffectHandlerSpy = EffectHandlerSpy<SUT.PPEvent, SUT.PPEffect>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        ppoEffectHandler: PPOEffectHandlerSpy
+        ppoEffectHandler: PPOEffectHandlerSpy,
+        ppEffectHandler: PPEffectHandlerSpy
     ) {
         let ppoEffectHandler = PPOEffectHandlerSpy()
+        let ppEffectHandler = PPEffectHandlerSpy()
         let sut = SUT(
-            ppoHandleEffect: ppoEffectHandler.handleEffect(_:_:)
+            ppoHandleEffect: ppoEffectHandler.handleEffect(_:_:),
+            ppHandleEffect: ppEffectHandler.handleEffect(_:_:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(ppoEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(ppEffectHandler, file: file, line: line)
         
-        return (sut, ppoEffectHandler)
+        return (sut, ppoEffectHandler, ppEffectHandler)
     }
     
     private func makeOperator(

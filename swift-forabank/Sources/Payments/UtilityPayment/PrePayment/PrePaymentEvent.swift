@@ -12,6 +12,7 @@ public enum PrePaymentEvent<LastPayment, Operator> {
     case payByInstruction
     case scan
     case select(SelectEvent)
+    case startPayment
 }
 
 public extension PrePaymentEvent {
