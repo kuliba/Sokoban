@@ -119,51 +119,51 @@ final class StackTests: XCTestCase {
         XCTAssertNotEqual(second, last)
     }
     
-    func test_last_shouldDeliverLastElement() {
+    func test_top_shouldDeliverLastElement() {
         
         var sut = makeSUT()
-        XCTAssertNoDiff(sut.last, nil)
+        XCTAssertNoDiff(sut.top, nil)
         
         let first = Item()
         sut.push(first)
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
         
         let second = Item()
         sut.push(second)
-        XCTAssertNoDiff(sut.last, second)
+        XCTAssertNoDiff(sut.top, second)
 
         let last = Item()
         sut.push(last)
-        XCTAssertNoDiff(sut.last, last)
+        XCTAssertNoDiff(sut.top, last)
 
         sut.pop()
-        XCTAssertNoDiff(sut.last, second)
+        XCTAssertNoDiff(sut.top, second)
 
         sut.pop()
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
 
         sut.pop()
         XCTAssertNil(sut.pop())
     }
     
-    func test_last_set_shouldChangeFirstElement() {
+    func test_top_set_shouldChangeFirstElement() {
         
         let first = Item()
         var sut = makeSUT(first)
         
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
         XCTAssertNoDiff(sut.pop(), first)
         
         let new = Item()
-        sut.last = new
+        sut.top = new
         
-        XCTAssertNoDiff(sut.last, new)
+        XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
         XCTAssertNotEqual(new, first)
     }
     
-    func test_last_set_shouldChangeLastElement() {
+    func test_top_set_shouldChangeLastElement() {
         
         let first = Item()
         var sut = makeSUT(first)
@@ -172,9 +172,9 @@ final class StackTests: XCTestCase {
         sut.push(second)
                 
         let new = Item()
-        sut.last = new
+        sut.top = new
         
-        XCTAssertNoDiff(sut.last, new)
+        XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
         XCTAssertNotEqual(first, second)
@@ -182,35 +182,35 @@ final class StackTests: XCTestCase {
         XCTAssertNotEqual(second, new)
     }
     
-    func test_last_set_shouldNotChangeEmptyOnNil() {
+    func test_top_set_shouldNotChangeEmptyOnNil() {
         
         let initial = makeSUT()
         var sut = initial
         
-        sut.last = nil
+        sut.top = nil
         
         XCTAssertNoDiff(sut, initial)
     }
     
-    func test_last_set_shouldEmptyStackOfOneOnNil() {
+    func test_top_set_shouldEmptyStackOfOneOnNil() {
         
         let first = Item()
         var sut = makeSUT(first)
         
-        sut.last = nil
+        sut.top = nil
         
         XCTAssert(sut.isEmpty)
     }
     
-    func test_last_set_shouldRemoveLastElementOnNil() {
+    func test_top_set_shouldRemoveLastElementOnNil() {
         
         let first = Item()
         let second = Item()
         var sut = makeSUT(first, second)
         
-        sut.last = nil
+        sut.top = nil
         
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
         XCTAssertNotEqual(first, second)
     }
     

@@ -22,7 +22,7 @@ public struct Stack<Element> {
 
 public extension Stack {
     
-    var last: Element? {
+    var top: Element? {
         
         get { peek() }
         
