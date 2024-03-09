@@ -16,7 +16,7 @@ struct DetailsView: View {
     let showCheckbox: Bool
     
     @Binding var isCheck: Bool
-    // TODO: paddings -> Config
+    // TODO: paddings & etc -> Config
     var body: some View {
         
         ZStack {
@@ -51,10 +51,14 @@ struct DetailsView: View {
             HStack(spacing: 0) {
                 
                 ForEach(items, id: \.id) {
-                    
                     let isFirst = $0 == items.first
                     DetailView(item: $0, event: event, config: config)
                         .padding(.leading, (isFirst ? 0 : 16))
+                    if isFirst {
+                        divider()
+                            .rotationEffect(.degrees(90))
+                            .frame(width: 32)
+                    }
                 }
             }
         }
