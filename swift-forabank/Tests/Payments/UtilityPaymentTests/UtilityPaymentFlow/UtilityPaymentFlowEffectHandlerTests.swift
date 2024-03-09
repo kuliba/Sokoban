@@ -13,9 +13,9 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let _ = makeSUT()
+        let (_, ppoEffectHandler) = makeSUT()
         
-        // TODO: add assertion
+        XCTAssertEqual(ppoEffectHandler.callCount, 0)
     }
     
     func test_prePaymentOptionsEffectShouldCallPrePaymentOptionsHandleEffect() {
@@ -27,18 +27,24 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator>
     
-    private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
+    private typealias PPOEffectHandlerSpy = EffectHandlerSpy<SUT.PPOEvent, SUT.PPOEffect>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT()
+    ) -> (
+        sut: SUT,
+        ppoEffectHandler: PPOEffectHandlerSpy
+    ) {
+        let ppoEffectHandler = PPOEffectHandlerSpy()
+        let sut = SUT(
+            ppoHandleEffect: ppoEffectHandler.handleEffect(_:_:)
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(ppoEffectHandler, file: file, line: line)
         
-        return sut
+        return (sut, ppoEffectHandler)
     }
 }
 
@@ -53,4 +59,3 @@ private struct Operator: Equatable, Identifiable {
     
     var id: String { value }
 }
-
