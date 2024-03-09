@@ -1,5 +1,5 @@
 //
-//  ItemView.swift
+//  DetailView.swift
 //
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ItemView: View {
+struct DetailView: View {
     
     let item: Item
     let event: (ItemEvent) -> Void
@@ -54,7 +54,7 @@ struct ItemView: View {
     }
 }
 
-extension View {
+private extension View {
     
     func maxWidthLeadingFrame() -> some View {
         
@@ -87,12 +87,12 @@ struct ItemView_Previews: PreviewProvider {
       
         Group {
             
-            ItemView(
+            DetailView(
                 item: .accountNumberItem,
                 event: { print("event - \($0)") },
                 config: .preview)
             
-            ItemView(
+            DetailView(
                 item: .cvvItem,
                 event: { print("event - \($0)") },
                 config: .preview)

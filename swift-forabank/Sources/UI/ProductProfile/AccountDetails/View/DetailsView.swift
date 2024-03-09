@@ -57,7 +57,7 @@ struct ItemViewNew: View {
             
         case let .single(item):
             
-            ItemView(item: item, event: event, config: config)
+            DetailView(item: item, event: event, config: config)
             CustomDivider()
             
         case let .multiple(items):
@@ -68,7 +68,7 @@ struct ItemViewNew: View {
                     
                     let isFirst = item == items.first
                     
-                    ItemView(item: item, event: event, config: config)
+                    DetailView(item: item, event: event, config: config)
                         .padding(.leading, (isFirst ? 0 : 16))
                     
                     if isFirst {
