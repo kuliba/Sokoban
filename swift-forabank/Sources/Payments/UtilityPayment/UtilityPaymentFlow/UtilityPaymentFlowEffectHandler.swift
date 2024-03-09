@@ -52,12 +52,12 @@ public extension UtilityPaymentFlowEffectHandler {
     typealias PPOHandleEffect = (PPOEffect, @escaping PPODispatch) -> Void
     
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator>
-    typealias PPEffect = PrePaymentEffect
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     typealias PPDispatch = (PPEvent) -> Void
     typealias PPHandleEffect = (PPEffect, @escaping PPDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentFlowEffect<Operator>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }

@@ -54,12 +54,12 @@ public extension UtilityPaymentFlowReducer {
     
     typealias PPState = PrePaymentState<LastPayment, Operator>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator>
-    typealias PPEffect = PrePaymentEffect
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentFlowEffect<Operator>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }
 
 private extension UtilityPaymentFlowReducer {
@@ -133,10 +133,10 @@ private extension UtilityPaymentFlowReducer {
                 switch prePaymentState {
                 case .addingCompany:
                     break
-                
+                    
                 case .payingByInstruction, .scanning:
                     state.pop()
-                
+                    
                 case let .selected(selected):
                     fatalError("can't handle `selected(\(selected))` event \(event) on prePaymentState state \(prePaymentState)")
                     
@@ -159,6 +159,12 @@ private extension UtilityPaymentFlowReducer {
         _ event: PPEvent.SelectEvent
     ) -> PPEffect {
         
-        .startPayment
+        switch event {
+        case let .last(lastPayment):
+            return .startPayment(.last(lastPayment))
+            
+        case let .operator(`operator`):
+            return .startPayment(.operator(`operator`))
+        }
     }
 }

@@ -11,7 +11,13 @@ import XCTest
 
 final class PrePaymentEffectHandler<LastPayment, Operator> {
     
+    private let startPayment: StartPayment
     
+    init(
+        startPayment: @escaping StartPayment
+    ) {
+        self.startPayment = startPayment
+    }
 }
 
 extension PrePaymentEffectHandler {
@@ -20,19 +26,70 @@ extension PrePaymentEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        fatalError()
+        switch effect {
+        case let .startPayment(payload):
+            startPayment(payload, dispatch)
+        }
     }
 }
 
 extension PrePaymentEffectHandler {
     
+    typealias Payload = Effect.StartPaymentPayload
+    typealias StartPaymentCompletion = (()) -> Void
+    typealias StartPayment = (Payload, @escaping StartPaymentCompletion) -> Void
+    
     typealias Dispatch = (Event) -> Void
     
     typealias Event = PrePaymentEvent<LastPayment, Operator>
-    typealias Effect = PrePaymentEffect
+    typealias Effect = PrePaymentEffect<LastPayment, Operator>
+}
+
+private extension PrePaymentEffectHandler {
+    
+    func startPayment(
+        _ payload: Effect.StartPaymentPayload,
+        _ dispatch: @escaping Dispatch
+    ) {
+        startPayment(payload) {
+            
+            
+        }
+    }
 }
 
 final class PrePaymentEffectHandlerTests: XCTestCase {
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (_, startPayment) = makeSUT()
+        
+        XCTAssertEqual(startPayment.callCount, 0)
+    }
+    
+    // MARK: - startPayment
+    
+    func test_startPayment_shouldCallStartPaymentWithLastPayment() {
+        
+        let lastPayment = makeLastPayment()
+        let effect: Effect = .startPayment(.last(lastPayment))
+        let (sut, startPayment) = makeSUT()
+        
+        sut.handleEffect(effect) { _ in }
+        
+        XCTAssertNoDiff(startPayment.messages.map(\.payload), [.last(lastPayment)])
+    }
+    
+    func test_startPayment_shouldCallStartPaymentWithOperator() {
+        
+        let `operator` = makeOperator()
+        let effect: Effect = .startPayment(.operator(`operator`))
+        let (sut, startPayment) = makeSUT()
+        
+        sut.handleEffect(effect) { _ in }
+        
+        XCTAssertNoDiff(startPayment.messages.map(\.payload), [.operator(`operator`)])
+    }
     
     // MARK: - Helpers
     
@@ -41,18 +98,40 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias StartPaymentSpy = Spy<Effect.StartPaymentPayload, Void>
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT()
+    ) -> (
+        sut: SUT,
+        startPayment: StartPaymentSpy
+    ) {
+        let startPayment = StartPaymentSpy()
+        let sut = SUT(
+            startPayment: startPayment.process
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(startPayment, file: file, line: line)
         
-        return sut
+        return (sut, startPayment)
     }
     
+    private func makeLastPayment(
+        _ value: String = UUID().uuidString
+    ) -> LastPayment {
+        
+        .init(value: value)
+    }
+    
+    private func makeOperator(
+        _ value: String = UUID().uuidString
+    ) -> Operator {
+        
+        .init(value: value)
+    }
+
     private func expect(
         _ sut: SUT,
         with effect: Effect,

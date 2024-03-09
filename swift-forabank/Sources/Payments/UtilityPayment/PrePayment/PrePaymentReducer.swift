@@ -53,5 +53,5 @@ public extension PrePaymentReducer {
     
     typealias State = PrePaymentState<LastPayment, Operator>
     typealias Event = PrePaymentEvent<LastPayment, Operator>
-    typealias Effect = PrePaymentEffect
+    typealias Effect = PrePaymentEffect<LastPayment, Operator>
 }

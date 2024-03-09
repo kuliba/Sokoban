@@ -367,7 +367,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
         
         let (sut, _, ppEffectHandler) = makeSUT()
-        let effect: SUT.PPEffect = .startPayment
+        let effect: SUT.PPEffect = .startPayment(.last(makeLastPayment()))
         
         sut.handleEffect(.prePayment(effect)) { _ in }
         
@@ -378,7 +378,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         
         let (sut, _, ppEffectHandler) = makeSUT()
         let event: SUT.PPEvent = .startPayment
-        let effect: SUT.PPEffect = .startPayment
+        let effect: SUT.PPEffect = .startPayment(.operator(makeOperator()))
         
         expect(sut, with: .prePayment(effect), toDeliver: .prePayment(event), on: {
             
@@ -416,6 +416,13 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(ppEffectHandler, file: file, line: line)
         
         return (sut, ppoEffectHandler, ppEffectHandler)
+    }
+    
+    private func makeLastPayment(
+        value: String = UUID().uuidString
+    ) -> LastPayment {
+        
+        .init(value: value)
     }
     
     private func makeOperator(
