@@ -511,6 +511,126 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         assert(selectOperator(), on: state, effect: .prePayment(.startPayment))
     }
     
+    func test_prePaymentEvent_selectLastPayment_shouldNorChangePrePaymentState_addingCompany() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.addingCompany)
+        )
+        
+        assertState(selectLastPayment(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectLastPayment_shouldNotDeliverEffectOnPrePaymentState_addingCompany() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.addingCompany)
+        )
+        
+        assert(selectLastPayment(), on: state, effect: nil)
+    }
+    
+    func test_prePaymentEvent_selectLastPayment_shouldNorChangePrePaymentState_payingByInstruction() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.payingByInstruction)
+        )
+        
+        assertState(selectLastPayment(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectLastPayment_shouldNotDeliverEffectOnPrePaymentState_payingByInstruction() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.payingByInstruction)
+        )
+        
+        assert(selectLastPayment(), on: state, effect: nil)
+    }
+    
+    func test_prePaymentEvent_selectLastPayment_shouldNorChangePrePaymentState_scanning() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.scanning)
+        )
+        
+        assertState(selectLastPayment(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectLastPayment_shouldNotDeliverEffectOnPrePaymentState_scanning() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.scanning)
+        )
+        
+        assert(selectLastPayment(), on: state, effect: nil)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotChangePrePaymentState_addingCompany() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.addingCompany)
+        )
+        
+        assertState(selectOperator(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotDeliverEffectOnPrePaymentState_addingCompany() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.addingCompany)
+        )
+        
+        assert(selectOperator(), on: state, effect: nil)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotChangePrePaymentState_payingByInstruction() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.payingByInstruction)
+        )
+        
+        assertState(selectOperator(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotDeliverEffectOnPrePaymentState_payingByInstruction() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.payingByInstruction)
+        )
+        
+        assert(selectOperator(), on: state, effect: nil)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotChangePrePaymentState_scanning() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.scanning)
+        )
+        
+        assertState(selectOperator(), on: state)
+    }
+    
+    func test_prePaymentEvent_selectOperator_shouldNotDeliverEffectOnPrePaymentState_scanning() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            .prePaymentState(.scanning)
+        )
+        
+        assert(selectOperator(), on: state, effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
