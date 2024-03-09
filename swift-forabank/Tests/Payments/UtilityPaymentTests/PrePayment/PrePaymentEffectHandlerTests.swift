@@ -45,7 +45,12 @@ extension PrePaymentEffectHandler {
     typealias LoadServicesCompletion = (LoadServicesResult) -> Void
     typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
     
-    typealias Payload = Effect.Select
+    enum Payload {
+        
+        case last(LastPayment)
+        case service(Operator, Service)
+    }
+    
     typealias StartPaymentResult = Result<Response, ServiceFailure>
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (Payload, @escaping StartPaymentCompletion) -> Void
@@ -55,6 +60,8 @@ extension PrePaymentEffectHandler {
     typealias Event = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias Effect = PrePaymentEffect<LastPayment, Operator>
 }
+
+extension PrePaymentEffectHandler.Payload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
 
 private extension PrePaymentEffectHandler {
     
@@ -75,15 +82,22 @@ private extension PrePaymentEffectHandler {
         _ lastPayment: LastPayment,
         _ dispatch: @escaping Dispatch
     ) {
-        startPayment(.last(lastPayment)) {
+        startPayment(.last(lastPayment)) { [weak self] in
             
-            switch $0 {
-            case let .failure(serviceFailure):
-                dispatch(.paymentStarted(.failure(serviceFailure)))
-                
-            case let .success(response):
-                dispatch(.paymentStarted(.success(response)))
-            }
+            self?.handleStartPayment(result: $0, dispatch)
+        }
+    }
+    
+    func handleStartPayment(
+        result: StartPaymentResult,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch result {
+        case let .failure(serviceFailure):
+            dispatch(.paymentStarted(.failure(serviceFailure)))
+            
+        case let .success(response):
+            dispatch(.paymentStarted(.success(response)))
         }
     }
     
@@ -91,7 +105,29 @@ private extension PrePaymentEffectHandler {
         _ `operator`: Operator,
         _ dispatch: @escaping Dispatch
     ) {
-        fatalError("can't handle `operator` case with \(`operator`) - can't start payment, need to select service first")
+        loadServices(`operator`) { [weak self] in
+            
+            switch $0 {
+            case .failure:
+                dispatch(.loaded(.failure))
+                
+            case let .success(services):
+                switch services.count {
+                case 0:
+                    dispatch(.loaded(.failure))
+                    
+                case 1:
+#warning("remove bang")
+                    self?.startPayment(.service(`operator`, services.first!)) { [weak self] in
+                        
+                        self?.handleStartPayment(result: $0, dispatch)
+                    }
+                    
+                default:
+                    dispatch(.loaded(.list(services)))
+                }
+            }
+        }
     }
 }
 
@@ -149,6 +185,108 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
             
+            startPayment.complete(with: .success(response))
+        })
+    }
+    
+    // MARK: - select operator
+    
+    func test_select_shouldCallLoadServicesWithOperator_operator() {
+        
+        let `operator` = makeOperator()
+        let effect: Effect = .select(.operator(`operator`))
+        let (sut, _, loadServices) = makeSUT()
+        
+        sut.handleEffect(effect) { _ in }
+        
+        XCTAssertNoDiff(loadServices.payloads, [`operator`])
+    }
+    
+    func test_select_shouldDeliverFailureOnLoadServicesFailure_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let (sut, _, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .loaded(.failure), on: {
+            
+            loadServices.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_select_shouldDeliverFailureOnLoadServicesSuccessWithEmptyList_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let (sut, _, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .loaded(.failure), on: {
+            
+            loadServices.complete(with: .success([]))
+        })
+    }
+    
+    func test_select_shouldDeliverServicesListOnLoadServicesSuccessWithMoreThanOneService_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let services = [makeUtilityService(), makeUtilityService()]
+        let (sut, _, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .loaded(.list(services)), on: {
+            
+            loadServices.complete(with: .success(services))
+        })
+        XCTAssertEqual(services.count, 2)
+    }
+    
+    func test_select_shouldCallStartPaymentOnLoadServicesSuccessWithOneService_operator() {
+        
+        let `operator` = makeOperator()
+        let effect: Effect = .select(.operator(`operator`))
+        let service = makeUtilityService()
+        let (sut, startPayment, loadServices) = makeSUT()
+        
+        sut.handleEffect(effect) { _ in }
+        loadServices.complete(with: .success([service]))
+        
+        XCTAssertNoDiff(startPayment.payloads, [.service(`operator`, service)])
+    }
+    
+    func test_select_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailureOnLoadServicesSuccessWithOneService_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let service = makeUtilityService()
+        let (sut, startPayment, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
+            
+            loadServices.complete(with: .success([service]))
+            startPayment.complete(with: .failure(.connectivityError))
+        })
+    }
+    
+    func test_select_shouldDeliverServerErrorOnStartPaymentServerErrorFailureOnLoadServicesSuccessWithOneService_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let service = makeUtilityService()
+        let message = anyMessage()
+        let (sut, startPayment, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.serverError(message))), on: {
+            
+            loadServices.complete(with: .success([service]))
+            startPayment.complete(with: .failure(.serverError(message)))
+        })
+    }
+    
+    func test_select_shouldDeliverStartPaymentResponseOnSuccessOnLoadServicesSuccessWithOneService_operator() {
+        
+        let effect: Effect = .select(.operator(makeOperator()))
+        let response = makeResponse()
+        let service = makeUtilityService()
+        let (sut, startPayment, loadServices) = makeSUT()
+        
+        expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
+            
+            loadServices.complete(with: .success([service]))
             startPayment.complete(with: .success(response))
         })
     }
