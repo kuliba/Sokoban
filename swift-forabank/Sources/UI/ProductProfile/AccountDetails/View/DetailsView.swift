@@ -64,7 +64,7 @@ struct DetailsView: View {
         
         HStack {
             config.images.checkImage(isCheck)
-                .frame(width: showCheckbox ? config.sizes.icon : 0, height: showCheckbox ? config.sizes.icon : 0, alignment: .center)
+                .frame(width: showCheckbox ? config.iconSize : 0, height: showCheckbox ? config.iconSize : 0, alignment: .center)
                 .onTapGesture { isCheck.toggle() }
                 .opacity(showCheckbox ? 1 : 0)
             Text(title)

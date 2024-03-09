@@ -10,18 +10,18 @@ import SwiftUI
 public struct Config {
     
     let images: Images
-    let sizes: Sizes
+    let iconSize: CGFloat
     let colors: Colors
     let fonts: Fonts
     
     public init(
         images: Images,
-        sizes: Sizes,
+        iconSize: CGFloat,
         colors: Colors,
         fonts: Fonts
     ) {
         self.images = images
-        self.sizes = sizes
+        self.iconSize = iconSize
         self.colors = colors
         self.fonts = fonts
     }
@@ -49,20 +49,6 @@ public extension Config {
             self.checkOn = checkOn
             self.checkOff = checkOff
             self.info = info
-        }
-    }
-}
-
-public extension Config {
-    
-    struct Sizes {
-        
-        let icon: CGFloat
-        
-        public init(
-            icon: CGFloat
-        ) {
-            self.icon = icon
         }
     }
 }

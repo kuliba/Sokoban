@@ -20,11 +20,10 @@ struct DetailView: View {
             titleSubtitleView()
             
             if let image = config.images.iconBy(item.id) {
-                
                 image
                     .renderingMode(.template)
                     .foregroundColor(config.colors.image)
-                    .frame(width: config.sizes.icon, height: config.sizes.icon, alignment: .center)
+                    .frame(width: config.iconSize, height: config.iconSize, alignment: .center)
                     .onTapGesture { event(.iconTap(item.id)) }
                     .accessibilityIdentifier("InfoProductItemButton")
             }

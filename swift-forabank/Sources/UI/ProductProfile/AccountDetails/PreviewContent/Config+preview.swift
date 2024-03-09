@@ -11,7 +11,7 @@ extension Config {
     
     static let preview: Self = .init(
         images: .preview,
-        sizes: .preview,
+        iconSize: 24,
         colors: .preview,
         fonts: .preview
     )
