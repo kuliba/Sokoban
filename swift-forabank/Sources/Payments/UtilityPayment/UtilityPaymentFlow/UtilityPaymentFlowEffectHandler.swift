@@ -25,7 +25,16 @@ public extension UtilityPaymentFlowEffectHandler {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        fatalError()
+        switch effect {
+        case let .prePaymentOptions(prePaymentOptionsEffect):
+            ppoHandleEffect(prePaymentOptionsEffect) { 
+                
+                dispatch(.prePaymentOptions($0))
+            }
+            
+        case let .prePayment(prePaymentEffect):
+            fatalError("can't handle prePaymentEffect \(prePaymentEffect)")
+        }
     }
 }
 
