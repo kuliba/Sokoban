@@ -377,7 +377,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     func test_prePaymentEffect_startPayment_shouldDeliverPrePaymentOptionsHandleEffectEvent_startPayment() {
         
         let (sut, _, ppEffectHandler) = makeSUT()
-        let event: SUT.PPEvent = .startPayment(.failure(.connectivityError))
+        let event: SUT.PPEvent = .paymentStarted(.failure(.connectivityError))
         let effect: SUT.PPEffect = .startPayment(.operator(makeOperator()))
         
         expect(sut, with: .prePayment(effect), toDeliver: .prePayment(event), on: {
@@ -388,7 +388,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator>
+    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -464,6 +464,13 @@ private struct LastPayment: Equatable {
 }
 
 private struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+private struct StartPaymentResponse: Equatable {
     
     var value: String
     

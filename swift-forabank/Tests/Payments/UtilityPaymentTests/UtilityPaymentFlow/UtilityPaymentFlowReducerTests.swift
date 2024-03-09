@@ -635,7 +635,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
+    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -801,6 +801,13 @@ private struct LastPayment: Equatable {
 }
 
 private struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+private struct StartPaymentResponse: Equatable {
     
     var value: String
     

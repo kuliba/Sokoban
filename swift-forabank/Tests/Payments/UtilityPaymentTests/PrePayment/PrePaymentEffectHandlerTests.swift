@@ -11,7 +11,7 @@ import XCTest
 
 typealias ServiceFailure = UtilityPayment.ServiceFailure
 
-final class PrePaymentEffectHandler<LastPayment, Operator> {
+final class PrePaymentEffectHandler<LastPayment, Operator, Response> {
     
     private let startPayment: StartPayment
     
@@ -38,13 +38,13 @@ extension PrePaymentEffectHandler {
 extension PrePaymentEffectHandler {
     
     typealias Payload = Effect.StartPaymentPayload
-    typealias StartPaymentResult = Result<Never, ServiceFailure>
+    typealias StartPaymentResult = Result<Response, ServiceFailure>
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (Payload, @escaping StartPaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PrePaymentEvent<LastPayment, Operator>
+    typealias Event = PrePaymentEvent<LastPayment, Operator, Response>
     typealias Effect = PrePaymentEffect<LastPayment, Operator>
 }
 
@@ -54,14 +54,21 @@ private extension PrePaymentEffectHandler {
         _ payload: Effect.StartPaymentPayload,
         _ dispatch: @escaping Dispatch
     ) {
-        startPayment(payload) {
-            
-            switch $0 {
-            case let .failure(serviceFailure):
-                dispatch(.startPayment(.failure(serviceFailure)))
+        switch payload {
+        case let .last(lastPayment):
+            startPayment(.last(lastPayment)) {
                 
-            
+                switch $0 {
+                case let .failure(serviceFailure):
+                    dispatch(.paymentStarted(.failure(serviceFailure)))
+                    
+                case let .success(response):
+                    dispatch(.paymentStarted(.success(response)))
+                }
             }
+            
+        case let .operator(`operator`):
+            fatalError("can't handle `operator` case with \(`operator`) - can't start payment, need to select service first")
         }
     }
 }
@@ -88,23 +95,12 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(startPayment.messages.map(\.payload), [.last(lastPayment)])
     }
     
-    func test_startPayment_shouldCallStartPayment_operator() {
-        
-        let `operator` = makeOperator()
-        let effect: Effect = .startPayment(.operator(`operator`))
-        let (sut, startPayment) = makeSUT()
-        
-        sut.handleEffect(effect) { _ in }
-        
-        XCTAssertNoDiff(startPayment.messages.map(\.payload), [.operator(`operator`)])
-    }
-    
     func test_startPayment_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_lastPayment() {
         
         let effect: Effect = .startPayment(.last(makeLastPayment()))
         let (sut, startPayment) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .startPayment(.failure(.connectivityError)), on: {
+        expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
             
             startPayment.complete(with: .failure(.connectivityError))
         })
@@ -116,43 +112,32 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         let message = anyMessage()
         let (sut, startPayment) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .startPayment(.failure(.serverError(message))), on: {
+        expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.serverError(message))), on: {
             
             startPayment.complete(with: .failure(.serverError(message)))
         })
     }
     
-    func test_startPayment_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_operator() {
+    func test_startPayment_shouldDeliverStartPaymentResponseOnSuccess_lastPayment() {
         
-        let effect: Effect = .startPayment(.operator(makeOperator()))
+        let effect: Effect = .startPayment(.last(makeLastPayment()))
+        let response = makeResponse()
         let (sut, startPayment) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .startPayment(.failure(.connectivityError)), on: {
+        expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
             
-            startPayment.complete(with: .failure(.connectivityError))
-        })
-    }
-    
-    func test_startPayment_shouldDeliverServerErrorOnStartPaymentServerErrorFailure_operator() {
-        
-        let effect: Effect = .startPayment(.operator(makeOperator()))
-        let message = anyMessage()
-        let (sut, startPayment) = makeSUT()
-        
-        expect(sut, with: effect, toDeliver: .startPayment(.failure(.serverError(message))), on: {
-            
-            startPayment.complete(with: .failure(.serverError(message)))
+            startPayment.complete(with: .success(response))
         })
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PrePaymentEffectHandler<LastPayment, Operator>
+    private typealias SUT = PrePaymentEffectHandler<LastPayment, Operator, StartPaymentResponse>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias StartPaymentSpy = Spy<Effect.StartPaymentPayload, SUT.StartPaymentResult>
+    private typealias StartPaymentSpy = Spy<SUT.Payload, SUT.StartPaymentResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -182,6 +167,13 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     private func makeOperator(
         _ value: String = UUID().uuidString
     ) -> Operator {
+        
+        .init(value: value)
+    }
+    
+    private func makeResponse(
+        _ value: String = UUID().uuidString
+    ) -> StartPaymentResponse {
         
         .init(value: value)
     }
@@ -224,3 +216,9 @@ private struct Operator: Equatable, Identifiable {
     var id: String { value }
 }
 
+private struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}

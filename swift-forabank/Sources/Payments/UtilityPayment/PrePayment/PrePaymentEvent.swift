@@ -5,14 +5,14 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-public enum PrePaymentEvent<LastPayment, Operator> {
+public enum PrePaymentEvent<LastPayment, Operator, Response> {
     
     case addCompany
     case back
     case payByInstruction
     case scan
     case select(SelectEvent)
-    case startPayment(StartPaymentResult)
+    case paymentStarted(ResponseResult)
 }
 
 public extension PrePaymentEvent {
@@ -23,8 +23,8 @@ public extension PrePaymentEvent {
         case `operator`(Operator)
     }
     
-    typealias StartPaymentResult = Result<Never, ServiceFailure>
+    typealias ResponseResult = Result<Response, ServiceFailure>
 }
 
-extension PrePaymentEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Response: Equatable {}
 extension PrePaymentEvent.SelectEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
