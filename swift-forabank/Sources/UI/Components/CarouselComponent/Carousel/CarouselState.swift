@@ -20,7 +20,7 @@ public struct CarouselState: Equatable {
     var selectedProductType: Product.ID.ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
-    var carouselDimensions: CarouselConfiguration.ProductDimensions
+    var carouselDimensions: CarouselConfig.ProductDimensions
     var numberOfItemsBeforeSpoiler: Int
     
     public init(
@@ -28,7 +28,7 @@ public struct CarouselState: Equatable {
         productGroups: ProductGroups,
         separators: ProductSeparators = [:],
         selectedProductType: Product.ID.ProductType? = nil,
-        carouselDimensions: CarouselConfiguration.ProductDimensions = .regular,
+        carouselDimensions: CarouselConfig.ProductDimensions = .regular,
         numberOfItemsBeforeSpoiler: Int = 3
     ) {
         self.selector = selector
@@ -179,7 +179,7 @@ extension CarouselState {
             let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
             
             let separatorsCount = separators[group.id]?.count ?? 0
-            let visibleProductsCount = group.visibleProducts(with: numberOfItemsBeforeSpoiler).count
+            let visibleProductsCount = group.visibleProducts(count: numberOfItemsBeforeSpoiler).count
             
             let visibleProductsWidth = visibleProductsCount * Int(productWidth)
             let separatorsWidth = separatorsCount * Int(separatorWidth)
@@ -242,14 +242,14 @@ extension CarouselState {
         
         productGroups
             .first(where: { $0 == productGroup })?
-            .spoilerTitle(with: numberOfItemsBeforeSpoiler)
+            .spoilerTitle(count: numberOfItemsBeforeSpoiler)
     }
     
     func visibleProducts(for productGroup: ProductGroup) -> [Product] {
         
         productGroups
             .first(where: { $0 == productGroup })?
-            .visibleProducts(with: numberOfItemsBeforeSpoiler) ?? []
+            .visibleProducts(count: numberOfItemsBeforeSpoiler) ?? []
     }
 }
 

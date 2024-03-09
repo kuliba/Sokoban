@@ -7,31 +7,31 @@
 
 import SwiftUI
 
-public struct CarouselView<ProductView: View, ButtonNewProduct: View, StickerView: View>: View {
+public struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View>: View {
 
     let state: CarouselState
     let event: (CarouselEvent) -> Void
     
     let productView: (Product) -> ProductView
     let stickerView: (Product) -> StickerView?
-    let buttonNewProduct: () -> ButtonNewProduct?
+    let newProductButton: () -> NewProductButton?
     
-    let carouselComponentConfiguration: CarouselComponentConfiguration
+    let config: CarouselComponentConfig
     
     public init(
         state: CarouselState,
         event: @escaping (CarouselEvent) -> Void,
         productView: @escaping (Product) -> ProductView,
         stickerView: @escaping (Product) -> StickerView?,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?,
-        carouselComponentConfiguration: CarouselComponentConfiguration
+        newProductButton: @escaping () -> NewProductButton?,
+        config: CarouselComponentConfig
     ) {
         self.state = state
         self.event = event
         self.productView = productView
         self.stickerView = stickerView
-        self.buttonNewProduct = buttonNewProduct
-        self.carouselComponentConfiguration = carouselComponentConfiguration
+        self.newProductButton = newProductButton
+        self.config = config
     }
     
     public var body: some View {
@@ -47,17 +47,17 @@ public struct CarouselView<ProductView: View, ButtonNewProduct: View, StickerVie
                 SelectorView(
                     state: state.selector,
                     event: { event(.select($0, delay: 0.2)) }, 
-                    configuration: carouselComponentConfiguration.selectorConfiguration
+                    config: config.selectorConfig
                 )
                 
-                ProductGroupsView<ProductView, ButtonNewProduct, StickerView>(
+                ProductGroupsView<ProductView, NewProductButton, StickerView>(
                     state: state,
                     groups: state.productGroups,
                     event: event,
                     productView: productView, 
                     stickerView: stickerView, 
-                    buttonNewProduct: buttonNewProduct,
-                    carouselConfiguration: carouselComponentConfiguration.carouselConfiguration
+                    newProductButton: newProductButton,
+                    config: config.carouselConfig
                 )
             }
         }

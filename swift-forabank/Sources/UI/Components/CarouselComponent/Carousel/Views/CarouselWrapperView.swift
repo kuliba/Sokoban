@@ -7,28 +7,28 @@
 
 import SwiftUI
 
-public struct CarouselWrapperView<ProductView: View, ButtonNewProduct: View, StickerView: View>: View {
+public struct CarouselWrapperView<ProductView: View, NewProductButton: View, StickerView: View>: View {
     
     @ObservedObject var viewModel: CarouselViewModel
     
     private let productView: (Product) -> ProductView
     private let stickerView: (Product) -> StickerView?
-    private let buttonNewProduct: () -> ButtonNewProduct?
+    private let newProductButton: () -> NewProductButton?
     
-    private let carouselComponentConfiguration: CarouselComponentConfiguration
+    private let config: CarouselComponentConfig
     
     public init(
         viewModel: CarouselViewModel,
         productView: @escaping (Product) -> ProductView,
         stickerView: @escaping (Product) -> StickerView?,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?,
-        carouselComponentConfiguration: CarouselComponentConfiguration
+        newProductButton: @escaping () -> NewProductButton?,
+        config: CarouselComponentConfig
     ) {
         self.viewModel = viewModel
         self.productView = productView
         self.stickerView = stickerView
-        self.buttonNewProduct = buttonNewProduct
-        self.carouselComponentConfiguration = carouselComponentConfiguration
+        self.newProductButton = newProductButton
+        self.config = config
     }
     
     public var body: some View {
@@ -38,8 +38,8 @@ public struct CarouselWrapperView<ProductView: View, ButtonNewProduct: View, Sti
             event: viewModel.event(_:),
             productView: productView, 
             stickerView: stickerView, 
-            buttonNewProduct: buttonNewProduct,
-            carouselComponentConfiguration: carouselComponentConfiguration
+            newProductButton: newProductButton,
+            config: config
         )
     }
 }

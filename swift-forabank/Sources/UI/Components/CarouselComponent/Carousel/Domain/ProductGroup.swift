@@ -34,27 +34,27 @@ public struct ProductGroup: Equatable, Identifiable {
 
 extension ProductGroup {
     
-    func visibleProducts(with prefix: Int) -> [Product] {
+    func visibleProducts(count: Int) -> [Product] {
         
         switch state {
         case .collapsed:
-            return .init(products.prefix(prefix))
+            return .init(products.prefix(count))
             
         case .expanded:
             return products
         }
     }
     
-    func spoilerTitle(with prefix: Int) -> String? {
+    func spoilerTitle(count: Int) -> String? {
         
         switch state {
         case .collapsed:
-            let numberIfItemsUnderSpoiler = products.count - prefix
+            let numberIfItemsUnderSpoiler = products.count - count
             
             guard numberIfItemsUnderSpoiler > 0
             else { return nil }
             
-            return "+ \(numberIfItemsUnderSpoiler)"
+            return "+\(numberIfItemsUnderSpoiler)"
             
         case .expanded:
             return nil

@@ -50,6 +50,36 @@ extension Array where Element == Product {
     static let additionalCards: Self = [
         .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn
     ]
+    
+    static let allCardProducts: Self = [
+        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
+        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3,
+        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
+        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
+    ]
+    
+    static let allCardProductsWithSticker: Self = [
+        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
+        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3,
+        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
+        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7, .sticker
+    ]
+    
+    static let accountProducts: Self = [
+        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4
+    ]
+    
+    static let depositProducts: Self = [
+        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4
+    ]
+    
+    static let loanProducts: Self = [
+        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4
+    ]
+    
+    static let threeCards: Self = [
+        .card, .cardAdditionalOther, .cardAdditionalSelf
+    ]
 }
 
 extension Product {
@@ -180,4 +210,22 @@ extension ProductSeparators {
         Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id,
         Product.cardAdditionalSelfAccOwn2.id, Product.cardRegular2.id ]
     ]
+}
+
+extension ProductGroup {
+    
+    static let cards: Self = .init(id: .card, products: .cards)
+    static let allCardProducts: Self = .init(id: .card, products: .allCardProducts)
+    static let allCardProductsWithSticker: Self = .init(id: .card, products: .allCardProductsWithSticker)
+    static let accountProducts: Self = .init(id: .account, products: .accountProducts)
+    static let depositProducts: Self = .init(id: .deposit, products: .depositProducts)
+    static let loanProducts: Self = .init(id: .loan, products: .loanProducts)
+    static let threeCards: Self = .init(id: .card, products: .threeCards)
+}
+
+extension String {
+    
+    static let spoilerTitleForCardProducts: Self = .init("+5")
+    static let spoilerTitleForAllCardProducts: Self = .init("+13")
+    static let spoilerTitleForAllCardProductsWithSticker: Self = .init("+14")
 }

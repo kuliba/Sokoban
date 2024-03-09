@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView: View>: View {
+struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView: View>: View {
     
     var state: CarouselState
     let groups: CarouselState.ProductGroups
@@ -15,9 +15,9 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
     
     let productView: (Product) -> ProductView
     let stickerView: (Product) -> StickerView?
-    let buttonNewProduct: () -> ButtonNewProduct?
+    let newProductButton: () -> NewProductButton?
     
-    let carouselConfiguration: CarouselConfiguration
+    let config: CarouselConfig
     
     private let coordinateSpaceName = "scrollingEndedView_coordinateSpace"
     
@@ -32,7 +32,7 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
             
             ScrollViewReader { scrollProxy in
                 
-                HStack(alignment: .top, spacing: carouselConfiguration.productDimensions.spacing) {
+                HStack(alignment: .top, spacing: config.productDimensions.spacing) {
                     
                     ForEach(groups) { group in
                         
@@ -43,8 +43,8 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
                         productGroupSeparator(for: group)
                     }
                     
-                    buttonNewProduct()
-                        .frame(carouselConfiguration.productDimensions, for: \.new)
+                    newProductButton()
+                        .frame(config.productDimensions, for: \.new)
                 }
                 .onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })
                 .onChange(of: state.selectedProductType) { productType in
@@ -85,18 +85,14 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
                     if product.id.cardType?.isSticker == true {
                         
                         stickerView(product)
-                            .id(group.id)
-                            .frame(carouselConfiguration.productDimensions, for: \.product)
-                            .accessibilityIdentifier("mainProduct")
-                    }
-                    else {
+                    } else {
                         
                         productView(product)
-                            .id(group.id)
-                            .frame(carouselConfiguration.productDimensions, for: \.product)
-                            .accessibilityIdentifier("mainProduct")
                     }
                 }
+                .id(group.id)
+                .frame(config.productDimensions, for: \.product)
+                .accessibilityIdentifier("mainProduct")
                 
                 if state.shouldAddSeparator(for: product) { separator() }
             })
@@ -105,8 +101,8 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
     private func shadow() -> some View {
         
         RoundedRectangle(cornerRadius: 12)
-            .frame(carouselConfiguration.productDimensions, for: \.productShadow)
-            .foregroundColor(carouselConfiguration.style.colors.groupShadowForeground)
+            .frame(config.productDimensions, for: \.productShadow)
+            .foregroundColor(config.group.shadowForeground)
             .opacity(0.15)
             .offset(x: 0, y: 13)
             .blur(radius: 8)
@@ -135,7 +131,7 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
                         )
                     }
                 }
-                .frame(carouselConfiguration.productDimensions, for: \.button)
+                .frame(config.productDimensions, for: \.button)
             }
             .id("spoiler\(group.id)")
         }
@@ -150,10 +146,10 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
     func separator() -> some View {
         
         Capsule(style: .continuous)
-            .foregroundColor(carouselConfiguration.style.colors.separatorForeground)
-            .frame(carouselConfiguration.productDimensions, for: \.separator)
+            .foregroundColor(config.separatorForeground)
+            .frame(config.productDimensions, for: \.separator)
             // wrap in another frame to center align
-            .frame(height: carouselConfiguration.productDimensions.sizes.product.height)
+            .frame(height: config.productDimensions.sizes.product.height)
     }
     
     func spoilerInnerView(
@@ -165,17 +161,17 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
         ZStack {
             
             RoundedRectangle(cornerRadius: 12)
-                .foregroundColor(carouselConfiguration.style.colors.groupButtonForegroundPrimary)
+                .foregroundColor(config.group.buttonForegroundPrimary)
             
             if isCollapsed {
                 
                 Text(spoilerTitle ?? "")
-                    .font(carouselConfiguration.style.fonts.groupButton)
-                    .foregroundColor(carouselConfiguration.style.colors.groupButtonForegroundSecondary)
+                    .font(config.group.buttonFont)
+                    .foregroundColor(config.group.buttonForegroundSecondary)
             } else {
                 
-                carouselConfiguration.style.images.spoilerImage
-                    .foregroundColor(carouselConfiguration.style.colors.groupButtonIconForeground)
+                config.spoilerImage
+                    .foregroundColor(config.group.buttonIconForeground)
             }
             
         }.onTapGesture {
@@ -187,7 +183,7 @@ struct ProductGroupsView<ProductView: View, ButtonNewProduct: View, StickerView:
 
 private extension View {
     
-    typealias Dimensions = CarouselConfiguration.ProductDimensions
+    typealias Dimensions = CarouselConfig.ProductDimensions
 
     @ViewBuilder
     func frame(
