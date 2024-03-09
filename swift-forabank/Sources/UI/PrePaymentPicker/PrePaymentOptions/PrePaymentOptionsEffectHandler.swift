@@ -8,8 +8,7 @@
 import Foundation
 
 public final class PrePaymentOptionsEffectHandler<LastPayment, Operator>
-where LastPayment: Equatable & Identifiable,
-      Operator: Equatable & Identifiable {
+where Operator: Identifiable {
     
     private let debounce: DispatchTimeInterval
     private let loadLastPayments: LoadLastPayments
