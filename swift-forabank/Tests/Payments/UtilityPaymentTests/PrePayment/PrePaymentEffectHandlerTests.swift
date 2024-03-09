@@ -29,15 +29,15 @@ extension PrePaymentEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .startPayment(payload):
-            startPayment(payload, dispatch)
+        case let .select(select):
+            handleSelect(select, dispatch)
         }
     }
 }
 
 extension PrePaymentEffectHandler {
     
-    typealias Payload = Effect.StartPaymentPayload
+    typealias Payload = Effect.Select
     typealias StartPaymentResult = Result<Response, ServiceFailure>
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (Payload, @escaping StartPaymentCompletion) -> Void
@@ -50,11 +50,11 @@ extension PrePaymentEffectHandler {
 
 private extension PrePaymentEffectHandler {
     
-    func startPayment(
-        _ payload: Effect.StartPaymentPayload,
+    func handleSelect(
+        _ select: Effect.Select,
         _ dispatch: @escaping Dispatch
     ) {
-        switch payload {
+        switch select {
         case let .last(lastPayment):
             startPayment(.last(lastPayment)) {
                 
@@ -82,51 +82,51 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         XCTAssertEqual(startPayment.callCount, 0)
     }
     
-    // MARK: - startPayment
+    // MARK: - select
     
-    func test_startPayment_shouldCallStartPayment_lastPayment() {
+    func test_select_shouldCallStartPayment_lastPayment() {
         
         let lastPayment = makeLastPayment()
-        let effect: Effect = .startPayment(.last(lastPayment))
-        let (sut, startPayment) = makeSUT()
+        let effect: Effect = .select(.last(lastPayment))
+        let (sut, startPaymentSpy) = makeSUT()
         
         sut.handleEffect(effect) { _ in }
         
-        XCTAssertNoDiff(startPayment.messages.map(\.payload), [.last(lastPayment)])
+        XCTAssertNoDiff(startPaymentSpy.messages.map(\.payload), [.last(lastPayment)])
     }
     
-    func test_startPayment_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_lastPayment() {
+    func test_select_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailure_lastPayment() {
         
-        let effect: Effect = .startPayment(.last(makeLastPayment()))
-        let (sut, startPayment) = makeSUT()
+        let effect: Effect = .select(.last(makeLastPayment()))
+        let (sut, startPaymentSpy) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
             
-            startPayment.complete(with: .failure(.connectivityError))
+            startPaymentSpy.complete(with: .failure(.connectivityError))
         })
     }
     
-    func test_startPayment_shouldDeliverServerErrorOnStartPaymentServerErrorFailure_lastPayment() {
+    func test_select_shouldDeliverServerErrorOnStartPaymentServerErrorFailure_lastPayment() {
         
-        let effect: Effect = .startPayment(.last(makeLastPayment()))
+        let effect: Effect = .select(.last(makeLastPayment()))
         let message = anyMessage()
-        let (sut, startPayment) = makeSUT()
+        let (sut, startPaymentSpy) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.serverError(message))), on: {
             
-            startPayment.complete(with: .failure(.serverError(message)))
+            startPaymentSpy.complete(with: .failure(.serverError(message)))
         })
     }
     
-    func test_startPayment_shouldDeliverStartPaymentResponseOnSuccess_lastPayment() {
+    func test_select_shouldDeliverStartPaymentResponseOnSuccess_lastPayment() {
         
-        let effect: Effect = .startPayment(.last(makeLastPayment()))
+        let effect: Effect = .select(.last(makeLastPayment()))
         let response = makeResponse()
-        let (sut, startPayment) = makeSUT()
+        let (sut, startPaymentSpy) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
             
-            startPayment.complete(with: .success(response))
+            startPaymentSpy.complete(with: .success(response))
         })
     }
     

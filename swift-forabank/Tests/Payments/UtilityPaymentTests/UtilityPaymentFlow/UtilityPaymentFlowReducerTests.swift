@@ -495,7 +495,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assert(selectLastPayment(lastPayment), on: state, effect: .prePayment(.startPayment(.last(lastPayment))))
+        assert(selectLastPayment(lastPayment), on: state, effect: .prePayment(.select(.last(lastPayment))))
     }
     
     func test_prePaymentEvent_selectOperator_shouldChangeStateToInflightOnPrePaymentOptionsState() {
@@ -510,7 +510,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let `operator` = makeOperator()
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assert(selectOperator(`operator`), on: state, effect: .prePayment(.startPayment(.operator(`operator`))))
+        assert(selectOperator(`operator`), on: state, effect: .prePayment(.select(.operator(`operator`))))
     }
     
     func test_prePaymentEvent_selectLastPayment_shouldNorChangePrePaymentState_addingCompany() {

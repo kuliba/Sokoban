@@ -118,7 +118,7 @@ private extension UtilityPaymentFlowReducer {
                 
             case let .select(select):
                 state.isInflight = true
-                effect = .prePayment(startPayment(select))
+                effect = .prePayment(handleSelect(select))
                 
             case let .paymentStarted(result):
                 fatalError("can't handle `paymentStarted` event with \(result)")
@@ -155,16 +155,16 @@ private extension UtilityPaymentFlowReducer {
         return (state, effect)
     }
     
-    func startPayment(
+    func handleSelect(
         _ event: PPEvent.SelectEvent
     ) -> PPEffect {
         
         switch event {
         case let .last(lastPayment):
-            return .startPayment(.last(lastPayment))
+            return .select(.last(lastPayment))
             
         case let .operator(`operator`):
-            return .startPayment(.operator(`operator`))
+            return .select(.operator(`operator`))
         }
     }
 }

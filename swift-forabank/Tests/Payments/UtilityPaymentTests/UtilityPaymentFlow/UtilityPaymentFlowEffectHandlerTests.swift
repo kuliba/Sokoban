@@ -367,7 +367,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
         
         let (sut, _, ppEffectHandler) = makeSUT()
-        let effect: SUT.PPEffect = .startPayment(.last(makeLastPayment()))
+        let effect: SUT.PPEffect = .select(.last(makeLastPayment()))
         
         sut.handleEffect(.prePayment(effect)) { _ in }
         
@@ -378,7 +378,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         
         let (sut, _, ppEffectHandler) = makeSUT()
         let event: SUT.PPEvent = .paymentStarted(.failure(.connectivityError))
-        let effect: SUT.PPEffect = .startPayment(.operator(makeOperator()))
+        let effect: SUT.PPEffect = .select(.operator(makeOperator()))
         
         expect(sut, with: .prePayment(effect), toDeliver: .prePayment(event), on: {
             
