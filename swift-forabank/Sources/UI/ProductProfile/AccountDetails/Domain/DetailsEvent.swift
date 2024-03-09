@@ -10,5 +10,5 @@ import Tagged
 public enum DetailsEvent: Equatable {
     
     case appear
-    case itemTapped(ItemEvent)
+    case itemTapped(DetailEvent)
 }

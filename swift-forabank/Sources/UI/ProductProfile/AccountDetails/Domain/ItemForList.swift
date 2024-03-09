@@ -19,19 +19,19 @@ public enum ItemForList: Hashable {
         }
     }
     
-    case single(Item)
-    case multiple([Item])
+    case single(Detail)
+    case multiple([Detail])
     
-    var currentValues: [Item] {
+    var currentValues: [Detail] {
         
         switch self {
-        case let .single(item):
+        case let .single(detail):
             
-            return [item]
+            return [detail]
             
-        case let .multiple(items):
+        case let .multiple(details):
             
-            return items
+            return details
         }
     }
     

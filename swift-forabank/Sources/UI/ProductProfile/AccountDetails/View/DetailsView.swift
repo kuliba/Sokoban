@@ -10,13 +10,13 @@ import SwiftUI
 struct DetailsView: View {
     
     let items: [ItemForList]
-    let event: (ItemEvent) -> Void
+    let event: (DetailEvent) -> Void
     let config: Config
     let title: String
     let showCheckbox: Bool
     
     @Binding var isCheck: Bool
-    
+    // TODO: paddings -> Config
     var body: some View {
         
         ZStack {
@@ -26,109 +26,61 @@ struct DetailsView: View {
                 .cornerRadius(12)
             VStack(alignment: .leading, spacing: 13) {
                 
-                TitleWithCheckBox(
-                    title: title,
-                    config: config,
-                    showCheckbox: showCheckbox,
-                    isCheck: $isCheck)
-                
-                CustomDivider()
-                
-                ForEach(items, id: \.self) { value in
-                    
-                    ItemViewNew(value: value, event: event, config: config)
-                }
+                titleWithCheckBox(title)
+                divider()
+                ForEach(items, id: \.self) { itemView(value: $0) }
             }
             .padding(.bottom, 13)
             .padding(.horizontal, 16)
         }
         .padding(.horizontal, 16)
     }
-}
-struct ItemViewNew: View {
     
-    let value: ItemForList
-    let event: (ItemEvent) -> Void
-    let config: Config
-    
-    var body: some View {
+    @ViewBuilder
+    private func itemView(value: ItemForList) -> some View {
         
         switch value {
             
         case let .single(item):
             
             DetailView(item: item, event: event, config: config)
-            CustomDivider()
+            divider()
             
         case let .multiple(items):
             
             HStack(spacing: 0) {
                 
-                ForEach(items, id: \.id) { item in
+                ForEach(items, id: \.id) {
                     
-                    let isFirst = item == items.first
-                    
-                    DetailView(item: item, event: event, config: config)
+                    let isFirst = $0 == items.first
+                    DetailView(item: $0, event: event, config: config)
                         .padding(.leading, (isFirst ? 0 : 16))
-                    
-                    if isFirst {
-                        
-                        CustomDivider()
-                            .rotationEffect(.degrees(90))
-                            .frame(width: 16)
-                    }
                 }
             }
         }
     }
-}
-
-struct CustomDivider: View {
     
-    let color: Color
-    
-    init(
-        color: Color = Color(red: 0.83, green: 0.83, blue: 0.83).opacity(0.3)
-    ) {
-        self.color = color
-    }
-    
-    var body: some View {
-        
-        Rectangle()
-            .foregroundColor(.clear)
-            .frame(height: 0.5)
-            .frame(maxWidth: .infinity)
-            .background(color)
-    }
-}
-
-struct TitleWithCheckBox: View {
-    
-    let title: String
-    let config: Config
-    
-    let showCheckbox: Bool
-    
-    @Binding var isCheck: Bool
-    
-    var body: some View {
+    private func titleWithCheckBox(_ title: String) -> some View {
         
         HStack {
-            
             config.images.checkImage(isCheck)
-                .frame(width: showCheckbox ? 24 : 0, height: showCheckbox ? 24 : 0, alignment: .center)
-                .onTapGesture {
-                    
-                    isCheck.toggle()
-                }
+                .frame(width: showCheckbox ? config.sizes.icon : 0, height: showCheckbox ? config.sizes.icon : 0, alignment: .center)
+                .onTapGesture { isCheck.toggle() }
                 .opacity(showCheckbox ? 1 : 0)
-            
             Text(title)
                 .font(config.fonts.checkBoxTitle)
                 .foregroundColor(config.colors.checkBoxTitle)
         }
         .padding(.top, 13)
+    }
+    
+    private func divider() -> some View {
+        
+        Rectangle()
+            .foregroundColor(.clear)
+            .frame(height: 0.5)
+            .frame(maxWidth: .infinity)
+            .background(config.colors.divider)
     }
 }
 
@@ -147,8 +99,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
         @State var trueValue = true
         @State var falseValue = false
         
-        NavigationView {
-            
+        Group {
             DetailsView(
                 items: .preview,
                 event: { print($0) },
@@ -157,10 +108,6 @@ struct ItemsViewNew_Previews: PreviewProvider {
                 showCheckbox: false,
                 isCheck: $falseValue
             )
-        }
-        
-        NavigationView {
-            
             DetailsView(
                 items: .preview,
                 event: { print($0) },
@@ -169,10 +116,6 @@ struct ItemsViewNew_Previews: PreviewProvider {
                 showCheckbox: true,
                 isCheck: $falseValue
             )
-        }
-        
-        NavigationView {
-            
             DetailsView(
                 items: .cardItems,
                 event: { print($0) },

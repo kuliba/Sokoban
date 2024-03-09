@@ -76,19 +76,22 @@ public extension Config {
         let subtitle: Color
         let fill: Color
         let checkBoxTitle: Color
+        let divider: Color
         
         public init(
             image: Color,
             title: Color,
             subtitle: Color,
             fill: Color,
-            checkBoxTitle: Color
+            checkBoxTitle: Color,
+            divider: Color = Color(red: 0.83, green: 0.83, blue: 0.83).opacity(0.3)
         ) {
             self.image = image
             self.title = title
             self.subtitle = subtitle
             self.fill = fill
             self.checkBoxTitle = checkBoxTitle
+            self.divider = divider
         }
     }
 }

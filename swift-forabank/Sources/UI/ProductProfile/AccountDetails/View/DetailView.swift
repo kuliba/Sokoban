@@ -9,8 +9,8 @@ import SwiftUI
 
 struct DetailView: View {
     
-    let item: Item
-    let event: (ItemEvent) -> Void
+    let item: Detail
+    let event: (DetailEvent) -> Void
     let config: Config
     
     var body: some View {
@@ -25,10 +25,7 @@ struct DetailView: View {
                     .renderingMode(.template)
                     .foregroundColor(config.colors.image)
                     .frame(width: config.sizes.icon, height: config.sizes.icon, alignment: .center)
-                    .onTapGesture {
-                        
-                        event(.iconTap(item.id))
-                    }
+                    .onTapGesture { event(.iconTap(item.id)) }
                     .accessibilityIdentifier("InfoProductItemButton")
             }
         }
@@ -100,7 +97,7 @@ struct ItemView_Previews: PreviewProvider {
     }
 }
 
-private extension Item {
+private extension Detail {
     
     static let accountNumberItem: Self = .init(
         id: .accountNumber,
