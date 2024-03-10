@@ -39,12 +39,12 @@ extension PaymentsTransfersViewModel {
         
         let loadLastPayments: PPOEffectHandler.LoadLastPayments = { completion in
             
-                completion(flow.loadLastPayments.result)
+            completion(flow.loadLastPayments.result)
         }
         
         let loadOperators: PPOEffectHandler.LoadOperators = { payload, completion in
             
-            
+            completion(flow.loadOperators.result)
         }
         
         let ppoEffectHandler = PPOEffectHandler(
@@ -106,16 +106,16 @@ private extension Flow.LoadLastPayments {
     }
 }
 
-private extension Flow.LoadPrePayment {
+private extension Flow.LoadOperators {
     
-    var result: Result<PaymentsTransfersEvent.PrePayment, SimpleServiceFailure> {
+    var result: PPOEffectHandler.LoadOperatorsResult {
         
         switch self {
+        case .failure:
+            return .failure(.connectivityError)
+            
         case .success:
             return .success(.init())
-            
-        case .failure:
-            return .failure(.init())
         }
     }
 }

@@ -9,11 +9,11 @@ extension Flow {
     
     static let happy: Self = .init(
         loadLastPayments: .success,
-        loadPrePayment: .success
+        loadOperators: .success
     )
     
     static let sad: Self = .init(
         loadLastPayments: .failure,
-        loadPrePayment: .failure
+        loadOperators: .failure
     )
 }

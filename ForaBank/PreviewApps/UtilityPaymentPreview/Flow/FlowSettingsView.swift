@@ -16,7 +16,7 @@ struct FlowSettingsView: View {
         List {
             
             pickerSection("Load Last Payments", $flow.loadLastPayments)
-            pickerSection("Load PrePayment", $flow.loadPrePayment)
+            pickerSection("Load Operators", $flow.loadOperators)
         }
         .listStyle(.plain)
     }
