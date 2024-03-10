@@ -31,18 +31,14 @@ extension PaymentsTransfersReducer {
         switch (state.route, event) {
         case (.none, .openUtilityPayment):
             state.status = .inflight
+            state.route = .utilityPayment(.init([]))
             effect = .utilityPayment(.prePaymentOptions(.initiate))
             
-        case let (
-            .utilityPayment(utilityPaymentFlowState),
-            .utilityPayment(utilityPaymentFlowEvent)
-        ):
-            let (s, e) = utilityPaymentFlowReduce(utilityPaymentFlowState, utilityPaymentFlowEvent)
-            state.route = .utilityPayment(s)
-            if s.isInflight {
-                state.status = .inflight
-            }
-            effect = e.map { Effect.utilityPayment($0) }
+//        case let (.none, .utilityPayment(.prePaymentOptions(.loaded(loadLastPaymentsResult, loadOperatorsResult)))):
+//            fatalError("loaded")
+            
+        case let (.utilityPayment(flowState), .utilityPayment(flowEvent)):
+            (state, effect) = reduce(state, flowState, flowEvent)
             
         default:
             fatalError("can't handle \(event) at \(state)")
@@ -130,6 +126,9 @@ extension PaymentsTransfersReducer {
         //            }
         //        }
         
+        dump(state)
+        dump(effect)
+        
         return (state, effect)
     }
 }
@@ -149,4 +148,29 @@ extension PaymentsTransfersReducer {
     typealias State = PaymentsTransfersState
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
+}
+
+private extension PaymentsTransfersReducer {
+    
+    func reduce(
+        _ state: State,
+        _ flowState: FlowState,
+        _ flowEvent: FlowEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        let (flowState, flowEffect) = utilityPaymentFlowReduce(flowState, flowEvent)
+        
+        state.status = .none
+        state.route = .utilityPayment(flowState)
+        if flowState.isInflight {
+            state.status = .inflight
+        }
+        
+        effect = flowEffect.map { Effect.utilityPayment($0) }
+        
+        return (state, effect)
+    }
 }

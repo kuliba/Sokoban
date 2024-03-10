@@ -39,12 +39,18 @@ extension PaymentsTransfersViewModel {
         
         let loadLastPayments: PPOEffectHandler.LoadLastPayments = { completion in
             
-            completion(flow.loadLastPayments.result)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flow.loadLastPayments.result)
+            }
         }
         
         let loadOperators: PPOEffectHandler.LoadOperators = { payload, completion in
             
-            completion(flow.loadOperators.result)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flow.loadOperators.result)
+            }
         }
         
         let ppoEffectHandler = PPOEffectHandler(

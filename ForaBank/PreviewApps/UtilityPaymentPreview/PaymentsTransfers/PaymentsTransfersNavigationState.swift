@@ -10,11 +10,20 @@ extension PaymentsTransfersState {
     var navigationState: NavigationState? {
         
         switch route {            
-        case let .utilityPayment(utilityPaymentState):
-            return .prePayment(.success)
-            
-        default:
+        case .none:
             return .none
+            
+        case let .utilityPayment(utilityPaymentState):
+            switch utilityPaymentState.current {
+            case .none:
+                return .none
+                
+            case let .prePaymentOptions(prePaymentOptions):
+                return .prePaymentOptions(.success)
+                
+            case let .prePaymentState(prePaymentState):
+                return .prePayment(.success)
+            }
         }
     }
     
@@ -34,11 +43,15 @@ extension PaymentsTransfersState {
     
     enum NavigationState: Identifiable {
         
+        case prePaymentOptions(PrePaymentOptions)
         case prePayment(PrePayment)
         
         var id: ID {
             
             switch self {
+            case .prePaymentOptions:
+                return .prePaymentOptions
+                
             case .prePayment:
                 return .prePayment
             }
@@ -46,6 +59,7 @@ extension PaymentsTransfersState {
         
         enum ID {
             
+            case prePaymentOptions
             case prePayment
         }
     }
@@ -70,6 +84,12 @@ extension PaymentsTransfersState {
 }
 
 extension PaymentsTransfersState.NavigationState {
+    
+    enum PrePaymentOptions {
+
+        case failure
+        case success
+    }
     
     enum PrePayment {
 

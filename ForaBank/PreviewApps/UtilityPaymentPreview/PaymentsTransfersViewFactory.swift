@@ -47,5 +47,5 @@ extension PaymentsTransfersViewFactory {
     
     typealias PayByInstruction = () -> Void
     
-    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, LoadServicesResponse, UtilityService>
 }

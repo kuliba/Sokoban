@@ -54,7 +54,7 @@ struct PrePaymentMockView: View {
         Button("Operator \"\(id)\"") { event(.select(.operator(.init(id: id)))) }
     }
     
-    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, LoadServicesResponse, UtilityService>
 }
 
 struct PrePaymentView_Previews: PreviewProvider {
