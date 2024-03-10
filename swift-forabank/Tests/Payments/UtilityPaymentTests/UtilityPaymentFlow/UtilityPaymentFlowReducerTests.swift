@@ -20,6 +20,165 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     // MARK: - PrePaymentOptionsEvent
+//    didScrollTo
+//    initiate
+//    paginated
+//    search
+    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_didScrollTo() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.didScrollTo("abc"))
+
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_initiate() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.initiate)
+
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_paginatedFailure() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.paginated(.failure(.connectivityError)))
+
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_paginatedSuccess() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.paginated(.success([
+            makeOperator(), makeOperator()
+        ])))
+
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_search() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.search(.entered("abc")))
+
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldSetInitialFlow_loadLastPaymentFailure_loadOperatorsFailure() {
+        
+        let state = makeState(flows: [])
+        let event: Event = .prePaymentOptions(.loaded(
+            .failure(.connectivityError), .failure(.connectivityError)
+        ))
+
+        assertState(event, on: state) {
+            
+            $0.current = .prePaymentOptions(.init())
+        }
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldSetInitialFlow_loadLastPaymentSuccess_loadOperatorsFailure() {
+        
+        let state = makeState(flows: [])
+        let lastPayments = [makeLastPayment(), makeLastPayment()]
+        let event: Event = .prePaymentOptions(.loaded(
+            .success(lastPayments), .failure(.connectivityError)
+        ))
+
+        assertState(event, on: state) {
+            
+            $0.current = .prePaymentOptions(.init(
+                lastPayments: lastPayments
+            ))
+        }
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldSetInitialFlow_loadLastPaymentFailure_loadOperatorsSuccess() {
+        
+        let state = makeState(flows: [])
+        let operators = [makeOperator(), makeOperator()]
+        let event: Event = .prePaymentOptions(.loaded(
+            .failure(.connectivityError), .success(operators)
+        ))
+
+        assertState(event, on: state) {
+            
+            $0.current = .prePaymentOptions(.init(
+                operators: operators
+            ))
+        }
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldSetInitialFlow_loadLastPaymentSuccessEmpty_loadOperatorsSuccessEmpty() {
+        
+        let state = makeState(flows: [])
+        let lastPayments = [LastPayment]()
+        let operators = [Operator]()
+        let event: Event = .prePaymentOptions(.loaded(
+            .success(lastPayments), .success(operators)
+        ))
+
+        assertState(event, on: state) {
+            
+            $0.current = .prePaymentOptions(.init(
+                lastPayments: lastPayments,
+                operators: operators
+            ))
+        }
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldSetInitialFlow_loadLastPaymentSuccess_loadOperatorsSuccess() {
+        
+        let state = makeState(flows: [])
+        let lastPayments = [makeLastPayment()]
+        let operators = [makeOperator(), makeOperator()]
+        let event: Event = .prePaymentOptions(.loaded(
+            .success(lastPayments), .success(operators)
+        ))
+
+        assertState(event, on: state) {
+            
+            $0.current = .prePaymentOptions(.init(
+                lastPayments: lastPayments,
+                operators: operators
+            ))
+        }
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prePaymentOptionsEvent_loaded_shouldChangeNonEmptyFlow() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeState(.prePaymentOptions(prePaymentOptions))
+        let event: Event = .prePaymentOptions(.loaded(
+            .failure(.connectivityError), .failure(.connectivityError)
+        ))
+        
+        assertState(event, on: state)
+        
+        XCTAssertNotNil(state.current)
+    }
     
     func test_prePaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_didScrollTo() {
         
@@ -730,6 +889,14 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     private func makeState(
         _ flows: Flow...,
+        isInflight: Bool = false
+    ) -> State {
+        
+        .init(flows, isInflight: isInflight)
+    }
+    
+    private func makeState(
+        flows: [Flow],
         isInflight: Bool = false
     ) -> State {
         

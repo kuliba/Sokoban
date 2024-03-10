@@ -73,6 +73,19 @@ private extension UtilityPaymentFlowReducer {
         var effect: Effect?
         
         switch state.current {
+        case .none:
+            switch event {
+            case let .loaded(loadLastPaymentsResult, loadOperatorsResult):
+                state.isInflight = false
+                state.current = .prePaymentOptions(.init(
+                    lastPayments: try? loadLastPaymentsResult.get(),
+                    operators: try? loadOperatorsResult.get()
+                ))
+                
+            default:
+                break
+            }
+            
         case let .prePaymentOptions(prePaymentOptionsState):
             let (ppoState, ppoEffect) = prePaymentOptionsReduce(prePaymentOptionsState, event)
             
@@ -82,7 +95,7 @@ private extension UtilityPaymentFlowReducer {
             state.current = .prePaymentOptions(ppoState)
             effect = ppoEffect.map { Effect.prePaymentOptions($0) }
             
-        default:
+        case .prePaymentState:
             break
         }
         
