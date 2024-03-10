@@ -28,7 +28,7 @@ struct PaymentsTransfersViewFactory {
     }
     
     func prePaymentView(
-        _ event: @escaping (PrePaymentEvent) -> Void
+        _ event: @escaping (PPEvent) -> Void
     ) -> some View {
         
         switch mode {
@@ -46,4 +46,6 @@ extension PaymentsTransfersViewFactory {
     }
     
     typealias PayByInstruction = () -> Void
+    
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
 }

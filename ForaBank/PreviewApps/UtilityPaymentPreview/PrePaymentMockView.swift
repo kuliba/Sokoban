@@ -10,7 +10,7 @@ import UtilityPayment
 
 struct PrePaymentMockView: View {
     
-    let event: (PrePaymentEvent) -> Void
+    let event: (PPEvent) -> Void
     
     @State private var text = ""
     
@@ -53,6 +53,8 @@ struct PrePaymentMockView: View {
         
         Button("Operator \"\(id)\"") { event(.select(.operator(.init(id: id)))) }
     }
+    
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
 }
 
 struct PrePaymentView_Previews: PreviewProvider {

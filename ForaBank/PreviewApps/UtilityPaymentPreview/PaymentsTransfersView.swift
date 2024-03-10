@@ -56,17 +56,17 @@ struct PaymentsTransfersView: View {
                 
             case .success:
                 factory.prePaymentView { viewModel.event(.prePayment($0)) }
-                    .navigationDestination(
-                        item: .init(
-                            get: {
-                                let state = viewModel.state.prePaymentNavigationState
-                                print(state ?? "nil")
-                                return state
-                            },
-                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
-                        ),
-                        content: prePaymentDestinationView
-                    )
+//                    .navigationDestination(
+//                        item: .init(
+//                            get: {
+//                                let state = viewModel.state.prePaymentNavigationState
+//                                print(state ?? "nil")
+//                                return state
+//                            },
+//                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
+//                        ),
+//                        content: prePaymentDestinationView
+//                    )
             }
         }
     }

@@ -15,7 +15,7 @@ extension PaymentsTransfersViewModel {
         flow: Flow = .happy
     ) -> PaymentsTransfersViewModel {
         
-        let prePaymentReducer = PrePaymentReducer()
+        let prePaymentReducer = PrePaymentReducer<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>()
         
         let reducer = PaymentsTransfersReducer(
             prePaymentReduce: prePaymentReducer.reduce

@@ -17,12 +17,16 @@ extension PaymentsTransfersState {
     
     enum Route: Equatable {
         
-        case prePayment(Result<PrePaymentState, SimpleServiceFailure>)
-        case utilityPayment(AnywayPaymentState)
+        case prePayment(Result<PPState, SimpleServiceFailure>)
+        case utilityPayment(AnywayPayment)
     }
     
     enum Status: Equatable {
         
         case inflight
     }
+    
+    typealias PPState = PrePaymentState<LastPayment, Operator>
+    
+    typealias AnywayPayment = AnywayPaymentState<Never>
 }

@@ -16,7 +16,7 @@ enum PaymentsTransfersEvent: Equatable {
     case loadedServices(LoadServicesResponse, for: Operator)
     case payByInstruction
 #warning("move to `UtilityPaymentEvent`")
-    case prePayment(PrePaymentEvent)
+    case prePayment(PPEvent)
     case resetDestination
 #warning("move to `UtilityPaymentEvent`")
     case startPaymentResponse(StartPaymentResponse)
@@ -36,4 +36,6 @@ extension PaymentsTransfersEvent {
         case list([UtilityService]) // non-empty!
         case single(UtilityService)
     }
+    
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
 }

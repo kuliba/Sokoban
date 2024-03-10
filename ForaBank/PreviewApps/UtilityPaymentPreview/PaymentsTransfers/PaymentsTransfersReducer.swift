@@ -65,7 +65,7 @@ extension PaymentsTransfersReducer {
             if prePaymentEvent == .back,
                 case let .utilityPayment(utilityPayment) = state.route {
                 
-                state.route = .prePayment(.success(utilityPayment.prePayment))
+                // state.route = .prePayment(.success(utilityPayment.prePayment))
                 break
             }
             
@@ -104,7 +104,8 @@ extension PaymentsTransfersReducer {
                 print("startPaymentResponse: \(serviceFailure)")
                 
             case let .success(startPayment):
-                state.route = .utilityPayment(.init(prePayment: prePayment))
+                // state.route = .utilityPayment(.init(prePayment: prePayment))
+                break
             }
         }
         
@@ -114,8 +115,11 @@ extension PaymentsTransfersReducer {
 
 extension PaymentsTransfersReducer {
     
-    typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
-    
+    typealias PPState = PrePaymentState<LastPayment, Operator>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
+    typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
+
     typealias State = PaymentsTransfersState
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
