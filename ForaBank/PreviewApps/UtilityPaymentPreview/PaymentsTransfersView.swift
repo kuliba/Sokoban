@@ -50,6 +50,13 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         switch navigationState {
+        case .addingCompany:
+            Text("TBD: go to chat")
+                .navigationBarBackButtonHidden()
+            
+        case .payingByInstruction:
+            Text("TBD: pay by Instruction here")
+            
         case let .prePaymentOptions(prePaymentOptions):
             switch prePaymentOptions {
             case .failure:
@@ -95,6 +102,9 @@ struct PaymentsTransfersView: View {
 //                        content: prePaymentDestinationView
 //                    )
             }
+            
+        case .scanning:
+            Text("TBD: scanning")
         }
     }
     
