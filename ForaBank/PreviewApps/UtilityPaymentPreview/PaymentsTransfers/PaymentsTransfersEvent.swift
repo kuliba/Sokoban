@@ -9,6 +9,7 @@ import UtilityPayment
 
 enum PaymentsTransfersEvent: Equatable {
     
+    case back
     case openUtilityPayment
     case utilityPayment(UtilityFlowEvent)
 }

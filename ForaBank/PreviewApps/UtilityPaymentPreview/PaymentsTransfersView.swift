@@ -38,7 +38,7 @@ struct PaymentsTransfersView: View {
         .navigationDestination(
             item: .init(
                 get: { viewModel.state.navigationState },
-                set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
+                set: { if $0 == nil { viewModel.event(.back) }}
             ),
             content: destinationView
         )
@@ -53,23 +53,25 @@ struct PaymentsTransfersView: View {
         case let .prePaymentOptions(prePaymentOptions):
             switch prePaymentOptions {
             case .failure:
-                Text("TBD: prePaymentOptionsFailureView")
-//                factory.prePaymentFailureView { viewModel.event(.utilityPayment(.prePayment(.payByInstruction))) }
+                factory.prePaymentFailureView {
+                
+                    viewModel.event(.utilityPayment(.prePayment(.payByInstruction)))
+                }
                 
             case .success:
                 Text("TBD: prePaymentOptionsView")
                 // factory.prePaymentView { _ in fatalError() }
-                    .navigationDestination(
-                        item: .init(
-                            get: {
-                                let state = viewModel.state.prePaymentNavigationState
-                                print(state ?? "nil")
-                                return state
-                            },
-                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
-                        ),
-                        content: prePaymentDestinationView
-                    )
+//                    .navigationDestination(
+//                        item: .init(
+//                            get: {
+//                                let state = viewModel.state.prePaymentNavigationState
+//                                print(state ?? "nil")
+//                                return state
+//                            },
+//                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
+//                        ),
+//                        content: prePaymentDestinationView
+//                    )
             }
             
         case let .prePayment(prePayment):

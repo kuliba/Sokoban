@@ -19,7 +19,13 @@ extension PaymentsTransfersState {
                 return .none
                 
             case let .prePaymentOptions(prePaymentOptions):
-                return .prePaymentOptions(.success)
+                switch prePaymentOptions {
+                case .init():
+                    return .prePaymentOptions(.failure)
+                    
+                default:
+                    return .prePaymentOptions(.success)
+                }
                 
             case let .prePaymentState(prePaymentState):
                 return .prePayment(.success)
