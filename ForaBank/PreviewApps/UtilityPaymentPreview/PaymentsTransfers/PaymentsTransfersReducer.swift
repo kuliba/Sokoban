@@ -86,8 +86,13 @@ private extension PaymentsTransfersReducer {
                     utilityPayment,
                     .prePayment(.back)
                 )
-                state.route = .utilityPayment(s)
-                effect = e.map { Effect.utilityPayment($0) }
+                
+                if s.current == nil {
+                    state.route = nil
+                } else {
+                    state.route = .utilityPayment(s)
+                    effect = e.map { Effect.utilityPayment($0) }
+                }
             }
         }
         
@@ -132,6 +137,8 @@ private extension PaymentsTransfersReducer {
             state.route = .utilityPayment(flowState)
             state.status = flowState.isInflight ? .inflight : .none
             effect = flowEffect.map { Effect.utilityPayment($0) }
+            
+            #warning("switch over flowState` to make additional state changes like go to chat if `addCompany`")
         }
         
         return (state, effect)
