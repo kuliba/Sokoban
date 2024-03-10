@@ -45,35 +45,12 @@ struct ContentView: View {
         
         NavigationView {
             
-            List {
-                
-                pickerSection("Load PrePayment", $flow.loadPrePayment)
-            }
-            .listStyle(.plain)
-            .navigationTitle("Flow Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(content: closeSettingsButton)
-            }
-        }
-    }
-    
-    private func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
-        _ title: String,
-        _ selection: Binding<T>
-    ) -> some View where T.AllCases: RandomAccessCollection, T.RawValue == String {
-        
-        Section(header: Text(title)) {
-            
-            Picker(title, selection: selection) {
-                
-                ForEach(T.allCases, id: \.self) {
-                    
-                    Text($0.rawValue)
-                        .tag($0)
+            FlowSettingsView(flow: $flow)
+                .navigationTitle("Flow Settings")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(content: closeSettingsButton)
                 }
-            }
-            .pickerStyle(.segmented)
         }
     }
     
