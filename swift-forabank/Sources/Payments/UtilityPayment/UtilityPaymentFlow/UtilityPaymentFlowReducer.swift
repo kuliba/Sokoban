@@ -151,7 +151,7 @@ private extension UtilityPaymentFlowReducer {
                     break
                     
                 case .payingByInstruction, .scanning:
-                    state.pop()
+                    state.current = nil
                     
                 case let .selected(selected):
                     fatalError("can't handle `selected(\(selected))` event \(event) on prePaymentState state \(prePaymentState)")
