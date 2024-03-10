@@ -21,10 +21,9 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - initiate
     
-    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_didScrollTo() {
+    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffectWithEffect() {
         
         let (sut, ppoEffectHandler, _) = makeSUT()
-        
         let effect: SUT.PPOEffect = .initiate
         
         sut.handleEffect(.prePaymentOptions(effect)) { _ in }
@@ -44,16 +43,6 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         })
     }
     
-    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_initiate() {
-        
-        let (sut, ppoEffectHandler, _) = makeSUT()
-        let effect: SUT.PPOEffect = .initiate
-        
-        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
-        
-        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
-    }
-    
     func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_initiate() {
         
         let (sut, ppoEffectHandler, _) = makeSUT()
@@ -64,16 +53,6 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
             
             ppoEffectHandler.complete(with: event)
         })
-    }
-    
-    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_loaded() {
-        
-        let (sut, ppoEffectHandler, _) = makeSUT()
-        let effect: SUT.PPOEffect = .initiate
-        
-        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
-        
-        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
     }
     
     func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_loaded() {
@@ -90,16 +69,6 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         })
     }
     
-    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_paginated() {
-        
-        let (sut, ppoEffectHandler, _) = makeSUT()
-        let effect: SUT.PPOEffect = .initiate
-        
-        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
-        
-        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
-    }
-    
     func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_paginated() {
         
         let (sut, ppoEffectHandler, _) = makeSUT()
@@ -110,16 +79,6 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
             
             ppoEffectHandler.complete(with: event)
         })
-    }
-    
-    func test_prePaymentOptionsEffect_initiate_shouldCallPrePaymentOptionsHandleEffect_search() {
-        
-        let (sut, ppoEffectHandler, _) = makeSUT()
-        let effect: SUT.PPOEffect = .initiate
-        
-        sut.handleEffect(.prePaymentOptions(effect)) { _ in }
-        
-        XCTAssertNoDiff(ppoEffectHandler.messages.map(\.effect), [effect])
     }
     
     func test_prePaymentOptionsEffect_initiate_shouldDeliverPrePaymentOptionsHandleEffectEvent_search() {
