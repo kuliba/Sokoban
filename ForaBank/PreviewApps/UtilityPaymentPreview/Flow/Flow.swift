@@ -7,10 +7,16 @@
 
 struct Flow {
     
+    var loadLastPayments: LoadLastPayments
     var loadPrePayment: LoadPrePayment
 }
 
 extension Flow {
+
+    enum LoadLastPayments: String, CaseIterable {
+        
+        case success, failure
+    }
 
     enum LoadPrePayment: String, CaseIterable {
         

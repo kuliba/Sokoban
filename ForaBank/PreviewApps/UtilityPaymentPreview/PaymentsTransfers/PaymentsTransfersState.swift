@@ -17,8 +17,7 @@ extension PaymentsTransfersState {
     
     enum Route: Equatable {
         
-        case prePayment(Result<PPState, SimpleServiceFailure>)
-        case utilityPayment(AnywayPayment)
+        case utilityPayment(UtilityPayment)
     }
     
     enum Status: Equatable {
@@ -26,7 +25,5 @@ extension PaymentsTransfersState {
         case inflight
     }
     
-    typealias PPState = PrePaymentState<LastPayment, Operator>
-    
-    typealias AnywayPayment = AnywayPaymentState<Never>
+    typealias UtilityPayment = UtilityPaymentFlowState<LastPayment, Operator>
 }

@@ -9,6 +9,11 @@ import UtilityPayment
 
 enum PaymentsTransfersEvent: Equatable {
     
+    case openUtilityPayment
+    case utilityPayment(UtilityFlowEvent)
+    
+    #warning("remove cases!!!!!!!!")
+    
     #warning("move to `UtilityPaymentEvent`")
     case openPrePayment
     #warning("rename to loadPrePayment")
@@ -38,4 +43,5 @@ extension PaymentsTransfersEvent {
     }
     
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
 }

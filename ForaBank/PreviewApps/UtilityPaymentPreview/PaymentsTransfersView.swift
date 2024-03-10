@@ -15,6 +15,7 @@ struct PaymentsTransfersView: View {
     let factory: PaymentsTransfersViewFactory
     
     var body: some View {
+        
         ZStack {
 #warning("remodel spinner and NavigationView position to resemble app")
             

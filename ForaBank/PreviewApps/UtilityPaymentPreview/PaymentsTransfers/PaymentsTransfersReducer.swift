@@ -9,11 +9,12 @@ import UtilityPayment
 
 final class PaymentsTransfersReducer {
     
-    private let prePaymentReduce: PrePaymentReduce
+    private let utilityPaymentFlowReduce: UtilityPaymentFlowReduce
     
-    init(prePaymentReduce: @escaping PrePaymentReduce) {
-        
-        self.prePaymentReduce = prePaymentReduce
+    init(
+        utilityPaymentFlowReduce: @escaping UtilityPaymentFlowReduce
+    ) {
+        self.utilityPaymentFlowReduce = utilityPaymentFlowReduce
     }
 }
 
@@ -27,87 +28,107 @@ extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch event {
-        case .openPrePayment:
+        switch (state.route, event) {
+        case (.none, .openUtilityPayment):
             state.status = .inflight
-            effect = .loadPrePayment
+            effect = .utilityPayment(.prePaymentOptions(.initiate))
             
-        case let .loaded(prePaymentResult):
-            state.status = nil
-            
-            switch prePaymentResult {
-            case let .failure(failure):
-                state.route = .prePayment(.failure(failure))
-                
-            case let .success(success):
-                state.route = .prePayment(.success(.selecting))
-            }
-            
-        case let .loadedServices(response, for: `operator`):
-            switch response {
-                
-            case .failure:
-                fatalError()
-                
-            case let .list(utilityServices):
-                fatalError()
-                
-            case let .single(utilityService):
+        case let (
+            .utilityPayment(utilityPaymentFlowState),
+            .utilityPayment(utilityPaymentFlowEvent)
+        ):
+            let (s, e) = utilityPaymentFlowReduce(utilityPaymentFlowState, utilityPaymentFlowEvent)
+            state.route = .utilityPayment(s)
+            if s.isInflight {
                 state.status = .inflight
-                effect = .startPayment(.service(`operator`, utilityService))
             }
+            effect = e.map { Effect.utilityPayment($0) }
             
-        case .payByInstruction:
-#warning("FIX ME")
-            
-        case let .prePayment(prePaymentEvent):
-            
-            if prePaymentEvent == .back,
-                case let .utilityPayment(utilityPayment) = state.route {
-                
-                // state.route = .prePayment(.success(utilityPayment.prePayment))
-                break
-            }
-            
-            #warning("what if it's failure case?")
-            guard case let .prePayment(.success(prePaymentState)) = state.route
-            else { break }
-            
-            let (newPrePaymentState, _) = prePaymentReduce(prePaymentState, prePaymentEvent)
-            state.route = .prePayment(.success(newPrePaymentState))
-            
-            switch newPrePaymentState {
-            case let .selected(.last(lastPayment)):
-                state.status = .inflight
-                effect = .startPayment(.last(lastPayment))
-                
-            case let .selected(.operator(`operator`)):
-                state.status = .inflight
-                effect = .loadServices(for: `operator`)
-                
-            default:
-                break
-            }
-            
-        case .resetDestination:
-            state.route = nil
-            
-        case let .startPaymentResponse(response):
-            guard case let .prePayment(.success(prePayment)) = state.route
-            else { break }
-            
-            state.status = nil
-            #warning("FIX ME")
-            switch response {
-            case let .failure(serviceFailure):
-                #warning("move to mainScreen")
-                print("startPaymentResponse: \(serviceFailure)")
-                
-            case let .success(startPayment):
-                // state.route = .utilityPayment(.init(prePayment: prePayment))
-                break
-            }
+        default:
+            fatalError("can't handle \(event) at \(state)")
         }
+        
+        //        switch event {
+        //        case .openPrePayment:
+        //            state.status = .inflight
+        //            effect = .loadPrePayment
+        //
+        //        case let .loaded(prePaymentResult):
+        //            state.status = nil
+        //
+        //            switch prePaymentResult {
+        //            case let .failure(failure):
+        //                state.route = .prePayment(.failure(failure))
+        //
+        //            case let .success(success):
+        //                state.route = .prePayment(.success(.selecting))
+        //            }
+        //
+        //        case let .loadedServices(response, for: `operator`):
+        //            switch response {
+        //
+        //            case .failure:
+        //                fatalError()
+        //
+        //            case let .list(utilityServices):
+        //                fatalError()
+        //
+        //            case let .single(utilityService):
+        //                state.status = .inflight
+        //                effect = .startPayment(.service(`operator`, utilityService))
+        //            }
+        //
+        //        case .payByInstruction:
+        //#warning("FIX ME")
+        //
+        //        case let .prePayment(prePaymentEvent):
+        //
+        //            if prePaymentEvent == .back,
+        //               case let .utilityPayment(utilityPayment) = state.route {
+        //
+        //                // state.route = .prePayment(.success(utilityPayment.prePayment))
+        //                break
+        //            }
+        //
+        //#warning("what if it's failure case?")
+        //            guard case let .prePayment(.success(prePaymentState)) = state.route
+        //            else { break }
+        //
+        //            let (newPrePaymentState, _) = prePaymentReduce(prePaymentState, prePaymentEvent)
+        //            state.route = .prePayment(.success(newPrePaymentState))
+        //
+        //            switch newPrePaymentState {
+        //            case let .selected(.last(lastPayment)):
+        //                state.status = .inflight
+        //                effect = .startPayment(.last(lastPayment))
+        //
+        //            case let .selected(.operator(`operator`)):
+        //                state.status = .inflight
+        //                effect = .loadServices(for: `operator`)
+        //
+        //            default:
+        //                break
+        //            }
+        //
+        //        case .resetDestination:
+        //            state.route = nil
+        //
+        //        case let .startPaymentResponse(response):
+        //            guard case let .prePayment(.success(prePayment)) = state.route
+        //            else { break }
+        //
+        //            state.status = nil
+        //#warning("FIX ME")
+        //            switch response {
+        //            case let .failure(serviceFailure):
+        //#warning("move to mainScreen")
+        //                print("startPaymentResponse: \(serviceFailure)")
+        //
+        //            case let .success(startPayment):
+        //                // state.route = .utilityPayment(.init(prePayment: prePayment))
+        //                break
+        //            }
+        //        }
         
         return (state, effect)
     }
@@ -116,10 +137,15 @@ extension PaymentsTransfersReducer {
 extension PaymentsTransfersReducer {
     
     typealias PPState = PrePaymentState<LastPayment, Operator>
-    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.LoadServicesResponse, UtilityService>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
-
+    
+    typealias FlowState = UtilityPaymentFlowState<LastPayment, Operator>
+    typealias FlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
+    typealias FlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator>
+    typealias UtilityPaymentFlowReduce = (FlowState, FlowEvent) -> (FlowState, FlowEffect?)
+    
     typealias State = PaymentsTransfersState
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect

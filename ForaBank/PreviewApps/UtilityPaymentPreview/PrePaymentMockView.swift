@@ -27,7 +27,7 @@ struct PrePaymentMockView: View {
             
             Section(header: Text("Operators")) {
                 
-                ForEach(["failure", "list", "single"], id: \.self, content: operatorView)
+                ForEach(["failure", "empty", "single", "list"], id: \.self, content: operatorView)
             }
             
             Section(header: Text("Footer")) {
