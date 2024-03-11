@@ -40,9 +40,6 @@ extension PaymentsTransfersState {
                     
                 case .selected:
                     return nil
-                    
-                case .selecting:
-                    return nil
                 }
             }
         }
