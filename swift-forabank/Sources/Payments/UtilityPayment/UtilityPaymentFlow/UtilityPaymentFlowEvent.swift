@@ -11,12 +11,13 @@ public enum UtilityPaymentFlowEvent<LastPayment, Operator>
 where Operator: Identifiable {
     
     case prePaymentOptions(PrePaymentOptions)
-    case prePayment(PrePaymentEvent)
+    case prePayment(PrePayment)
 }
 
 public extension UtilityPaymentFlowEvent {
     
     typealias PrePaymentOptions = PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias PrePayment = PrePaymentEvent<LastPayment, Operator>
 }
 
 extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
