@@ -15,12 +15,14 @@ extension ProductProfileViewModel {
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+    typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
 
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
+        details: [ProductDetailsUI.ListItem],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -100,6 +102,20 @@ extension ProductProfileViewModel {
             print("account statement: card \($0.status)")
         }
         
+        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        
+        let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
+        
+        let makeDetailsViewModel: MakeProductDetailsViewModel =  {
+            
+            .init(
+                initialState: .init(items: details),
+                reduce: detailsReduce,
+                handleEffect: detailsHandleEffect,
+                scheduler: $0
+            )
+        }
+        
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -115,6 +131,7 @@ extension ProductProfileViewModel {
             accountInfoPanelActions: .init(
                 accountDetails: accountDetails,
                 accountStatement: accountStatement),
+            makeProductDetailsViewModel: makeDetailsViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)
         

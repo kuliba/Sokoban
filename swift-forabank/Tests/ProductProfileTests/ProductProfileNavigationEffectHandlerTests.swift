@@ -59,12 +59,15 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     
     private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
 
+    private typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+
     private typealias OpenPanelSpy = () -> Void
     
     private func makeSUT(
         buttons: [CardGuardianState._Button] = .preview,
         topUpCardButtons: [TopUpCardState.PanelButton] = .previewRegular,
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton] = .previewRegular,
+        details: [ListItem] = .preview,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.GuardCard = {_ in },
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
@@ -121,6 +124,17 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let detailsReduce = ProductDetailsReducer()
+        let detailsHandleEffect = ProductDetailsEffectHandler()
+        let makeProductDetailsViewModel: MakeProductDetailsViewModel =  {
+            .init(
+                initialState: .init(items: details),
+                reduce: detailsReduce.reduce(_:_:),
+                handleEffect: detailsHandleEffect.handleEffect(_:_:),
+                scheduler: $0
+            )
+        }
+        
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -139,6 +153,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
                 accountDetails: accountDetails,
                 accountStatement: accountStatement
             ),
+            makeProductDetailsViewModel: makeProductDetailsViewModel,
             scheduler: scheduler
         )
         
@@ -146,7 +161,10 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(cardGuardianHandleEffect, file: file, line: line)
         trackForMemoryLeaks(topUpCardReduce, file: file, line: line)
         trackForMemoryLeaks(topUpCardHandleEffect, file: file, line: line)
-
+        trackForMemoryLeaks(accountInfoPanelReduce, file: file, line: line)
+        trackForMemoryLeaks(accountInfoPanelHandleEffect, file: file, line: line)
+        trackForMemoryLeaks(detailsReduce, file: file, line: line)
+        trackForMemoryLeaks(detailsHandleEffect, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut

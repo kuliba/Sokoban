@@ -66,6 +66,23 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         }
     }
     
+    func test_createProductDetails_shouldDeliverEffectCreateDetails() {
+        
+        assert(
+            .create(.productDetails),
+            on: productProfileState(),
+            effect: .create(.productDetails))
+    }
+    
+    func test_createProductDetails_shouldSetStatusOnModalNilAlertNil() {
+        
+        assert(.create(.productDetails), on: productProfileState()) {
+            
+            $0.modal = nil
+            $0.alert = nil
+        }
+    }
+    
     // MARK: test open
     
     func test_openCardGuardian_shouldNotDeliverEffect() {
@@ -88,6 +105,14 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
         
         assert(
             .open(.accountInfoPanelRoute(createAccountInfoRoute())),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    func test_openDetails_shouldNotDeliverEffect() {
+        
+        assert(
+            .open(.productDetailsRoute(createProductDetailsRoute())),
             on: productProfileState(),
             effect: nil)
     }
@@ -178,6 +203,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     private typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     private typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+    private typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
 
     private func makeSUT(
         file: StaticString = #file,
@@ -311,6 +337,29 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             .sink { _ in }
         
         return .init(accountInfoViewModel, cancellable)
+    }
+    
+    private func createProductDetailsRoute(
+    ) -> ProductProfileNavigation.ProductDetailsRoute {
+        
+        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        
+        let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
+
+        let makeDetailsViewModel: MakeProductDetailsViewModel =  {
+            .init(
+                initialState: .init(items: .preview),
+                reduce: detailsReduce,
+                handleEffect: detailsHandleEffect,
+                scheduler: $0
+            )
+        }
+        
+        let detailsViewModel = makeDetailsViewModel(.immediate)
+        let cancellable = detailsViewModel.$state
+            .sink { _ in }
+        
+        return .init(detailsViewModel, cancellable)
     }
 }
 

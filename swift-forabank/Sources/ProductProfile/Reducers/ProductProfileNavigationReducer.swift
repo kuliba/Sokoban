@@ -39,6 +39,8 @@ public extension ProductProfileNavigationReducer {
                 effect = .create(.accountInfo)
             case .cardGuardian:
                 effect = .create(.cardGuardian)
+            case .productDetails:
+                effect = .create(.productDetails)
             case .topUpCard:
                 effect = .create(.topUpCard)
             }
@@ -52,6 +54,8 @@ public extension ProductProfileNavigationReducer {
                 state.modal = .accountInfo( .init(route.viewModel, route.cancellable))
             case let .cardGuardianRoute(route):
                 state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
+            case let .productDetailsRoute(route):
+                state.modal = .productDetails( .init(route.viewModel, route.cancellable))
             case let .topUpCardRoute(route):
                 state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
             }
@@ -59,6 +63,8 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, accountInfoPanelInput)
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)
+        case let .productDetailsInput(detailsInput):
+            (state, effect) = reduce(state, detailsInput)
         case let .topUpCardInput(topUpCardInput):
             (state, effect) = reduce(state, topUpCardInput)
 
@@ -177,6 +183,36 @@ private extension ProductProfileNavigationReducer {
     }
 }
 
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ topUpCardInput: ProductDetailsStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.alert = nil
+        
+        switch topUpCardInput {
+        
+        case .appear:
+            break
+        case let .itemTapped(tap):
+            switch tap {
+                
+            case let .iconTap(documentId):
+                effect = .productProfile(.productDetailsIconTap(documentId))
+
+            case let .longPress(valueForCopy, textForInformer):
+                effect = .productProfile(.productDetailsItemlongPress(valueForCopy, textForInformer))
+            }
+        }
+        
+        return (state, effect)
+    }
+}
 
 private extension ProductProfileNavigationReducer {
     

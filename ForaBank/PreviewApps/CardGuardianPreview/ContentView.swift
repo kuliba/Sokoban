@@ -21,15 +21,17 @@ struct ContentView: View {
     init(
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
-        accountInfoPanelButtons: [AccountInfoPanelState.PanelButton]
+        accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
+        details: [ListItem]
     ) {
         self.buttons = buttons
         self.topUpCardButtons = topUpCardButtons
         self._viewModel = .init(
             wrappedValue: .preview(
                 buttons: buttons,
-                topUpCardButtons: topUpCardButtons, 
-                accountInfoPanelButtons: accountInfoPanelButtons
+                topUpCardButtons: topUpCardButtons,
+                accountInfoPanelButtons: accountInfoPanelButtons,
+                details: details
             )
         )
     }
@@ -126,6 +128,11 @@ struct ContentView: View {
                 state: viewModel.state,
                 event: viewModel.event
             )
+            
+            ProductDetailsView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
         }
         .padding()
     }
@@ -134,6 +141,7 @@ struct ContentView: View {
 #Preview {
     ContentView(
         buttons: .preview,
-        topUpCardButtons: .previewRegular, 
-        accountInfoPanelButtons: .previewRegular)
+        topUpCardButtons: .previewRegular,
+        accountInfoPanelButtons: .previewRegular,
+        details: .preview)
 }

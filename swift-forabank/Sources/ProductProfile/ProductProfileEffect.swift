@@ -1,6 +1,6 @@
 //
 //  ProductProfileEffect.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 13.02.2024.
 //
@@ -18,4 +18,6 @@ public enum ProductProfileEffect: Equatable {
     case accountAnotherBank(ProductProfileComponents.TopUpCard)
     case accountDetails(ProductProfileComponents.AccountInfoPanelCard)
     case accountStatement(ProductProfileComponents.AccountInfoPanelCard)
+    case productDetailsItemlongPress(ProductDetailEvent.ValueForCopy, ProductDetailEvent.TextForInformer)
+    case productDetailsIconTap(DocumentItem.ID)
 }
