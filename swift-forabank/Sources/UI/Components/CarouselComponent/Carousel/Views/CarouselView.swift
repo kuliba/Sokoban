@@ -47,7 +47,7 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
                 SelectorView(
                     state: state.selector,
                     event: { event(.select($0, delay: 0.2)) }, 
-                    config: config.selectorConfig
+                    config: config.selector
                 )
                 
                 ProductGroupsView<ProductView, NewProductButton, StickerView>(
@@ -57,7 +57,7 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
                     productView: productView, 
                     stickerView: stickerView, 
                     newProductButton: newProductButton,
-                    config: config.carouselConfig
+                    config: config.carousel
                 )
             }
         }

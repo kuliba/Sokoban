@@ -22,17 +22,13 @@ struct SelectorView: View {
             HStack(spacing: config.itemSpacing) {
                                 
                 ForEach(state.items.uniqueValues, id: \.self) { productType in
-                    
-                    Group {
-                        
-                        labelView(
-                            title: productType.pluralName,
-                            shouldSelect: productType == state.selected,
-                            config: config
-                        ) {
-                            event(productType)
-                        }
-
+                                            
+                    labelView(
+                        title: productType.pluralName,
+                        shouldSelect: productType == state.selected,
+                        config: config
+                    ) {
+                        event(productType)
                     }
                     .frame(height: config.optionConfig.frameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")

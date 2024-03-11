@@ -152,11 +152,6 @@ public extension CarouselState {
             return firstProduct.id
         }
         
-        if secondProduct.id.cardType?.isSticker == true {
-            
-            return firstProduct.id
-        }
-        
         return nil
     }
 }
