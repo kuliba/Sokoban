@@ -10,8 +10,8 @@ import SwiftUI
 extension Config.Images {
     
     static let preview: Self = .init(
-        valueMasked: Image(systemName: "eye"),
-        valueShown : Image(systemName: "eye.slash"),
+        maskedValue: Image(systemName: "eye"),
+        showValue : Image(systemName: "eye.slash"),
         checkOn: Image(systemName: "checkmark.square"),
         checkOff: Image(systemName: "rectangle"),
         info: Image(systemName: "info.circle")

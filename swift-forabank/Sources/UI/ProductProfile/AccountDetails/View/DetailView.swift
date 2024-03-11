@@ -64,13 +64,13 @@ private extension Config.Images {
         
         switch id {
         case .numberMasked:
-            return valueMasked
+            return maskedValue
         case .number:
-            return valueShown
+            return showValue
         case .cvvMasked:
-            return valueMasked
+            return maskedValue
         case .cvv:
-            return valueShown
+            return showValue
         default:
             return nil
         }
