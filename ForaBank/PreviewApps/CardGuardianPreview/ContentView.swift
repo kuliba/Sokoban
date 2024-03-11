@@ -22,7 +22,8 @@ struct ContentView: View {
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
-        details: [ListItem]
+        accountDetails: [ListItem],
+        cardDetails: [ListItem]
     ) {
         self.buttons = buttons
         self.topUpCardButtons = topUpCardButtons
@@ -31,7 +32,8 @@ struct ContentView: View {
                 buttons: buttons,
                 topUpCardButtons: topUpCardButtons,
                 accountInfoPanelButtons: accountInfoPanelButtons,
-                details: details
+                accountDetails: accountDetails,
+                cardDetails: cardDetails
             )
         )
     }
@@ -143,5 +145,7 @@ struct ContentView: View {
         buttons: .preview,
         topUpCardButtons: .previewRegular,
         accountInfoPanelButtons: .previewRegular,
-        details: .preview)
+        accountDetails: .accountItems,
+        cardDetails: .cardItems
+    )
 }

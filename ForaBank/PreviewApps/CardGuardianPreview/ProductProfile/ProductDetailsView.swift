@@ -54,9 +54,7 @@ struct ProductDetailsView: View {
         
         ProductDetailsWrappedView(
             viewModel: route.viewModel,
-            config: .preview,
-            title: "Реквизиты счета",
-            showCheckbox: true
+            config: .preview
         )
     }
 }

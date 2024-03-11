@@ -9,5 +9,8 @@ import Foundation
 
 public extension ProductDetailsState {
     
-    static let initialState = ProductDetailsState(items: .preview)
+    static let initialState = ProductDetailsState(
+        accountDetails: .accountItems,
+        cardDetails: .cardItems
+    )
 }

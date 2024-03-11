@@ -9,7 +9,7 @@ import Foundation
 
 public extension Array where Element == ListItem {
     
-    static let preview: Self = [
+    static let accountItems: Self = [
         .single(.payee),
         .single(.accountNumber),
         .single(.bic),

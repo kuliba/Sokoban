@@ -22,7 +22,8 @@ extension ProductProfileViewModel {
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
-        details: [ProductDetailsUI.ListItem],
+        accountDetails: [ListItem],
+        cardDetails: [ListItem],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -94,11 +95,11 @@ extension ProductProfileViewModel {
             print("top up card \($0.status)")
         }
         
-        let accountDetails: ProductProfileNavigationEffectHandler.AccountDetails = {
+        let accountDetailsAction: ProductProfileNavigationEffectHandler.AccountDetails = {
             print("account details: card \($0.status)")
         }
         
-        let accountStatement: ProductProfileNavigationEffectHandler.AccountStatement = {
+        let accountStatementAction: ProductProfileNavigationEffectHandler.AccountStatement = {
             print("account statement: card \($0.status)")
         }
         
@@ -109,7 +110,7 @@ extension ProductProfileViewModel {
         let makeDetailsViewModel: MakeProductDetailsViewModel =  {
             
             .init(
-                initialState: .init(items: details),
+                initialState: .init(accountDetails: accountDetails, cardDetails: cardDetails),
                 reduce: detailsReduce,
                 handleEffect: detailsHandleEffect,
                 scheduler: $0
@@ -129,8 +130,8 @@ extension ProductProfileViewModel {
                 topUpCardFromOurBank: topUpCardFromOurBank),
             makeAccountInfoPanelViewModel: makeAccountInfoPanelViewModel,
             accountInfoPanelActions: .init(
-                accountDetails: accountDetails,
-                accountStatement: accountStatement),
+                accountDetails: accountDetailsAction,
+                accountStatement: accountStatementAction),
             makeProductDetailsViewModel: makeDetailsViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)

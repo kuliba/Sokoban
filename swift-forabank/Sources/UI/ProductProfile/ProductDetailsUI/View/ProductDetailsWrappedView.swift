@@ -16,32 +16,27 @@ public struct ProductDetailsWrappedView: View {
     @ObservedObject private var viewModel: ProductDetailsViewModel
     
     @State private var isCheck = false
+    @State private var showCheckbox = false
 
     private let config: Config
-    private let title: String
-    private let showCheckbox: Bool
 
     public init(
         viewModel: ProductDetailsViewModel,
-        config: Config,
-        title: String,
-        showCheckbox: Bool
+        config: Config
     ) {
         self.viewModel = viewModel
         self.config = config
-        self.title = title
-        self.showCheckbox = showCheckbox
     }
 
     public var body: some View {
         
         ProductDetailsView(
-            items: viewModel.state.items,
+            accountDetails: viewModel.state.accountDetails,
+            cardDetails: viewModel.state.cardDetails,
             event: { viewModel.event(.itemTapped($0)) },
             config: config,
-            title: title,
-            showCheckbox: showCheckbox,
-            isCheck: $isCheck
+            isCheck: $isCheck,
+            showCheckbox: $showCheckbox
         )
     }
 }

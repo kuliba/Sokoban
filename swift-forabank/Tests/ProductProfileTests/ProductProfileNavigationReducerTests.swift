@@ -348,7 +348,9 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
 
         let makeDetailsViewModel: MakeProductDetailsViewModel =  {
             .init(
-                initialState: .init(items: .preview),
+                initialState: .init(
+                    accountDetails: .accountItems,
+                    cardDetails: .cardItems),
                 reduce: detailsReduce,
                 handleEffect: detailsHandleEffect,
                 scheduler: $0
