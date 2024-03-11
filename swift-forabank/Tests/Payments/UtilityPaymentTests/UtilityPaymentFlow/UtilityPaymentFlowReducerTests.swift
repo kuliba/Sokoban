@@ -19,10 +19,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     // MARK: - PrePaymentOptionsEvent
-//    didScrollTo
-//    initiate
-//    paginated
-//    search
+
     func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_didScrollTo() {
         
         let state = makeState(flows: [])
