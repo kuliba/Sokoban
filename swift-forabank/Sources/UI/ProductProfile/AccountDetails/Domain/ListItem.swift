@@ -9,10 +9,10 @@ import Foundation
 
 public enum ListItem: Hashable {
     
-    case single(Detail)
-    case multiple([Detail])
+    case single(ProductDetail)
+    case multiple([ProductDetail])
     
-    var currentValues: [Detail] {
+    var currentValues: [ProductDetail] {
         
         switch self {
         case let .single(detail):

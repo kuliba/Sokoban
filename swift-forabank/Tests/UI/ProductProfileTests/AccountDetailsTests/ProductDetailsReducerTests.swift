@@ -1,6 +1,6 @@
 //
-//  DetailsReducerTests.swift
-//  
+//  ProductDetailsReducerTests.swift
+//
 //
 //  Created by Andryusina Nataly on 06.03.2024.
 //
@@ -9,7 +9,7 @@ import XCTest
 @testable import AccountDetails
 import RxViewModel
 
-final class DetailsReducerTests: XCTestCase {
+final class ProductDetailsReducerTests: XCTestCase {
 
     func test_appear_shouldSetEffectNone() {
         
@@ -52,7 +52,7 @@ final class DetailsReducerTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private typealias SUT = DetailsReducer
+    private typealias SUT = ProductDetailsReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -117,4 +117,4 @@ final class DetailsReducerTests: XCTestCase {
     }
 }
 
-extension DetailsReducer: Reducer { }
+extension ProductDetailsReducer: Reducer { }

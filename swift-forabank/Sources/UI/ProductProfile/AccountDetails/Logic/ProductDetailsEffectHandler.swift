@@ -1,5 +1,5 @@
 //
-//  DetailsEffectHandler.swift
+//  ProductDetailsEffectHandler.swift
 //
 //
 //  Created by Andryusina Nataly on 08.03.2024.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-public final class DetailsEffectHandler {
+public final class ProductDetailsEffectHandler {
     
     public init(){}
 }
 
-public extension DetailsEffectHandler {
+public extension ProductDetailsEffectHandler {
         
     func handleEffect(
         _ effect: Effect,
@@ -22,10 +22,10 @@ public extension DetailsEffectHandler {
     }
 }
 
-public extension DetailsEffectHandler {
+public extension ProductDetailsEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = DetailsEvent
-    typealias Effect = DetailsEffect
+    typealias Event = ProductDetailsEvent
+    typealias Effect = ProductDetailsEffect
 }

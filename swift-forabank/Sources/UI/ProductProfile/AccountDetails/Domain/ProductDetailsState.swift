@@ -1,5 +1,5 @@
 //
-//  DetailsState.swift
+//  ProductDetailsState.swift
 //  
 //
 //  Created by Andryusina Nataly on 07.03.2024.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-public struct DetailsState: Equatable {
+public struct ProductDetailsState: Equatable {
     
     public let items: [ListItem]
-    public var event: DetailsEvent?
+    public var event: ProductDetailsEvent?
     
     public init(
         items: [ListItem],
-        event: DetailsEvent? = nil
+        event: ProductDetailsEvent? = nil
     ) {
         self.items = items
         self.event = event

@@ -1,5 +1,5 @@
 //
-//  DetailsView.swift
+//  ProductDetailsView.swift
 //
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct DetailsView: View {
+struct ProductDetailsView: View {
     
     let items: [ListItem]
-    let event: (DetailEvent) -> Void
+    let event: (ProductDetailEvent) -> Void
     let config: Config
     let title: String
     let showCheckbox: Bool
@@ -44,7 +44,7 @@ struct DetailsView: View {
             
         case let .single(item):
             
-            DetailView(item: item, event: event, config: config)
+            ProductDetailView(item: item, event: event, config: config)
             divider()
             
         case let .multiple(items):
@@ -53,7 +53,7 @@ struct DetailsView: View {
                 
                 ForEach(items, id: \.id) {
                     let isFirst = $0 == items.first
-                    DetailView(item: $0, event: event, config: config)
+                    ProductDetailView(item: $0, event: event, config: config)
                         .padding(.leading, (isFirst ? 0 : 16))
                     if isFirst {
                         divider()
@@ -101,7 +101,7 @@ private extension Config.Images {
     }
 }
 
-struct ItemsViewNew_Previews: PreviewProvider {
+struct ProductDetailsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -109,7 +109,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
         @State var falseValue = false
         
         Group {
-            DetailsView(
+            ProductDetailsView(
                 items: .preview,
                 event: { print($0) },
                 config: .preview,
@@ -117,7 +117,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
                 showCheckbox: false,
                 isCheck: $falseValue
             )
-            DetailsView(
+            ProductDetailsView(
                 items: .preview,
                 event: { print($0) },
                 config: .preview,
@@ -125,7 +125,7 @@ struct ItemsViewNew_Previews: PreviewProvider {
                 showCheckbox: true,
                 isCheck: $falseValue
             )
-            DetailsView(
+            ProductDetailsView(
                 items: .cardItems,
                 event: { print($0) },
                 config: .preview,

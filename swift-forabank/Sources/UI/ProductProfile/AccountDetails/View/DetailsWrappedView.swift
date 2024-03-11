@@ -1,5 +1,5 @@
 //
-//  DetailsWrappedView.swift
+//  ProductDetailsWrappedView.swift
 //
 //
 //  Created by Andryusina Nataly on 08.03.2024.
@@ -9,11 +9,11 @@ import RxViewModel
 import SwiftUI
 import Tagged
 
-public typealias DetailsViewModel = RxViewModel<DetailsState, DetailsEvent, DetailsEffect>
+public typealias ProductDetailsViewModel = RxViewModel<ProductDetailsState, ProductDetailsEvent, ProductDetailsEffect>
 
-public struct DetailsWrappedView: View {
+public struct ProductDetailsWrappedView: View {
     
-    @ObservedObject private var viewModel: DetailsViewModel
+    @ObservedObject private var viewModel: ProductDetailsViewModel
     
     @State private var isCheck = false
 
@@ -22,7 +22,7 @@ public struct DetailsWrappedView: View {
     private let showCheckbox: Bool
 
     public init(
-        viewModel: DetailsViewModel,
+        viewModel: ProductDetailsViewModel,
         config: Config,
         title: String,
         showCheckbox: Bool
@@ -35,7 +35,7 @@ public struct DetailsWrappedView: View {
 
     public var body: some View {
         
-        DetailsView(
+        ProductDetailsView(
             items: viewModel.state.items,
             event: { viewModel.event(.itemTapped($0)) },
             config: config,

@@ -1,5 +1,5 @@
 //
-//  DetailsReducer.swift
+//  ProductDetailsReducer.swift
 //
 //
 //  Created by Andryusina Nataly on 08.03.2024.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-public final class DetailsReducer {
+public final class ProductDetailsReducer {
     
     public init() {}
 }
 
-public extension DetailsReducer {
+public extension ProductDetailsReducer {
  
     func reduce(
         _ state: State,
@@ -39,11 +39,11 @@ public extension DetailsReducer {
     }
 }
 
-public extension DetailsReducer {
+public extension ProductDetailsReducer {
     
-    typealias State = DetailsState
-    typealias Event = DetailsEvent
-    typealias Effect = DetailsEffect
+    typealias State = ProductDetailsState
+    typealias Event = ProductDetailsEvent
+    typealias Effect = ProductDetailsEffect
 
     typealias Reduce = (State, Event) -> (State, Effect?)
 }

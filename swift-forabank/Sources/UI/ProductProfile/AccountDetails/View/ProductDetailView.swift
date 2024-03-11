@@ -1,5 +1,5 @@
 //
-//  DetailView.swift
+//  ProductDetailView.swift
 //
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct DetailView: View {
+struct ProductDetailView: View {
     
-    let item: Detail
-    let event: (DetailEvent) -> Void
+    let item: ProductDetail
+    let event: (ProductDetailEvent) -> Void
     let config: Config
     
     var body: some View {
@@ -77,18 +77,18 @@ private extension Config.Images {
     }
 }
 
-struct ItemView_Previews: PreviewProvider {
+struct ProductDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
       
         Group {
             
-            DetailView(
+            ProductDetailView(
                 item: .accountNumber,
                 event: { print("event - \($0)") },
                 config: .preview)
             
-            DetailView(
+            ProductDetailView(
                 item: .cvvMasked,
                 event: { print("event - \($0)") },
                 config: .preview)

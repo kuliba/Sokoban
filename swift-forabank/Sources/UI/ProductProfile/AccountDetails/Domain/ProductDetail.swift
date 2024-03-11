@@ -1,5 +1,5 @@
 //
-//  Detail.swift
+//  ProductDetail.swift
 //
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,13 +7,13 @@
 
 import Tagged
 
-public struct Detail: Equatable, Hashable {
+public struct ProductDetail: Equatable, Hashable {
     
     let id: DocumentItem.ID
     let title: String
     var subtitle: String
     let copyValue: String
-    let event: DetailEvent
+    let event: ProductDetailEvent
     
     var informerTitle: String {
         switch id {
@@ -27,12 +27,12 @@ public struct Detail: Equatable, Hashable {
     }
 }
 
-public enum DetailEvent: Equatable, Hashable {
+public enum ProductDetailEvent: Equatable, Hashable {
     case longPress(ValueForCopy, TextForInformer)
     case iconTap(DocumentItem.ID)
 }
 
-public extension DetailEvent {
+public extension ProductDetailEvent {
     
     typealias ValueForCopy = Tagged<_ValueForCopy, String>
     enum _ValueForCopy {}

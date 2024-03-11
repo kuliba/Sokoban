@@ -1,5 +1,5 @@
 //
-//  Detail+ext.swift
+//  ProductDetail+ext.swift
 //
 //
 //  Created by Andryusina Nataly on 09.03.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Detail {
+public extension ProductDetail {
     
     static let payee : Self = .init(
         id: .payeeName,
