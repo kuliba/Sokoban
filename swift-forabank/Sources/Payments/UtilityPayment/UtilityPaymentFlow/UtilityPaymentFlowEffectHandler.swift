@@ -7,15 +7,18 @@
 
 import PrePaymentPicker
 
-public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator>
+public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     
     private let ppoHandleEffect: PPOHandleEffect
+    private let ppHandleEffect: PPHandleEffect
     
     public init(
-        ppoHandleEffect: @escaping PPOHandleEffect
+        ppoHandleEffect: @escaping PPOHandleEffect,
+        ppHandleEffect: @escaping PPHandleEffect
     ) {
         self.ppoHandleEffect = ppoHandleEffect
+        self.ppHandleEffect = ppHandleEffect
     }
 }
 
@@ -33,7 +36,10 @@ public extension UtilityPaymentFlowEffectHandler {
             }
             
         case let .prePayment(prePaymentEffect):
-            fatalError("can't handle prePaymentEffect \(prePaymentEffect)")
+            ppHandleEffect(prePaymentEffect) {
+                
+                dispatch(.prePayment($0))
+            }
         }
     }
 }
@@ -45,8 +51,13 @@ public extension UtilityPaymentFlowEffectHandler {
     typealias PPODispatch = (PPOEvent) -> Void
     typealias PPOHandleEffect = (PPOEffect, @escaping PPODispatch) -> Void
     
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
+    typealias PPDispatch = (PPEvent) -> Void
+    typealias PPHandleEffect = (PPEffect, @escaping PPDispatch) -> Void
+    
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator>
-    typealias Effect = UtilityPaymentFlowEffect<Operator>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }

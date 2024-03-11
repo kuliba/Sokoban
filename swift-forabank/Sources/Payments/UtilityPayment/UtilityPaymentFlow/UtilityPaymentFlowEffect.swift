@@ -7,11 +7,17 @@
 
 import PrePaymentPicker
 
-public enum UtilityPaymentFlowEffect<Operator> 
+public enum UtilityPaymentFlowEffect<LastPayment, Operator>
 where Operator: Identifiable {
     
-    case prePaymentOptions(PrePaymentOptionsEffect<Operator>)
-    case prePayment(PrePaymentEffect)
+    case prePaymentOptions(PrePaymentOptions)
+    case prePayment(PrePayment)
 }
 
-extension UtilityPaymentFlowEffect: Equatable where Operator: Equatable {}
+public extension UtilityPaymentFlowEffect {
+    
+    typealias PrePaymentOptions = PrePaymentOptionsEffect<Operator>
+    typealias PrePayment = PrePaymentEffect<LastPayment, Operator>
+}
+
+extension UtilityPaymentFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable {}

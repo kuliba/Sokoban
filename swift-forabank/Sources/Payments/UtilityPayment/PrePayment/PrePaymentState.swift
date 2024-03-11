@@ -11,7 +11,6 @@ public enum PrePaymentState<LastPayment, Operator> {
     case payingByInstruction
     case scanning
     case selected(Selected)
-    case selecting
 }
 
 public extension PrePaymentState {

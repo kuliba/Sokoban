@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "4690D48E-D80A-4307-B964-C3E16E590577",
-      "name" : "Test Scheme Action",
+      "id" : "ADD7D0BC-F529-424C-BC06-2F5ADF485233",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -17,6 +17,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "PrePaymentPickerTests",
         "name" : "PrePaymentPickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
       }
     }
   ],
