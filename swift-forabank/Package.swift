@@ -893,6 +893,8 @@ private extension Target {
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
+            .foraTools,
+            .prePaymentPicker,
             .tagged,
         ],
         path: "Sources/Payments/\(String.utilityPayment)"

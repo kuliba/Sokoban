@@ -5,14 +5,17 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public final class UtilityPaymentFlowReducer {
+import PrePaymentPicker
+
+public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Service>
+where Operator: Identifiable {
     
-    private let prePaymentReduce: PrePaymentReduce
+    private let prePaymentOptionsReduce: PrePaymentOptionsReduce
     
     public init(
-        prePaymentReduce: @escaping PrePaymentReduce
+        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce
     ) {
-        self.prePaymentReduce = prePaymentReduce
+        self.prePaymentOptionsReduce = prePaymentOptionsReduce
     }
 }
 
@@ -26,8 +29,18 @@ public extension UtilityPaymentFlowReducer {
         var state = state
         var effect: Effect?
         
-#warning("add state to switch do exclude impossible cases (?)")
         switch event {
+        case .back:
+            switch state.current {
+            case .prePaymentState(.addingCompany):
+                break
+                
+            default:
+                state.current = nil
+            }
+            
+        case let .prePaymentOptions(prePaymentOptionsEvent):
+            (state, effect) = reduce(state, prePaymentOptionsEvent)
             
         case let .prePayment(prePaymentEvent):
             (state, effect) = reduce(state, prePaymentEvent)
@@ -39,49 +52,124 @@ public extension UtilityPaymentFlowReducer {
 
 public extension UtilityPaymentFlowReducer {
     
-    typealias PrePaymentReduce = (PrePaymentState, PrePaymentEvent) -> (PrePaymentState, PrePaymentEffect?)
+    typealias PPOState = PrePaymentOptionsState<LastPayment, Operator>
+    typealias PPOEvent = PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias PPOEffect = PrePaymentOptionsEffect<Operator>
+    typealias PrePaymentOptionsReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
     
-    typealias State = UtilityPaymentFlowState
-    typealias Event = UtilityPaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect
+    typealias PPState = PrePaymentState<LastPayment, Operator>
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
+    
+    typealias State = UtilityPaymentFlowState<LastPayment, Operator>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }
 
 private extension UtilityPaymentFlowReducer {
     
     func reduce(
         _ state: State,
-        _ event: PrePaymentEvent
+        _ event: PPOEvent
     ) -> (State, Effect?) {
         
-        fatalError()
-//        var state = state
-//        var effect: Effect?
-//        
-//        switch state.prePayment {
-//        case .none:
-//            break
-//            
-//        case let .some(prePaymentState):
-//            let (prePaymentState, _) = prePaymentReduce(prePaymentState, event)
-//            
-//            switch prePaymentState {
-//            case .addingCompany:
-//                <#code#>
-//
-//            case .payingByInstruction:
-//                <#code#>
-//
-//            case .scanning:
-//                <#code#>
-//
-//            case let .selected(selected):
-//                <#code#>
-//
-//            case .selecting:
-//                <#code#>
-//            }
-//        }
-//
-//        return (state, effect)
+        var state = state
+        var effect: Effect?
+        
+        switch state.current {
+        case .none:
+            switch event {
+            case let .loaded(loadLastPaymentsResult, loadOperatorsResult):
+                state.isInflight = false
+                state.current = .prePaymentOptions(.init(
+                    lastPayments: try? loadLastPaymentsResult.get(),
+                    operators: try? loadOperatorsResult.get()
+                ))
+                
+            default:
+                break
+            }
+            
+        case let .prePaymentOptions(prePaymentOptionsState):
+            let (ppoState, ppoEffect) = prePaymentOptionsReduce(prePaymentOptionsState, event)
+            
+            if ppoState.isInflight {
+                state.isInflight = true
+            }
+            state.current = .prePaymentOptions(ppoState)
+            effect = ppoEffect.map { .prePaymentOptions($0) }
+            
+        case .prePaymentState:
+            break
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: PPEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch state.current {
+        case .none:
+            fatalError("can't handle empty flow stack")
+            
+        case .prePaymentOptions:
+            
+            switch event {
+            case .addCompany:
+                state.current = .prePaymentState(.addingCompany)
+                
+            case let .loaded(result):
+                fatalError("can't handle `loaded` event with \(result)")
+                
+            case .payByInstruction:
+                state.current = .prePaymentState(.payingByInstruction)
+                
+            case .scan:
+                state.current = .prePaymentState(.scanning)
+                
+            case let .select(select):
+                state.isInflight = true
+                effect = .prePayment(handleSelect(select))
+                
+            case let .paymentStarted(result):
+                fatalError("can't handle `paymentStarted` event with \(result)")
+            }
+            
+        case let .prePaymentState(prePaymentState):
+            switch event {
+            case .addCompany, .payByInstruction, .scan:
+                break
+                
+            case let .loaded(result):
+                fatalError("can't handle `loaded` event with \(result)")
+                
+            case .select:
+                break
+                
+            case let .paymentStarted(result):
+                fatalError("can't handle `paymentStarted` event with \(result)")
+            }
+        }
+        
+        return (state, effect)
+    }
+    
+    func handleSelect(
+        _ event: PPEvent.SelectEvent
+    ) -> PPEffect {
+        
+        switch event {
+        case let .last(lastPayment):
+            return .select(.last(lastPayment))
+            
+        case let .operator(`operator`):
+            return .select(.operator(`operator`))
+        }
     }
 }
