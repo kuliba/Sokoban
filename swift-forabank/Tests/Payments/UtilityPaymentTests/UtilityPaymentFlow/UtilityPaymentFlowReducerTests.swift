@@ -13,10 +13,9 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, ppoReducer, prePaymentReducer) = makeSUT()
+        let (_, ppoReducer) = makeSUT()
         
         XCTAssertEqual(ppoReducer.callCount, 0)
-        XCTAssertEqual(prePaymentReducer.callCount, 0)
     }
     
     // MARK: - PrePaymentOptionsEvent
@@ -185,7 +184,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let prePaymentOptionsEvent: PPOEvent = .didScrollTo("abc")
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -198,7 +197,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let prePaymentOptionsEvent: PPOEvent = .initiate
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -214,7 +213,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .failure(.connectivityError),
             .failure(.connectivityError)
         )
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -229,7 +228,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentOptionsEvent: PPOEvent = .paginated(
             .failure(.connectivityError)
         )
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -242,7 +241,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentOptions = makePrePaymentOptionsState()
         let state = makeState(.prePaymentOptions(prePaymentOptions))
         let prePaymentOptionsEvent: PPOEvent = .search(.entered(""))
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -254,7 +253,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let state = makeState(.prePaymentState(.addingCompany))
         let prePaymentOptionsEvent: PPOEvent = .initiate
-        let (sut, ppoReducer, _) = makeSUT()
+        let (sut, ppoReducer) = makeSUT()
         
         _ = sut.reduce(state, .prePaymentOptions(prePaymentOptionsEvent))
         
@@ -272,7 +271,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             searchText: "abc",
             ppoEffect: .search("abc")
         )
-        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+        let (sut, _) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
         
         assertState(sut: sut, event, on: state) {
             
@@ -291,7 +290,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             searchText: "abc"
         )
         let ppoEffectStub: PPOEffect = .search("abc")
-        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+        let (sut, _) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
         
         assert(sut: sut, event, on: state, effect: .prePaymentOptions(ppoEffectStub))
     }
@@ -308,7 +307,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             isInflight: true
         )
         let ppoEffectStub: PPOEffect = .search("abc")
-        let (sut, _,_) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+        let (sut, _) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
         
         assertState(sut: sut, event, on: state) {
             
@@ -810,30 +809,24 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     private typealias PPState = SUT.PPState
     private typealias PPEvent = SUT.PPEvent
     private typealias PPEffect = SUT.PPEffect
-    private typealias PrePaymentReducer = ReducerSpy<PPState, PPEvent, PPEffect>
     
     private func makeSUT(
         ppoStub: [(PPOState, PPOEffect?)] = [(.init(), nil)],
-        prePaymentStub: [(PPState, PPEffect?)] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        ppoReducer: PPOReducer,
-        prePaymentReducer: PrePaymentReducer
+        ppoReducer: PPOReducer
     ) {
         let ppoReducer = PPOReducer(stub: ppoStub)
-        let prePaymentReducer = PrePaymentReducer(stub: prePaymentStub)
         let sut = SUT(
-            prePaymentOptionsReduce: ppoReducer.reduce,
-            prePaymentReduce: prePaymentReducer.reduce
+            prePaymentOptionsReduce: ppoReducer.reduce
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(ppoReducer, file: file, line: line)
-        trackForMemoryLeaks(prePaymentReducer, file: file, line: line)
         
-        return (sut, ppoReducer, prePaymentReducer)
+        return (sut, ppoReducer)
     }
     
     private func makeLastPayment(

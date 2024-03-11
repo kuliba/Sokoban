@@ -11,14 +11,11 @@ public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Se
 where Operator: Identifiable {
     
     private let prePaymentOptionsReduce: PrePaymentOptionsReduce
-    private let prePaymentReduce: PrePaymentReduce
     
     public init(
-        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce,
-        prePaymentReduce: @escaping PrePaymentReduce
+        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce
     ) {
         self.prePaymentOptionsReduce = prePaymentOptionsReduce
-        self.prePaymentReduce = prePaymentReduce
     }
 }
 
@@ -63,7 +60,6 @@ public extension UtilityPaymentFlowReducer {
     typealias PPState = PrePaymentState<LastPayment, Operator>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
-    typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>

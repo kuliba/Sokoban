@@ -10,7 +10,7 @@ import PrePaymentPicker
 import UtilityPayment
 
 private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
-private typealias PPReducer = PrePaymentReducer<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
+private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
 
 private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
 private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
@@ -26,11 +26,9 @@ extension PaymentsTransfersViewModel {
     ) -> PaymentsTransfersViewModel {
         
         let prePaymentOptionsReducer = PPOReducer(observeLast: 3, pageSize: 10)
-        let prePaymentReducer = PPReducer()
         
-        let utilityPaymentFlowReducer = UtilityPaymentFlowReducer(
-            prePaymentOptionsReduce: prePaymentOptionsReducer.reduce,
-            prePaymentReduce: prePaymentReducer.reduce
+        let utilityPaymentFlowReducer = FlowReducer(
+            prePaymentOptionsReduce: prePaymentOptionsReducer.reduce
         )
         
         let reducer = PaymentsTransfersReducer(
