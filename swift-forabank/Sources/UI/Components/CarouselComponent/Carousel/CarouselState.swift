@@ -20,16 +20,23 @@ public struct CarouselState: Equatable {
     var selectedProductType: Product.ID.ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
+    var carouselDimensions: CarouselConfig.ProductDimensions
+    var numberOfItemsBeforeSpoiler: Int
+    
     public init(
         selector: ProductTypeSelector,
         productGroups: ProductGroups,
         separators: ProductSeparators = [:],
-        selectedProductType: Product.ID.ProductType? = nil
+        selectedProductType: Product.ID.ProductType? = nil,
+        carouselDimensions: CarouselConfig.ProductDimensions = .regular,
+        numberOfItemsBeforeSpoiler: Int = 3
     ) {
         self.selector = selector
         self.productGroups = productGroups
         self.separators = separators
         self.selectedProductType = selectedProductType
+        self.carouselDimensions = carouselDimensions
+        self.numberOfItemsBeforeSpoiler = numberOfItemsBeforeSpoiler
     }
     
     public struct ProductTypeSelector: Equatable {
@@ -144,6 +151,7 @@ public extension CarouselState {
             
             return firstProduct.id
         }
+        
         return nil
     }
 }
@@ -158,16 +166,21 @@ extension CarouselState {
         
         for group in productGroups {
             
-            // TODO: - Вынести в конфигурацию
-            let productWidth = 120
-            let productInset = 0
-            let separatorWidth = 10
+            let shouldAddSpoiler = shouldAddSpoiler(for: group)
             
-            let visibleProductsWidth = group.visibleProducts.count * productWidth
-            let separatorsWidth = (separators[group.id]?.count ?? 0) * separatorWidth
-            let productsInsets = group.visibleProducts.count * productInset * 2
+            let productWidth = carouselDimensions.sizes.product.width
+            let separatorWidth = carouselDimensions.sizes.separator.width
+            let productSpacing = carouselDimensions.spacing
+            let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
             
-            currentLength += CGFloat(visibleProductsWidth + separatorsWidth + productsInsets)
+            let separatorsCount = separators[group.id]?.count ?? 0
+            let visibleProductsCount = group.visibleProducts(count: numberOfItemsBeforeSpoiler).count
+            
+            let visibleProductsWidth = visibleProductsCount * Int(productWidth)
+            let separatorsWidth = separatorsCount * Int(separatorWidth)
+            let productsInsets = visibleProductsCount * Int(productSpacing)
+            
+            currentLength += CGFloat(visibleProductsWidth + separatorsWidth + productsInsets + spoilerWidth)
             
             guard currentLength >= offset else { continue }
             
@@ -206,6 +219,32 @@ extension CarouselState {
     func shouldAddGroupSeparator(for productGroup: ProductGroup) -> Bool {
         
         productGroups.last != productGroup
+    }
+    
+    func productGroupIsCollapsed(_ productGroup: ProductGroup) -> Bool {
+        
+        productGroups
+            .contains(where: { $0 == productGroup && $0.state == .collapsed })        
+    }
+    
+    func shouldAddSpoiler(for productGroup: ProductGroup) -> Bool {
+        
+        productGroups
+            .first(where: { $0 == productGroup && $0.products.count > numberOfItemsBeforeSpoiler }) != nil
+    }
+    
+    func spoilerTitle(for productGroup: ProductGroup) -> String? {
+        
+        productGroups
+            .first(where: { $0 == productGroup })?
+            .spoilerTitle(count: numberOfItemsBeforeSpoiler)
+    }
+    
+    func visibleProducts(for productGroup: ProductGroup) -> [Product] {
+        
+        productGroups
+            .first(where: { $0 == productGroup })?
+            .visibleProducts(count: numberOfItemsBeforeSpoiler) ?? []
     }
 }
 

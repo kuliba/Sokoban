@@ -13,6 +13,14 @@ final class CarouselComponentReducerTests: XCTestCase {
     
     // MARK: - Reducer events
     
+    func test_toggle_shouldNotToggleGroupFromCollapsedForEmptyProducts() {
+        
+        assert(.update(.empty), on: .empty) {
+            
+            $0[.card]?.state = .collapsed
+        }
+    }
+    
     func test_toggle_shouldToggleGroupToExpanded() {
         
         assert(.toggle(id: .card, screenwidth: 0, xOffset: 0), on: .cards) {
@@ -127,6 +135,17 @@ final class CarouselComponentReducerTests: XCTestCase {
         }
     }
     
+    // TODO: - Добавить тест для нового кейса со стикером
+//    func test_separators_shouldUpdateEmptyWithNonEmptyProductsWithSticker() {
+//        
+//        assert(.update(.cardsWithSticker), on: .empty) {
+//            
+//            $0.selector = .init(items: [.card])
+//            $0.productGroups = .cardsWithSticker
+//            $0.separators = .separatorsForPreviewProductsWithSticker
+//        }
+//    }
+    
     func test_separators_shouldUpdateToMoreProductsFromNonEmpty() {
         
         assert(.update(.moreProducts), on: .cards) {
@@ -137,6 +156,88 @@ final class CarouselComponentReducerTests: XCTestCase {
         }
     }
 
+    // MARK: - Spoiler Title
+    
+    func test_spoilerTitle_shouldNotUpdateForNonCardProducts() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.nonCardProducts))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .cards)
+        
+        XCTAssertEqual(spoilerTitle, nil)
+    }
+    
+    func test_spoilerTitle_shouldNotUpdateForThreeCards() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.threeCards))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .threeCards)
+        
+        XCTAssertEqual(spoilerTitle, nil)
+    }
+    
+    func test_spoilerTitle_shouldNotUpdateForAccountProductsFromEmpty() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.accountProducts))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .accountProducts)
+        
+        XCTAssertEqual(spoilerTitle, nil)
+    }
+    
+    func test_spoilerTitle_shouldNotUpdateForDepositProductsFromEmpty() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.depositProducts))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .depositProducts)
+        
+        XCTAssertEqual(spoilerTitle, nil)
+    }
+    
+    func test_spoilerTitle_shouldNotUpdateForLoanProductsFromEmpty() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.loanProducts))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .loanProducts)
+        
+        XCTAssertEqual(spoilerTitle, nil)
+    }
+    
+    func test_spoilerTitle_shouldNotUpdateForEmptyWithEmptyProducts() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.cards))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .cards)
+        
+        XCTAssertEqual(spoilerTitle, .spoilerTitleForCardProducts)
+    }
+    
+    func test_spoilerTitle_shouldUpdateWithAllCardProducts() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.allCardProducts))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .allCardProducts)
+                
+        XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProducts)
+    }
+    
+    func test_spoilerTitle_shouldUpdateWithAllCardProductsWithSticker() {
+                
+        let sut = makeSUT()
+        
+        let reduce = reduce(sut, event: .update(.allCardProductsWithSticker))
+        let spoilerTitle = reduce.state.spoilerTitle(for: .allCardProductsWithSticker)
+                
+        XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProductsWithSticker)
+    }
+    
     private typealias SUT = CarouselReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
