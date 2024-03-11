@@ -2057,12 +2057,8 @@
 		C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */; };
 		C155ABD92A28F33300BE66AE /* TranferData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C155ABD82A28F33300BE66AE /* TranferData+Stubs.swift */; };
 		C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C155ABDA2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift */; };
-		C15CB8E12B7EBEDF00718B49 /* Services in Frameworks */ = {isa = PBXBuildFile; productRef = C15CB8E02B7EBEDF00718B49 /* Services */; };
 		C15CB8E42B7EF26B00718B49 /* Service+getOperatorsListByParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15CB8E32B7EF26B00718B49 /* Service+getOperatorsListByParam.swift */; };
 		C15CB8E72B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15CB8E62B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift */; };
-		C15CB8E92B7F183E00718B49 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C15CB8E82B7F183E00718B49 /* TextFieldComponent */; };
-		C15CB8EB2B7F183E00718B49 /* TextFieldModel in Frameworks */ = {isa = PBXBuildFile; productRef = C15CB8EA2B7F183E00718B49 /* TextFieldModel */; };
-		C15CB8ED2B7F184500718B49 /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C15CB8EC2B7F184500718B49 /* SearchBarComponent */; };
 		C161C490299505BF003830C9 /* PaymentsSelectDropDownListComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C161C48F299505BF003830C9 /* PaymentsSelectDropDownListComponent.swift */; };
 		C16502F32939FED600B034D0 /* PaymentsAntifraudViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16502F22939FED600B034D0 /* PaymentsAntifraudViewModel.swift */; };
 		C16502F52939FF2200B034D0 /* PaymentsAntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16502F42939FF2200B034D0 /* PaymentsAntifraudView.swift */; };
@@ -2101,7 +2097,6 @@
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
 		C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C19980792B7EB8F500D85C09 /* OperatorsListComponents */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
-		C19C37852B84E15900159A18 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = C19C37842B84E15900159A18 /* RxViewModel */; };
 		C19C37872B84E19000159A18 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = C19C37862B84E19000159A18 /* RxViewModel */; };
 		C1A290B02AF4DCFD00CBEBA8 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C1A290AF2AF4DCFD00CBEBA8 /* PaymentSticker */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
@@ -2132,7 +2127,6 @@
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
-		C1E8A0532B84D457000DA998 /* UtilityPaymentsRx in Frameworks */ = {isa = PBXBuildFile; productRef = C1E8A0522B84D457000DA998 /* UtilityPaymentsRx */; };
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
@@ -2504,15 +2498,6 @@
 				A51568332821B927000D4455 /* ForaPushServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C1299A222B73BE7B000402BE /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C1D6BB9B2AD613730006B151 /* CopyFiles */ = {
@@ -4517,7 +4502,6 @@
 		C113225B28CFC37800F90072 /* SearchBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarViewComponent.swift; sourceTree = "<group>"; };
 		C113225D28D2169300F90072 /* BankClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankClientInfo.swift; sourceTree = "<group>"; };
 		C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeViewModelTests.swift; sourceTree = "<group>"; };
-		C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOperatorsListComponent.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetImageList.swift"; sourceTree = "<group>"; };
 		C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTests.swift; sourceTree = "<group>"; };
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
@@ -5039,19 +5023,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C1299A212B73BE7B000402BE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C15CB8ED2B7F184500718B49 /* SearchBarComponent in Frameworks */,
-				C19C37852B84E15900159A18 /* RxViewModel in Frameworks */,
-				C15CB8E92B7F183E00718B49 /* TextFieldComponent in Frameworks */,
-				C15CB8EB2B7F183E00718B49 /* TextFieldModel in Frameworks */,
-				C15CB8E12B7EBEDF00718B49 /* Services in Frameworks */,
-				C1E8A0532B84D457000DA998 /* UtilityPaymentsRx in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12210,7 +12181,6 @@
 				2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */,
 				2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */,
 				2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */,
-				C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */,
 				8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */,
 				2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */,
 				C1C6F1C62B83642300237C07 /* OperatorsListPreview.app */,
@@ -13265,31 +13235,6 @@
 			productReference = A515682C2821B927000D4455 /* ForaPushServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		C1299A232B73BE7B000402BE /* OperatorsListComponent */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C1299A2C2B73BE7C000402BE /* Build configuration list for PBXNativeTarget "OperatorsListComponent" */;
-			buildPhases = (
-				C1299A202B73BE7B000402BE /* Sources */,
-				C1299A212B73BE7B000402BE /* Frameworks */,
-				C1299A222B73BE7B000402BE /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = OperatorsListComponent;
-			packageProductDependencies = (
-				C15CB8E02B7EBEDF00718B49 /* Services */,
-				C15CB8E82B7F183E00718B49 /* TextFieldComponent */,
-				C15CB8EA2B7F183E00718B49 /* TextFieldModel */,
-				C15CB8EC2B7F184500718B49 /* SearchBarComponent */,
-				C1E8A0522B84D457000DA998 /* UtilityPaymentsRx */,
-				C19C37842B84E15900159A18 /* RxViewModel */,
-			);
-			productName = OperatorsListComponent;
-			productReference = C1299A242B73BE7B000402BE /* libOperatorsListComponent.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */;
@@ -13568,9 +13513,6 @@
 					A515682B2821B927000D4455 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
-					C1299A232B73BE7B000402BE = {
-						CreatedOnToolsVersion = 15.2;
-					};
 					C1A4D37A2A67CDFC001DD9E4 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
@@ -13650,7 +13592,6 @@
 				2A95CB9F2B2C80560041F5EC /* DecimalTextFieldPreview */,
 				2A6EAA782B50576D0093EE83 /* FastPaymentsSettingsPreview */,
 				2A783A802B5A87CE0035CEAB /* OTPInputComponentPreview */,
-				C1299A232B73BE7B000402BE /* OperatorsListComponent */,
 				8357E33C2B6CF77B0065E581 /* CardGuardianPreview */,
 				2A14081C2B78C79E004219AA /* C2BSubscriptionUIPreview */,
 				C1C6F1C52B83642300237C07 /* OperatorsListPreview */,
@@ -14369,13 +14310,6 @@
 				A515682F2821B927000D4455 /* NotificationService.swift in Sources */,
 				A55E879B2824052600562060 /* URLHost.swift in Sources */,
 				A55E87882823F66100562060 /* EmptyData.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C1299A202B73BE7B000402BE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17919,83 +17853,6 @@
 			};
 			name = Release;
 		};
-		C1299A282B73BE7B000402BE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C1299A292B73BE7B000402BE /* Mock */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Mock;
-		};
-		C1299A2A2B73BE7B000402BE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		C1299A2B2B73BE7B000402BE /* Preprod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Preprod;
-		};
 		C137D6782A28C72400EC337E /* Preprod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -19178,17 +19035,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		C1299A2C2B73BE7C000402BE /* Build configuration list for PBXNativeTarget "OperatorsListComponent" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C1299A282B73BE7B000402BE /* Debug */,
-				C1299A292B73BE7B000402BE /* Mock */,
-				C1299A2A2B73BE7B000402BE /* Release */,
-				C1299A2B2B73BE7B000402BE /* Preprod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -19804,29 +19650,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
 		};
-		C15CB8E02B7EBEDF00718B49 /* Services */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Services;
-		};
-		C15CB8E82B7F183E00718B49 /* TextFieldComponent */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TextFieldComponent;
-		};
-		C15CB8EA2B7F183E00718B49 /* TextFieldModel */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TextFieldModel;
-		};
-		C15CB8EC2B7F184500718B49 /* SearchBarComponent */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SearchBarComponent;
-		};
 		C19980792B7EB8F500D85C09 /* OperatorsListComponents */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OperatorsListComponents;
-		};
-		C19C37842B84E15900159A18 /* RxViewModel */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RxViewModel;
 		};
 		C19C37862B84E19000159A18 /* RxViewModel */ = {
 			isa = XCSwiftPackageProductDependency;
