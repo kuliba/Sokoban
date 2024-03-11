@@ -11,11 +11,11 @@ import SwiftUI
 
 public struct AmountConfig {
     
-    let amount: TextConfig
-    let backgroundColor: Color
-    let button: ButtonConfig
-    let dividerColor: Color
-    let title: TextConfig
+    public let amount: TextConfig
+    public let backgroundColor: Color
+    public let button: ButtonConfig
+    public let dividerColor: Color
+    public let title: TextConfig
     
     public init(
         amount: TextConfig, 
