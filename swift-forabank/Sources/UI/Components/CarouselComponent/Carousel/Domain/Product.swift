@@ -46,6 +46,7 @@ public extension Product {
             case additionalSelf
             case additionalSelfAccOwn
             case additionalOther
+            case sticker
             
             public var isAdditional: Bool {
                 self == .additionalSelf ||
@@ -57,6 +58,10 @@ public extension Product {
                 self == .main ||
                 self == .regular
             }
+            
+            public var isSticker: Bool {
+                self == .sticker
+            }
         }
         
         public init(
@@ -67,24 +72,6 @@ public extension Product {
             self.value = value
             self.type = type
             self.cardType = cardType
-        }
-    }
-}
-
-public extension Product {
-    
-    // TODO: - Перенести в конфигурацию
-    var color: Color {
-             
-        switch id.type {
-        case .account:
-            return .green
-        case .card:
-            return .orange
-        case .deposit:
-            return .red
-        case .loan:
-            return .yellow
         }
     }
 }
