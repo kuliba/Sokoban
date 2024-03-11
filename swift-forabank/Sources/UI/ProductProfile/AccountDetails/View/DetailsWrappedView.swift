@@ -13,13 +13,13 @@ public typealias DetailsViewModel = RxViewModel<DetailsState, DetailsEvent, Deta
 
 public struct DetailsWrappedView: View {
     
-    @ObservedObject var viewModel: DetailsViewModel
+    @ObservedObject private var viewModel: DetailsViewModel
     
-    @State var isCheck = false
+    @State private var isCheck = false
 
-    public let config: Config
-    public let title: String
-    public let showCheckbox: Bool
+    private let config: Config
+    private let title: String
+    private let showCheckbox: Bool
 
     public init(
         viewModel: DetailsViewModel,
