@@ -34,11 +34,6 @@ public extension UtilityPaymentFlowState {
         
         stack.push(flow)
     }
-    
-    mutating func pop() {
-        
-        stack.pop()
-    }
 }
 
 public extension UtilityPaymentFlowState {

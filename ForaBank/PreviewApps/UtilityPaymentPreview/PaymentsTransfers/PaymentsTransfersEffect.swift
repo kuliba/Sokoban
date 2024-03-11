@@ -7,19 +7,12 @@
 
 import UtilityPayment
 
-#warning("move to UtilityPaymentEffect")
 enum PaymentsTransfersEffect: Equatable {
     
-    case loadPrePayment
-    case loadServices(for: Operator)
-    case startPayment(StartPaymentPayload)
+    case utilityPayment(UtilityFlowEffect)
 }
 
 extension PaymentsTransfersEffect {
     
-    enum StartPaymentPayload: Equatable {
-        
-        case last(LastPayment)
-        case service(Operator, UtilityService)
-    }
+    typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }

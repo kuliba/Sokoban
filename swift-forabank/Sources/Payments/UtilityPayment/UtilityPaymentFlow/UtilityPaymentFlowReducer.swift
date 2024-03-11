@@ -11,14 +11,11 @@ public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Se
 where Operator: Identifiable {
     
     private let prePaymentOptionsReduce: PrePaymentOptionsReduce
-    private let prePaymentReduce: PrePaymentReduce
     
     public init(
-        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce,
-        prePaymentReduce: @escaping PrePaymentReduce
+        prePaymentOptionsReduce: @escaping PrePaymentOptionsReduce
     ) {
         self.prePaymentOptionsReduce = prePaymentOptionsReduce
-        self.prePaymentReduce = prePaymentReduce
     }
 }
 
@@ -32,8 +29,16 @@ public extension UtilityPaymentFlowReducer {
         var state = state
         var effect: Effect?
         
-#warning("add state to switch do exclude impossible cases (?)")
         switch event {
+        case .back:
+            switch state.current {
+            case .prePaymentState(.addingCompany):
+                break
+                
+            default:
+                state.current = nil
+            }
+            
         case let .prePaymentOptions(prePaymentOptionsEvent):
             (state, effect) = reduce(state, prePaymentOptionsEvent)
             
@@ -55,7 +60,6 @@ public extension UtilityPaymentFlowReducer {
     typealias PPState = PrePaymentState<LastPayment, Operator>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
-    typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
@@ -73,6 +77,19 @@ private extension UtilityPaymentFlowReducer {
         var effect: Effect?
         
         switch state.current {
+        case .none:
+            switch event {
+            case let .loaded(loadLastPaymentsResult, loadOperatorsResult):
+                state.isInflight = false
+                state.current = .prePaymentOptions(.init(
+                    lastPayments: try? loadLastPaymentsResult.get(),
+                    operators: try? loadOperatorsResult.get()
+                ))
+                
+            default:
+                break
+            }
+            
         case let .prePaymentOptions(prePaymentOptionsState):
             let (ppoState, ppoEffect) = prePaymentOptionsReduce(prePaymentOptionsState, event)
             
@@ -80,9 +97,9 @@ private extension UtilityPaymentFlowReducer {
                 state.isInflight = true
             }
             state.current = .prePaymentOptions(ppoState)
-            effect = ppoEffect.map { Effect.prePaymentOptions($0) }
+            effect = ppoEffect.map { .prePaymentOptions($0) }
             
-        default:
+        case .prePaymentState:
             break
         }
         
@@ -107,12 +124,9 @@ private extension UtilityPaymentFlowReducer {
             case .addCompany:
                 state.current = .prePaymentState(.addingCompany)
                 
-            case .back:
-                state.current = nil
-                
             case let .loaded(result):
                 fatalError("can't handle `loaded` event with \(result)")
-
+                
             case .payByInstruction:
                 state.current = .prePaymentState(.payingByInstruction)
                 
@@ -131,21 +145,6 @@ private extension UtilityPaymentFlowReducer {
             switch event {
             case .addCompany, .payByInstruction, .scan:
                 break
-                
-            case .back:
-                switch prePaymentState {
-                case .addingCompany:
-                    break
-                    
-                case .payingByInstruction, .scanning:
-                    state.pop()
-                    
-                case let .selected(selected):
-                    fatalError("can't handle `selected(\(selected))` event \(event) on prePaymentState state \(prePaymentState)")
-                    
-                case .selecting:
-                    fatalError("can't handle event \(event) on prePaymentState state \(prePaymentState)")
-                }
                 
             case let .loaded(result):
                 fatalError("can't handle `loaded` event with \(result)")

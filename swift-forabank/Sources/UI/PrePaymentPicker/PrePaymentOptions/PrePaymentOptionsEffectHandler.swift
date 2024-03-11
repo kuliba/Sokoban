@@ -49,6 +49,7 @@ public extension PrePaymentOptionsEffectHandler {
 
 public extension PrePaymentOptionsEffectHandler {
     
+    #warning("replace Failure with `struct SimpleServiceFailure: Error & Equatable {}` ??")
     typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
     typealias LoadLastPaymentsCompletion = (LoadLastPaymentsResult) -> Void
     typealias LoadLastPayments = (@escaping LoadLastPaymentsCompletion) -> Void

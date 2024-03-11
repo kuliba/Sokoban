@@ -8,7 +8,6 @@
 public enum PrePaymentEvent<LastPayment, Operator, Response, Service> {
     
     case addCompany
-    case back
     case loaded(LoadResult)
     case payByInstruction
     case scan
