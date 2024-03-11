@@ -7,7 +7,6 @@
 
 public enum PrePaymentState<LastPayment, Operator> {
     
-    case addingCompany
     case payingByInstruction
     case scanning
     case selected(Selected)

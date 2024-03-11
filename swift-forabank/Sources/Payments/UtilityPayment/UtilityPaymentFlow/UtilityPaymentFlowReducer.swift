@@ -31,13 +31,7 @@ public extension UtilityPaymentFlowReducer {
         
         switch event {
         case .back:
-            switch state.current {
-            case .prePaymentState(.addingCompany):
-                break
-                
-            default:
-                state.current = nil
-            }
+            state.current = nil
             
         case let .prePaymentOptions(prePaymentOptionsEvent):
             (state, effect) = reduce(state, prePaymentOptionsEvent)
@@ -121,9 +115,6 @@ private extension UtilityPaymentFlowReducer {
         case .prePaymentOptions:
             
             switch event {
-            case .addCompany:
-                state.current = .prePaymentState(.addingCompany)
-                
             case let .loaded(result):
                 fatalError("can't handle `loaded` event with \(result)")
                 
@@ -143,7 +134,7 @@ private extension UtilityPaymentFlowReducer {
             
         case let .prePaymentState(prePaymentState):
             switch event {
-            case .addCompany, .payByInstruction, .scan:
+            case .payByInstruction, .scan:
                 break
                 
             case let .loaded(result):

@@ -29,9 +29,6 @@ extension PaymentsTransfersState {
                 
             case let .prePaymentState(prePaymentState):
                 switch prePaymentState {
-                case .addingCompany:
-                    return .addingCompany
-                    
                 case .payingByInstruction:
                     return .payingByInstruction
                     
@@ -61,7 +58,6 @@ extension PaymentsTransfersState {
     
     enum NavigationState: Identifiable {
         
-        case addingCompany
         case payingByInstruction
         case prePaymentOptions(PrePaymentOptions)
         case prePayment(PrePayment)
@@ -70,9 +66,6 @@ extension PaymentsTransfersState {
         var id: ID {
             
             switch self {
-            case .addingCompany:
-                return .addingCompany
-                
             case .payingByInstruction:
                 return .payingByInstruction
                 
@@ -89,7 +82,6 @@ extension PaymentsTransfersState {
         
         enum ID {
             
-            case addingCompany
             case payingByInstruction
             case prePaymentOptions
             case prePayment

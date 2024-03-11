@@ -49,11 +49,7 @@ struct PaymentsTransfersView: View {
         navigationState: PaymentsTransfersState.NavigationState
     ) -> some View {
         
-        switch navigationState {
-        case .addingCompany:
-            Text("TBD: go to chat")
-                .navigationBarBackButtonHidden()
-            
+        switch navigationState {            
         case .payingByInstruction:
             Text("TBD: pay by Instruction here")
             
