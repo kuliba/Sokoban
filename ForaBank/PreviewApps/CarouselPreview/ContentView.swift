@@ -8,14 +8,13 @@
 import RxViewModel
 import SwiftUI
 import CarouselComponent
-import PaymentSticker
 
 struct ContentView: View {
         
     var body: some View {
         
         CarouselMainView(
-            viewModel: .init(initialState: .init(products: .allProductsWithSticker))) { product in
+            viewModel: .init(initialState: .init(products: .allProducts, sticker: .sticker))) { product in
                 
                 switch product.id.type {
                 case .account:
@@ -83,7 +82,7 @@ struct CarouselMainView: View {
     
     var carouselComponentConfig: CarouselComponentConfig {
         
-        .init(carouselConfig: .init(
+        .init(carousel: .init(
             item: .init(
                 spacing: 13,
                 horizontalPadding: 20
@@ -99,7 +98,7 @@ struct CarouselMainView: View {
             spoilerImage: Image("shevronDown"),
             separatorForeground: Color.bordersDivider,
             productDimensions: .regular),
-              selectorConfig: .init(
+              selector: .init(
                 optionConfig: .init(
                     frameHeight: 24,
                     textFont: Font.custom("Inter", size: 12.0),

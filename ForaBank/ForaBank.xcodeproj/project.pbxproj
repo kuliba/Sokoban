@@ -2152,6 +2152,7 @@
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
 		D46EC0EB2B9D2B1100E70669 /* ProductView_Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46EC0EA2B9D2B1100E70669 /* ProductView_Preview.swift */; };
 		D46EC0F12B9D2E7200E70669 /* NewProductButtonConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46EC0EF2B9D2DC800E70669 /* NewProductButtonConfig.swift */; };
+		D46EC0FC2B9F4B2600E70669 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = D46EC0FB2B9F4B2600E70669 /* UIPrimitives */; };
 		D47C7ED22B9715F700A35A25 /* CarouselPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C7ED12B9715F700A35A25 /* CarouselPreviewApp.swift */; };
 		D47C7ED42B9715F700A35A25 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C7ED32B9715F700A35A25 /* ContentView.swift */; };
 		D47C7EE02B97165000A35A25 /* ContentView_Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C7EDF2B97165000A35A25 /* ContentView_Preview.swift */; };
@@ -5088,6 +5089,7 @@
 			files = (
 				D4BD60902B97512400909F43 /* PinCodeUI in Frameworks */,
 				D47C7EE22B97166A00A35A25 /* CarouselComponent in Frameworks */,
+				D46EC0FC2B9F4B2600E70669 /* UIPrimitives in Frameworks */,
 				D47C7EE42B97167100A35A25 /* RxViewModel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13380,6 +13382,7 @@
 				D47C7EE12B97166A00A35A25 /* CarouselComponent */,
 				D47C7EE32B97167100A35A25 /* RxViewModel */,
 				D4BD608F2B97512400909F43 /* PinCodeUI */,
+				D46EC0FB2B9F4B2600E70669 /* UIPrimitives */,
 			);
 			productName = CarouselPreview;
 			productReference = D47C7ECF2B9715F700A35A25 /* CarouselPreview.app */;
@@ -19737,9 +19740,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
 		};
-		C1E8A0522B84D457000DA998 /* UtilityPaymentsRx */ = {
+		D46EC0FB2B9F4B2600E70669 /* UIPrimitives */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = UtilityPaymentsRx;
+			productName = UIPrimitives;
 		};
 		D47C7EE12B97166A00A35A25 /* CarouselComponent */ = {
 			isa = XCSwiftPackageProductDependency;
