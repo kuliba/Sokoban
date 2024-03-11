@@ -18,8 +18,18 @@ public struct NonEmptyStack<Element> {
 
 public extension NonEmptyStack {
     
-    var last: Element {
-        
+    /// The `top` property serves dual purposes:
+    /// - Getter: Retrieves the top element of the stack without removing it.
+    ///   Returns `nil` if the stack is empty.
+    /// - Setter: Modifies the top element of the stack based on the provided value.
+    ///   - If the stack is not empty:
+    ///     - Assigning a non-nil value replaces the top element with this new value.
+    ///     - Assigning `nil` removes the top element from the stack.
+    ///   - If the stack is empty:
+    ///     - Assigning a non-nil value initializes the stack with this new element.
+    ///     - Assigning `nil` has no effect.
+    var top: Element {
+
         get { peek() }
         
         set(newValue) {
@@ -58,3 +68,5 @@ public extension NonEmptyStack {
     
     var isEmpty: Bool { false }
 }
+
+extension NonEmptyStack: Equatable where Element: Equatable {}

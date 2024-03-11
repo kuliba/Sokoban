@@ -11,7 +11,6 @@ import Tagged
 public struct SelectorConfig {
     
     let optionConfig: OptionConfig
-    
     let itemSpacing: CGFloat
 
     public init(

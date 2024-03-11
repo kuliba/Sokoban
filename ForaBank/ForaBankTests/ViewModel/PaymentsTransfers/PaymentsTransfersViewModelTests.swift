@@ -7,6 +7,7 @@
 
 import Combine
 @testable import ForaBank
+import OperatorsListComponents
 import SberQR
 import XCTest
 
@@ -136,7 +137,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         
-        sut.event(.latestPaymentTapped(.init()))
+        sut.event(.latestPaymentTapped(makeLatestPayment()))
         
         XCTAssertNoDiff(spy.values, [nil, nil])
     }
@@ -300,7 +301,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         sut.event(.operatorTapped(`operator`))
         effectSpy.complete(with: .loaded(.single(service), for: `operator`))
         effectSpy.complete(with: .paymentStarted(.details(details)))
-
+        
         XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
         XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
         XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
@@ -324,7 +325,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         effectSpy.complete(with: .loaded(.list([service, makeService()]), for: `operator`))
         sut.event(.utilityServiceTap(`operator`, service))
         effectSpy.complete(with: .paymentStarted(.details(details)))
-
+        
         XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
         XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .list])
         XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
@@ -406,7 +407,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
-
+        
         try sut.openUtilityPayments()
         sut.event(.resetDestination)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -428,7 +429,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
         let (sut, _,_) = makeSUT()
-
+        
         try sut.openUtilityPayments()
         sut.event(.paymentStarted(paymentStarted))
         
@@ -461,9 +462,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         sut.event(.paymentStarted(paymentStarted))
         
         XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
-
+        
         sut.event(.resetUtilityDestination)
-
+        
         XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment, nil])
     }
     
@@ -489,7 +490,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.openUtilityPayments()
         sut.event(.utilityServiceTap(`operator`, utilityService))
-
+        
         XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
         XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
     }
@@ -740,7 +741,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 completion(.utilities(.init(
                     initialState: .init(
-                        latestPayments: [],
+                        lastPayments: [],
                         operators: []
                     ),
                     loadOperators: { _,_ in }
@@ -770,21 +771,21 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeOperator(
         _ id: String = UUID().uuidString
-    ) -> UtilitiesViewModel.Operator {
+    ) -> OperatorsListComponents.Operator {
         
-        .init(id: id)
+        .init(id: id, title: id, subtitle: nil, image: nil)
+    }
+    
+    private func makeLatestPayment(
+        _ title: String = UUID().uuidString
+    ) -> OperatorsListComponents.LatestPayment {
+        
+        .init(image: nil, title: title, amount: "")
     }
     
     private func makeService(
         _ id: String = UUID().uuidString
     ) -> UtilityService {
-        
-        .init(id: id)
-    }
-    
-    private func makeLatestPayment(
-        _ id: String = UUID().uuidString
-    ) -> UtilitiesViewModel.LatestPayment {
         
         .init(id: id)
     }

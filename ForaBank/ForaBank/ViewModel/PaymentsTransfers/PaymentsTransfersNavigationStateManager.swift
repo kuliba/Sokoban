@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OperatorsListComponents
 
 struct PaymentsTransfersNavigationStateManager {
     
@@ -39,9 +40,10 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
-    case latestPaymentTapped(UtilitiesViewModel.LatestPayment)
-    case loaded(GetOperatorsListByParamResponse, for: UtilitiesViewModel.Operator)
-    case operatorTapped(UtilitiesViewModel.Operator)
+    case latestPaymentTapped(OperatorsListComponents.LatestPayment)
+    case loaded(GetOperatorsListByParamResponse, for: OperatorsListComponents.Operator)
+    case operatorTapped(OperatorsListComponents.Operator)
+    #warning("rename to `payByInstruction`")
     case payByRequisites
     case paymentStarted(PaymentStarted)
     case resetDestination
@@ -49,7 +51,7 @@ enum PaymentsTransfersEvent: Equatable {
     case resetUtilityDestination
     case resetUtilityListDestination
     case utilityPayment(UtilityPaymentEvent)
-    case utilityServiceTap(UtilitiesViewModel.Operator, UtilityService)
+    case utilityServiceTap(OperatorsListComponents.Operator, UtilityService)
 }
 
 extension PaymentsTransfersEvent {
@@ -87,7 +89,7 @@ extension PaymentsTransfersEvent {
 
 enum PaymentsTransfersEffect: Equatable {
     
-    case getServicesFor(UtilitiesViewModel.Operator)
+    case getServicesFor(OperatorsListComponents.Operator)
     case utilityPayment(UtilityPaymentEffect)
     case startPayment(StartPaymentPayload)
 }
@@ -96,8 +98,8 @@ extension PaymentsTransfersEffect {
     
     enum StartPaymentPayload: Equatable {
         
-        case latestPayment(UtilitiesViewModel.LatestPayment)
-        case service(UtilitiesViewModel.Operator, UtilityService)
+        case latestPayment(OperatorsListComponents.LatestPayment)
+        case service(OperatorsListComponents.Operator, UtilityService)
     }
 }
 

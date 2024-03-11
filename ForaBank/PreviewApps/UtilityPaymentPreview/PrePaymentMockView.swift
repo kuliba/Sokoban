@@ -10,7 +10,7 @@ import UtilityPayment
 
 struct PrePaymentMockView: View {
     
-    let event: (PrePaymentEvent) -> Void
+    let event: (PPEvent) -> Void
     
     @State private var text = ""
     
@@ -27,7 +27,7 @@ struct PrePaymentMockView: View {
             
             Section(header: Text("Operators")) {
                 
-                ForEach(["failure", "list", "single"], id: \.self, content: operatorView)
+                ForEach(["failure", "empty", "single", "list"], id: \.self, content: operatorView)
             }
             
             Section(header: Text("Footer")) {
@@ -53,6 +53,8 @@ struct PrePaymentMockView: View {
         
         Button("Operator \"\(id)\"") { event(.select(.operator(.init(id: id)))) }
     }
+    
+    typealias PPEvent = PrePaymentEvent<LastPayment, Operator, LoadServicesResponse, UtilityService>
 }
 
 struct PrePaymentView_Previews: PreviewProvider {

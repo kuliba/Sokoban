@@ -10,14 +10,14 @@ import Tagged
 
 public struct CarouselComponentConfig {
     
-    public let carouselConfig: CarouselConfig
-    public let selectorConfig: SelectorConfig
+    public let carousel: CarouselConfig
+    public let selector: SelectorConfig
     
     public init(
-        carouselConfig: CarouselConfig,
-        selectorConfig: SelectorConfig
+        carousel: CarouselConfig,
+        selector: SelectorConfig
     ) {
-        self.carouselConfig = carouselConfig
-        self.selectorConfig = selectorConfig
+        self.carousel = carousel
+        self.selector = selector
     }
 }

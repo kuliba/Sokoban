@@ -1,17 +1,44 @@
 //
-//  UtilityPaymentState.swift
+//  UtilityPaymentFlowState.swift
 //
 //
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-public struct UtilityPaymentFlowState: Equatable {
+import ForaTools
+
+public struct UtilityPaymentFlowState<LastPayment, Operator> {
     
-    public var prePayment: PrePaymentState
+    public var isInflight: Bool
+    
+    private var stack: Stack<Flow>
     
     public init(
-        prePayment: PrePaymentState = .selecting
+        _ flows: [Flow],
+        isInflight: Bool = false
     ) {
-        self.prePayment = prePayment
+        self.stack = .init(flows)
+        self.isInflight = isInflight
     }
 }
+
+public extension UtilityPaymentFlowState {
+
+    var current: Flow? {
+        
+        get { stack.top }
+        set { stack.top = newValue }
+    }
+    
+    mutating func push(_ flow: Flow) {
+        
+        stack.push(flow)
+    }
+}
+
+public extension UtilityPaymentFlowState {
+    
+    typealias Flow = UtilityPaymentFlow<LastPayment, Operator>
+}
+
+extension UtilityPaymentFlowState: Equatable where LastPayment: Equatable, Operator: Equatable {}

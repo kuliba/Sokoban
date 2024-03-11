@@ -8,6 +8,8 @@
 import Foundation
 import Services
 
+public typealias GetProductDetailsRequestFactory = RequestFactory
+
 public extension RequestFactory {
         
     static func getProductDetailsRequest(

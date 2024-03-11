@@ -7,10 +7,10 @@
 
 import Foundation
 import ManageSubscriptionsUI
+import OperatorsListComponents
 import PaymentSticker
 import SberQR
 import SwiftUI
-import OperatorsListComponents
 
 extension RootViewModelFactory {
     
@@ -181,9 +181,9 @@ extension RootViewModelFactory {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
                 completion([
-                    .init(id: "list"),
-                    .init(id: "single"),
-                    .init(id: "failure")
+                    .failure,
+                    .list,
+                    .single,
                 ])
             }
         }
@@ -203,7 +203,7 @@ extension RootViewModelFactory {
         
 #warning("connect real type; move typealiases")
         
-        typealias GetAllLatestPaymentsCompletion = ([UtilitiesViewModel.LatestPayment]) -> Void
+        typealias GetAllLatestPaymentsCompletion = ([OperatorsListComponents.LatestPayment]) -> Void
         typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
         
         let getAllLatestPayments: GetAllLatestPayments = { completion in
@@ -220,7 +220,7 @@ extension RootViewModelFactory {
                 
                 let viewModel = UtilitiesViewModel(
                     initialState: .init(
-                        latestPayments: latestPayments,
+                        lastPayments: latestPayments,
                         operators: operators
                     ),
                     loadOperators: loadOperators
@@ -708,3 +708,16 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
+// MARK: - Stubs
+
+private extension OperatorsListComponents.Operator {
+    
+    static let failure: Self = .init("failure", "Failure")
+    static let list: Self = .init("list", "List")
+    static let single: Self = .init("single", "Single")
+    
+    private init(_ id: String, _ title: String) {
+        
+        self.init(id: id, title: title, subtitle: nil, image: nil)
+    }
+}

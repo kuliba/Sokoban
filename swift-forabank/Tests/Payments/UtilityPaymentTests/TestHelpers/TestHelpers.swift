@@ -68,7 +68,7 @@ func makeUtilityPayment(
 
 struct CreateAnywayTransferResponse: Equatable {}
 
-struct TestPayment: Payment {
+struct TestPayment: AnywayPayment {
     
 #warning("TBD")
     // snapshots stack

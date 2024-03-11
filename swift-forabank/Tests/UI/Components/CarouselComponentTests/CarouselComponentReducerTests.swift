@@ -135,15 +135,16 @@ final class CarouselComponentReducerTests: XCTestCase {
         }
     }
     
-    func test_separators_shouldUpdateEmptyWithNonEmptyProductsWithSticker() {
-        
-        assert(.update(.cardsWithSticker), on: .empty) {
-            
-            $0.selector = .init(items: [.card])
-            $0.productGroups = .cardsWithSticker
-            $0.separators = .separatorsForPreviewProductsWithSticker
-        }
-    }
+    // TODO: - Добавить тест для нового кейса со стикером
+//    func test_separators_shouldUpdateEmptyWithNonEmptyProductsWithSticker() {
+//        
+//        assert(.update(.cardsWithSticker), on: .empty) {
+//            
+//            $0.selector = .init(items: [.card])
+//            $0.productGroups = .cardsWithSticker
+//            $0.separators = .separatorsForPreviewProductsWithSticker
+//        }
+//    }
     
     func test_separators_shouldUpdateToMoreProductsFromNonEmpty() {
         

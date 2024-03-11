@@ -1720,7 +1720,7 @@ extension PaymentsTransfersViewModel.Route {
     
     enum UtilitiesDestination: Identifiable {
         
-        case failure(UtilitiesViewModel.Operator)
+        case failure(OperatorsListComponents.Operator)
         case list(List)
         case payment(UtilityPaymentState)
     }
@@ -1730,7 +1730,7 @@ extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
     
     struct List {
         
-        let `operator`: UtilitiesViewModel.Operator
+        let `operator`: OperatorsListComponents.Operator
         let services: [UtilityService]
         let destination: UtilityServicePickerDestination?
     }
