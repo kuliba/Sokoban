@@ -59,47 +59,47 @@ final class NonEmptyStackTests: XCTestCase {
         XCTAssertNotEqual(second, last)
     }
     
-    func test_last_shouldDeliverLastElement() {
+    func test_top_shouldDeliverLastElement() {
         
         let first = Item()
         var sut = makeSUT(first)
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
         
         let second = Item()
         sut.push(second)
-        XCTAssertNoDiff(sut.last, second)
+        XCTAssertNoDiff(sut.top, second)
 
         let last = Item()
         sut.push(last)
-        XCTAssertNoDiff(sut.last, last)
+        XCTAssertNoDiff(sut.top, last)
 
         sut.pop()
-        XCTAssertNoDiff(sut.last, second)
+        XCTAssertNoDiff(sut.top, second)
 
         sut.pop()
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
 
         sut.pop()
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
     }
     
-    func test_last_set_shouldChangeFirstElement() {
+    func test_top_set_shouldChangeFirstElement() {
         
         let first = Item()
         var sut = makeSUT(first)
         
-        XCTAssertNoDiff(sut.last, first)
+        XCTAssertNoDiff(sut.top, first)
         XCTAssertNoDiff(sut.pop(), first)
         
         let new = Item()
-        sut.last = new
-        XCTAssertNoDiff(sut.last, new)
+        sut.top = new
+        XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
         XCTAssertNotEqual(new, first)
     }
     
-    func test_last_set_shouldChangeLastElement() {
+    func test_top_set_shouldChangeLastElement() {
         
         let first = Item()
         var sut = makeSUT(first)
@@ -108,8 +108,8 @@ final class NonEmptyStackTests: XCTestCase {
         sut.push(second)
                 
         let new = Item()
-        sut.last = new
-        XCTAssertNoDiff(sut.last, new)
+        sut.top = new
+        XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
         XCTAssertNotEqual(first, second)

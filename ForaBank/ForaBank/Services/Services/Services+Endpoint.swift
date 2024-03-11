@@ -82,6 +82,7 @@ extension Services {
             case getPINConfirmationCode
             case getPrintForm
             case getProcessingSessionCode
+            case getProductDetails
             case getProductDynamicParamsList
             case getSvgImageList
             case getScenarioQRData
@@ -263,6 +264,12 @@ extension Services.Endpoint {
         serviceName: .getProcessingSessionCode
     )
     
+    static let getProductDetails: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getProductDetails
+    )
+
     static let getProductDynamicParamsList: Self = .init(
         pathPrefix: .rest,
         version: .v2,
