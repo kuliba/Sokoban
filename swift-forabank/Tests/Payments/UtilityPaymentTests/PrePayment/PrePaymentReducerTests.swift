@@ -234,7 +234,7 @@ final class PrePaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PrePaymentReducer<LastPayment, Operator>
+    private typealias SUT = PrePaymentReducer<LastPayment, Operator, StartPaymentResponse, UtilityService>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -322,3 +322,18 @@ private struct Operator: Equatable, Identifiable {
     
     var id: String { value }
 }
+
+private struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+private struct UtilityService: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+

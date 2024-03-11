@@ -7,17 +7,17 @@
 
 public enum PrePaymentEffect<LastPayment, Operator> {
     
-    case startPayment(StartPaymentPayload)
+    case select(Select)
 }
 
 public extension PrePaymentEffect {
     
-    enum StartPaymentPayload {
+    enum Select {
         
         case last(LastPayment)
         case `operator`(Operator)
     }
 }
 
-extension PrePaymentEffect.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentEffect.Select: Equatable where LastPayment: Equatable, Operator: Equatable {}
 extension PrePaymentEffect: Equatable where LastPayment: Equatable, Operator: Equatable {}

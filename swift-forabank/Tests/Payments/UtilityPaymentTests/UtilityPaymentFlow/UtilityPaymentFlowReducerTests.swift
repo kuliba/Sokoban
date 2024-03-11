@@ -495,7 +495,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assert(selectLastPayment(lastPayment), on: state, effect: .prePayment(.startPayment(.last(lastPayment))))
+        assert(selectLastPayment(lastPayment), on: state, effect: .prePayment(.select(.last(lastPayment))))
     }
     
     func test_prePaymentEvent_selectOperator_shouldChangeStateToInflightOnPrePaymentOptionsState() {
@@ -510,7 +510,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let `operator` = makeOperator()
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assert(selectOperator(`operator`), on: state, effect: .prePayment(.startPayment(.operator(`operator`))))
+        assert(selectOperator(`operator`), on: state, effect: .prePayment(.select(.operator(`operator`))))
     }
     
     func test_prePaymentEvent_selectLastPayment_shouldNorChangePrePaymentState_addingCompany() {
@@ -635,7 +635,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator>
+    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse, UtilityService>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -806,3 +806,18 @@ private struct Operator: Equatable, Identifiable {
     
     var id: String { value }
 }
+
+private struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+private struct UtilityService: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
