@@ -43,8 +43,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "AccountDetailsTests",
-        "name" : "AccountDetailsTests"
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
       }
     }
   ],
