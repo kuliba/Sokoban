@@ -13,7 +13,7 @@ public struct Detail: Equatable, Hashable {
     let title: String
     let informerTitle: String
     var subtitle: String
-    let valueForCopy: String
+    let copyValue: String
     let event: DetailEvent
 }
 

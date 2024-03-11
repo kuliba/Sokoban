@@ -45,7 +45,7 @@ public enum ItemForList: Hashable {
                 return nil
                 
             default:
-                return $0.title + ": " + $0.valueForCopy
+                return $0.title + ": " + $0.copyValue
             }
         }.joined(separator: "\n")
     }
