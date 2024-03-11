@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import AccountDetails
+@testable import ProductDetailsUI
 import RxViewModel
 
 final class ProductDetailsReducerTests: XCTestCase {
