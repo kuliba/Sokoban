@@ -141,6 +141,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .productDetailsUI,
+        .productDetailsUITests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .cardGuardianUI,
@@ -308,6 +310,13 @@ private extension Product {
         ]
     )
     
+    static let productDetailsUI = library(
+        name: .productDetailsUI,
+        targets: [
+            .productDetailsUI
+        ]
+    )
+
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -454,6 +463,7 @@ private extension Product {
         targets: [
             .activateSlider,
             .accountInfoPanel,
+            .productDetailsUI,
             .cardGuardianUI,
             .productProfileComponents,
             .topUpCardUI,
@@ -887,6 +897,8 @@ private extension Target {
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
+            .foraTools,
+            .prePaymentPicker,
             .tagged,
         ],
         path: "Sources/Payments/\(String.utilityPayment)"
@@ -1179,6 +1191,32 @@ private extension Target {
             .services,
         ],
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
+    )
+    
+    static let productDetailsUI = target(
+        name: .productDetailsUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+            .services,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.productDetailsUI)"
+    )
+    
+    static let productDetailsUITests = testTarget(
+        name: .productDetailsUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .productDetailsUI,
+            .services,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.productDetailsUITests)"
     )
 
     static let buttonWithSheet = target(
@@ -1517,6 +1555,7 @@ private extension Target {
         dependencies: [
             .activateSlider,
             .accountInfoPanel,
+            .productDetailsUI,
             .cardGuardianUI,
             .topUpCardUI,
         ],
@@ -1737,6 +1776,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let productDetailsUI = byName(
+        name: .productDetailsUI
     )
     
     static let buttonWithSheet = byName(
@@ -1971,6 +2014,9 @@ private extension String {
 
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
+
+    static let productDetailsUI = "ProductDetailsUI"
+    static let productDetailsUITests = "ProductDetailsUITests"
 
     static let buttonWithSheet = "ButtonWithSheet"
     

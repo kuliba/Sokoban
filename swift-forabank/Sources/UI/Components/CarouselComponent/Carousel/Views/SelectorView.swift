@@ -13,20 +13,60 @@ struct SelectorView: View {
     
     let state: Selector
     let event: (Product.ID.ProductType) -> Void
-    
+    let config: SelectorConfig
+        
     var body: some View {
         
-        HStack {
-            ForEach(state.items.uniqueValues, id: \.self, content: productTypeView)
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: config.itemSpacing) {
+                                
+                ForEach(state.items.uniqueValues, id: \.self) { productType in
+                                            
+                    labelView(
+                        title: productType.pluralName,
+                        shouldSelect: productType == state.selected,
+                        config: config
+                    ) {
+                        event(productType)
+                    }
+                    .frame(height: config.optionConfig.frameHeight)
+                    .accessibilityIdentifier("optionProductTypeSelection")
+                }
+            }
         }
     }
+}
+
+extension SelectorView {
     
-    private func productTypeView(
-        productType: Product.ID.ProductType
+    @ViewBuilder
+    private func labelView(
+        title: String,
+        shouldSelect: Bool,
+        config: SelectorConfig,
+        action: @escaping () -> Void
     ) -> some View {
         
-        Text(productType.pluralName)
-            .foregroundColor(productType == state.selected ? .orange : .gray)
-            .onTapGesture { event(productType) }
+        let optionTextForeground = shouldSelect
+            ? config.optionConfig.textForegroundSelected
+            : config.optionConfig.textForeground
+        
+        let optionShapeForeground = shouldSelect
+            ? config.optionConfig.shapeForegroundSelected
+            : config.optionConfig.shapeForeground
+        
+        Group {
+            
+            Text(title)
+                .font(config.optionConfig.textFont)
+                .foregroundColor(optionTextForeground)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Capsule().foregroundColor(optionShapeForeground))
+        }
+        .onTapGesture {
+            action()
+        }
     }
 }
