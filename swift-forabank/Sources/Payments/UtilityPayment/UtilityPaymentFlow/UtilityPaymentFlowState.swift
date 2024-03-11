@@ -26,8 +26,8 @@ public extension UtilityPaymentFlowState {
 
     var current: Flow {
         
-        get { stack.last }
-        set { stack.last = newValue }
+        get { stack.top }
+        set { stack.top = newValue }
     }
 }
 
