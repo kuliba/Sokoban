@@ -10,9 +10,9 @@ import SwiftUI
 struct InputView: View {
     
     @State private var text: String = ""
-    let inputState: InputState
-    let inputEvent: (InputEvent) -> Void
-    let config: InputConfigView
+    let state: InputState
+    let event: (InputEvent) -> Void
+    let config: Config
     
     var body: some View {
         
@@ -20,7 +20,7 @@ struct InputView: View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                inputState.image()
+                state.image()
                     .resizable()
                     .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .center)
                 
@@ -53,7 +53,7 @@ struct InputView: View {
         .cornerRadius(12)
     }
     
-    struct InputConfigView {
+    struct Config {
         
         let title: String
         let titleFont: Font
@@ -79,7 +79,7 @@ struct InputView: View {
     }
 }
 
-private extension InputView.InputConfigView {
+private extension InputView.Config {
     
     static let preview: Self = .init(
         title: "Лицевой счет",
@@ -101,15 +101,15 @@ struct InputView_Previews: PreviewProvider {
         Group {
             
             InputView(
-                inputState: .init(image: { .init(systemName: "photo.artframe") }),
-                inputEvent: { _ in },
+                state: .init(image: { .init(systemName: "photo.artframe") }),
+                event: { _ in },
                 config: .preview
             )
             .padding(20)
             
             InputView(
-                inputState: .init(image: { .init(systemName: "photo.artframe") }),
-                inputEvent: { _ in },
+                state: .init(image: { .init(systemName: "photo.artframe") }),
+                event: { _ in },
                 config: .preview
             )
             .padding(20)
