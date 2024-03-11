@@ -24,6 +24,7 @@ struct DetailsView: View {
             Rectangle()
                 .fill(config.colors.fill)
                 .cornerRadius(12)
+            
             VStack(alignment: .leading, spacing: 13) {
                 
                 titleWithCheckBox(title)
@@ -67,8 +68,12 @@ struct DetailsView: View {
     private func titleWithCheckBox(_ title: String) -> some View {
         
         HStack {
+            
             config.images.checkImage(isCheck)
-                .frame(width: showCheckbox ? config.iconSize : 0, height: showCheckbox ? config.iconSize : 0, alignment: .center)
+                .frame(
+                    width: showCheckbox ? config.iconSize : 0,
+                    height: showCheckbox ? config.iconSize : 0,
+                    alignment: .center)
                 .onTapGesture { isCheck.toggle() }
                 .opacity(showCheckbox ? 1 : 0)
             Text(title)

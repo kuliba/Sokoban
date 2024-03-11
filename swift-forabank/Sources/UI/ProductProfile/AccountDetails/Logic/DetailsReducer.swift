@@ -34,6 +34,7 @@ public extension DetailsReducer {
                 state.updateEvent(.itemTapped(.iconTap(itemId)))
             }
         }
+        
         return (state, .none)
     }
 }
