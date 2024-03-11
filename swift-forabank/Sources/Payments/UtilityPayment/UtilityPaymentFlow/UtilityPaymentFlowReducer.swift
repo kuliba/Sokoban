@@ -119,7 +119,7 @@ private extension UtilityPaymentFlowReducer {
                 fatalError("can't handle `loaded` event with \(result)")
                 
             case .payByInstruction:
-                state.current = .prePaymentState(.payingByInstruction)
+                state.push(.prePaymentState(.payingByInstruction))
                 
             case .scan:
                 state.current = .prePaymentState(.scanning)

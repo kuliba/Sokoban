@@ -367,6 +367,28 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         assert(.back, on: state, effect: nil)
     }
+    func test_payByInstruction_back_shouldRevertStateToInitialPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        
+        let (state, _) = sut.reduce(initialState, .prePayment(.payByInstruction))
+        let (final, _) = sut.reduce(state, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_payByInstruction_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        
+        let (state, effect1) = sut.reduce(initialState, .prePayment(.payByInstruction))
+        let (_, effect2) = sut.reduce(state, .back)
+        
+        XCTAssertNil(effect1)
+        XCTAssertNil(effect2)
+    }
     
     // MARK: - payByInstruction
     
@@ -646,6 +668,13 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     private func makeOperator(
         value: String = UUID().uuidString
     ) -> Operator {
+        
+        .init(value: value)
+    }
+    
+    private func makeService(
+        value: String = UUID().uuidString
+    ) -> UtilityService {
         
         .init(value: value)
     }
