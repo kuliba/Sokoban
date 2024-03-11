@@ -11,10 +11,20 @@ public struct Detail: Equatable, Hashable {
     
     let id: DocumentItem.ID
     let title: String
-    let informerTitle: String
     var subtitle: String
     let copyValue: String
     let event: DetailEvent
+    
+    var informerTitle: String {
+        switch id {
+            
+        case .expirationDate:
+            return "Срок действия карты"
+            
+        default:
+            return title
+        }
+    }
 }
 
 public enum DetailEvent: Equatable, Hashable {

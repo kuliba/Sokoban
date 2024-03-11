@@ -65,17 +65,6 @@ public struct DocumentItem {
             return .cvvTitle
         }
     }
-    
-    var titleForInformer: String {
-        switch id {
-            
-        case .expirationDate:
-            return "Срок действия карты"
-            
-        default:
-            return title
-        }
-    }
 }
 
 extension String {
