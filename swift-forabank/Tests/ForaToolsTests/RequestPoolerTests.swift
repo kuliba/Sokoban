@@ -6,7 +6,8 @@
 //
 
 final class RequestPooler<Request: Hashable, Response> {
-
+    
+    private var requestQueue = [Request: [Completion]]()
     private let perform: Perform
     
     init(perform: @escaping Perform) {
@@ -21,7 +22,31 @@ extension RequestPooler {
         _ request: Request,
         _ completion: @escaping Completion
     ) {
-        // ...
+        if requestQueue[request] == nil {
+            
+            requestQueue[request] = [completion]
+            perform(request) { [weak self] response in
+                
+                self?.deliverResponse(response, for: request)
+            }
+            
+        } else {
+            
+            requestQueue[request]?.append(completion)
+        }
+    }
+    
+    private func deliverResponse(
+        _ response: Response,
+        for request: Request
+    ) {
+        requestQueue[request]?.forEach { [weak self] completion in
+            
+            guard self != nil else { return }
+            
+            completion(response)
+        }
+        requestQueue[request] = nil
     }
 }
 
@@ -40,6 +65,139 @@ final class RequestPoolerTests: XCTestCase {
         let (_, spy) = makeSUT()
         
         XCTAssertEqual(spy.callCount, 0)
+    }
+    
+    func test_handleRequest_shouldCallCollaboratorOnceForSameRequests() {
+        
+        let request = makeRequest()
+        let (sut, spy) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = 3
+        
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        spy.complete(with: makeResponse())
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(spy.payloads.count, 1)
+        XCTAssertEqual(spy.payloads, [request])
+    }
+    
+    func test_handleRequest_shouldCallCollaboratorTwiceIfSameRequestComeAfterResponseDelivered() {
+        
+        let request = makeRequest()
+        let (sut, spy) = makeSUT()
+        
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = 3
+        
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        spy.complete(with: makeResponse())
+        
+        sut.handleRequest(request) { _ in exp.fulfill() }
+        spy.complete(with: makeResponse())
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(spy.payloads.count, 2)
+        XCTAssertEqual(spy.payloads, [request, request])
+    }
+    
+    func test_handleRequest_shouldCallCollaboratorWithDifferentRequests() {
+        
+        let firstRequest = makeRequest()
+        let lastRequest = makeRequest()
+        let (sut, spy) = makeSUT()
+        
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = 2
+        
+        sut.handleRequest(firstRequest) { _ in exp.fulfill() }
+        sut.handleRequest(firstRequest) { _ in exp.fulfill() }
+        spy.complete(with: makeResponse())
+        
+        sut.handleRequest(lastRequest) { _ in exp.fulfill() }
+        spy.complete(with: makeResponse())
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(spy.payloads.count, 2)
+        XCTAssertEqual(spy.payloads, [firstRequest, lastRequest])
+    }
+    
+    func test_handleRequest_shouldDeliverSameResponseForAllClientsWithSameRequest() {
+        
+        let request = makeRequest()
+        let response = makeResponse()
+        let (sut, spy) = makeSUT()
+        
+        var responses = [Response]()
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = 2
+        
+        sut.handleRequest(request) {
+            
+            responses.append($0)
+            exp.fulfill()
+        }
+        sut.handleRequest(request) {
+            
+            responses.append($0)
+            exp.fulfill()
+        }
+        spy.complete(with: response)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(responses, [response, response])
+    }
+    
+    func test_handleRequest_shouldDeliverResponsesCorrespondingToRequests() {
+        
+        let (firstRequest, firstResponse) = (makeRequest(), makeResponse())
+        let (lastRequest, lastResponse) = (makeRequest(), makeResponse())
+        let (sut, spy) = makeSUT()
+        
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = 2
+        var first: Response?
+        var last: Response?
+        
+        sut.handleRequest(firstRequest) {
+            
+            first = $0
+            exp.fulfill()
+        }
+        sut.handleRequest(lastRequest) {
+            
+            last = $0
+            exp.fulfill()
+        }
+        spy.complete(with: lastResponse, at: 1)
+        spy.complete(with: firstResponse, at: 0)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(first, firstResponse)
+        XCTAssertNoDiff(last, lastResponse)
+    }
+    
+    func test_handleRequest_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let spy: PerformSpy
+        (sut, spy) = makeSUT()
+        
+        var responses = [Response]()
+        
+        sut?.handleRequest(makeRequest()) { responses.append($0) }
+        sut = nil
+        spy.complete(with: makeResponse())
+        
+        XCTAssertEqual(responses, [])
     }
     
     // MARK: - Helpers
@@ -62,24 +220,38 @@ final class RequestPoolerTests: XCTestCase {
         
         return (sut, spy)
     }
-}
-
-private struct Request: Hashable {
     
-    var id: String
-    
-    init(id: String = UUID().uuidString) {
+    private func makeRequest(
+        _ id: String = UUID().uuidString
+    ) -> Request {
         
-        self.id = id
+        .init(id: id)
     }
-}
-
-private struct Response: Equatable {
     
-    var value: String
-    
-    init(value: String = UUID().uuidString) {
+    private func makeResponse(
+        _ value: String = UUID().uuidString
+    ) -> Response {
         
-        self.value = value
+        .init(value: value)
+    }
+    
+    private struct Request: Hashable {
+        
+        var id: String
+        
+        init(id: String = UUID().uuidString) {
+            
+            self.id = id
+        }
+    }
+    
+    private struct Response: Equatable {
+        
+        var value: String
+        
+        init(value: String = UUID().uuidString) {
+            
+            self.value = value
+        }
     }
 }
