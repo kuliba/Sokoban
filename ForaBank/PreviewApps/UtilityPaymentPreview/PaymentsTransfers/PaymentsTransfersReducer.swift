@@ -74,25 +74,16 @@ private extension PaymentsTransfersReducer {
             break
             
         case let .utilityPayment(utilityPayment):
-            switch utilityPayment.current {
-            case .none:
-                break
-                
-            case .prePaymentOptions:
+            let (flowState, flowEffect) = utilityPaymentFlowReduce(
+                utilityPayment,
+                .back
+            )
+            
+            if flowState.current == nil {
                 state.route = nil
-                
-            case .prePaymentState:
-                let (s, e) = utilityPaymentFlowReduce(
-                    utilityPayment,
-                    .prePayment(.back)
-                )
-                
-                if s.current == nil {
-                    state.route = nil
-                } else {
-                    state.route = .utilityPayment(s)
-                    effect = e.map { Effect.utilityPayment($0) }
-                }
+            } else {
+                state.route = .utilityPayment(flowState)
+                effect = flowEffect.map { .utilityPayment($0) }
             }
         }
         
@@ -136,7 +127,7 @@ private extension PaymentsTransfersReducer {
             let (flowState, flowEffect) = utilityPaymentFlowReduce(flowState, flowEvent)
             state.route = .utilityPayment(flowState)
             state.status = flowState.isInflight ? .inflight : .none
-            effect = flowEffect.map { Effect.utilityPayment($0) }
+            effect = flowEffect.map { .utilityPayment($0) }
             
             #warning("switch over flowState` to make additional state changes like go to chat if `addCompany`")
         }

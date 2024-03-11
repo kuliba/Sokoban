@@ -397,44 +397,44 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - back
     
-    func test_prePaymentEvent_back_shouldChangeStateToEmptyOnPrePaymentOptions() {
+    func test_back_shouldChangeStateToEmptyOnPrePaymentOptions() {
         
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assertState(.prePayment(.back), on: state) {
+        assertState(.back, on: state) {
             
             $0.current = nil
         }
     }
     
-    func test_prePaymentEvent_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+    func test_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
         
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         
-        assert(.prePayment(.back), on: state, effect: nil)
+        assert(.back, on: state, effect: nil)
     }
     
-    func test_prePaymentEvent_back_shouldNotChangePrePaymentState_addingCompany() {
+    func test_back_shouldNotChangePrePaymentState_addingCompany() {
         
         let state = makeState(
             .prePaymentOptions(makePrePaymentOptionsState()),
             .prePaymentState(.addingCompany)
         )
         
-        assertState(.prePayment(.back), on: state)
+        assertState(.back, on: state)
     }
     
-    func test_prePaymentEvent_back_shouldNotDeliverEffectOnPrePaymentState_addingCompany() {
+    func test_back_shouldNotDeliverEffectOnPrePaymentState_addingCompany() {
         
         let state = makeState(
             .prePaymentOptions(makePrePaymentOptionsState()),
             .prePaymentState(.addingCompany)
         )
         
-        assert(.prePayment(.back), on: state, effect: nil)
+        assert(.back, on: state, effect: nil)
     }
     
-    func test_prePaymentEvent_back_shouldChangePrePaymentStateToPrePaymentOptions_payingByInstruction() {
+    func test_back_shouldChangePrePaymentStateToPrePaymentOptions_payingByInstruction() {
         
         let prePaymentOptions: Flow = .prePaymentOptions(makePrePaymentOptionsState())
         let state = makeState(
@@ -442,23 +442,23 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentState(.payingByInstruction)
         )
         
-        assertState(.prePayment(.back), on: state) {
+        assertState(.back, on: state) {
             
             $0 = .init([prePaymentOptions])
         }
     }
     
-    func test_prePaymentEvent_back_shouldNotDeliverEffectOnPrePaymentState_payingByInstruction() {
+    func test_back_shouldNotDeliverEffectOnPrePaymentState_payingByInstruction() {
         
         let state = makeState(
             .prePaymentOptions(makePrePaymentOptionsState()),
             .prePaymentState(.payingByInstruction)
         )
         
-        assert(.prePayment(.back), on: state, effect: nil)
+        assert(.back, on: state, effect: nil)
     }
     
-    func test_prePaymentEvent_back_shouldChangePrePaymentStateToPrePaymentOptions_scanning() {
+    func test_back_shouldChangePrePaymentStateToPrePaymentOptions_scanning() {
         
         let prePaymentOptions: Flow = .prePaymentOptions(makePrePaymentOptionsState())
         let state = makeState(
@@ -466,20 +466,20 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentState(.scanning)
         )
         
-        assertState(.prePayment(.back), on: state){
+        assertState(.back, on: state){
             
             $0 = .init([prePaymentOptions])
         }
     }
     
-    func test_prePaymentEvent_back_shouldNotDeliverEffectOnPrePaymentState_scanning() {
+    func test_back_shouldNotDeliverEffectOnPrePaymentState_scanning() {
         
         let state = makeState(
             .prePaymentOptions(makePrePaymentOptionsState()),
             .prePaymentState(.scanning)
         )
         
-        assert(.prePayment(.back), on: state, effect: nil)
+        assert(.back, on: state, effect: nil)
     }
     
     // MARK: - payByInstruction

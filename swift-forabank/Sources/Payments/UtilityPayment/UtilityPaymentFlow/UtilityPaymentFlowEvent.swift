@@ -10,6 +10,7 @@ import PrePaymentPicker
 public enum UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     
+    case back
     case prePaymentOptions(PrePaymentOptions)
     case prePayment(PrePayment)
 }
