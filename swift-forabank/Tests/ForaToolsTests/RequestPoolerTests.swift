@@ -5,57 +5,7 @@
 //  Created by Igor Malyarov on 11.03.2024.
 //
 
-final class RequestPooler<Request: Hashable, Response> {
-    
-    private var requestQueue = [Request: [Completion]]()
-    private let perform: Perform
-    
-    init(perform: @escaping Perform) {
-        
-        self.perform = perform
-    }
-}
-
-extension RequestPooler {
-    
-    func handleRequest(
-        _ request: Request,
-        _ completion: @escaping Completion
-    ) {
-        if requestQueue[request] == nil {
-            
-            requestQueue[request] = [completion]
-            perform(request) { [weak self] response in
-                
-                self?.deliverResponse(response, for: request)
-            }
-            
-        } else {
-            
-            requestQueue[request]?.append(completion)
-        }
-    }
-    
-    private func deliverResponse(
-        _ response: Response,
-        for request: Request
-    ) {
-        requestQueue[request]?.forEach { [weak self] completion in
-            
-            guard self != nil else { return }
-            
-            completion(response)
-        }
-        requestQueue[request] = nil
-    }
-}
-
-extension RequestPooler {
-    
-    typealias Perform = (Request, @escaping (Response) -> Void) -> Void
-    typealias Completion = (Response) -> Void
-}
-
+import ForaTools
 import XCTest
 
 final class RequestPoolerTests: XCTestCase {
