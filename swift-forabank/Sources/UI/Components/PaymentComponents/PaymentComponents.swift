@@ -8,6 +8,7 @@
 @_exported import AmountComponent
 @_exported import ButtonComponent
 @_exported import InfoComponent
+@_exported import CheckBoxComponent
 @_exported import ProductSelectComponent
 @_exported import SharedConfigs
 
@@ -41,4 +42,7 @@ public extension PaymentComponents {
     typealias ProductCard = ProductSelectComponent.ProductCard
     typealias ProductCardConfig = ProductSelectComponent.ProductCardConfig
     typealias ProductCardView = ProductSelectComponent.ProductCardView
+    
+    typealias CheckBox = CheckBoxComponent.CheckBoxView
+    typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
 }

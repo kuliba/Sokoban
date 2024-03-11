@@ -7,6 +7,7 @@
 
 import OperatorsListComponents
 import PrePaymentPicker
+import FooterComponent
 import SwiftUI
 
 struct UtilityOperatorPicker: View {
@@ -19,8 +20,7 @@ struct UtilityOperatorPicker: View {
         switch state.uiState {
             
         case . failure:
-            // TODO: replace with `FooterView` from the module
-            Text("TBD: Footer View with pay by Instruction button")
+            failureView()
             
         case let .options(state):
             ComposedOperatorsView(
@@ -59,13 +59,26 @@ struct UtilityOperatorPicker: View {
         )
     }
     
+    private func failureView() -> some View {
+        return FooterComponent.FooterView(
+            state: .failure(.preview),
+            event: { events in event(.addCompany) },
+            config: .iFora
+        )
+    }
+    
     private func footerView() -> some View {
         
-        OperatorsListComponents.NoCompanyInListView(
-            noCompanyListViewModel: .default(
-                payByInstruction: { event(.payByInstruction) },
-                addCompany: { event(.addCompany) }
-            ),
+        FooterComponent.FooterView(
+            state: .footer(.preview),
+            event: { events in
+                switch events {
+                case .payByInstruction:
+                    event(.payByInstruction)
+                case .addCompany:
+                    event(.addCompany)
+                }
+            },
             config: .iFora
         )
     }
@@ -121,50 +134,42 @@ private extension OperatorView.OperatorViewConfig {
     )
 }
 
-private extension OperatorsListComponents.NoCompanyInListViewModel {
-    
-    static func `default`(
-        payByInstruction: @escaping () -> Void,
-        addCompany: @escaping () -> Void
-    ) -> Self {
+private extension FooterComponent.FooterState.Footer {
         
-        .init(
-            title: "Нет компании в списке?",
-            description: "Воспользуйтесь другими способами оплаты",
-            subtitle: "Сообщите нам, и мы подключим новую организацию",
-            buttons: [
-                .init(
-                    title: "Оплатить по реквизитам",
-                    buttonConfiguration: .init(
-                        titleFont: .body,
-                        titleForeground: .red,
-                        backgroundColor: .gray
-                    ),
-                    action: payByInstruction
-                ),
-                .init(
-                    title: "Добавить организацию",
-                    buttonConfiguration: .init(
-                        titleFont: .body,
-                        titleForeground: .blue,
-                        backgroundColor: .gray
-                    ),
-                    action: addCompany
-                )
-            ]
-        )
-    }
+    static let preview: Self = .init(
+        title: "Нет компании в списке?",
+        description: "Воспользуйтесь другими способами оплаты",
+        subtitle: "Сообщите нам, и мы подключим новую организацию"
+    )
 }
 
-private extension NoCompanyInListViewConfig {
+private extension FooterComponent.FooterState.Failure {
+
+    static let preview: Self = .init(
+        image: .init(systemName: "photo.artframe"),
+        description: "Что-то пошло не так.\nПопробуйте позже."
+    )
+}
+
+private extension FooterComponent.FooterView.Config {
     
     static let iFora: Self = .init(
-        titleFont: .title,
-        titleColor: .black,
-        descriptionFont: .callout,
-        descriptionColor: .gray,
-        subtitleFont: .footnote,
-        subtitleColor: .gray
+        titleConfig: .init(textFont: .title3, textColor: .black),
+        descriptionConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
+        subtitleConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
+        backgroundIcon: .gray,
+        requisitesButtonTitle: "Оплатить по реквизитам",
+        requisitesButtonConfig: .init(
+            titleFont: .body,
+            titleForeground: .red,
+            backgroundColor: .gray
+        ),
+        addCompanyButtonTitle: "Добавить организацию",
+        addCompanyButtonConfiguration: .init(
+            titleFont: .body,
+            titleForeground: .blue,
+            backgroundColor: .gray
+        )
     )
 }
 

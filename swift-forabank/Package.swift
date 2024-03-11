@@ -176,6 +176,8 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
+        .checkBoxComponent,
+        .footerComponent,
         .paymentComponents,
         .productProfileComponents,
         .productSelectComponent,
@@ -439,6 +441,8 @@ private extension Product {
             .amountComponent,
             .buttonComponent,
             .infoComponent,
+            .checkBoxComponent,
+            .footerComponent,
             .paymentComponents,
             .productSelectComponent,
             .sharedConfigs,
@@ -1477,12 +1481,31 @@ private extension Target {
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
+    static let checkBoxComponent = target(
+        name: .checkBoxComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.checkBoxComponent)"
+    )
+    
+    static let footerComponent = target(
+        name: .footerComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.footerComponent)"
+    )
+    
+    
     static let paymentComponents = target(
         name: .paymentComponents,
         dependencies: [
             .amountComponent,
             .buttonComponent,
             .infoComponent,
+            .checkBoxComponent,
+            .footerComponent,
             .productSelectComponent,
             .sharedConfigs,
         ],
@@ -1790,6 +1813,14 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
+    static let checkBoxComponent = byName(
+        name: .checkBoxComponent
+    )
+    
+    static let footerComponent = byName(
+        name: .footerComponent
+    )
+    
     static let paymentComponents = byName(
         name: .paymentComponents
     )
@@ -1992,6 +2023,10 @@ private extension String {
     static let buttonComponent = "ButtonComponent"
     
     static let infoComponent = "InfoComponent"
+    
+    static let checkBoxComponent = "CheckBoxComponent"
+    
+    static let footerComponent = "FooterComponent"
     
     static let paymentComponents = "PaymentComponents"
     

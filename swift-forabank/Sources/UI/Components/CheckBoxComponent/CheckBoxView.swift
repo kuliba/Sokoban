@@ -6,14 +6,25 @@
 //
 
 import SwiftUI
+import SharedConfigs
 
-struct CheckBoxView: View {
+public struct CheckBoxView: View {
     
     let isChecked: Bool
     let checkBoxEvent: (CheckBoxEvent) -> Void
-    let config: CheckBoxViewConfig
+    let config: Config
     
-    var body: some View {
+    init(
+        isChecked: Bool,
+        checkBoxEvent: @escaping (CheckBoxEvent) -> Void,
+        config: Config
+    ) {
+        self.isChecked = isChecked
+        self.checkBoxEvent = checkBoxEvent
+        self.config = config
+    }
+    
+    public var body: some View {
         
         HStack(spacing: 16) {
             
@@ -27,9 +38,7 @@ struct CheckBoxView: View {
             .animation(nil, value: isChecked)
             .frame(width: 24, height: 24)
             
-            Text(config.title)
-                .foregroundColor(config.titleForeground)
-                .font(config.titleFont)
+            config.title.text(withConfig: config.titleConfig)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -45,7 +54,7 @@ extension CheckBoxView {
     struct CheckView: View {
         
         let isChecked: Bool
-        let config: CheckBoxViewConfig
+        let config: Config
         
         var body: some View {
             
@@ -85,13 +94,12 @@ extension CheckBoxView {
     }
 }
 
-extension CheckBoxView {
+public extension CheckBoxView {
     
-    struct CheckBoxViewConfig {
+    struct Config {
         
         let title: String
-        let titleFont: Font
-        let titleForeground: Color
+        let titleConfig: TextConfig
         
         let lineWidth: CGFloat
         let strokeColor: Color
@@ -120,8 +128,7 @@ struct CheckBoxView_Previews: PreviewProvider {
             checkBoxEvent: { _ in },
             config: .init(
                 title: "Оплата ЖКХ",
-                titleFont: .body,
-                titleForeground: .black,
+                titleConfig: .init(textFont: .body, textColor: .black),
                 lineWidth: 2,
                 strokeColor: .green,
                 dashPhase: 70
