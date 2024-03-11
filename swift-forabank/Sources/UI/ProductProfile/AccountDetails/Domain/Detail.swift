@@ -11,7 +11,7 @@ public struct Detail: Equatable, Hashable {
     
     let id: DocumentItem.ID
     let title: String
-    let titleForInformer: String
+    let informerTitle: String
     var subtitle: String
     let valueForCopy: String
     let event: DetailEvent

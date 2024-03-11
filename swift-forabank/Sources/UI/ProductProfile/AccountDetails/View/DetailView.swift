@@ -45,7 +45,7 @@ struct DetailView: View {
         }
         .onLongPressGesture(minimumDuration: 1) {
             
-            event(.longPress(.init(item.valueForCopy), .init(item.titleForInformer)))
+            event(.longPress(.init(item.valueForCopy), .init(item.informerTitle)))
         }
     }
 }

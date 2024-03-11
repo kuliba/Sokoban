@@ -12,7 +12,7 @@ public extension Detail {
     static let payee : Self = .init(
         id: .payeeName,
         title: "Получатель",
-        titleForInformer: "Получатель",
+        informerTitle: "Получатель",
         subtitle: "Константин Войцехов",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -20,7 +20,7 @@ public extension Detail {
     static let accountNumber: Self = .init(
         id: .accountNumber,
         title: "Номер счета",
-        titleForInformer: "Номер счета",
+        informerTitle: "Номер счета",
         subtitle: "408178810888 005001137",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -28,7 +28,7 @@ public extension Detail {
     static let bic: Self = .init(
         id: .bic,
         title: "БИК",
-        titleForInformer: "БИК",
+        informerTitle: "БИК",
         subtitle: "044525341",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -36,7 +36,7 @@ public extension Detail {
     static let corrAccount: Self = .init(
         id: .corrAccount,
         title: "Кореспондентский счет",
-        titleForInformer: "Кореспондентский счет",
+        informerTitle: "Кореспондентский счет",
         subtitle: "301018103000000000341",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -44,7 +44,7 @@ public extension Detail {
     static let inn: Self = .init(
         id: .inn,
         title: "ИНН",
-        titleForInformer: "ИНН",
+        informerTitle: "ИНН",
         subtitle: "7704113772",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -52,7 +52,7 @@ public extension Detail {
     static let kpp: Self = .init(
         id: .kpp,
         title: "КПП",
-        titleForInformer: "КПП",
+        informerTitle: "КПП",
         subtitle: "770401001",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -60,7 +60,7 @@ public extension Detail {
     static let holder: Self = .init(
         id: .holderName,
         title: "Держатель",
-        titleForInformer: "Держатель",
+        informerTitle: "Держатель",
         subtitle: "Константин Войцехов",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -68,7 +68,7 @@ public extension Detail {
     static let numberMasked: Self = .init(
         id: .numberMasked,
         title: "Номер карты",
-        titleForInformer: "Номер карты",
+        informerTitle: "Номер карты",
         subtitle: "**** **** **** 0500",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -76,7 +76,7 @@ public extension Detail {
     static let expirationDate: Self = .init(
         id: .expirationDate,
         title: "Карта действует до",
-        titleForInformer: "Срок действия карты",
+        informerTitle: "Срок действия карты",
         subtitle: "01/01",
         valueForCopy: "valueForCopy",
         event: .longPress("valueForCopy", "for informer")
@@ -84,7 +84,7 @@ public extension Detail {
     static let cvvMasked: Self = .init(
         id: .cvvMasked,
         title: .cvvTitle,
-        titleForInformer: .cvvTitle,
+        informerTitle: .cvvTitle,
         subtitle: "111",
         valueForCopy: "",
         event: .longPress("valueForCopy", "for informer")
