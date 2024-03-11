@@ -968,10 +968,15 @@ private extension Target {
     static let operatorsComponent = target(
         name: .operatorsListComponents,
         dependencies: [
-            // external packages
+            // internal packages
+            .textFieldComponent,
+            .searchBarComponent,
+            .rxViewModel,
             .prePaymentPicker,
-            .genericRemoteService,
-            .services
+            .services,
+            .phoneNumberWrapper,
+            .otpInputComponent,
+            .paymentComponents
         ]
     )
     
@@ -1525,7 +1530,11 @@ private extension Target {
             .foraTools,
             .paymentComponents,
             .productSelectComponent,
-            .prePaymentPicker
+            .prePaymentPicker,
+            .rxViewModel,
+            .textFieldComponent,
+            .searchBarComponent,
+            .phoneNumberWrapper
         ]
     )
     
