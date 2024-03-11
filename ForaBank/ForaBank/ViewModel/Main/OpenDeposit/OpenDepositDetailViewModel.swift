@@ -142,7 +142,7 @@ extension OpenDepositDetailViewModel {
 
         init(with deposit: DepositProductData) {
             
-            self.init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
+            self.init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         }
         
         struct Details: Identifiable {
