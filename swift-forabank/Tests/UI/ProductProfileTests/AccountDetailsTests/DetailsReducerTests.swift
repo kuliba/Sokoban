@@ -20,7 +20,7 @@ final class DetailsReducerTests: XCTestCase {
                 
         assert(.appear, on: .initialState) {
             
-            $0.updateEvent(.appear)
+            $0.event = .appear
         }
     }
     
@@ -33,7 +33,7 @@ final class DetailsReducerTests: XCTestCase {
          
         assert(.itemTapped(.longPress("111","text")), on: .initialState) {
             
-            $0.updateEvent(.itemTapped(.longPress("111","text")))
+            $0.event = .itemTapped(.longPress("111","text"))
         }
     }
 
@@ -46,7 +46,7 @@ final class DetailsReducerTests: XCTestCase {
          
         assert(.itemTapped(.iconTap(.cvv)), on: .initialState) {
             
-            $0.updateEvent(.itemTapped(.iconTap(.cvv)))
+            $0.event = .itemTapped(.iconTap(.cvv))
         }
     }
 

@@ -23,15 +23,15 @@ public extension DetailsReducer {
         
         switch event {
         case .appear:
-            state.updateEvent(.appear)
+            state.event = .appear
             
         case let .itemTapped(tap):
             switch tap {
             case let .longPress(valueForCopy, text):
-                state.updateEvent(.itemTapped(.longPress(valueForCopy, text)))
+                state.event = .itemTapped(.longPress(valueForCopy, text))
                 
             case let .iconTap(itemId):
-                state.updateEvent(.itemTapped(.iconTap(itemId)))
+                state.event = .itemTapped(.iconTap(itemId))
             }
         }
         
