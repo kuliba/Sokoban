@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailsView: View {
     
-    let items: [ItemForList]
+    let items: [ListItem]
     let event: (DetailEvent) -> Void
     let config: Config
     let title: String
@@ -37,7 +37,7 @@ struct DetailsView: View {
     }
     
     @ViewBuilder
-    private func itemView(value: ItemForList) -> some View {
+    private func itemView(value: ListItem) -> some View {
         
         switch value {
             

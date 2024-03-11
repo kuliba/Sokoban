@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Array where Element == ItemForList {
+extension Array where Element == ListItem {
     
     static let preview: Self = [
         .single(.payee),

@@ -1,5 +1,5 @@
 //
-//  ItemForList.swift
+//  ListItem.swift
 //  
 //
 //  Created by Andryusina Nataly on 06.03.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ItemForList: Hashable {
+public enum ListItem: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         

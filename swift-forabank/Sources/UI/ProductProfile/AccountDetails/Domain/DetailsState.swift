@@ -9,11 +9,11 @@ import Foundation
 
 public struct DetailsState: Equatable {
     
-    public let items: [ItemForList]
+    public let items: [ListItem]
     public var event: DetailsEvent?
     
     public init(
-        items: [ItemForList],
+        items: [ListItem],
         event: DetailsEvent? = nil
     ) {
         self.items = items
