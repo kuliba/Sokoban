@@ -9,6 +9,7 @@ import ForaTools
 import SwiftUI
 import XCTest
 
+#if os(iOS)
 final class Image_extTests: XCTestCase {
     
     func test_init_shouldFailForInvalidSVGString() {
@@ -22,3 +23,4 @@ final class Image_extTests: XCTestCase {
     
     // TODO: add tests
 }
+#endif
