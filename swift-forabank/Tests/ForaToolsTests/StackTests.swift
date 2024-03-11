@@ -1,5 +1,5 @@
 //
-//  NonEmptyStackTests.swift
+//  StackTests.swift
 //
 //
 //  Created by Igor Malyarov on 05.03.2024.
@@ -8,16 +8,73 @@
 import ForaTools
 import XCTest
 
-final class NonEmptyStackTests: XCTestCase {
+final class StackTests: XCTestCase {
     
-    func test_pop_shouldDeliverFirstElement() {
+    func test_init_withOneElement() {
+        
+        let first = Item()
+        let sut = SUT(first)
+        
+        XCTAssertNoDiff(sut.peek(), first)
+    }
+    
+    func test_init_withTwoElements() {
+        
+        let first = Item()
+        let second = Item()
+        var sut = SUT(first, second)
+        
+        XCTAssertNoDiff(sut.pop(), second)
+        XCTAssertNoDiff(sut.pop(), first)
+        
+        XCTAssertNotEqual(first, second)
+    }
+    
+    func test_init_withArrayOfOne() {
+        
+        let first = Item()
+        var sut = SUT([first])
+        
+        XCTAssertNoDiff(sut.pop(), first)
+    }
+    
+    func test_init_withArray() {
+        
+        let first = Item()
+        let second = Item()
+        var sut = SUT([first, second])
+        
+        XCTAssertNoDiff(sut.pop(), second)
+        XCTAssertNoDiff(sut.pop(), first)
+        
+        XCTAssertNotEqual(first, second)
+    }
+    
+    func test_stackEquality() {
+        
+        let firstItem = Item()
+        let secondItem = Item()
+        
+        let first = SUT(firstItem, secondItem)
+        let second = SUT([firstItem, secondItem])
+        
+        XCTAssertNoDiff(first, second)
+    }
+    
+    func test_pop_shouldDeliverNilOnEmpty() {
+        
+        var sut = makeSUT()
+        
+        XCTAssertNil(sut.pop())
+    }
+    
+    func test_pop_shouldRemoveLastElement() {
         
         let first = Item()
         var sut = makeSUT(first)
         
         XCTAssertNoDiff(sut.pop(), first)
-        XCTAssertNoDiff(sut.pop(), first)
-        XCTAssertNoDiff(sut.pop(), first)
+        XCTAssertNil(sut.pop())
     }
     
     func test_pop_shouldDeliverLastElement() {
@@ -42,9 +99,12 @@ final class NonEmptyStackTests: XCTestCase {
     
     func test_peek_shouldDeliverLastElement() {
         
+        var sut = makeSUT()
+        XCTAssertNil(sut.pop())
+
         let first = Item()
-        var sut = makeSUT(first)
-        XCTAssertNoDiff(sut.pop(), first)
+        sut.push(first)
+        XCTAssertNoDiff(sut.peek(), first)
         
         let second = Item()
         sut.push(second)
@@ -61,8 +121,11 @@ final class NonEmptyStackTests: XCTestCase {
     
     func test_top_shouldDeliverLastElement() {
         
+        var sut = makeSUT()
+        XCTAssertNoDiff(sut.top, nil)
+        
         let first = Item()
-        var sut = makeSUT(first)
+        sut.push(first)
         XCTAssertNoDiff(sut.top, first)
         
         let second = Item()
@@ -80,7 +143,7 @@ final class NonEmptyStackTests: XCTestCase {
         XCTAssertNoDiff(sut.top, first)
 
         sut.pop()
-        XCTAssertNoDiff(sut.top, first)
+        XCTAssertNil(sut.pop())
     }
     
     func test_top_set_shouldChangeFirstElement() {
@@ -93,6 +156,7 @@ final class NonEmptyStackTests: XCTestCase {
         
         let new = Item()
         sut.top = new
+        
         XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
@@ -109,12 +173,45 @@ final class NonEmptyStackTests: XCTestCase {
                 
         let new = Item()
         sut.top = new
+        
         XCTAssertNoDiff(sut.top, new)
         XCTAssertNoDiff(sut.pop(), new)
         
         XCTAssertNotEqual(first, second)
         XCTAssertNotEqual(first, new)
         XCTAssertNotEqual(second, new)
+    }
+    
+    func test_top_set_shouldNotChangeEmptyOnNil() {
+        
+        let initial = makeSUT()
+        var sut = initial
+        
+        sut.top = nil
+        
+        XCTAssertNoDiff(sut, initial)
+    }
+    
+    func test_top_set_shouldEmptyStackOfOneOnNil() {
+        
+        let first = Item()
+        var sut = makeSUT(first)
+        
+        sut.top = nil
+        
+        XCTAssert(sut.isEmpty)
+    }
+    
+    func test_top_set_shouldRemoveLastElementOnNil() {
+        
+        let first = Item()
+        let second = Item()
+        var sut = makeSUT(first, second)
+        
+        sut.top = nil
+        
+        XCTAssertNoDiff(sut.top, first)
+        XCTAssertNotEqual(first, second)
     }
     
     func test_count_shouldDeliverNumberOfElement() {
@@ -138,13 +235,16 @@ final class NonEmptyStackTests: XCTestCase {
         XCTAssertEqual(sut.count, 1)
         
         sut.pop()
-        XCTAssertEqual(sut.count, 1)
+        XCTAssertNil(sut.pop())
     }
     
-    func test_isEmpty_shouldDeliverFalse() {
+    func test_isEmpty_shouldDeliverFalseOnEmptyStack() {
         
+        var sut = makeSUT()
+        XCTAssert(sut.isEmpty)
+
         let first = Item()
-        var sut = makeSUT(first)
+        sut.push(first)
         XCTAssertFalse(sut.isEmpty)
         
         let second = Item()
@@ -155,19 +255,19 @@ final class NonEmptyStackTests: XCTestCase {
         sut.push(last)
         XCTAssertFalse(sut.isEmpty)
         
-        sut.pop()
+        XCTAssertNoDiff(sut.pop(), last)
         XCTAssertFalse(sut.isEmpty)
         
-        sut.pop()
+        XCTAssertNoDiff(sut.pop(), second)
         XCTAssertFalse(sut.isEmpty)
         
-        sut.pop()
-        XCTAssertFalse(sut.isEmpty)
+        XCTAssertNoDiff(sut.pop(), first)
+        XCTAssert(sut.isEmpty)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = NonEmptyStack<Item>
+    private typealias SUT = Stack<Item>
     
     private struct Item: Equatable {
         
@@ -180,12 +280,23 @@ final class NonEmptyStackTests: XCTestCase {
     }
     
     private func makeSUT(
-        _ item: Item,
+        _ items: Item...,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(item)
+        let sut = SUT(items)
+        
+        return sut
+    }
+    
+    private func makeSUT(
+        _ items: [Item],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let sut = SUT(items)
         
         return sut
     }
