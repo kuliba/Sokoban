@@ -38,15 +38,15 @@ public extension Stack {
         
         set(newValue) {
             
-            if elements.endIndex > 0 {
+            if elements.isEmpty {
+                if let newValue {
+                    elements = [newValue]
+                }
+            } else {
                 if let newValue {
                     elements[elements.endIndex - 1] = newValue
                 } else {
                     elements.removeLast()
-                }
-            } else {
-                if let newValue {
-                    elements = [newValue]
                 }
             }
         }
