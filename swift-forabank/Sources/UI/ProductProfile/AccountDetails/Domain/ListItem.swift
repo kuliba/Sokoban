@@ -9,16 +9,6 @@ import Foundation
 
 public enum ListItem: Hashable {
     
-    public func hash(into hasher: inout Hasher) {
-        
-        switch self {
-        case let .single(item):
-            hasher.combine(item)
-        case let .multiple(items):
-            hasher.combine(items)
-        }
-    }
-    
     case single(Detail)
     case multiple([Detail])
     

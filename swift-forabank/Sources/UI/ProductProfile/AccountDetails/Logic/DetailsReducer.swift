@@ -27,7 +27,6 @@ public extension DetailsReducer {
             
         case let .itemTapped(tap):
             switch tap {
-                
             case let .longPress(valueForCopy, text):
                 state.updateEvent(.itemTapped(.longPress(valueForCopy, text)))
                 

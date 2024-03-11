@@ -23,7 +23,7 @@ public struct DocumentItem {
         self.valueForCopy = valueForCopy
     }
     
-    public enum ID {
+    public enum ID: Hashable {
         
         case accountNumber
         case bic
