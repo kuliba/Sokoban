@@ -8,5 +8,7 @@
 import Foundation
 
 enum NameEvent {
-    case changeState
+    
+    case collapse
+    case expanded
 }

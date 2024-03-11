@@ -11,8 +11,8 @@ struct NameView: View {
     
     let state: NameViewState
     @State private var text: String = ""
-    let nameEvent: (NameEvent) -> Void
-    let config: InputView.InputConfigView
+    let event: (NameEvent) -> Void
+    let config: InputView.Config
     
     var body: some View {
         
@@ -20,11 +20,11 @@ struct NameView: View {
         case .collapse:
             
             fieldView(
-                title: FieldTitle.general.rawValue,
-                placeholder: FieldPlaceholder.general.rawValue,
+                FieldTitle.general.rawValue,
+                FieldPlaceholder.general.rawValue,
                 collapseButton: true
             )
-            .background(Color.gray.opacity(0.1))
+            .background(config.backgroundColor)
             .cornerRadius(12)
             
         case .expended:
@@ -32,40 +32,40 @@ struct NameView: View {
             VStack {
                 
                 fieldView(
-                    title: FieldTitle.surname.rawValue,
-                    placeholder: FieldPlaceholder.surname.rawValue,
+                    FieldTitle.surname.rawValue,
+                    FieldPlaceholder.surname.rawValue,
                     collapseButton: true
                 )
                 
                 fieldView(
-                    title: FieldTitle.name.rawValue,
-                    placeholder: FieldPlaceholder.name.rawValue,
+                    FieldTitle.name.rawValue,
+                    FieldPlaceholder.name.rawValue,
                     collapseButton: false
                 )
                 
                 fieldView(
-                    title: FieldTitle.patronymic.rawValue,
-                    placeholder: FieldPlaceholder.patronymic.rawValue,
+                    FieldTitle.patronymic.rawValue,
+                    FieldPlaceholder.patronymic.rawValue,
                     collapseButton: false
                 )
             }
-            .background(Color.gray.opacity(0.1))
+            .background(config.backgroundColor)
             .cornerRadius(12)
         }
     }
     
     private func fieldView(
-        title: String,
-        placeholder: String,
+        _ title: String,
+        _ placeholder: String,
         collapseButton: Bool
     ) -> some View {
         
         HStack {
             
             InputView(
-                inputState: .init(image: { .init(systemName: "person") }),
-                inputEvent: { event in },
-                config: setupConfig(title: title, placeholder: placeholder)
+                state: .init(image: { .init(systemName: "person") }),
+                event: { event in },
+                config: setupConfig(title, placeholder)
             )
             
             if collapseButton {
@@ -77,7 +77,6 @@ struct NameView: View {
                         Image(systemName: "chevron.up")
                             .foregroundColor(Color.gray.opacity(0.7))
                     })
-                
             }
         }
         .padding(.trailing, 16)
@@ -103,9 +102,9 @@ private extension NameView {
     }
     
     private func setupConfig(
-        title: String,
-        placeholder: String
-    ) ->  InputView.InputConfigView {
+        _ title: String,
+        _ placeholder: String
+    ) ->  InputView.Config {
         
         .init(
             title: title,
@@ -122,6 +121,22 @@ private extension NameView {
     }
 }
 
+private extension InputView.Config {
+    
+    static let preview: Self = .init(
+        title: "title",
+        titleFont: .system(size: 12),
+        titleColor: .gray.opacity(0.8),
+        textFieldFont: .system(size: 14),
+        placeholder: "placeholder",
+        hint: nil,
+        hintFont: .system(size: 10),
+        hintColor: .gray.opacity(0.7),
+        backgroundColor: .clear,
+        imageSize: .small
+    )
+}
+
 struct NameView_Previews: PreviewProvider {
     static var previews: some View {
         
@@ -131,36 +146,14 @@ struct NameView_Previews: PreviewProvider {
                 
                 NameView(
                     state: .init(state: .collapse),
-                    nameEvent: { state in },
-                    config: .init(
-                        title: "title",
-                        titleFont: .system(size: 12),
-                        titleColor: .gray.opacity(0.8),
-                        textFieldFont: .system(size: 14),
-                        placeholder: "placeholder",
-                        hint: nil,
-                        hintFont: .system(size: 10),
-                        hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear,
-                        imageSize: .small
-                    )
+                    event: { state in },
+                    config: .preview
                 )
                 
                 NameView(
                     state: .init(state: .expended),
-                    nameEvent: { state in },
-                    config: .init(
-                        title: "title",
-                        titleFont: .system(size: 12),
-                        titleColor: .gray.opacity(0.8),
-                        textFieldFont: .system(size: 14),
-                        placeholder: "placeholder",
-                        hint: nil,
-                        hintFont: .system(size: 10),
-                        hintColor: .gray.opacity(0.7),
-                        backgroundColor: .clear,
-                        imageSize: .small
-                    )
+                    event: { state in },
+                    config: .preview
                 )
             }
         }
