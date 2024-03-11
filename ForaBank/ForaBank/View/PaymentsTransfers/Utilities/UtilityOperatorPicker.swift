@@ -60,7 +60,7 @@ struct UtilityOperatorPicker: View {
     
     private func failureView() -> some View {
         return OperatorsListComponents.FooterView(
-            state: .failure(.preview),
+            state: .failure(.failure),
             event: { events in event(.addCompany) },
             config: .iFora
         )
@@ -69,7 +69,7 @@ struct UtilityOperatorPicker: View {
     private func footerView() -> some View {
         
         OperatorsListComponents.FooterView(
-            state: .footer(.preview),
+            state: .footer(.footer),
             event: { events in
                 switch events {
                 case .payByInstruction:
@@ -135,7 +135,7 @@ private extension OperatorView.OperatorViewConfig {
 
 private extension OperatorsListComponents.FooterState.Footer {
         
-    static let preview: Self = .init(
+    static let footer: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
         subtitle: "Сообщите нам, и мы подключим новую организацию"
@@ -144,7 +144,7 @@ private extension OperatorsListComponents.FooterState.Footer {
 
 private extension OperatorsListComponents.FooterState.Failure {
 
-    static let preview: Self = .init(
+    static let failure: Self = .init(
         image: .init(systemName: "photo.artframe"),
         description: "Что-то пошло не так.\nПопробуйте позже."
     )
