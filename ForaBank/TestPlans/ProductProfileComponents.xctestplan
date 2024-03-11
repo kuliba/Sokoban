@@ -39,6 +39,13 @@
         "identifier" : "AccountInfoPanelTests",
         "name" : "AccountInfoPanelTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
     }
   ],
   "version" : 1
