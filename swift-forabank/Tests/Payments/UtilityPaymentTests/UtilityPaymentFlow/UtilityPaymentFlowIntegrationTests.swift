@@ -24,17 +24,25 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_loadFailureFlow() {
         
-        let (sut, spy, loadLastPayments, loadOperators, _, _) = makeSUT()
+        let initialState = State([])
+        let (sut, spy, loadLastPayments, loadOperators, _, _) = makeSUT(initialState: initialState)
         
         sut.event(.prePaymentOptions(.initiate))
         loadLastPayments.complete(with: .failure(.connectivityError))
         loadOperators.complete(with: .failure(.connectivityError))
         
-        XCTAssertNoDiff(spy.values, [
-            .init([]),
-            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
-            .init([.prePaymentOptions(.init(isInflight: false))], status: nil),
-        ])
+        assert(
+            spy,
+            initialState, {
+                $0 = initialState
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: true))
+                $0.status = .inflight
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: false))
+                $0.status = nil
+            }
+        )
     }
     
     func test_scrollFlow() {
@@ -42,7 +50,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         let lastPayments = [makeLastPayment()]
         let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
-        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
         
         sut.event(.prePaymentOptions(.initiate))
         loadLastPayments.complete(with: .success(lastPayments))
@@ -58,6 +66,148 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, isInflight: false))], status: nil),
             .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators + newPage, isInflight: false))], status: nil),
         ])
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    isInflight: true
+                ))
+                $0.status = .inflight
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    lastPayments: lastPayments,
+                    operators: operators,
+                    isInflight: false
+                ))
+                $0.status = nil
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    lastPayments: lastPayments,
+                    operators: operators + newPage,
+                    isInflight: false
+                ))
+                $0.status = nil
+            }
+        )
+    }
+    
+    func test_searchFlow() {
+        
+        let lastPayments = [makeLastPayment()]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePaymentOptions(.search(.entered("abc"))))
+#warning("FIX SEARCH!")
+        // let found = [makeOperator(), makeOperator()]
+        // loadOperators.complete(with: .success(found), at: 1)
+        
+        XCTAssertNoDiff(spy.values, [
+            .init([]),
+            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
+            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, isInflight: false))], status: nil),
+            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, searchText: "abc", isInflight: false))], status: nil),
+            //  .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: found, isInflight: false))], status: nil),
+        ])
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    isInflight: true
+                ))
+                $0.status = .inflight
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    lastPayments: lastPayments,
+                    operators: operators,
+                    isInflight: false
+                ))
+                $0.status = nil
+            }, {
+                $0.current = .prePaymentOptions(.init(
+                    lastPayments: lastPayments,
+                    operators: operators,
+                    searchText: "abc",
+                    isInflight: false
+                ))
+                $0.status = nil
+            }
+        )
+    }
+    
+    func test_flow() {
+        
+        let lastPayment = makeLastPayment()
+        let lastPayments = [lastPayment]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let serverErrorMessage = anyMessage()
+        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePayment(.payByInstruction))
+        sut.event(.back)
+        
+        sut.event(.prePayment(.scan))
+        sut.event(.back)
+        
+        sut.event(.prePayment(.select(.last(lastPayment))))
+
+#warning("add payment flow")
+        
+        let ppo = State.Flow.prePaymentOptions(.init(
+            lastPayments: lastPayments,
+            operators: operators,
+            isInflight: false
+        ))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init([]),
+            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
+            .init([ppo]),
+            .init([ppo, .prePaymentState(.payingByInstruction)]),
+            .init([ppo]),
+            .init([ppo, .prePaymentState(.scanning)]),
+            .init([ppo]),
+            .init([ppo], status: .inflight),
+        ])
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: true))
+                $0.status = .inflight
+            }, {
+                $0.current = ppo
+                $0.status = nil
+            }, {
+                $0.push(.prePaymentState(.payingByInstruction))
+            }, {
+                $0 = .init([ppo])
+            }, {
+                $0.push(.prePaymentState(.scanning))
+            }, {
+                $0 = .init([ppo])
+            }, {
+                $0.status = .inflight
+            }
+        )
     }
     
     // MARK: - Helpers
@@ -70,6 +220,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     private typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias StateSpy = ValueSpy<State>
     
     private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
     
@@ -91,7 +242,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: ValueSpy<State>,
+        spy: StateSpy,
         loadLastPayments: LoadLastPaymentsSpy,
         loadOperators: LoadOperatorsSpy,
         loadServices: LoadServicesSpy,
@@ -109,7 +260,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         let loadOperators = LoadOperatorsSpy()
         let ppoEffectHandler = PPOEffectHandler(
             loadLastPayments: loadLastPayments.process,
-            loadOperators: loadOperators.process
+            loadOperators: loadOperators.process,
+            scheduler: .immediate
         )
         
         let loadServices = LoadServicesSpy()
@@ -131,7 +283,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             scheduler: .immediate
         )
         
-        let spy = ValueSpy(sut.$state)
+        let spy = StateSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
@@ -141,5 +293,24 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         trackForMemoryLeaks(startPayment, file: file, line: line)
         
         return (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment)
+    }
+    
+    private func assert(
+        _ spy: StateSpy,
+        _ initialState: State,
+        _ updates: ((inout State) -> Void)...,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var state = initialState
+        var values = [State]()
+        
+        for update in updates {
+            
+            update(&state)
+            values.append(state)
+        }
+        
+        XCTAssertNoDiff(spy.values, values, file: file, line: line)
     }
 }
