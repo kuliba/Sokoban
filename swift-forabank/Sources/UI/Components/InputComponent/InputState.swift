@@ -10,4 +10,10 @@ import SwiftUI
 public struct InputState {
 
     let image: () -> Image
+    
+    public init(
+        image: @escaping () -> Image
+    ) {
+        self.image = image
+    }
 }

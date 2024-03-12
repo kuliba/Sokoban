@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InputComponent
 
 struct NameView: View {
     

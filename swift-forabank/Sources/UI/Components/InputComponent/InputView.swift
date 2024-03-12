@@ -7,14 +7,24 @@
 
 import SwiftUI
 
-struct InputView: View {
+public struct InputView: View {
     
     @State private var text: String = ""
     let state: InputState
     let event: (InputEvent) -> Void
     let config: Config
     
-    var body: some View {
+    public init(
+        state: InputState,
+        event: @escaping (InputEvent) -> Void,
+        config: InputView.Config
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: 4) {
             
@@ -53,25 +63,49 @@ struct InputView: View {
         .cornerRadius(12)
     }
     
-    struct Config {
+    public struct Config {
         
-        let title: String
-        let titleFont: Font
-        let titleColor: Color
+        public let title: String
+        public let titleFont: Font
+        public let titleColor: Color
         
-        let textFieldFont: Font
+        public let textFieldFont: Font
         
-        let placeholder: String
+        public let placeholder: String
         
-        let hint: String?
-        let hintFont: Font
-        let hintColor: Color
+        public let hint: String?
+        public let hintFont: Font
+        public let hintColor: Color
         
-        let backgroundColor: Color
+        public let backgroundColor: Color
         
-        let imageSize: ImageSize
+        public let imageSize: ImageSize
         
-        enum ImageSize: CGFloat {
+        public init(
+            title: String,
+            titleFont: Font,
+            titleColor: Color,
+            textFieldFont: Font,
+            placeholder: String,
+            hint: String? = nil,
+            hintFont: Font,
+            hintColor: Color,
+            backgroundColor: Color,
+            imageSize: InputView.Config.ImageSize
+        ) {
+            self.title = title
+            self.titleFont = titleFont
+            self.titleColor = titleColor
+            self.textFieldFont = textFieldFont
+            self.placeholder = placeholder
+            self.hint = hint
+            self.hintFont = hintFont
+            self.hintColor = hintColor
+            self.backgroundColor = backgroundColor
+            self.imageSize = imageSize
+        }
+        
+        public enum ImageSize: CGFloat {
             
             case small = 24
             case large = 32
