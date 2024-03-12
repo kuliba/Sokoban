@@ -482,11 +482,35 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
         
-        let (state, effect1) = sut.reduce(initialState, .prePayment(.payByInstruction))
-        let (_, effect2) = sut.reduce(state, .back)
+        let (state, firstEffect) = sut.reduce(initialState, .prePayment(.payByInstruction))
+        let (_, lastEffect) = sut.reduce(state, .back)
         
-        XCTAssertNil(effect1)
-        XCTAssertNil(effect2)
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
+    
+    func test_scan_back_shouldRevertStateToInitialPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        
+        let (state, _) = sut.reduce(initialState, .prePayment(.scan))
+        let (final, _) = sut.reduce(state, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_scan_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        
+        let (state, firstEffect) = sut.reduce(initialState, .prePayment(.scan))
+        let (_, lastEffect) = sut.reduce(state, .back)
+        
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
     }
     
     // MARK: - payByInstruction
@@ -596,7 +620,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         assertState(.prePayment(.scan), on: state) {
             
-            $0.current = .prePaymentState(.scanning)
+            $0.push(.prePaymentState(.scanning))
         }
     }
     

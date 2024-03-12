@@ -135,7 +135,7 @@ private extension UtilityPaymentFlowReducer {
                 state.push(.prePaymentState(.payingByInstruction))
                 
             case .scan:
-                state.current = .prePaymentState(.scanning)
+                state.push(.prePaymentState(.scanning))
                 
             case let .select(select):
                 state.isInflight = true
