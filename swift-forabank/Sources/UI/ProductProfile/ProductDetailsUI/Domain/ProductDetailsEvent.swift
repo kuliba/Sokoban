@@ -11,4 +11,7 @@ public enum ProductDetailsEvent: Equatable {
     
     case appear
     case itemTapped(ProductDetailEvent)
+    case share
+    case sendAll
+    case sendSelect
 }

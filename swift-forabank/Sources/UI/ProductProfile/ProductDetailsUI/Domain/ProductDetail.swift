@@ -30,6 +30,7 @@ public struct ProductDetail: Equatable, Hashable {
 public enum ProductDetailEvent: Equatable, Hashable {
     case longPress(ValueForCopy, TextForInformer)
     case iconTap(DocumentItem.ID)
+    case share
 }
 
 public extension ProductDetailEvent {

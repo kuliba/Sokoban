@@ -16,6 +16,8 @@ extension ProductProfileViewModel {
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
     typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
+
 
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
@@ -23,6 +25,7 @@ extension ProductProfileViewModel {
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
         accountDetails: [ListItem],
+        detailsSheetButtons: [ProductDetailsSheetState.PanelButton],
         cardDetails: [ListItem],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
@@ -117,6 +120,23 @@ extension ProductProfileViewModel {
             )
         }
         
+        let sheetReduce = ProductDetailsSheetReducer().reduce(_:_:)
+        
+        let sheetHandleEffect = ProductDetailsSheetEffectHandler().handleEffect(_:_:)
+        
+        let makeDetailsSheetViewModel: MakeProductDetailsSheetViewModel =  {
+            
+            .init(
+                initialState: .init(
+                    buttons: detailsSheetButtons
+                ),
+                reduce: sheetReduce,
+                handleEffect: sheetHandleEffect,
+                scheduler: $0
+            )
+        }
+
+        
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -133,6 +153,7 @@ extension ProductProfileViewModel {
                 accountDetails: accountDetailsAction,
                 accountStatement: accountStatementAction),
             makeProductDetailsViewModel: makeDetailsViewModel,
+            makeProductDetailsSheetViewModel: makeDetailsSheetViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)
         

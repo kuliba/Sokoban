@@ -18,7 +18,7 @@ struct ProductDetailsView: View {
     @Binding var showCheckbox: Bool
     // TODO: paddings & etc -> Config
     var body: some View {
-     
+        
         ScrollView(.vertical, showsIndicators: false) {
             
             VStack {
@@ -38,24 +38,27 @@ struct ProductDetailsView: View {
                     title: "Реквизиты карты",
                     items: cardDetails
                 )
-                // TODO: add action
-                Button(action: {  }) {
-                    
-                    ZStack {
-                        
-                        Rectangle()
-                            .fill(config.colors.fill)
-                            .cornerRadius(12)
-                        
-                        Text("Поделиться")
-                    }
-                    .frame(height: 56)
-                    .frame(maxWidth: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-                .padding(.horizontal, 16)
             }
         }
+        
+        Button(action: {
+            event(.share)
+        }) {
+            
+            ZStack {
+                
+                Rectangle()
+                    .fill(config.colors.fill)
+                    .cornerRadius(12)
+                
+                Text("Поделиться")
+            }
+            .frame(height: 56)
+            .frame(maxWidth: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .padding(.horizontal, 16)
+
     }
     
     private func noAccountDetails() -> some View {
@@ -182,7 +185,7 @@ struct ProductDetailsView_Previews: PreviewProvider {
                 cardDetails: .cardItems,
                 event: { print($0) },
                 config: .preview,
-                isCheck: $falseValue, 
+                isCheck: $falseValue,
                 showCheckbox: $falseValue
             )
             ProductDetailsView(

@@ -43,6 +43,8 @@ public extension ProductProfileNavigationReducer {
                 effect = .create(.productDetails)
             case .topUpCard:
                 effect = .create(.topUpCard)
+            case .share:
+                effect = .create(.share)
             }
         case .dismissDestination:
             state.modal = nil
@@ -55,9 +57,12 @@ public extension ProductProfileNavigationReducer {
             case let .cardGuardianRoute(route):
                 state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
             case let .productDetailsRoute(route):
-                state.modal = .productDetails( .init(route.viewModel, route.cancellable))
+                state.modal = nil
+                state.destination = .init(route.viewModel, route.cancellable)
             case let .topUpCardRoute(route):
-                state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
+                state.modal = .topUpCard(.init(route.viewModel, route.cancellable))
+            case let .productDetailsSheetRoute(route):
+                state.modal = .share(.init(route.viewModel, route.cancellable))
             }
         case let .accountInfoPanelInput(accountInfoPanelInput):
             (state, effect) = reduce(state, accountInfoPanelInput)
@@ -69,6 +74,8 @@ public extension ProductProfileNavigationReducer {
             (state, effect) = reduce(state, topUpCardInput)
 
         case let .productProfile(event):
+            (state, effect) = reduce(state, event)
+        case let .productDetailsSheetInput(event):
             (state, effect) = reduce(state, event)
         }
         return (state, effect)
@@ -187,7 +194,7 @@ private extension ProductProfileNavigationReducer {
     
     func reduce(
         _ state: State,
-        _ topUpCardInput: ProductDetailsStateProjection
+        _ input: ProductDetailsSheetStateProjection
     ) -> (State, Effect?) {
         
         var state = state
@@ -195,7 +202,42 @@ private extension ProductProfileNavigationReducer {
         
         state.alert = nil
         
-        switch topUpCardInput {
+        switch input {
+        
+        case .appear:
+            break
+        case let .buttonTapped(tap):
+            switch tap {
+                
+            case .sendAll:
+                state.modal = nil
+                state.destination?.viewModel.event(.sendAll)
+                effect = .productProfile(.shareTap)
+
+            case .sendSelect:
+                state.modal = nil
+                state.destination?.viewModel.event(.sendSelect)
+                effect = .productProfile(.shareTap)
+            }
+        }
+        
+        return (state, effect)
+    }
+}
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ input: ProductDetailsStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.alert = nil
+        
+        switch input {
         
         case .appear:
             break
@@ -207,7 +249,16 @@ private extension ProductProfileNavigationReducer {
 
             case let .longPress(valueForCopy, textForInformer):
                 effect = .productProfile(.productDetailsItemlongPress(valueForCopy, textForInformer))
+                
+            case .share:
+                effect = .create(.share)
             }
+        case .share:
+            effect = .create(.share)
+        case .sendAll:
+            effect = .productProfile(.sendAll)
+        case .sendSelect:
+            effect = .productProfile(.sendSelect)
         }
         
         return (state, effect)

@@ -46,6 +46,13 @@ struct ProductDetailsView: View {
             ),
             content: destinationView
         )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            destination: destinationView
+        )
     }
     
     private func destinationView(
@@ -56,6 +63,34 @@ struct ProductDetailsView: View {
             viewModel: route.viewModel,
             config: .preview
         )
+        .sheet(
+            item: .init(
+                get: {
+                    if case let .share(route) = state.modal {
+                        return route
+                    } else { return nil }
+                },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            content: sheetView
+        )
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                    Text("Реквизиты счета и карты").font(.headline)
+            }
+        }
+    }
+    
+    private func sheetView(
+        route: ProductProfileNavigation.State.ProductDetailsSheetRoute
+    ) -> some View {
+        
+        ProductDetailsSheetWrappedView(
+            viewModel: route.viewModel,
+            config: .preview
+        )
+        .presentationDetents([.height(374)])
     }
 }
 

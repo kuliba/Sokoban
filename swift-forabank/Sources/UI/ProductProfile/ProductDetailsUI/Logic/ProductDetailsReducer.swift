@@ -32,7 +32,18 @@ public extension ProductDetailsReducer {
                 
             case let .iconTap(itemId):
                 state.event = .itemTapped(.iconTap(itemId))
+                
+            case .share:
+                state.event = .share
             }
+        case .share:
+            //// ???
+            print("share")
+        case .sendAll:
+            state.event = .sendAll
+        case .sendSelect:
+            state.event = .sendSelect
+
         }
         
         return (state, .none)

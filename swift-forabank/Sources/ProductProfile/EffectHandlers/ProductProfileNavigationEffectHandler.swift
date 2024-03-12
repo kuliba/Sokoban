@@ -21,6 +21,7 @@ public final class ProductProfileNavigationEffectHandler {
     private let accountInfoPanelActions: AccountInfoPanelActions
 
     private let makeProductDetailsViewModel: MakeProductDetailsViewModel
+    private let makeProductDetailsSheetViewModel: MakeProductDetailsSheetViewModel
 
     private let scheduler: AnySchedulerOfDispatchQueue
     
@@ -32,6 +33,7 @@ public final class ProductProfileNavigationEffectHandler {
         makeAccountInfoPanelViewModel: @escaping MakeAccountInfoPanelViewModel,
         accountInfoPanelActions: AccountInfoPanelActions,
         makeProductDetailsViewModel: @escaping MakeProductDetailsViewModel,
+        makeProductDetailsSheetViewModel: @escaping MakeProductDetailsSheetViewModel,
         scheduler: AnySchedulerOfDispatchQueue
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
@@ -41,6 +43,7 @@ public final class ProductProfileNavigationEffectHandler {
         self.makeAccountInfoPanelViewModel = makeAccountInfoPanelViewModel
         self.accountInfoPanelActions = accountInfoPanelActions
         self.makeProductDetailsViewModel = makeProductDetailsViewModel
+        self.makeProductDetailsSheetViewModel = makeProductDetailsSheetViewModel
         self.scheduler = scheduler
     }
 }
@@ -118,6 +121,8 @@ public extension ProductProfileNavigationEffectHandler {
                 dispatch(makeDestinationDetails(dispatch))
             case .topUpCard:
                 dispatch(makeDestinationTopUpCard(dispatch))
+            case .share:
+                dispatch(makeDestinationProductDetailsSheet(dispatch))
             }
         case let .productProfile(effect):
             // fire and forget
@@ -153,6 +158,12 @@ public extension ProductProfileNavigationEffectHandler {
             print("copy: \(valueForCopy) - informer: \(textForInformer)")
         case let .productDetailsIconTap(documentId):
             print("documentId - \(documentId)")
+        case .shareTap:
+            print("shareTap")
+        case .sendAll:
+            print("sendAll")
+        case .sendSelect:
+            print("sendSelect")
         }
     }
 }
@@ -233,6 +244,26 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
+private extension ProductProfileNavigationEffectHandler {
+    
+    func makeDestinationProductDetailsSheet(
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let productDetailsSheetViewModel = makeProductDetailsSheetViewModel(scheduler)
+        let cancellable = productDetailsSheetViewModel.$state
+            .dropFirst()
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.productDetailsSheetInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .open(.productDetailsSheetRoute(.init(productDetailsSheetViewModel, cancellable)))
+    }
+}
+
+
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -256,6 +287,7 @@ public extension ProductProfileNavigationEffectHandler {
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
     typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
 }
 
 // MARK: - CardGuardian
@@ -339,6 +371,12 @@ private extension ProductDetailsState {
             return .itemTapped(tap)
         case .appear:
             return .appear
+        case .share:
+            return .share
+        case .sendAll:
+            return .sendAll
+        case .sendSelect:
+            return .sendSelect
         }
     }
 }
@@ -346,4 +384,28 @@ private extension ProductDetailsState {
 public enum ProductDetailsStateProjection: Equatable {
     case appear
     case itemTapped(ProductDetailEvent)
+    case share
+    case sendAll
+    case sendSelect
+}
+
+private extension ProductDetailsSheetState {
+    
+    var projection: ProductDetailsSheetStateProjection? {
+        
+        switch self.event {
+            
+        case .none:
+            return .none
+        case let .buttonTapped(tap):
+            return .buttonTapped(tap)
+        case .appear:
+            return .appear
+        }
+    }
+}
+
+public enum ProductDetailsSheetStateProjection: Equatable {
+    case appear
+    case buttonTapped(SheetButtonEvent)
 }
