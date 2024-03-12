@@ -9,16 +9,16 @@ import ForaTools
 
 public struct UtilityPaymentFlowState<LastPayment, Operator, Service> {
     
-    public var isInflight: Bool
+    public var status: Status?
     
     private var stack: Stack<Flow>
     
     public init(
         _ flows: [Flow],
-        isInflight: Bool = false
+        status: Status? = nil
     ) {
         self.stack = .init(flows)
-        self.isInflight = isInflight
+        self.status = status
     }
 }
 
@@ -30,6 +30,12 @@ public extension UtilityPaymentFlowState {
         set { stack.top = newValue }
     }
     
+    var isInflight: Bool {
+        
+        get { status == .inflight }
+        set { if newValue { status = .inflight }}
+    }
+    
     mutating func push(_ flow: Flow) {
         
         stack.push(flow)
@@ -37,6 +43,12 @@ public extension UtilityPaymentFlowState {
 }
 
 public extension UtilityPaymentFlowState {
+    
+    enum Status: Equatable {
+        
+        case inflight
+        case failure(ServiceFailure)
+    }
     
     typealias Flow = UtilityPaymentFlow<LastPayment, Operator, Service>
 }

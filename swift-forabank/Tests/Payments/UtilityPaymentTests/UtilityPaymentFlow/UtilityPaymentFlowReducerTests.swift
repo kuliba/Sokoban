@@ -297,7 +297,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         assertState(sut: sut, event, on: state) {
             
-            $0 = self.makeState(.prePaymentOptions(ppoStateStub), isInflight: true)
+            $0 = .init([.prePaymentOptions(ppoStateStub)], status: .inflight)
         }
     }
         
@@ -932,18 +932,18 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     private func makeState(
         _ flows: Flow...,
-        isInflight: Bool = false
+        status: State.Status? = nil
     ) -> State {
         
-        .init(flows, isInflight: isInflight)
+        .init(flows, status: status)
     }
     
     private func makeState(
         flows: [Flow],
-        isInflight: Bool = false
+        status: State.Status? = nil
     ) -> State {
         
-        .init(flows, isInflight: isInflight)
+        .init(flows, status: status)
     }
     
     private func selectLastPayment(
