@@ -41,6 +41,10 @@ extension PaymentsTransfersState {
                 case let .services(services):
                     return nil
                 }
+                
+                
+            case .payment:
+                fatalError()
             }
         }
     }

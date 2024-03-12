@@ -11,6 +11,7 @@ public enum UtilityPaymentFlow<LastPayment, Operator, Service> {
     
     case prePaymentOptions(PrePaymentOptions)
     case prePaymentState(PrePayment)
+    case payment
 }
 
 public extension UtilityPaymentFlow {

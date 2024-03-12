@@ -688,6 +688,27 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
         
+        assert(event, on: prePaymentOptionsState, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldChangePrePaymentOptionsState_success() {
+        
+        let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
+        
+        assertState(event, on: prePaymentOptionsState) {
+            
+            $0.push(.payment)
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_success() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
+        
         assert(event, on: initialState, effect: nil)
     }
     
@@ -729,6 +750,27 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let prePaymentState = makeState(makeSelectingServicesState())
         let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
+        
+        assert(event, on: prePaymentState, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldChangePrePaymentState_success() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
+        
+        assertState(event, on: prePaymentState) {
+            
+            $0.push(.payment)
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentState_success() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assert(event, on: prePaymentState, effect: nil)
     }

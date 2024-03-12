@@ -95,6 +95,9 @@ private extension UtilityPaymentFlowReducer {
             
         case .prePaymentState:
             break
+            
+        case .payment:
+            fatalError()
         }
         
         return (state, effect)
@@ -147,7 +150,7 @@ private extension UtilityPaymentFlowReducer {
                     state.status = .failure(serviceFailure)
                     
                 case let .success(response):
-                    break
+                    state.push(.payment)
                 }
             }
             
@@ -168,9 +171,12 @@ private extension UtilityPaymentFlowReducer {
                     state.status = .failure(serviceFailure)
                     
                 case let .success(response):
-                    break
+                    state.push(.payment)
                 }
             }
+            
+        case .payment:
+            fatalError()
         }
         
         return (state, effect)
