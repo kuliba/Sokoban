@@ -192,10 +192,4 @@ struct PushButtonStyle: ButtonStyle {
 extension NewProductButton.ViewModel {
     
     static let sample = NewProductButton.ViewModel(id: "CARD", icon: Image("ic24NewCardColor"), title: "Карту", subTitle: "62 дня без %", action: {})
-    
-//    static let sampleAccount =  ButtonNewProduct.ViewModel.init(id: "ACCOUNT", icon: .ic24FilePluseColor, title: "Счет", subTitle: "Бесплатно", action: {})
-//
-//    static let sampleEmptySubtitle =  ButtonNewProduct.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
-//
-//    static let sampleLongSubtitle =  ButtonNewProduct.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
 }
