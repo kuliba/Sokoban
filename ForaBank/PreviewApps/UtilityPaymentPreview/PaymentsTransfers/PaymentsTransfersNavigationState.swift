@@ -37,6 +37,9 @@ extension PaymentsTransfersState {
                     
                 case .selected:
                     return nil
+                    
+                case let .services(services):
+                    return nil
                 }
             }
         }

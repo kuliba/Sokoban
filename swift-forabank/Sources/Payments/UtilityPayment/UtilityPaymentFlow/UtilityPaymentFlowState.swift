@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public struct UtilityPaymentFlowState<LastPayment, Operator> {
+public struct UtilityPaymentFlowState<LastPayment, Operator, Service> {
     
     public var isInflight: Bool
     
@@ -38,7 +38,7 @@ public extension UtilityPaymentFlowState {
 
 public extension UtilityPaymentFlowState {
     
-    typealias Flow = UtilityPaymentFlow<LastPayment, Operator>
+    typealias Flow = UtilityPaymentFlow<LastPayment, Operator, Service>
 }
 
-extension UtilityPaymentFlowState: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityPaymentFlowState: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

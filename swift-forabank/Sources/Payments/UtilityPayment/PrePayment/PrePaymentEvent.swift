@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
+#warning("rename/move to FlowEvent?")
 public enum PrePaymentEvent<LastPayment, Operator, Response, Service> {
     
     case loaded(LoadResult)
@@ -27,7 +28,7 @@ public extension PrePaymentEvent {
     enum LoadResult {
         
         case failure
-        case list([Service])
+        case list([Service]) // list of many (more than one)
     }
 }
 

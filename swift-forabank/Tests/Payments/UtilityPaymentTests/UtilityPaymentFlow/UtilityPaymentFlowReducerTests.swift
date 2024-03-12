@@ -367,6 +367,105 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         assert(.back, on: state, effect: nil)
     }
+    func test_loadedFailure_back_shouldNotChangeState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.failure))
+        
+        let (loaded, _) = sut.reduce(initialState, loadedEvent)
+        let (final, _) = sut.reduce(loaded, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_loadedFailure_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.failure))
+        
+        let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
+        let (_, lastEffect) = sut.reduce(loaded, .back)
+        
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
+    
+    func test_loadedEmptySuccess_back_shouldNotChangeState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([])))
+        
+        let (loaded, _) = sut.reduce(initialState, loadedEvent)
+        let (final, _) = sut.reduce(loaded, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_loadedEmptySuccess_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([])))
+        
+        let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
+        let (_, lastEffect) = sut.reduce(loaded, .back)
+        
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
+    
+    func test_loadedOneSuccess_back_shouldNotChangeState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([makeService()])))
+        
+        let (loaded, _) = sut.reduce(initialState, loadedEvent)
+        let (final, _) = sut.reduce(loaded, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_loadedOneSuccess_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([makeService()])))
+        
+        let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
+        let (_, lastEffect) = sut.reduce(loaded, .back)
+        
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
+    
+    func test_loadedManySuccess_back_shouldRevertStateToInitialPrePaymentOptionsState() {
+     
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([makeService(), makeService()])))
+        
+        let (loaded, _) = sut.reduce(initialState, loadedEvent)
+        let (final, _) = sut.reduce(loaded, .back)
+        
+        XCTAssertNoDiff(final, initialState)
+    }
+    
+    func test_loadedManySuccess_back_shouldNotDeliverEffectOnPrePaymentOptionsState() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let (sut, _) = makeSUT()
+        let loadedEvent: Event = .prePayment(.loaded(.list([makeService(), makeService()])))
+        
+        let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
+        let (_, lastEffect) = sut.reduce(loaded, .back)
+        
+        XCTAssertNil(firstEffect)
+        XCTAssertNil(lastEffect)
+    }
     func test_payByInstruction_back_shouldRevertStateToInitialPrePaymentOptionsState() {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))

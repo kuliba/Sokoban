@@ -1694,26 +1694,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AccountDetailsTests"
-               BuildableName = "AccountDetailsTests"
-               BlueprintName = "AccountDetailsTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ProductDetailsTests"
-               BuildableName = "ProductDetailsTests"
-               BlueprintName = "ProductDetailsTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ProductDetailsUITests"
                BuildableName = "ProductDetailsUITests"
                BlueprintName = "ProductDetailsUITests"

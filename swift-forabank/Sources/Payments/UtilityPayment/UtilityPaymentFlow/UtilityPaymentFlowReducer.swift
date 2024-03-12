@@ -51,11 +51,11 @@ public extension UtilityPaymentFlowReducer {
     typealias PPOEffect = PrePaymentOptionsEffect<Operator>
     typealias PrePaymentOptionsReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
     
-    typealias PPState = PrePaymentState<LastPayment, Operator>
+    typealias PPState = PrePaymentState<LastPayment, Operator, Service>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
     typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
     
-    typealias State = UtilityPaymentFlowState<LastPayment, Operator>
+    typealias State = UtilityPaymentFlowState<LastPayment, Operator, Service>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
     typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
 }
@@ -116,7 +116,20 @@ private extension UtilityPaymentFlowReducer {
             
             switch event {
             case let .loaded(result):
-                fatalError("can't handle `loaded` event with \(result)")
+                switch result {
+                case .failure:
+                    state.push(.prePaymentState(.payingByInstruction))
+                    
+                case let .list(services):
+                    // `services` is array thus there is no guaranty that it contains many
+                    switch services.count {
+                    case 0, 1:
+                        state.push(.prePaymentState(.payingByInstruction))
+                        
+                    default:
+                        state.push(.prePaymentState(.services(services)))
+                    }
+                }
                 
             case .payByInstruction:
                 state.push(.prePaymentState(.payingByInstruction))

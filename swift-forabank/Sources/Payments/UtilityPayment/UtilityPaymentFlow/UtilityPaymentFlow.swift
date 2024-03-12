@@ -7,7 +7,7 @@
 
 import PrePaymentPicker
 
-public enum UtilityPaymentFlow<LastPayment, Operator> {
+public enum UtilityPaymentFlow<LastPayment, Operator, Service> {
     
     case prePaymentOptions(PrePaymentOptions)
     case prePaymentState(PrePayment)
@@ -16,7 +16,7 @@ public enum UtilityPaymentFlow<LastPayment, Operator> {
 public extension UtilityPaymentFlow {
     
     typealias PrePaymentOptions = PrePaymentOptionsState<LastPayment, Operator>
-    typealias PrePayment = PrePaymentState<LastPayment, Operator>
+    typealias PrePayment = PrePaymentState<LastPayment, Operator, Service>
 }
 
-extension UtilityPaymentFlow: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityPaymentFlow: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
