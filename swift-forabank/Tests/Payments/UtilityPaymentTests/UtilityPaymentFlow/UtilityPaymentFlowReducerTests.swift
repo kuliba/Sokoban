@@ -306,6 +306,46 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - back
     
+    func test_back_shouldNotChangeStateOnPrePaymentOptionsStatusFailure() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            status: .failure(.connectivityError)
+        )
+        
+        assertState(.back, on: state)
+    }
+    
+    func test_back_shouldNotDeliverEffectOnPrePaymentOptionsStatusFailure() {
+        
+        let state = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            status: .failure(.connectivityError)
+        )
+        
+        assert(.back, on: state, effect: nil)
+    }
+    
+    func test_back_shouldNotChangeStateOnPrePaymentStatusFailure() {
+        
+        let state = makeState(
+            makeSelectingServicesState(),
+            status: .failure(.serverError(anyMessage()))
+        )
+        
+        assertState(.back, on: state)
+    }
+    
+    func test_back_shouldNotDeliverEffectOnPrePaymentStatusFailure() {
+        
+        let state = makeState(
+            makeSelectingServicesState(),
+            status: .failure(.serverError(anyMessage()))
+        )
+        
+        assert(.back, on: state, effect: nil)
+    }
+    
     func test_back_shouldChangeStateToEmptyOnPrePaymentOptions() {
         
         let state = makeState(.prePaymentOptions(makePrePaymentOptionsState()))

@@ -31,7 +31,13 @@ public extension UtilityPaymentFlowReducer {
         
         switch event {
         case .back:
-            state.current = nil
+            switch state.status {
+            case .failure:
+                break
+
+            default:
+                state.current = nil
+            }
             
         case let .prePaymentOptions(prePaymentOptionsEvent):
             (state, effect) = reduce(state, prePaymentOptionsEvent)

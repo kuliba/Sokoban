@@ -131,14 +131,14 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         )
     }
     
-    func test_flow() {
+    func test_startPaymentFailureFlow() {
         
         let lastPayment = makeLastPayment()
         let lastPayments = [lastPayment]
         let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
         let serverErrorMessage = anyMessage()
-        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        let (sut, spy, loadLastPayments, loadOperators, _, startPayment) = makeSUT()
         
         sut.event(.prePaymentOptions(.initiate))
         loadLastPayments.complete(with: .success(lastPayments))
@@ -151,8 +151,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.back)
         
         sut.event(.prePayment(.select(.last(lastPayment))))
-
-#warning("add payment flow")
+        startPayment.complete(with: .failure(.serverError(serverErrorMessage)))
+        sut.event(.back)
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
@@ -180,6 +180,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
                 $0 = .init([ppo])
             }, {
                 $0.status = .inflight
+            }, {
+                $0.status = .failure(.serverError(serverErrorMessage))
             }
         )
     }
