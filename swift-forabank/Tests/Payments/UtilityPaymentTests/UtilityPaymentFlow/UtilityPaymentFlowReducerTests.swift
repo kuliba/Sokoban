@@ -439,7 +439,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [])))
         
         let (loaded, _) = sut.reduce(initialState, loadedEvent)
         let (final, _) = sut.reduce(loaded, .back)
@@ -451,7 +451,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [])))
         
         let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
         let (_, lastEffect) = sut.reduce(loaded, .back)
@@ -464,7 +464,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([makeUtilityService()])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [makeUtilityService()])))
         
         let (loaded, _) = sut.reduce(initialState, loadedEvent)
         let (final, _) = sut.reduce(loaded, .back)
@@ -476,7 +476,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([makeUtilityService()])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [makeUtilityService()])))
         
         let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
         let (_, lastEffect) = sut.reduce(loaded, .back)
@@ -489,7 +489,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([makeUtilityService(), makeUtilityService()])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [makeUtilityService(), makeUtilityService()])))
         
         let (loaded, _) = sut.reduce(initialState, loadedEvent)
         let (final, _) = sut.reduce(loaded, .back)
@@ -501,7 +501,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
-        let loadedEvent: Event = .prePayment(.loaded(.list([makeUtilityService(), makeUtilityService()])))
+        let loadedEvent: Event = .prePayment(.loaded(.list(makeOperator(), [makeUtilityService(), makeUtilityService()])))
         
         let (loaded, firstEffect) = sut.reduce(initialState, loadedEvent)
         let (_, lastEffect) = sut.reduce(loaded, .back)
@@ -1093,10 +1093,11 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makeSelectingServicesState(
+        _ `operator`: Operator = makeOperator(),
         _ services: [UtilityService]? = nil
     ) -> Flow {
         
-        .prePaymentState(.services(services ?? [makeUtilityService(), makeUtilityService()]))
+        .prePaymentState(.services(`operator`, services ?? [makeUtilityService(), makeUtilityService()]))
     }
     
     private func makeState(

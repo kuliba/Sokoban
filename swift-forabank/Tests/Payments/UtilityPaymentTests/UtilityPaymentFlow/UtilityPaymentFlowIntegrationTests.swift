@@ -290,7 +290,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.prePayment(.select(.operator(`operator`))))
         loadServices.complete(with: .success(services))
         
-        sut.event(.prePayment(.select(.service(`operator`, service))))
+        sut.event(.prePayment(.select(.service(service))))
         startPayment.complete(with: .success(makeResponse()))
         
         let ppo = State.Flow.prePaymentOptions(.init(
@@ -312,7 +312,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             }, {
                 $0.status = .inflight
             }, {
-                $0.push(.prePaymentState(.services(services)))
+                $0.push(.prePaymentState(.services(`operator`, services)))
                 $0.status = nil
             }, {
                 $0.status = .inflight

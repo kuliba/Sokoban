@@ -21,7 +21,7 @@ public extension PrePaymentEvent {
         
         case last(LastPayment)
         case `operator`(Operator)
-        case service(Operator, Service)
+        case service(Service)
     }
     
     typealias ResponseResult = Result<Response, ServiceFailure>
@@ -29,10 +29,10 @@ public extension PrePaymentEvent {
     enum LoadResult {
         
         case failure
-        case list([Service]) // list of many (more than one)
+        case list(Operator, [Service]) // list of many (more than one)
     }
 }
 
 extension PrePaymentEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Response: Equatable, Service: Equatable {}
-extension PrePaymentEvent.LoadResult: Equatable where Service: Equatable {}
+extension PrePaymentEvent.LoadResult: Equatable where Operator: Equatable, Service: Equatable {}
 extension PrePaymentEvent.SelectEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

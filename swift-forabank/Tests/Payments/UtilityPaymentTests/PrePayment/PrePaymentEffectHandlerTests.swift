@@ -104,11 +104,12 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     
     func test_select_shouldDeliverServicesListOnLoadServicesSuccessWithMoreThanOneService_operator() {
         
-        let effect: Effect = .select(.operator(makeOperator()))
+        let `operator` = makeOperator()
+        let effect: Effect = .select(.operator(`operator`))
         let services = [makeUtilityService(), makeUtilityService()]
         let (sut, _, loadServices) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .loaded(.list(services)), on: {
+        expect(sut, with: effect, toDeliver: .loaded(.list(`operator`, services)), on: {
             
             loadServices.complete(with: .success(services))
         })

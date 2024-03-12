@@ -143,14 +143,14 @@ private extension UtilityPaymentFlowReducer {
                 case .failure:
                     state.push(.prePaymentState(.payingByInstruction))
                     
-                case let .list(services):
+                case let .list(`operator`, services):
                     // `services` is array thus there is no guaranty that it contains many
                     switch services.count {
                     case 0, 1:
                         state.push(.prePaymentState(.payingByInstruction))
                         
                     default:
-                        state.push(.prePaymentState(.services(services)))
+                        state.push(.prePaymentState(.services(`operator`, services)))
                     }
                 }
                 
@@ -162,8 +162,8 @@ private extension UtilityPaymentFlowReducer {
                 
             case let .select(select):
                 state.isInflight = true
-                effect = .prePayment(handleSelect(select))
-                
+                effect = handleSelect(nil, select).map { .prePayment($0) }
+
             case let .paymentStarted(result):
                 switch result {
                 case let .failure(serviceFailure):
@@ -185,9 +185,9 @@ private extension UtilityPaymentFlowReducer {
                 
             case let .select(select):
                 switch prePaymentState {
-                case .services:
+                case let .services(`operator`, services):
                     state.isInflight = true
-                    effect = .prePayment(handleSelect(select))
+                    effect = handleSelect(`operator`, select).map { .prePayment($0) }
                     
                 default:
                     break
@@ -212,8 +212,9 @@ private extension UtilityPaymentFlowReducer {
     }
     
     func handleSelect(
+        _ `operator`: Operator? = nil,
         _ event: PPEvent.SelectEvent
-    ) -> PPEffect {
+    ) -> PPEffect? {
         
         switch event {
         case let .last(lastPayment):
@@ -222,9 +223,8 @@ private extension UtilityPaymentFlowReducer {
         case let .operator(`operator`):
             return .select(.operator(`operator`))
             
-            #warning("move `operator` to state, selection should be performed using service only")
-        case let .service(`operator`, service):
-            return .select(.service(`operator`, service))
+        case let .service(service):
+            return `operator`.map { .select(.service($0, service)) }
         }
     }
 }

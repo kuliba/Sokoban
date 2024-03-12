@@ -120,7 +120,7 @@ private extension PrePaymentEffectHandler {
                     }
                     
                 default:
-                    dispatch(.loaded(.list(services)))
+                    dispatch(.loaded(.list(`operator`, services)))
                 }
             }
         }
