@@ -653,10 +653,10 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldChangePrePaymentOptionsState_connectivityError() {
         
-        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
         
-        assertState(event, on: initialState) {
+        assertState(event, on: prePaymentOptionsState) {
             
             $0.status = .failure(.connectivityError)
         }
@@ -664,19 +664,19 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_connectivityError() {
         
-        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
         
-        assert(event, on: initialState, effect: nil)
+        assert(event, on: prePaymentOptionsState, effect: nil)
     }
     
     func test_paymentStarted_shouldChangePrePaymentOptionsState_serverError() {
         
-        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
         
-        assertState(event, on: initialState) {
+        assertState(event, on: prePaymentOptionsState) {
             
             $0.status = .failure(.serverError(message))
         }
@@ -684,7 +684,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_serverError() {
         
-        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
         
