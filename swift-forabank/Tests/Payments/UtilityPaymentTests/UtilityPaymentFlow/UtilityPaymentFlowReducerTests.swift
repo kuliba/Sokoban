@@ -755,6 +755,34 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         assert(event, on: initialState, effect: nil)
     }
     
+    func test_paymentStarted_shouldChangePrePaymentOptionsStateInflight_success() {
+        
+        let prePaymentOptionsState = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            status: .inflight
+        )
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
+        
+        assertState(event, on: prePaymentOptionsState) {
+            
+            $0.push(.payment)
+            $0.status = nil
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsStateInflight_success() {
+        
+        let initialState = makeState(
+            .prePaymentOptions(makePrePaymentOptionsState()),
+            status: .inflight
+        )
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
+        
+        assert(event, on: initialState, effect: nil)
+    }
+    
     // MARK: - paymentStarted on PrePayment State
     
     func test_paymentStarted_shouldChangePrePaymentState_connectivityError() {

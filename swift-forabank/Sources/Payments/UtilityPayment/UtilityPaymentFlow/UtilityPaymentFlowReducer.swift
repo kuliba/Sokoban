@@ -168,6 +168,7 @@ private extension UtilityPaymentFlowReducer {
                     state.status = .failure(serviceFailure)
                     
                 case let .success(response):
+                    state.status = nil
                     state.push(.payment)
                 }
             }
