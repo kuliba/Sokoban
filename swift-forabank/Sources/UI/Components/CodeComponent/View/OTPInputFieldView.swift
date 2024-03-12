@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OTPInputComponent
+import UIPrimitives
 
 struct OTPInputFieldView: View {
     
