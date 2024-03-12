@@ -12,14 +12,17 @@ public struct ProductDetailsState: Equatable {
     public let accountDetails: [ListItem]
     public let cardDetails: [ListItem]
     public var event: ProductDetailsEvent?
+    var showCheckBox: Bool
     
     public init(
         accountDetails: [ListItem],
         cardDetails: [ListItem],
-        event: ProductDetailsEvent? = nil
+        event: ProductDetailsEvent? = nil,
+        showCheckBox: Bool = false
     ) {
         self.accountDetails = accountDetails
         self.cardDetails = cardDetails
         self.event = event
+        self.showCheckBox = false
     }
 }

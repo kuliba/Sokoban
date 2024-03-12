@@ -35,15 +35,15 @@ public extension ProductDetailsReducer {
                 
             case .share:
                 state.event = .share
+                state.showCheckBox = false
             }
         case .share:
-            //// ???
-            print("share")
+            state.showCheckBox = false
         case .sendAll:
             state.event = .sendAll
         case .sendSelect:
             state.event = .sendSelect
-
+            state.showCheckBox = true
         }
         
         return (state, .none)

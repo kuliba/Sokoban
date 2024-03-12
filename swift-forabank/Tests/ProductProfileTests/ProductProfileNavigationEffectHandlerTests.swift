@@ -60,6 +60,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
 
     private typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    private typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
 
     private typealias OpenPanelSpy = () -> Void
     
@@ -69,6 +70,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton] = .previewRegular,
         accountDetails: [ListItem] = .accountItems,
         cardDetails: [ListItem] = .cardItems,
+        sheetButtons: [ProductDetailsSheetState.PanelButton] = .previewRegular,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.GuardCard = {_ in },
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
@@ -138,6 +140,17 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let sheetReduce = ProductDetailsSheetReducer()
+        let sheetHandleEffect = ProductDetailsSheetEffectHandler()
+        let makeProductDetailsSheetViewModel: MakeProductDetailsSheetViewModel =  {
+            .init(
+                initialState: .init(buttons: sheetButtons),
+                reduce: sheetReduce.reduce(_:_:),
+                handleEffect: sheetHandleEffect.handleEffect(_:_:),
+                scheduler: $0
+            )
+        }
+
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -157,6 +170,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
                 accountStatement: accountStatementAction
             ),
             makeProductDetailsViewModel: makeProductDetailsViewModel,
+            makeProductDetailsSheetViewModel: makeProductDetailsSheetViewModel,
             scheduler: scheduler
         )
         
