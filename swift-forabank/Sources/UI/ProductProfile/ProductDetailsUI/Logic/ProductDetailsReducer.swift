@@ -36,14 +36,17 @@ public extension ProductDetailsReducer {
             case .share:
                 state.event = .share
                 state.showCheckBox = false
+                state.title = "Реквизиты счета и карты"
             }
         case .share:
             state.showCheckBox = false
+            state.title = "Реквизиты счета и карты"
         case .sendAll:
             state.event = .sendAll
         case .sendSelect:
             state.event = .sendSelect
             state.showCheckBox = true
+            state.title = "Выберите реквизиты"
         }
         
         return (state, .none)

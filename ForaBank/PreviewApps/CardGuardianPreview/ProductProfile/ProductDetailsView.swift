@@ -77,7 +77,7 @@ struct ProductDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                    Text("Реквизиты счета и карты").font(.headline)
+                Text(state.destination?.viewModel.state.title ?? "Реквизиты счета и карты").font(.headline)
             }
         }
     }

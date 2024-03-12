@@ -13,7 +13,7 @@ struct ProductDetailsView: View {
     let cardDetails: [ListItem]
     let event: (ProductDetailEvent) -> Void
     let config: Config
-    var showCheckbox: Bool = false
+    var showCheckbox: Bool
     
     @Binding var isCheckAccount: Bool
     @Binding var isCheckCard: Bool
@@ -62,6 +62,15 @@ struct ProductDetailsView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(.horizontal, 16)
+        .disabled(buttonDisabled())
+    }
+    
+    private func buttonDisabled() -> Bool {
+        
+        if showCheckbox {
+            
+            return !(isCheckCard || isCheckAccount)
+        } else { return false }
     }
     
     private func noAccountDetails() -> some View {
