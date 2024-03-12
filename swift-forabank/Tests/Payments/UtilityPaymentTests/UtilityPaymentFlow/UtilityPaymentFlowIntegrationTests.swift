@@ -238,7 +238,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         loadServices.complete(with: .success([makeUtilityService()]))
         startPayment.complete(with: .success(makeResponse()), at: 1)
         sut.event(.back)
-                
+        
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
             operators: operators,
@@ -290,9 +290,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.prePayment(.select(.operator(`operator`))))
         loadServices.complete(with: .success(services))
         
-#warning("add select utility")
-        
-#warning("add payment flow")
+        sut.event(.prePayment(.select(.service(`operator`, service))))
+        startPayment.complete(with: .success(makeResponse()))
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
@@ -315,9 +314,16 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             }, {
                 $0.push(.prePaymentState(.services(services)))
                 $0.status = nil
+            }, {
+                $0.status = .inflight
+            }, {
+                $0.push(.payment)
+                $0.status = nil
             }
         )
     }
+    
+#warning("add payment flow test")
     
     // MARK: - Helpers
     
@@ -326,7 +332,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     private typealias State = UtilityPaymentFlowState<LastPayment, Operator, Service>
     private typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
-    private typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
+    private typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>

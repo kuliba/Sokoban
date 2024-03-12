@@ -14,5 +14,5 @@ enum PaymentsTransfersEffect: Equatable {
 
 extension PaymentsTransfersEffect {
     
-    typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator>
+    typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
 }

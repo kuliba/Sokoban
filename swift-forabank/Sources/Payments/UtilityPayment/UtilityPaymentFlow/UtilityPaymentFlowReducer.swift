@@ -59,11 +59,11 @@ public extension UtilityPaymentFlowReducer {
     
     typealias PPState = PrePaymentState<LastPayment, Operator, Service>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, Response, Service>
-    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator, Service>
     
     typealias State = UtilityPaymentFlowState<LastPayment, Operator, Service>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
 }
 
 private extension UtilityPaymentFlowReducer {
@@ -183,15 +183,23 @@ private extension UtilityPaymentFlowReducer {
             case let .loaded(result):
                 fatalError("can't handle `loaded` event with \(result)")
                 
-            case .select:
-                break
-                
+            case let .select(select):
+                switch prePaymentState {
+                case .services:
+                    state.isInflight = true
+                    effect = .prePayment(handleSelect(select))
+                    
+                default:
+                    break
+                }
+
             case let .paymentStarted(result):
                 switch result {
                 case let .failure(serviceFailure):
                     state.status = .failure(serviceFailure)
                     
                 case let .success(response):
+                    state.status = nil
                     state.push(.payment)
                 }
             }
@@ -213,6 +221,10 @@ private extension UtilityPaymentFlowReducer {
             
         case let .operator(`operator`):
             return .select(.operator(`operator`))
+            
+            #warning("move `operator` to state, selection should be performed using service only")
+        case let .service(`operator`, service):
+            return .select(.service(`operator`, service))
         }
     }
 }
