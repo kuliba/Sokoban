@@ -19,12 +19,12 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     // MARK: - PrePaymentOptionsEvent
-
+    
     func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_didScrollTo() {
         
         let state = makeState(flows: [])
         let event: Event = .prePaymentOptions(.didScrollTo("abc"))
-
+        
         assertState(event, on: state)
         
         XCTAssertNil(state.current)
@@ -34,7 +34,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let state = makeState(flows: [])
         let event: Event = .prePaymentOptions(.initiate)
-
+        
         assertState(event, on: state)
         
         XCTAssertNil(state.current)
@@ -44,7 +44,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let state = makeState(flows: [])
         let event: Event = .prePaymentOptions(.paginated(.failure(.connectivityError)))
-
+        
         assertState(event, on: state)
         
         XCTAssertNil(state.current)
@@ -56,7 +56,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.paginated(.success([
             makeOperator(), makeOperator()
         ])))
-
+        
         assertState(event, on: state)
         
         XCTAssertNil(state.current)
@@ -66,7 +66,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         
         let state = makeState(flows: [])
         let event: Event = .prePaymentOptions(.search(.entered("abc")))
-
+        
         assertState(event, on: state)
         
         XCTAssertNil(state.current)
@@ -78,7 +78,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.loaded(
             .failure(.connectivityError), .failure(.connectivityError)
         ))
-
+        
         assertState(event, on: state) {
             
             $0.current = .prePaymentOptions(.init())
@@ -94,7 +94,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.loaded(
             .success(lastPayments), .failure(.connectivityError)
         ))
-
+        
         assertState(event, on: state) {
             
             $0.current = .prePaymentOptions(.init(
@@ -112,7 +112,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.loaded(
             .failure(.connectivityError), .success(operators)
         ))
-
+        
         assertState(event, on: state) {
             
             $0.current = .prePaymentOptions(.init(
@@ -131,7 +131,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.loaded(
             .success(lastPayments), .success(operators)
         ))
-
+        
         assertState(event, on: state) {
             
             $0.current = .prePaymentOptions(.init(
@@ -151,7 +151,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         let event: Event = .prePaymentOptions(.loaded(
             .success(lastPayments), .success(operators)
         ))
-
+        
         assertState(event, on: state) {
             
             $0.current = .prePaymentOptions(.init(
@@ -300,7 +300,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             $0 = .init([.prePaymentOptions(ppoStateStub)], status: .inflight)
         }
     }
-        
+    
     // MARK: - back
     
     func test_back_shouldChangeStateToEmptyOnPrePaymentOptions() {
@@ -443,7 +443,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     func test_loadedManySuccess_back_shouldRevertStateToInitialPrePaymentOptionsState() {
-     
+        
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
         let (sut, _) = makeSUT()
         let loadedEvent: Event = .prePayment(.loaded(.list([makeService(), makeService()])))
@@ -647,6 +647,90 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         )
         
         assert(.prePayment(.payByInstruction), on: state, effect: nil)
+    }
+    
+    // MARK: - paymentStarted on PrePaymentOption State
+    
+    func test_paymentStarted_shouldChangePrePaymentOptionsState_connectivityError() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
+        
+        assertState(event, on: initialState) {
+            
+            $0.status = .failure(.connectivityError)
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_connectivityError() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
+        
+        assert(event, on: initialState, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldChangePrePaymentOptionsState_serverError() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
+        
+        assertState(event, on: initialState) {
+            
+            $0.status = .failure(.serverError(message))
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_serverError() {
+        
+        let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
+        
+        assert(event, on: initialState, effect: nil)
+    }
+    
+    // MARK: - paymentStarted on PrePayment State
+    
+    func test_paymentStarted_shouldChangePrePaymentState_connectivityError() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
+        
+        assertState(event, on: prePaymentState) {
+            
+            $0.status = .failure(.connectivityError)
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentState_connectivityError() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let event: Event = .prePayment(.paymentStarted(.failure(.connectivityError)))
+        
+        assert(event, on: prePaymentState, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldChangePrePaymentState_serverError() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
+        
+        assertState(event, on: prePaymentState) {
+            
+            $0.status = .failure(.serverError(message))
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentState_serverError() {
+        
+        let prePaymentState = makeState(makeSelectingServicesState())
+        let message = anyMessage()
+        let event: Event = .prePayment(.paymentStarted(.failure(.serverError(message))))
+        
+        assert(event, on: prePaymentState, effect: nil)
     }
     
     // MARK: - scan
