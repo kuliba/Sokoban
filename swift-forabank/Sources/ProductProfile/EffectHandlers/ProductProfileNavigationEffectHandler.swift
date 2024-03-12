@@ -20,6 +20,8 @@ public final class ProductProfileNavigationEffectHandler {
     private let makeAccountInfoPanelViewModel: MakeAccountInfoPanelViewModel
     private let accountInfoPanelActions: AccountInfoPanelActions
 
+    private let makeProductDetailsViewModel: MakeProductDetailsViewModel
+
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
@@ -29,6 +31,7 @@ public final class ProductProfileNavigationEffectHandler {
         topUpCardActions: TopUpCardActions,
         makeAccountInfoPanelViewModel: @escaping MakeAccountInfoPanelViewModel,
         accountInfoPanelActions: AccountInfoPanelActions,
+        makeProductDetailsViewModel: @escaping MakeProductDetailsViewModel,
         scheduler: AnySchedulerOfDispatchQueue
     ) {
         self.makeCardGuardianViewModel = makeCardGuardianViewModel
@@ -37,6 +40,7 @@ public final class ProductProfileNavigationEffectHandler {
         self.topUpCardActions = topUpCardActions
         self.makeAccountInfoPanelViewModel = makeAccountInfoPanelViewModel
         self.accountInfoPanelActions = accountInfoPanelActions
+        self.makeProductDetailsViewModel = makeProductDetailsViewModel
         self.scheduler = scheduler
     }
 }
@@ -110,17 +114,20 @@ public extension ProductProfileNavigationEffectHandler {
                 dispatch(makeDestinationAccountInfoPanel(dispatch))
             case .cardGuardian:
                 dispatch(makeDestination(dispatch))
+            case .productDetails:
+                dispatch(makeDestinationDetails(dispatch))
             case .topUpCard:
                 dispatch(makeDestinationTopUpCard(dispatch))
             }
         case let .productProfile(effect):
             // fire and forget
-            handleEffect(effect)
+            handleEffect(effect, dispatch)
         }
     }
     
     private func handleEffect(
-        _ effect: ProductProfileEffect
+        _ effect: ProductProfileEffect,
+        _ dispatch: @escaping Dispatch
     ) {
         switch effect {
         case let .guardCard(card):
@@ -136,9 +143,16 @@ public extension ProductProfileNavigationEffectHandler {
         case let .accountAnotherBank(card):
             topUpCardActions.topUpCardFromOtherBank(card)
         case let .accountDetails(card):
-            accountInfoPanelActions.accountDetails(card)
+            dispatch(makeDestinationDetails(dispatch))
+
+           // accountInfoPanelActions.accountDetails(card)
         case let .accountStatement(card):
             accountInfoPanelActions.accountStatement(card)
+            // TODO: add actions
+        case let .productDetailsItemlongPress(valueForCopy, textForInformer):
+            print("copy: \(valueForCopy) - informer: \(textForInformer)")
+        case let .productDetailsIconTap(documentId):
+            print("documentId - \(documentId)")
         }
     }
 }
@@ -200,6 +214,25 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
+private extension ProductProfileNavigationEffectHandler {
+    
+    func makeDestinationDetails(
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let productDetailsViewModel = makeProductDetailsViewModel(scheduler)
+        let cancellable = productDetailsViewModel.$state
+            .dropFirst()
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.productDetailsInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .open(.productDetailsRoute(.init(productDetailsViewModel, cancellable)))
+    }
+}
+
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -222,6 +255,7 @@ public extension ProductProfileNavigationEffectHandler {
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+    typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
 }
 
 // MARK: - CardGuardian
@@ -289,4 +323,27 @@ private extension AccountInfoPanelState {
 public enum AccountInfoPanelStateProjection: Equatable {
     case appear
     case buttonTapped(AccountInfoPanel.ButtonEvent)
+}
+
+// MARK: - Details
+
+private extension ProductDetailsState {
+    
+    var projection: ProductDetailsStateProjection? {
+        
+        switch self.event {
+            
+        case .none:
+            return .none
+        case let .itemTapped(tap):
+            return .itemTapped(tap)
+        case .appear:
+            return .appear
+        }
+    }
+}
+
+public enum ProductDetailsStateProjection: Equatable {
+    case appear
+    case itemTapped(ProductDetailEvent)
 }

@@ -16,7 +16,9 @@ struct CardGuardianPreviewApp: App {
                 ContentView(
                     buttons: .preview,
                     topUpCardButtons: .previewRegular,
-                    accountInfoPanelButtons: .previewRegular
+                    accountInfoPanelButtons: .previewRegular,
+                    accountDetails: [],
+                    cardDetails: .cardItems
                 )
                 .background(.cyan)
                 .tabItem {
@@ -26,7 +28,9 @@ struct CardGuardianPreviewApp: App {
                 ContentView(
                     buttons: .previewBlockHide,
                     topUpCardButtons: .previewAdditionalOther,
-                    accountInfoPanelButtons: .previewAdditionalOther
+                    accountInfoPanelButtons: .previewAdditionalOther,
+                    accountDetails: .accountItems,
+                    cardDetails: .cardItems
                 )
                 .tabItem {
                     Label("2", systemImage: "square.and.pencil")
@@ -35,7 +39,9 @@ struct CardGuardianPreviewApp: App {
                 ContentView(
                     buttons: .previewBlockUnlockNotAvailable,
                     topUpCardButtons: .previewAdditionalSelfNotOwner,
-                    accountInfoPanelButtons: .previewAdditionalSelfNotOwner
+                    accountInfoPanelButtons: .previewAdditionalSelfNotOwner,
+                    accountDetails: .accountItems,
+                    cardDetails: .cardItems
                 )
                 .tabItem {
                     Label("3", systemImage: "sparkles")

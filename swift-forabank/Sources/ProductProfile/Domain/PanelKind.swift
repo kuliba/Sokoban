@@ -11,5 +11,6 @@ public enum PanelKind: Equatable {
     
     case accountInfo
     case cardGuardian
+    case productDetails
     case topUpCard
 }
