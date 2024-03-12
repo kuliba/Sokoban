@@ -1,5 +1,5 @@
 //
-//  OTPInputConfig.swift
+//  CodeInputConfig.swift
 //
 //
 //  Created by Дмитрий Савушкин on 11.03.2024.
@@ -9,7 +9,7 @@ import SwiftUI
 import UIPrimitives
 import OTPInputComponent
 
-public struct OTPInputConfig {
+public struct CodeInputConfig {
     
     let icon: Image
     let button: ButtonConfig

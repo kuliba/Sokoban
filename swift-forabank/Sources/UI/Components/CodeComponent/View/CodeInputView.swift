@@ -1,6 +1,6 @@
 //
-//  OTPInputView.swift
-//  OTPInputComponentPreview
+//  CodeInputView.swift
+//
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
@@ -9,16 +9,16 @@ import SwiftUI
 import UIPrimitives
 import OTPInputComponent
 
-public struct OTPInputView: View {
+public struct CodeInputView: View {
     
     private let state: OTPInputState.Status.Input
     private let event: (OTPInputEvent) -> Void
-    private let config: OTPInputConfig
+    private let config: CodeInputConfig
     
     public init(
         state: OTPInputState.Status.Input,
         event: @escaping (OTPInputEvent) -> Void,
-        config: OTPInputConfig
+        config: CodeInputConfig
     ) {
         self.state = state
         self.event = event
@@ -84,7 +84,7 @@ public struct OTPInputView: View {
     
     private func inputField() -> some View {
         
-        OTPInputFieldView(
+        CodeInputFieldView(
             state: state.otpField,
             event: { event(.otpField($0)) },
             config: config.digitModel
@@ -195,30 +195,44 @@ private extension OTPInputState.Status.Input {
     }
 }
 
-struct OTPInputView_Previews: PreviewProvider {
+struct CodeInputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        otpInputView(.timerCompleted)
+        codeInputView(.timerCompleted)
             .previewDisplayName("timer Completed")
-        otpInputView(.timerRunning)
+        codeInputView(.timerRunning)
             .previewDisplayName("timer Running")
-        otpInputView(.timerStarting)
+        codeInputView(.timerStarting)
             .previewDisplayName("timer Starting")
-        otpInputView(.incompleteOTP)
+        codeInputView(.incompleteOTP)
             .previewDisplayName("incomplete OTP")
-        otpInputView(.completeOTP)
+        codeInputView(.completeOTP)
             .previewDisplayName("complete OTP")
     }
     
-    private static func otpInputView(
+    private static func codeInputView(
         _ state: OTPInputState.Status.Input
     ) -> some View {
         
-        OTPInputView(
+        CodeInputView(
             state: state,
             event: { _ in },
-            config: .init(icon: .init(systemName: ""), button: .preview, digitModel: .init(digitConfig: .init(textFont: .body, textColor: .black), rectColor: .black), resend: .init(backgroundColor: .black, text: .init(textFont: .callout, textColor: .blue)), subtitle: .init(textFont: .body, textColor: .blue), timer: .init(textFont: .body, textColor: .green), title: .init(textFont: .body, textColor: .black))
+            config: .init(
+                icon: .init(systemName: ""),
+                button: .preview,
+                digitModel: .init(
+                    digitConfig: .init(textFont: .body, textColor: .black),
+                    rectColor: .black
+                ),
+                resend: .init(
+                    backgroundColor: .black,
+                    text: .init(textFont: .callout, textColor: .blue)
+                ),
+                subtitle: .init(textFont: .body, textColor: .blue),
+                timer: .init(textFont: .body, textColor: .green),
+                title: .init(textFont: .body, textColor: .black)
+            )
         )
         .padding(20)
     }
