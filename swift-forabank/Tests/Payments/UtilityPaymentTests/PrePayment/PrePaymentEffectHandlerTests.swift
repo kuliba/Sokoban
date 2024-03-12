@@ -201,34 +201,6 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         return (sut, startPayment, loadServices)
     }
     
-    private func makeLastPayment(
-        _ value: String = UUID().uuidString
-    ) -> LastPayment {
-        
-        .init(value: value)
-    }
-    
-    private func makeOperator(
-        _ value: String = UUID().uuidString
-    ) -> Operator {
-        
-        .init(value: value)
-    }
-    
-    private func makeResponse(
-        _ value: String = UUID().uuidString
-    ) -> StartPaymentResponse {
-        
-        .init(value: value)
-    }
-    
-    private func makeUtilityService(
-        _ value: String = UUID().uuidString
-    ) -> UtilityService {
-        
-        .init(value: value)
-    }
-    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
@@ -253,30 +225,4 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
-}
-
-private struct LastPayment: Equatable {
-    
-    var value: String
-}
-
-private struct Operator: Equatable, Identifiable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct StartPaymentResponse: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct UtilityService: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
 }
