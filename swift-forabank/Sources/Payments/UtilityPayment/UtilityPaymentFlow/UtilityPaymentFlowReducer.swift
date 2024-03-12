@@ -142,7 +142,7 @@ private extension UtilityPaymentFlowReducer {
                 effect = .prePayment(handleSelect(select))
                 
             case let .paymentStarted(result):
-                fatalError("can't handle `paymentStarted` event with \(result)")
+                break
             }
             
         case let .prePaymentState(prePaymentState):
@@ -157,7 +157,7 @@ private extension UtilityPaymentFlowReducer {
                 break
                 
             case let .paymentStarted(result):
-                fatalError("can't handle `paymentStarted` event with \(result)")
+                break
             }
         }
         
