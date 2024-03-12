@@ -47,8 +47,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_scrollFlow() {
         
-        let lastPayments = [makeLastPayment()]
-        let `operator` = makeOperator()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
+        let lastPayments = [lastPayment]
         let operators = [makeOperator(), `operator`, makeOperator()]
         let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
         
@@ -89,8 +89,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_searchFlow() {
         
-        let lastPayments = [makeLastPayment()]
-        let `operator` = makeOperator()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
+        let lastPayments = [lastPayment]
         let operators = [makeOperator(), `operator`, makeOperator()]
         let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
         
@@ -133,9 +133,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_backFlow() {
         
-        let lastPayment = makeLastPayment()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
         let lastPayments = [lastPayment]
-        let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
         let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
         
@@ -151,8 +150,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
-            operators: operators,
-            isInflight: false
+            operators: operators
         ))
         
         assert(
@@ -179,9 +177,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_startPaymentFailureFlow() {
         
-        let lastPayment = makeLastPayment()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
         let lastPayments = [lastPayment]
-        let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
         let serverErrorMessage = anyMessage()
         let (sut, spy, loadLastPayments, loadOperators, _, startPayment) = makeSUT()
@@ -196,8 +193,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
-            operators: operators,
-            isInflight: false
+            operators: operators
         ))
         
         assert(
@@ -220,9 +216,8 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_startPayment_back_flow() {
         
-        let lastPayment = makeLastPayment()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
         let lastPayments = [lastPayment]
-        let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
         let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
         
@@ -235,14 +230,13 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.back)
         
         sut.event(.prePayment(.select(.operator(`operator`))))
-        loadServices.complete(with: .success([makeUtilityService()]))
+        loadServices.complete(with: .success([makeService()]))
         startPayment.complete(with: .success(makeResponse()), at: 1)
         sut.event(.back)
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
-            operators: operators,
-            isInflight: false
+            operators: operators
         ))
         
         assert(
@@ -275,12 +269,10 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_startPaymentFromServicesFlow() {
         
-        let lastPayment = makeLastPayment()
+        let (lastPayment, `operator`, service) = (makeLastPayment(), makeOperator(), makeService())
         let lastPayments = [lastPayment]
-        let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
-        let service = makeUtilityService()
-        let services = [service, makeUtilityService(), makeUtilityService()]
+        let services = [service, makeService(), makeService()]
         let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
         
         sut.event(.prePaymentOptions(.initiate))
@@ -295,8 +287,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         
         let ppo = State.Flow.prePaymentOptions(.init(
             lastPayments: lastPayments,
-            operators: operators,
-            isInflight: false
+            operators: operators
         ))
         
         assert(

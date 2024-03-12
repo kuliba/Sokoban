@@ -106,7 +106,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let `operator` = makeOperator()
         let effect: Effect = .select(.operator(`operator`))
-        let services = [makeUtilityService(), makeUtilityService()]
+        let services = [makeService(), makeService()]
         let (sut, _, loadServices) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .loaded(.list(`operator`, services)), on: {
@@ -120,7 +120,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let `operator` = makeOperator()
         let effect: Effect = .select(.operator(`operator`))
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         sut.handleEffect(effect) { _ in }
@@ -132,7 +132,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     func test_select_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailureOnLoadServicesSuccessWithOneService_operator() {
         
         let effect: Effect = .select(.operator(makeOperator()))
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
@@ -145,7 +145,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     func test_select_shouldDeliverServerErrorOnStartPaymentServerErrorFailureOnLoadServicesSuccessWithOneService_operator() {
         
         let effect: Effect = .select(.operator(makeOperator()))
-        let service = makeUtilityService()
+        let service = makeService()
         let message = anyMessage()
         let (sut, startPayment, loadServices) = makeSUT()
         
@@ -160,7 +160,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let effect: Effect = .select(.operator(makeOperator()))
         let response = makeResponse()
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
