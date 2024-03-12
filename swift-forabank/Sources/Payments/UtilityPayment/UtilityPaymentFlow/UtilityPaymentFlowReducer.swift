@@ -34,7 +34,7 @@ public extension UtilityPaymentFlowReducer {
             switch state.status {
             case .failure:
                 break
-
+                
             default:
                 state.current = nil
             }
@@ -95,7 +95,7 @@ private extension UtilityPaymentFlowReducer {
                 }
                 state.current = .prePaymentOptions(ppoState)
                 effect = ppoEffect.map { .prePaymentOptions($0) }
-
+                
             default:
                 break
             }
@@ -137,6 +137,8 @@ private extension UtilityPaymentFlowReducer {
             
             switch event {
             case let .loaded(result):
+                state.status = nil
+                
                 switch result {
                 case .failure:
                     state.push(.prePaymentState(.payingByInstruction))

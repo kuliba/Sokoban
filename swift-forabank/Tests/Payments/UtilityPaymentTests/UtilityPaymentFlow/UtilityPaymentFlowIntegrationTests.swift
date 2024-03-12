@@ -131,14 +131,13 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         )
     }
     
-    func test_startPaymentFailureFlow() {
+    func test_backFlow() {
         
         let lastPayment = makeLastPayment()
         let lastPayments = [lastPayment]
         let `operator` = makeOperator()
         let operators = [makeOperator(), `operator`, makeOperator()]
-        let serverErrorMessage = anyMessage()
-        let (sut, spy, loadLastPayments, loadOperators, _, startPayment) = makeSUT()
+        let (sut, spy, loadLastPayments, loadOperators, _,_) = makeSUT()
         
         sut.event(.prePaymentOptions(.initiate))
         loadLastPayments.complete(with: .success(lastPayments))
@@ -148,10 +147,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.back)
         
         sut.event(.prePayment(.scan))
-        sut.event(.back)
-        
-        sut.event(.prePayment(.select(.last(lastPayment))))
-        startPayment.complete(with: .failure(.serverError(serverErrorMessage)))
         sut.event(.back)
         
         let ppo = State.Flow.prePaymentOptions(.init(
@@ -178,10 +173,148 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
                 $0.push(.prePaymentState(.scanning))
             }, {
                 $0 = .init([ppo])
+            }
+        )
+    }
+    
+    func test_startPaymentFailureFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let lastPayments = [lastPayment]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let serverErrorMessage = anyMessage()
+        let (sut, spy, loadLastPayments, loadOperators, _, startPayment) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePayment(.select(.last(lastPayment))))
+        startPayment.complete(with: .failure(.serverError(serverErrorMessage)))
+        sut.event(.back)
+        
+        let ppo = State.Flow.prePaymentOptions(.init(
+            lastPayments: lastPayments,
+            operators: operators,
+            isInflight: false
+        ))
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: true))
+                $0.status = .inflight
+            }, {
+                $0.current = ppo
+                $0.status = nil
             }, {
                 $0.status = .inflight
             }, {
                 $0.status = .failure(.serverError(serverErrorMessage))
+            }
+        )
+    }
+    
+    func test_startPayment_back_flow() {
+        
+        let lastPayment = makeLastPayment()
+        let lastPayments = [lastPayment]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePayment(.select(.last(lastPayment))))
+        startPayment.complete(with: .success(makeResponse()))
+        sut.event(.back)
+        
+        sut.event(.prePayment(.select(.operator(`operator`))))
+        loadServices.complete(with: .success([makeUtilityService()]))
+        startPayment.complete(with: .success(makeResponse()), at: 1)
+        sut.event(.back)
+                
+        let ppo = State.Flow.prePaymentOptions(.init(
+            lastPayments: lastPayments,
+            operators: operators,
+            isInflight: false
+        ))
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: true))
+                $0.status = .inflight
+            }, {
+                $0.current = ppo
+                $0.status = nil
+            }, {
+                $0.status = .inflight
+            }, {
+                $0.push(.payment)
+                $0.status = nil
+            }, {
+                $0 = .init([ppo])
+            }, {
+                $0.status = .inflight
+            }, {
+                $0.push(.payment)
+                $0.status = nil
+            }, {
+                $0 = .init([ppo])
+            }
+        )
+    }
+    
+    func test_startPaymentFromServicesFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let lastPayments = [lastPayment]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let service = makeUtilityService()
+        let services = [service, makeUtilityService(), makeUtilityService()]
+        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePayment(.select(.operator(`operator`))))
+        loadServices.complete(with: .success(services))
+        
+#warning("add select utility")
+        
+#warning("add payment flow")
+        
+        let ppo = State.Flow.prePaymentOptions(.init(
+            lastPayments: lastPayments,
+            operators: operators,
+            isInflight: false
+        ))
+        
+        assert(
+            spy,
+            .init([]), {
+                $0 = .init([])
+            }, {
+                $0.current = .prePaymentOptions(.init(isInflight: true))
+                $0.status = .inflight
+            }, {
+                $0.current = ppo
+                $0.status = nil
+            }, {
+                $0.status = .inflight
+            }, {
+                $0.push(.prePaymentState(.services(services)))
+                $0.status = nil
             }
         )
     }
