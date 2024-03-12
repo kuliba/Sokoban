@@ -9,14 +9,17 @@ import Foundation
 
 public struct ProductDetailsState: Equatable {
     
-    public let items: [ListItem]
+    public let accountDetails: [ListItem]
+    public let cardDetails: [ListItem]
     public var event: ProductDetailsEvent?
     
     public init(
-        items: [ListItem],
+        accountDetails: [ListItem],
+        cardDetails: [ListItem],
         event: ProductDetailsEvent? = nil
     ) {
-        self.items = items
+        self.accountDetails = accountDetails
+        self.cardDetails = cardDetails
         self.event = event
     }
 }

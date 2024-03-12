@@ -9,15 +9,82 @@ import SwiftUI
 
 struct ProductDetailsView: View {
     
-    let items: [ListItem]
+    let accountDetails: [ListItem]
+    let cardDetails: [ListItem]
     let event: (ProductDetailEvent) -> Void
     let config: Config
-    let title: String
-    let showCheckbox: Bool
     
     @Binding var isCheck: Bool
+    @Binding var showCheckbox: Bool
     // TODO: paddings & etc -> Config
     var body: some View {
+     
+        ScrollView(.vertical, showsIndicators: false) {
+            
+            VStack {
+                
+                if !accountDetails.isEmpty {
+                    
+                    itemsView(
+                        title: "Реквизиты счета",
+                        items: accountDetails
+                    )
+                } else {
+                    
+                    noAccountDetails()
+                }
+                
+                itemsView(
+                    title: "Реквизиты карты",
+                    items: cardDetails
+                )
+                // TODO: add action
+                Button(action: {  }) {
+                    
+                    ZStack {
+                        
+                        Rectangle()
+                            .fill(config.colors.fill)
+                            .cornerRadius(12)
+                        
+                        Text("Поделиться")
+                    }
+                    .frame(height: 56)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal, 16)
+            }
+        }
+    }
+    
+    private func noAccountDetails() -> some View {
+        
+        ZStack {
+            
+            Rectangle()
+                .fill(config.colors.fill)
+                .cornerRadius(90)
+            
+            HStack {
+                
+                Image(systemName: "ellipsis.bubble")
+                
+                Text("Реквизиты счета доступны владельцу основной карты. Он сможет их посмотреть в ЛК.")
+                    .lineLimit(3)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 76)
+        .padding(.horizontal, 16)
+    }
+    
+    private func itemsView(
+        title: String,
+        items: [ListItem]
+    ) -> some View {
         
         ZStack {
             
@@ -34,6 +101,7 @@ struct ProductDetailsView: View {
             .padding(.bottom, 13)
             .padding(.horizontal, 16)
         }
+        .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 16)
     }
     
@@ -110,28 +178,28 @@ struct ProductDetailsView_Previews: PreviewProvider {
         
         Group {
             ProductDetailsView(
-                items: .preview,
+                accountDetails: .accountItems,
+                cardDetails: .cardItems,
                 event: { print($0) },
                 config: .preview,
-                title: "Реквизиты счета",
-                showCheckbox: false,
-                isCheck: $falseValue
+                isCheck: $falseValue, 
+                showCheckbox: $falseValue
             )
             ProductDetailsView(
-                items: .preview,
+                accountDetails: [],
+                cardDetails: .cardItems,
                 event: { print($0) },
                 config: .preview,
-                title: "Реквизиты счета",
-                showCheckbox: true,
-                isCheck: $falseValue
+                isCheck: $falseValue,
+                showCheckbox: $trueValue
             )
             ProductDetailsView(
-                items: .cardItems,
+                accountDetails: .accountItems,
+                cardDetails: .cardItems,
                 event: { print($0) },
                 config: .preview,
-                title: "Реквизиты карты",
-                showCheckbox: true,
-                isCheck: $trueValue
+                isCheck: $trueValue,
+                showCheckbox: $trueValue
             )
         }
     }

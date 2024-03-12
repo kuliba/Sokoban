@@ -15,12 +15,15 @@ extension ProductProfileViewModel {
     typealias MakeCardGuardianViewModel = (AnySchedulerOfDispatchQueue) -> CardGuardianViewModel
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
+    typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
 
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
         buttons: [CardGuardianState._Button],
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
+        accountDetails: [ListItem],
+        cardDetails: [ListItem],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
         
@@ -92,12 +95,26 @@ extension ProductProfileViewModel {
             print("top up card \($0.status)")
         }
         
-        let accountDetails: ProductProfileNavigationEffectHandler.AccountDetails = {
+        let accountDetailsAction: ProductProfileNavigationEffectHandler.AccountDetails = {
             print("account details: card \($0.status)")
         }
         
-        let accountStatement: ProductProfileNavigationEffectHandler.AccountStatement = {
+        let accountStatementAction: ProductProfileNavigationEffectHandler.AccountStatement = {
             print("account statement: card \($0.status)")
+        }
+        
+        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        
+        let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
+        
+        let makeDetailsViewModel: MakeProductDetailsViewModel =  {
+            
+            .init(
+                initialState: .init(accountDetails: accountDetails, cardDetails: cardDetails),
+                reduce: detailsReduce,
+                handleEffect: detailsHandleEffect,
+                scheduler: $0
+            )
         }
         
         let handleEffect = ProductProfileNavigationEffectHandler(
@@ -113,8 +130,9 @@ extension ProductProfileViewModel {
                 topUpCardFromOurBank: topUpCardFromOurBank),
             makeAccountInfoPanelViewModel: makeAccountInfoPanelViewModel,
             accountInfoPanelActions: .init(
-                accountDetails: accountDetails,
-                accountStatement: accountStatement),
+                accountDetails: accountDetailsAction,
+                accountStatement: accountStatementAction),
+            makeProductDetailsViewModel: makeDetailsViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)
         
