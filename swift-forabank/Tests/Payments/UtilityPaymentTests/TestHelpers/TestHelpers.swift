@@ -43,9 +43,11 @@ func anyMessage() -> String {
     .init(value: value)
 }
 
-struct LastPayment: Equatable {
+struct LastPayment: Equatable, Identifiable {
     
     var value: String
+    
+    var id: String { value }
 }
 
 struct Operator: Equatable, Identifiable {
