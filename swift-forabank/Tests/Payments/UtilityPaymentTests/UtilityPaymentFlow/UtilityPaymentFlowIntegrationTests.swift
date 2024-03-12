@@ -14,12 +14,27 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        let (_,_, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
         
         XCTAssertEqual(loadLastPayments.callCount, 0)
         XCTAssertEqual(loadOperators.callCount, 0)
         XCTAssertEqual(loadServices.callCount, 0)
         XCTAssertEqual(startPayment.callCount, 0)
+    }
+    
+    func test_loadFailureFlow() {
+        
+        let (sut, spy, loadLastPayments, loadOperators, _, _) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .failure(.connectivityError))
+        loadOperators.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init([]),
+            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
+            .init([.prePaymentOptions(.init(isInflight: false))], status: .none),
+        ])
     }
     
     // MARK: - Helpers
@@ -53,6 +68,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
+        spy: ValueSpy<State>,
         loadLastPayments: LoadLastPaymentsSpy,
         loadOperators: LoadOperatorsSpy,
         loadServices: LoadServicesSpy,
@@ -92,12 +108,15 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             scheduler: .immediate
         )
         
+        let spy = ValueSpy(sut.$state)
+        
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         trackForMemoryLeaks(loadLastPayments, file: file, line: line)
         trackForMemoryLeaks(loadOperators, file: file, line: line)
         trackForMemoryLeaks(loadServices, file: file, line: line)
         trackForMemoryLeaks(startPayment, file: file, line: line)
         
-        return (sut, loadLastPayments, loadOperators, loadServices, startPayment)
+        return (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment)
     }
 }

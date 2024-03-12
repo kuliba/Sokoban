@@ -30,12 +30,15 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
         XCTAssertNil(state.current)
     }
     
-    func test_prePaymentOptionsEvent_shouldNotChangeEmptyFlow_initiate() {
+    func test_prePaymentOptionsEvent_shouldChangeEmptyFlow_initiate() {
         
         let state = makeState(flows: [])
         let event: Event = .prePaymentOptions(.initiate)
         
-        assertState(event, on: state)
+        assertState(event, on: state) {
+            
+            $0.push(.prePaymentOptions(.init()))
+        }
         
         XCTAssertNil(state.current)
     }

@@ -80,6 +80,16 @@ private extension UtilityPaymentFlowReducer {
                     operators: try? loadOperatorsResult.get()
                 ))
                 
+            case .initiate:
+                let (ppoState, ppoEffect) = prePaymentOptionsReduce(.init(), event)
+                if ppoState.isInflight {
+                    state.status = .inflight
+                } else {
+                    state.status = .none
+                }
+                state.current = .prePaymentOptions(ppoState)
+                effect = ppoEffect.map { .prePaymentOptions($0) }
+
             default:
                 break
             }
@@ -88,7 +98,9 @@ private extension UtilityPaymentFlowReducer {
             let (ppoState, ppoEffect) = prePaymentOptionsReduce(prePaymentOptionsState, event)
             
             if ppoState.isInflight {
-                state.isInflight = true
+                state.status = .inflight
+            } else {
+                state.status = .none
             }
             state.current = .prePaymentOptions(ppoState)
             effect = ppoEffect.map { .prePaymentOptions($0) }
