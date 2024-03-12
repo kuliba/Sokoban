@@ -9,6 +9,7 @@ import Foundation
 import ProductProfileComponents
 import ProductProfile
 import RxViewModel
+import UIKit
 
 extension ProductProfileViewModel {
     
@@ -120,6 +121,16 @@ extension ProductProfileViewModel {
             )
         }
         
+        let detailsActions = ProductProfileNavigationEffectHandler.ProductDetailsActions.init(
+            longPress: {
+                
+                UIPasteboard.general.string = $0
+                print("informer \($1)")
+            },
+            cvvTap: {
+                print("cvv tap")
+            })
+        
         let sheetReduce = ProductDetailsSheetReducer().reduce(_:_:)
         
         let sheetHandleEffect = ProductDetailsSheetEffectHandler().handleEffect(_:_:)
@@ -153,6 +164,7 @@ extension ProductProfileViewModel {
                 accountDetails: accountDetailsAction,
                 accountStatement: accountStatementAction),
             makeProductDetailsViewModel: makeDetailsViewModel,
+            productDetailsActions: detailsActions,
             makeProductDetailsSheetViewModel: makeDetailsSheetViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)

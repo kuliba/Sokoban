@@ -80,6 +80,8 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         topUpCardFromOtherBank: @escaping SUT.TopUpCardFromOtherBank = {_ in },
         accountDetailsAction: @escaping SUT.AccountDetails = {_ in },
         accountStatementAction: @escaping SUT.AccountStatement = {_ in },
+        longPress: @escaping SUT.LongPress = {_,_ in },
+        cvvTapped: @escaping SUT.CvvTapped = { },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -170,6 +172,9 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
                 accountStatement: accountStatementAction
             ),
             makeProductDetailsViewModel: makeProductDetailsViewModel,
+            productDetailsActions: .init(
+                longPress: longPress,
+                cvvTap: cvvTapped),
             makeProductDetailsSheetViewModel: makeProductDetailsSheetViewModel,
             scheduler: scheduler
         )
@@ -182,6 +187,9 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(accountInfoPanelHandleEffect, file: file, line: line)
         trackForMemoryLeaks(detailsReduce, file: file, line: line)
         trackForMemoryLeaks(detailsHandleEffect, file: file, line: line)
+        trackForMemoryLeaks(sheetReduce, file: file, line: line)
+        trackForMemoryLeaks(sheetHandleEffect, file: file, line: line)
+
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut

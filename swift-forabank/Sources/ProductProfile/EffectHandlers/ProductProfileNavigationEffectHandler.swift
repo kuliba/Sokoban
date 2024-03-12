@@ -21,6 +21,8 @@ public final class ProductProfileNavigationEffectHandler {
     private let accountInfoPanelActions: AccountInfoPanelActions
 
     private let makeProductDetailsViewModel: MakeProductDetailsViewModel
+    private let productDetailsActions: ProductDetailsActions
+
     private let makeProductDetailsSheetViewModel: MakeProductDetailsSheetViewModel
 
     private let scheduler: AnySchedulerOfDispatchQueue
@@ -33,6 +35,7 @@ public final class ProductProfileNavigationEffectHandler {
         makeAccountInfoPanelViewModel: @escaping MakeAccountInfoPanelViewModel,
         accountInfoPanelActions: AccountInfoPanelActions,
         makeProductDetailsViewModel: @escaping MakeProductDetailsViewModel,
+        productDetailsActions: ProductDetailsActions,
         makeProductDetailsSheetViewModel: @escaping MakeProductDetailsSheetViewModel,
         scheduler: AnySchedulerOfDispatchQueue
     ) {
@@ -43,6 +46,7 @@ public final class ProductProfileNavigationEffectHandler {
         self.makeAccountInfoPanelViewModel = makeAccountInfoPanelViewModel
         self.accountInfoPanelActions = accountInfoPanelActions
         self.makeProductDetailsViewModel = makeProductDetailsViewModel
+        self.productDetailsActions = productDetailsActions
         self.makeProductDetailsSheetViewModel = makeProductDetailsSheetViewModel
         self.scheduler = scheduler
     }
@@ -95,6 +99,20 @@ public extension ProductProfileNavigationEffectHandler {
         ) {
             self.accountDetails = accountDetails
             self.accountStatement = accountStatement
+        }
+    }
+    
+    struct ProductDetailsActions {
+        
+        let longPress: LongPress
+        let cvvTap: CvvTapped
+        
+        public init(
+            longPress: @escaping LongPress,
+            cvvTap: @escaping CvvTapped
+        ) {
+            self.longPress = longPress
+            self.cvvTap = cvvTap
         }
     }
 }
@@ -155,9 +173,16 @@ public extension ProductProfileNavigationEffectHandler {
             accountInfoPanelActions.accountStatement(card)
             // TODO: add actions
         case let .productDetailsItemlongPress(valueForCopy, textForInformer):
-            print("copy: \(valueForCopy) - informer: \(textForInformer)")
+            productDetailsActions.longPress(valueForCopy.rawValue, textForInformer.rawValue)
         case let .productDetailsIconTap(documentId):
-            print("documentId - \(documentId)")
+            switch documentId {
+                
+            case .cvvMasked:
+                productDetailsActions.cvvTap()
+                
+            default:
+                break
+            }
         case .shareTap:
             print("shareTap")
         case .sendAll:
@@ -287,6 +312,10 @@ public extension ProductProfileNavigationEffectHandler {
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
     typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    
+    typealias LongPress = (String, String) -> Void
+    typealias CvvTapped = () -> Void
+
     typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
 }
 
