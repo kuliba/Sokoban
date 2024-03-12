@@ -33,7 +33,30 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init([]),
             .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
-            .init([.prePaymentOptions(.init(isInflight: false))], status: .none),
+            .init([.prePaymentOptions(.init(isInflight: false))], status: nil),
+        ])
+    }
+    
+    func test_scrollFlow() {
+        
+        let lastPayments = [makeLastPayment()]
+        let `operator` = makeOperator()
+        let operators = [makeOperator(), `operator`, makeOperator()]
+        let (sut, spy, loadLastPayments, loadOperators, loadServices, startPayment) = makeSUT()
+        
+        sut.event(.prePaymentOptions(.initiate))
+        loadLastPayments.complete(with: .success(lastPayments))
+        loadOperators.complete(with: .success(operators))
+        
+        sut.event(.prePaymentOptions(.didScrollTo(`operator`.id)))
+        let newPage = [makeOperator(), makeOperator()]
+        loadOperators.complete(with: .success(newPage), at: 1)
+        
+        XCTAssertNoDiff(spy.values, [
+            .init([]),
+            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
+            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, isInflight: false))], status: nil),
+            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators + newPage, isInflight: false))], status: nil),
         ])
     }
     
