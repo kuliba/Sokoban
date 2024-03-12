@@ -74,6 +74,8 @@ extension Product {
     static let cardAdditionalOther6: Self = .init(id: 22, .card, .additionalOther, 13)
     static let cardAdditionalSelf4: Self = .init(id: 23, .card, .additionalSelf, 14)
     static let cardAdditionalOther7: Self = .init(id: 24, .card, .additionalOther, 15)
+    
+    static let sticker: Self = .init(id: 25, .card, .sticker, 16)
 }
 
 extension Array where Element == ProductGroup {
