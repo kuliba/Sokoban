@@ -60,13 +60,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         let newPage = [makeOperator(), makeOperator()]
         loadOperators.complete(with: .success(newPage), at: 1)
         
-        XCTAssertNoDiff(spy.values, [
-            .init([]),
-            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
-            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, isInflight: false))], status: nil),
-            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators + newPage, isInflight: false))], status: nil),
-        ])
-        
         assert(
             spy,
             .init([]), {
@@ -109,14 +102,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
 #warning("FIX SEARCH!")
         // let found = [makeOperator(), makeOperator()]
         // loadOperators.complete(with: .success(found), at: 1)
-        
-        XCTAssertNoDiff(spy.values, [
-            .init([]),
-            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
-            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, isInflight: false))], status: nil),
-            .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: operators, searchText: "abc", isInflight: false))], status: nil),
-            //  .init([.prePaymentOptions(.init(lastPayments: lastPayments, operators: found, isInflight: false))], status: nil),
-        ])
         
         assert(
             spy,
@@ -174,17 +159,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
             operators: operators,
             isInflight: false
         ))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init([]),
-            .init([.prePaymentOptions(.init(isInflight: true))], status: .inflight),
-            .init([ppo]),
-            .init([ppo, .prePaymentState(.payingByInstruction)]),
-            .init([ppo]),
-            .init([ppo, .prePaymentState(.scanning)]),
-            .init([ppo]),
-            .init([ppo], status: .inflight),
-        ])
         
         assert(
             spy,
