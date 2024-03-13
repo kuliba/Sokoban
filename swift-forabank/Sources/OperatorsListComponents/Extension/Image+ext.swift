@@ -17,11 +17,12 @@ public extension Image {
         ZStack {
             
             Circle()
-                .frame(width: 40, height: 40)
+                .frame(width: 32, height: 32)
+                .foregroundColor(backgroundColor)
                 .background(backgroundColor)
             
             icon
-                .frame(width: 24, height: 24)
+                .frame(width: 16, height: 16)
                 .foregroundColor(.white)
         }
     }
