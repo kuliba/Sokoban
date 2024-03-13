@@ -260,14 +260,8 @@ private extension ProductProfileNavigationReducer {
             case .selectAccountValue, .selectCardValue:
                 break
             }
-        case .sendAll:
-            effect = .productProfile(.sendAll)
-        case .sendSelect:
-            effect = .productProfile(.sendSelect)
         case .close:
             state.destination = nil
-        case .hideCheckbox:
-            break
         }
         
         return (state, effect)

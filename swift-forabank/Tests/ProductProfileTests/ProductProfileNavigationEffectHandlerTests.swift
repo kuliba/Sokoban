@@ -81,7 +81,8 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         accountDetailsAction: @escaping SUT.AccountDetails = {_ in },
         accountStatementAction: @escaping SUT.AccountStatement = {_ in },
         longPress: @escaping SUT.LongPress = {_,_ in },
-        cvvTapped: @escaping SUT.CvvTapped = { },
+        cvvTapped: @escaping SUT.CvvTapped = { "" },
+        shareInfo: @escaping ([String]) -> Void = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -129,7 +130,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
-        let detailsReduce = ProductDetailsReducer()
+        let detailsReduce = ProductDetailsReducer(shareInfo: shareInfo)
         let detailsHandleEffect = ProductDetailsEffectHandler()
         let makeProductDetailsViewModel: MakeProductDetailsViewModel =  {
             .init(

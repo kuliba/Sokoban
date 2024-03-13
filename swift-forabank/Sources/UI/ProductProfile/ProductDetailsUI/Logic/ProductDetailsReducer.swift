@@ -9,9 +9,9 @@ import Foundation
 
 public final class ProductDetailsReducer {
     
-    private let shareInfo: ([String]) -> Void
+    private let shareInfo: ShareAction
     
-    public init(shareInfo: @escaping ([String]) -> Void) {
+    public init(shareInfo: @escaping ShareAction) {
         self.shareInfo = shareInfo
     }
 }
@@ -78,4 +78,6 @@ public extension ProductDetailsReducer {
     typealias Effect = ProductDetailsEffect
 
     typealias Reduce = (State, Event) -> (State, Effect?)
+    
+    typealias ShareAction = ([String]) -> Void
 }

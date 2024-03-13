@@ -179,10 +179,6 @@ public extension ProductProfileNavigationEffectHandler {
             }
         case .shareTap:
             print("shareTap")
-        case .sendAll:
-            print("sendAll")
-        case .sendSelect:
-            print("sendSelect")
         }
     }
 }
@@ -388,20 +384,14 @@ private extension ProductDetailsState {
         
         switch self.event {
             
-        case .none:
+        case .none, .sendAll, .sendSelect, .hideCheckbox:
             return .none
         case let .itemTapped(tap):
             return .itemTapped(tap)
         case .appear:
             return .appear
-        case .sendAll:
-            return .sendAll
-        case .sendSelect:
-            return .sendSelect
         case .close:
             return .close
-        case .hideCheckbox:
-            return .hideCheckbox
         }
     }
 }
@@ -409,10 +399,7 @@ private extension ProductDetailsState {
 public enum ProductDetailsStateProjection: Equatable {
     case appear
     case itemTapped(ProductDetailEvent)
-    case sendAll
-    case sendSelect
     case close
-    case hideCheckbox
 }
 
 private extension ProductDetailsSheetState {

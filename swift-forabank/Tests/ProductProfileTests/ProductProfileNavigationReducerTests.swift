@@ -340,9 +340,10 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     }
     
     private func createProductDetailsRoute(
+        shareInfo: @escaping ([String]) -> Void = {_ in }
     ) -> ProductProfileNavigation.ProductDetailsRoute {
         
-        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        let detailsReduce = ProductDetailsReducer(shareInfo: shareInfo).reduce(_:_:)
         
         let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
 

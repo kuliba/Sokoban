@@ -21,6 +21,4 @@ public enum ProductProfileEffect: Equatable {
     case productDetailsItemlongPress(ProductDetailEvent.ValueForCopy, ProductDetailEvent.TextForInformer)
     case productDetailsIconTap(DocumentItem.ID)
     case shareTap
-    case sendAll
-    case sendSelect
 }

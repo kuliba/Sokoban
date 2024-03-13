@@ -59,11 +59,12 @@ final class ProductDetailsReducerTests: XCTestCase {
     private typealias Result = (State, Effect?)
     
     private func makeSUT(
+        shareAction: @escaping SUT.ShareAction = {_ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(shareInfo: shareAction)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut)
