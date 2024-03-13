@@ -52,7 +52,7 @@ private extension PaymentsTransfersView {
             case .failure:
                 factory.prePaymentFailureView {
                     
-                    viewModel.event(.utilityPayment(.prePayment(.payByInstruction)))
+                    viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
                 }
                 
             case .success:

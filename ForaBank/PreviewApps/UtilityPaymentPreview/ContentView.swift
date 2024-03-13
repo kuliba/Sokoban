@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var tab: Tab = .settings
-    @State private var flow: Flow = .happy
+    @State private var tab: Tab = .payments
+    @State private var flow: Flow = .sad
     @State private var isShowingSpinner = false
     
     var body: some View {
@@ -20,6 +20,7 @@ struct ContentView: View {
             tabView()
             
             spinner()
+                .ignoresSafeArea()
         }
     }
 }
@@ -61,8 +62,8 @@ private extension ContentView {
         let viewModel = PaymentsTransfersViewModel.default(flow: flow)
         viewModel.rootActions = .init(
             spinner: .init(
-                hide: { isShowingSpinner = false },
-                show: { isShowingSpinner = true }
+                hide: { DispatchQueue.main.async { isShowingSpinner = false }},
+                show: { DispatchQueue.main.async { isShowingSpinner = true }}
             )
         )
         

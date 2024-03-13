@@ -11,7 +11,7 @@ enum PaymentsTransfersEvent: Equatable {
     
     case back
     case openUtilityPayment
-    case utilityPayment(UtilityFlowEvent)
+    case utilityFlow(UtilityFlowEvent)
 }
 
 extension PaymentsTransfersEvent {

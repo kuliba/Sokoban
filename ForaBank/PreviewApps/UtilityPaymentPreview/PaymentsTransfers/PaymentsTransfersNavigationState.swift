@@ -9,18 +9,26 @@ extension PaymentsTransfersState {
     
     var navigationState: NavigationState? {
         
-        switch route {            
+        let state = getNavigationState()
+        dump(state)
+        
+        return state
+    }
+     
+    private func getNavigationState() -> NavigationState? {
+        
+        switch route {
         case .none:
             return .none
             
-        case let .utilityPayment(utilityPaymentState):
-            switch utilityPaymentState.current {
+        case let .utilityFlow(utilityFlow):
+            switch utilityFlow.current {
             case .none:
                 return .none
                 
             case let .prePaymentOptions(prePaymentOptions):
-                switch prePaymentOptions {
-                case .init():
+                switch prePaymentOptions.operators {
+                case .none:
                     return .prePaymentOptions(.failure)
                     
                 default:
@@ -42,7 +50,6 @@ extension PaymentsTransfersState {
                     return nil
                 }
                 
-                
             case .payment:
                 fatalError()
             }
@@ -52,7 +59,7 @@ extension PaymentsTransfersState {
     var prePaymentNavigationState: PrePaymentNavigationState? {
         
         switch route {
-        case let .utilityPayment(utilityPaymentState):
+        case let .utilityFlow(utilityPaymentState):
             return .utilityPayment
 
         default:
