@@ -53,7 +53,7 @@ public struct ProductDetailsWrappedView: View {
         
         if viewModel.state.showCheckBox {
             
-            Button(action: {} ) {
+            Button(action: { viewModel.event(.hideCheckbox) } ) {
                 
                 Image(systemName: "xmark")
                     .aspectRatio(contentMode: .fit)

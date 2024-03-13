@@ -408,6 +408,8 @@ private extension ProductDetailsState {
             return .sendSelect
         case .close:
             return .close
+        case .hideCheckbox:
+            return .hideCheckbox
         }
     }
 }
@@ -419,6 +421,7 @@ public enum ProductDetailsStateProjection: Equatable {
     case sendAll
     case sendSelect
     case close
+    case hideCheckbox
 }
 
 private extension ProductDetailsSheetState {

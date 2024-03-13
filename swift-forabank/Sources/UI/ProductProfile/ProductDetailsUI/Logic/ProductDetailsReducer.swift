@@ -49,6 +49,9 @@ public extension ProductDetailsReducer {
             state.title = "Выберите реквизиты"
         case .close:
             state.event = .close
+        case .hideCheckbox:
+            state.showCheckBox = false
+            state.title = "Реквизиты счета и карты"
         }
         
         return (state, .none)

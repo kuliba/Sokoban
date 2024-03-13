@@ -15,4 +15,5 @@ public enum ProductDetailsEvent: Equatable {
     case sendAll
     case sendSelect
     case close
+    case hideCheckbox
 }
