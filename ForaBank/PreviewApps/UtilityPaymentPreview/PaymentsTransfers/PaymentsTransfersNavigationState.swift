@@ -10,11 +10,11 @@ extension PaymentsTransfersState {
     var navigationState: NavigationState? {
         
         let state = getNavigationState()
-        dump(state)
+        // dump(state)
         
         return state
     }
-     
+    
     private func getNavigationState() -> NavigationState? {
         
         switch route {
@@ -61,7 +61,7 @@ extension PaymentsTransfersState {
         switch route {
         case let .utilityFlow(utilityPaymentState):
             return .utilityPayment
-
+            
         default:
             return .none
         }
@@ -125,13 +125,13 @@ extension PaymentsTransfersState {
 extension PaymentsTransfersState.NavigationState {
     
     enum PrePaymentOptions {
-
+        
         case failure
         case success
     }
     
     enum PrePayment {
-
+        
         case failure
         case success
     }

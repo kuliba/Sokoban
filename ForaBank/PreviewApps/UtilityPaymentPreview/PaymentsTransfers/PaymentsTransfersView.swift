@@ -10,7 +10,7 @@ import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
-    @ObservedObject var viewModel: PaymentsTransfersViewModel
+    @StateObject var viewModel: PaymentsTransfersViewModel
     
     let factory: PaymentsTransfersViewFactory
     

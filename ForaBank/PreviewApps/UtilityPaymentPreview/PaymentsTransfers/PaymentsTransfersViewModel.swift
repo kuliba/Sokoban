@@ -35,6 +35,11 @@ final class PaymentsTransfersViewModel: ObservableObject {
             .receive(on: scheduler)
             .assign(to: &$state)
     }
+    
+    deinit {
+        
+        print("deinit: \(type(of: Self.self))")
+    }
 }
 
 extension PaymentsTransfersViewModel {
@@ -77,7 +82,7 @@ extension PaymentsTransfersViewModel {
     
     typealias PaymentsTransfersReduce = (State, Event) -> (State, Effect?)
     typealias PaymentsTransfersHandleEffect = (Effect, @escaping Dispatch) -> Void
-
+    
     typealias Dispatch = (Event) -> Void
     
     typealias State = PaymentsTransfersState

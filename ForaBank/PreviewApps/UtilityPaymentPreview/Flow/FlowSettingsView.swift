@@ -32,15 +32,19 @@ private extension FlowSettingsView {
             
             Button("happy") {
                 
-                flow.loadLastPayments = .success
-                flow.loadOperators = .success
+                flow = .init(
+                    loadLastPayments: .success,
+                    loadOperators: .success
+                )
             }
             .foregroundColor(.blue)
             
             Button("sad") {
                 
-                flow.loadLastPayments = .failure
-                flow.loadOperators = .failure
+                flow = .init(
+                    loadLastPayments: .failure,
+                    loadOperators: .failure
+                )
             }
             .foregroundColor(.red)
         }

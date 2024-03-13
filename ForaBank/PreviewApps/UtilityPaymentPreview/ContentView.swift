@@ -5,13 +5,68 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
+import Combine
 import SwiftUI
+
+struct ContentState {
+    
+    var tab: ContentView.Tab = .payments
+    var flow: Flow = .sad
+    var isShowingSpinner = false
+}
+
+final class ContentViewModel: ObservableObject {
+    
+    @Published var state: ContentState
+    
+    private(set) var viewModel: PaymentsTransfersViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(state: ContentState = .init()) {
+        
+        self.state = state
+        self.viewModel = .default(flow: state.flow)
+        
+        $state
+            .map(\.flow)
+            .removeDuplicates()
+            .sink { [weak self] in
+                
+                guard let self else { return }
+                
+                print("set PaymentsTransfersViewModel")
+                viewModel = .default(flow: $0)
+                viewModel.rootActions = .init(
+                    spinner: .init(
+                        hide: {
+                            
+                            DispatchQueue.main.async { [weak self] in
+                                
+                                self?.state.isShowingSpinner = false
+                            }
+                        },
+                        show: {
+                            
+                            DispatchQueue.main.async { [weak self] in
+                                
+                                self?.state.isShowingSpinner = true
+                                
+                            }}
+                    )
+                )
+            }
+            .store(in: &cancellables)
+    }
+    
+    deinit {
+        
+        print("deinit: \(type(of: Self.self))")
+    }
+}
 
 struct ContentView: View {
     
-    @State private var tab: Tab = .payments
-    @State private var flow: Flow = .sad
-    @State private var isShowingSpinner = false
+    @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
         
@@ -29,7 +84,7 @@ private extension ContentView {
     
     func tabView() -> some View {
         
-        TabView(selection: $tab) {
+        TabView(selection: $viewModel.state.tab) {
             
             mainView()
                 .taggedTabItem(.main)
@@ -43,7 +98,7 @@ private extension ContentView {
             settingsView()
                 .taggedTabItem(.settings)
         }
-        .animation(.default, value: tab)
+        .animation(.default, value: viewModel.state.tab)
     }
     
     func mainView() -> some View {
@@ -53,24 +108,16 @@ private extension ContentView {
             Text("Main View")
                 .font(.title.bold())
             
-            Button("Payments") { tab = .payments }
+            Button("Payments") { viewModel.state.tab = .payments }
         }
     }
     
     func paymentsView() -> some View {
         
-        let viewModel = PaymentsTransfersViewModel.default(flow: flow)
-        viewModel.rootActions = .init(
-            spinner: .init(
-                hide: { DispatchQueue.main.async { isShowingSpinner = false }},
-                show: { DispatchQueue.main.async { isShowingSpinner = true }}
-            )
-        )
-        
-        return NavigationView {
+        NavigationView {
             
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: viewModel.viewModel,
                 factory: .init()
             )
             .navigationViewStyle(StackNavigationViewStyle())
@@ -92,7 +139,7 @@ private extension ContentView {
         
         NavigationView {
             
-            FlowSettingsView(flow: $flow)
+            FlowSettingsView(flow: $viewModel.state.flow)
                 .navigationTitle("Flow Settings")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -103,7 +150,7 @@ private extension ContentView {
     
     private func closeSettingsButton() -> some View {
         
-        Button("Done") { tab = .payments }
+        Button("Done") { viewModel.state.tab = .payments }
     }
     
     private func spinner() -> some View {
@@ -115,7 +162,7 @@ private extension ContentView {
             ProgressView()
         }
         .ignoresSafeArea()
-        .opacity(isShowingSpinner ? 1 : 0)
+        .opacity(viewModel.state.isShowingSpinner ? 1 : 0)
     }
 }
 
@@ -166,6 +213,6 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContentView()
+        ContentView(viewModel: .init())
     }
 }
