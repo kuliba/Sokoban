@@ -26,6 +26,25 @@ final class ContentViewModel: ObservableObject {
         
         self.state = state
         self.viewModel = .default(flow: state.flow)
+        let rootActions = RootActions(
+            spinner: .init(
+                hide: {
+                    
+                    DispatchQueue.main.async { [weak self] in
+                        
+                        self?.state.isShowingSpinner = false
+                    }
+                },
+                show: {
+                    
+                    DispatchQueue.main.async { [weak self] in
+                        
+                        self?.state.isShowingSpinner = true
+                        
+                    }}
+            )
+        )
+        self.viewModel.rootActions = rootActions
         
         $state
             .map(\.flow)
@@ -36,24 +55,7 @@ final class ContentViewModel: ObservableObject {
                 
                 print("set PaymentsTransfersViewModel")
                 viewModel = .default(flow: $0)
-                viewModel.rootActions = .init(
-                    spinner: .init(
-                        hide: {
-                            
-                            DispatchQueue.main.async { [weak self] in
-                                
-                                self?.state.isShowingSpinner = false
-                            }
-                        },
-                        show: {
-                            
-                            DispatchQueue.main.async { [weak self] in
-                                
-                                self?.state.isShowingSpinner = true
-                                
-                            }}
-                    )
-                )
+                viewModel.rootActions = rootActions
             }
             .store(in: &cancellables)
     }
