@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-public enum PrePaymentState<LastPayment, Operator> {
+public enum PrePaymentState<LastPayment, Operator, Service> {
     
-    case addingCompany
     case payingByInstruction
     case scanning
     case selected(Selected)
+    case services(Operator, [Service])
 }
 
 public extension PrePaymentState {
@@ -22,5 +22,5 @@ public extension PrePaymentState {
     }
 }
 
-extension PrePaymentState: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrePaymentState: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
 extension PrePaymentState.Selected: Equatable where LastPayment: Equatable, Operator: Equatable {}

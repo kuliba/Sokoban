@@ -28,12 +28,13 @@ struct PaymentsTransfersViewFactory {
     }
     
     func prePaymentView(
-        _ event: @escaping (PPEvent) -> Void
+        event: @escaping (PPEvent) -> Void,
+        addCompany: @escaping () -> Void
     ) -> some View {
         
         switch mode {
         case .mock:
-            return PrePaymentMockView(event: event)
+            return PrePaymentMockView(event: event, addCompany: addCompany)
         }
     }
 }

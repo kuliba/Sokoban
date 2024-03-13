@@ -13,6 +13,66 @@ func anyMessage() -> String {
     UUID().uuidString
 }
 
+// MARK: -
+
+ func makeLastPayment(
+    _ value: String = UUID().uuidString
+) -> LastPayment {
+    
+    .init(value: value)
+}
+
+ func makeOperator(
+    _ value: String = UUID().uuidString
+) -> Operator {
+    
+    .init(value: value)
+}
+
+ func makeResponse(
+    _ value: String = UUID().uuidString
+) -> StartPaymentResponse {
+    
+    .init(value: value)
+}
+
+ func makeService(
+    _ value: String = UUID().uuidString
+) -> UtilityService {
+    
+    .init(value: value)
+}
+
+struct LastPayment: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct UtilityService: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+// MARK: -
+
 func makeCreateAnywayTransferResponse(
 ) -> CreateAnywayTransferResponse {
     
@@ -60,7 +120,7 @@ func makeUtilityPayment(
 ) -> TestPayment {
     
     .init(
-        isFinalStep: isFinalStep, 
+        isFinalStep: isFinalStep,
         verificationCode: verificationCode,
         status: status
     )
