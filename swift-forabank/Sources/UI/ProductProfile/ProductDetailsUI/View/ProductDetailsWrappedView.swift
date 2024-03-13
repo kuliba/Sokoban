@@ -36,6 +36,7 @@ public struct ProductDetailsWrappedView: View {
             event: { viewModel.event(.itemTapped($0)) },
             config: config,
             showCheckbox: viewModel.state.showCheckBox,
+            detailsState: viewModel.state.detailsState,
             isCheckAccount: $isCheckAccount,
             isCheckCard: $isCheckCard
         )

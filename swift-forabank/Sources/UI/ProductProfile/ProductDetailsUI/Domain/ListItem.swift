@@ -31,11 +31,11 @@ public enum ListItem: Hashable {
             
             switch $0.id {
                 
-            case .cvv, .cvvMasked:
+            case .cvv:
                 return nil
                 
             default:
-                return $0.title + ": " + $0.copyValue
+                return $0.title + ": " + $0.value.copyValue
             }
         }.joined(separator: "\n")
     }

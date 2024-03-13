@@ -14,6 +14,7 @@ struct ProductDetailsView: View {
     let event: (ProductDetailEvent) -> Void
     let config: Config
     var showCheckbox: Bool
+    let detailsState: DetailsState
     
     @Binding var isCheckAccount: Bool
     @Binding var isCheckCard: Bool
@@ -134,7 +135,7 @@ struct ProductDetailsView: View {
             
         case let .single(item):
             
-            ProductDetailView(item: item, event: event, config: config)
+            ProductDetailView(item: item, event: event, config: config, detailsState: detailsState)
             divider()
             
         case let .multiple(items):
@@ -143,7 +144,7 @@ struct ProductDetailsView: View {
                 
                 ForEach(items, id: \.id) {
                     let isFirst = $0 == items.first
-                    ProductDetailView(item: $0, event: event, config: config)
+                    ProductDetailView(item: $0, event: event, config: config, detailsState: detailsState)
                         .padding(.leading, (isFirst ? 0 : 16))
                     if isFirst {
                         divider()
@@ -204,7 +205,8 @@ struct ProductDetailsView_Previews: PreviewProvider {
                 cardDetails: .cardItems,
                 event: { print($0) },
                 config: .preview,
-                showCheckbox: false,
+                showCheckbox: false, 
+                detailsState: .initial,
                 isCheckAccount: $falseValue,
                 isCheckCard: $falseValue
             )
@@ -214,6 +216,7 @@ struct ProductDetailsView_Previews: PreviewProvider {
                 event: { print($0) },
                 config: .preview,
                 showCheckbox: true,
+                detailsState: .needShowNumber,
                 isCheckAccount: $falseValue,
                 isCheckCard: $trueValue
             )
@@ -223,6 +226,7 @@ struct ProductDetailsView_Previews: PreviewProvider {
                 event: { print($0) },
                 config: .preview,
                 showCheckbox: true,
+                detailsState: .needShowCvv,
                 isCheckAccount: $trueValue,
                 isCheckCard: $falseValue
             )

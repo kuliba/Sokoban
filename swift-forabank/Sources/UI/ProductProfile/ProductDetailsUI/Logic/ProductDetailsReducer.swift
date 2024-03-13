@@ -31,8 +31,12 @@ public extension ProductDetailsReducer {
                 state.event = .itemTapped(.longPress(valueForCopy, text))
                 
             case let .iconTap(itemId):
-                state.event = .itemTapped(.iconTap(itemId))
-                
+                switch itemId {
+                case .number:
+                    state.updateDetailsStateByTap(itemId)
+                default:
+                    state.event = .itemTapped(.iconTap(itemId))
+                }
             case .share:
                 state.event = .share
                 state.showCheckBox = false

@@ -177,9 +177,8 @@ public extension ProductProfileNavigationEffectHandler {
         case let .productDetailsIconTap(documentId):
             switch documentId {
                 
-            case .cvvMasked:
+            case .cvv:
                 productDetailsActions.cvvTap()
-                
             default:
                 break
             }
