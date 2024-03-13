@@ -25,5 +25,5 @@ extension PaymentsTransfersState {
         case inflight
     }
     
-    typealias UtilityPayment = UtilityPaymentFlowState<LastPayment, Operator>
+    typealias UtilityPayment = UtilityPaymentFlowState<LastPayment, Operator, UtilityService>
 }

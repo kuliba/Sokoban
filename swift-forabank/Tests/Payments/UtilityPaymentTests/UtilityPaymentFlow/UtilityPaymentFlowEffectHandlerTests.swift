@@ -416,30 +416,3 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 }
-
-private struct LastPayment: Equatable {
-    
-    var value: String
-}
-
-private struct Operator: Equatable, Identifiable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct StartPaymentResponse: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct UtilityService: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
