@@ -36,7 +36,7 @@ func anyMessage() -> String {
     .init(value: value)
 }
 
- func makeUtilityService(
+ func makeService(
     _ value: String = UUID().uuidString
 ) -> UtilityService {
     

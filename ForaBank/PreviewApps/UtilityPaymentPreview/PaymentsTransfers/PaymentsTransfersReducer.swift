@@ -47,12 +47,12 @@ extension PaymentsTransfersReducer {
     
     typealias PPState = PrePaymentState<LastPayment, Operator, UtilityService>
     typealias PPEvent = PrePaymentEvent<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
-    typealias PPEffect = PrePaymentEffect<LastPayment, Operator>
+    typealias PPEffect = PrePaymentEffect<LastPayment, Operator, UtilityService>
     typealias PrePaymentReduce = (PPState, PPEvent) -> (PPState, PPEffect?)
     
     typealias FlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService>
     typealias FlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
-    typealias FlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator>
+    typealias FlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
     typealias UtilityPaymentFlowReduce = (FlowState, FlowEvent) -> (FlowState, FlowEffect?)
     
     typealias State = PaymentsTransfersState

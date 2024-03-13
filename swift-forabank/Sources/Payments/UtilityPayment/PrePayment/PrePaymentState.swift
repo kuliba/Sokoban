@@ -10,7 +10,7 @@ public enum PrePaymentState<LastPayment, Operator, Service> {
     case payingByInstruction
     case scanning
     case selected(Selected)
-    case services([Service])
+    case services(Operator, [Service])
 }
 
 public extension PrePaymentState {
