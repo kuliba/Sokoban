@@ -20,5 +20,4 @@ public enum ProductProfileEffect: Equatable {
     case accountStatement(ProductProfileComponents.AccountInfoPanelCard)
     case productDetailsItemlongPress(ProductDetailEvent.ValueForCopy, ProductDetailEvent.TextForInformer)
     case productDetailsIconTap(DocumentItem.ID)
-    case shareTap
 }

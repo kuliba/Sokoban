@@ -149,7 +149,6 @@ extension ProductProfileViewModel {
                 scheduler: $0
             )
         }
-
         
         let handleEffect = ProductProfileNavigationEffectHandler(
             makeCardGuardianViewModel: makeCardGuardianViewModel,

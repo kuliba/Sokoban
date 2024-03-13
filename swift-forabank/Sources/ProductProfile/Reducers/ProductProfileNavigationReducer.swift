@@ -212,12 +212,10 @@ private extension ProductProfileNavigationReducer {
             case .sendAll:
                 state.modal = nil
                 state.destination?.viewModel.event(.sendAll)
-                effect = .productProfile(.shareTap)
 
             case .sendSelect:
                 state.modal = nil
                 state.destination?.viewModel.event(.sendSelect)
-                effect = .productProfile(.shareTap)
             }
         }
         

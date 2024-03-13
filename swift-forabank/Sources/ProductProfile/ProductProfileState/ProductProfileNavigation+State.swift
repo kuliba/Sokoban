@@ -34,7 +34,6 @@ public extension ProductProfileNavigation {
 
 extension ProductProfileNavigation.State.ProductDetailsRoute: Hashable {
     
-    
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }

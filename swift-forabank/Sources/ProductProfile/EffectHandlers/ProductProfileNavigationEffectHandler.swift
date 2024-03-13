@@ -177,8 +177,6 @@ public extension ProductProfileNavigationEffectHandler {
             if case .cvv = documentId {
                 productDetailsActions.cvvTap()
             }
-        case .shareTap:
-            print("shareTap")
         }
     }
 }
