@@ -27,14 +27,6 @@ struct ProductDetailsView: View {
         )
         .buttonStyle(.bordered)
         .controlSize(.large)
-        .alert(
-            item: .init(
-                get: { state.alert },
-                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
-                set: { _ in }
-            ),
-            content: { .init(with: $0, event: event) }
-        )
         .sheet(
             item: .init(
                 get: {
@@ -62,6 +54,14 @@ struct ProductDetailsView: View {
         ProductDetailsWrappedView(
             viewModel: route.viewModel,
             config: .preview
+        )
+        .alert(
+            item: .init(
+                get: { state.alert },
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: event) }
         )
         .sheet(
             item: .init(

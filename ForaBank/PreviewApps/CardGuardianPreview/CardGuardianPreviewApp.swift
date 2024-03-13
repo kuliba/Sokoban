@@ -18,7 +18,7 @@ struct CardGuardianPreviewApp: App {
                     topUpCardButtons: .previewRegular,
                     accountInfoPanelButtons: .previewRegular,
                     accountDetails: [],
-                    cardDetails: .cardItems, 
+                    cardDetails: .cardItemsWithInfo, 
                     sheetButtons: .previewRegular
                 )
                 .background(.cyan)

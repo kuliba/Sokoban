@@ -45,9 +45,7 @@ struct ProductDetailsView: View {
             }
         }
         
-        Button(action: {
-            event(.share)
-        }) {
+        Button(action: { event(.share) }) {
             
             ZStack {
                 

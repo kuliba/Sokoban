@@ -22,4 +22,10 @@ public extension Array where Element == ListItem {
         .single(.numberMasked),
         .multiple([.expirationDate, .cvvMasked])
     ]
+    
+    static let cardItemsWithInfo: Self = [
+        .single(.holder),
+        .single(.numberMasked),
+        .multiple([.expirationDate, .info])
+    ]
 }

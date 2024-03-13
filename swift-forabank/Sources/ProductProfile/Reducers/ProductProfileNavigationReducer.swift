@@ -245,7 +245,12 @@ private extension ProductProfileNavigationReducer {
             switch tap {
                 
             case let .iconTap(documentId):
-                effect = .productProfile(.productDetailsIconTap(documentId))
+                switch documentId {
+                case .info:
+                    effect = .delayAlert(AlertModelOf.alertCVV(), alertLifespan)
+                default:
+                    effect = .productProfile(.productDetailsIconTap(documentId))
+                }
 
             case let .longPress(valueForCopy, textForInformer):
                 effect = .productProfile(.productDetailsItemlongPress(valueForCopy, textForInformer))

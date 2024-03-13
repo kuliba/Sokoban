@@ -79,4 +79,11 @@ public extension ProductDetail {
         copyValue: "",
         event: .longPress("valueForCopy", "for informer")
     )
+    static let info: Self = .init(
+        id: .info,
+        title: .cvvTitle,
+        subtitle: "Недоступно",
+        copyValue: "",
+        event: .iconTap(.info)
+    )
 }

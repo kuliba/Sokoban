@@ -37,6 +37,7 @@ public struct DocumentItem {
         case number
         case cvvMasked
         case cvv
+        case info
     }
     
     var title: String {
@@ -61,7 +62,7 @@ public struct DocumentItem {
             return "Держатель карты"
         case .expirationDate:
             return "Карта действует до"
-        case .cvvMasked, .cvv:
+        case .cvvMasked, .cvv, .info:
             return .cvvTitle
         }
     }

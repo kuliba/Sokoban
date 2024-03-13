@@ -24,7 +24,9 @@ struct ProductDetailView: View {
                     .renderingMode(.template)
                     .foregroundColor(config.colors.image)
                     .frame(width: config.iconSize, height: config.iconSize, alignment: .center)
-                    .onTapGesture { event(.iconTap(item.id)) }
+                    .onTapGesture {
+                        event(.iconTap(item.id))
+                    }
                     .accessibilityIdentifier("InfoProductItemButton")
             }
         }
@@ -71,6 +73,8 @@ private extension Config.Images {
             return maskedValue
         case .cvv:
             return showValue
+        case .info:
+            return info
         default:
             return nil
         }
@@ -90,6 +94,11 @@ struct ProductDetailView_Previews: PreviewProvider {
             
             ProductDetailView(
                 item: .cvvMasked,
+                event: { print("event - \($0)") },
+                config: .preview)
+            
+            ProductDetailView(
+                item: .info,
                 event: { print("event - \($0)") },
                 config: .preview)
         }
