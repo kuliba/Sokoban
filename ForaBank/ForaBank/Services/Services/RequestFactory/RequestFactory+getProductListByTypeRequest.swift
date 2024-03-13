@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import GetProductListByTypeService
 
 extension RequestFactory {
     
-    static func makeGetProductListByTypeRequest(
-        _ productType: ProductType
+    static func getProductListByTypeRequest(
+        _ productType: GetProductListByTypeService.ProductListData.ProductType
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [

@@ -41,6 +41,7 @@ let package = Package(
         .symmetricEncryption,
         .transferPublicKey,
         .urlRequestFactory,
+        .getProductListByTypeService,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -136,6 +137,8 @@ let package = Package(
         .transferPublicKeyTests,
         .urlRequestFactory,
         .urlRequestFactoryTests,
+        .getProductListByTypeService,
+        .getProductListByTypeServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -592,6 +595,13 @@ private extension Product {
         name: .transferPublicKey,
         targets: [
             .transferPublicKey,
+        ]
+    )
+    
+    static let getProductListByTypeService = library(
+        name: .getProductListByTypeService,
+        targets: [
+            .getProductListByTypeService
         ]
     )
     
@@ -1129,6 +1139,25 @@ private extension Target {
             .urlRequestFactory,
         ],
         path: "Tests/Services/\(String.urlRequestFactoryTests)"
+    )
+    
+    static let getProductListByTypeService = target(
+        name: .getProductListByTypeService,
+        dependencies: [
+            .services
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeService)"
+    )
+    
+    static let getProductListByTypeServiceTests = testTarget(
+        name: .getProductListByTypeServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeServiceTests)"
     )
 
     // MARK: - UI
@@ -1911,6 +1940,10 @@ private extension Target.Dependency {
         name: .urlRequestFactory
     )
     
+    static let getProductListByTypeService = byName(
+        name: .getProductListByTypeService
+    )
+    
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -2098,6 +2131,9 @@ private extension String {
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
+
+    static let getProductListByTypeService = "GetProductListByTypeService"
+    static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
 
     // MARK: - Tools
     

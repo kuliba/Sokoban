@@ -6,61 +6,34 @@
 //
 
 import Foundation
+import Services
 
-extension ResponseMapper {
+public typealias ResponseMapper = Services.ResponseMapper
+public typealias MappingError = Services.ResponseMapper.MappingError
+
+public extension ResponseMapper {
     
-    typealias ProductList = ServerCommands.ProductController.GetProductListByType.Response.List
+    typealias GetProductListByTypeResult = Result<ProductListData, MappingError>
     
-    typealias GetProductListByTypeResult = Result<ProductList, GetProductListByTypeResultError>
-    
-    static func mapMakeProductListResponse(
+    static func mapGetCardStatementResponse(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
+        _ response: HTTPURLResponse
     ) -> GetProductListByTypeResult {
         
-        do {
-            switch httpURLResponse.statusCode {
-            case 200:
-                
-                let makeTransferResponse = try JSONDecoder().decode(
-                    ServerResponse<ProductList>.self,
-                    from: data
-                )
-                
-                guard let productList = makeTransferResponse.data else {
-                    
-                    return .failure(.invalidData(
-                        statusCode: httpURLResponse.statusCode, data: data
-                    ))
-                }
-                
-                return .success(productList)
-                
-            default:
-                
-                let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                
-                return .failure(.error(
-                    statusCode: serverError.statusCode,
-                    errorMessage: serverError.errorMessage
-                ))
-            }
-            
-        } catch {
-            
-            guard let error = try? JSONDecoder().decode(ServerError.self, from: data) else {
-
-                return .failure(.invalidData(
-                    statusCode: httpURLResponse.statusCode, data: data
-                ))
-            }
-
-            return .failure(.error(
-                statusCode: error.statusCode,
-                errorMessage: error.errorMessage)
-            )
-        }
+        map(data, response, mapOrThrow: map)
     }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> ProductListData {
+        
+        ProductListData(data: data)
+    }
+}
+
+private extension ResponseMapper {
+    
+    typealias _Data = ProductListWrapperDTO
 }
 
 private extension ResponseMapper {
@@ -323,144 +296,12 @@ private extension ResponseMapper {
     }
 }
 
-private extension ProductType {
+private extension ProductListData {
     
-    init(productTypeDTO: ResponseMapper.ProductTypeDTO) {
+    init(data: ResponseMapper._Data) {
         
-        switch productTypeDTO {
-        case .account:
-            self = .account
-            
-        case .card:
-            self = .card
-            
-        case .deposit:
-            self = .deposit
-            
-        case .loan:
-            self = .loan
-            
-        }
-    }
-}
-
-private extension ProductData.Status {
-    
-    init(statusDTO: ResponseMapper.StatusDTO) {
+        // MARK: - Mapping
         
-        switch statusDTO {
-        case .blockedByClient:
-            self = .blockedByClient
-            
-        case .active:
-            self = .active
-            
-        case .issuedToClient:
-            self = .issuedToClient
-            
-        case .blockedByBank:
-            self = .blockedByBank
-            
-        case .notBlocked:
-            self = .notBlocked
-            
-        case .blockedDebet:
-            self = .blockedDebet
-            
-        case .blockedCredit:
-            self = .blockedCredit
-            
-        case .blocked:
-            self = .blocked
-            
-        case .unknown:
-            self = .unknown
-        }
-    }
-}
-
-private extension PaymentData {
-    
-    convenience init(paymentDTO: ResponseMapper.PaymentDTO) {
-        
-        self.init(
-            date: Date.dateUTC(with: paymentDTO.date),
-            account: paymentDTO.account,
-            currency: paymentDTO.currency,
-            amount: paymentDTO.amount,
-            purpose: paymentDTO.purpose
-        )
-    }
-}
-
-private extension ProductCardData.PaymentDataItem {
-    
-    init(paymentDTO: ResponseMapper.PaymentDTO) {
-        
-        self.init(
-            account: paymentDTO.account,
-            date: Date.dateUTC(with: paymentDTO.date),
-            amount: paymentDTO.amount,
-            currency: paymentDTO.currency,
-            purpose: paymentDTO.currency
-        )
-    }
-}
-
-private extension ProductCardData.LoanBaseParamInfoData {
-    
-    init(loanDTO: ResponseMapper.LoanBaseParamDTO?) {
-        
-        self.init(
-            loanId: loanDTO?.loanID ?? 0,
-            clientId: loanDTO?.clientID ?? 0,
-            number: loanDTO?.number ?? "",
-            currencyId: loanDTO?.currencyID,
-            currencyNumber: loanDTO?.currencyNumber,
-            currencyCode: loanDTO?.currencyCode,
-            minimumPayment: loanDTO?.minimumPayment,
-            gracePeriodPayment: loanDTO?.gracePeriodPayment,
-            overduePayment: loanDTO?.overduePayment,
-            availableExceedLimit: loanDTO?.availableExceedLimit,
-            ownFunds: loanDTO?.ownFunds,
-            debtAmount: loanDTO?.debtAmount,
-            totalAvailableAmount: loanDTO?.totalAvailableAmount,
-            totalDebtAmount: loanDTO?.totalDebtAmount
-        )
-    }
-}
-
-private extension ProductData.StatusPC {
-    
-    init(statusPCDTO: ResponseMapper.StatusPCDTO) {
-        
-        switch statusPCDTO {
-        case .active:
-            self = .active
-            
-        case .operationsBlocked:
-            self = .operationsBlocked
-            
-        case .blockedByBank:
-            self = .blockedByBank
-            
-        case .lost:
-            self = .lost
-            
-        case .stolen:
-            self = .stolen
-            
-        case .notActivated:
-            self = .notActivated
-            
-        case .temporarilyBlocked:
-            self = .temporarilyBlocked
-            
-        case .blockedByClient:
-            self = .blockedByClient
-            
-        case .unknown:
-            self = .unknown
-        }
+        self = .init(serial: data.serial, productList: [])
     }
 }

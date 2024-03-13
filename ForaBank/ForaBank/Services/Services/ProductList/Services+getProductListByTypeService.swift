@@ -7,23 +7,21 @@
 
 import Foundation
 import GenericRemoteService
+import GetProductListByTypeService
 
 extension Services {
-    
-    typealias ProductList = ServerCommands.ProductController.GetProductListByType.Response.List
-    
-    typealias GetProductListByTypePayload = ProductType
-    typealias GetProductListByTypeResult = Result<ProductList, GetProductListByTypeResultError>
-    typealias GetProductListByTypeService = RemoteServiceOf<GetProductListByTypePayload, GetProductListByTypeResult>
+        
+    typealias GetProductListByTypePayload = GetProductListByTypeService.ProductListData.ProductType
+    typealias GetProductListByTypeRemoteService = MappingRemoteService<GetProductListByTypePayload, GetProductListByTypeService.ProductListData, GetProductListByTypeService.MappingError>
     
     static func makeGetProductListByTypeService(
         httpClient: HTTPClient
-    ) -> GetProductListByTypeService {
+    ) -> GetProductListByTypeRemoteService {
         
         return .init(
-            createRequest: RequestFactory.makeGetProductListByTypeRequest,
+            createRequest: RequestFactory.getProductListByTypeRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: ResponseMapper.mapMakeProductListResponse
+            mapResponse: GetProductListByTypeService.ResponseMapper.mapGetCardStatementResponse
         )
     }
 }
