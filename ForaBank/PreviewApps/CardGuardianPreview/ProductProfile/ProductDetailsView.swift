@@ -74,12 +74,6 @@ struct ProductDetailsView: View {
             ),
             content: sheetView
         )
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(state.destination?.viewModel.state.title ?? "Реквизиты счета и карты").font(.headline)
-            }
-        }
     }
     
     private func sheetView(

@@ -39,5 +39,53 @@ public struct ProductDetailsWrappedView: View {
             isCheckAccount: $isCheckAccount,
             isCheckCard: $isCheckCard
         )
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle(Text(viewModel.state.title), displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: navigationLeadingItem,
+            trailing: navigationTrailingItem
+        )
     }
+    
+    @ViewBuilder
+    var navigationLeadingItem: some View {
+        
+        if viewModel.state.showCheckBox {
+            
+            Button(action: {} ) {
+                
+                HStack {
+                    
+                    Image(systemName: "xmark")
+                        .aspectRatio(contentMode: .fit)
+                }
+            }
+        } else {
+            
+            Button(action: {
+                
+                viewModel.event(.close)
+            }) {
+                HStack {
+                    Image(systemName: "chevron.left")
+                    .frame(width: 24, height: 24)                }
+            }
+        }
+    }
+    
+    var navigationTrailingItem: some View {
+        
+       // viewModel.shareButton.map {
+        Button(action: {
+            viewModel.event(.share)
+        }) {
+                
+                Image(systemName: "square.and.arrow.up")
+                    //.foregroundColor(buttonForegroundColor)
+            }
+            //.disabled(viewModel.isDisableShareButton)
+       // }
+    }
+
 }

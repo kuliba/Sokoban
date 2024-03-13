@@ -259,6 +259,8 @@ private extension ProductProfileNavigationReducer {
             effect = .productProfile(.sendAll)
         case .sendSelect:
             effect = .productProfile(.sendSelect)
+        case .close:
+            state.destination = nil
         }
         
         return (state, effect)

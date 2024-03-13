@@ -47,6 +47,8 @@ public extension ProductDetailsReducer {
             state.event = .sendSelect
             state.showCheckBox = true
             state.title = "Выберите реквизиты"
+        case .close:
+            state.event = .close
         }
         
         return (state, .none)

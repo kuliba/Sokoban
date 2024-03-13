@@ -406,6 +406,8 @@ private extension ProductDetailsState {
             return .sendAll
         case .sendSelect:
             return .sendSelect
+        case .close:
+            return .close
         }
     }
 }
@@ -416,6 +418,7 @@ public enum ProductDetailsStateProjection: Equatable {
     case share
     case sendAll
     case sendSelect
+    case close
 }
 
 private extension ProductDetailsSheetState {
