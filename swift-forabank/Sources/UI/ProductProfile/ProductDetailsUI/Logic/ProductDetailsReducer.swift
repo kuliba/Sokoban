@@ -9,7 +9,11 @@ import Foundation
 
 public final class ProductDetailsReducer {
     
-    public init() {}
+    private let shareInfo: ([String]) -> Void
+    
+    public init(shareInfo: @escaping ([String]) -> Void) {
+        self.shareInfo = shareInfo
+    }
 }
 
 public extension ProductDetailsReducer {
@@ -38,13 +42,18 @@ public extension ProductDetailsReducer {
                     state.event = .itemTapped(.iconTap(itemId))
                 }
             case .share:
-                state.event = .share
+                if state.showCheckBox {
+                    shareInfo(state.copyValues())
+                } else {
+                    state.event = .itemTapped(.share)
+                }
                 state.showCheckBox = false
                 state.title = "Реквизиты счета и карты"
+            case let .selectAccountValue(select):
+                state.updateShareData(.needAddAccountInfo(select))
+            case let .selectCardValue(select):
+                state.updateShareData(.needAddCardInfo(select))
             }
-        case .share:
-            state.showCheckBox = false
-            state.title = "Реквизиты счета и карты"
         case .sendAll:
             state.event = .sendAll
         case .sendSelect:

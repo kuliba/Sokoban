@@ -171,16 +171,11 @@ public extension ProductProfileNavigationEffectHandler {
            // accountInfoPanelActions.accountDetails(card)
         case let .accountStatement(card):
             accountInfoPanelActions.accountStatement(card)
-            // TODO: add actions
         case let .productDetailsItemlongPress(valueForCopy, textForInformer):
             productDetailsActions.longPress(valueForCopy.rawValue, textForInformer.rawValue)
         case let .productDetailsIconTap(documentId):
-            switch documentId {
-                
-            case .cvv:
+            if case .cvv = documentId {
                 productDetailsActions.cvvTap()
-            default:
-                break
             }
         case .shareTap:
             print("shareTap")
@@ -287,7 +282,6 @@ private extension ProductProfileNavigationEffectHandler {
     }
 }
 
-
 public extension ProductProfileNavigationEffectHandler {
     
     typealias Event = ProductProfileNavigation.Event
@@ -313,7 +307,8 @@ public extension ProductProfileNavigationEffectHandler {
     typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
     
     typealias LongPress = (String, String) -> Void
-    typealias CvvTapped = () -> Void
+    typealias CvvTapped = () -> (String)
+    typealias ShareTapped = ([String]) -> Void
 
     typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
 }
@@ -399,8 +394,6 @@ private extension ProductDetailsState {
             return .itemTapped(tap)
         case .appear:
             return .appear
-        case .share:
-            return .share
         case .sendAll:
             return .sendAll
         case .sendSelect:
@@ -416,7 +409,6 @@ private extension ProductDetailsState {
 public enum ProductDetailsStateProjection: Equatable {
     case appear
     case itemTapped(ProductDetailEvent)
-    case share
     case sendAll
     case sendSelect
     case close

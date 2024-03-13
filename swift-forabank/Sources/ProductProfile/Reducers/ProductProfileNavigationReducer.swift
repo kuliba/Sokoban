@@ -257,9 +257,9 @@ private extension ProductProfileNavigationReducer {
                 
             case .share:
                 effect = .create(.share)
+            case .selectAccountValue, .selectCardValue:
+                break
             }
-        case .share:
-            effect = .create(.share)
         case .sendAll:
             effect = .productProfile(.sendAll)
         case .sendSelect:

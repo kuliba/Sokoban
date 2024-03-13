@@ -165,7 +165,16 @@ struct ProductDetailsView: View {
                     width: showCheckbox ? config.iconSize : 0,
                     height: showCheckbox ? config.iconSize : 0,
                     alignment: .center)
-                .onTapGesture { isAccount ? isCheckAccount.toggle() : isCheckCard.toggle() }
+                .onTapGesture {
+                    if isAccount
+                    {
+                        isCheckAccount.toggle()
+                        event(.selectAccountValue(isCheckAccount))
+                    } else {
+                        isCheckCard.toggle()
+                        event(.selectCardValue(isCheckCard))
+                    }
+                }
                 .opacity(showCheckbox ? 1 : 0)
             Text(title)
                 .font(config.fonts.checkBoxTitle)

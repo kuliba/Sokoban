@@ -107,7 +107,9 @@ extension ProductProfileViewModel {
             print("account statement: card \($0.status)")
         }
         
-        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        let detailsReduce = ProductDetailsReducer(
+            shareInfo: { print($0) }
+        ).reduce(_:_:)
         
         let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
         
@@ -129,6 +131,7 @@ extension ProductProfileViewModel {
             },
             cvvTap: {
                 print("cvv tap")
+                return "444"
             })
         
         let sheetReduce = ProductDetailsSheetReducer().reduce(_:_:)
