@@ -11,10 +11,16 @@ struct ContentView: View {
     
     @State private var tab: Tab = .settings
     @State private var flow: Flow = .happy
+    @State private var isShowingSpinner = false
     
     var body: some View {
         
-        tabView()
+        ZStack {
+            
+            tabView()
+            
+            spinner()
+        }
     }
 }
 
@@ -52,10 +58,22 @@ private extension ContentView {
     
     func paymentsView() -> some View {
         
-        PaymentsTransfersView(
-            viewModel: .default(flow: flow),
-            factory: .init()
+        let viewModel = PaymentsTransfersViewModel.default(flow: flow)
+        viewModel.rootActions = .init(
+            spinner: .init(
+                hide: { isShowingSpinner = false },
+                show: { isShowingSpinner = true }
+            )
         )
+        
+        return NavigationView {
+            
+            PaymentsTransfersView(
+                viewModel: viewModel,
+                factory: .init()
+            )
+            .navigationViewStyle(StackNavigationViewStyle())
+        }
     }
     
     func chatView() -> some View {
@@ -85,6 +103,18 @@ private extension ContentView {
     private func closeSettingsButton() -> some View {
         
         Button("Done") { tab = .payments }
+    }
+    
+    private func spinner() -> some View {
+        
+        ZStack {
+            
+            Color.black.opacity(0.5)
+            
+            ProgressView()
+        }
+        .ignoresSafeArea()
+        .opacity(isShowingSpinner ? 1 : 0)
     }
 }
 
