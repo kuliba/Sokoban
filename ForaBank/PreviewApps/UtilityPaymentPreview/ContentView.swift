@@ -6,43 +6,70 @@
 //
 
 import SwiftUI
-import UIPrimitives
 
 struct ContentView: View {
     
+    @State private var tab: Tab = .settings
     @State private var flow: Flow = .happy
-    @State private var isShowingSettings = false
     
     var body: some View {
         
-        ZStack(alignment: .bottomLeading) {
+        tabView()
+    }
+}
+
+private extension ContentView {
+    
+    func tabView() -> some View {
+        
+        TabView(selection: $tab) {
             
-            PaymentsTransfersView(
-                viewModel: .default(flow: flow),
-                factory: .init()
-            )
+            mainView()
+                .taggedTabItem(.main)
             
-            settingsButton()
+            paymentsView()
+                .taggedTabItem(.payments)
+            
+            chatView()
+                .taggedTabItem(.chat)
+            
+            settingsView()
+                .taggedTabItem(.settings)
         }
-        .fullScreenCover(
-            isPresented: $isShowingSettings,
-            content: fullScreenCover
+        .animation(.default, value: tab)
+    }
+    
+    func mainView() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text("Main View")
+                .font(.title.bold())
+            
+            Button("Payments") { tab = .payments }
+        }
+    }
+    
+    func paymentsView() -> some View {
+        
+        PaymentsTransfersView(
+            viewModel: .default(flow: flow),
+            factory: .init()
         )
     }
     
-    private func settingsButton() -> some View {
+    func chatView() -> some View {
         
-        Button {
-            isShowingSettings = true
-        } label: {
-            Image(systemName: "slider.horizontal.3")
-                .imageScale(.large)
-                .frame(width: 44, height: 44)
+        VStack(spacing: 32) {
+            
+            Text("Chat")
+                .font(.title.bold())
+            
+            Label("Under Construction", systemImage: "wrench.and.screwdriver")
         }
-        .padding(.horizontal)
     }
     
-    private func fullScreenCover() -> some View {
+    func settingsView() -> some View {
         
         NavigationView {
             
@@ -57,8 +84,50 @@ struct ContentView: View {
     
     private func closeSettingsButton() -> some View {
         
-        Button("Done") { isShowingSettings = false }
-            .padding(.horizontal)
+        Button("Done") { tab = .payments }
+    }
+}
+
+extension ContentView {
+    
+    enum Tab: String {
+        
+        case main, payments, chat, settings
+    }
+}
+
+private extension ContentView.Tab {
+    
+    var systemImage: String {
+        
+        switch self {
+        case .main:
+            return "book.pages"
+        case .payments:
+            return "rublesign.arrow.circlepath"
+        case .chat:
+            return "bubble"
+        case .settings:
+            return "slider.horizontal.3"
+        }
+    }
+}
+
+private extension View {
+    
+    func taggedTabItem(
+        _ tab: ContentView.Tab
+    ) -> some View {
+        
+        self
+            .tabItem {
+                
+                Label(
+                    tab.rawValue.capitalized,
+                    systemImage: tab.systemImage
+                )
+            }
+            .tag(tab)
     }
 }
 

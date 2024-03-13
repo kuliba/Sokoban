@@ -23,6 +23,7 @@ struct PaymentsTransfersView: View {
                 
                 utilityPaymentButton()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationViewStyle(StackNavigationViewStyle())
             }
             
             spinner()
