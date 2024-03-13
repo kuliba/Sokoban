@@ -55,37 +55,34 @@ public struct ProductDetailsWrappedView: View {
             
             Button(action: {} ) {
                 
-                HStack {
-                    
-                    Image(systemName: "xmark")
-                        .aspectRatio(contentMode: .fit)
-                }
+                Image(systemName: "xmark")
+                    .aspectRatio(contentMode: .fit)
             }
         } else {
             
-            Button(action: {
-                
-                viewModel.event(.close)
-            }) {
-                HStack {
-                    Image(systemName: "chevron.left")
-                    .frame(width: 24, height: 24)                }
+            Button(action: { viewModel.event(.close) }) {
+                Image(systemName: "chevron.left")
+                    .frame(width: 24, height: 24)
             }
         }
     }
     
     var navigationTrailingItem: some View {
         
-       // viewModel.shareButton.map {
         Button(action: {
-            viewModel.event(.share)
+            viewModel.event(.itemTapped(.share))
         }) {
-                
-                Image(systemName: "square.and.arrow.up")
-                    //.foregroundColor(buttonForegroundColor)
-            }
-            //.disabled(viewModel.isDisableShareButton)
-       // }
+            Image(systemName: "square.and.arrow.up")
+            //.foregroundColor(buttonForegroundColor)
+        }
+        .disabled(buttonDisabled())
     }
-
+    
+    private func buttonDisabled() -> Bool {
+        
+        if viewModel.state.showCheckBox {
+            
+            return !(isCheckCard || isCheckAccount)
+        } else { return false }
+    }
 }
