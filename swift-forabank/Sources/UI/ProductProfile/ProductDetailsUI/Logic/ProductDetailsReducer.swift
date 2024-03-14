@@ -27,7 +27,7 @@ public extension ProductDetailsReducer {
         
         switch event {
         case .appear:
-            break
+            state.status = .appear
             
         case let .itemTapped(tap):
             switch tap {
@@ -63,12 +63,12 @@ public extension ProductDetailsReducer {
             state.showCheckBox = true
             state.title = "Выберите реквизиты"
             state.status = .sendSelect
-        case .close:
-            state.status = .close
         case .hideCheckbox:
             state.showCheckBox = false
             state.title = "Реквизиты счета и карты"
             state.status = nil
+        case .close:
+            state.status = .close
         case .closeModal:
             state.status = .closeModal
         }

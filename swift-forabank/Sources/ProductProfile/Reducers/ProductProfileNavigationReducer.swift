@@ -269,8 +269,6 @@ private extension ProductProfileNavigationReducer {
             break
         case .sendSelect:
             break
-        case .hideCheckbox:
-            break
         case .closeModal:
             if state.destination?.viewModel.state.status == .itemTapped(.share) {
                 state.modal = nil

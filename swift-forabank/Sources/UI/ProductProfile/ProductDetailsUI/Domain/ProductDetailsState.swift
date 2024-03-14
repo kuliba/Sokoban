@@ -16,7 +16,7 @@ public struct ProductDetailsState: Equatable {
     public var title: String
     public var detailsState: DetailsState
     
-    private var dataForShare: [String]
+    var dataForShare: [String]
     
     public init(
         accountDetails: [ListItem],
@@ -30,7 +30,7 @@ public struct ProductDetailsState: Equatable {
         self.accountDetails = accountDetails
         self.cardDetails = cardDetails
         self.status = status
-        self.showCheckBox = false
+        self.showCheckBox = showCheckBox
         self.title = title
         self.detailsState = detailsState
         self.dataForShare = dataForShare
