@@ -524,16 +524,40 @@ extension Model {
             
             return numAbo
         }
+        
         return ""
     }
     
-    func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
+    enum ParameterType: String {
         
-        operatorData.parameterList.compactMap {
+        case account = "a3_PERSONAL_ACCOUNT_1_1"
+        case code = "a3_CODE_3_1"
+    }
+    
+    func getValue(for parameterData: ParameterData, qrCode: QRCode) -> String {
+        
+        switch ParameterType(rawValue: parameterData.id) {
+            
+        case .account:
+            
+            return parameterData.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : ""
+        case .code:
+            
+            return qrCode.rawData["category"] ?? ""
+        case .none:
+            
+            return ""
+        }
+    }
+    
+    func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
+
+        return operatorData.parameterList.compactMap {
             
             if $0.viewType == .input {
                 
-                let value: String = ($0.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : "")
+                let value = getValue(for: $0, qrCode: qrCode)
+
                 return PaymentServiceData.AdditionalListData(
                     fieldTitle: $0.title,
                     fieldName: $0.id,
