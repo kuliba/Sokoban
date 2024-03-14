@@ -12,71 +12,69 @@ public extension ProductDetail {
     static let payee : Self = .init(
         id: .payeeName,
         title: "Получатель",
-        subtitle: "Константин Войцехов",
-        copyValue: "valueForCopy",
-        event: .longPress("valueForCopy", "for informer")
+        value: .value("Получатель Константин Войцехов"),
+        event: .longPress("copyValue", "for informer")
     )
     static let accountNumber: Self = .init(
         id: .accountNumber,
         title: "Номер счета",
-        subtitle: "408178810888 005001137",
-        copyValue: "valueForCopy",
+        value: .value("408178810888 005001137"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let bic: Self = .init(
         id: .bic,
         title: "БИК",
-        subtitle: "044525341",
-        copyValue: "valueForCopy",
+        value: .value("044525341"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let corrAccount: Self = .init(
         id: .corrAccount,
         title: "Кореспондентский счет",
-        subtitle: "301018103000000000341",
-        copyValue: "valueForCopy",
+        value: .value("301018103000000000341"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let inn: Self = .init(
         id: .inn,
         title: "ИНН",
-        subtitle: "7704113772",
-        copyValue: "valueForCopy",
+        value: .value("7704113772"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let kpp: Self = .init(
         id: .kpp,
         title: "КПП",
-        subtitle: "770401001",
-        copyValue: "valueForCopy",
+        value: .value("770401001"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let holder: Self = .init(
         id: .holderName,
         title: "Держатель",
-        subtitle: "Константин Войцехов",
-        copyValue: "valueForCopy",
+        value: .value("Константин Войцехов"),
         event: .longPress("valueForCopy", "for informer")
     )
-    static let numberMasked: Self = .init(
-        id: .numberMasked,
+    static let number: Self = .init(
+        id: .number,
         title: "Номер карты",
-        subtitle: "**** **** **** 0500",
-        copyValue: "valueForCopy",
+        value: .valueWithMask(.init(
+            value: "4897 2525 1111 7654",
+            maskedValue: "4897 25** **** 7654")),
         event: .longPress("valueForCopy", "for informer")
     )
     static let expirationDate: Self = .init(
         id: .expirationDate,
         title: "Карта действует до",
-        subtitle: "01/01",
-        copyValue: "valueForCopy",
+        value: .value("01/01"),
         event: .longPress("valueForCopy", "for informer")
     )
     static let cvvMasked: Self = .init(
-        id: .cvvMasked,
+        id: .cvv,
         title: .cvvTitle,
-        subtitle: "111",
-        copyValue: "",
+        value: .valueWithMask(.init(value: "*1*", maskedValue: "***")),
         event: .longPress("valueForCopy", "for informer")
+    )
+    static let info: Self = .init(
+        id: .info,
+        title: .cvvTitle,
+        value: .value("Недоступно"),
+        event: .iconTap(.info)
     )
 }

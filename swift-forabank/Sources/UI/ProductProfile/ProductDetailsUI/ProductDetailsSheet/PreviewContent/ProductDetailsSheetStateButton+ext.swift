@@ -14,7 +14,7 @@ extension ProductDetailsSheetState.PanelButton {
         title: "Отправить выбранные",
         accessibilityIdentifier: "InfoProductSheetTopButton")
     static let regularSecondButton: Self = .init(
-        event: .sendSelect,
+        event: .sendAll,
         title: "Отправить все",
         accessibilityIdentifier: "InfoProductSheetBottomButton")
 }
