@@ -466,13 +466,15 @@ extension ProductProfileHistoryView.ViewModel {
                 @Published var image: Image?
                 let subtitle: String
                 let amount: Amount?
+                var amountStatusImage: Image?
                 let action: () -> Void
                 
-                internal init(statement: StatementBasicData, title: String, image: Image?, subtitle: String, amount: Amount?, action: @escaping () -> Void = {}) {
+                internal init(statement: StatementBasicData, title: String, image: Image?, subtitle: String, amount: Amount?, amountStatusImage: Image?, action: @escaping () -> Void = {}) {
                     
                     self.statement = statement
                     self.title = title
                     self.image = image
+                    self.amountStatusImage = amountStatusImage
                     self.subtitle = subtitle
                     self.amount = amount
                     self.action = action
@@ -538,6 +540,30 @@ extension ProductProfileHistoryView.ViewModel {
 }
 
 //MARK: - View
+
+private extension ProductStatementData {
+    
+    var operationColor: Color {
+        
+        switch operationType {
+            
+        case .credit, .creditPlan: return .systemColorActive
+        case .debitFict, .creditFict: return .systemColorError
+        default: return .mainColorsBlack
+        }
+    }
+    
+    var image: Image? {
+        
+        switch operationType {
+            
+        case .debitPlan, .creditPlan: return .ic16Waiting
+        case .debitFict, .creditFict: return .ic16Denied
+        default: return nil
+        }
+    }
+    
+}
 
 struct ProductProfileHistoryView: View {
     

@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ResultOperationView: View {
+    
     var body: some View {
+        
         VStack{
-            Image("waiting")
+            Image.ic16Waiting
             Text("Перевод отменен!")
             Text("Время на подтверждение перевода вышло")
             Text("1000 Р.")
