@@ -49,56 +49,6 @@ enum FlowEffect<PushEffect, UpdateEffect> {
 
 extension FlowEffect: Equatable where PushEffect: Equatable, UpdateEffect: Equatable {}
 
-final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
-    
-    private let push: Push
-    private let update: Update
-    
-    init(
-        push: @escaping Push,
-        update: @escaping Update
-    ) {
-        self.push = push
-        self.update = update
-    }
-}
-
-extension FlowReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case let .push(pushEvent):
-            let (destination, pushEffect) = push(state, pushEvent)
-            state.push(destination)
-            effect = pushEffect.map { .push($0) }
-            
-        case let .update(updateEvent):
-            let (destination, updateEffect) = update(state, updateEvent)
-            state.current = destination
-            effect = updateEffect.map { .update($0) }
-        }
-        
-        return (state, effect)
-    }
-}
-
-extension FlowReducer {
-    
-    typealias Push = (State, PushEvent) -> (Destination, PushEffect?)
-    typealias Update = (State, UpdateEvent) -> (Destination, UpdateEffect?)
-    
-    typealias State = Flow<Destination>
-    typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    typealias Effect = FlowEffect<PushEffect, UpdateEffect>
-}
-
 final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
     
     private let push: Push
@@ -145,75 +95,6 @@ extension FlowEffectHandler {
 
 import RxViewModel
 import XCTest
-
-final class FlowReducerTests: XCTestCase {
-    
-    // MARK: - Helpers
-    
-    private typealias SUT = FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
-    
-    private typealias State = Flow<Destination>
-    private typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
-    
-    private func makeSUT(
-        pushStub: (Destination, PushEffect?),
-        updateStub: (Destination, UpdateEffect?),
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT(
-            push: { _,_ in pushStub },
-            update: { _,_ in updateStub }
-        )
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        
-        return sut
-    }
-    
-    private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
-    
-    private func assertState(
-        sut: SUT,
-        _ event: Event,
-        on state: State,
-        updateStateToExpected: UpdateStateToExpected<State>? = nil,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        var expectedState = state
-        updateStateToExpected?(&expectedState)
-        
-        let (receivedState, _) = sut.reduce(state, event)
-        
-        XCTAssertNoDiff(
-            receivedState,
-            expectedState,
-            "\nExpected \(expectedState), but got \(receivedState) instead.",
-            file: file, line: line
-        )
-    }
-    
-    private func assert(
-        sut: SUT,
-        _ event: Event,
-        on state: State,
-        effect expectedEffect: Effect?,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let (_, receivedEffect) = sut.reduce(state, event)
-        
-        XCTAssertNoDiff(
-            receivedEffect,
-            expectedEffect,
-            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
-            file: file, line: line
-        )
-    }
-}
 
 final class FlowEffectHandlerTests: XCTestCase {
     
@@ -342,30 +223,3 @@ final class FlowIntegrationTests: XCTestCase {
         return (sut, spy, pushSpy, updateSpy)
     }
 }
-
-private enum Destination: Equatable {
-    
-    case prepayment(Prepayment)
-    case services
-}
-
-private extension Destination {
-    
-    enum Prepayment: Equatable {
-        
-        case failure
-        case options(Options)
-    }
-}
-
-private extension Destination.Prepayment {
-    
-    struct Options: Equatable {
-        
-    }
-}
-
-enum PushEvent: Equatable {}
-enum UpdateEvent: Equatable {}
-enum PushEffect: Equatable {}
-enum UpdateEffect: Equatable {}
