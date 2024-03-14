@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
+import CombineSchedulers
 import Foundation
 import PrePaymentPicker
 import UtilityPayment
@@ -21,8 +22,8 @@ extension PaymentsTransfersViewModel {
     static func `default`(
         initialState: PaymentsTransfersState = .init(),
         flow: Flow = .happy,
-        debounce: DispatchTimeInterval = .milliseconds(300)
-        // TODO: add scheduler
+        debounce: DispatchTimeInterval = .milliseconds(300),
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PaymentsTransfersViewModel {
         
         let prePaymentOptionsReducer = PPOReducer(observeLast: 3, pageSize: 10)
@@ -54,8 +55,8 @@ extension PaymentsTransfersViewModel {
         let ppoEffectHandler = PPOEffectHandler(
             debounce: debounce,
             loadLastPayments: loadLastPayments,
-            loadOperators: loadOperators
-            // scheduler: <#T##AnySchedulerOfDispatchQueue#>
+            loadOperators: loadOperators,
+            scheduler: scheduler
         )
         
         let loadServices: PPEffectHandler.LoadServices = { payload, completion in
@@ -90,8 +91,9 @@ extension PaymentsTransfersViewModel {
         
         return .init(
             initialState: initialState,
-            reduce: reducer.reduce,
-            handleEffect: effectHandler.handleEffect
+            paymentsTransfersReduce: reducer.reduce,
+            paymentsTransfersHandleEffect: effectHandler.handleEffect,
+            scheduler: scheduler
         )
     }
 }

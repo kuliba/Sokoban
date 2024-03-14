@@ -15,13 +15,43 @@ struct FlowSettingsView: View {
         
         List {
             
+            buttons()
+            
             pickerSection("Load Last Payments", $flow.loadLastPayments)
             pickerSection("Load Operators", $flow.loadOperators)
         }
         .listStyle(.plain)
     }
+}
+
+private extension FlowSettingsView {
     
-    private func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
+    func buttons() -> some View {
+        
+        HStack {
+            
+            Button("happy") {
+                
+                flow = .init(
+                    loadLastPayments: .success,
+                    loadOperators: .success
+                )
+            }
+            .foregroundColor(.blue)
+            
+            Button("sad") {
+                
+                flow = .init(
+                    loadLastPayments: .failure,
+                    loadOperators: .failure
+                )
+            }
+            .foregroundColor(.red)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
         _ title: String,
         _ selection: Binding<T>
     ) -> some View where T.AllCases: RandomAccessCollection, T.RawValue == String {

@@ -35,7 +35,7 @@ extension PaymentsTransfersReducer {
         case .openUtilityPayment:
             (state, effect) = openUtilityPayment(state)
             
-        case let .utilityPayment(flowEvent):
+        case let .utilityFlow(flowEvent):
             (state, effect) = reduce(state, flowEvent)
         }
         
@@ -69,20 +69,20 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
             break
             
-        case let .utilityPayment(utilityPayment):
+        case let .utilityFlow(utilityFlow):
             let (flowState, flowEffect) = utilityPaymentFlowReduce(
-                utilityPayment,
+                utilityFlow,
                 .back
             )
             
             if flowState.current == nil {
-                state.route = nil
+                state.destination = nil
             } else {
-                state.route = .utilityPayment(flowState)
+                state.destination = .utilityFlow(flowState)
                 effect = flowEffect.map { .utilityPayment($0) }
             }
         }
@@ -97,11 +97,10 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
 #warning("`openUtilityPayment` could be `UtilityPaymentFlowEvent` case and this handling could be moved to `UtilityPaymentFlow` domain")
-            state.status = .inflight
-            state.route = .utilityPayment(.init([]))
+            state.destination = .utilityFlow(.init([]))
             effect = .utilityPayment(.prePaymentOptions(.initiate))
             
         case .some:
@@ -119,14 +118,13 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
             break
             
-        case let .utilityPayment(flowState):
+        case let .utilityFlow(flowState):
             let (flowState, flowEffect) = utilityPaymentFlowReduce(flowState, flowEvent)
-            state.route = .utilityPayment(flowState)
-            state.status = flowState.isInflight ? .inflight : .none
+            state.destination = .utilityFlow(flowState)
             effect = flowEffect.map { .utilityPayment($0) }
             
             #warning("switch over flowState` to make additional state changes like go to chat if `addCompany`")
