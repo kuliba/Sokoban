@@ -47,8 +47,10 @@ public extension ProductProfileNavigationReducer {
                 effect = .create(.share)
             }
         case .dismissModal:
-            if (state.destination != nil) {
-                state.destination?.viewModel.event(.closeModal)
+            if let status = state.destination?.viewModel.state.status {
+                if status == .itemTapped(.share) {
+                    state.destination?.viewModel.event(.closeModal)
+                }
             } else {
                 state.modal = nil
             }
@@ -269,6 +271,10 @@ private extension ProductProfileNavigationReducer {
             break
         case .hideCheckbox:
             break
+        case .closeModal:
+            if state.destination?.viewModel.state.status == .itemTapped(.share) {
+                state.modal = nil
+            }
         }
         
         return (state, effect)

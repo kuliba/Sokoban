@@ -70,7 +70,7 @@ public extension ProductDetailsReducer {
             state.title = "Реквизиты счета и карты"
             state.status = nil
         case .closeModal:
-            state.status = nil
+            state.status = .closeModal
         }
         
         return (state, .none)

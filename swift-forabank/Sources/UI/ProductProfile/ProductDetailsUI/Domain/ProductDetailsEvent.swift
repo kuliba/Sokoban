@@ -25,5 +25,6 @@ public enum ProductDetailsStatus: Equatable {
     case sendAll
     case sendSelect
     case close
+    case closeModal
     case hideCheckbox
 }

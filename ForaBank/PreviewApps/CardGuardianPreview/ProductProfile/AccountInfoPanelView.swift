@@ -43,7 +43,7 @@ struct AccountInfoPanelView: View {
                         return route
                     } else { return nil }
                 },
-                set: { if $0 == nil { event(.dismissModal) }}
+                set: { _ in }
             ),
             content: destinationView
         )
@@ -79,7 +79,7 @@ struct AccountInfoPanelView: View {
                         return route
                     } else { return nil }
                 },
-                set: { if $0 == nil { event(.dismissModal) }}
+                set: { if $0 == nil { route.viewModel.event(.closeModal) }}
             ),
             content: sheetView
         )

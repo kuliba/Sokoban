@@ -396,6 +396,8 @@ private extension ProductDetailsState {
             return .sendSelect
         case .hideCheckbox:
             return .hideCheckbox
+        case .closeModal:
+            return .closeModal
         }
     }
 }
@@ -403,7 +405,7 @@ private extension ProductDetailsState {
 public enum ProductDetailsStateProjection: Equatable {
     case appear
     case itemTapped(ProductDetailEvent)
-    case close
+    case close, closeModal
     case sendAll, sendSelect
     case hideCheckbox
 }
