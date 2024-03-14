@@ -54,7 +54,21 @@ private extension ResponseMapper {
             let container = try decoder.singleValueContainer()
             
             commonSettings = try container.decode(CommonSettingsDTO.self)
-            productSettings = try container.decode(ProductSettingsDTO.self)
+            
+            switch commonSettings.productType {
+            case .account:
+                productSettings = .account(try container.decode(AccountSettingsDTO.self))
+                
+            case .card:
+                productSettings = .card(try container.decode(CardSettingsDTO.self))
+
+            case .deposit:
+                productSettings = .deposit(try container.decode(DepositSettingsDTO.self))
+                
+            case .loan:
+                productSettings = .loan(try container.decode(LoanSettingsDTO.self))
+
+            }
         }
     }
     
@@ -89,12 +103,12 @@ private extension ResponseMapper {
         
         let id: Int
         let productType: ProductTypeDTO
-        let productState: [String]
+        let productState: [ProductStateDTO]
         let order: Int
         let visibility: Bool
-        let number: String
-        let numberMasked: String
-        let accountNumber: String
+        let number: String?
+        let numberMasked: String?
+        let accountNumber: String?
         let currency: String
         let mainField: String
         let additionalField: String?
@@ -102,16 +116,16 @@ private extension ResponseMapper {
         let productName: String
         let balance: Double?
         let balanceRUB: Double?
-        let openDate: Int
-        let ownerId: Int
-        let branchId: Int
+        let openDate: Int?
+        let ownerID: Int
+        let branchId: Int?
         let allowDebit: Bool
         let allowCredit: Bool
         let fontDesignColor: String
-        let smallDesignMd5Hash: String
-        let mediumDesignMd5Hash: String
-        let largeDesignMd5Hash: String
-        let xlDesignMd5Hash: String
+        let smallDesignMd5hash: String
+        let mediumDesignMd5hash: String
+        let largeDesignMd5hash: String
+        let XLDesignMd5hash: String
         let smallBackgroundDesignHash: String
         let background: [String]
     }
@@ -191,28 +205,13 @@ private extension ResponseMapper {
         let depositProductID: Int
         let depositID: Int
         let interestRate: Double
-        let cardID: Int
         let accountID: Int
-        let creditMinimumAmount: Double
-        let minimumBalance: Double
-        let endDate: Int
+        let creditMinimumAmount: Double?
+        let minimumBalance: Double?
+        let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
         let isDebitInterestAvailable: Bool?
-        let name: String
-        let validThru: Int
-        let expireDate: String
-        let holderName: String
-        let product: String
-        let branch: String
-        let miniStatement: [PaymentDTO]
-        let paymentSystemName: String
-        let paymentSystemImageMd5Hash: String
-        let idParent: Int?
-        let cardType: CardTypeDTO
-        let statusCard: StatusCardDTO
-        let loanBaseParam: LoanBaseParamDTO?
-        let statusPC: StatusPCDTO
     }
 }
 
@@ -282,7 +281,7 @@ private extension ResponseMapper {
         case blockedNotVisible = "BLOCKED_NOT_VISIBILITY"
     }
     
-    enum StatusPCDTO: String, Codable {
+    enum StatusPCDTO: String, Decodable {
         
         case active = "0"
         case operationsBlocked = "3"

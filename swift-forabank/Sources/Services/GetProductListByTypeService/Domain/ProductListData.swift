@@ -1,6 +1,6 @@
 //
 //  ProductListData.swift
-//  
+//
 //
 //  Created by Disman Dmitry on 14.03.2024.
 //
@@ -9,8 +9,8 @@ import Foundation
 
 public struct ProductListData: Equatable {
     
-    let serial: String?
-    let productList: [ProductList]
+    public let serial: String?
+    public let productList: [ProductList]
     
     public init(
         serial: String?,
@@ -22,11 +22,11 @@ public struct ProductListData: Equatable {
     
     public struct ProductList: Equatable {
         
-        let commonSettings: CommonProductSettings
-        let productSettings: ProductSettings
+        public let commonSettings: CommonProductSettings
+        public let productSettings: ProductSettings
     }
     
-    enum ProductSettings: Equatable {
+    public enum ProductSettings: Equatable {
 
         case card(CardSettings)
         case loan(LoanSettings)
@@ -39,33 +39,33 @@ public extension ProductListData {
     
     struct CommonProductSettings: Equatable {
         
-        let id: Int
-        let productType: ProductType
-        let productState: [String]
-        let order: Int
-        let visibility: Bool
-        let number: String
-        let numberMasked: String
-        let accountNumber: String
-        let currency: String
-        let mainField: String
-        let additionalField: String?
-        let customName: String?
-        let productName: String
-        let balance: Double?
-        let balanceRUB: Double?
-        let openDate: Int
-        let ownerId: Int
-        let branchId: Int
-        let allowDebit: Bool
-        let allowCredit: Bool
-        let fontDesignColor: String
-        let smallDesignMd5Hash: String
-        let mediumDesignMd5Hash: String
-        let largeDesignMd5Hash: String
-        let xlDesignMd5Hash: String
-        let smallBackgroundDesignHash: String
-        let background: [String]
+        public let id: Int
+        public let productType: ProductType
+        public let productState: [ProductState]
+        public let order: Int
+        public let visibility: Bool
+        public let number: String?
+        public let numberMasked: String?
+        public let accountNumber: String?
+        public let currency: String
+        public let mainField: String
+        public let additionalField: String?
+        public let customName: String?
+        public let productName: String
+        public let balance: Double?
+        public let balanceRUB: Double?
+        public let openDate: Int?
+        public let ownerId: Int
+        public let branchId: Int?
+        public let allowDebit: Bool
+        public let allowCredit: Bool
+        public let fontDesignColor: String
+        public let smallDesignMd5Hash: String
+        public let mediumDesignMd5Hash: String
+        public let largeDesignMd5Hash: String
+        public let xlDesignMd5Hash: String
+        public let smallBackgroundDesignHash: String
+        public let background: [String]
     }
 }
 
@@ -73,41 +73,41 @@ public extension ProductListData {
     
     struct CardSettings: Equatable {
         
-        let cardID: Int
-        let idParent: Int?
-        let accountID: Int
-        let cardType: CardType
-        let statusCard: StatusCard
-        let loanBaseParam: LoanBaseParam?
-        let statusPC: StatusPC
-        let miniStatement: [Payment]
-        let name: String
-        let validThru: Int
-        let status: Status
-        let expireDate: String
-        let holderName: String
-        let product: String
-        let branch: String
-        let paymentSystemName: String
-        let paymentSystemImageMd5Hash: String
+        public let cardID: Int
+        public let idParent: Int?
+        public let accountID: Int
+        public let cardType: CardType
+        public let statusCard: StatusCard
+        public let loanBaseParam: LoanBaseParam?
+        public let statusPC: StatusPC
+        public let miniStatement: [Payment]
+        public let name: String
+        public let validThru: Int
+        public let status: Status
+        public let expireDate: String
+        public let holderName: String
+        public let product: String
+        public let branch: String
+        public let paymentSystemName: String
+        public let paymentSystemImageMd5Hash: String
     }
     
     struct LoanBaseParam: Equatable {
         
-        let loanID: Int
-        let clientID: Int
-        let number: String
-        let currencyID: Int?
-        let currencyNumber: Int?
-        let currencyCode: String?
-        let minimumPayment: Double?
-        let gracePeriodPayment: Double?
-        let overduePayment: Double?
-        let availableExceedLimit: Double?
-        let ownFunds: Double?
-        let debtAmount: Double?
-        let totalAvailableAmount: Double?
-        let totalDebtAmount: Double?
+        public let loanID: Int
+        public let clientID: Int
+        public let number: String
+        public let currencyID: Int?
+        public let currencyNumber: Int?
+        public let currencyCode: String?
+        public let minimumPayment: Double?
+        public let gracePeriodPayment: Double?
+        public let overduePayment: Double?
+        public let availableExceedLimit: Double?
+        public let ownFunds: Double?
+        public let debtAmount: Double?
+        public let totalAvailableAmount: Double?
+        public let totalDebtAmount: Double?
     }
 }
 
@@ -115,18 +115,18 @@ public extension ProductListData {
     
     struct LoanSettings: Decodable, Equatable {
         
-        let currencyNumber: Int?
-        let bankProductID: Int
-        let amount: Double
-        let currentInterestRate: Double
-        let principalDebt: Double?
-        let defaultPrincipalDebt: Double?
-        let totalAmountDebt: Double?
-        let principalDebtAccount: String
-        let settlementAccount: String
-        let settlementAccountId: Int
-        let dateLong: Int
-        let strDateLong: String
+        public let currencyNumber: Int?
+        public let bankProductID: Int
+        public let amount: Double
+        public let currentInterestRate: Double
+        public let principalDebt: Double?
+        public let defaultPrincipalDebt: Double?
+        public let totalAmountDebt: Double?
+        public let principalDebtAccount: String
+        public let settlementAccount: String
+        public let settlementAccountId: Int
+        public let dateLong: Int
+        public let strDateLong: String
     }
 }
 
@@ -134,31 +134,16 @@ public extension ProductListData {
     
     struct DepositSettings: Equatable {
         
-        let depositProductID: Int
-        let depositID: Int
-        let interestRate: Double
-        let cardID: Int
-        let accountID: Int
-        let creditMinimumAmount: Double
-        let minimumBalance: Double
-        let endDate: Int
-        let endDateNF: Bool
-        let demandDeposit: Bool
-        let isDebitInterestAvailable: Bool?
-        let name: String
-        let validThru: Int
-        let expireDate: String
-        let holderName: String
-        let product: String
-        let branch: String
-        let miniStatement: [Payment]
-        let paymentSystemName: String
-        let paymentSystemImageMd5Hash: String
-        let idParent: Int?
-        let cardType: CardType
-        let statusCard: StatusCard
-        let loanBaseParam: LoanBaseParam?
-        let statusPC: StatusPC
+        public let depositProductID: Int
+        public let depositID: Int
+        public let interestRate: Double
+        public let accountID: Int
+        public let creditMinimumAmount: Double?
+        public let minimumBalance: Double?
+        public let endDate: Int?
+        public let endDateNF: Bool
+        public let demandDeposit: Bool
+        public let isDebitInterestAvailable: Bool?
     }
 }
 
@@ -166,14 +151,14 @@ public extension ProductListData {
     
     struct AccountSettings: Equatable {
         
-        let name: String
-        let externalID: Int
-        let dateOpen: Int
-        let status: Status
-        let branchName: String
-        let miniStatement: [Payment]
-        let detailedRatesUrl: String
-        let detailedConditionUrl: String
+        public let name: String
+        public let externalID: Int
+        public let dateOpen: Int
+        public let status: Status
+        public let branchName: String
+        public let miniStatement: [Payment]
+        public let detailedRatesUrl: String
+        public let detailedConditionUrl: String
     }
 }
 
@@ -181,11 +166,11 @@ public extension ProductListData {
     
     struct Payment: Equatable {
         
-        let account: String
-        let date: Int
-        let amount: Double
-        let currency: String
-        let purpose: String
+        public let account: String
+        public let date: Int
+        public let amount: Double
+        public let currency: String
+        public let purpose: String
     }
 }
 
@@ -207,7 +192,7 @@ public extension ProductListData {
         case notActivated
     }
     
-    enum Status: Equatable {
+    enum Status: String, Equatable {
         
         case blockedByClient
         case active
