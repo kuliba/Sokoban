@@ -17,7 +17,7 @@ extension PaymentsTransfersState {
     
     private func getNavigationState() -> NavigationState? {
         
-        switch route {
+        switch destination {
         case .none:
             return .none
             
@@ -58,7 +58,7 @@ extension PaymentsTransfersState {
     
     var prePaymentNavigationState: PrePaymentNavigationState? {
         
-        switch route {
+        switch destination {
         case let .utilityFlow(utilityPaymentState):
             return .utilityPayment
             

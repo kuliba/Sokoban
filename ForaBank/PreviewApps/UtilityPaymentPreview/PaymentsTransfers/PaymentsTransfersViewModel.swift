@@ -68,6 +68,7 @@ private extension PaymentsTransfersViewModel {
         
         let (state, effect) = paymentsTransfersReduce(state, event)
         
+        // decoration
         if effect == nil {
             rootActions?.spinner.hide()
         } else {

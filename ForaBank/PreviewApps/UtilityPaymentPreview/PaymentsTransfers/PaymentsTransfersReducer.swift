@@ -69,7 +69,7 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
             break
             
@@ -80,9 +80,9 @@ private extension PaymentsTransfersReducer {
             )
             
             if flowState.current == nil {
-                state.route = nil
+                state.destination = nil
             } else {
-                state.route = .utilityFlow(flowState)
+                state.destination = .utilityFlow(flowState)
                 effect = flowEffect.map { .utilityPayment($0) }
             }
         }
@@ -97,10 +97,10 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
 #warning("`openUtilityPayment` could be `UtilityPaymentFlowEvent` case and this handling could be moved to `UtilityPaymentFlow` domain")
-            state.route = .utilityFlow(.init([]))
+            state.destination = .utilityFlow(.init([]))
             effect = .utilityPayment(.prePaymentOptions(.initiate))
             
         case .some:
@@ -118,13 +118,13 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
-        switch state.route {
+        switch state.destination {
         case .none:
             break
             
         case let .utilityFlow(flowState):
             let (flowState, flowEffect) = utilityPaymentFlowReduce(flowState, flowEvent)
-            state.route = .utilityFlow(flowState)
+            state.destination = .utilityFlow(flowState)
             effect = flowEffect.map { .utilityPayment($0) }
             
             #warning("switch over flowState` to make additional state changes like go to chat if `addCompany`")
