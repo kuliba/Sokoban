@@ -140,7 +140,7 @@ public extension ProductProfileNavigationEffectHandler {
             case .topUpCard:
                 dispatch(makeDestinationTopUpCard(dispatch))
             case .share:
-                dispatch(makeDestinationProductDetailsSheet(dispatch))
+                dispatch(makeDestinationProductDetails(dispatch))
             }
         case let .productProfile(effect):
             // fire and forget
@@ -257,7 +257,7 @@ private extension ProductProfileNavigationEffectHandler {
 
 private extension ProductProfileNavigationEffectHandler {
     
-    func makeDestinationProductDetailsSheet(
+    func makeDestinationProductDetails(
         _ dispatch: @escaping Dispatch
     ) -> Event {
         
