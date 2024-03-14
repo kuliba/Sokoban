@@ -1634,9 +1634,11 @@ private extension Target {
             .cvvPin,
             .genericRemoteService,
             .getProcessingSessionCodeService,
+            .rxViewModel,
             .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
+            .utilityPayment,
         ]
     )
     
