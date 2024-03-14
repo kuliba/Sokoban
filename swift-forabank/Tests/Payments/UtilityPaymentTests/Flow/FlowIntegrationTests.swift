@@ -195,7 +195,8 @@ final class FlowIntegrationTests: XCTestCase {
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .immediate
         )
         
         let spy = StateSpy(sut.$state)

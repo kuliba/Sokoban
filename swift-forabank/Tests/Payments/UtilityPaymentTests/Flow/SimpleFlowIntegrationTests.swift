@@ -51,31 +51,22 @@ extension SimpleFlowReducer {
         
         switch event {
         case .initiate:
-            switch state.current {
-            case .none:
+            if state.current == nil {
                 effect = .initiate
-                
-            default:
-                break
             }
             
         case let .loaded(loaded):
-            switch loaded {
-            case .failure:
-                if state.current == nil {
-                    state.current = .prepayment(.failure)
-                }
+            if state.current == nil {
                 
-            case let .success(lastPayments, operators):
-                switch state.current {
-                case .none:
+                switch loaded {
+                case .failure:
+                    state.current = .prepayment(.failure)
+                    
+                case let .success(lastPayments, operators):
                     state.push(.prepayment(.options(.init(
                         lastPayments: lastPayments,
                         operators: operators
                     ))))
-                    
-                default:
-                    break
                 }
             }
         }
@@ -455,7 +446,7 @@ final class SimpleFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.callCount, 0)
     }
     
-    func test_flow() {
+    func test_loadFailureFlow() {
         
         let (sut, spy, loader) = makeSUT()
         
@@ -466,6 +457,33 @@ final class SimpleFlowIntegrationTests: XCTestCase {
             spy,
             .init(), {
                 _ in
+            }, {
+                _ in
+            }, {
+                $0.push(.prepayment(.failure))
+            }
+        )
+    }
+    
+    func test_flow() {
+        
+        let lastPayments = [makeLastPayment()]
+        let `operator` = makeOperator()
+        let operators = [`operator`, makeOperator()]
+        let options = Options(lastPayments: lastPayments, operators: operators)
+        let (sut, spy, loader) = makeSUT()
+        
+        sut.event(.initiate)
+        loader.complete(with: .success((lastPayments, operators)))
+        
+        assert(
+            spy,
+            .init(), {
+                _ in
+            }, {
+                _ in
+            }, {
+                $0.push(.prepayment(.options(options)))
             }
         )
     }
@@ -477,6 +495,8 @@ final class SimpleFlowIntegrationTests: XCTestCase {
     private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = SimpleFlowEvent<LastPayment, Operator>
     private typealias Effect = SimpleFlowEffect
+    
+    private typealias Options = Destination<LastPayment, Operator>.Prepayment.Options
     
     private typealias Reducer = SimpleFlowReducer<LastPayment, Operator>
     private typealias EffectHandler = SimpleFlowEffectHandler<LastPayment, Operator>
@@ -502,7 +522,8 @@ final class SimpleFlowIntegrationTests: XCTestCase {
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .immediate
         )
         
         let spy = StateSpy(sut.$state)
