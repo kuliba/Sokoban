@@ -118,18 +118,18 @@ final class FlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias SUT = FlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias State = Flow<Destination>
+    private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = FlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
     
-    private typealias PushSpy = CallSpy<(Flow<Destination>, PushEvent)>
-    private typealias UpdateSpy = CallSpy<(Flow<Destination>, UpdateEvent)>
+    private typealias PushSpy = CallSpy<(Flow<Destination<LastPayment, Operator>>, PushEvent)>
+    private typealias UpdateSpy = CallSpy<(Flow<Destination<LastPayment, Operator>>, UpdateEvent)>
     
     private func makeSUT(
-        pushStub: (Destination, PushEffect?) = (.services, nil),
-        updateStub: (Destination, UpdateEffect?) = (.services, nil),
+        pushStub: (Destination<LastPayment, Operator>, PushEffect?) = (.services, nil),
+        updateStub: (Destination<LastPayment, Operator>, UpdateEffect?) = (.services, nil),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

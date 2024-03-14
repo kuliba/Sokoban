@@ -32,7 +32,7 @@ extension DestinationUpdater {
     func update(
         _ state: State,
         _ event: Event
-    ) -> (Destination?, Effect?) {
+    ) -> (Destination<LastPayment, Operator>?, Effect?) {
         
         switch event {
         case .initiate:
@@ -43,7 +43,7 @@ extension DestinationUpdater {
 
 extension DestinationUpdater {
     
-    typealias State = Flow<Destination>
+    typealias State = Flow<Destination<LastPayment, Operator>>
     typealias Event = UpdateFlowEvent
     typealias Effect = UpdateFlowEffect
 }
@@ -57,7 +57,7 @@ extension StackStacker {
     func push(
         _ state: State,
         _ event: Event
-    ) -> (Destination, Effect?) {
+    ) -> (Destination<LastPayment, Operator>, Effect?) {
         
         fatalError()
     }
@@ -65,7 +65,7 @@ extension StackStacker {
 
 extension StackStacker {
     
-    typealias State = Flow<Destination>
+    typealias State = Flow<Destination<LastPayment, Operator>>
     typealias Event = PushEvent
     typealias Effect = PushEffect
 }
@@ -155,11 +155,11 @@ final class FlowIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
-    private typealias State = Flow<Destination>
+    private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = FlowEvent<PushEvent, UpdateFlowEvent>
     private typealias Effect = FlowEffect<PushEffect, UpdateFlowEffect>
     
-    private typealias Reducer = FlowReducer<Destination, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
+    private typealias Reducer = FlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     private typealias EffectHandler = FlowEffectHandler<PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     
     private typealias StateSpy = ValueSpy<State>

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import PrePaymentPicker
 
-enum Destination: Equatable {
+enum Destination<LastPayment, Operator> {
     
     case prepayment(Prepayment)
     case services
@@ -15,7 +16,7 @@ enum Destination: Equatable {
 
 extension Destination {
     
-    enum Prepayment: Equatable {
+    enum Prepayment {
         
         case failure
         case options(Options)
@@ -24,16 +25,12 @@ extension Destination {
 
 extension Destination.Prepayment {
     
-    struct Options: Equatable {
-        
-        var value: String
-        
-        init(_ value: String = UUID().uuidString) {
-            
-            self.value = value
-        }
-    }
+    typealias Options = PrePaymentOptionsState<LastPayment, Operator>
 }
+
+extension Destination: Equatable where LastPayment: Equatable, Operator: Equatable {}
+
+extension Destination.Prepayment: Equatable where LastPayment: Equatable, Operator: Equatable {}
 
 enum PushEvent: Equatable {
     
@@ -56,8 +53,16 @@ enum UpdateEffect: Equatable {
 }
 
 func makeDestination(
-    _ value: String = UUID().uuidString
-) -> Destination {
+    lastPayments: [LastPayment] = [],
+    operators: [Operator] = [],
+    searchText: String = "",
+    isInflight: Bool = false
+) -> Destination<LastPayment, Operator> {
     
-    .prepayment(.options(.init(value)))
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators,
+        searchText: searchText,
+        isInflight: isInflight
+    )))
 }

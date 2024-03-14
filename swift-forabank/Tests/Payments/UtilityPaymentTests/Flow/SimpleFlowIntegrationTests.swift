@@ -66,11 +66,13 @@ extension SimpleFlowReducer {
                     state.current = .prepayment(.failure)
                 }
                 
-            case let .success((lastPayments, operators)):
+            case let .success(lastPayments, operators):
                 switch state.current {
-//                        case .none:
-//                    state.push(.prepayment(.failure))
-                    //
+                case .none:
+                    state.push(.prepayment(.options(.init(
+                        lastPayments: lastPayments,
+                        operators: operators
+                    ))))
                     
                 default:
                     break
@@ -84,7 +86,7 @@ extension SimpleFlowReducer {
 
 extension SimpleFlowReducer {
     
-    typealias State = Flow<Destination>
+    typealias State = Flow<Destination<LastPayment, Operator>>
     typealias Event = SimpleFlowEvent<LastPayment, Operator>
     typealias Effect = SimpleFlowEffect
 }
@@ -154,11 +156,75 @@ final class SimpleFlowReducerTests: XCTestCase {
         assert(.loaded(.failure), on: nonEmptyState, effect: nil)
     }
     
+    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
+        
+        let operators = [makeOperator()]
+        let emptyState = State()
+
+        assertState(.loaded(.success([], operators)), on: emptyState) {
+            
+            $0.push(.prepayment(.options(.init(
+                lastPayments: [],
+                operators: operators
+            ))))
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
+
+        let operators = [makeOperator()]
+        let emptyState = State()
+
+        assert(.loaded(.success([], operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
+        
+        let lastPayments = [makeLastPayment()]
+        let operators = [makeOperator()]
+        let emptyState = State()
+
+        assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
+            
+            $0.push(.prepayment(.options(.init(
+                lastPayments: lastPayments,
+                operators: operators
+            ))))
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
+
+        let lastPayments = [makeLastPayment()]
+        let operators = [makeOperator()]
+        let emptyState = State()
+
+        assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_loaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
+        
+        let lastPayments = [makeLastPayment()]
+        let operators = [makeOperator()]
+        let nonEmptyState = State(stack: .init(.services))
+
+        assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
+
+        let lastPayments = [makeLastPayment()]
+        let operators = [makeOperator()]
+        let nonEmptyState = State(stack: .init(.services))
+
+        assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SimpleFlowReducer<LastPayment, Operator>
     
-    private typealias State = Flow<Destination>
+    private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = SimpleFlowEvent<LastPayment, Operator>
     private typealias Effect = SimpleFlowEffect
     
@@ -332,7 +398,7 @@ final class SimpleFlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = SimpleFlowEffectHandler<LastPayment, Operator>
     
-    private typealias State = Flow<Destination>
+    private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = SimpleFlowEvent<LastPayment, Operator>
     private typealias Effect = SimpleFlowEffect
     
@@ -408,7 +474,7 @@ final class SimpleFlowIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
-    private typealias State = Flow<Destination>
+    private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = SimpleFlowEvent<LastPayment, Operator>
     private typealias Effect = SimpleFlowEffect
     
