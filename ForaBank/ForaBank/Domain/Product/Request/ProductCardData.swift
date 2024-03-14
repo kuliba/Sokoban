@@ -27,6 +27,10 @@ class ProductCardData: ProductData {
     let isMain: Bool?
     let externalId: Int?
     
+    var statusCard: StatusCard? = nil
+    var cardType: CardType? = nil
+    var idParent: Int? = nil
+    
     init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
 
         self.accountId = accountId
@@ -288,4 +292,24 @@ extension ProductCardData.LoanBaseParamInfoData {
     }
     var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
     var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
+}
+
+extension ProductCardData {
+    
+    enum StatusCard: String, Decodable {
+        
+        case active = "ACTIVE"
+        case blockedUnlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
+        case blockedUnlockNotAvailable = "BLOCKED_UNLOCK_NOT_AVAILABLE"
+        case notActivated = "NOT_ACTIVE"
+    }
+
+    enum CardType: String, Decodable {
+        
+        case main = "MAIN"
+        case regular = "REGULAR"
+        case additionalSelf = "ADDITIONAL_SELF"
+        case additionalSelfAccOwn = "ADDITIONAL_SELF_ACC_OWN"
+        case additionalOther = "ADDITIONAL_OTHER"
+    }
 }
