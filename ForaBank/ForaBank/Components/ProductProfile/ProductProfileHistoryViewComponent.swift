@@ -150,14 +150,19 @@ extension ProductProfileHistoryView {
             case .deposit:
                 
                 statementFilteredOperation = statements
-                    .filter { $0.operationType == OperationType.credit
-                           && $0.groupName == "Выплата процентов" }
-                    
+                    .filter {
+                        ($0.operationType == OperationType.credit && $0.groupName == "Выплата процентов") ||
+                        ($0.operationType == OperationType.creditPlan && $0.groupName == "Выплата процентов")
+                    }
+                
             case .account, .card:
                 
                 statementFilteredOperation = statements
-                    .filter { $0.operationType == OperationType.debit }
-            
+                    .filter { statement in
+                        return statement.operationType == OperationType.debit ||
+                        statement.operationType == OperationType.debitPlan
+                    }
+                
             case .loan: return
             }
             
@@ -349,7 +354,7 @@ extension ProductProfileHistoryView.ViewModel {
             } else {
                 
                 downloadImagesIds.append(imageId)
-            }            
+            }
         }
         
         let sortedUpdatedOperations = updatedOperations.sorted(by: { $0.statement.date > $1.statement.date })
@@ -490,14 +495,8 @@ extension ProductProfileHistoryView.ViewModel {
                         
                         let amountFormatted = model.amountFormatted(amount: statement.amount, currencyCodeNumeric: statement.currencyCodeNumeric, style: .normal) ?? "\(statement.amount)"
                         
-                        if statement.isMinusSign {
-                            
-                            self.amount = .init(value: "- \(amountFormatted)", color: .mainColorsBlack)
-                            
-                        } else {
-                            
-                            self.amount = .init(value: "+ \(amountFormatted)", color: .systemColorActive)
-                        }
+                        self.amount = .init(value: statement.operationSymbolsAndAmount(amountFormatted), color: statement.operationColor)
+                        self.amountStatusImage = statement.image
                         
                     } else {
                         
@@ -539,8 +538,6 @@ extension ProductProfileHistoryView.ViewModel {
     }
 }
 
-//MARK: - View
-
 private extension ProductStatementData {
     
     var operationColor: Color {
@@ -564,6 +561,8 @@ private extension ProductStatementData {
     }
     
 }
+
+//MARK: - View
 
 struct ProductProfileHistoryView: View {
     
@@ -589,7 +588,6 @@ struct ProductProfileHistoryView: View {
                         SegmentedBarView(viewModel: segmentedVM)
                             .padding(.vertical, 5)
                     }
-                    
                     ListView(viewModel: listViewModel)
                 }
                 
@@ -742,21 +740,30 @@ extension ProductProfileHistoryView {
             
             HStack(alignment: .top, spacing: 20) {
                 
-                if let image = viewModel.image {
+                ZStack(alignment: .topTrailing) {
                     
-                    image
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .padding(.top, 8)
-                    
-                } else {
-                    
-                    Circle()
-                        .foregroundColor(.mainColorsGrayMedium)
-                        .frame(width: 40, height: 40)
-                        .shimmering(active: true, bounce: false)
-                        .padding(.top, 8)
+                    if let image = viewModel.image {
+                        
+                        image
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                        
+                    } else {
+                        
+                        Circle()
+                            .foregroundColor(.mainColorsGrayMedium)
+                            .frame(width: 40, height: 40)
+                            .shimmering(active: true, bounce: false)
+                    }
+                   
+                    if let image = viewModel.amountStatusImage {
+                        image
+                            .renderingMode(.original)
+                            .frame(width: 16, height: 16)
+                            .padding(.trailing, -4)
+                    }
                 }
+                .padding(.top, 8)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
@@ -925,9 +932,9 @@ struct HistoryViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel {
     
-    static let debitOperation = Operation(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar"), subtitle: "Услуги банка", amount: .init(value: "-65 Р", color: .black))
+    static let debitOperation = Operation(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar"), subtitle: "Услуги банка", amount: .init(value: "-65 Р", color: .black), amountStatusImage: Image("MigAvatar"))
     
-    static let creditOperation = Operation(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage"), subtitle: "Услуги банка", amount: .init(value: "-100 Р", color: .black))
+    static let creditOperation = Operation(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage"), subtitle: "Услуги банка", amount: .init(value: "-100 Р", color: .black), amountStatusImage: Image("MigAvatar"))
 }
 
 extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateState.FailViewModel {
@@ -937,9 +944,9 @@ extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateS
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black)), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: nil)))
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
     
-    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ))
+    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ))
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black)), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black)), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black)), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black)), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: nil)))
+    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
 }

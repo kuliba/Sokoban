@@ -51,8 +51,16 @@ extension CardStatementAPI.ProductStatementData.OperationType {
             
         case .credit:
             return .credit
+        case .creditPlan:
+            return .creditPlan
+        case .creditFict:
+            return .creditFict
         case .debit:
             return .debit
+        case .debitPlan:
+            return .debitPlan
+        case .debitFict:
+            return .debitFict
         case .open:
             return .open
         case .demandDepositFromAccount:
