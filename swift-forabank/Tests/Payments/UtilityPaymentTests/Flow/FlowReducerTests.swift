@@ -23,14 +23,27 @@ final class FlowReducerTests: XCTestCase {
         XCTAssertNoDiff(pushSpy.payloads.map(\.1), [event])
     }
     
-    func test_pushEvent_shouldDeliverPushState() {
+    func test_pushEvent_shouldDeliverPushStateOnEmpty() {
         
+        let empty = State()
         let destination = makeDestination()
         let (sut, _,_) = makeSUT(pushStub: (destination, nil))
         
-        assertState(sut: sut, .push(.push), on: .init()) {
+        assertState(sut: sut, .push(.push), on: empty) {
             
             $0.current = destination
+        }
+    }
+    
+    func test_pushEvent_shouldDeliverPushStateOnTopOfNonEmpty() {
+        
+        let nonEmpty = State(stack: .init(makeDestination()))
+        let destination = makeDestination()
+        let (sut, _,_) = makeSUT(pushStub: (destination, nil))
+        
+        assertState(sut: sut, .push(.push), on: nonEmpty) {
+            
+            $0.push(destination)
         }
     }
     
@@ -63,12 +76,25 @@ final class FlowReducerTests: XCTestCase {
         XCTAssertNoDiff(updateSpy.payloads.map(\.1), [event])
     }
     
-    func test_updateEvent_shouldDeliverUpdateState() {
+    func test_updateEvent_shouldDeliverUpdateStateOnEmpty() {
         
+        let empty = State()
         let destination = makeDestination()
         let (sut, _,_) = makeSUT(updateStub: (destination, nil))
         
-        assertState(sut: sut, .update(.update), on: .init()) {
+        assertState(sut: sut, .update(.update), on: empty) {
+            
+            $0.current = destination
+        }
+    }
+    
+    func test_updateEvent_shouldChangeStateToUpdatedOnNonEmpty() {
+        
+        let nonEmpty = State(stack: .init(makeDestination()))
+        let destination = makeDestination()
+        let (sut, _,_) = makeSUT(updateStub: (destination, nil))
+        
+        assertState(sut: sut, .update(.update), on: nonEmpty) {
             
             $0.current = destination
         }
