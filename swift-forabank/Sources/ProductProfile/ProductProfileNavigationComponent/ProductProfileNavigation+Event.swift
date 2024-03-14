@@ -31,6 +31,7 @@ public extension ProductProfileNavigation {
         case productDetailsInput(ProductDetailsStateProjection)
         case productDetailsSheetInput(ProductDetailsSheetStateProjection)
 
+        case dismissModal
         case dismissDestination
 
         case showAlert(AlertModelOf<ProductProfileNavigation.Event>)

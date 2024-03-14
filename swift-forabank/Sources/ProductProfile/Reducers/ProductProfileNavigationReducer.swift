@@ -46,8 +46,14 @@ public extension ProductProfileNavigationReducer {
             case .share:
                 effect = .create(.share)
             }
+        case .dismissModal:
+            if (state.destination != nil) {
+                state.destination?.viewModel.event(.closeModal)
+            } else {
+                state.modal = nil
+            }
         case .dismissDestination:
-            state.modal = nil
+            state.destination?.viewModel.event(.close)
         case let .showAlert(alert):
             state.alert = alert
         case let .open(panel):
@@ -198,17 +204,15 @@ private extension ProductProfileNavigationReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        var effect: Effect?
         
         state.alert = nil
         
         switch input {
-        
         case .appear:
             break
+            
         case let .buttonTapped(tap):
             switch tap {
-                
             case .sendAll:
                 state.modal = nil
                 state.destination?.viewModel.event(.sendAll)
@@ -218,8 +222,7 @@ private extension ProductProfileNavigationReducer {
                 state.destination?.viewModel.event(.sendSelect)
             }
         }
-        
-        return (state, effect)
+        return (state, .none)
     }
 }
 
@@ -260,6 +263,12 @@ private extension ProductProfileNavigationReducer {
             }
         case .close:
             state.destination = nil
+        case .sendAll:
+            break
+        case .sendSelect:
+            break
+        case .hideCheckbox:
+            break
         }
         
         return (state, effect)

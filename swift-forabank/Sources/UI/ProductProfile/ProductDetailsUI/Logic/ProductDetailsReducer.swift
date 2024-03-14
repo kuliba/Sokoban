@@ -27,25 +27,26 @@ public extension ProductDetailsReducer {
         
         switch event {
         case .appear:
-            state.event = .appear
+            break
             
         case let .itemTapped(tap):
             switch tap {
             case let .longPress(valueForCopy, text):
-                state.event = .itemTapped(.longPress(valueForCopy, text))
-                
+                state.status = .itemTapped(.longPress(valueForCopy, text))
             case let .iconTap(itemId):
                 switch itemId {
                 case .number:
                     state.updateDetailsStateByTap(itemId)
+                    state.status = nil
                 default:
-                    state.event = .itemTapped(.iconTap(itemId))
+                    state.status = .itemTapped(.iconTap(itemId))
                 }
             case .share:
                 if state.showCheckBox {
                     shareInfo(state.copyValues())
+                    state.status = nil
                 } else {
-                    state.event = .itemTapped(.share)
+                    state.status = .itemTapped(.share)
                 }
                 state.showCheckBox = false
                 state.title = "Реквизиты счета и карты"
@@ -55,16 +56,21 @@ public extension ProductDetailsReducer {
                 state.updateShareData(.needAddCardInfo(select))
             }
         case .sendAll:
-            state.event = .sendAll
+            shareInfo(state.allVallues())
+            state.cleanDataForShare()
+            state.status = .sendAll
         case .sendSelect:
-            state.event = .sendSelect
             state.showCheckBox = true
             state.title = "Выберите реквизиты"
+            state.status = .sendSelect
         case .close:
-            state.event = .close
+            state.status = .close
         case .hideCheckbox:
             state.showCheckBox = false
             state.title = "Реквизиты счета и карты"
+            state.status = nil
+        case .closeModal:
+            state.status = nil
         }
         
         return (state, .none)

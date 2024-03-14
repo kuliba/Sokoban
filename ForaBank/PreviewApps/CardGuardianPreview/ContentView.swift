@@ -132,11 +132,6 @@ struct ContentView: View {
                 state: viewModel.state,
                 event: viewModel.event
             )
-            
-            ProductDetailsView.init(
-                state: viewModel.state,
-                event: viewModel.event
-            )
         }
         .padding()
     }

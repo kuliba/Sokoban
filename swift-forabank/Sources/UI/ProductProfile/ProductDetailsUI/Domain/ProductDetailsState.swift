@@ -11,7 +11,7 @@ public struct ProductDetailsState: Equatable {
     
     public let accountDetails: [ListItem]
     public let cardDetails: [ListItem]
-    public var event: ProductDetailsEvent?
+    public var status: ProductDetailsStatus?
     public var showCheckBox: Bool
     public var title: String
     public var detailsState: DetailsState
@@ -21,7 +21,7 @@ public struct ProductDetailsState: Equatable {
     public init(
         accountDetails: [ListItem],
         cardDetails: [ListItem],
-        event: ProductDetailsEvent? = nil,
+        status: ProductDetailsStatus? = nil,
         showCheckBox: Bool = false,
         title: String = "Реквизиты счета и карты",
         detailsState: DetailsState = .initial,
@@ -29,7 +29,7 @@ public struct ProductDetailsState: Equatable {
     ) {
         self.accountDetails = accountDetails
         self.cardDetails = cardDetails
-        self.event = event
+        self.status = status
         self.showCheckBox = false
         self.title = title
         self.detailsState = detailsState
@@ -70,6 +70,17 @@ public struct ProductDetailsState: Equatable {
     
     func copyValues() -> [String] {
         return dataForShare
+    }
+    
+    mutating func allVallues() -> [String] {
+        
+        updateShareData(.needAddAccountInfo(true))
+        updateShareData(.needAddCardInfo(true))
+        return dataForShare
+    }
+    
+    mutating func cleanDataForShare() {
+        dataForShare.removeAll()
     }
     
     enum ShareData {

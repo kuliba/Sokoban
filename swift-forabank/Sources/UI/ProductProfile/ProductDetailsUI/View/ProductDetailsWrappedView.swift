@@ -61,7 +61,9 @@ public struct ProductDetailsWrappedView: View {
             }
         } else {
             
-            Button(action: { viewModel.event(.close) }) {
+            Button(action: { 
+                viewModel.event(.close)
+            }) {
                 Image(systemName: "chevron.left")
                     .frame(width: 24, height: 24)
             }

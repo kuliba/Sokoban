@@ -380,9 +380,9 @@ private extension ProductDetailsState {
     
     var projection: ProductDetailsStateProjection? {
         
-        switch self.event {
+        switch self.status {
             
-        case .none, .sendAll, .sendSelect, .hideCheckbox:
+        case .none:
             return .none
         case let .itemTapped(tap):
             return .itemTapped(tap)
@@ -390,6 +390,12 @@ private extension ProductDetailsState {
             return .appear
         case .close:
             return .close
+        case .sendAll:
+            return .sendAll
+        case .sendSelect:
+            return .sendSelect
+        case .hideCheckbox:
+            return .hideCheckbox
         }
     }
 }
@@ -398,6 +404,8 @@ public enum ProductDetailsStateProjection: Equatable {
     case appear
     case itemTapped(ProductDetailEvent)
     case close
+    case sendAll, sendSelect
+    case hideCheckbox
 }
 
 private extension ProductDetailsSheetState {

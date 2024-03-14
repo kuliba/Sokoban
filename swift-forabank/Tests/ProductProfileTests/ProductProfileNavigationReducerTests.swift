@@ -141,7 +141,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     func test_dismissDestination_shouldNotDeliverEffect() {
         
         assert(
-            .dismissDestination,
+            .dismissModal,
             on: productProfileState(),
             effect: nil)
     }
