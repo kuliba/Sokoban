@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import UtilityPayment
 import XCTest
 
 final class FlowIntegrationTests: XCTestCase {

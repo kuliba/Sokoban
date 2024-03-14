@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.03.2024.
 //
 
+import UtilityPayment
 import XCTest
 
 final class FlowEffectHandlerTests: XCTestCase {

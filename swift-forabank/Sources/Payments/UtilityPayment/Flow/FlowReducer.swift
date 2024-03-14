@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 14.03.2024.
 //
 
-final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
+public final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
     
     private let push: Push
     private let update: Update
     
-    init(
+    public init(
         push: @escaping Push,
         update: @escaping Update
     ) {
@@ -19,7 +19,7 @@ final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateE
     }
 }
 
-extension FlowReducer {
+public extension FlowReducer {
     
     func reduce(
         _ state: State,
@@ -45,7 +45,7 @@ extension FlowReducer {
     }
 }
 
-extension FlowReducer {
+public extension FlowReducer {
     
     typealias Push = (State, PushEvent) -> (Destination, PushEffect?)
     typealias Update = (State, UpdateEvent) -> (Destination, UpdateEffect?)

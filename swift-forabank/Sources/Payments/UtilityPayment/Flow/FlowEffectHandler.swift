@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 14.03.2024.
 //
 
-final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
+public final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
     
     private let push: Push
     private let update: Update
     
-    init(
+    public init(
         push: @escaping Push,
         update: @escaping Update
     ) {
@@ -19,7 +19,7 @@ final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> 
     }
 }
 
-extension FlowEffectHandler {
+public extension FlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -35,7 +35,7 @@ extension FlowEffectHandler {
     }
 }
 
-extension FlowEffectHandler {
+public extension FlowEffectHandler {
     
     typealias PushDispatch = (PushEvent) -> Void
     typealias Push = (PushEffect, @escaping PushDispatch) -> Void
