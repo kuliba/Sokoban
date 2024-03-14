@@ -9,6 +9,7 @@ import Foundation
 import ProductProfileComponents
 import ProductProfile
 import RxViewModel
+import UIKit
 
 extension ProductProfileViewModel {
     
@@ -16,6 +17,8 @@ extension ProductProfileViewModel {
     typealias MakeTopUpCardViewModel = (AnySchedulerOfDispatchQueue) -> TopUpCardViewModel
     typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
     typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
+
 
     static func preview(
         initialState: ProductProfileNavigation.State = .init(),
@@ -23,6 +26,7 @@ extension ProductProfileViewModel {
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
         accountDetails: [ListItem],
+        detailsSheetButtons: [ProductDetailsSheetState.PanelButton],
         cardDetails: [ListItem],
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ProductProfileViewModel {
@@ -103,7 +107,9 @@ extension ProductProfileViewModel {
             print("account statement: card \($0.status)")
         }
         
-        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        let detailsReduce = ProductDetailsReducer(
+            shareInfo: { print($0) }
+        ).reduce(_:_:)
         
         let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
         
@@ -113,6 +119,33 @@ extension ProductProfileViewModel {
                 initialState: .init(accountDetails: accountDetails, cardDetails: cardDetails),
                 reduce: detailsReduce,
                 handleEffect: detailsHandleEffect,
+                scheduler: $0
+            )
+        }
+        
+        let detailsActions = ProductProfileNavigationEffectHandler.ProductDetailsActions.init(
+            longPress: {
+                
+                UIPasteboard.general.string = $0
+                print("informer \($1)")
+            },
+            cvvTap: {
+                print("cvv tap")
+                return "444"
+            })
+        
+        let sheetReduce = ProductDetailsSheetReducer().reduce(_:_:)
+        
+        let sheetHandleEffect = ProductDetailsSheetEffectHandler().handleEffect(_:_:)
+        
+        let makeDetailsSheetViewModel: MakeProductDetailsSheetViewModel =  {
+            
+            .init(
+                initialState: .init(
+                    buttons: detailsSheetButtons
+                ),
+                reduce: sheetReduce,
+                handleEffect: sheetHandleEffect,
                 scheduler: $0
             )
         }
@@ -133,6 +166,8 @@ extension ProductProfileViewModel {
                 accountDetails: accountDetailsAction,
                 accountStatement: accountStatementAction),
             makeProductDetailsViewModel: makeDetailsViewModel,
+            productDetailsActions: detailsActions,
+            makeProductDetailsSheetViewModel: makeDetailsSheetViewModel,
             scheduler: scheduler
         ).handleEffect(_:_:)
         

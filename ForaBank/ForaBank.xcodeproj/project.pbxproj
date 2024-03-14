@@ -1953,7 +1953,6 @@
 		83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */ = {isa = PBXBuildFile; productRef = 83E513382AA73CFC00F8183B /* LandingMapping */; };
 		83E82B732A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */; };
 		83E84BC429E42CD800E1A445 /* PaymentsServicesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */; };
-		83F5B51C2B9F1CC7003BD8F5 /* ProductDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F5B51B2B9F1CC7003BD8F5 /* ProductDetailsView.swift */; };
 		83F686362B988A0F00B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */; };
 		83F686382B98D49000B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */; };
 		83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */; };
@@ -4452,7 +4451,6 @@
 		83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrDataMapperTests.swift; sourceTree = "<group>"; };
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
 		83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesData.swift; sourceTree = "<group>"; };
-		83F5B51B2B9F1CC7003BD8F5 /* ProductDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsView.swift; sourceTree = "<group>"; };
 		83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
 		83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
 		83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDetailsRequest.swift"; sourceTree = "<group>"; };
@@ -10690,7 +10688,6 @@
 				83BCA2082B9711F5002CD83D /* AccountInfoPanelView.swift */,
 				835E7C722B7E301E0044FB67 /* CvvButtonView.swift */,
 				835E7C742B7E3B690044FB67 /* CvvCardBlockedView.swift */,
-				83F5B51B2B9F1CC7003BD8F5 /* ProductDetailsView.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -14353,7 +14350,6 @@
 				83BCA2092B9711F5002CD83D /* AccountInfoPanelView.swift in Sources */,
 				83361EB82B6CF89A00F58C10 /* ContentView.swift in Sources */,
 				83361EB52B6CF89A00F58C10 /* CardGuardianPreviewApp.swift in Sources */,
-				83F5B51C2B9F1CC7003BD8F5 /* ProductDetailsView.swift in Sources */,
 				833E87232B920027009A01AB /* TopUpCardView.swift in Sources */,
 				835E7C732B7E301E0044FB67 /* CvvButtonView.swift in Sources */,
 				83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */,

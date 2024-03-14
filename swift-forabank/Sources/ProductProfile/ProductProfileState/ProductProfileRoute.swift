@@ -18,6 +18,8 @@ public extension ProductProfileNavigation.State {
     typealias AccountInfoRoute = GenericRoute<AccountInfoPanelViewModel, ProductProfileNavigation.State.CGDestination, Never, Never>
 
     typealias ProductDetailsRoute = GenericRoute<ProductDetailsViewModel, ProductProfileNavigation.State.CGDestination, Never, Never>
+    
+    typealias ProductDetailsSheetRoute = GenericRoute<ProductDetailsSheetViewModel, ProductProfileNavigation.State.CGDestination, Never, Never>
 
     enum ProductProfileRoute: Equatable, Identifiable {
         
@@ -32,6 +34,8 @@ public extension ProductProfileNavigation.State {
                 return route.id
             case let .topUpCard(route):
                 return route.id
+            case let .share(route):
+                return route.id
             }
         }
 
@@ -39,5 +43,6 @@ public extension ProductProfileNavigation.State {
         case cardGuardian(CardGuardianRoute)
         case productDetails(ProductDetailsRoute)
         case topUpCard(TopUpCardRoute)
+        case share(ProductDetailsSheetRoute)
     }
 }
