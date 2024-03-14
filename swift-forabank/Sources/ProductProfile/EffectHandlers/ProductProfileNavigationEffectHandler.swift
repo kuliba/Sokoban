@@ -165,10 +165,8 @@ public extension ProductProfileNavigationEffectHandler {
             topUpCardActions.topUpCardFromOurBank(card)
         case let .accountAnotherBank(card):
             topUpCardActions.topUpCardFromOtherBank(card)
-        case let .accountDetails(card):
+        case .accountDetails:
             dispatch(makeDestinationDetails(dispatch))
-
-           // accountInfoPanelActions.accountDetails(card)
         case let .accountStatement(card):
             accountInfoPanelActions.accountStatement(card)
         case let .productDetailsItemlongPress(valueForCopy, textForInformer):
