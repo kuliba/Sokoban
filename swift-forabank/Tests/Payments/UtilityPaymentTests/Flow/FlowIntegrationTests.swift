@@ -9,6 +9,130 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
+enum UpdateFlowEvent {
+    
+    case initiate
+}
+
+extension UpdateFlowEvent: Equatable {}
+
+enum UpdateFlowEffect {
+    
+    case initiate
+}
+
+extension UpdateFlowEffect: Equatable {}
+
+final class DestinationUpdater {
+    
+}
+
+extension DestinationUpdater {
+    
+    func update(
+        _ state: State,
+        _ event: Event
+    ) -> (Destination?, Effect?) {
+        
+        switch event {
+        case .initiate:
+            return (nil, .initiate)
+        }
+    }
+}
+
+extension DestinationUpdater {
+    
+    typealias State = Flow<Destination>
+    typealias Event = UpdateFlowEvent
+    typealias Effect = UpdateFlowEffect
+}
+
+final class StackStacker {
+    
+}
+
+extension StackStacker {
+    
+    func push(
+        _ state: State,
+        _ event: Event
+    ) -> (Destination, Effect?) {
+        
+        fatalError()
+    }
+}
+
+extension StackStacker {
+    
+    typealias State = Flow<Destination>
+    typealias Event = PushEvent
+    typealias Effect = PushEffect
+}
+
+final class DestinationUpdaterTests: XCTestCase {
+    
+    func test_initiate_shouldDeliverNilDestinationOnEmptyState() {
+        
+        let emptyState = State()
+        let sut = makeSUT()
+        
+        let (destination, _) = sut.update(emptyState, .initiate)
+        
+        XCTAssertNil(destination)
+    }
+    
+    func test_initiate_shouldDeliverEffectOnEmptyState() {
+        
+        let emptyState = State()
+        let sut = makeSUT()
+        
+        let (_, effect) = sut.update(emptyState, .initiate)
+        
+        XCTAssertNoDiff(effect, .initiate)
+    }
+    
+    func test_initiate_shouldDeliverNilDestinationOnNonEmptyState() {
+        
+        let nonEmptyState = State(stack: .init(.services))
+        let sut = makeSUT()
+        
+        let (destination, _) = sut.update(nonEmptyState, .initiate)
+        
+        XCTAssertNil(destination)
+    }
+    
+    func test_initiate_shouldDeliverEffectOnNonEmptyState() {
+        
+        let nonEmptyState = State(stack: .init(.services))
+        let sut = makeSUT()
+        
+        let (_, effect) = sut.update(nonEmptyState, .initiate)
+        
+        XCTAssertNoDiff(effect, .initiate)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = DestinationUpdater
+    
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let sut = SUT()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
+}
+
 final class FlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
@@ -19,25 +143,31 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertEqual(updateSpy.callCount, 0)
     }
     
+    func test_flow() {
+        
+        let (sut, spy, pushSpy, updateSpy) = makeSUT()
+        
+        sut.event(.update(.initiate))
+        updateSpy.complete(with: .initiate)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
     private typealias State = Flow<Destination>
-    private typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    private typealias Event = FlowEvent<PushEvent, UpdateFlowEvent>
+    private typealias Effect = FlowEffect<PushEffect, UpdateFlowEffect>
     
-    private typealias Reducer = FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
-    private typealias EffectHandler = FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias Reducer = FlowReducer<Destination, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
+    private typealias EffectHandler = FlowEffectHandler<PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     
     private typealias StateSpy = ValueSpy<State>
     private typealias PushSpy = Spy<PushEffect, PushEvent>
-    private typealias UpdateSpy = Spy<UpdateEffect, UpdateEvent>
+    private typealias UpdateSpy = Spy<UpdateFlowEffect, UpdateFlowEvent>
     
     private func makeSUT(
         initialState: State = .init(),
-        push: @escaping Reducer.Push = { _,_ in (.services, nil) },
-        update: @escaping Reducer.Update = { _,_ in (.services, nil) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -46,7 +176,13 @@ final class FlowIntegrationTests: XCTestCase {
         pushSpy: PushSpy,
         updateSpy: UpdateSpy
     ) {
-        let reducer = Reducer(push: push, update: update)
+        let stacker = StackStacker()
+        let updater = DestinationUpdater()
+        
+        let reducer = Reducer(
+            push: stacker.push,
+            update: updater.update
+        )
         
         let pushSpy = PushSpy()
         let updateSpy = UpdateSpy()

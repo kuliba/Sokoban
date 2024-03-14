@@ -48,7 +48,8 @@ public extension FlowReducer {
 public extension FlowReducer {
     
     typealias Push = (State, PushEvent) -> (Destination, PushEffect?)
-    typealias Update = (State, UpdateEvent) -> (Destination, UpdateEffect?)
+    #warning("add test for nil destination!! with empty and non-empty stack!!")
+    typealias Update = (State, UpdateEvent) -> (Destination?, UpdateEffect?)
     
     typealias State = Flow<Destination>
     typealias Event = FlowEvent<PushEvent, UpdateEvent>
