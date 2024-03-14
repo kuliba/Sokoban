@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
+import C2BSubscriptionUI
 import Combine
 import FastPaymentsSettings
 import OTPInputComponent
@@ -48,7 +49,7 @@ public extension UserAccountNavigation.State {
     
     enum FPSDestination: Equatable, Identifiable {
         
-#warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
+#warning("remove optionality: change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
         case c2BSub(GetC2BSubResponse, AnyCancellable?)
         case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
         
@@ -110,6 +111,20 @@ extension UserAccountNavigation.State.FPSDestination: Hashable {
             
         case let .c2BSub(getC2BSubResponse, _):
             hasher.combine(getC2BSubResponse)
+        }
+    }
+}
+
+extension GetC2BSubResponse: Hashable {
+    
+    public func hash(into hasher: inout Hasher) {
+        
+        switch details {
+        case .empty:
+            hasher.combine(0)
+        
+        case let .list(list):
+            hasher.combine(list.map(\.id))
         }
     }
 }

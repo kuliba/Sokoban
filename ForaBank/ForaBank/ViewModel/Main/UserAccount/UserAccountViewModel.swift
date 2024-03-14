@@ -11,7 +11,6 @@ import Foundation
 import ManageSubscriptionsUI
 import TextFieldModel
 import SwiftUI
-import UserAccountNavigationComponent
 import UIPrimitives
 
 class UserAccountViewModel: ObservableObject {
@@ -231,99 +230,6 @@ private extension UserAccountViewModel {
         
         return sections
     }
-    
-    func getSubscriptions(
-        with items: [C2BSubscription.ProductSubscription]?
-    ) -> [SubscriptionsViewModel.Product] {
-        
-        var products: [SubscriptionsViewModel.Product] = []
-        
-        guard let items else { return [] }
-        
-        for item in items {
-            
-            let product = model.allProducts.first(where: { $0.id.description == item.productId })
-            
-            let subscriptions = item.subscriptions.map({
-                
-                var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
-                
-                let brandIcon = $0.brandIcon
-                
-                if let icon = model.images.value[brandIcon]?.image {
-                    
-                    image = .image(icon)
-                    
-                } else {
-                    
-                    image = .default(.ic24ShoppingCart)
-                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
-                }
-                
-                return ManageSubscriptionsUI.SubscriptionViewModel(
-                    token: $0.subscriptionToken,
-                    name: $0.brandName,
-                    image: image,
-                    subtitle: $0.subscriptionPurpose,
-                    purposeTitle: $0.cancelAlert,
-                    trash: .ic24Trash2,
-                    config: .init(
-                        headerFont: .textH4M16240(),
-                        subtitle: .textBodySR12160()
-                    ),
-                    onDelete: { token, title in
-                        
-                        self.event(.navigate(.alert(.cancelC2BSub(
-                            title: title,
-                            event: .cancelC2BSub(token)
-                        ))))
-                    },
-                    detailAction: { token in
-                        
-                        self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-                    }
-                )
-            })
-            
-            if let product,
-               let balance = model.amountFormatted(
-                amount: product.balanceValue,
-                currencyCode: product.currency,
-                style: .fraction
-               ),
-               let icon = product.smallDesign.image {
-                
-                if let product = product as? ProductCardData {
-                    
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: product.isBlocked,
-                        subscriptions: subscriptions
-                    ))
-                    
-                } else {
-                    
-                    products.append(.init(
-                        image: icon,
-                        title: item.productTitle,
-                        paymentSystemIcon: nil,
-                        name: product.displayName,
-                        balance: balance,
-                        descriptions: product.description,
-                        isLocked: false,
-                        subscriptions: subscriptions
-                    ))
-                }
-            }
-        }
-        
-        return products
-    }
 }
 
 private extension UserAccountViewModel {
@@ -502,40 +408,20 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            let products = self.getSubscriptions(with: model.subscriptions.value?.list)
+            let viewModel = navigationStateManager.makeSubscriptionsViewModel(
+                { [weak self] token, title in
+                    
+                    self?.event(.navigate(.alert(.cancelC2BSub(
+                        title: title,
+                        event: .cancelC2BSub(token)
+                    ))))
+                },
+                { [weak self] token in
+                    
+                    self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                })
             
-            let reducer = TransformingReducer(
-                placeholderText: "Поиск",
-                transform: {
-                    .init(
-                        $0.text,
-                        cursorPosition: $0.cursorPosition
-                    )
-                }
-            )
-            
-            let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
-            let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
-            let titleCondition = (products.count == 0)
-            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-                icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
-                title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
-            )
-            
-            self.event(.navigate(.link(
-                .managingSubscription(.init(
-                    products: products,
-                    searchViewModel: .init(
-                        initialState: .placeholder("Поиск"),
-                        reducer: reducer,
-                        keyboardType: .default
-                    ),
-                    emptyViewModel: emptyViewModel,
-                    configurator: .init(
-                        backgroundColor: .mainColorsGrayLightest
-                    )
-                ))
-            )))
+            self.event(.navigate(.link(.managingSubscription(viewModel))))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
             switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {
@@ -558,7 +444,7 @@ private extension UserAccountViewModel {
                 let cancellable = viewModel.$state
                     .dropFirst()
                     .removeDuplicates()
-                    .map(UserAccountNavigation.Event.FastPaymentsSettings.updated)
+                    .map(UserAccountEvent.FastPaymentsSettings.updated)
                     .receive(on: scheduler)
                     .sink { [weak self] in self?.event(.fps($0)) }
 #warning("and change to effect (??) when moved to `reduce` (?)")

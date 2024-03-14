@@ -192,7 +192,7 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         
         XCTAssertEqual(effectHandlerSpy.callCount, 0)
 
-        XCTAssertNoDiff(stateSpy.values, [
+        XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
             starting(4),
             running(4),
@@ -258,10 +258,14 @@ final class TimedOTPInputViewModelTests: XCTestCase {
     }
     
     private func makeState(
+        phoneNumber: State.PhoneNumberMask = .init(anyMessage()),
         countdown: CountdownState = .completed,
         otpField: OTPFieldState = .init()
     ) -> State {
         
-        .input(.init(countdown: countdown, otpField: otpField))
+        .init(
+            phoneNumber: phoneNumber,
+            status: .input(.init(countdown: countdown, otpField: otpField))
+        )
     }
 }

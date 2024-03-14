@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "B5417267-3ED4-4121-89A8-EF64C8CAACE0",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

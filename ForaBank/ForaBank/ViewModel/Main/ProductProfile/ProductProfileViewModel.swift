@@ -47,7 +47,8 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let navigationStateManager: UserAccountNavigationStateManager
+    private let paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager
+    private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
@@ -71,7 +72,8 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         navigationStateManager: UserAccountNavigationStateManager,
+         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+         userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
@@ -89,7 +91,8 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.navigationStateManager = navigationStateManager
+        self.paymentsTransfersNavigationStateManager = paymentsTransfersNavigationStateManager
+        self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
@@ -109,7 +112,8 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        navigationStateManager: UserAccountNavigationStateManager,
+        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
@@ -140,7 +144,8 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            navigationStateManager: navigationStateManager,
+            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
@@ -371,7 +376,8 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    navigationStateManager: navigationStateManager,
+                    navigationStateManager: paymentsTransfersNavigationStateManager,
+                    userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     paymentsTransfersFactory: paymentsTransfersFactory,
@@ -1505,7 +1511,8 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            navigationStateManager: navigationStateManager,
+            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory, 
             paymentsTransfersFactory: paymentsTransfersFactory, 
