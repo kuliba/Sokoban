@@ -80,3 +80,11 @@ public extension Stack {
 }
 
 extension Stack: Equatable where Element: Equatable {}
+
+extension Stack: ExpressibleByArrayLiteral {
+    
+    public init(arrayLiteral elements: Element...) {
+        
+        self.elements = elements
+    }
+}
