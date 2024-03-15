@@ -9,6 +9,26 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
+private typealias SUT = RxViewModel<State, Event, Effect>
+
+private typealias State = PaymentsTransfersState<Destination>
+private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
+private typealias Effect = PaymentsTransfersEffect<LastPayment>
+
+//private typealias Destination = UtilityDestination<LastPayment, Operator>
+
+private typealias StateSpy = ValueSpy<State>
+
+private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, StartPaymentResponse>
+
+private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
+
+private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse>
+
+private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
+private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
+private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
+
 final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     // MARK: - back
@@ -58,20 +78,17 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             .init(route: nil), {
                 _ in
             }, {
-                $0.route = .utilityFlow(.init())
+                $0.route = emptyUtilityFlow()
             }, {
-                $0.route = .utilityFlow(.init(stack: [.prepayment(.failure)]))
+                $0.route = utilityFlow(.prepayment(.failure))
             }, {
                 $0.route = nil
             }, {
-                $0.route = .utilityFlow(.init())
+                $0.route = emptyUtilityFlow()
             }, {
-                $0.route = .utilityFlow(.init(stack: [prepayment]))
+                $0.route = utilityFlow(prepayment)
             }, {
-                $0.route = .utilityFlow(.init(stack: [
-                    prepayment,
-                    .failure(.connectivityError)
-                ]))
+                $0.route = utilityFlow(prepayment, .failure(.connectivityError))
             }
         )
     }
@@ -105,43 +122,24 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             .init(route: nil), {
                 _ in
             }, {
-                $0.route = .utilityFlow(.init())
+                $0.route = emptyUtilityFlow()
             }, {
-                $0.route = .utilityFlow(.init(stack: [.prepayment(.failure)]))
+                $0.route = utilityFlow(.prepayment(.failure))
             }, {
                 $0.route = nil
             }, {
-                $0.route = .utilityFlow(.init())
+                $0.route = emptyUtilityFlow()
             }, {
-                $0.route = .utilityFlow(.init(stack: [prepayment]))
+                $0.route = utilityFlow(prepayment)
             }, {
-                $0.route = .utilityFlow(.init(stack: [prepayment, .payment]))
+                $0.route = utilityFlow(prepayment, .payment)
             }, {
-                $0.route = .utilityFlow(.init(stack: [prepayment]))
+                $0.route = utilityFlow(prepayment)
             }
         )
     }
     
     // MARK: - Helpers
-    
-    private typealias SUT = RxViewModel<State, Event, Effect>
-    
-    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, StartPaymentResponse>
-    private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
-    
-    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse>
-    
-    private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
-    private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
-    private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
-
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
-    
-    private typealias StateSpy = ValueSpy<State>
-    
-    private typealias State = PaymentsTransfersState<Destination>
-    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
-    private typealias Effect = PaymentsTransfersEffect<LastPayment>
     
     private func makeSUT(
         initialRoute: State.Route? = nil,
@@ -207,4 +205,16 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         XCTAssertNoDiff(spy.values, values, file: file, line: line)
     }
+}
+
+private func emptyUtilityFlow() -> State.Route {
+    
+    .utilityFlow(.init())
+}
+
+private func utilityFlow(
+    _ destinations: Destination...
+) -> State.Route {
+    
+    .utilityFlow(.init(stack: .init(destinations)))
 }
