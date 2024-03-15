@@ -115,6 +115,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         sut.event(.back)
         
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
         assert(
             spy,
             .init(route: nil), {
