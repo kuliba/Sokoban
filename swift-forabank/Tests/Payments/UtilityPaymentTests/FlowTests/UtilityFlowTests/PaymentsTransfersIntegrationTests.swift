@@ -105,12 +105,12 @@ private extension PaymentsTransfersReducer {
             break
             
         case let .utilityFlow(utilityFlow):
-            let (s, e) = utilityReduce(utilityFlow, .back)
-            if s.isEmpty {
+            let (utilityFlow, utilityEffect) = utilityReduce(utilityFlow, .back)
+            if utilityFlow.isEmpty {
                 state.route = nil
             } else {
-                state.route = .utilityFlow(s)
-                effect = e.map { .utilityFlow($0) }
+                state.route = .utilityFlow(utilityFlow)
+                effect = utilityEffect.map { .utilityFlow($0) }
             }
         }
         
