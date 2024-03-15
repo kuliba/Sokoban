@@ -52,7 +52,6 @@ extension UtilityFlowReducer {
         
         switch event {
         case .back:
-            #warning("add tests")
             state.current = nil
             
         case .initiate:
@@ -90,6 +89,56 @@ extension UtilityFlowReducer {
 }
 
 final class UtilityFlowReducerTests: XCTestCase {
+    
+    // MARK: - back
+    
+    func test_back_shouldNotChangeEmptyState() {
+        
+        let emptyState = State()
+        
+        assertState(.back, on: emptyState)
+    }
+    
+    func test_back_shouldNotDeliverEffectOnEmptyState() {
+        
+        let emptyState = State()
+        
+        assert(.back, on: emptyState, effect: nil)
+    }
+    
+    func test_back_shouldChangeStateToEmptyOnSingleFlowState() {
+        
+        let singleFlow = State(stack: .init(.services))
+        
+        assertState(.back, on: singleFlow) {
+            
+            $0 = .init()
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnSingleFlowState() {
+        
+        let singleFlow = State(stack: .init(.services))
+        
+        assert(.back, on: singleFlow, effect: nil)
+    }
+    
+    func test_back_shouldRemoveTopOnMultiFlowState() {
+        
+        let multiFlowState = State(stack: .init(.services, .prepayment(.failure)))
+        
+        assertState(.back, on: multiFlowState) {
+            
+            $0 = .init(stack: .init(.services))
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnMultiFlowState() {
+        
+        let multiFlowState = State(stack: .init(.services, .prepayment(.failure)))
+        
+        assert(.back, on: multiFlowState, effect: nil)
+    }
     
     // MARK: - initiate
     
@@ -223,7 +272,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     private typealias SUT = UtilityFlowReducer<LastPayment, Operator>
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
-
+    
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator>
     private typealias Effect = UtilityFlowEffect
@@ -402,7 +451,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator>
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
-
+    
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator>
     private typealias Effect = UtilityFlowEffect
@@ -505,9 +554,9 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
- 
+    
     private typealias Destination = UtilityDestination<LastPayment, Operator>
-
+    
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator>
     private typealias Effect = UtilityFlowEffect
