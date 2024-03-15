@@ -1,6 +1,6 @@
 //
 //  UtilityFlowReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 15.03.2024.
 //
@@ -14,23 +14,21 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_back_shouldNotChangeEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.back, on: emptyState)
     }
     
     func test_back_shouldNotDeliverEffectOnEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.back, on: emptyState, effect: nil)
     }
     
     func test_back_shouldChangeStateToEmptyOnSingleFlowState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let singleFlow = State(stack: .init(.services(services)))
+        let singleFlow = makeSingleDestinationUtilityFlow()
         
         assertState(.back, on: singleFlow) {
             
@@ -40,17 +38,15 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_back_shouldNotDeliverEffectOnSingleFlowState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let singleFlow = State(stack: .init(.services(services)))
-
+        let singleFlow = makeSingleDestinationUtilityFlow()
+        
         assert(.back, on: singleFlow, effect: nil)
     }
     
     func test_back_shouldRemoveTopOnMultiFlowState() {
         
-        let services = [makeService(), makeService()]
-       let multiFlowState = State(stack: .init(.services(services), .prepayment(.failure)))
+        let services = makeServices()
+        let multiFlowState = makeFlow(.services(services), .prepayment(.failure))
         
         assertState(.back, on: multiFlowState) {
             
@@ -59,10 +55,9 @@ final class UtilityFlowReducerTests: XCTestCase {
     }
     
     func test_back_shouldNotDeliverEffectOnMultiFlowState() {
-
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let multiFlowState = State(stack: .init(.services(services), .prepayment(.failure)))
+        
+        let services = makeServices()
+        let multiFlowState = makeFlow(.services(services), .prepayment(.failure))
         
         assert(.back, on: multiFlowState, effect: nil)
     }
@@ -71,33 +66,29 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_initiate_shouldNotChangeEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.initiate, on: emptyState)
     }
     
     func test_initiate_shouldDeliverEffectOnEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.initiate, on: emptyState, effect: .initiate)
     }
     
     func test_initiate_shouldNotChangeNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assertState(.initiate, on: nonEmptyState)
     }
     
     func test_initiate_shouldNotDeliverEffectOnNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assert(.initiate, on: nonEmptyState, effect: nil)
     }
     
@@ -105,7 +96,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.loaded(.failure), on: emptyState) {
             
@@ -115,33 +106,29 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
         
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.loaded(.failure), on: emptyState, effect: nil)
     }
     
     func test_loaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assertState(.loaded(.failure), on: nonEmptyState)
     }
     
     func test_loaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assert(.loaded(.failure), on: nonEmptyState, effect: nil)
     }
     
     func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
         
         let operators = [makeOperator()]
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.loaded(.success([], operators)), on: emptyState) {
             
@@ -155,7 +142,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
         
         let operators = [makeOperator()]
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.loaded(.success([], operators)), on: emptyState, effect: nil)
     }
@@ -164,7 +151,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
             
@@ -179,7 +166,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
     }
@@ -188,10 +175,8 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
     }
     
@@ -199,10 +184,8 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
-
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
         assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
     }
     
@@ -210,8 +193,8 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loadedServices_shouldPushServicesDestinationOnTop() {
         
-        let state = makeState()
-        let services = [makeService(), makeService()]
+        let state = makeFlow()
+        let services = makeServices()
         
         assertState(.loadedServices(services), on: state) {
             
@@ -221,8 +204,8 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loadedServices_shouldNotDeliverEffect() {
         
-        let state = makeState()
-        let services = [makeService(), makeService()]
+        let state = makeFlow()
+        let services = makeServices()
         
         assert(.loadedServices(services), on: state, effect: nil)
     }
@@ -231,7 +214,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldPushFailureDestinationOnConnectivityErrorFailure() {
         
-        let state = makeState()
+        let state = makeFlow()
         
         assertState(.paymentStarted(.failure(.connectivityError)), on: state) {
             
@@ -241,7 +224,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
-        let state = makeState()
+        let state = makeFlow()
         
         assert(.paymentStarted(.failure(.connectivityError)), on: state, effect: nil)
     }
@@ -249,7 +232,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldPushFailureDestinationOnServerErrorFailure() {
         
         let message = anyMessage()
-        let state = makeState()
+        let state = makeFlow()
         
         assertState(.paymentStarted(.failure(.serverError(message))), on: state) {
             
@@ -260,14 +243,14 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnServerErrorFailure() {
         
         let message = anyMessage()
-        let state = makeState()
+        let state = makeFlow()
         
         assert(.paymentStarted(.failure(.serverError(message))), on: state, effect: nil)
     }
     
     func test_paymentStarted_shouldPushPaymentDestinationOnSuccess() {
         
-        let state = makeState()
+        let state = makeFlow()
         
         assertState(.paymentStarted(.success(makeResponse())), on: state) {
             
@@ -277,7 +260,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnSuccess() {
         
-        let state = makeState()
+        let state = makeFlow()
         
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
     }
@@ -287,7 +270,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeEmptyState() {
         
         let lastPayment = makeLastPayment()
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.select(.last(lastPayment)), on: emptyState)
     }
@@ -295,7 +278,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotDeliverEffectOnEmptyState() {
         
         let lastPayment = makeLastPayment()
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.select(.last(lastPayment)), on: emptyState, effect: nil)
     }
@@ -303,10 +286,10 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeTopPrepaymentState() {
         
         let lastPayment = makeLastPayment()
-        let topPrepaymentState = State(stack: .init(.prepayment(.options(.init(
+        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
             lastPayments: [lastPayment],
             operators: [makeOperator()]
-        )))))
+        ))))
         
         assertState(.select(.last(lastPayment)), on: topPrepaymentState)
     }
@@ -314,10 +297,10 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldDeliverEffectOnTopPrepaymentState() {
         
         let lastPayment = makeLastPayment()
-        let topPrepaymentState = State(stack: .init(.prepayment(.options(.init(
+        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
             lastPayments: [lastPayment],
             operators: [makeOperator()]
-        )))))
+        ))))
         
         assert(.select(.last(lastPayment)), on: topPrepaymentState, effect: .select(.last(lastPayment)))
     }
@@ -325,27 +308,23 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeTopServicesState() {
         
         let lastPayment = makeLastPayment()
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let topServicesState = State(stack: .init(.services(services)))
-
+        let topServicesState = makeFlow(.services(makeServices()))
+        
         assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
     
     func test_select_lastPayment_shouldNotDeliverEffectOnTopServicesState() {
         
         let lastPayment = makeLastPayment()
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let topServicesState = State(stack: .init(.services(services)))
-
+        let topServicesState = makeFlow(.services(makeServices()))
+        
         assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
     
     func test_select_operator_shouldNotChangeEmptyState() {
         
         let `operator` = makeOperator()
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assertState(.select(.operator(`operator`)), on: emptyState)
     }
@@ -353,7 +332,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldNotDeliverEffectOnEmptyState() {
         
         let `operator` = makeOperator()
-        let emptyState = makeState()
+        let emptyState = makeFlow()
         
         assert(.select(.operator(`operator`)), on: emptyState, effect: nil)
     }
@@ -361,10 +340,10 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldNotChangeTopPrepaymentState() {
         
         let `operator` = makeOperator()
-        let topPrepaymentState = State(stack: .init(.prepayment(.options(.init(
+        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
             lastPayments: [],
             operators: [makeOperator()]
-        )))))
+        ))))
         
         assertState(.select(.operator(`operator`)), on: topPrepaymentState)
     }
@@ -372,10 +351,10 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldDeliverEffectOnTopPrepaymentState() {
         
         let `operator` = makeOperator()
-        let topPrepaymentState = State(stack: .init(.prepayment(.options(.init(
+        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
             lastPayments: [],
             operators: [makeOperator()]
-        )))))
+        ))))
         
         assert(.select(.operator(`operator`)), on: topPrepaymentState, effect: .select(.operator(`operator`)))
     }
@@ -383,19 +362,15 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldNotChangeTopServicesState() {
         
         let `operator` = makeOperator()
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let topServicesState = State(stack: .init(.services(services)))
-
+        let topServicesState = makeFlow(.services(makeServices()))
+        
         assert(.select(.operator(`operator`)), on: topServicesState, effect: nil)
     }
     
     func test_select_operator_shouldNotDeliverEffectOnTopServicesState() {
         
         let `operator` = makeOperator()
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let topServicesState = State(stack: .init(.services(services)))
+        let topServicesState = makeFlow(.services(makeServices()))
         
         assert(.select(.operator(`operator`)), on: topServicesState, effect: nil)
     }
@@ -404,7 +379,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_selectFailure_shouldPushFailureDestinationOnTop() {
         
-        let state = makeState()
+        let state = makeFlow()
         let `operator` = makeOperator()
         
         assertState(.selectFailure(`operator`), on: state) {
@@ -415,7 +390,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_selectFailure_shouldNotDeliverEffect() {
         
-        let state = makeState()
+        let state = makeFlow()
         let `operator` = makeOperator()
         
         assert(.selectFailure(`operator`), on: state, effect: nil)
@@ -424,8 +399,6 @@ final class UtilityFlowReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
@@ -441,11 +414,6 @@ final class UtilityFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
-    }
-    
-    private func makeState() -> State {
-        
-        .init()
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

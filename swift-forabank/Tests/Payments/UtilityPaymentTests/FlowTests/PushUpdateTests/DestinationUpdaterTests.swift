@@ -97,9 +97,7 @@ final class DestinationUpdaterTests: XCTestCase {
     
     func test_initiate_shouldDeliverNilDestinationOnNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
+        let nonEmptyState = State(stack: .init(.services(makeServices())))
         let sut = makeSUT()
         
         let (destination, _) = sut.update(nonEmptyState, .initiate)
@@ -109,9 +107,7 @@ final class DestinationUpdaterTests: XCTestCase {
     
     func test_initiate_shouldDeliverEffectOnNonEmptyState() {
         
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let nonEmptyState = State(stack: .init(.services(services)))
+        let nonEmptyState = State(stack: .init(.services(makeServices())))
         let sut = makeSUT()
         
         let (_, effect) = sut.update(nonEmptyState, .initiate)

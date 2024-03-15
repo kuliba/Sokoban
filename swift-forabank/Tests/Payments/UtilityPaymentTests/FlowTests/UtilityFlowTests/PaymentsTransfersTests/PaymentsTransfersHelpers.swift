@@ -23,6 +23,28 @@ func makeEmptyUtilityFlow(
     return flow
 }
 
+func makeDestination(
+    lastPayments: [LastPayment] = [],
+    operators: [Operator] = [],
+    searchText: String = "",
+    isInflight: Bool = false
+) -> Destination {
+    
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators,
+        searchText: searchText,
+        isInflight: isInflight
+    )))
+}
+
+func makeServicesDestination(
+    _ services: [UtilityService] = [makeService(), makeService()]
+) -> Destination {
+    
+    .services(services)
+}
+
 func makeSingleDestinationUtilityFlow(
     _ destination: Destination? = nil,
     file: StaticString = #file,
@@ -30,7 +52,7 @@ func makeSingleDestinationUtilityFlow(
 ) -> UtilityFlow {
     
     let flow = UtilityFlow.init(stack: .init([
-        destination ?? .services([makeService(), makeService()])
+        destination ?? makeServicesDestination()
     ]))
     
     XCTAssertNoDiff(flow.stack.count, 1)
@@ -43,4 +65,11 @@ func makeUtilityFlowState(
 ) -> PaymentsTransfersState<Destination> {
     
     .init(route: .utilityFlow(flow))
+}
+
+func makeFlow(
+    _ destinations: Destination...
+) -> Flow<Destination> {
+    
+    .init(stack: .init(destinations))
 }

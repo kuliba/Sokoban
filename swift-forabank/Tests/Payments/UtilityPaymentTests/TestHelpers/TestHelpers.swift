@@ -15,32 +15,37 @@ func anyMessage() -> String {
 
 // MARK: -
 
- func makeLastPayment(
+func makeLastPayment(
     _ value: String = UUID().uuidString
 ) -> LastPayment {
     
     .init(value: value)
 }
 
- func makeOperator(
+func makeOperator(
     _ value: String = UUID().uuidString
 ) -> Operator {
     
     .init(value: value)
 }
 
- func makeResponse(
+func makeResponse(
     _ value: String = UUID().uuidString
 ) -> StartPaymentResponse {
     
     .init(value: value)
 }
 
- func makeService(
+func makeService(
     _ value: String = UUID().uuidString
 ) -> UtilityService {
     
     .init(value: value)
+}
+
+func makeServices() -> [UtilityService] {
+    
+    [makeService(), makeService()]
 }
 
 struct LastPayment: Equatable, Identifiable {

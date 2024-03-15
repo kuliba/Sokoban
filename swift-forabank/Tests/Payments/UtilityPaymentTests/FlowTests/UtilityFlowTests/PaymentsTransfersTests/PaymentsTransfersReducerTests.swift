@@ -112,9 +112,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(.initiate), on: state) {
@@ -126,9 +124,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
@@ -137,9 +133,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
@@ -161,9 +155,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(.initiate), on: state) {
@@ -176,9 +168,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
@@ -188,9 +178,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
@@ -214,9 +202,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let nilRouteState = State(route: nil)
         let event = UtilityEvent.loaded(.failure)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(event), on: nilRouteState)
@@ -226,9 +212,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let nilRouteState = State(route: nil)
         let event = UtilityEvent.loaded(.failure)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(event), on: nilRouteState, effect: nil)
@@ -252,9 +236,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let event = UtilityEvent.loaded(.failure)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(event), on: state) {
@@ -268,9 +250,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let event = UtilityEvent.loaded(.failure)
-#warning("extract and reuse helper")
-        let services = [makeService(), makeService()]
-        let newFlow = UtilityFlow(stack: .init([.services(services)]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(event), on: state, effect: .utilityFlow(.initiate))
