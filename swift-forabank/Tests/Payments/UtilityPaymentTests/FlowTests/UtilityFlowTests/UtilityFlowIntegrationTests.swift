@@ -106,22 +106,27 @@ extension UtilityFlowReducer {
             }
             
         case let .select(select):
-            switch select {
-            case let .last(lastPayment):
-                if case .prepayment = state.current {
-                    
-                    effect = .startPayment(.last(lastPayment))
-                }
-                
-            case let .operator(`operator`):
-                if case .prepayment = state.current {
-                    
-                    effect = .startPayment(.operator(`operator`))
-                }
+            if case .prepayment = state.current {
+            
+                effect = .startPayment(select.startPayment)
             }
         }
         
         return (state, effect)
+    }
+}
+
+private extension UtilityFlowEvent.Select {
+    
+    var startPayment: UtilityFlowEffect<LastPayment, Operator>.StartPayment {
+        
+        switch self {
+        case let .last(lastPayment):
+            return .last(lastPayment)
+        
+        case let .operator(`operator`):
+            return .operator(`operator`)
+        }
     }
 }
 
