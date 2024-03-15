@@ -737,7 +737,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldChangePrePaymentOptionsState_success() {
         
         let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assertState(event, on: prePaymentOptionsState) {
@@ -749,7 +748,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_success() {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assert(event, on: initialState, effect: nil)
@@ -761,7 +759,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentOptions(makePrePaymentOptionsState()),
             status: .inflight
         )
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assertState(event, on: prePaymentOptionsState) {
@@ -777,7 +774,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentOptions(makePrePaymentOptionsState()),
             status: .inflight
         )
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assert(event, on: initialState, effect: nil)

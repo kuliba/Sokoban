@@ -267,10 +267,10 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     private typealias UtilityFlow = Flow<Destination>
     
-    private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityFlowEffect<LastPayment>>
+    private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityEffect>
     private typealias UtilityState = Flow<Destination>
     private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
-    private typealias UtilityEffect = UtilityFlowEffect<LastPayment>
+    private typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator>
     
     private typealias UtilityReduceStub = (UtilityState, UtilityEffect?)
     

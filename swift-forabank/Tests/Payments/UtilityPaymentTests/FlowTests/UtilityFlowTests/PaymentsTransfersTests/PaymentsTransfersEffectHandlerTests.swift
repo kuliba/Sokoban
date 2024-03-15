@@ -56,7 +56,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
     private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
-    private typealias UtilityEffect = UtilityFlowEffect<LastPayment>
+    private typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
