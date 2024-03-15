@@ -46,5 +46,5 @@ public extension FlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
 }

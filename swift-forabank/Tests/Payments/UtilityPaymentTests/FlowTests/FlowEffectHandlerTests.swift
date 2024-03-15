@@ -70,7 +70,7 @@ final class FlowEffectHandlerTests: XCTestCase {
     
     private typealias State = Flow<Destination<LastPayment, Operator>>
     private typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
     private typealias PushSpy = Spy<PushEffect, PushEvent>
     private typealias UpdateSpy = Spy<UpdateEffect, UpdateEvent>
