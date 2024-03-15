@@ -35,7 +35,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         let (sut, spy, utilityEffectHandler) = makeSUT(initialRoute: nil)
         
-        sut.event(.start(.utilityFlow))
+        sut.event(.utilityFlow(.initiate))
 //        utilityEffectHandler.complete(with: .loaded(.failure))
         
         assert(

@@ -1,6 +1,6 @@
 //
 //  PaymentsTransfersReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 15.03.2024.
 //
@@ -31,11 +31,8 @@ extension PaymentsTransfersReducer {
         case .back:
             (state, effect) = back(state)
             
-        case let .start(flow):
-            (state, effect) = start(state, flow)
-            
-        case let .utilityFlow(utilityFlow):
-            fatalError()
+        case let .utilityFlow(utilityFlowEvent):
+            (state, effect) = reduce(state, utilityFlowEvent)
         }
         
         return (state, effect)
@@ -83,35 +80,25 @@ private extension PaymentsTransfersReducer {
         return (state, effect)
     }
     
-    func start(
+    func reduce(
         _ state: State,
-        _ flow: Event.Flow
+        _ event: Event.UtilityFlow
     ) -> (State, Effect?) {
         
         var state = state
         var effect: Effect?
         
-        switch flow {
-        case .utilityFlow:
-            (state, effect) = startUtilityFlow(state)
-        }
-        
-        return (state, effect)
-    }
-    
-    func startUtilityFlow(
-        _ state: State
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
+        switch state.route {
+        case .none:
+            let (utilityFlow, utilityEffect) = utilityReduce(.init(), .initiate)
+            state.route = .utilityFlow(utilityFlow)
+            effect = utilityEffect.map { .utilityFlow($0) }
             
-        let (utilityFlow, utilityEffect) = utilityReduce(
-            state.utilityFlow ?? .init(),
-            .initiate
-        )
-        state.route = .utilityFlow(utilityFlow)
-        effect = utilityEffect.map { .utilityFlow($0) }
+        case let .utilityFlow(utilityFlow):
+            let (utilityFlow, utilityEffect) = utilityReduce(utilityFlow, .initiate)
+            state.route = .utilityFlow(utilityFlow)
+            effect = utilityEffect.map { .utilityFlow($0) }
+        }
         
         return (state, effect)
     }
@@ -120,15 +107,4 @@ private extension PaymentsTransfersReducer {
 private extension Flow {
     
     var isEmpty: Bool { stack.isEmpty }
-}
-
-private extension PaymentsTransfersState {
-    
-    var utilityFlow: Route.UtilityFlow? {
-        
-        guard case let .utilityFlow(utilityFlow) = route
-        else { return nil }
-        
-        return utilityFlow
-    }
 }

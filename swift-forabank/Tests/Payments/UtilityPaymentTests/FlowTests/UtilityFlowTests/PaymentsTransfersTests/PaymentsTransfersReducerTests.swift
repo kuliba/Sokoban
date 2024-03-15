@@ -95,93 +95,93 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
     }
     
-    // MARK: - start
+    // MARK: - initiate utilityFlow
     
-    func test_start_utilityFlow_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
+    func test_utilityFlow_initiate_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
         
         let emptyFlow = UtilityFlow()
         let state = State(route: nil)
         let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
         
-        _ = sut.reduce(state, .start(.utilityFlow))
+        _ = sut.reduce(state, .utilityFlow(.initiate))
         
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [emptyFlow])
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
     }
     
-    func test_start_utilityFlow_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assertState(sut: sut, .start(.utilityFlow), on: state) {
+        assertState(sut: sut, .utilityFlow(.initiate), on: state) {
             
             $0.route = .utilityFlow(newFlow)
         }
     }
     
-    func test_start_utilityFlow_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assert(sut: sut, .start(.utilityFlow), on: state, effect: nil)
+        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
     }
     
-    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
-        assert(sut: sut, .start(.utilityFlow), on: state, effect: .utilityFlow(.initiate))
+        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
     }
     
-    func test_start_utilityFlow_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
+    func test_utilityFlow_initiate_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
         
-        _ = sut.reduce(state, .start(.utilityFlow))
+        _ = sut.reduce(state, .utilityFlow(.initiate))
         
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [flow])
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
     }
     
-    func test_start_utilityFlow_shouldSetStateToUtilityFlowFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assertState(sut: sut, .start(.utilityFlow), on: state) {
+        assertState(sut: sut, .utilityFlow(.initiate), on: state) {
             
             $0.route = .utilityFlow(newFlow)
         }
     }
     
-    func test_start_utilityFlow_shouldDeliverNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assert(sut: sut, .start(.utilityFlow), on: state, effect: nil)
+        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
     }
     
-    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = UtilityFlow(stack: .init([.services]))
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
-        assert(sut: sut, .start(.utilityFlow), on: state, effect: .utilityFlow(.initiate))
+        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
     }
     
     // MARK: - Helpers
