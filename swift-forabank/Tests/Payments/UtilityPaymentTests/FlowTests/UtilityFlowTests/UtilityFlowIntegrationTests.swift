@@ -11,6 +11,7 @@ import XCTest
 
 enum UtilityFlowEvent<LastPayment, Operator> {
     
+    case back
     case initiate
     case loaded(Loaded)
 }
@@ -50,6 +51,10 @@ extension UtilityFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .back:
+            #warning("add tests")
+            state.current = nil
+            
         case .initiate:
             if state.current == nil {
                 effect = .initiate
