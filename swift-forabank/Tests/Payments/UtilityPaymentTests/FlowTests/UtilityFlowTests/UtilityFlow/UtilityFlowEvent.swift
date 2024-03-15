@@ -7,13 +7,15 @@
 
 import UtilityPayment
 
-enum UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse> {
+enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> {
     
     case back
     case initiate
     case loaded(Loaded)
     case paymentStarted(StartPaymentResult)
     case select(Select)
+    case selectFailure(Operator)
+    case loadedServices([Service]) // more than one
 }
 
 extension UtilityFlowEvent {
@@ -33,7 +35,7 @@ extension UtilityFlowEvent {
     typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
 }
 
-extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, StartPaymentResponse: Equatable {}
+extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable, StartPaymentResponse: Equatable {}
 
 extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
 extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable {}

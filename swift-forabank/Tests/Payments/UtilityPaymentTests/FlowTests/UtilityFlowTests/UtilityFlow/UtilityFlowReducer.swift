@@ -7,7 +7,7 @@
 
 import UtilityPayment
 
-final class UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse> {
+final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
     
 }
 
@@ -45,6 +45,9 @@ extension UtilityFlowReducer {
                 }
             }
             
+        case let .loadedServices(services):
+            fatalError()
+            
         case let .paymentStarted(result):
             switch result {
             case let .failure(serviceFailure):
@@ -59,6 +62,9 @@ extension UtilityFlowReducer {
                 
                 effect = .select(select.effectSelect)
             }
+            
+        case let .selectFailure(`operator`):
+            fatalError()
         }
         
         return (state, effect)
@@ -84,6 +90,6 @@ extension UtilityFlowReducer {
     typealias Destination = UtilityDestination<LastPayment, Operator>
     
     typealias State = Flow<Destination>
-    typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
+    typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
     typealias Effect = UtilityFlowEffect<LastPayment, Operator>
 }

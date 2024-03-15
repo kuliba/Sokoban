@@ -12,19 +12,20 @@ import XCTest
 private typealias SUT = RxViewModel<State, Event, Effect>
 
 private typealias State = PaymentsTransfersState<Destination>
-private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
+private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
 private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator>
 
 private typealias StateSpy = ValueSpy<State>
 
-private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, StartPaymentResponse>
+private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
 
-private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
+private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
 
-private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse>
+private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
 
-private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
+private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
 private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
+private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
 private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
 
 final class PaymentsTransfersIntegrationTests: XCTestCase {
@@ -33,7 +34,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     func test_back_shouldNotChangeNilRouteState() {
         
-        let (sut, spy, _,_) = makeSUT(initialRoute: nil)
+        let (sut, spy, _,_,_) = makeSUT(initialRoute: nil)
         
         sut.event(.back)
         sut.event(.back)
@@ -58,7 +59,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             lastPayments: [lastPayment],
             operators: operators
         )))
-        let (sut, spy, loader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .failure(anyError()))
@@ -100,7 +101,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             lastPayments: [lastPayment],
             operators: operators
         )))
-        let (sut, spy, loader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .failure(anyError()))
@@ -148,6 +149,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         sut: SUT,
         spy: StateSpy,
         loader: LoaderSpy,
+        servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
         let utilityReducer = UtilityReducer()
@@ -155,10 +157,13 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             utilityReduce: utilityReducer.reduce(_:_:)
         )
         
-        let paymentStarter = PaymentStarterSpy()
         let loader = LoaderSpy()
+        let servicesLoader = ServicesLoaderSpy()
+        let paymentStarter = PaymentStarterSpy()
+
         let utilityEffectHandler = UtilityEffectHandler(
             load: loader.process,
+            loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )
         
@@ -181,9 +186,10 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         trackForMemoryLeaks(utilityEffectHandler, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(servicesLoader, file: file, line: line)
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, spy, loader, paymentStarter)
+        return (sut, spy, loader, servicesLoader, paymentStarter)
     }
     
     private func assert(

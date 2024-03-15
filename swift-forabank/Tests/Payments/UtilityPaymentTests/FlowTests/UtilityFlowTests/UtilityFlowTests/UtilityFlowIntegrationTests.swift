@@ -13,14 +13,16 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, loader) = makeSUT()
+        let (_,_, loader, servicesLoader, paymentStarter) = makeSUT()
         
         XCTAssertEqual(loader.callCount, 0)
+        XCTAssertEqual(servicesLoader.callCount, 0)
+        XCTAssertEqual(paymentStarter.callCount, 0)
     }
     
     func test_loadFailureFlow() {
         
-        let (sut, spy, loader) = makeSUT()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT()
         
         sut.event(.initiate)
         loader.complete(with: .failure(anyError()))
@@ -43,7 +45,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         let `operator` = makeOperator()
         let operators = [`operator`, makeOperator()]
         let options = Options(lastPayments: lastPayments, operators: operators)
-        let (sut, spy, loader) = makeSUT()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT()
         
         sut.event(.initiate)
         loader.complete(with: .success((lastPayments, operators)))
@@ -67,17 +69,18 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
+    private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
     private typealias Effect = UtilityFlowEffect<LastPayment, Operator>
     
     private typealias Options = Destination.Prepayment.Options
     
-    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
-    private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
+    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
+    private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
     
     private typealias StateSpy = ValueSpy<State>
     
     private typealias LoaderSpy = Spy<Void, EffectHandler.LoadResult>
+    private typealias ServicesLoaderSpy = Spy<EffectHandler.LoadServicesPayload, EffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<EffectHandler.StartPaymentPayload, EffectHandler.StartPaymentResult>
     
     private func makeSUT(
@@ -87,14 +90,19 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     ) -> (
         sut: SUT,
         spy: StateSpy,
-        loader: LoaderSpy
+        loader: LoaderSpy,
+        servicesLoader: ServicesLoaderSpy,
+        paymentStarter: PaymentStarterSpy
     ) {
         let reducer = Reducer()
         
         let loader = LoaderSpy()
+        let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
+
         let effectHandler = EffectHandler(
             load: loader.process,
+            loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )
         
@@ -109,9 +117,14 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(reducer, file: file, line: line)
+        trackForMemoryLeaks(effectHandler, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(servicesLoader, file: file, line: line)
+        trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, spy, loader)
+        return (sut, spy, loader, servicesLoader, paymentStarter)
+        
     }
     
     private func assert(

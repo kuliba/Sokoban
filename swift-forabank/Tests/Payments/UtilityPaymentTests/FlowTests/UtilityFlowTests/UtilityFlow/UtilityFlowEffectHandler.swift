@@ -7,16 +7,19 @@
 
 import UtilityPayment
 
-final class UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse> {
+final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let load: Load
+    private let loadServices: LoadServices
     private let startPayment: StartPayment
     
     init(
         load: @escaping Load,
+        loadServices: @escaping LoadServices,
         startPayment: @escaping StartPayment
     ) {
         self.load = load
+        self.loadServices = loadServices
         self.startPayment = startPayment
     }
 }
@@ -45,24 +48,39 @@ extension UtilityFlowEffectHandler {
             }
             
         case let .select(payload):
-            startPayment(.init(payload)) {
+            switch payload {
+            case let .last(lastPayment):
+                startPayment(.last(lastPayment)) {
+                    
+                    dispatch(.paymentStarted($0))
+                }
                 
-                dispatch(.paymentStarted($0))
+            case let .operator(`operator`):
+                loadServices(`operator`) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    switch $0 {
+                    case .failure:
+                        dispatch(.selectFailure(`operator`))
+                        
+                    case let .success(services):
+                        switch (services.count, services.first) {
+                        case (0, .none):
+                            dispatch(.selectFailure(`operator`))
+                        
+                        case let (1, .some(service)):
+                            startPayment(.operator(`operator`, service)) {
+                                
+                                dispatch(.paymentStarted($0))
+                            }
+                            
+                        default:
+                            dispatch(.loadedServices(services))
+                        }
+                    }
+                }
             }
-        }
-    }
-}
-
-private extension UtilityFlowEffectHandler.StartPaymentPayload {
-    
-    init(_ select: UtilityFlowEffect<LastPayment, Operator>.Select) {
-        
-        switch select {
-        case let .last(lastPayment):
-            self = .last(lastPayment)
-            
-        case let .operator(`operator`):
-            self = .operator(`operator`)
         }
     }
 }
@@ -74,10 +92,15 @@ extension UtilityFlowEffectHandler {
     typealias LoadCompletion = (LoadResult) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
     
+    typealias LoadServicesPayload = Operator
+    typealias LoadServicesResult = Result<[Service], Error>
+    typealias LoadServicesCompletion = (LoadServicesResult) -> Void
+    typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
+
     enum StartPaymentPayload {
         
         case last(LastPayment)
-        case `operator`(Operator)
+        case `operator`(Operator, Service)
     }
     
     typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
@@ -86,8 +109,8 @@ extension UtilityFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
+    typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
     typealias Effect = UtilityFlowEffect<LastPayment, Operator>
 }
 
-extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

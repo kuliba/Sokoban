@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-enum PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse> {
+enum PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse> {
     
     case back
     case utilityFlow(UtilityFlow)
@@ -13,7 +13,7 @@ enum PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse> {
 
 extension PaymentsTransfersEvent {
     
-    typealias UtilityFlow = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
+    typealias UtilityFlow = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
 }
 
-extension PaymentsTransfersEvent: Equatable where LastPayment: Equatable, Operator: Equatable, StartPaymentResponse: Equatable {}
+extension PaymentsTransfersEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable, StartPaymentResponse: Equatable {}
