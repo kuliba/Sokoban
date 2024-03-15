@@ -130,14 +130,14 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         assert(sut: sut, .start(.utilityFlow), on: state, effect: nil)
     }
     
-    //    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
-    //
-    //        let state = State(route: nil)
-    //        let newFlow = UtilityFlow(stack: .init([.services]))
-    //        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
-    //
-    //        assert(sut: sut, .start(.utilityFlow), on: state, effect: .initiate)
-    //    }
+    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
+        
+        let state = State(route: nil)
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        
+        assert(sut: sut, .start(.utilityFlow), on: state, effect: .utilityFlow(.initiate))
+    }
     
     func test_start_utilityFlow_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
         
@@ -174,15 +174,15 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         assert(sut: sut, .start(.utilityFlow), on: state, effect: nil)
     }
     
-    //    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
-    //
-    //        let flow = makeEmptyUtilityFlow()
-    //        let state = State(route: .utilityFlow(flow))
-    //        let newFlow = UtilityFlow(stack: .init([.services]))
-    //        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
-    //
-    //        assert(sut: sut, .start(.utilityFlow), on: state, effect: .initiate)
-    //    }
+    func test_start_utilityFlow_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
+        
+        let flow = makeEmptyUtilityFlow()
+        let state = State(route: .utilityFlow(flow))
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        
+        assert(sut: sut, .start(.utilityFlow), on: state, effect: .utilityFlow(.initiate))
+    }
     
     // MARK: - Helpers
     

@@ -15,7 +15,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     func test_back_shouldNotChangeNilRouteState() {
         
-        let (sut, spy) = makeSUT(initialRoute: nil)
+        let (sut, spy, _) = makeSUT(initialRoute: nil)
         
         sut.event(.back)
         sut.event(.back)
@@ -23,21 +23,28 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         assert(
             spy,
-            .init(route: nil),
-            { _ in }
+            .init(route: nil), {
+                _ in
+            }, {
+                _ in
+            }
         )
     }
     
     func test_flow() {
         
-        let (sut, spy) = makeSUT(initialRoute: nil)
+        let (sut, spy, utilityEffectHandler) = makeSUT(initialRoute: nil)
         
         sut.event(.start(.utilityFlow))
+//        utilityEffectHandler.complete(with: .loaded(.failure))
         
         assert(
             spy,
-            .init(route: nil),
-            { _ in }
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = .utilityFlow(.init())
+            }
         )
     }
     
@@ -48,12 +55,18 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator>
     private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator>
     
+    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator>
+    
+    private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
+    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    private typealias UtilityEffect = UtilityFlowEffect
+
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias StateSpy = ValueSpy<State>
     
     private typealias State = PaymentsTransfersState<Destination>
-    private typealias Event = PaymentsTransfersEvent
+    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
     private typealias Effect = PaymentsTransfersEffect
     
     private func makeSUT(
@@ -62,19 +75,25 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: StateSpy
+        spy: StateSpy,
+        utilityEffectHandler: UtilityFlowEffectHandleSpy
     ) {
         let utilityReducer = UtilityReducer()
         let reducer = Reducer(
             utilityReduce: utilityReducer.reduce(_:_:)
         )
-        
-        let effectHandler = PaymentsTransfersEffectHandler()
+
+        let utilityEffectHandler = UtilityFlowEffectHandleSpy()
+
+        let effectHandler = EffectHandler(
+            utilityFlowHandleEffect: utilityEffectHandler.handleEffect(_:_:)
+        )
         
         let sut = SUT(
             initialState: .init(route: initialRoute),
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .immediate
         )
         
         let spy = StateSpy(sut.$state)
@@ -83,8 +102,9 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
+        trackForMemoryLeaks(utilityEffectHandler, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, spy, utilityEffectHandler)
     }
     
     private func assert(

@@ -33,6 +33,9 @@ extension PaymentsTransfersReducer {
             
         case let .start(flow):
             (state, effect) = start(state, flow)
+            
+        case let .utilityFlow(utilityFlow):
+            fatalError()
         }
         
         return (state, effect)
@@ -50,7 +53,7 @@ extension PaymentsTransfersReducer {
     typealias Destination = UtilityDestination<LastPayment, Operator>
     
     typealias State = PaymentsTransfersState<Destination>
-    typealias Event = PaymentsTransfersEvent
+    typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
     typealias Effect = PaymentsTransfersEffect
 }
 
@@ -103,8 +106,12 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
             
-        let (utilityFlow, _) = utilityReduce(state.utilityFlow ?? .init(), .initiate)
+        let (utilityFlow, utilityEffect) = utilityReduce(
+            state.utilityFlow ?? .init(),
+            .initiate
+        )
         state.route = .utilityFlow(utilityFlow)
+        effect = utilityEffect.map { .utilityFlow($0) }
         
         return (state, effect)
     }
