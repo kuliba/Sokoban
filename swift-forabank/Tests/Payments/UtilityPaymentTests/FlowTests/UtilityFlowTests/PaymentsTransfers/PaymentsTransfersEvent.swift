@@ -8,4 +8,13 @@
 enum PaymentsTransfersEvent: Equatable {
     
     case back
+    case start(Flow)
+}
+
+extension PaymentsTransfersEvent {
+    
+    enum Flow: Equatable {
+        
+        case utilityFlow
+    }
 }

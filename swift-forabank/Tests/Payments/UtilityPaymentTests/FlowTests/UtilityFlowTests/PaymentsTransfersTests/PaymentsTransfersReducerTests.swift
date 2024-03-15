@@ -95,6 +95,32 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
     }
     
+    // MARK: - start
+    
+    func test_start_utilityFlow_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
+        
+        let emptyFlow = UtilityFlow()
+        let state = State(route: nil)
+        let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
+        
+        _ = sut.reduce(state, .start(.utilityFlow))
+        
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [emptyFlow])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
+    }
+    
+    func test_start_utilityFlow_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
+        
+        let flow = makeEmptyUtilityFlow()
+        let state = makeUtilityFlowState(flow)
+        let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
+        
+        _ = sut.reduce(state, .start(.utilityFlow))
+        
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [flow])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersReducer<LastPayment, Operator>
@@ -104,6 +130,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
+    private typealias UtilityFlow = Flow<Destination>
     
     private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityFlowEffect>
     private typealias UtilityState = Flow<Destination>

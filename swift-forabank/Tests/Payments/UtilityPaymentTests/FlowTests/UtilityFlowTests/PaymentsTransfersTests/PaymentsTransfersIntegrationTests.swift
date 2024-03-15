@@ -13,8 +13,32 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     // MARK: - back
     
-    func test_back______() {
+    func test_back_shouldNotChangeNilRouteState() {
         
+        let (sut, spy) = makeSUT(initialRoute: nil)
+        
+        sut.event(.back)
+        sut.event(.back)
+        sut.event(.back)
+        
+        assert(
+            spy,
+            .init(route: nil),
+            { _ in }
+        )
+    }
+    
+    func test_flow() {
+        
+        let (sut, spy) = makeSUT(initialRoute: nil)
+        
+        sut.event(.start(.utilityFlow))
+        
+        assert(
+            spy,
+            .init(route: nil),
+            { _ in }
+        )
     }
     
     // MARK: - Helpers

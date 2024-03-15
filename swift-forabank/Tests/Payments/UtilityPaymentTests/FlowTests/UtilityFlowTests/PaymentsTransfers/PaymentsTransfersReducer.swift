@@ -30,6 +30,9 @@ extension PaymentsTransfersReducer {
         switch event {
         case .back:
             (state, effect) = back(state)
+            
+        case let .start(flow):
+            (state, effect) = start(state, flow)
         }
         
         return (state, effect)
@@ -71,6 +74,28 @@ private extension PaymentsTransfersReducer {
             } else {
                 state.route = .utilityFlow(utilityFlow)
                 effect = utilityEffect.map { .utilityFlow($0) }
+            }
+        }
+        
+        return (state, effect)
+    }
+    
+    func start(
+        _ state: State,
+        _ flow: Event.Flow
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch flow {
+        case .utilityFlow:
+            switch state.route {
+            case .none:
+                _ = utilityReduce(.init(), .initiate)
+                
+            case let .utilityFlow(utilityFlow):
+                _ = utilityReduce(utilityFlow, .initiate)
             }
         }
         
