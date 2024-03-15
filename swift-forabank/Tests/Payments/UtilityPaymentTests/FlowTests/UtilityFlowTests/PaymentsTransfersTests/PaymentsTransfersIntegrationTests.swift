@@ -70,7 +70,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .success(([lastPayment], operators)), at: 1)
         
-        sut.event(.utilityFlow(.select(lastPayment)))
+        sut.event(.utilityFlow(.select(.last(lastPayment))))
         paymentStarter.complete(with: .failure(.connectivityError))
         
         assert(
@@ -112,7 +112,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .success(([lastPayment], operators)), at: 1)
         
-        sut.event(.utilityFlow(.select(lastPayment)))
+        sut.event(.utilityFlow(.select(.last(lastPayment))))
         paymentStarter.complete(with: .success(makeResponse()))
         
         sut.event(.back)

@@ -15,7 +15,7 @@ enum UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse> {
     case initiate
     case loaded(Loaded)
     case paymentStarted(StartPaymentResult)
-    case select(LastPayment)
+    case select(Select)
 }
 
 extension UtilityFlowEvent {
@@ -26,12 +26,18 @@ extension UtilityFlowEvent {
         case success([LastPayment], [Operator])
     }
     
+    enum Select {
+        
+        case last(LastPayment)
+    }
+    
     typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
 }
 
 extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, StartPaymentResponse: Equatable {}
 
 extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable {}
 
 enum UtilityFlowEffect<LastPayment> {
     
@@ -88,10 +94,13 @@ extension UtilityFlowReducer {
                 state.push(.payment)
             }
             
-        case let .select(lastPayment):
-            if case .prepayment = state.current {
-                
-                effect = .startPayment(lastPayment)
+        case let .select(select):
+            switch select {
+            case let .last(lastPayment):
+                if case .prepayment = state.current {
+                    
+                    effect = .startPayment(lastPayment)
+                }
             }
         }
         
@@ -327,7 +336,6 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldPushPaymentDestinationOnSuccess() {
         
-        let message = anyMessage()
         let state = makeState()
         
         assertState(.paymentStarted(.success(makeResponse())), on: state) {
@@ -338,7 +346,6 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnSuccess() {
     
-        let message = anyMessage()
         let state = makeState()
                 
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
@@ -351,7 +358,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let emptyState = makeState()
         
-        assertState(.select(lastPayment), on: emptyState)
+        assertState(.select(.last(lastPayment)), on: emptyState)
     }
     
     func test_select_lastPayment_shouldNotDeliverEffectOnEmptyState() {
@@ -359,7 +366,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let emptyState = makeState()
 
-        assert(.select(lastPayment), on: emptyState, effect: nil)
+        assert(.select(.last(lastPayment)), on: emptyState, effect: nil)
     }
     
     func test_select_lastPayment_shouldNotChangeTopPrepaymentState() {
@@ -370,7 +377,7 @@ final class UtilityFlowReducerTests: XCTestCase {
             operators: [makeOperator()]
         )))))
         
-        assertState(.select(lastPayment), on: topPrepaymentState)
+        assertState(.select(.last(lastPayment)), on: topPrepaymentState)
     }
     
     func test_select_lastPayment_shouldDeliverEffectOnTopPrepaymentState() {
@@ -381,7 +388,7 @@ final class UtilityFlowReducerTests: XCTestCase {
             operators: [makeOperator()]
         )))))
         
-        assert(.select(lastPayment), on: topPrepaymentState, effect: .startPayment(lastPayment))
+        assert(.select(.last(lastPayment)), on: topPrepaymentState, effect: .startPayment(lastPayment))
     }
     
     func test_select_lastPayment_shouldNotChangeTopServicesState() {
@@ -389,7 +396,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let topServicesState = State(stack: .init(.services))
         
-        assert(.select(lastPayment), on: topServicesState, effect: nil)
+        assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
         
     func test_select_lastPayment_shouldNotDeliverEffectOnTopServicesState() {
@@ -397,7 +404,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let topServicesState = State(stack: .init(.services))
         
-        assert(.select(lastPayment), on: topServicesState, effect: nil)
+        assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
     
     // MARK: - Helpers
