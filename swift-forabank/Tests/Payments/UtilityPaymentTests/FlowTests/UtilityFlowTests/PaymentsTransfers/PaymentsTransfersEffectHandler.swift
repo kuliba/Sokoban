@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-final class PaymentsTransfersEffectHandler<LastPayment, Operator> {
+final class PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse> {
     
     private let utilityFlowHandleEffect: UtilityFlowHandleEffect
     
@@ -36,12 +36,12 @@ extension PaymentsTransfersEffectHandler {
     typealias UtilityDispatch = (UtilityEvent) -> Void
     typealias UtilityFlowHandleEffect = (UtilityEffect, @escaping UtilityDispatch) -> Void
     
-    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     typealias UtilityEffect = UtilityFlowEffect<LastPayment>
     
     typealias Dispatch = (Event) -> Void
     
     typealias State = PaymentsTransfersState
-    typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
+    typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
     typealias Effect = PaymentsTransfersEffect<LastPayment>
 }

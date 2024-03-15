@@ -9,11 +9,12 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-enum UtilityFlowEvent<LastPayment, Operator> {
+enum UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse> {
     
     case back
     case initiate
     case loaded(Loaded)
+    case paymentStarted(StartPaymentResult)
     case select(LastPayment)
 }
 
@@ -24,9 +25,11 @@ extension UtilityFlowEvent {
         case failure
         case success([LastPayment], [Operator])
     }
+    
+    typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
 }
 
-extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, StartPaymentResponse: Equatable {}
 
 extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
 
@@ -38,7 +41,7 @@ enum UtilityFlowEffect<LastPayment> {
 
 extension UtilityFlowEffect: Equatable where LastPayment: Equatable {}
 
-final class UtilityFlowReducer<LastPayment, Operator> {
+final class UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse> {
     
 }
 
@@ -76,6 +79,9 @@ extension UtilityFlowReducer {
                 }
             }
             
+        case let .paymentStarted(result):
+            fatalError()
+            
         case let .select(lastPayment):
             if case .prepayment = state.current {
                 
@@ -92,7 +98,7 @@ extension UtilityFlowReducer {
     typealias Destination = UtilityDestination<LastPayment, Operator>
     
     typealias State = Flow<Destination>
-    typealias Event = UtilityFlowEvent<LastPayment, Operator>
+    typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     typealias Effect = UtilityFlowEffect<LastPayment>
 }
 
@@ -333,12 +339,12 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityFlowReducer<LastPayment, Operator>
+    private typealias SUT = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator>
+    private typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias Effect = UtilityFlowEffect<LastPayment>
     
     private func makeSUT(
@@ -439,7 +445,7 @@ extension UtilityFlowEffectHandler {
         case let .startPayment(payload):
             startPayment(payload) {
                 
-                _ in
+                dispatch(.paymentStarted($0))
             }
         }
     }
@@ -459,7 +465,7 @@ extension UtilityFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityFlowEvent<LastPayment, Operator>
+    typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     typealias Effect = UtilityFlowEffect<LastPayment>
 }
 
@@ -540,6 +546,41 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(paymentStarter.payloads, [lastPayment])
     }
     
+    func test_startPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+        
+        let lastPayment = makeLastPayment()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(lastPayment), toDeliver: .paymentStarted(.failure(.connectivityError))) {
+            
+            paymentStarter.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_startPayment_shouldDeliverServerErrorOnServerErrorFailure() {
+        
+        let lastPayment = makeLastPayment()
+        let message = anyMessage()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(lastPayment), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
+            
+            paymentStarter.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
+    func test_startPayment_shouldDeliverResponseOnSuccess() {
+        
+        let lastPayment = makeLastPayment()
+        let response = makeResponse()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(lastPayment), toDeliver: .paymentStarted(.success(response))) {
+            
+            paymentStarter.complete(with: .success(response))
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
@@ -547,7 +588,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator>
+    private typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias Effect = UtilityFlowEffect<LastPayment>
     
     private typealias LoaderSpy = Spy<Void, SUT.LoadResult>
@@ -659,12 +700,12 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator>
+    private typealias Event = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias Effect = UtilityFlowEffect<LastPayment>
     
     private typealias Options = Destination.Prepayment.Options
     
-    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator>
+    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
     private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, StartPaymentResponse>
     
     private typealias StateSpy = ValueSpy<State>

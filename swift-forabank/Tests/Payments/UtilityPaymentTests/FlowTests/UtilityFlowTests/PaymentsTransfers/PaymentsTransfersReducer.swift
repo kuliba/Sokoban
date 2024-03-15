@@ -7,7 +7,7 @@
 
 import UtilityPayment
 
-final class PaymentsTransfersReducer<LastPayment, Operator> {
+final class PaymentsTransfersReducer<LastPayment, Operator, StartPaymentResponse> {
     
     private let utilityReduce: UtilityReduce
     
@@ -44,13 +44,13 @@ extension PaymentsTransfersReducer {
     typealias UtilityReduce = (UtilityState, UtilityEvent) -> (UtilityState, UtilityEffect?)
     
     typealias UtilityState = Flow<Destination>
-    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     typealias UtilityEffect = UtilityFlowEffect<LastPayment>
     
     typealias Destination = UtilityDestination<LastPayment, Operator>
     
     typealias State = PaymentsTransfersState<Destination>
-    typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
+    typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
     typealias Effect = PaymentsTransfersEffect<LastPayment>
 }
 

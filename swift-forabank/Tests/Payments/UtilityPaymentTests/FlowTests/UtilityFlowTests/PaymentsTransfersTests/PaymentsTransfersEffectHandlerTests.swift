@@ -52,10 +52,10 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersEffectHandler<LastPayment, Operator>
+    private typealias SUT = PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse>
     
     private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
-    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias UtilityEffect = UtilityFlowEffect<LastPayment>
     
     private typealias Event = SUT.Event

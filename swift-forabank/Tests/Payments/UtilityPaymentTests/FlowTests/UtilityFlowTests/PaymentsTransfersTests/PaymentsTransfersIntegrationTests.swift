@@ -110,13 +110,13 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
-    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator>
-    private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator>
+    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, StartPaymentResponse>
+    private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, StartPaymentResponse>
     
-    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator>
+    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, StartPaymentResponse>
     
     private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
-    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias UtilityEffect = UtilityFlowEffect<LastPayment>
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
@@ -124,7 +124,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     
     private typealias State = PaymentsTransfersState<Destination>
-    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
+    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, StartPaymentResponse>
     private typealias Effect = PaymentsTransfersEffect<LastPayment>
     
     private func makeSUT(
