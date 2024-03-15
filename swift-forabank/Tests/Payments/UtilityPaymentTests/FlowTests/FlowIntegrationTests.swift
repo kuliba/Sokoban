@@ -156,7 +156,7 @@ final class FlowIntegrationTests: XCTestCase {
     private typealias SUT = RxViewModel<State, Event, Effect>
     
     private typealias State = Flow<Destination<LastPayment, Operator>>
-    private typealias Event = FlowEvent<PushEvent, UpdateFlowEvent>
+    private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateFlowEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateFlowEffect>
     
     private typealias Reducer = FlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>

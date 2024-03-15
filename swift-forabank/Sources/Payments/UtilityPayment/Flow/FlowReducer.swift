@@ -52,6 +52,6 @@ public extension FlowReducer {
     typealias Update = (State, UpdateEvent) -> (Destination?, UpdateEffect?)
     
     typealias State = Flow<Destination>
-    typealias Event = FlowEvent<PushEvent, UpdateEvent>
+    typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
 }

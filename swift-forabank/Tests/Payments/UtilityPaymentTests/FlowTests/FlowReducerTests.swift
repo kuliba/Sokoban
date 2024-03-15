@@ -121,7 +121,7 @@ final class FlowReducerTests: XCTestCase {
     private typealias SUT = FlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
     private typealias State = Flow<Destination<LastPayment, Operator>>
-    private typealias Event = FlowEvent<PushEvent, UpdateEvent>
+    private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
     private typealias PushSpy = CallSpy<(Flow<Destination<LastPayment, Operator>>, PushEvent)>
