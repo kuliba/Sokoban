@@ -12,6 +12,7 @@ import Foundation
 @_exported import TopUpCardUI
 @_exported import AccountInfoPanel
 @_exported import ProductDetailsUI
+@_exported import CardUI
 
 /// A namespace
 ///
