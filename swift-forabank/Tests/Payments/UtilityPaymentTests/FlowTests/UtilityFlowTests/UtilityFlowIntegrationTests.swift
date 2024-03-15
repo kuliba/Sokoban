@@ -107,7 +107,7 @@ extension UtilityFlowReducer {
             
         case let .select(select):
             if case .prepayment = state.current {
-            
+                
                 effect = .startPayment(select.startPayment)
             }
         }
@@ -123,7 +123,7 @@ private extension UtilityFlowEvent.Select {
         switch self {
         case let .last(lastPayment):
             return .last(lastPayment)
-        
+            
         case let .operator(`operator`):
             return .operator(`operator`)
         }
@@ -333,7 +333,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         let state = makeState()
-
+        
         assert(.paymentStarted(.failure(.connectivityError)), on: state, effect: nil)
     }
     
@@ -349,10 +349,10 @@ final class UtilityFlowReducerTests: XCTestCase {
     }
     
     func test_paymentStarted_shouldNotDeliverEffectOnServerErrorFailure() {
-    
+        
         let message = anyMessage()
         let state = makeState()
-                
+        
         assert(.paymentStarted(.failure(.serverError(message))), on: state, effect: nil)
     }
     
@@ -367,9 +367,9 @@ final class UtilityFlowReducerTests: XCTestCase {
     }
     
     func test_paymentStarted_shouldNotDeliverEffectOnSuccess() {
-    
+        
         let state = makeState()
-                
+        
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
     }
     
@@ -387,7 +387,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayment = makeLastPayment()
         let emptyState = makeState()
-
+        
         assert(.select(.last(lastPayment)), on: emptyState, effect: nil)
     }
     
@@ -420,7 +420,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
-        
+    
     func test_select_lastPayment_shouldNotDeliverEffectOnTopServicesState() {
         
         let lastPayment = makeLastPayment()
@@ -441,7 +441,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let `operator` = makeOperator()
         let emptyState = makeState()
-
+        
         assert(.select(.operator(`operator`)), on: emptyState, effect: nil)
     }
     
@@ -474,7 +474,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         assert(.select(.operator(`operator`)), on: topServicesState, effect: nil)
     }
-        
+    
     func test_select_operator_shouldNotDeliverEffectOnTopServicesState() {
         
         let `operator` = makeOperator()
@@ -594,20 +594,24 @@ extension UtilityFlowEffectHandler {
             }
             
         case let .startPayment(payload):
-            #warning("simplify with mapping!!")
-            switch payload {
-            case let .last(lastPayment):
-                startPayment(.last(lastPayment)) {
-                    
-                    dispatch(.paymentStarted($0))
-                }
+            startPayment(.init(payload)) {
                 
-            case let .operator(`operator`):
-                startPayment(.operator(`operator`)) {
-                    
-                    dispatch(.paymentStarted($0))
-                }
+                dispatch(.paymentStarted($0))
             }
+        }
+    }
+}
+
+private extension UtilityFlowEffectHandler.StartPaymentPayload {
+    
+    init(_ payload: UtilityFlowEffect<LastPayment, Operator>.StartPayment) {
+        
+        switch payload {
+        case let .last(lastPayment):
+            self = .last(lastPayment)
+            
+        case let .operator(`operator`):
+            self = .operator(`operator`)
         }
     }
 }
@@ -620,7 +624,7 @@ extension UtilityFlowEffectHandler {
     typealias Load = (@escaping LoadCompletion) -> Void
     
     enum StartPaymentPayload {
-    
+        
         case last(LastPayment)
         case `operator`(Operator)
     }
@@ -704,7 +708,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - startPayment
     
-    func test_startPayment_shouldCallPaymentStarterWithPayload() {
+    func test_startPayment_lastPayment_shouldCallPaymentStarterWithPayload() {
         
         let lastPayment = makeLastPayment()
         let (sut, _, paymentStarter) = makeSUT()
@@ -714,7 +718,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(paymentStarter.payloads, [.last(lastPayment)])
     }
     
-    func test_startPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+    func test_startPayment_lastPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
         
         let lastPayment = makeLastPayment()
         let (sut, _, paymentStarter) = makeSUT()
@@ -725,7 +729,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         }
     }
     
-    func test_startPayment_shouldDeliverServerErrorOnServerErrorFailure() {
+    func test_startPayment_lastPayment_shouldDeliverServerErrorOnServerErrorFailure() {
         
         let lastPayment = makeLastPayment()
         let message = anyMessage()
@@ -737,13 +741,58 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         }
     }
     
-    func test_startPayment_shouldDeliverResponseOnSuccess() {
+    func test_startPayment_lastPayment_shouldDeliverResponseOnSuccess() {
         
         let lastPayment = makeLastPayment()
         let response = makeResponse()
         let (sut, _, paymentStarter) = makeSUT()
         
         expect(sut, with: .startPayment(.last(lastPayment)), toDeliver: .paymentStarted(.success(response))) {
+            
+            paymentStarter.complete(with: .success(response))
+        }
+    }
+    
+    func test_startPayment_operator_shouldCallPaymentStarterWithPayload() {
+        
+        let `operator` = makeOperator()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        sut.handleEffect(.startPayment(.operator(`operator`))) { _ in }
+        
+        XCTAssertNoDiff(paymentStarter.payloads, [.operator(`operator`)])
+    }
+    
+    func test_startPayment_operator_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+        
+        let `operator` = makeOperator()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
+            
+            paymentStarter.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_startPayment_operator_shouldDeliverServerErrorOnServerErrorFailure() {
+        
+        let `operator` = makeOperator()
+        let message = anyMessage()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
+            
+            paymentStarter.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
+    func test_startPayment_operator_shouldDeliverResponseOnSuccess() {
+        
+        let `operator` = makeOperator()
+        let response = makeResponse()
+        let (sut, _, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.success(response))) {
             
             paymentStarter.complete(with: .success(response))
         }
