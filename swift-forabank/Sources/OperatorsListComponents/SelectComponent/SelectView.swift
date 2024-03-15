@@ -15,29 +15,43 @@ struct SelectView: View {
     let event: (SelectEvent) -> Void
     let config: Config
     
+    var searchText: String
+    
     var body: some View {
         
         switch state {
-        case .collapsed:
+        case let .collapsed(option):
             
             HStack(spacing: 16) {
                 
-                Image.defaultIcon(
-                    backgroundColor: config.backgroundIcon,
-                    icon: config.icon
-                )
-                .cornerRadius(20)
+                if let option {
+                    
+                    iconOption(option, option.config)
+                        .cornerRadius(20)
+                    
+                } else {
+                    
+                    Image.defaultIcon(
+                        backgroundColor: config.backgroundIcon,
+                        foregroundColor: config.foregroundIcon,
+                        icon: config.icon
+                    )
+                    .cornerRadius(20)
+                }
                 
-                Text(config.title)
-                    .foregroundColor(.gray)
+                if let option {
+                    
+                    Text(option.title)
+                    
+                } else {
+                    
+                    Text(config.title)
+                        .foregroundColor(Color.gray.opacity(0.6))
+                }
                 
                 Spacer()
                 
-                Button(action: {}, label: {
-                    
-                    Image(systemName: "chevron.down")
-                        .foregroundColor(.gray)
-                })
+                chevronButton()
             }
             .padding(.vertical, 13)
             .padding(.horizontal, 16)
@@ -52,24 +66,35 @@ struct SelectView: View {
                     
                     Image.defaultIcon(
                         backgroundColor: config.backgroundIcon,
+                        foregroundColor: config.foregroundIcon,
                         icon: config.icon
                     )
                     .cornerRadius(20)
                     
-                    VStack {
+                    VStack(spacing: 4) {
                         
                         HStack {
                             
-                            config.title.text(withConfig: config.titleConfig)
-                                .multilineTextAlignment(.leading)
+                            config.title.text(
+                                withConfig: config.titleConfig
+                            )
+                            .multilineTextAlignment(.leading)
                             
                             Spacer()
                         }
                         
                         HStack {
-                            
-                            Text(config.placeholder)
-                                .foregroundColor(.gray.opacity(0.5))
+                        
+                            if config.isSearchable {
+                                
+                                textField()
+                                    .frame(height: 24)
+                                
+                            } else {
+                                
+                                Text(config.placeholder)
+                                    .foregroundColor(.gray.opacity(0.5))
+                            }
                             
                             Spacer()
                         }
@@ -77,11 +102,7 @@ struct SelectView: View {
                     
                     Spacer()
                     
-                    Button(action: {}, label: {
-                        
-                        Image(systemName: "chevron.up")
-                            .foregroundColor(.gray)
-                    })
+                    chevronButton()
                 }
                 
                 ScrollView(.vertical) {
@@ -90,30 +111,8 @@ struct SelectView: View {
                         
                         ForEach(options, id: \.id) { option in
                             
-                            VStack {
-                                
-                                Button(action: {}) {
-                                    
-                                    HStack(spacing: 20) {
-                                        
-                                        Image.defaultIcon(
-                                            backgroundColor: option.backgroundIcon,
-                                            icon: option.icon
-                                        )
-                                        .cornerRadius(20)
-                                        
-                                        Text(option.title)
-                                            .foregroundColor(.black)
-                                        
-                                        
-                                        Spacer()
-                                    }
-                                }
-                                
-                                Color.gray
-                                    .frame(width: .infinity, height: 1, alignment: .center)
-                                    .opacity(0.2)
-                            }
+                            optionView(option)
+                            
                         }
                     }
                 }
@@ -123,9 +122,110 @@ struct SelectView: View {
             .padding(.horizontal, 16)
             .background(Color.gray.opacity(0.3))
             .cornerRadius(12)
+        }
+    }
+    
+    private func textField() -> some View {
+        
+        TextField(
+            "Начните ввод для поиска",
+            text: .init(
+                get: { searchText },
+                set: { _ in event(.search) }
+            )
+        )
+    }
+    
+    private func optionView(
+        _ option: SelectState.Option
+    ) -> some View {
+        
+        Button(action: {}) {
             
-        case let .selectedOption(option: option):
+            HStack(alignment: .top, spacing: 20) {
+                
+                iconOption(option, option.config)
+                    .cornerRadius(20)
+                    .frame(height: 50, alignment: .top)
+            }
             
+            VStack(spacing: 20) {
+                
+                HStack(spacing: 20) {
+                    
+                    Text(option.title)
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                }
+                
+                Color.gray
+                    .frame(width: .infinity, height: 1, alignment: .center)
+                    .opacity(0.2)
+            }
+        }
+    }
+    
+    private func chevronButton() -> some View {
+        
+        Button(action: {}, label: {
+            
+            switch state {
+            case .collapsed:
+                Image(systemName: "chevron.down")
+                    .foregroundColor(.gray)
+                
+            case .expanded:
+                Image(systemName: "chevron.up")
+                    .foregroundColor(.gray)
+            }
+        })
+    }
+    
+    private func iconOption(
+        _ option: SelectState.Option,
+        _ config: SelectState.Option.Config
+    ) -> some View {
+        
+        if option.isSelected {
+            
+            return circleIcon(option, config)
+            
+        } else {
+            
+            return circleIcon(option, config)
+        }
+    }
+    
+    private func circleIcon(
+        _ option: SelectState.Option,
+        _ config: SelectState.Option.Config
+    ) -> some View {
+        
+        ZStack {
+            
+            Circle()
+                .frame(width: 32, height: 32)
+                .foregroundColor(config.mainBackground)
+                .background(config.mainBackground)
+            
+            if option.isSelected {
+                
+                config.selectIcon
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                    .foregroundColor(config.selectForeground)
+                
+            } else {
+                
+                config.icon
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                    .foregroundColor(config.foreground)
+            }
         }
     }
 }
@@ -141,7 +241,10 @@ extension SelectView {
         let placeholderConfig: TextConfig
         
         let backgroundIcon: Color
+        let foregroundIcon: Color
         let icon: Image
+        
+        let isSearchable: Bool
     }
 }
 
@@ -149,60 +252,176 @@ struct SelectView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        selectView(.collapsed)
+        selectView(configPreview(), .collapsed(option: nil))
             .previewDisplayName("collapse")
         
-        selectView(.expanded(options: previewOptions()))
+        selectView(configPreview(), .collapsed(option: .init(
+            id: UUID().description,
+            title: "Имущественный налог",
+            isSelected: false,
+            config: randomConfig()
+        )))
+        .previewDisplayName("collapse with Option")
+        
+        
+        selectView(configPreview(), .expanded(options: previewOptions()))
             .previewDisplayName("expanded")
         
-        selectView(.expanded(options: previewOptions()))
-            .previewDisplayName("selected option")
+        selectView(
+            configPreview2(isSearchable: false),
+            .expanded(options: previewOptionsWithCircleIcon())
+        )
+        .previewDisplayName("preview Option with Circle icon")
+        
+        selectView(
+            configPreview2(isSearchable: true),
+            .expanded(options: previewOptionsWithCircleIcon())
+        )
+        .previewDisplayName("preview with searchable")
     }
     
     private static func selectView(
+        _ config: SelectView.Config,
         _ state: SelectState
     ) -> some View {
         
         SelectView(
             state: state,
             event: { _ in },
-            config: .init(
-                title: "Тип услуги",
-                titleConfig: .init(textFont: .title3, textColor: .black),
-                placeholder: "Начните ввод для поиска",
-                placeholderConfig: .init(textFont: .body, textColor: .gray),
-                backgroundIcon: .black,
-                icon: .init(systemName: "photo.artframe")
-            ))
+            config: config,
+            searchText: ""
+        )
         .padding(.all, 20)
+    }
+    
+    private static func configPreview() -> SelectView.Config {
+        
+        .init(
+            title: "Тип услуги",
+            titleConfig: .init(textFont: .title3, textColor: .black),
+            placeholder: "Выберите услугу",
+            placeholderConfig: .init(textFont: .body, textColor: .gray),
+            backgroundIcon: .clear,
+            foregroundIcon: .gray.opacity(0.6),
+            icon: .init(systemName: "photo.artframe"),
+            isSearchable: false
+        )
+    }
+    
+    private static func configPreview2(
+        isSearchable: Bool
+    ) -> SelectView.Config {
+        
+        .init(
+            title: "Вид платежа",
+            titleConfig: .init(textFont: .title3, textColor: .black),
+            placeholder: isSearchable ? "Начните ввод для поиска" : "Выберите услугу",
+            placeholderConfig: .init(textFont: .body, textColor: .gray),
+            backgroundIcon: .clear,
+            foregroundIcon: .gray.opacity(0.4),
+            icon: .init(systemName: "doc"), 
+            isSearchable: isSearchable
+        )
     }
     
     private static func previewOptions() -> [SelectState.Option] {
         
-        return [
+        [
             .init(
                 id: UUID().uuidString,
                 title: "Имущественный налог",
-                icon: .init(systemName: "house"),
-                backgroundIcon: .purple
+                isSelected: false,
+                config: randomConfig()
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Транспортный налог",
-                icon: .init(systemName: "car"),
-                backgroundIcon: .blue.opacity(0.5)
+                isSelected: false,
+                config: randomConfig()
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Земельный налог",
-                icon: .init(systemName: "square.dashed"),
-                backgroundIcon: .purple.opacity(0.6)
+                isSelected: false,
+                config: randomConfig()
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Водный налог",
-                icon: .init(systemName: "drop.degreesign"),
-                backgroundIcon: .blue.opacity(0.3)
+                isSelected: false,
+                config: randomConfig()
+            )
+        ]
+    }
+    
+    private static func randomConfig() -> SelectState.Option.Config {
+        
+        let icons = [
+            Image(systemName: "house"),
+            Image(systemName: "car"),
+            Image(systemName: "square.dashed"),
+            Image(systemName: "drop.degreesign")
+            
+        ]
+        
+        return .init(
+            icon: icons.randomElement() ?? Image(systemName: "house"),
+            foreground: .white,
+            background: .blue,
+            selectIcon: icons.randomElement() ?? Image(systemName: "house"),
+            selectForeground: .blue,
+            selectBackground: .blue,
+            mainBackground: .green,
+            kind: .small
+        )
+    }
+    
+    private static func circleConfig() -> SelectState.Option.Config {
+        
+        return .init(
+            icon: Image(systemName: "circle"),
+            foreground: .gray.opacity(0.3),
+            background: .clear,
+            selectIcon: Image(systemName: "record.circle"),
+            selectForeground: .red,
+            selectBackground: .clear,
+            mainBackground: .clear,
+            kind: .normal
+        )
+    }
+    
+    private static func previewOptionsWithCircleIcon() -> [SelectState.Option] {
+        
+        [
+            .init(
+                id: UUID().uuidString,
+                title: "Оплата пакета МАТЧ! Футбол месяц",
+                isSelected: false,
+                config: circleConfig()
+            ),
+            .init(
+                id: UUID().uuidString,
+                title: "Оплата пакета Новый год",
+                isSelected: false,
+                config: circleConfig()
+            ),
+            .init(
+                id: UUID().uuidString,
+                title: "Оплата пакета Детский год",
+                isSelected: false,
+                config: circleConfig()
+            ),
+            .init(
+                id: UUID().uuidString,
+                title: "Триколор ТВ - Ночной месяц",
+                isSelected: true,
+                config: circleConfig()
+            ),
+            .init(
+                id: UUID().uuidString,
+                title: "Оплата пакета Единый/Единый\n UND/Экстра/Триколор Онлайн.",
+                isSelected: false,
+                config: circleConfig()
             )
         ]
     }

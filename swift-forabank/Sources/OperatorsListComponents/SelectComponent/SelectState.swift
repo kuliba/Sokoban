@@ -10,17 +10,36 @@ import SwiftUI
 
 enum SelectState {
     
-    case collapsed
+    case collapsed(option: Option?)
     case expanded(options: [Option])
-    case selectedOption(option: Option)
     
     struct Option {
         
         let id: String
-        
         let title: String
-        let icon: Image
-        let backgroundIcon: Color
+        let isSelected: Bool
         
+        let config: Config
+        
+        struct Config {
+            
+            let icon: Image
+            let foreground: Color
+            let background: Color
+            
+            let selectIcon: Image
+            let selectForeground: Color
+            let selectBackground: Color
+            
+            let mainBackground: Color
+            
+            let kind: Kind
+            
+            enum Kind: Int {
+                
+                case small = 16
+                case normal = 24
+            }
+        }
     }
 }

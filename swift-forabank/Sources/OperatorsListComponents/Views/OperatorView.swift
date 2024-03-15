@@ -38,6 +38,7 @@ public struct OperatorView: View {
                     
                     Image.defaultIcon(
                         backgroundColor: config.defaultIconBackgroundColor,
+                        foregroundColor: .white,
                         icon: config.defaultIcon
                     )
                 }

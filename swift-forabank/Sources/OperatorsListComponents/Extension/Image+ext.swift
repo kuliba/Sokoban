@@ -11,6 +11,7 @@ public extension Image {
     
     static func defaultIcon(
         backgroundColor: Color,
+        foregroundColor: Color,
         icon: Image
     ) -> some View {
         
@@ -22,8 +23,10 @@ public extension Image {
                 .background(backgroundColor)
             
             icon
-                .frame(width: 16, height: 16)
-                .foregroundColor(.white)
+                .resizable()
+                .renderingMode(.template)
+                .frame(width: 24, height: 24)
+                .foregroundColor(foregroundColor)
         }
     }
 }
