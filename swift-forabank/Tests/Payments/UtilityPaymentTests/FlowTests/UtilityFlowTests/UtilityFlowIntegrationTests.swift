@@ -114,14 +114,14 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_back_shouldNotChangeEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.back, on: emptyState)
     }
     
     func test_back_shouldNotDeliverEffectOnEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assert(.back, on: emptyState, effect: nil)
     }
@@ -164,14 +164,14 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_initiate_shouldNotChangeEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.initiate, on: emptyState)
     }
     
     func test_initiate_shouldDeliverEffectOnEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assert(.initiate, on: emptyState, effect: .initiate)
     }
@@ -194,7 +194,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.loaded(.failure), on: emptyState) {
             
@@ -204,7 +204,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
         
-        let emptyState = State()
+        let emptyState = makeState()
         
         assert(.loaded(.failure), on: emptyState, effect: nil)
     }
@@ -226,7 +226,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
         
         let operators = [makeOperator()]
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.loaded(.success([], operators)), on: emptyState) {
             
@@ -240,7 +240,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
         
         let operators = [makeOperator()]
-        let emptyState = State()
+        let emptyState = makeState()
         
         assert(.loaded(.success([], operators)), on: emptyState, effect: nil)
     }
@@ -249,7 +249,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
             
@@ -264,7 +264,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let emptyState = State()
+        let emptyState = makeState()
         
         assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
     }
@@ -291,7 +291,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldPushFailureDestinationOnConnectivityErrorFailure() {
         
-        let state = State()
+        let state = makeState()
         
         assertState(.paymentStarted(.failure(.connectivityError)), on: state) {
             
@@ -301,7 +301,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
-        let state = State()
+        let state = makeState()
 
         assert(.paymentStarted(.failure(.connectivityError)), on: state, effect: nil)
     }
@@ -309,7 +309,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldPushFailureDestinationOnServerErrorFailure() {
         
         let message = anyMessage()
-        let state = State()
+        let state = makeState()
         
         assertState(.paymentStarted(.failure(.serverError(message))), on: state) {
             
@@ -320,7 +320,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnServerErrorFailure() {
     
         let message = anyMessage()
-        let state = State()
+        let state = makeState()
                 
         assert(.paymentStarted(.failure(.serverError(message))), on: state, effect: nil)
     }
@@ -328,7 +328,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldPushPaymentDestinationOnSuccess() {
         
         let message = anyMessage()
-        let state = State()
+        let state = makeState()
         
         assertState(.paymentStarted(.success(makeResponse())), on: state) {
             
@@ -339,7 +339,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnSuccess() {
     
         let message = anyMessage()
-        let state = State()
+        let state = makeState()
                 
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
     }
@@ -349,7 +349,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeEmptyState() {
         
         let lastPayment = makeLastPayment()
-        let emptyState = State()
+        let emptyState = makeState()
         
         assertState(.select(lastPayment), on: emptyState)
     }
@@ -357,7 +357,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotDeliverEffectOnEmptyState() {
         
         let lastPayment = makeLastPayment()
-        let emptyState = State()
+        let emptyState = makeState()
 
         assert(.select(lastPayment), on: emptyState, effect: nil)
     }
@@ -420,6 +420,11 @@ final class UtilityFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState() -> State {
+        
+        .init()
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
