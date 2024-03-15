@@ -1,0 +1,177 @@
+//
+//  PaymentsTransfersReducerTests.swift
+//  
+//
+//  Created by Igor Malyarov on 15.03.2024.
+//
+
+import UtilityPayment
+import XCTest
+
+final class PaymentsTransfersReducerTests: XCTestCase {
+    
+    // MARK: - back
+    
+    func test_back_shouldNotChangeNilRouteState() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assertState(.back, on: nilRouteState)
+    }
+    
+    func test_back_shouldNotDeliverEffectOnNilRouteState() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assert(.back, on: nilRouteState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnEmptyUtilityFlowState() {
+        
+        let emptyUtilityFlowState = makeUtilityFlowState(makeEmptyUtilityFlow())
+        
+        assertState(.back, on: emptyUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnEmptyUtilityFlowState() {
+        
+        let emptyUtilityFlowState = makeUtilityFlowState(makeEmptyUtilityFlow())
+        
+        assert(.back, on: emptyUtilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldChangeUtilityFlowStateToNilOnEmptyFlowFromUtilityFlowReduce() {
+        
+        let utilityFlowState = makeUtilityFlowState(.init())
+        let emptyFlow = UtilityFlow()
+        let (sut, _) = makeSUT(stub: (emptyFlow, nil))
+        
+        assertState(sut: sut, .back, on: utilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldChangeUtilityFlowStateOnNonEmptyFlowFromUtilityFlowReduce() {
+        
+        let utilityFlowState = makeUtilityFlowState(.init())
+        let nonEmptyFlow = makeSingleDestinationUtilityFlow()
+        let (sut, _) = makeSUT(stub: (nonEmptyFlow, nil))
+        
+        assertState(sut: sut, .back, on: utilityFlowState) {
+            
+            $0.route = .utilityFlow(nonEmptyFlow)
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnNilEffectFromUtilityFlowReduce() {
+        
+        let utilityFlowState = makeUtilityFlowState(.init())
+        let (sut, _) = makeSUT(stub: (.init(), nil))
+        
+        assert(sut: sut, .back, on: utilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldNotDeliverEffectOnEmptyFlowAndNonNilEffectFromUtilityFlowReduce() {
+        
+        let utilityFlowState = makeUtilityFlowState(.init())
+        let emptyFlow = UtilityFlow()
+        let effect = UtilityEffect.initiate
+        let (sut, _) = makeSUT(stub: (emptyFlow, effect))
+        
+        assert(sut: sut, .back, on: utilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldDeliverEffectOnNonNilEffectFromUtilityFlowReduce() {
+        
+        let utilityFlowState = makeUtilityFlowState(.init())
+        let nonEmptyFlow = makeSingleDestinationUtilityFlow()
+        let effect = UtilityEffect.initiate
+        let (sut, _) = makeSUT(stub: (nonEmptyFlow, effect))
+        
+        assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = PaymentsTransfersReducer<LastPayment, Operator>
+    
+    private typealias State = SUT.State
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    
+    private typealias Destination = UtilityDestination<LastPayment, Operator>
+    
+    private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityFlowEffect>
+    private typealias UtilityState = Flow<Destination>
+    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
+    private typealias UtilityEffect = UtilityFlowEffect
+    
+    private typealias UtilityReduceStub = (UtilityState, UtilityEffect?)
+    
+    private func makeSUT(
+        stub: UtilityReduceStub,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        utilityReducerSpy: UtilityReducerSpy
+    ) {
+        let utilityReducerSpy = UtilityReducerSpy(stub: [stub])
+        
+        let sut = SUT(utilityReduce: utilityReducerSpy.reduce(_:_:))
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(utilityReducerSpy, file: file, line: line)
+        
+        return (sut, utilityReducerSpy)
+    }
+    
+    private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
+    
+    private func assertState(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: UpdateStateToExpected<State>? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT(stub: (UtilityState(), nil)).sut
+        
+        var expectedState = state
+        updateStateToExpected?(&expectedState)
+        
+        let (receivedState, _) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedState,
+            expectedState,
+            "\nExpected \(expectedState), but got \(receivedState) instead.",
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        effect expectedEffect: Effect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT(stub: (UtilityFlow(), nil)).sut
+        
+        let (_, receivedEffect) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+    }
+}
