@@ -6,31 +6,21 @@
 //
 
 import Foundation
-import PrePaymentPicker
 
-enum Destination<LastPayment, Operator> {
+func makeDestination(
+    lastPayments: [LastPayment] = [],
+    operators: [Operator] = [],
+    searchText: String = "",
+    isInflight: Bool = false
+) -> Destination<LastPayment, Operator> {
     
-    case prepayment(Prepayment)
-    case services
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators,
+        searchText: searchText,
+        isInflight: isInflight
+    )))
 }
-
-extension Destination {
-    
-    enum Prepayment {
-        
-        case failure
-        case options(Options)
-    }
-}
-
-extension Destination.Prepayment {
-    
-    typealias Options = PrePaymentOptionsState<LastPayment, Operator>
-}
-
-extension Destination: Equatable where LastPayment: Equatable, Operator: Equatable {}
-
-extension Destination.Prepayment: Equatable where LastPayment: Equatable, Operator: Equatable {}
 
 enum PushEvent: Equatable {
     
@@ -50,19 +40,4 @@ enum PushEffect: Equatable {
 enum UpdateEffect: Equatable {
     
     case update
-}
-
-func makeDestination(
-    lastPayments: [LastPayment] = [],
-    operators: [Operator] = [],
-    searchText: String = "",
-    isInflight: Bool = false
-) -> Destination<LastPayment, Operator> {
-    
-    .prepayment(.options(.init(
-        lastPayments: lastPayments,
-        operators: operators,
-        searchText: searchText,
-        isInflight: isInflight
-    )))
 }
