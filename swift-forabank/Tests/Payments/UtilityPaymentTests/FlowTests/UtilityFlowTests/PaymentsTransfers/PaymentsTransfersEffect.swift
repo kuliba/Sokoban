@@ -5,14 +5,14 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-enum PaymentsTransfersEffect {
+enum PaymentsTransfersEffect<LastPayment> {
     
     case utilityFlow(UtilityFlow)
 }
 
 extension PaymentsTransfersEffect {
     
-    typealias UtilityFlow = UtilityFlowEffect
+    typealias UtilityFlow = UtilityFlowEffect<LastPayment>
 }
 
-extension PaymentsTransfersEffect: Equatable {}
+extension PaymentsTransfersEffect: Equatable where LastPayment: Equatable {}

@@ -50,6 +50,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         sut.event(.utilityFlow(.initiate))
         utilityEffectHandler.complete(with: .loaded(.success([lastPayment], operators)))
         
+        sut.event(.utilityFlow(.select(lastPayment)))
         assert(
             spy,
             .init(route: nil), {
@@ -116,7 +117,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
     private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
-    private typealias UtilityEffect = UtilityFlowEffect
+    private typealias UtilityEffect = UtilityFlowEffect<LastPayment>
     
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
@@ -124,7 +125,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     private typealias State = PaymentsTransfersState<Destination>
     private typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
-    private typealias Effect = PaymentsTransfersEffect
+    private typealias Effect = PaymentsTransfersEffect<LastPayment>
     
     private func makeSUT(
         initialRoute: State.Route? = nil,
