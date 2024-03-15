@@ -1,5 +1,5 @@
 //
-//  FlowIntegrationTests.swift
+//  PushUpdateFlowIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 14.03.2024.
@@ -9,7 +9,7 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-final class FlowIntegrationTests: XCTestCase {
+final class PushUpdateFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -19,25 +19,33 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertEqual(updateSpy.callCount, 0)
     }
     
+    func test_flow() {
+        
+        let (sut, spy, pushSpy, updateSpy) = makeSUT()
+        
+        sut.event(.update(.initiate))
+        updateSpy.complete(with: .initiate)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
+    private typealias Destination = UtilityDestination<LastPayment, Operator>
+
     private typealias State = Flow<Destination>
-    private typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateFlowEvent>
+    private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateFlowEffect>
     
-    private typealias Reducer = FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
-    private typealias EffectHandler = FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias Reducer = PushUpdateFlowReducer<Destination, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
+    private typealias EffectHandler = PushUpdateFlowEffectHandler<PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     
     private typealias StateSpy = ValueSpy<State>
     private typealias PushSpy = Spy<PushEffect, PushEvent>
-    private typealias UpdateSpy = Spy<UpdateEffect, UpdateEvent>
+    private typealias UpdateSpy = Spy<UpdateFlowEffect, UpdateFlowEvent>
     
     private func makeSUT(
         initialState: State = .init(),
-        push: @escaping Reducer.Push = { _,_ in (.services, nil) },
-        update: @escaping Reducer.Update = { _,_ in (.services, nil) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -46,7 +54,13 @@ final class FlowIntegrationTests: XCTestCase {
         pushSpy: PushSpy,
         updateSpy: UpdateSpy
     ) {
-        let reducer = Reducer(push: push, update: update)
+        let stacker = StackStacker()
+        let updater = DestinationUpdater()
+        
+        let reducer = Reducer(
+            push: stacker.push,
+            update: updater.update
+        )
         
         let pushSpy = PushSpy()
         let updateSpy = UpdateSpy()
@@ -59,7 +73,8 @@ final class FlowIntegrationTests: XCTestCase {
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .immediate
         )
         
         let spy = StateSpy(sut.$state)

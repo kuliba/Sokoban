@@ -1,11 +1,11 @@
 //
-//  FlowReducer.swift
+//  PushUpdateFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 14.03.2024.
 //
 
-public final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
+public final class PushUpdateFlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
     
     private let push: Push
     private let update: Update
@@ -19,7 +19,7 @@ public final class FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, 
     }
 }
 
-public extension FlowReducer {
+public extension PushUpdateFlowReducer {
     
     func reduce(
         _ state: State,
@@ -45,12 +45,13 @@ public extension FlowReducer {
     }
 }
 
-public extension FlowReducer {
+public extension PushUpdateFlowReducer {
     
     typealias Push = (State, PushEvent) -> (Destination, PushEffect?)
-    typealias Update = (State, UpdateEvent) -> (Destination, UpdateEffect?)
+    #warning("add test for nil destination!! with empty and non-empty stack!!")
+    typealias Update = (State, UpdateEvent) -> (Destination?, UpdateEffect?)
     
     typealias State = Flow<Destination>
-    typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
+    typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
 }

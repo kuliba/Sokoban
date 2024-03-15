@@ -1,5 +1,5 @@
 //
-//  FlowReducerTests.swift
+//  PushUpdateFlowReducerTests.swift
 //  
 //
 //  Created by Igor Malyarov on 14.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class FlowReducerTests: XCTestCase {
+final class PushUpdateFlowReducerTests: XCTestCase {
     
     // MARK: - push
     
@@ -118,11 +118,13 @@ final class FlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias SUT = PushUpdateFlowReducer<UtilityDestination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
+    private typealias Destination = UtilityDestination<LastPayment, Operator>
+
     private typealias State = Flow<Destination>
-    private typealias Event = FlowEvent<PushEvent, UpdateEvent>
-    private typealias Effect = FlowEffect<PushEffect, UpdateEffect>
+    private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
+    private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
     private typealias PushSpy = CallSpy<(Flow<Destination>, PushEvent)>
     private typealias UpdateSpy = CallSpy<(Flow<Destination>, UpdateEvent)>
