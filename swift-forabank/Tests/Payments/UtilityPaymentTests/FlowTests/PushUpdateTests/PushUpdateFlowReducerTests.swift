@@ -1,5 +1,5 @@
 //
-//  FlowReducerTests.swift
+//  PushUpdateFlowReducerTests.swift
 //  
 //
 //  Created by Igor Malyarov on 14.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class FlowReducerTests: XCTestCase {
+final class PushUpdateFlowReducerTests: XCTestCase {
     
     // MARK: - push
     
@@ -118,18 +118,20 @@ final class FlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PushUpdateFlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias SUT = PushUpdateFlowReducer<UtilityDestination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias State = Flow<Destination<LastPayment, Operator>>
+    private typealias Destination = UtilityDestination<LastPayment, Operator>
+
+    private typealias State = Flow<Destination>
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
-    private typealias PushSpy = CallSpy<(Flow<Destination<LastPayment, Operator>>, PushEvent)>
-    private typealias UpdateSpy = CallSpy<(Flow<Destination<LastPayment, Operator>>, UpdateEvent)>
+    private typealias PushSpy = CallSpy<(Flow<Destination>, PushEvent)>
+    private typealias UpdateSpy = CallSpy<(Flow<Destination>, UpdateEvent)>
     
     private func makeSUT(
-        pushStub: (Destination<LastPayment, Operator>, PushEffect?) = (.services, nil),
-        updateStub: (Destination<LastPayment, Operator>, UpdateEffect?) = (.services, nil),
+        pushStub: (Destination, PushEffect?) = (.services, nil),
+        updateStub: (Destination, UpdateEffect?) = (.services, nil),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

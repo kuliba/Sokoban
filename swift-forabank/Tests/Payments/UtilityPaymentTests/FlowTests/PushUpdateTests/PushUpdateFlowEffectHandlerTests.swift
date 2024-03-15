@@ -1,5 +1,5 @@
 //
-//  FlowEffectHandlerTests.swift
+//  PushUpdateFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 14.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class FlowEffectHandlerTests: XCTestCase {
+final class PushUpdateFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -68,7 +68,7 @@ final class FlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = PushUpdateFlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias State = Flow<Destination<LastPayment, Operator>>
+    private typealias State = Flow<UtilityDestination<LastPayment, Operator>>
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
