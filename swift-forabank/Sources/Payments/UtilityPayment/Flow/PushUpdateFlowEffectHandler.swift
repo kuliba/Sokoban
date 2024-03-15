@@ -1,11 +1,11 @@
 //
-//  FlowEffectHandler.swift
+//  PushUpdateFlowEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 14.03.2024.
 //
 
-public final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
+public final class PushUpdateFlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect> {
     
     private let push: Push
     private let update: Update
@@ -19,7 +19,7 @@ public final class FlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateE
     }
 }
 
-public extension FlowEffectHandler {
+public extension PushUpdateFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -35,7 +35,7 @@ public extension FlowEffectHandler {
     }
 }
 
-public extension FlowEffectHandler {
+public extension PushUpdateFlowEffectHandler {
     
     typealias PushDispatch = (PushEvent) -> Void
     typealias Push = (PushEffect, @escaping PushDispatch) -> Void
