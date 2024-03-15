@@ -159,7 +159,7 @@ final class FlowIntegrationTests: XCTestCase {
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateFlowEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateFlowEffect>
     
-    private typealias Reducer = FlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
+    private typealias Reducer = PushUpdateFlowReducer<Destination<LastPayment, Operator>, PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     private typealias EffectHandler = PushUpdateFlowEffectHandler<PushEvent, UpdateFlowEvent, PushEffect, UpdateFlowEffect>
     
     private typealias StateSpy = ValueSpy<State>
