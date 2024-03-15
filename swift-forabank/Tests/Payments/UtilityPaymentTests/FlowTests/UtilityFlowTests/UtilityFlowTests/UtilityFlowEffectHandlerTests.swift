@@ -210,7 +210,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
+    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>

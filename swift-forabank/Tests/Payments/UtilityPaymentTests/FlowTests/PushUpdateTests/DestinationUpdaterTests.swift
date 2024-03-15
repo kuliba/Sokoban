@@ -42,9 +42,9 @@ extension DestinationUpdater {
 
 extension DestinationUpdater {
     
-    typealias Destination = UtilityDestination<LastPayment, Operator>
+    typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
-    typealias State = Flow<UtilityDestination<LastPayment, Operator>>
+    typealias State = Flow<UtilityDestination<LastPayment, Operator, UtilityService>>
     typealias Event = UpdateFlowEvent
     typealias Effect = UpdateFlowEffect
 }
@@ -66,9 +66,9 @@ extension StackStacker {
 
 extension StackStacker {
     
-    typealias Destination = UtilityDestination<LastPayment, Operator>
+    typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
-    typealias State = Flow<UtilityDestination<LastPayment, Operator>>
+    typealias State = Flow<UtilityDestination<LastPayment, Operator, UtilityService>>
     typealias Event = PushEvent
     typealias Effect = PushEffect
 }
@@ -97,7 +97,9 @@ final class DestinationUpdaterTests: XCTestCase {
     
     func test_initiate_shouldDeliverNilDestinationOnNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
         let sut = makeSUT()
         
         let (destination, _) = sut.update(nonEmptyState, .initiate)
@@ -107,7 +109,9 @@ final class DestinationUpdaterTests: XCTestCase {
     
     func test_initiate_shouldDeliverEffectOnNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
         let sut = makeSUT()
         
         let (_, effect) = sut.update(nonEmptyState, .initiate)

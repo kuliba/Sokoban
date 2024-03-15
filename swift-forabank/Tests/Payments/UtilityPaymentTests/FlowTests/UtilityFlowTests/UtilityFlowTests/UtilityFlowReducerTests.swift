@@ -28,7 +28,9 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_back_shouldChangeStateToEmptyOnSingleFlowState() {
         
-        let singleFlow = State(stack: .init(.services))
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let singleFlow = State(stack: .init(.services(services)))
         
         assertState(.back, on: singleFlow) {
             
@@ -38,24 +40,29 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_back_shouldNotDeliverEffectOnSingleFlowState() {
         
-        let singleFlow = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let singleFlow = State(stack: .init(.services(services)))
+
         assert(.back, on: singleFlow, effect: nil)
     }
     
     func test_back_shouldRemoveTopOnMultiFlowState() {
         
-        let multiFlowState = State(stack: .init(.services, .prepayment(.failure)))
+        let services = [makeService(), makeService()]
+       let multiFlowState = State(stack: .init(.services(services), .prepayment(.failure)))
         
         assertState(.back, on: multiFlowState) {
             
-            $0 = .init(stack: .init(.services))
+            $0 = .init(stack: .init(.services(services)))
         }
     }
     
     func test_back_shouldNotDeliverEffectOnMultiFlowState() {
-        
-        let multiFlowState = State(stack: .init(.services, .prepayment(.failure)))
+
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let multiFlowState = State(stack: .init(.services(services), .prepayment(.failure)))
         
         assert(.back, on: multiFlowState, effect: nil)
     }
@@ -78,15 +85,19 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_initiate_shouldNotChangeNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assertState(.initiate, on: nonEmptyState)
     }
     
     func test_initiate_shouldNotDeliverEffectOnNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assert(.initiate, on: nonEmptyState, effect: nil)
     }
     
@@ -111,15 +122,19 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assertState(.loaded(.failure), on: nonEmptyState)
     }
     
     func test_loaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
         
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assert(.loaded(.failure), on: nonEmptyState, effect: nil)
     }
     
@@ -173,8 +188,10 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
     }
     
@@ -182,9 +199,32 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let lastPayments = [makeLastPayment()]
         let operators = [makeOperator()]
-        let nonEmptyState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let nonEmptyState = State(stack: .init(.services(services)))
+
         assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
+    }
+    
+    // MARK: - loadedServices
+    
+    func test_loadedServices_shouldPushServicesDestinationOnTop() {
+        
+        let state = makeState()
+        let services = [makeService(), makeService()]
+        
+        assertState(.loadedServices(services), on: state) {
+            
+            $0.push(.services(services))
+        }
+    }
+    
+    func test_loadedServices_shouldNotDeliverEffect() {
+        
+        let state = makeState()
+        let services = [makeService(), makeService()]
+        
+        assert(.loadedServices(services), on: state, effect: nil)
     }
     
     // MARK: - paymentStarted
@@ -285,16 +325,20 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeTopServicesState() {
         
         let lastPayment = makeLastPayment()
-        let topServicesState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let topServicesState = State(stack: .init(.services(services)))
+
         assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
     
     func test_select_lastPayment_shouldNotDeliverEffectOnTopServicesState() {
         
         let lastPayment = makeLastPayment()
-        let topServicesState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let topServicesState = State(stack: .init(.services(services)))
+
         assert(.select(.last(lastPayment)), on: topServicesState, effect: nil)
     }
     
@@ -339,24 +383,49 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldNotChangeTopServicesState() {
         
         let `operator` = makeOperator()
-        let topServicesState = State(stack: .init(.services))
-        
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let topServicesState = State(stack: .init(.services(services)))
+
         assert(.select(.operator(`operator`)), on: topServicesState, effect: nil)
     }
     
     func test_select_operator_shouldNotDeliverEffectOnTopServicesState() {
         
         let `operator` = makeOperator()
-        let topServicesState = State(stack: .init(.services))
+#warning("extract and reuse helper")
+        let services = [makeService(), makeService()]
+        let topServicesState = State(stack: .init(.services(services)))
         
         assert(.select(.operator(`operator`)), on: topServicesState, effect: nil)
+    }
+    
+    // MARK: - selectFailure
+    
+    func test_selectFailure_shouldPushFailureDestinationOnTop() {
+        
+        let state = makeState()
+        let `operator` = makeOperator()
+        
+        assertState(.selectFailure(`operator`), on: state) {
+            
+            $0.push(.selectFailure(`operator`))
+        }
+    }
+    
+    func test_selectFailure_shouldNotDeliverEffect() {
+        
+        let state = makeState()
+        let `operator` = makeOperator()
+        
+        assert(.selectFailure(`operator`), on: state, effect: nil)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
+    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>

@@ -65,8 +65,8 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
-    
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
+    #warning("extrat reusable test typealiases")
+    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>

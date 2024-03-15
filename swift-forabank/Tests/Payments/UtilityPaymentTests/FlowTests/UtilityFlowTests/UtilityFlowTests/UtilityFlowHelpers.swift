@@ -12,7 +12,7 @@ func makeDestination(
     operators: [Operator] = [],
     searchText: String = "",
     isInflight: Bool = false
-) -> UtilityDestination<LastPayment, Operator> {
+) -> UtilityDestination<LastPayment, Operator, UtilityService> {
     
     .prepayment(.options(.init(
         lastPayments: lastPayments,

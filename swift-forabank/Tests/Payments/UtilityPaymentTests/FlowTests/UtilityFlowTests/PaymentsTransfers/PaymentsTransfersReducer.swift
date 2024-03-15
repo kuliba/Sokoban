@@ -47,7 +47,7 @@ extension PaymentsTransfersReducer {
     typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
     typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator>
     
-    typealias Destination = UtilityDestination<LastPayment, Operator>
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = PaymentsTransfersState<Destination>
     typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>

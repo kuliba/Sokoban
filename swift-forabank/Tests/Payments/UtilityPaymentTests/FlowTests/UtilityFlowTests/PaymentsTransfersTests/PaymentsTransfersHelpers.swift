@@ -9,7 +9,7 @@ import UtilityPayment
 import XCTest
 
 typealias UtilityFlow = Flow<Destination>
-typealias Destination = UtilityDestination<LastPayment, Operator>
+typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
 
 func makeEmptyUtilityFlow(
     file: StaticString = #file,
@@ -30,7 +30,7 @@ func makeSingleDestinationUtilityFlow(
 ) -> UtilityFlow {
     
     let flow = UtilityFlow.init(stack: .init([
-        destination ?? .services
+        destination ?? .services([makeService(), makeService()])
     ]))
     
     XCTAssertNoDiff(flow.stack.count, 1)

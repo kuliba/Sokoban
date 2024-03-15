@@ -46,7 +46,7 @@ extension UtilityFlowReducer {
             }
             
         case let .loadedServices(services):
-            fatalError()
+            state.push(.services(services))
             
         case let .paymentStarted(result):
             switch result {
@@ -64,7 +64,7 @@ extension UtilityFlowReducer {
             }
             
         case let .selectFailure(`operator`):
-            fatalError()
+            state.push(.selectFailure(`operator`))
         }
         
         return (state, effect)
@@ -87,7 +87,7 @@ private extension UtilityFlowEvent.Select {
 
 extension UtilityFlowReducer {
     
-    typealias Destination = UtilityDestination<LastPayment, Operator>
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = Flow<Destination>
     typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
