@@ -73,8 +73,23 @@ private extension PaymentsTransfersReducer {
         var state = state
         var effect: Effect?
         
+        switch state.route {
+        case .none:
+            break
+            
+        case let .utilityFlow(utilityFlow):
+            if utilityFlow.isEmpty || utilityFlow.stack.count == 1 {
+                state.route = nil
+            }
+        }
+ 
         return (state, effect)
     }
+}
+
+private extension PaymentsTransfersState.Route.UtilityFlow {
+    
+    var isEmpty: Bool { stack.isEmpty }
 }
 
 final class PaymentsTransfersEffectHandler {}
@@ -114,6 +129,107 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         let nilRouteState = State(route: nil)
         
         assert(.back, on: nilRouteState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnEmptyUtilityFlowState() {
+        
+        let emptyUtilityFlowState = makeUtilityFlowState(makeEmptyUtilityFlow())
+        
+        assertState(.back, on: emptyUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnEmptyUtilityFlowState() {
+        
+        let emptyUtilityFlowState = makeUtilityFlowState(makeEmptyUtilityFlow())
+
+        assert(.back, on: emptyUtilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnSingleDestinationUtilityFlowState_prepaymentFailure() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        )
+        
+        assertState(.back, on: singleDestinationUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnSingleDestinationUtilityFlowState_prepaymentFailure() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        )
+
+        assert(.back, on: singleDestinationUtilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnSingleDestinationUtilityFlowState_prepaymentEmptyOptions() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(makePrepaymentEmptyOptions())
+        )
+        
+        assertState(.back, on: singleDestinationUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnSingleDestinationUtilityFlowState_prepaymentEmptyOptions() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(makePrepaymentEmptyOptions())
+        )
+
+        assert(.back, on: singleDestinationUtilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnSingleDestinationUtilityFlowState_prepaymentOptions() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(makePrepaymentOptions())
+        )
+        
+        assertState(.back, on: singleDestinationUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnSingleDestinationUtilityFlowState_prepaymentOptions() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(makePrepaymentOptions())
+        )
+
+        assert(.back, on: singleDestinationUtilityFlowState, effect: nil)
+    }
+    
+    func test_back_shouldChangeRouteToNilOnSingleDestinationUtilityFlowState_services() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(.services)
+        )
+        
+        assertState(.back, on: singleDestinationUtilityFlowState) {
+            
+            $0.route = nil
+        }
+    }
+    
+    func test_back_shouldNotDeliverEffectOnSingleDestinationUtilityFlowState_services() {
+        
+        let singleDestinationUtilityFlowState = makeUtilityFlowState(
+            makeSingleDestinationUtilityFlow(.services)
+        )
+
+        assert(.back, on: singleDestinationUtilityFlowState, effect: nil)
     }
     
     // MARK: - Helpers
@@ -247,4 +363,61 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         XCTAssertNoDiff(spy.values, values, file: file, line: line)
     }
+}
+
+private typealias UtilityFlow = PaymentsTransfersState.Route.UtilityFlow
+private typealias Destination = UtilityDestination<LastPayment, Operator>
+
+// while `operators` is Array (not NonEmptyArray) only
+private func makePrepaymentEmptyOptions(
+) -> Destination {
+    
+    .prepayment(.options(.init()))
+}
+
+private func makePrepaymentOptions(
+    lastPayments: [LastPayment] = [],
+    operators: [Operator] = [makeOperator()],
+    searchText: String = ""
+) -> Destination {
+    
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators,
+        searchText: searchText
+    )))
+}
+
+private func makeEmptyUtilityFlow(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> UtilityFlow {
+    
+    let flow = UtilityFlow.init(stack: .init([]))
+    
+    XCTAssert(flow.stack.isEmpty)
+    
+    return flow
+}
+
+private func makeSingleDestinationUtilityFlow(
+    _ destination: Destination? = nil,
+    file: StaticString = #file,
+    line: UInt = #line
+) -> UtilityFlow {
+    
+    let flow = UtilityFlow.init(stack: .init([
+        destination ?? .services
+    ]))
+    
+    XCTAssertNoDiff(flow.stack.count, 1)
+    
+    return flow
+}
+
+private func makeUtilityFlowState(
+    _ flow: UtilityFlow
+) -> PaymentsTransfersReducer.State {
+    
+    .init(route: .utilityFlow(flow))
 }

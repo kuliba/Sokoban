@@ -9,7 +9,7 @@ import ForaTools
 
 public struct Flow<Destination> {
     
-    private(set) var stack: Stack<Destination>
+    public private(set) var stack: Stack<Destination>
     
     public init(stack: Stack<Destination> = .init([])) {
         
