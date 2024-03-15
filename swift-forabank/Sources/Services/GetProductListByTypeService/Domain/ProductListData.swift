@@ -80,7 +80,6 @@ public extension ProductListData {
         public let statusCard: StatusCard
         public let loanBaseParam: LoanBaseParam?
         public let statusPC: StatusPC
-        public let miniStatement: [Payment]
         public let name: String
         public let validThru: Int
         public let status: Status
@@ -139,11 +138,11 @@ public extension ProductListData {
         public let interestRate: Double
         public let accountID: Int
         public let creditMinimumAmount: Double?
-        public let minimumBalance: Double?
+        public let minimumBalance: Double
         public let endDate: Int?
         public let endDateNF: Bool
         public let demandDeposit: Bool
-        public let isDebitInterestAvailable: Bool?
+        public let isDebitInterestAvailable: Bool
     }
 }
 
@@ -156,21 +155,8 @@ public extension ProductListData {
         public let dateOpen: Int
         public let status: Status
         public let branchName: String
-        public let miniStatement: [Payment]
         public let detailedRatesUrl: String
         public let detailedConditionUrl: String
-    }
-}
-
-public extension ProductListData {
-    
-    struct Payment: Equatable {
-        
-        public let account: String
-        public let date: Int
-        public let amount: Double
-        public let currency: String
-        public let purpose: String
     }
 }
 

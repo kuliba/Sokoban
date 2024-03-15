@@ -81,20 +81,6 @@ private extension ResponseMapper {
     }
 }
 
-// MARK: - PaymentDTO
-
-private extension ResponseMapper {
-    
-    struct PaymentDTO: Decodable, Equatable {
-        
-        let account: String
-        let date: Int
-        let amount: Double
-        let currency: String
-        let purpose: String
-    }
-}
-
 // MARK: - BaseSettingsDTO
 
 private extension ResponseMapper {
@@ -144,7 +130,6 @@ private extension ResponseMapper {
         let statusCard: StatusCardDTO
         let loanBaseParam: LoanBaseParamDTO?
         let statusPC: StatusPCDTO
-        let miniStatement: [PaymentDTO]
         let name: String
         let validThru: Int
         let status: StatusDTO
@@ -207,11 +192,11 @@ private extension ResponseMapper {
         let interestRate: Double
         let accountID: Int
         let creditMinimumAmount: Double?
-        let minimumBalance: Double?
+        let minimumBalance: Double
         let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
-        let isDebitInterestAvailable: Bool?
+        let isDebitInterestAvailable: Bool
     }
 }
 
@@ -226,7 +211,6 @@ private extension ResponseMapper {
         let dateOpen: Int
         let status: StatusDTO
         let branchName: String
-        let miniStatement: [PaymentDTO]
         let detailedRatesUrl: String
         let detailedConditionUrl: String
     }
