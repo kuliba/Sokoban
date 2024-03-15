@@ -33,10 +33,18 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     func test_flow() {
         
+        let lastPayment = makeLastPayment()
+        let `operator` = makeOperator()
+        let operators = [`operator`, makeOperator()]
         let (sut, spy, utilityEffectHandler) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
-//        utilityEffectHandler.complete(with: .loaded(.failure))
+        utilityEffectHandler.complete(with: .loaded(.failure))
+        
+        sut.event(.back)
+        
+        sut.event(.utilityFlow(.initiate))
+        utilityEffectHandler.complete(with: .loaded(.success([lastPayment], operators)))
         
         assert(
             spy,
@@ -44,6 +52,17 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 _ in
             }, {
                 $0.route = .utilityFlow(.init())
+            }, {
+                $0.route = .utilityFlow(.init(stack: [.prepayment(.failure)]))
+            }, {
+                $0.route = nil
+            }, {
+                $0.route = .utilityFlow(.init())
+            }, {
+                $0.route = .utilityFlow(.init(stack: [.prepayment(.options(.init(
+                    lastPayments: [lastPayment],
+                    operators: operators
+                )))]))
             }
         )
     }
@@ -60,7 +79,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
     private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
     private typealias UtilityEffect = UtilityFlowEffect
-
+    
     private typealias Destination = UtilityDestination<LastPayment, Operator>
     
     private typealias StateSpy = ValueSpy<State>
@@ -82,9 +101,9 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         let reducer = Reducer(
             utilityReduce: utilityReducer.reduce(_:_:)
         )
-
+        
         let utilityEffectHandler = UtilityFlowEffectHandleSpy()
-
+        
         let effectHandler = EffectHandler(
             utilityFlowHandleEffect: utilityEffectHandler.handleEffect(_:_:)
         )

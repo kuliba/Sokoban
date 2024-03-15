@@ -184,6 +184,78 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
     }
     
+    // MARK: - loaded
+    
+    func test_utilityFlow_loaded_shouldNotCallUtilityReduceWithFlowAndEventOnNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        let event = UtilityEvent.loaded(.failure)
+        let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
+        
+        _ = sut.reduce(nilRouteState, .utilityFlow(event))
+        
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [])
+    }
+    
+    func test_utilityFlow_loaded_shouldNotChangeStateToUtilityFlowFromUtilityReduceOnNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        let event = UtilityEvent.loaded(.failure)
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, nil))
+        
+        assertState(sut: sut, .utilityFlow(event), on: nilRouteState)
+    }
+    
+    func test_utilityFlow_loaded_shouldNotDeliverUtilityEffectFromUtilityReduceOnNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        let event = UtilityEvent.loaded(.failure)
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        
+        assert(sut: sut, .utilityFlow(event), on: nilRouteState, effect: nil)
+    }
+    
+    func test_utilityFlow_loaded_shouldCallUtilityReduceWithFlowAndEventOnNonNilRoute() {
+        
+        let flow = makeEmptyUtilityFlow()
+        let state = State(route: .utilityFlow(flow))
+        let event = UtilityEvent.loaded(.failure)
+        let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
+        
+        _ = sut.reduce(state, .utilityFlow(event))
+        
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [flow])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [event])
+    }
+    
+    func test_utilityFlow_loaded_shouldChangeStateToUtilityFlowFromUtilityReduceOnNonNilRoute() {
+        
+        let flow = makeEmptyUtilityFlow()
+        let state = State(route: .utilityFlow(flow))
+        let event = UtilityEvent.loaded(.failure)
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, nil))
+        
+        assertState(sut: sut, .utilityFlow(event), on: state) {
+            
+            $0.route = .utilityFlow(newFlow)
+        }
+    }
+    
+    func test_utilityFlow_loaded_shouldDeliverUtilityEffectFromUtilityReduceOnNonNilRoute() {
+        
+        let flow = makeEmptyUtilityFlow()
+        let state = State(route: .utilityFlow(flow))
+        let event = UtilityEvent.loaded(.failure)
+        let newFlow = UtilityFlow(stack: .init([.services]))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        
+        assert(sut: sut, .utilityFlow(event), on: state, effect: .utilityFlow(.initiate))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersReducer<LastPayment, Operator>
