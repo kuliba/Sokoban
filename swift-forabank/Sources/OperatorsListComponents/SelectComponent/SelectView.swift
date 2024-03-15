@@ -31,12 +31,12 @@ struct SelectView: View {
                     
                 } else {
                     
-                    Image.defaultIcon(
-                        backgroundColor: config.backgroundIcon,
-                        foregroundColor: config.foregroundIcon,
-                        icon: config.icon
-                    )
-                    .cornerRadius(20)
+                    config.icon
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
+                        .foregroundColor(config.foregroundIcon)
+                        .background(config.backgroundIcon)
+                        .cornerRadius(20)
                 }
                 
                 if let option {
@@ -64,12 +64,11 @@ struct SelectView: View {
                 
                 HStack(spacing: 16) {
                     
-                    Image.defaultIcon(
-                        backgroundColor: config.backgroundIcon,
-                        foregroundColor: config.foregroundIcon,
-                        icon: config.icon
-                    )
-                    .cornerRadius(20)
+                    config.icon
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
+                        .foregroundColor(config.foregroundIcon)
+                        .background(config.backgroundIcon)
                     
                     VStack(spacing: 4) {
                         
