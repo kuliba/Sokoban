@@ -44,7 +44,7 @@ extension UtilityFlowEffectHandler {
                 }
             }
             
-        case let .startPayment(payload):
+        case let .select(payload):
             startPayment(.init(payload)) {
                 
                 dispatch(.paymentStarted($0))
@@ -55,9 +55,9 @@ extension UtilityFlowEffectHandler {
 
 private extension UtilityFlowEffectHandler.StartPaymentPayload {
     
-    init(_ payload: UtilityFlowEffect<LastPayment, Operator>.StartPayment) {
+    init(_ select: UtilityFlowEffect<LastPayment, Operator>.Select) {
         
-        switch payload {
+        switch select {
         case let .last(lastPayment):
             self = .last(lastPayment)
             

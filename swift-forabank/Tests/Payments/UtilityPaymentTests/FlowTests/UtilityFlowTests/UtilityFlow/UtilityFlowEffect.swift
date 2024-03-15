@@ -10,12 +10,12 @@ import UtilityPayment
 enum UtilityFlowEffect<LastPayment, Operator> {
     
     case initiate
-    case startPayment(StartPayment)
+    case select(Select)
 }
 
 extension UtilityFlowEffect {
     
-    enum StartPayment {
+    enum Select {
         
         case last(LastPayment)
         case `operator`(Operator)
@@ -23,4 +23,4 @@ extension UtilityFlowEffect {
 }
 
 extension UtilityFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable {}
-extension UtilityFlowEffect.StartPayment: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEffect.Select: Equatable where LastPayment: Equatable, Operator: Equatable {}

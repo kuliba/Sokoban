@@ -73,93 +73,93 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         }
     }
     
-    // MARK: - startPayment
+    // MARK: - select
     
-    func test_startPayment_lastPayment_shouldCallPaymentStarterWithPayload() {
+    func test_select_lastPayment_shouldCallPaymentStarterWithPayload() {
         
         let lastPayment = makeLastPayment()
         let (sut, _, paymentStarter) = makeSUT()
         
-        sut.handleEffect(.startPayment(.last(lastPayment))) { _ in }
+        sut.handleEffect(.select(.last(lastPayment))) { _ in }
         
         XCTAssertNoDiff(paymentStarter.payloads, [.last(lastPayment)])
     }
     
-    func test_startPayment_lastPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+    func test_select_lastPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
         
         let lastPayment = makeLastPayment()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.last(lastPayment)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
+        expect(sut, with: .select(.last(lastPayment)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
             
             paymentStarter.complete(with: .failure(.connectivityError))
         }
     }
     
-    func test_startPayment_lastPayment_shouldDeliverServerErrorOnServerErrorFailure() {
+    func test_select_lastPayment_shouldDeliverServerErrorOnServerErrorFailure() {
         
         let lastPayment = makeLastPayment()
         let message = anyMessage()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.last(lastPayment)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
+        expect(sut, with: .select(.last(lastPayment)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
             
             paymentStarter.complete(with: .failure(.serverError(message)))
         }
     }
     
-    func test_startPayment_lastPayment_shouldDeliverResponseOnSuccess() {
+    func test_select_lastPayment_shouldDeliverResponseOnSuccess() {
         
         let lastPayment = makeLastPayment()
         let response = makeResponse()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.last(lastPayment)), toDeliver: .paymentStarted(.success(response))) {
+        expect(sut, with: .select(.last(lastPayment)), toDeliver: .paymentStarted(.success(response))) {
             
             paymentStarter.complete(with: .success(response))
         }
     }
     
-    func test_startPayment_operator_shouldCallPaymentStarterWithPayload() {
+    func test_select_operator_shouldCallPaymentStarterWithPayload() {
         
         let `operator` = makeOperator()
         let (sut, _, paymentStarter) = makeSUT()
         
-        sut.handleEffect(.startPayment(.operator(`operator`))) { _ in }
+        sut.handleEffect(.select(.operator(`operator`))) { _ in }
         
         XCTAssertNoDiff(paymentStarter.payloads, [.operator(`operator`)])
     }
     
-    func test_startPayment_operator_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+    func test_select_operator_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
         
         let `operator` = makeOperator()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
+        expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
             
             paymentStarter.complete(with: .failure(.connectivityError))
         }
     }
     
-    func test_startPayment_operator_shouldDeliverServerErrorOnServerErrorFailure() {
+    func test_select_operator_shouldDeliverServerErrorOnServerErrorFailure() {
         
         let `operator` = makeOperator()
         let message = anyMessage()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
+        expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
             
             paymentStarter.complete(with: .failure(.serverError(message)))
         }
     }
     
-    func test_startPayment_operator_shouldDeliverResponseOnSuccess() {
+    func test_select_operator_shouldDeliverResponseOnSuccess() {
         
         let `operator` = makeOperator()
         let response = makeResponse()
         let (sut, _, paymentStarter) = makeSUT()
         
-        expect(sut, with: .startPayment(.operator(`operator`)), toDeliver: .paymentStarted(.success(response))) {
+        expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.success(response))) {
             
             paymentStarter.complete(with: .success(response))
         }

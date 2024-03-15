@@ -279,7 +279,7 @@ final class UtilityFlowReducerTests: XCTestCase {
             operators: [makeOperator()]
         )))))
         
-        assert(.select(.last(lastPayment)), on: topPrepaymentState, effect: .startPayment(.last(lastPayment)))
+        assert(.select(.last(lastPayment)), on: topPrepaymentState, effect: .select(.last(lastPayment)))
     }
     
     func test_select_lastPayment_shouldNotChangeTopServicesState() {
@@ -333,7 +333,7 @@ final class UtilityFlowReducerTests: XCTestCase {
             operators: [makeOperator()]
         )))))
         
-        assert(.select(.operator(`operator`)), on: topPrepaymentState, effect: .startPayment(.operator(`operator`)))
+        assert(.select(.operator(`operator`)), on: topPrepaymentState, effect: .select(.operator(`operator`)))
     }
     
     func test_select_operator_shouldNotChangeTopServicesState() {

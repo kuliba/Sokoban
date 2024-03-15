@@ -321,7 +321,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         })
     }
     
-    // MARK: - startPayment
+    // MARK: - select
     
     func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
         
