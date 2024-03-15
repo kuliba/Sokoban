@@ -80,7 +80,13 @@ extension UtilityFlowReducer {
             }
             
         case let .paymentStarted(result):
-            fatalError()
+            switch result {
+            case let .failure(serviceFailure):
+                state.push(.failure(serviceFailure))
+                
+            case let .success(response):
+                state.push(.payment)
+            }
             
         case let .select(lastPayment):
             if case .prepayment = state.current {
@@ -279,6 +285,63 @@ final class UtilityFlowReducerTests: XCTestCase {
         let nonEmptyState = State(stack: .init(.services))
         
         assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
+    }
+    
+    // MARK: - paymentStarted
+    
+    func test_paymentStarted_shouldPushFailureDestinationOnConnectivityErrorFailure() {
+        
+        let state = State()
+        
+        assertState(.paymentStarted(.failure(.connectivityError)), on: state) {
+            
+            $0.push(.failure(.connectivityError))
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnConnectivityErrorFailure() {
+        
+        let state = State()
+
+        assert(.paymentStarted(.failure(.connectivityError)), on: state, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldPushFailureDestinationOnServerErrorFailure() {
+        
+        let message = anyMessage()
+        let state = State()
+        
+        assertState(.paymentStarted(.failure(.serverError(message))), on: state) {
+            
+            $0.push(.failure(.serverError(message)))
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnServerErrorFailure() {
+    
+        let message = anyMessage()
+        let state = State()
+                
+        assert(.paymentStarted(.failure(.serverError(message))), on: state, effect: nil)
+    }
+    
+    func test_paymentStarted_shouldPushPaymentDestinationOnSuccess() {
+        
+        let message = anyMessage()
+        let state = State()
+        
+        assertState(.paymentStarted(.success(makeResponse())), on: state) {
+            
+            $0.push(.payment)
+        }
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnSuccess() {
+    
+        let message = anyMessage()
+        let state = State()
+                
+        assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
     }
     
     // MARK: - select

@@ -9,6 +9,8 @@ import PrePaymentPicker
 
 public enum UtilityDestination<LastPayment, Operator> {
     
+    case failure(ServiceFailure)
+    case payment
     case prepayment(Prepayment)
     case services
 }
