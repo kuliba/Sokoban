@@ -31,11 +31,15 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         )
     }
     
-    func test_flow() {
+    func test_startPaymentFailureFlow() {
         
         let lastPayment = makeLastPayment()
         let `operator` = makeOperator()
         let operators = [`operator`, makeOperator()]
+        let prepayment = Destination.prepayment(.options(.init(
+            lastPayments: [lastPayment],
+            operators: operators
+        )))
         let (sut, spy, utilityEffectHandler) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
@@ -59,10 +63,44 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             }, {
                 $0.route = .utilityFlow(.init())
             }, {
-                $0.route = .utilityFlow(.init(stack: [.prepayment(.options(.init(
-                    lastPayments: [lastPayment],
-                    operators: operators
-                )))]))
+                $0.route = .utilityFlow(.init(stack: [prepayment]))
+            }
+        )
+    }
+    
+    func test_startPaymentSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let `operator` = makeOperator()
+        let operators = [`operator`, makeOperator()]
+        let prepayment = Destination.prepayment(.options(.init(
+            lastPayments: [lastPayment],
+            operators: operators
+        )))
+        let (sut, spy, utilityEffectHandler) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        utilityEffectHandler.complete(with: .loaded(.failure))
+        
+        sut.event(.back)
+        
+        sut.event(.utilityFlow(.initiate))
+        utilityEffectHandler.complete(with: .loaded(.success([lastPayment], operators)))
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = .utilityFlow(.init())
+            }, {
+                $0.route = .utilityFlow(.init(stack: [.prepayment(.failure)]))
+            }, {
+                $0.route = nil
+            }, {
+                $0.route = .utilityFlow(.init())
+            }, {
+                $0.route = .utilityFlow(.init(stack: [prepayment]))
             }
         )
     }
