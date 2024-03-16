@@ -129,7 +129,7 @@ final class AnywayPaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = AnywayPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
+    private typealias SUT = AnywayPaymentEffectHandler<Payment, CreateAnywayTransferResponse>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
@@ -137,7 +137,6 @@ final class AnywayPaymentEffectHandlerTests: XCTestCase {
     private typealias MakeTransferSpy = Spy<SUT.MakeTransferPayload, SUT.MakeTransferResult>
     
     private func makeSUT(
-        debounce: DispatchTimeInterval = .milliseconds(500),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
