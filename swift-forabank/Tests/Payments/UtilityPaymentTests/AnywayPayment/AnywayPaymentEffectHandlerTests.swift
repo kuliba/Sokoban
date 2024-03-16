@@ -38,21 +38,6 @@ final class AnywayPaymentEffectHandlerTests: XCTestCase {
         XCTAssertEqual(createAnywayTransferSpy.payloads, [utilityPayment])
     }
     
-    func test_createAnywayTransfer_shouldDeliverResponseOnSuccess() {
-        
-        let utilityPayment = makeNonFinalStepUtilityPayment()
-        let response = makeCreateAnywayTransferResponse()
-        let (sut, createAnywayTransferSpy, _) = makeSUT()
-        
-        expect(
-            sut,
-            with: .createAnywayTransfer(utilityPayment),
-            toDeliver: .receivedAnywayResult(.success(response))
-        ) {
-            createAnywayTransferSpy.complete(with: .success(response))
-        }
-    }
-    
     func test_createAnywayTransfer_shouldDeliverConnectivityErrorOnConnectivityError() {
         
         let utilityPayment = makeNonFinalStepUtilityPayment()
@@ -79,6 +64,21 @@ final class AnywayPaymentEffectHandlerTests: XCTestCase {
             toDeliver: .receivedAnywayResult(.failure(.serverError(message)))
         ) {
             createAnywayTransferSpy.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
+    func test_createAnywayTransfer_shouldDeliverResponseOnSuccess() {
+        
+        let utilityPayment = makeNonFinalStepUtilityPayment()
+        let response = makeCreateAnywayTransferResponse()
+        let (sut, createAnywayTransferSpy, _) = makeSUT()
+        
+        expect(
+            sut,
+            with: .createAnywayTransfer(utilityPayment),
+            toDeliver: .receivedAnywayResult(.success(response))
+        ) {
+            createAnywayTransferSpy.complete(with: .success(response))
         }
     }
     
