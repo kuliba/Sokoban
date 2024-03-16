@@ -63,7 +63,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             }
         )
     }
-            
+    
     func test_startPaymentWithLastPaymentFailureFlow() {
         
         let lastPayment = makeLastPayment()
@@ -160,7 +160,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
         servicesLoader.complete(with: .success(services))
-
+        
         sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
         paymentStarter.complete(with: .failure(.connectivityError))
         
@@ -180,10 +180,10 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         )
     }
     
-    func test_startPaymentWithLastOperatorSuccessFlow() {
+    func test_startPaymentWithLastPaymentSuccessFlow() {
         
         let lastPayment = makeLastPayment()
-        let (`operator`, operators) = makeOperatorOperators()
+        let (_, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
         let (sut, spy, loader, _, paymentStarter) = makeSUT(initialRoute: nil)
         
@@ -194,8 +194,8 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         paymentStarter.complete(with: .success(makeResponse()))
         
         sut.event(.back)
+        sut.event(.back)
         
-        sut.event(.utilityFlow(.select(.operator(`operator`))))
         assert(
             spy,
             .init(route: nil), {
@@ -208,6 +208,8 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment, .payment)
             }, {
                 $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
             }
         )
     }
@@ -227,6 +229,9 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         servicesLoader.complete(with: .success([service]))
         paymentStarter.complete(with: .success(makeResponse()))
         
+        sut.event(.back)
+        sut.event(.back)
+        
         assert(
             spy,
             .init(route: nil), {
@@ -237,6 +242,10 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment)
             }, {
                 $0.route = utilityFlow(prepayment, .payment)
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
             }
         )
     }
@@ -254,9 +263,13 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
         servicesLoader.complete(with: .success(services))
-
+        
         sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
         paymentStarter.complete(with: .success(makeResponse()))
+        
+        sut.event(.back)
+        sut.event(.back)
+        sut.event(.back)
         
         assert(
             spy,
@@ -270,28 +283,36 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment, .services(services))
             }, {
                 $0.route = utilityFlow(prepayment, .services(services), .payment)
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
             }
         )
     }
     
+#warning("add payment flow")
+    
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
-
+    
     private typealias State = PaymentsTransfersState<Destination>
     private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
     private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
-
+    
     private typealias StateSpy = ValueSpy<State>
-
+    
     private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
-
+    
     private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
-
+    
     private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
     private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
-
+    
     private func makeSUT(
         initialRoute: State.Route? = nil,
         file: StaticString = #file,
@@ -311,7 +332,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
-
+        
         let utilityEffectHandler = UtilityEffectHandler(
             load: loader.process,
             loadServices: servicesLoader.process,
