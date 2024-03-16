@@ -201,9 +201,8 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         sut.event(.utilityFlow(.select(.operator(`operator`))))
         servicesLoader.complete(with: .success(services))
 
-        #warning("complete me")
-//        sut.event(.utilityFlow(.select(.service(service, `operator`))))
-//        paymentStarter.complete(with: .failure(.connectivityError))
+        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
+        paymentStarter.complete(with: .failure(.connectivityError))
         
         assert(
             spy,
@@ -215,6 +214,8 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment)
             }, {
                 $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services), .failure(.connectivityError))
             }
         )
     }
@@ -251,6 +252,77 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment, .payment)
             }, {
                 $0.route = utilityFlow(prepayment)
+            }
+        )
+    }
+    
+    func test_startPaymentWithSingleServiceOperatorSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let `operator` = makeOperator()
+        let operators = [`operator`, makeOperator()]
+        let prepayment = Destination.prepayment(.options(.init(
+            lastPayments: [lastPayment],
+            operators: operators
+        )))
+        let service = makeService()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success([service]))
+        paymentStarter.complete(with: .success(makeResponse()))
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = utilityFlow(prepayment, .payment)
+            }
+        )
+    }
+    
+    func test_startPaymentWithMultiServiceOperatorSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let `operator` = makeOperator()
+        let operators = [`operator`, makeOperator()]
+        let prepayment = Destination.prepayment(.options(.init(
+            lastPayments: [lastPayment],
+            operators: operators
+        )))
+        let service = makeService()
+        let services = [service, makeService()]
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success(services))
+
+        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
+        paymentStarter.complete(with: .success(makeResponse()))
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services), .payment)
             }
         )
     }
