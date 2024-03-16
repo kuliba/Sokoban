@@ -8,8 +8,14 @@
 import UtilityPayment
 import XCTest
 
-typealias UtilityFlow = Flow<Destination>
 typealias Destination = UtilityDestination<LastPayment, Operator, Service>
+
+typealias UtilityFlow = Flow<Destination>
+typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
+
+typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
 
 func makeEmptyUtilityFlow(
     file: StaticString = #file,

@@ -9,25 +9,6 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-private typealias SUT = RxViewModel<State, Event, Effect>
-
-private typealias State = PaymentsTransfersState<Destination>
-private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
-private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
-
-private typealias StateSpy = ValueSpy<State>
-
-private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
-
-private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
-
-private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
-
-private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
-private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
-private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
-private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
-
 final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     // MARK: - back
@@ -295,6 +276,22 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias SUT = RxViewModel<State, Event, Effect>
+
+    private typealias State = PaymentsTransfersState<Destination>
+    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
+
+    private typealias StateSpy = ValueSpy<State>
+
+    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
+
+    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+
+    private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
+    private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
+    private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
+
     private func makeSUT(
         initialRoute: State.Route? = nil,
         file: StaticString = #file,
@@ -366,14 +363,14 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     }
 }
 
-private func emptyUtilityFlow() -> State.Route {
+private func emptyUtilityFlow() -> PaymentsTransfersState<Destination>.Route {
     
     .utilityFlow(.init())
 }
 
 private func utilityFlow(
     _ destinations: Destination...
-) -> State.Route {
+) -> PaymentsTransfersState<Destination>.Route {
     
     .utilityFlow(.init(stack: .init(destinations)))
 }

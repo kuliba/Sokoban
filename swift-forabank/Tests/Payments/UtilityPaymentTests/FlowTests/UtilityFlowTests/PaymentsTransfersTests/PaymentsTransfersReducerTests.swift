@@ -263,16 +263,10 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-    
-    private typealias Destination = UtilityDestination<LastPayment, Operator, Service>
-    private typealias UtilityFlow = Flow<Destination>
-    
+        
     private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityEffect>
-    private typealias UtilityState = Flow<Destination>
-    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    private typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
     
-    private typealias UtilityReduceStub = (UtilityState, UtilityEffect?)
+    private typealias UtilityReduceStub = (UtilityFlow, UtilityEffect?)
     
     private func makeSUT(
         stub: UtilityReduceStub,
@@ -302,7 +296,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(stub: (UtilityState(), nil)).sut
+        let sut = sut ?? makeSUT(stub: (UtilityFlow(), nil)).sut
         
         var expectedState = state
         updateStateToExpected?(&expectedState)

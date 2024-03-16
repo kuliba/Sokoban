@@ -54,12 +54,10 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private typealias SUT = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
-    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    private typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
-    
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
+    
+    private typealias UtilityFlowEffectHandleSpy = EffectHandlerSpy<UtilityEvent, UtilityEffect>
     
     private func makeSUT(
         file: StaticString = #file,

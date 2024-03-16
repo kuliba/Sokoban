@@ -251,11 +251,9 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator, Service>
-    
-    private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
+    private typealias State = UtilityFlow
+    private typealias Event = UtilityEvent
+    private typealias Effect = UtilityEffect
     
     private typealias LoaderSpy = Spy<Void, SUT.LoadResult>
     private typealias PaymentStarterSpy = Spy<SUT.StartPaymentPayload, SUT.StartPaymentResult>

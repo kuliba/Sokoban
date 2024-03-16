@@ -414,9 +414,9 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     private typealias SUT = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
+    private typealias State = UtilityFlow
+    private typealias Event = UtilityEvent
+    private typealias Effect = UtilityEffect
     
     private func makeSUT(
         file: StaticString = #file,
