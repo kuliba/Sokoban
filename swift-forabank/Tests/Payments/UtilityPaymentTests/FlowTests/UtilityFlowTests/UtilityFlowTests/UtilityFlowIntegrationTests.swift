@@ -70,7 +70,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, UtilityService>
     
     private typealias Options = Destination.Prepayment.Options
     

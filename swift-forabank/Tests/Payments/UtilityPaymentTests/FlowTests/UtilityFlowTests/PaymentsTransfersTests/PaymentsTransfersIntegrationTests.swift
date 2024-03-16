@@ -13,7 +13,7 @@ private typealias SUT = RxViewModel<State, Event, Effect>
 
 private typealias State = PaymentsTransfersState<Destination>
 private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator>
+private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, UtilityService>
 
 private typealias StateSpy = ValueSpy<State>
 

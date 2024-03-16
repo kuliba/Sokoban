@@ -37,11 +37,11 @@ extension PaymentsTransfersEffectHandler {
     typealias UtilityFlowHandleEffect = (UtilityEffect, @escaping UtilityDispatch) -> Void
     
     typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator>
+    typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
     
     typealias Dispatch = (Event) -> Void
     
     typealias State = PaymentsTransfersState
     typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = PaymentsTransfersEffect<LastPayment, Operator>
+    typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
 }

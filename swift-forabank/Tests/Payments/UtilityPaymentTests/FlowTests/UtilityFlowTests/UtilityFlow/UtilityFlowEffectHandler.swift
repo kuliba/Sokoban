@@ -80,6 +80,9 @@ extension UtilityFlowEffectHandler {
                         }
                     }
                 }
+                
+            case let .service(service, for: `operator`):
+                fatalError()
             }
         }
     }
@@ -110,7 +113,7 @@ extension UtilityFlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
 }
 
 extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

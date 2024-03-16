@@ -396,13 +396,53 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.selectFailure(`operator`), on: state, effect: nil)
     }
     
+    func test_select_service_shouldNotChangePrepaymentState() {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let prepaymentState = makeFlow(.prepayment(.options(.init())))
+        
+        assertState(.select(.service(service, for: `operator`)), on: prepaymentState)
+    }
+    
+    func test_select_service_shouldNotDeliverEffectOnPrepaymentState() {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let prepaymentState = makeFlow(.prepayment(.options(.init())))
+        
+        assert(.select(.service(service, for: `operator`)), on: prepaymentState, effect: nil)
+    }
+    
+    func test_select_service_shouldNotChangeServicesState() {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let topServicesState = makeFlow(.services([service, makeService()]))
+
+        assertState(.select(.service(service, for: `operator`)), on: topServicesState)
+    }
+    
+    func test_select_service_shouldDeliverEffectOnServicesState() {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let topServicesState = makeFlow(.services([service, makeService()]))
+        
+        assert(
+            .select(.service(service, for: `operator`)),
+            on: topServicesState,
+            effect: .select(.service(service, for: `operator`))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
     
     private typealias State = Flow<Destination>
     private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, UtilityService>
     
     private func makeSUT(
         file: StaticString = #file,
