@@ -29,6 +29,26 @@ func makeOperator(
     .init(value: value)
 }
 
+func makeOperatorOperators(
+) -> (Operator, [Operator]) {
+    
+    let `operator` = makeOperator()
+    let operators = [`operator`, makeOperator()]
+    
+    return (`operator`, operators)
+}
+
+func makePrepayment(
+    _ lastPayments: [LastPayment] = [],
+    _ operators: [Operator] = []
+) -> Destination {
+    
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators
+    )))
+}
+
 func makeResponse(
     _ value: String = UUID().uuidString
 ) -> StartPaymentResponse {
@@ -41,6 +61,16 @@ func makeService(
 ) -> UtilityService {
     
     .init(value: value)
+}
+
+func makeServiceServices(
+    _ value: String = UUID().uuidString
+) -> (UtilityService, [UtilityService]) {
+    
+    let service = makeService()
+    let services = [service, makeService()]
+    
+    return (service, services)
 }
 
 func makeServices() -> [UtilityService] {

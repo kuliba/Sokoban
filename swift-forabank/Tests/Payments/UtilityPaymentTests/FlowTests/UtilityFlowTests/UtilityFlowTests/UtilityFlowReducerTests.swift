@@ -132,10 +132,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         assertState(.loaded(.success([], operators)), on: emptyState) {
             
-            $0.push(.prepayment(.options(.init(
-                lastPayments: [],
-                operators: operators
-            ))))
+            $0.push(makePrepayment([], operators))
         }
     }
     
@@ -149,23 +146,18 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
         
-        let lastPayments = [makeLastPayment()]
-        let operators = [makeOperator()]
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let emptyState = makeFlow()
         
         assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
             
-            $0.push(.prepayment(.options(.init(
-                lastPayments: lastPayments,
-                operators: operators
-            ))))
+            $0.push(makePrepayment(lastPayments, operators))
         }
     }
     
     func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
         
-        let lastPayments = [makeLastPayment()]
-        let operators = [makeOperator()]
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let emptyState = makeFlow()
         
         assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
@@ -173,8 +165,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
         
-        let lastPayments = [makeLastPayment()]
-        let operators = [makeOperator()]
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
         assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
@@ -182,8 +173,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
         
-        let lastPayments = [makeLastPayment()]
-        let operators = [makeOperator()]
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
         assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
@@ -286,10 +276,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldNotChangeTopPrepaymentState() {
         
         let lastPayment = makeLastPayment()
-        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
-            lastPayments: [lastPayment],
-            operators: [makeOperator()]
-        ))))
+        let topPrepaymentState = makeFlow(makePrepayment([lastPayment], [makeOperator()]))
         
         assertState(.select(.last(lastPayment)), on: topPrepaymentState)
     }
@@ -297,10 +284,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_lastPayment_shouldDeliverEffectOnTopPrepaymentState() {
         
         let lastPayment = makeLastPayment()
-        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
-            lastPayments: [lastPayment],
-            operators: [makeOperator()]
-        ))))
+        let topPrepaymentState = makeFlow(makePrepayment([lastPayment], [makeOperator()]))
         
         assert(.select(.last(lastPayment)), on: topPrepaymentState, effect: .select(.last(lastPayment)))
     }
@@ -340,10 +324,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldNotChangeTopPrepaymentState() {
         
         let `operator` = makeOperator()
-        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
-            lastPayments: [],
-            operators: [makeOperator()]
-        ))))
+        let topPrepaymentState = makeFlow(makePrepayment([], [makeOperator()]))
         
         assertState(.select(.operator(`operator`)), on: topPrepaymentState)
     }
@@ -351,10 +332,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     func test_select_operator_shouldDeliverEffectOnTopPrepaymentState() {
         
         let `operator` = makeOperator()
-        let topPrepaymentState = makeFlow(.prepayment(.options(.init(
-            lastPayments: [],
-            operators: [makeOperator()]
-        ))))
+        let topPrepaymentState = makeFlow(makePrepayment([], [makeOperator()]))
         
         assert(.select(.operator(`operator`)), on: topPrepaymentState, effect: .select(.operator(`operator`)))
     }
@@ -398,26 +376,23 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_select_service_shouldNotChangePrepaymentState() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
-        let prepaymentState = makeFlow(.prepayment(.options(.init())))
+        let (`operator`, service) = (makeOperator(), makeService())
+        let prepaymentState = makeFlow(makePrepayment())
         
         assertState(.select(.service(service, for: `operator`)), on: prepaymentState)
     }
     
     func test_select_service_shouldNotDeliverEffectOnPrepaymentState() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
-        let prepaymentState = makeFlow(.prepayment(.options(.init())))
+        let (`operator`, service) = (makeOperator(), makeService())
+        let prepaymentState = makeFlow(makePrepayment())
         
         assert(.select(.service(service, for: `operator`)), on: prepaymentState, effect: nil)
     }
     
     func test_select_service_shouldNotChangeServicesState() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
+        let (`operator`, service) = (makeOperator(), makeService())
         let topServicesState = makeFlow(.services([service, makeService()]))
 
         assertState(.select(.service(service, for: `operator`)), on: topServicesState)
@@ -425,8 +400,7 @@ final class UtilityFlowReducerTests: XCTestCase {
     
     func test_select_service_shouldDeliverEffectOnServicesState() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
+        let (`operator`, service) = (makeOperator(), makeService())
         let topServicesState = makeFlow(.services([service, makeService()]))
         
         assert(

@@ -42,8 +42,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     func test_flow() {
         
         let lastPayments = [makeLastPayment()]
-        let `operator` = makeOperator()
-        let operators = [`operator`, makeOperator()]
+        let (`operator`, operators) = makeOperatorOperators()
         let options = Options(lastPayments: lastPayments, operators: operators)
         let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT()
         
