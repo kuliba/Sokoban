@@ -58,14 +58,14 @@ func makeResponse(
 
 func makeService(
     _ value: String = UUID().uuidString
-) -> UtilityService {
+) -> Service {
     
     .init(value: value)
 }
 
 func makeServiceServices(
     _ value: String = UUID().uuidString
-) -> (UtilityService, [UtilityService]) {
+) -> (Service, [Service]) {
     
     let service = makeService()
     let services = [service, makeService()]
@@ -73,7 +73,7 @@ func makeServiceServices(
     return (service, services)
 }
 
-func makeServices() -> [UtilityService] {
+func makeServices() -> [Service] {
     
     [makeService(), makeService()]
 }
@@ -99,7 +99,7 @@ struct StartPaymentResponse: Equatable {
     var id: String { value }
 }
 
-struct UtilityService: Equatable {
+struct Service: Equatable {
     
     var value: String
     

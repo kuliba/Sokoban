@@ -31,7 +31,7 @@ final class PushUpdateFlowIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+    private typealias Destination = UtilityDestination<LastPayment, Operator, Service>
 
     private typealias State = Flow<Destination>
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateFlowEvent>

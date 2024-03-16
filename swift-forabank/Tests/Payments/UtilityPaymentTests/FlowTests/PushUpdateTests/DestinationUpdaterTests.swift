@@ -42,9 +42,9 @@ extension DestinationUpdater {
 
 extension DestinationUpdater {
     
-    typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
-    typealias State = Flow<UtilityDestination<LastPayment, Operator, UtilityService>>
+    typealias State = Flow<UtilityDestination<LastPayment, Operator, Service>>
     typealias Event = UpdateFlowEvent
     typealias Effect = UpdateFlowEffect
 }
@@ -66,9 +66,9 @@ extension StackStacker {
 
 extension StackStacker {
     
-    typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
-    typealias State = Flow<UtilityDestination<LastPayment, Operator, UtilityService>>
+    typealias State = Flow<UtilityDestination<LastPayment, Operator, Service>>
     typealias Event = PushEvent
     typealias Effect = PushEffect
 }

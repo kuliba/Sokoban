@@ -9,7 +9,7 @@ import UtilityPayment
 import XCTest
 
 typealias UtilityFlow = Flow<Destination>
-typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+typealias Destination = UtilityDestination<LastPayment, Operator, Service>
 
 func makeEmptyUtilityFlow(
     file: StaticString = #file,
@@ -39,7 +39,7 @@ func makeDestination(
 }
 
 func makeServicesDestination(
-    _ services: [UtilityService] = [makeService(), makeService()]
+    _ services: [Service] = [makeService(), makeService()]
 ) -> Destination {
     
     .services(services)

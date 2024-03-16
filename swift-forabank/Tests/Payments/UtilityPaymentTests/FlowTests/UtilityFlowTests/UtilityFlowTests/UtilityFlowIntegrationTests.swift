@@ -65,16 +65,16 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     #warning("extrat reusable test typealiases")
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+    private typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, UtilityService>
+    private typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
     
     private typealias Options = Destination.Prepayment.Options
     
-    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
+    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
     private typealias StateSpy = ValueSpy<State>
     

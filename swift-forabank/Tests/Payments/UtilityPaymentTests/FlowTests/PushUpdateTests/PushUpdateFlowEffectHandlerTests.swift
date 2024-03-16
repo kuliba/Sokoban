@@ -68,7 +68,7 @@ final class PushUpdateFlowEffectHandlerTests: XCTestCase {
     
     private typealias SUT = PushUpdateFlowEffectHandler<PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias State = Flow<UtilityDestination<LastPayment, Operator, UtilityService>>
+    private typealias State = Flow<UtilityDestination<LastPayment, Operator, Service>>
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
