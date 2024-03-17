@@ -17,6 +17,7 @@ struct FlowSettingsView: View {
             
             buttons()
             
+            pickerSection("Load Prepayment Options", $flowSettings.loadOptions)
             pickerSection("Load Last Payments", $flowSettings.loadLastPayments)
             pickerSection("Load Operators", $flowSettings.loadOperators)
         }
@@ -32,19 +33,13 @@ private extension FlowSettingsView {
             
             Button("happy") {
                 
-                flowSettings = .init(
-                    loadLastPayments: .success,
-                    loadOperators: .success
-                )
+                flowSettings = .happy
             }
             .foregroundColor(.blue)
             
             Button("sad") {
                 
-                flowSettings = .init(
-                    loadLastPayments: .failure,
-                    loadOperators: .failure
-                )
+                flowSettings = .sad
             }
             .foregroundColor(.red)
         }

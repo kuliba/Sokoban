@@ -11,11 +11,14 @@ import PrePaymentPicker
 import UtilityPayment
 
 private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
-private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
+private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
+private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
+private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, UtilityService, StartPayment>
 
 private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
-private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
-private typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, PaymentsTransfersEvent.StartPayment, UtilityService>
+private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, StartPayment, UtilityService>
+private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
+private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
 
 extension PaymentsTransfersViewModel {
     
@@ -32,8 +35,10 @@ extension PaymentsTransfersViewModel {
             prePaymentOptionsReduce: prePaymentOptionsReducer.reduce
         )
         
-        let reducer = PaymentsTransfersReducer(
-            utilityPaymentFlowReduce: utilityPaymentFlowReducer.reduce
+        let utilityReducer = UtilityReducer()
+        
+        let reducer = Reducer(
+            utilityReduce: utilityReducer.reduce
         )
         
         let loadLastPayments: PPOEffectHandler.LoadLastPayments = { completion in
@@ -79,14 +84,31 @@ extension PaymentsTransfersViewModel {
             loadServices: loadServices,
             startPayment: startPayment
         )
+                
+        let loadOptions: UtilityEffectHandler.LoadOptions = { completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(flowSettings.loadOptions.result)
+            }
+        }
         
-        let utilityPaymentFlowEffectHandler = UtilityFlowEffectHandler(
-            ppoHandleEffect: ppoEffectHandler.handleEffect,
-            ppHandleEffect: ppEffectHandler.handleEffect
+        let startPayment2: UtilityEffectHandler.StartPayment = { payload, completion in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                completion(payload.response)
+            }
+        }
+        
+        let utilityFlowEffectHandler = UtilityEffectHandler(
+            loadOptions: loadOptions,
+            loadServices: loadServices,
+            startPayment: startPayment2
         )
         
         let effectHandler = PaymentsTransfersEffectHandler(
-            utilityPaymentFlowHandleEffect: utilityPaymentFlowEffectHandler.handleEffect
+            utilityFlowHandleEffect: utilityFlowEffectHandler.handleEffect
         )
         
         return .init(
@@ -126,6 +148,22 @@ private extension FlowSettings.LoadOperators {
     }
 }
 
+private extension FlowSettings.LoadOptions {
+    
+    var result: UtilityEffectHandler.LoadOptionsResult {
+        
+        switch self {
+        case .failure:
+            return .failure(LoadOptionsError())
+            
+        case .success:
+            return .success(([.init()], [.init()]))
+        }
+    }
+    
+    struct LoadOptionsError: Error {}
+}
+
 private extension PPEffectHandler.StartPaymentPayload {
     
     var response: PPEffectHandler.StartPaymentResult {
@@ -147,6 +185,44 @@ private extension PPEffectHandler.StartPaymentPayload {
             }
             
         case let .service(`operator`, utilityService):
+            switch utilityService.id {
+            case "error":
+                return .failure(.serverError("Error #12345"))
+                
+            case "failure":
+                return .failure(.connectivityError)
+                
+            case "success":
+                return .success(.init())
+                
+            default:
+                return .success(.init())
+            }
+        }
+    }
+}
+
+private extension UtilityEffectHandler.StartPaymentPayload {
+    
+    var response: PPEffectHandler.StartPaymentResult {
+        
+        switch self {
+        case let .withLastPayment(lastPayment):
+            switch lastPayment.id {
+            case "error":
+                return .failure(.serverError("Error #12345"))
+                
+            case "failure":
+                return .failure(.connectivityError)
+                
+            case "success":
+                return .success(.init())
+                
+            default:
+                return .success(.init())
+            }
+            
+        case let .withService(`operator`, utilityService):
             switch utilityService.id {
             case "error":
                 return .failure(.serverError("Error #12345"))

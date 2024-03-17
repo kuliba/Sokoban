@@ -87,6 +87,6 @@ extension PaymentsTransfersViewModel {
     typealias Dispatch = (Event) -> Void
     
     typealias State = PaymentsTransfersState
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
+    typealias Event = PaymentsTransfersEvent<LastPayment, Operator, UtilityService, StartPayment>
+    typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, UtilityService>
 }

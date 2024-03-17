@@ -9,6 +9,7 @@ struct FlowSettings: Equatable {
     
     var loadLastPayments: LoadLastPayments
     var loadOperators: LoadOperators
+    var loadOptions: LoadOptions
 }
 
 extension FlowSettings {
@@ -19,6 +20,11 @@ extension FlowSettings {
     }
     
     enum LoadOperators: String, CaseIterable {
+        
+        case success, failure
+    }
+    
+    enum LoadOptions: String, CaseIterable {
         
         case success, failure
     }
