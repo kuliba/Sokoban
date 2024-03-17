@@ -1,6 +1,6 @@
 //
 //  UtilityFlowEffectHandler.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 15.03.2024.
 //
@@ -51,7 +51,7 @@ extension UtilityFlowEffectHandler {
     typealias LoadServicesResult = Result<[Service], Error>
     typealias LoadServicesCompletion = (LoadServicesResult) -> Void
     typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
-
+    
     enum StartPaymentPayload {
         
         case last(LastPayment)
@@ -103,30 +103,7 @@ private extension UtilityFlowEffectHandler {
             }
             
         case let .operator(`operator`):
-            loadServices(`operator`) { [weak self] in
-                
-                guard let self else { return }
-                
-                switch $0 {
-                case .failure:
-                    dispatch(.selectFailure(`operator`))
-                    
-                case let .success(services):
-                    switch (services.count, services.first) {
-                    case (0, .none):
-                        dispatch(.selectFailure(`operator`))
-                    
-                    case let (1, .some(service)):
-                        startPayment(.service(service, for: `operator`)) {
-                            
-                            dispatch(.paymentStarted($0))
-                        }
-                        
-                    default:
-                        dispatch(.loadedServices(services))
-                    }
-                }
-            }
+            self.select(`operator`, dispatch)
             
         case let .service(service, for: `operator`):
             startPayment(.service(service, for: `operator`)) {
@@ -134,6 +111,43 @@ private extension UtilityFlowEffectHandler {
                 dispatch(.paymentStarted($0))
             }
         }
-
+    }
+    
+    func select(
+        _ `operator`: Operator,
+        _ dispatch: @escaping Dispatch
+    ) {
+        loadServices(`operator`) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch $0 {
+            case .failure:
+                dispatch(.selectFailure(`operator`))
+                
+            case let .success(services):
+                handle(services, for: `operator`, dispatch)
+            }
+        }
+    }
+    
+    func handle(
+        _ services: [Service],
+        for `operator`: Operator,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch (services.count, services.first) {
+        case (0, .none):
+            dispatch(.selectFailure(`operator`))
+            
+        case let (1, .some(service)):
+            startPayment(.service(service, for: `operator`)) {
+                
+                dispatch(.paymentStarted($0))
+            }
+            
+        default:
+            dispatch(.loadedServices(services))
+        }
     }
 }
