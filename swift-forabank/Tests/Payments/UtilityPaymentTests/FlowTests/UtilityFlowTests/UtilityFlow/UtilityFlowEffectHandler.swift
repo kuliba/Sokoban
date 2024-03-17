@@ -32,20 +32,7 @@ extension UtilityFlowEffectHandler {
     ) {
         switch effect {
         case .initiate:
-            load {
-                
-                switch $0 {
-                case .failure:
-                    dispatch(.loaded(.failure))
-                    
-                case let .success((lastPayments, operators)):
-                    if operators.isEmpty {
-                        dispatch(.loaded(.failure))
-                    } else {
-                        dispatch(.loaded(.success(lastPayments, operators)))
-                    }
-                }
-            }
+            initiate(dispatch)
             
         case let .select(payload):
             switch payload {
@@ -120,3 +107,25 @@ extension UtilityFlowEffectHandler {
 }
 
 extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
+
+private extension UtilityFlowEffectHandler {
+    
+    func initiate(
+        _ dispatch: @escaping Dispatch
+    ) {
+        load {
+            
+            switch $0 {
+            case .failure:
+                dispatch(.loaded(.failure))
+                
+            case let .success((lastPayments, operators)):
+                if operators.isEmpty {
+                    dispatch(.loaded(.failure))
+                } else {
+                    dispatch(.loaded(.success(lastPayments, operators)))
+                }
+            }
+        }
+    }
+}
