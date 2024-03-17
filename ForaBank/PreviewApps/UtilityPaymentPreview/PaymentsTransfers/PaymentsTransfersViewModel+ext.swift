@@ -21,7 +21,7 @@ extension PaymentsTransfersViewModel {
     
     static func `default`(
         initialState: PaymentsTransfersState = .init(),
-        flow: Flow = .happy,
+        flowSettings: FlowSettings = .happy,
         debounce: DispatchTimeInterval = .milliseconds(300),
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PaymentsTransfersViewModel {
@@ -40,7 +40,7 @@ extension PaymentsTransfersViewModel {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                completion(flow.loadLastPayments.result)
+                completion(flowSettings.loadLastPayments.result)
             }
         }
         
@@ -48,7 +48,7 @@ extension PaymentsTransfersViewModel {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                completion(flow.loadOperators.result)
+                completion(flowSettings.loadOperators.result)
             }
         }
         
@@ -98,7 +98,7 @@ extension PaymentsTransfersViewModel {
     }
 }
 
-private extension Flow.LoadLastPayments {
+private extension FlowSettings.LoadLastPayments {
     
     var result: PPOEffectHandler.LoadLastPaymentsResult {
         
@@ -112,7 +112,7 @@ private extension Flow.LoadLastPayments {
     }
 }
 
-private extension Flow.LoadOperators {
+private extension FlowSettings.LoadOperators {
     
     var result: PPOEffectHandler.LoadOperatorsResult {
         

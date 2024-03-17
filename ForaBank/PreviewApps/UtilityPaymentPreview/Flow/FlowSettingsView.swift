@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FlowSettingsView: View {
     
-    @Binding var flow: Flow
+    @Binding var flowSettings: FlowSettings
     
     var body: some View {
         
@@ -17,8 +17,8 @@ struct FlowSettingsView: View {
             
             buttons()
             
-            pickerSection("Load Last Payments", $flow.loadLastPayments)
-            pickerSection("Load Operators", $flow.loadOperators)
+            pickerSection("Load Last Payments", $flowSettings.loadLastPayments)
+            pickerSection("Load Operators", $flowSettings.loadOperators)
         }
         .listStyle(.plain)
     }
@@ -32,7 +32,7 @@ private extension FlowSettingsView {
             
             Button("happy") {
                 
-                flow = .init(
+                flowSettings = .init(
                     loadLastPayments: .success,
                     loadOperators: .success
                 )
@@ -41,7 +41,7 @@ private extension FlowSettingsView {
             
             Button("sad") {
                 
-                flow = .init(
+                flowSettings = .init(
                     loadLastPayments: .failure,
                     loadOperators: .failure
                 )
@@ -75,6 +75,6 @@ struct FlowSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        FlowSettingsView(flow: .constant(.happy))
+        FlowSettingsView(flowSettings: .constant(.happy))
     }
 }
