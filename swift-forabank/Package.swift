@@ -141,6 +141,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .cardUI,
+        .cardUITests,
         .productDetailsUI,
         .productDetailsUITests,
         .buttonWithSheet,
@@ -308,6 +310,13 @@ private extension Product {
         ]
     )
     
+    static let cardUI = library(
+        name: .cardUI,
+        targets: [
+            .cardUI
+        ]
+    )
+    
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
@@ -459,6 +468,7 @@ private extension Product {
         targets: [
             .activateSlider,
             .accountInfoPanel,
+            .cardUI,
             .productDetailsUI,
             .cardGuardianUI,
             .productProfileComponents,
@@ -1183,6 +1193,31 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
     )
     
+    static let cardUI = target(
+        name: .cardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.cardUI)"
+    )
+
+    static let cardUITests = testTarget(
+        name: .cardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardUI,
+            .services,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.cardUITests)"
+    )
+    
     static let productDetailsUI = target(
         name: .productDetailsUI,
         dependencies: [
@@ -1526,6 +1561,7 @@ private extension Target {
         dependencies: [
             .activateSlider,
             .accountInfoPanel,
+            .cardUI,
             .productDetailsUI,
             .cardGuardianUI,
             .topUpCardUI,
@@ -1634,9 +1670,11 @@ private extension Target {
             .cvvPin,
             .genericRemoteService,
             .getProcessingSessionCodeService,
+            .rxViewModel,
             .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
+            .utilityPayment,
         ]
     )
     
@@ -1745,6 +1783,10 @@ private extension Target.Dependency {
         name: .accountInfoPanel
     )
     
+    static let cardUI = byName(
+        name: .cardUI
+    )
+
     static let productDetailsUI = byName(
         name: .productDetailsUI
     )
@@ -1973,6 +2015,9 @@ private extension String {
 
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
+    
+    static let cardUI = "CardUI"
+    static let cardUITests = "CardUITests"
 
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"

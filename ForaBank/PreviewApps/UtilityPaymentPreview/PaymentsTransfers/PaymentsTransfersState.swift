@@ -9,21 +9,15 @@ import UtilityPayment
 
 struct PaymentsTransfersState: Equatable {
     
-    var route: Route?
-    var status: Status?
+    var destination: Destination?
 }
 
 extension PaymentsTransfersState {
     
-    enum Route: Equatable {
+    enum Destination: Equatable {
         
-        case utilityPayment(UtilityPayment)
+        case utilityFlow(UtilityFlow)
     }
     
-    enum Status: Equatable {
-        
-        case inflight
-    }
-    
-    typealias UtilityPayment = UtilityPaymentFlowState<LastPayment, Operator, UtilityService>
+    typealias UtilityFlow = UtilityPaymentFlowState<LastPayment, Operator, UtilityService>
 }

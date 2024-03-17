@@ -60,6 +60,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
     private typealias MakeAccountInfoPanelViewModel = (AnySchedulerOfDispatchQueue) -> AccountInfoPanelViewModel
 
     private typealias MakeProductDetailsViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsViewModel
+    private typealias MakeProductDetailsSheetViewModel = (AnySchedulerOfDispatchQueue) -> ProductDetailsSheetViewModel
 
     private typealias OpenPanelSpy = () -> Void
     
@@ -69,6 +70,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton] = .previewRegular,
         accountDetails: [ListItem] = .accountItems,
         cardDetails: [ListItem] = .cardItems,
+        sheetButtons: [ProductDetailsSheetState.PanelButton] = .previewRegular,
         event: CardGuardianEvent? = nil,
         guardianCard: @escaping SUT.GuardCard = {_ in },
         toggleVisibilityOnMain: @escaping SUT.ToggleVisibilityOnMain = {_ in },
@@ -78,6 +80,9 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         topUpCardFromOtherBank: @escaping SUT.TopUpCardFromOtherBank = {_ in },
         accountDetailsAction: @escaping SUT.AccountDetails = {_ in },
         accountStatementAction: @escaping SUT.AccountStatement = {_ in },
+        longPress: @escaping SUT.LongPress = {_,_ in },
+        cvvTapped: @escaping SUT.CvvTapped = { "" },
+        shareInfo: @escaping ([String]) -> Void = {_ in },
         scheduler: AnySchedulerOfDispatchQueue = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -125,7 +130,7 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
-        let detailsReduce = ProductDetailsReducer()
+        let detailsReduce = ProductDetailsReducer(shareInfo: shareInfo)
         let detailsHandleEffect = ProductDetailsEffectHandler()
         let makeProductDetailsViewModel: MakeProductDetailsViewModel =  {
             .init(
@@ -138,6 +143,17 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
             )
         }
         
+        let sheetReduce = ProductDetailsSheetReducer()
+        let sheetHandleEffect = ProductDetailsSheetEffectHandler()
+        let makeProductDetailsSheetViewModel: MakeProductDetailsSheetViewModel =  {
+            .init(
+                initialState: .init(buttons: sheetButtons),
+                reduce: sheetReduce.reduce(_:_:),
+                handleEffect: sheetHandleEffect.handleEffect(_:_:),
+                scheduler: $0
+            )
+        }
+
         let sut = SUT(
             makeCardGuardianViewModel: makeCardGuardianViewModel,
             cardGuardianActions: .init(
@@ -157,6 +173,10 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
                 accountStatement: accountStatementAction
             ),
             makeProductDetailsViewModel: makeProductDetailsViewModel,
+            productDetailsActions: .init(
+                longPress: longPress,
+                cvvTap: cvvTapped),
+            makeProductDetailsSheetViewModel: makeProductDetailsSheetViewModel,
             scheduler: scheduler
         )
         
@@ -168,6 +188,9 @@ final class ProductProfileNavigationEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(accountInfoPanelHandleEffect, file: file, line: line)
         trackForMemoryLeaks(detailsReduce, file: file, line: line)
         trackForMemoryLeaks(detailsHandleEffect, file: file, line: line)
+        trackForMemoryLeaks(sheetReduce, file: file, line: line)
+        trackForMemoryLeaks(sheetHandleEffect, file: file, line: line)
+
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut

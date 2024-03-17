@@ -28,7 +28,7 @@ extension PaymentsTransfersEffectHandler {
         case let .utilityPayment(flowEffect):
             utilityPaymentFlowHandleEffect(flowEffect) {
                 
-                dispatch(.utilityPayment($0))
+                dispatch(.utilityFlow($0))
             }
         }
     }

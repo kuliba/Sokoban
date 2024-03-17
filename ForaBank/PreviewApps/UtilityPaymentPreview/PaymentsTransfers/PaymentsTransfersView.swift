@@ -10,26 +10,20 @@ import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
-    @ObservedObject var viewModel: PaymentsTransfersViewModel
+    @StateObject var viewModel: PaymentsTransfersViewModel
     
     let factory: PaymentsTransfersViewFactory
     
     var body: some View {
         
-        ZStack {
-#warning("remodel spinner and NavigationView position to resemble app")
-            
-            NavigationView {
-                
-                utilityPaymentButton()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            
-            spinner()
-        }
+        utilityPaymentButton()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
+
+private extension PaymentsTransfersView {
     
-    private func utilityPaymentButton() -> some View {
+    func utilityPaymentButton() -> some View {
         
         Button(
             "Utility Payment",
@@ -45,11 +39,11 @@ struct PaymentsTransfersView: View {
     }
     
     @ViewBuilder
-    private func destinationView(
+    func destinationView(
         navigationState: PaymentsTransfersState.NavigationState
     ) -> some View {
         
-        switch navigationState {            
+        switch navigationState {
         case .payingByInstruction:
             Text("TBD: pay by Instruction here")
             
@@ -57,46 +51,46 @@ struct PaymentsTransfersView: View {
             switch prePaymentOptions {
             case .failure:
                 factory.prePaymentFailureView {
-                
-                    viewModel.event(.utilityPayment(.prePayment(.payByInstruction)))
+                    
+                    viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
                 }
                 
             case .success:
                 Text("TBD: prePaymentOptionsView")
                 // factory.prePaymentView { _ in fatalError() }
-//                    .navigationDestination(
-//                        item: .init(
-//                            get: {
-//                                let state = viewModel.state.prePaymentNavigationState
-//                                print(state ?? "nil")
-//                                return state
-//                            },
-//                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
-//                        ),
-//                        content: prePaymentDestinationView
-//                    )
+                //                    .navigationDestination(
+                //                        item: .init(
+                //                            get: {
+                //                                let state = viewModel.state.prePaymentNavigationState
+                //                                print(state ?? "nil")
+                //                                return state
+                //                            },
+                //                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
+                //                        ),
+                //                        content: prePaymentDestinationView
+                //                    )
             }
             
         case let .prePayment(prePayment):
             switch prePayment {
             case .failure:
                 Text("TBD: prePaymentFailureView")
-//                factory.prePaymentFailureView { viewModel.event(.utilityPayment(.prePayment(.payByInstruction))) }
+                //                factory.prePaymentFailureView { viewModel.event(.utilityPayment(.prePayment(.payByInstruction))) }
                 
             case .success:
                 Text("TBD: prePaymentView")
-//                factory.prePaymentView { _ in fatalError() }
-//                    .navigationDestination(
-//                        item: .init(
-//                            get: {
-//                                let state = viewModel.state.prePaymentNavigationState
-//                                print(state ?? "nil")
-//                                return state
-//                            },
-//                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
-//                        ),
-//                        content: prePaymentDestinationView
-//                    )
+                //                factory.prePaymentView { _ in fatalError() }
+                //                    .navigationDestination(
+                //                        item: .init(
+                //                            get: {
+                //                                let state = viewModel.state.prePaymentNavigationState
+                //                                print(state ?? "nil")
+                //                                return state
+                //                            },
+                //                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
+                //                        ),
+                //                        content: prePaymentDestinationView
+                //                    )
             }
             
         case .scanning:
@@ -104,23 +98,11 @@ struct PaymentsTransfersView: View {
         }
     }
     
-    private func prePaymentDestinationView(
+    func prePaymentDestinationView(
         prePaymentNavigationState: PaymentsTransfersState.PrePaymentNavigationState
     ) -> some View {
         
         Text("Utility Payment View")
-    }
-    
-    private func spinner() -> some View {
-        
-        ZStack {
-            
-            Color.black.opacity(0.5)
-            
-            ProgressView()
-        }
-        .ignoresSafeArea()
-        .opacity(viewModel.state.status == .inflight ? 1 : 0)
     }
 }
 

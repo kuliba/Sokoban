@@ -14,7 +14,7 @@ struct UtilityPaymentPreviewApp: App {
         
         WindowGroup {
             
-            ContentView()
+            ContentView(viewModel: .init())
         }
     }
 }

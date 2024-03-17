@@ -46,6 +46,7 @@ public extension UtilityPaymentFlowState {
     
     enum Status: Equatable {
         
+        #warning("drop `inflight` case - leave effect handling to client")
         case inflight
         case failure(ServiceFailure)
     }
