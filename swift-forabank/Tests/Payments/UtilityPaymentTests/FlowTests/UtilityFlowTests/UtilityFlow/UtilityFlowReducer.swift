@@ -7,9 +7,7 @@
 
 import UtilityPayment
 
-final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
-    
-}
+final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {}
 
 extension UtilityFlowReducer {
     
@@ -31,52 +29,100 @@ extension UtilityFlowReducer {
             }
             
         case let .loaded(loaded):
-            if state.current == nil {
-                
-                switch loaded {
-                case .failure:
-                    state.current = .prepayment(.failure)
-                    
-                case let .success(lastPayments, operators):
-                    state.push(.prepayment(.options(.init(
-                        lastPayments: lastPayments,
-                        operators: operators
-                    ))))
-                }
-            }
+            state = reduce(state, loaded)
             
         case let .loadedServices(services):
             state.push(.services(services))
             
         case let .paymentStarted(result):
-            switch result {
-            case let .failure(serviceFailure):
-                state.push(.failure(serviceFailure))
-                
-            case let .success(response):
-                state.push(.payment)
-            }
+            state = reduce(state, result)
             
         case let .select(select):
-            switch select {
-            case .last, .operator:
-                if case .prepayment = state.current {
-                    
-                    effect = .select(select.effectSelect)
-                }
-                
-            case let .service(service, for: `operator`):
-                if case .services = state.current {
-                    
-                    effect = .select(.service(service, for: `operator`))
-                }
-            }
+            effect = reduce(state, select)
             
         case let .selectFailure(`operator`):
             state.push(.selectFailure(`operator`))
         }
         
         return (state, effect)
+    }
+}
+
+extension UtilityFlowReducer {
+    
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
+    
+    typealias State = Flow<Destination>
+    typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
+}
+
+private extension UtilityFlowReducer {
+    
+    func reduce(
+        _ state: State,
+        _ loaded: Event.Loaded
+    ) -> State {
+        
+        var state = state
+        
+        if state.current == nil {
+            
+            switch loaded {
+            case .failure:
+                state.current = .prepayment(.failure)
+                
+            case let .success(lastPayments, operators):
+                state.push(.prepayment(.options(.init(
+                    lastPayments: lastPayments,
+                    operators: operators
+                ))))
+            }
+        }
+        
+        return state
+    }
+    
+    func reduce(
+        _ state: State,
+        _ result: Event.StartPaymentResult
+    ) -> State {
+        
+        var state = state
+        
+        switch result {
+        case let .failure(serviceFailure):
+            state.push(.failure(serviceFailure))
+            
+        case let .success(response):
+            state.push(.payment)
+        }
+        
+        return state
+    }
+    
+    func reduce(
+        _ state: State,
+        _ select: Event.Select
+    ) -> Effect? {
+        
+        var effect: Effect?
+        
+        switch select {
+        case .last, .operator:
+            if case .prepayment = state.current {
+                
+                effect = .select(select.effectSelect)
+            }
+            
+        case let .service(service, for: `operator`):
+            if case .services = state.current {
+                
+                effect = .select(.service(service, for: `operator`))
+            }
+        }
+        
+        return effect
     }
 }
 
@@ -95,13 +141,4 @@ private extension UtilityFlowEvent.Select {
             return .service(service, for: `operator`)
         }
     }
-}
-
-extension UtilityFlowReducer {
-    
-    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
-    
-    typealias State = Flow<Destination>
-    typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
 }
