@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class Model_PaymentsServicesTests: XCTestCase {
+final class Model_PaymentsServicesTests: XCTestCase { 
     
     func test_paymentsOperator_forOperatorCode_shouldThrowOnEmptyOperatorsList() throws {
         
@@ -72,6 +72,104 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(operatorr, .utility)
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
+    
+//    func test_getValue_forEmptyQRCode_returnsEmptyString() {
+//        let parameterData: ParameterData = .pdClearOutput
+//        let qrCode: QRCode = .qrPersAcc
+//       let model = makeSUT()
+//        let value = model.getValue(for: parameterData, qrCode: qrCode)
+//       
+//       XCTAssertEqual(value, "")
+//     }
+    func test_additionalList_PDviewTypeOutput_returnsNil() {
+        
+        let model = makeSUT()
+        let parameterData: ParameterData = .pdClearOutput
+        let qrCode: QRCode = .qrPersAcc
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, nil)
+     }
+    func test_additionalList_PDviewTypeInput_returnsEmpty() {
+        
+        let model = makeSUT()
+        let parameterData: ParameterData = .pdClearInput
+        let qrCode: QRCode = .qrPersAcc
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, "")
+     }
+    func test_additionalList_AccountinputFieldTypeNil_returnsEmpty() {
+        let parameterData: ParameterData = .pdAccountInpFTNil
+        let qrCode: QRCode = .qrPersAcc
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, "")
+     }
+    
+    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_returnsEmpty() {
+        let parameterData: ParameterData = .pdAccountInpFTAccount
+        let qrCode: QRCode = .qrWithoutAccountNumberForPayment
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, "")
+     }
+    
+    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentpersacc() {
+        let parameterData: ParameterData = .pdAccountInpFTAccount
+        let qrCode: QRCode = .qrPersAcc
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, qrCode.rawData["persacc"])
+     }
+    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentphone() {
+        let parameterData: ParameterData = .pdAccountInpFTAccount
+        let qrCode: QRCode = .qrPhone
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, qrCode.rawData["phone"])
+     }
+    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentnumabo() {
+        let parameterData: ParameterData = .pdAccountInpFTAccount
+        let qrCode: QRCode = .qrNumAbo
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+       XCTAssertEqual(res, qrCode.rawData["numabo"])
+     }
+    
+    
+    func test_additionalList_ParameterDataCodeWithCategory_retursRawData() {
+        let parameterData: ParameterData = .pdCode
+        let qrCode: QRCode = .qrPersAcc
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+        let qqqr = qrCode.rawData["category"]
+       XCTAssertEqual(res, "1")
+     }
+    func test_additionalList_ParameterDataCodeWithoutCategory_retursEmptyString() {
+        let parameterData: ParameterData = .pdCode
+        let qrCode: QRCode = .qrPersAccCategoryNil
+       let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        let value = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = value?.first?.fieldValue
+        let qqqr = qrCode.rawData["category"]
+       XCTAssertEqual(res, "")
+     }
     
     // MARK: - Helper Tests
     
@@ -235,4 +333,45 @@ extension OperatorGroupData.OperatorData {
             synonymList: synonymList
         )
     }
+}
+
+private extension QRCode {
+    
+    static let qrPersAcc: Self = .init(
+        original: "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  \"АЛЬФА-БАНК\" г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|persAcc=502045019|paymPeriod=01.2024|category=1|ServiceName=5000|addAmount=0",
+        rawData: ["category": "1", "addamount": "0", "bankname": "АО  \"АЛЬФА-БАНК\" г. Москва", "personalacc": "40702810702910000312", "kpp": "760601001", "persacc": "502045019", "paymperiod": "01.2024", "payeeinn": "7606066274", "servicename": "5000", "purpose": "квитанция за ЖКУ", "sum": "383296", "name": "АО Управляющая организация многоквартирными домами Ленинского района", "payeraddress": "Свердлова ул., д.102, кв.44", "correspacc": "30101810200000000593", "bic": "044525593", "lastname": ""]
+    )
+    
+    static let qrPersAccCategoryNil: Self = .init(
+        original: "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  \"АЛЬФА-БАНК\" г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|persAcc=502045019|paymPeriod=01.2024|ServiceName=5000|addAmount=0",
+        rawData: ["addamount": "0", "bankname": "АО  \"АЛЬФА-БАНК\" г. Москва", "personalacc": "40702810702910000312", "kpp": "760601001", "persacc": "502045019", "paymperiod": "01.2024", "payeeinn": "7606066274", "servicename": "5000", "purpose": "квитанция за ЖКУ", "sum": "383296", "name": "АО Управляющая организация многоквартирными домами Ленинского района", "payeraddress": "Свердлова ул., д.102, кв.44", "correspacc": "30101810200000000593", "bic": "044525593", "lastname": ""]
+    )
+    
+    static let qrWithoutAccountNumberForPayment: Self = .init(
+        original: "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  \"АЛЬФА-БАНК\" г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|persAcc=502045019|paymPeriod=01.2024|category=1|ServiceName=5000|addAmount=0",
+        rawData: [:]
+    )
+    
+    static let qrPhone: Self = .init(
+        original: "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  \"АЛЬФА-БАНК\" г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|phone=+79995554433|paymPeriod=01.2024|category=1|ServiceName=5000|addAmount=0",
+        rawData: ["category": "1", "addamount": "0", "bankname": "АО  \"АЛЬФА-БАНК\" г. Москва", "personalacc": "40702810702910000312", "kpp": "760601001", "phone": "+79995554433", "paymperiod": "01.2024", "payeeinn": "7606066274", "servicename": "5000", "purpose": "квитанция за ЖКУ", "sum": "383296", "name": "АО Управляющая организация многоквартирными домами Ленинского района", "payeraddress": "Свердлова ул., д.102, кв.44", "correspacc": "30101810200000000593", "bic": "044525593", "lastname": ""]
+    )
+    
+    static let qrNumAbo: Self = .init(
+        original: "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  \"АЛЬФА-БАНК\" г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|numabo=33694934|paymPeriod=01.2024|category=1|ServiceName=5000|addAmount=0",
+        rawData: ["category": "1", "addamount": "0", "bankname": "АО  \"АЛЬФА-БАНК\" г. Москва", "personalacc": "40702810702910000312", "kpp": "760601001", "numabo": "33694934", "paymperiod": "01.2024", "payeeinn": "7606066274", "servicename": "5000", "purpose": "квитанция за ЖКУ", "sum": "383296", "name": "АО Управляющая организация многоквартирными домами Ленинского района", "payeraddress": "Свердлова ул., д.102, кв.44", "correspacc": "30101810200000000593", "bic": "044525593", "lastname": ""]
+    )
+}
+
+extension ParameterData {
+    
+    static let pdClearOutput: ParameterData = .init(content: nil, dataType: nil, id: "IDoutput", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .output)
+    
+    static let pdClearInput: ParameterData = .init(content: nil, dataType: nil, id: "IDinput", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
+    
+    static let pdAccountInpFTNil: ParameterData = .init(content: nil, dataType: nil, id: "a3_PERSONAL_ACCOUNT_1_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
+    
+    static let pdAccountInpFTAccount: ParameterData = .init(content: nil, dataType: nil, id: "a3_PERSONAL_ACCOUNT_1_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: .account, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
+    
+    static let pdCode: ParameterData = .init(content: nil, dataType: nil, id: "a3_CODE_3_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
 }

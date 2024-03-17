@@ -528,13 +528,13 @@ extension Model {
         return ""
     }
     
-    enum ParameterType: String {
+    private enum ParameterType: String {
         
         case account = "a3_PERSONAL_ACCOUNT_1_1"
         case code = "a3_CODE_3_1"
     }
     
-    func getValue(for parameterData: ParameterData, qrCode: QRCode) -> String {
+    private func getValue(for parameterData: ParameterData, qrCode: QRCode) -> String {
         
         switch ParameterType(rawValue: parameterData.id) {
             
@@ -555,15 +555,14 @@ extension Model {
         return operatorData.parameterList.compactMap {
             
             if $0.viewType == .input {
-                
-                let value = getValue(for: $0, qrCode: qrCode)
 
                 return PaymentServiceData.AdditionalListData(
                     fieldTitle: $0.title,
                     fieldName: $0.id,
-                    fieldValue: value,
+                    fieldValue: getValue(for: $0, qrCode: qrCode),
                     svgImage: $0.svgImage?.description
                 )
+                
             } else {
                 
                 return nil
