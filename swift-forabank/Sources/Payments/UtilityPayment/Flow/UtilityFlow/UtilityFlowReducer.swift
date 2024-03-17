@@ -5,11 +5,12 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
+public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+    
+    public init() {}
+}
 
-final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {}
-
-extension UtilityFlowReducer {
+public extension UtilityFlowReducer {
     
     func reduce(
         _ state: State,
@@ -48,7 +49,7 @@ extension UtilityFlowReducer {
     }
 }
 
-extension UtilityFlowReducer {
+public extension UtilityFlowReducer {
     
     typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     

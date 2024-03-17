@@ -5,15 +5,13 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let loadOptions: LoadOptions
     private let loadServices: LoadServices
     private let startPayment: StartPayment
     
-    init(
+    public init(
         loadOptions: @escaping LoadOptions,
         loadServices: @escaping LoadServices,
         startPayment: @escaping StartPayment
@@ -24,7 +22,7 @@ final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymen
     }
 }
 
-extension UtilityFlowEffectHandler {
+public extension UtilityFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -40,7 +38,7 @@ extension UtilityFlowEffectHandler {
     }
 }
 
-extension UtilityFlowEffectHandler {
+public extension UtilityFlowEffectHandler {
     
     typealias LoadOptionsResponse = ([LastPayment], [Operator])
     typealias LoadOptionsResult = Result<LoadOptionsResponse, Error>

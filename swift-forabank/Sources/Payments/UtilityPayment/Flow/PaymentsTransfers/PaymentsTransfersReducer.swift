@@ -5,19 +5,17 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-final class PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let utilityReduce: UtilityReduce
     
-    init(utilityReduce: @escaping UtilityReduce) {
+    public init(utilityReduce: @escaping UtilityReduce) {
         
         self.utilityReduce = utilityReduce
     }
 }
 
-extension PaymentsTransfersReducer {
+public extension PaymentsTransfersReducer {
     
     func reduce(
         _ state: State,
@@ -39,7 +37,7 @@ extension PaymentsTransfersReducer {
     }
 }
 
-extension PaymentsTransfersReducer {
+public extension PaymentsTransfersReducer {
     
     typealias UtilityReduce = (UtilityState, UtilityEvent) -> (UtilityState, UtilityEffect?)
     

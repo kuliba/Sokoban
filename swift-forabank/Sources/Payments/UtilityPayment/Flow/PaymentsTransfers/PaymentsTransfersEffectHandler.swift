@@ -5,17 +5,17 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-final class PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let utilityFlowHandleEffect: UtilityFlowHandleEffect
     
-    init(utilityFlowHandleEffect: @escaping UtilityFlowHandleEffect) {
+    public init(utilityFlowHandleEffect: @escaping UtilityFlowHandleEffect) {
         
         self.utilityFlowHandleEffect = utilityFlowHandleEffect
     }
 }
 
-extension PaymentsTransfersEffectHandler {
+public extension PaymentsTransfersEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -31,7 +31,7 @@ extension PaymentsTransfersEffectHandler {
     }
 }
 
-extension PaymentsTransfersEffectHandler {
+public extension PaymentsTransfersEffectHandler {
     
     typealias UtilityDispatch = (UtilityEvent) -> Void
     typealias UtilityFlowHandleEffect = (UtilityEffect, @escaping UtilityDispatch) -> Void

@@ -5,13 +5,13 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-enum PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse> {
+public enum PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse> {
     
     case back
     case utilityFlow(UtilityFlow)
 }
 
-extension PaymentsTransfersEvent {
+public extension PaymentsTransfersEvent {
     
     typealias UtilityFlow = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
 }

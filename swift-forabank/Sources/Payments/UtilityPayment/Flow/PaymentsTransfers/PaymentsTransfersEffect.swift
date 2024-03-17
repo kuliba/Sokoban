@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-enum PaymentsTransfersEffect<LastPayment, Operator, Service> {
+public enum PaymentsTransfersEffect<LastPayment, Operator, Service> {
     
     case utilityFlow(UtilityFlow)
 }
 
-extension PaymentsTransfersEffect {
+public extension PaymentsTransfersEffect {
     
     typealias UtilityFlow = UtilityFlowEffect<LastPayment, Operator, Service>
 }

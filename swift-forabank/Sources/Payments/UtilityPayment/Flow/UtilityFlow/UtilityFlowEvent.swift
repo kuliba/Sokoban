@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> {
+public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> {
     
     case back
     case initiate
@@ -18,7 +16,7 @@ enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> {
     case loadedServices([Service]) // more than one
 }
 
-extension UtilityFlowEvent {
+public extension UtilityFlowEvent {
     
     enum Loaded {
         
@@ -37,6 +35,5 @@ extension UtilityFlowEvent {
 }
 
 extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable, StartPaymentResponse: Equatable {}
-
 extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
 extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
