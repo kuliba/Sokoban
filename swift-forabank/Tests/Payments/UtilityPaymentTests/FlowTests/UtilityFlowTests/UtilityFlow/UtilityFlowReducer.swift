@@ -24,7 +24,7 @@ extension UtilityFlowReducer {
             state.current = nil
             
         case .initiate:
-            if state.current == nil {
+            if state.isEmpty {
                 effect = .initiate
             }
             
@@ -66,7 +66,7 @@ private extension UtilityFlowReducer {
         
         var state = state
         
-        if state.current == nil {
+        if state.isEmpty {
             
             switch loaded {
             case .failure:

@@ -106,8 +106,3 @@ private extension PaymentsTransfersReducer {
         return (state, effect)
     }
 }
-
-private extension Flow {
-    
-    var isEmpty: Bool { stack.isEmpty }
-}
