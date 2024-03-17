@@ -32,48 +32,10 @@ extension UtilityFlowEffectHandler {
     ) {
         switch effect {
         case .initiate:
-            initiate(dispatch)
+            self.initiate(dispatch)
             
-        case let .select(payload):
-            switch payload {
-            case let .last(lastPayment):
-                startPayment(.last(lastPayment)) {
-                    
-                    dispatch(.paymentStarted($0))
-                }
-                
-            case let .operator(`operator`):
-                loadServices(`operator`) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    switch $0 {
-                    case .failure:
-                        dispatch(.selectFailure(`operator`))
-                        
-                    case let .success(services):
-                        switch (services.count, services.first) {
-                        case (0, .none):
-                            dispatch(.selectFailure(`operator`))
-                        
-                        case let (1, .some(service)):
-                            startPayment(.service(service, for: `operator`)) {
-                                
-                                dispatch(.paymentStarted($0))
-                            }
-                            
-                        default:
-                            dispatch(.loadedServices(services))
-                        }
-                    }
-                }
-                
-            case let .service(service, for: `operator`):
-                startPayment(.service(service, for: `operator`)) {
-                    
-                    dispatch(.paymentStarted($0))
-                }
-            }
+        case let .select(select):
+            self.select(select, dispatch)
         }
     }
 }
@@ -127,5 +89,51 @@ private extension UtilityFlowEffectHandler {
                 }
             }
         }
+    }
+    
+    func select(
+        _ select: Effect.Select,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch select {
+        case let .last(lastPayment):
+            startPayment(.last(lastPayment)) {
+                
+                dispatch(.paymentStarted($0))
+            }
+            
+        case let .operator(`operator`):
+            loadServices(`operator`) { [weak self] in
+                
+                guard let self else { return }
+                
+                switch $0 {
+                case .failure:
+                    dispatch(.selectFailure(`operator`))
+                    
+                case let .success(services):
+                    switch (services.count, services.first) {
+                    case (0, .none):
+                        dispatch(.selectFailure(`operator`))
+                    
+                    case let (1, .some(service)):
+                        startPayment(.service(service, for: `operator`)) {
+                            
+                            dispatch(.paymentStarted($0))
+                        }
+                        
+                    default:
+                        dispatch(.loadedServices(services))
+                    }
+                }
+            }
+            
+        case let .service(service, for: `operator`):
+            startPayment(.service(service, for: `operator`)) {
+                
+                dispatch(.paymentStarted($0))
+            }
+        }
+
     }
 }
