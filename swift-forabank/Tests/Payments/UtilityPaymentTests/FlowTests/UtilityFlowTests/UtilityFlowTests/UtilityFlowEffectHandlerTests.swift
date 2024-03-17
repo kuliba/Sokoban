@@ -82,7 +82,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.select(.last(lastPayment))) { _ in }
         
-        XCTAssertNoDiff(paymentStarter.payloads, [.last(lastPayment)])
+        XCTAssertNoDiff(paymentStarter.payloads, [.withLastPayment(lastPayment)])
     }
     
     func test_select_lastPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
@@ -209,7 +209,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.select(.service(service, for: `operator`))) { _ in }
         
-        XCTAssertNoDiff(paymentStarter.payloads, [.service(service, for: `operator`)])
+        XCTAssertNoDiff(paymentStarter.payloads, [.withService(service, for: `operator`)])
     }
     
     func test_select_service_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
