@@ -38,7 +38,7 @@ extension UtilityFlowReducer {
             state = reduce(state, result)
             
         case let .select(select):
-            effect = reduce(state, select)
+            reduce(state, select, &effect)
             
         case let .selectFailure(`operator`):
             state.push(.selectFailure(`operator`))
@@ -103,11 +103,9 @@ private extension UtilityFlowReducer {
     
     func reduce(
         _ state: State,
-        _ select: Event.Select
-    ) -> Effect? {
-        
-        var effect: Effect?
-        
+        _ select: Event.Select,
+        _ effect: inout Effect?
+    ) {
         switch select {
         case .last, .operator:
             if case .prepayment = state.current {
@@ -121,8 +119,6 @@ private extension UtilityFlowReducer {
                 effect = .select(.service(service, for: `operator`))
             }
         }
-        
-        return effect
     }
 }
 
