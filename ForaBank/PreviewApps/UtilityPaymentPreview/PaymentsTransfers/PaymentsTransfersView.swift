@@ -27,13 +27,12 @@ private extension PaymentsTransfersView {
         
         Button(
             "Utility Payment",
-            // action: { viewModel.event(.openUtilityPayment) }
-            action: { fatalError() }
+            action: { viewModel.event(.flow(.utilityFlow(.initiate))) }
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.state.navigationState },
-                set: { if $0 == nil { viewModel.event(.back) }}
+                set: { if $0 == nil { viewModel.event(.flow(.back)) }}
             ),
             content: destinationView
         )

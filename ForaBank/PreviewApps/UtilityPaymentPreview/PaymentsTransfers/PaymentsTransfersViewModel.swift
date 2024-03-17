@@ -14,21 +14,21 @@ final class PaymentsTransfersViewModel: ObservableObject {
     
     @Published public private(set) var state: State
     
-    private let paymentsTransfersReduce: PaymentsTransfersReduce
-    private let paymentsTransfersHandleEffect: PaymentsTransfersHandleEffect
+    private let flowReduce: FlowReduce
+    private let flowHandleEffect: FlowHandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
     
     var rootActions: RootActions?
     
     public init(
         initialState: State,
-        paymentsTransfersReduce: @escaping PaymentsTransfersReduce,
-        paymentsTransfersHandleEffect: @escaping PaymentsTransfersHandleEffect,
+        flowReduce: @escaping FlowReduce,
+        flowHandleEffect: @escaping FlowHandleEffect,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
-        self.paymentsTransfersReduce = paymentsTransfersReduce
-        self.paymentsTransfersHandleEffect = paymentsTransfersHandleEffect
+        self.flowReduce = flowReduce
+        self.flowHandleEffect = flowHandleEffect
         
         stateSubject
             .removeDuplicates()
@@ -46,27 +46,53 @@ extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
         
+        switch event {
+        case let .flow(flowEvent):
+            self.event(flowEvent)
+            
+        case let .tap(tapEvent):
+            self.handle(tapEvent)
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel {
+    
+    typealias FlowReduce = (State, FlowEvent) -> (State, FlowEffect?)
+    typealias FlowHandleEffect = (FlowEffect, @escaping FlowDispatch) -> Void
+    
+    typealias FlowDispatch = (FlowEvent) -> Void
+    
+    typealias FlowEvent = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
+    typealias FlowEffect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    
+    typealias State = PaymentsTransfersState
+    typealias Event = PaymentsTransfersEvent
+    typealias Effect = PaymentsTransfersEffect
+}
+
+private extension PaymentsTransfersViewModel {
+    
+    func event(_ event: FlowEvent) {
+        
         let (state, effect) = reduce(state, event)
         stateSubject.send(state)
         
         if let effect {
             
-            paymentsTransfersHandleEffect(effect) { [weak self] event in
+            flowHandleEffect(effect) { [weak self] in
                 
-                self?.event(event)
+                self?.event(.flow($0))
             }
         }
     }
-}
-
-private extension PaymentsTransfersViewModel {
     
     func reduce(
         _ state: State,
-        _ event: Event
+        _ event: FlowEvent
     ) -> (State, Effect?) {
         
-        let (state, effect) = paymentsTransfersReduce(state, event)
+        let (state, effect) = flowReduce(state, event)
         
         // decoration
         if effect == nil {
@@ -77,16 +103,25 @@ private extension PaymentsTransfersViewModel {
         
         return (state, effect)
     }
-}
+    
+    func handle(_ tapEvent: Event.TapEvent) {
+        
+        switch tapEvent {
+        case .addCompany:
+            addCompany()
 
-extension PaymentsTransfersViewModel {
+        case .goToMain:
+            goToMain()
+        }
+    }
     
-    typealias PaymentsTransfersReduce = (State, Event) -> (State, Effect?)
-    typealias PaymentsTransfersHandleEffect = (Effect, @escaping Dispatch) -> Void
+    func addCompany() {
+        
+        fatalError()
+    }
     
-    typealias Dispatch = (Event) -> Void
-    
-    typealias State = PaymentsTransfersState
-    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
-    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    func goToMain() {
+        
+        fatalError()
+    }
 }
