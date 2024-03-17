@@ -39,36 +39,32 @@ final class ResponseMapper_getProductListByTypeServiceTests: XCTestCase {
         )
     }
     
-    func test_map_returnAccountProductListDataForAccountProductMock() throws {
+    func test_map_returnAccountOnAccountData() throws {
         
         let result = try XCTUnwrap(map(data: JSON(for: .account))).get()
-        let expectedResult: ProductListData = .account
                 
-        XCTAssertNoDiff(result, expectedResult)
+        XCTAssertNoDiff(result, .account)
     }
     
-    func test_map_returnCardProductListDataForCardProductMock() throws {
+    func test_map_returnCardOnCardData() throws {
         
         let result = try XCTUnwrap(map(data: JSON(for: .card))).get()
-        let expectedResult: ProductListData = .card
                 
-        XCTAssertNoDiff(result, expectedResult)
+        XCTAssertNoDiff(result, .card)
     }
 
-    func test_map_returnDepositProductListDataForDepositProductMock() throws {
+    func test_map_returnDepositOnDepositData() throws {
         
         let result = try XCTUnwrap(map(data: JSON(for: .deposit))).get()
-        let expectedResult: ProductListData = .deposit
                 
-        XCTAssertNoDiff(result, expectedResult)
+        XCTAssertNoDiff(result, .deposit)
     }
     
-    func test_map_returnLoanProductListDataForLoanProductMock() throws {
+    func test_map_returnLoanOnLoanData() throws {
         
         let result = try XCTUnwrap(map(data: JSON(for: .loan))).get()
-        let expectedResult: ProductListData = .loan
                 
-        XCTAssertNoDiff(result, expectedResult)
+        XCTAssertNoDiff(result, .loan)
     }
     
     // MARK: - Helpers
@@ -78,18 +74,10 @@ final class ResponseMapper_getProductListByTypeServiceTests: XCTestCase {
         data: Data
     ) -> Result {
         
-        let result = ResponseMapper.mapGetCardStatementResponse(
+        ResponseMapper.mapGetCardStatementResponse(
             data,
             anyHTTPURLResponse(statusCode: statusCode)
         )
-        return result
-    }
-    
-    private func errorMessageByCode(
-        _ code: Int
-    ) -> String {
-        
-        HTTPURLResponse.localizedString(forStatusCode: code)
     }
     
     private func JSON(for productType: ProductListData.ProductType) throws -> Data {
