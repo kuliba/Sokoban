@@ -13,12 +13,12 @@ import UtilityPayment
 private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
 private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
-private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, UtilityService, StartPayment>
+private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
 
 private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
 private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
-private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
+private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
 
 extension PaymentsTransfersViewModel {
     
@@ -107,7 +107,7 @@ extension PaymentsTransfersViewModel {
             startPayment: startPayment2
         )
         
-        let effectHandler = PaymentsTransfersEffectHandler(
+        let effectHandler = EffectHandler(
             utilityFlowHandleEffect: utilityFlowEffectHandler.handleEffect
         )
         

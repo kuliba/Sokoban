@@ -1,11 +1,11 @@
 //
-//  PaymentsTransfersReducer.swift
+//  PaymentsTransfersFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let utilityReduce: UtilityReduce
     
@@ -15,7 +15,7 @@ public final class PaymentsTransfersReducer<LastPayment, Operator, Service, Star
     }
 }
 
-public extension PaymentsTransfersReducer {
+public extension PaymentsTransfersFlowReducer {
     
     func reduce(
         _ state: State,
@@ -37,7 +37,7 @@ public extension PaymentsTransfersReducer {
     }
 }
 
-public extension PaymentsTransfersReducer {
+public extension PaymentsTransfersFlowReducer {
     
     typealias UtilityReduce = (UtilityState, UtilityEvent) -> (UtilityState, UtilityEffect?)
     
@@ -48,11 +48,11 @@ public extension PaymentsTransfersReducer {
     typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = PaymentsTransfersState<Destination>
-    typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
 }
 
-private extension PaymentsTransfersReducer {
+private extension PaymentsTransfersFlowReducer {
     
     func back(
         _ state: State

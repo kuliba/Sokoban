@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersIntegrationTests.swift
+//  PaymentsTransfersFlowIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
@@ -9,7 +9,7 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-final class PaymentsTransfersIntegrationTests: XCTestCase {
+final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     
     // MARK: - back
     
@@ -300,14 +300,14 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     private typealias SUT = RxViewModel<State, Event, Effect>
     
     private typealias State = PaymentsTransfersState<Destination>
-    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
+    private typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
     
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
     private typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadOptionsResult>
     private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
