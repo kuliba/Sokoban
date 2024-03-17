@@ -9,16 +9,16 @@ import UtilityPayment
 
 final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
     
-    private let load: Load
+    private let loadOptions: LoadOptions
     private let loadServices: LoadServices
     private let startPayment: StartPayment
     
     init(
-        load: @escaping Load,
+        loadOptions: @escaping LoadOptions,
         loadServices: @escaping LoadServices,
         startPayment: @escaping StartPayment
     ) {
-        self.load = load
+        self.loadOptions = loadOptions
         self.loadServices = loadServices
         self.startPayment = startPayment
     }
@@ -42,10 +42,10 @@ extension UtilityFlowEffectHandler {
 
 extension UtilityFlowEffectHandler {
     
-    typealias LoadResponse = ([LastPayment], [Operator])
-    typealias LoadResult = Result<LoadResponse, Error>
-    typealias LoadCompletion = (LoadResult) -> Void
-    typealias Load = (@escaping LoadCompletion) -> Void
+    typealias LoadOptionsResponse = ([LastPayment], [Operator])
+    typealias LoadOptionsResult = Result<LoadOptionsResponse, Error>
+    typealias LoadOptionsCompletion = (LoadOptionsResult) -> Void
+    typealias LoadOptions = (@escaping LoadOptionsCompletion) -> Void
     
     typealias LoadServicesPayload = Operator
     typealias LoadServicesResult = Result<[Service], Error>
@@ -75,7 +75,7 @@ private extension UtilityFlowEffectHandler {
     func initiate(
         _ dispatch: @escaping Dispatch
     ) {
-        load {
+        loadOptions {
             
             switch $0 {
             case .failure:
