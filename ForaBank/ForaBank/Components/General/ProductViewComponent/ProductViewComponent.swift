@@ -417,7 +417,7 @@ enum ProductViewModelAction {
     
     struct ShowCVV: Action {
         let cardId: CardDomain.CardId
-        let cvv: ProductView.ViewModel.CardInfo.CVV
+        let cvv: CardInfo.CVV
     }
     
     enum CardActivation {
@@ -564,90 +564,6 @@ extension ProductView.ViewModel {
             
             struct Failed: Action {}
         }
-    }
-        
-    struct CardInfo: Equatable {
-        
-        typealias CVV = Tagged<_CVV, String>
-        enum _CVV {}
-
-        var name: String
-        var owner: String
-        
-        let cvvTitle: CVVTitle
-        var cardWiggle: Bool
-        let fullNumber: FullNumber
-        let numberMasked: MaskedNumber
-        var state: State = .showFront
-
-        enum State: Equatable {
-            
-            case awaitingCVV
-            case fullNumberMaskedCVV
-            case maskedNumberCVV(CVV)
-            case showFront
-        }
-        
-        struct FullNumber: Equatable {
-            
-            let value: String
-        }
-        
-        struct MaskedNumber: Equatable {
-            
-            let value: String
-        }
-                
-        struct CVVTitle: Equatable {
-            
-            let value: String
-        }
-        
-        mutating func stateToggle() {
-            
-            switch state {
-                
-            case .showFront:
-                
-                state = .fullNumberMaskedCVV
-                
-            default:
-                
-                state = .showFront
-            }
-        }
-    }
-}
-
-extension ProductView.ViewModel.CardInfo {
-    
-    var numberToDisplay: String {
-        
-        switch state {
-            
-        case .maskedNumberCVV, .awaitingCVV:
-            return numberMasked.value
-            
-        case .fullNumberMaskedCVV, .showFront:
-            return fullNumber.value.formatted()
-        }
-    }
-    
-    var cvvToDisplay: String {
-        
-        switch state {
-            
-        case .fullNumberMaskedCVV, .showFront, .awaitingCVV:
-            return cvvTitle.value
-            
-        case let .maskedNumberCVV(value):
-            return value.rawValue
-        }
-    }
-    
-    var isShowingCardBack: Bool {
-        
-        return state != .showFront
     }
 }
 

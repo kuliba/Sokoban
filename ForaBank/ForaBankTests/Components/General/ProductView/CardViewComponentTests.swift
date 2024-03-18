@@ -458,8 +458,8 @@ final class CardViewComponentTests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias FullNumber = ProductView.ViewModel.CardInfo.FullNumber
-    typealias MaskedNumber = ProductView.ViewModel.CardInfo.MaskedNumber
+    typealias FullNumber = CardInfo.FullNumber
+    typealias MaskedNumber = CardInfo.MaskedNumber
     
     private func makeSUT(
         id: ProductData.ID,
@@ -708,7 +708,7 @@ private extension ProductCardData {
     }
 }
 
-private extension ProductView.ViewModel.CardInfo {
+private extension CardInfo {
     
     static let defaultValueEmptyOwner: Self = .init(
         name: "Visa",
