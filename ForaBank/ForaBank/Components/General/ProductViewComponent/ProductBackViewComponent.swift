@@ -12,7 +12,7 @@ import CardUI
 
 struct ProductBackView<Header: View, CVV: View>: View {
     
-    let backViewConfig: CardUI.Config.Back
+    let backConfig: CardUI.Config.Back
     
     let headerView: () -> Header
     let cvvView: () -> CVV
@@ -22,9 +22,9 @@ struct ProductBackView<Header: View, CVV: View>: View {
         VStack {
             
             headerView()
-                .padding(.leading, backViewConfig.headerLeadingPadding)
-                .padding(.top, backViewConfig.headerLeadingPadding)
-                .padding(.trailing, backViewConfig.headerTrailingPadding)
+                .padding(.leading, backConfig.headerLeadingPadding)
+                .padding(.top, backConfig.headerLeadingPadding)
+                .padding(.trailing, backConfig.headerTrailingPadding)
             
             cvvView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
