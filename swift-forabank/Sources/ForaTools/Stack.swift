@@ -51,6 +51,12 @@ public extension Stack {
             }
         }
     }
+    
+    var count: Int { _elements.count }
+    
+    var isEmpty: Bool { count == 0 }
+    
+    var elements: [Element] { _elements }
 }
 
 public extension Stack {
@@ -70,13 +76,6 @@ public extension Stack {
         
         _elements.append(element)
     }
-}
-
-public extension Stack {
-    
-    var count: Int { _elements.count }
-    
-    var isEmpty: Bool { count == 0 }
 }
 
 extension Stack: Equatable where Element: Equatable {}
