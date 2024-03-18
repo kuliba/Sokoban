@@ -145,7 +145,7 @@ private extension UtilityFlowEffectHandler {
             }
             
         default:
-            dispatch(.loadedServices(services))
+            dispatch(.servicesLoaded(services))
         }
     }
 }

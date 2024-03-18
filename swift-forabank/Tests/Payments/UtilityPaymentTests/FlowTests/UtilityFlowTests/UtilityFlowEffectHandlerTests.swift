@@ -196,7 +196,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         let services = [makeService(), makeService()]
         let (sut, _, servicesLoader, _) = makeSUT()
         
-        expect(sut, with: .select(.operator(`operator`)), toDeliver: .loadedServices(services)) {
+        expect(sut, with: .select(.operator(`operator`)), toDeliver: .servicesLoaded(services)) {
             
             servicesLoader.complete(with: .success(services))
         }

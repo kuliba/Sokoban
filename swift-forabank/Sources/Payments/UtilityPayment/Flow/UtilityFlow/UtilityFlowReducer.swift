@@ -32,7 +32,7 @@ public extension UtilityFlowReducer {
         case let .prepaymentLoaded(prepaymentLoaded):
             state = reduce(state, prepaymentLoaded)
             
-        case let .loadedServices(services):
+        case let .servicesLoaded(services):
             state.push(.services(services))
             
         case let .paymentStarted(result):

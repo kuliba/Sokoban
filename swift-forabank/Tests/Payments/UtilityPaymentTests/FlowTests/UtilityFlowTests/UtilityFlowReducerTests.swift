@@ -179,14 +179,14 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
     }
     
-    // MARK: - loadedServices
+    // MARK: - servicesLoaded
     
     func test_loadedServices_shouldPushServicesDestinationOnTop() {
         
         let state = makeFlow()
         let services = makeServices()
         
-        assertState(.loadedServices(services), on: state) {
+        assertState(.servicesLoaded(services), on: state) {
             
             $0.push(.services(services))
         }
@@ -197,7 +197,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let state = makeFlow()
         let services = makeServices()
         
-        assert(.loadedServices(services), on: state, effect: nil)
+        assert(.servicesLoaded(services), on: state, effect: nil)
     }
     
     // MARK: - paymentStarted

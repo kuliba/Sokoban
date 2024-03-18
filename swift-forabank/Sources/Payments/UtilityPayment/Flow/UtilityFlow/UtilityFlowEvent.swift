@@ -9,11 +9,11 @@ public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentRespons
     
     case back
     case initiatePrepayment
-    case prepaymentLoaded(PrepaymentLoaded)
     case paymentStarted(StartPaymentResult)
+    case prepaymentLoaded(PrepaymentLoaded)
     case select(Select)
     case selectFailure(Operator)
-    case loadedServices([Service]) // more than one // servicesLoaded
+    case servicesLoaded([Service]) // more than one
 }
 
 public extension UtilityFlowEvent {
