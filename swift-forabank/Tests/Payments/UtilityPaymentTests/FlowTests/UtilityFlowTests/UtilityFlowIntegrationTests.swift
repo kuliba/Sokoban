@@ -121,7 +121,6 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
         return (sut, spy, optionsLoader, servicesLoader, paymentStarter)
-        
     }
     
     private func assert(
