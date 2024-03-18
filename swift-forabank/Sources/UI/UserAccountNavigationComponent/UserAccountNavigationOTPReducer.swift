@@ -119,12 +119,11 @@ private extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
 #warning("fpsAlert is not nil here; to nullify it `effect = .fps(.resetStatus)` is needed - but current implementation does not allow multiple effects - should `Effect?` be changed to `[Effect]` ??")
-        if state.destination != nil,
-           state.destination?.destination == nil {
+        if let phoneNumber = state.phoneNumber {
             
             state.isLoading = true
             state.destination?.viewModel.event(.resetStatus)
-            effect = .otp(.prepareSetBankDefault)
+            effect = .otp(.prepareSetBankDefault(phoneNumber))
         }
         
         return (state, effect)
@@ -142,8 +141,8 @@ private extension UserAccountNavigationOTPReducer {
         state.destination?.viewModel.event(.resetStatus)
         
         switch response {
-        case .success:
-            effect = .otp(.create)
+        case let .success(phoneNumber):
+            effect = .otp(.create(phoneNumber))
             
         case .connectivityError:
             state.destination?.destination = nil
@@ -156,5 +155,16 @@ private extension UserAccountNavigationOTPReducer {
         }
         
         return (state, effect)
+    }
+}
+
+private extension UserAccountNavigationOTPReducer.State {
+    
+    var phoneNumber: OTPInputState.PhoneNumberMask? {
+        
+        guard case let .confirmSetBankDefault(timedOTPInputViewModel, _) = destination?.destination
+        else { return nil }
+        
+        return timedOTPInputViewModel.state.phoneNumber
     }
 }

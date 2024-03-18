@@ -82,6 +82,7 @@ extension Services {
             case getPINConfirmationCode
             case getPrintForm
             case getProcessingSessionCode
+            case getProductDetails
             case getProductDynamicParamsList
             case getSvgImageList
             case getScenarioQRData
@@ -91,6 +92,7 @@ extension Services {
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
+            case getOperatorsListByParam
         }
     }
 }
@@ -262,6 +264,12 @@ extension Services.Endpoint {
         serviceName: .getProcessingSessionCode
     )
     
+    static let getProductDetails: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getProductDetails
+    )
+
     static let getProductDynamicParamsList: Self = .init(
         pathPrefix: .rest,
         version: .v2,
@@ -320,5 +328,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .updateFastPaymentContract
+    )
+    
+    static let getOperatorsListByParam: Self = .init(
+        pathPrefix: .dict,
+        version: .none,
+        serviceName: .getOperatorsListByParam
     )
 }

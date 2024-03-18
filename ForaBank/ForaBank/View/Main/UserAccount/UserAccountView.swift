@@ -12,7 +12,6 @@ import Presentation
 import ManageSubscriptionsUI
 import SearchBarComponent
 import SwiftUI
-import UserAccountNavigationComponent
 import UIPrimitives
 
 struct UserAccountView: View {
@@ -236,17 +235,19 @@ struct UserAccountView: View {
     }
     
     private func fpsView(
-        _ route: UserAccountNavigation.State.FPSRoute
+        _ route: UserAccountRoute.FPSRoute
     ) -> some View {
         
         ZStack(alignment: .top) {
             
             fpsWrapperView(route)
+            
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+            
             viewModel.route.informer.map {
                 InformerView(viewModel: .init(
                     message: $0.message,
-                    icon: .init(systemName: "xmark")
+                    icon: $0.icon.image
                 ))
                 .padding(.top, 56)
             }
@@ -254,12 +255,12 @@ struct UserAccountView: View {
     }
     
     private func fpsWrapperView(
-        _ route: UserAccountNavigation.State.FPSRoute
+        _ route: UserAccountRoute.FPSRoute
     ) -> some View {
         
         FastPaymentsSettingsWrapperView(
             viewModel: route.viewModel,
-            config: .preview
+            config: .iFora
         )
         .navigationBar(with: .fastPayments(
             action: { viewModel.event(.dismiss(.destination)) }
@@ -271,7 +272,7 @@ struct UserAccountView: View {
                 // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
                 set: { _ in }
             ),
-            content: { .init(with: $0, event: { viewModel.event(.init(event: $0)) }) }
+            content: { .init(with: $0, event: { viewModel.event($0) }) }
         )
         .navigationDestination(
             item: .init(
@@ -284,7 +285,7 @@ struct UserAccountView: View {
     
     @ViewBuilder
     private func fpsDestinationView(
-        fpsDestination: UserAccountNavigation.State.FPSDestination
+        fpsDestination: UserAccountRoute.FPSDestination
     ) -> some View {
         
         ZStack {
@@ -292,9 +293,9 @@ struct UserAccountView: View {
             switch fpsDestination {
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
                 OTPInputWrapperView(viewModel: timedOTPInputViewModel)
-                
-            case let .c2BSub(getC2BSubResponse, _):
-                Text("TBD: \(String(describing: getC2BSubResponse))")
+                    .navigationBar(with: .fastPayments(
+                        action: { viewModel.event(.dismiss(.fpsDestination)) }
+                    ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
@@ -342,56 +343,29 @@ struct UserAccountView: View {
     }
 }
 
-private extension UserAccountEvent {
+extension UserAccountRoute.Informer.Icon {
     
-    init(event: UserAccountNavigation.Event) {
+    var image: Image {
         
-        switch event {
-        case .closeAlert:
-            self = .dismiss(.alert)
-            
-        case .closeFPSAlert:
-            self = .dismiss(.fpsAlert)
-            
-        case .dismissDestination:
-            self = .dismiss(.destination)
-            
-        case .dismissFPSDestination:
-            self = .dismiss(.fpsDestination)
-            
-        case .dismissRoute:
-            self = .dismiss(.route)
-            
-        case let .fps(fps):
-            self = .fps(fps)
-            
-        case let .otp(otp):
-            self = .otp(otp)
+        switch self {
+        case .failure:
+            return .ic16Close
+        case .success:
+            return .ic16Check
         }
     }
 }
 
 private extension UserAccountRoute {
     
-    var fpsAlert: AlertModelOf<UserAccountNavigation.Event>? {
+    var fpsAlert: AlertModelOf<UserAccountEvent>? {
         
         fpsRoute?.alert
     }
     
-    var fpsDestination: UserAccountNavigation.State.FPSDestination? {
+    var fpsDestination: UserAccountRoute.FPSDestination? {
         
         fpsRoute?.destination
-    }
-    
-    private var fpsRoute: UserAccountNavigation.State.FPSRoute? {
-        
-        switch link {
-        case let .fastPaymentSettings(.new(fpsRoute)):
-            return fpsRoute
-            
-        default:
-            return nil
-        }
     }
 }
 
@@ -406,15 +380,16 @@ private struct OTPInputWrapperView: View {
     
     var body: some View {
         
-        switch viewModel.state {
+        switch viewModel.state.status {
         case .failure:
             EmptyView()
             
         case let .input(input):
             OTPInputView(
                 state: input,
-                phoneNumber: "TBD: hardcoded phone number",
-                event: viewModel.event(_:)
+                phoneNumber: viewModel.state.phoneNumber.rawValue,
+                event: viewModel.event(_:),
+                config: .iFora
             )
             
         case .validOTP:
@@ -432,7 +407,7 @@ private extension NavigationBarView.ViewModel {
         .init(
             title: "Настройки СБП",
             subtitle: "Система быстрых платежей",
-            icon: "sfpBig",
+            icon: "ic32Sbp",
             action: action
         )
     }
@@ -497,7 +472,7 @@ extension UserAccountNavigationStateManager {
     
     static let preview: Self = .init(
         fastPaymentsFactory: .new, 
-        makeSubscriptionsViewModel: { _ in .empty },
+        makeSubscriptionsViewModel: { _,_ in .empty },
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

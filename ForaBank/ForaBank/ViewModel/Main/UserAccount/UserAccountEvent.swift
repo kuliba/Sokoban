@@ -5,9 +5,10 @@
 //  Created by Igor Malyarov on 30.01.2024.
 //
 
-import SwiftUI
+import FastPaymentsSettings
 import ManageSubscriptionsUI
-import UserAccountNavigationComponent
+import OTPInputComponent
+import SwiftUI
 import UIPrimitives
 
 indirect enum UserAccountEvent {
@@ -38,7 +39,7 @@ extension UserAccountEvent {
         case sheet
         case textFieldAlert
     }
-        
+    
     enum NavigateEvent {
         
         case alert(AlertModelOf<UserAccountEvent>)
@@ -51,6 +52,26 @@ extension UserAccountEvent {
 
 extension UserAccountEvent {
     
-    typealias FastPaymentsSettings = UserAccountNavigation.Event.FastPaymentsSettings
-    typealias OTPEvent = UserAccountNavigation.Event.OTP
+    enum FastPaymentsSettings: Equatable {
+        
+        case dismissFPSDestination
+        case updated(FastPaymentsSettingsState)
+    }
+    
+    enum OTPEvent: Equatable {
+        
+        case create(TimedOTPRoute)
+        case otpInput(OTPInputStateProjection)
+        case prepareSetBankDefault
+        case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
+        
+        typealias TimedOTPRoute = GenericRoute<TimedOTPInputViewModel, Never, Never, Never>
+        
+        enum PrepareSetBankDefaultResponse: Equatable {
+            
+            case success(OTPInputState.PhoneNumberMask)
+            case connectivityError
+            case serverError(String)
+        }
+    }
 }

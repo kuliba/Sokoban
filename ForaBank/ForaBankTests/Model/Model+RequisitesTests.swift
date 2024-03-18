@@ -10,6 +10,80 @@ import XCTest
 
 final class Model_RequisitesTests: XCTestCase {
     
+    func testValidateKppRules() {
+        let rules = makeSUT().validateKppParameter()
+        
+        XCTAssertEqual(rules.rules.count, 2)
+        
+        let lengthRule = rules.rules[0] as! Payments.Validation.LengthLimitsRule
+        XCTAssertEqual(lengthRule.lengthLimits, [9])
+        
+        let regexpRule = rules.rules[1] as! Payments.Validation.RegExpRule
+        XCTAssertEqual(regexpRule.regExp, "^[0-9]\\d*$")
+    }
+    
+    func testValidateCompanyNameRules() {
+        let rules = makeSUT().validateCompanyNameParameter()
+        
+        XCTAssertEqual(rules.rules.count, 2)
+        
+        let minLengthRule = rules.rules[0] as! Payments.Validation.MinLengthRule
+        XCTAssertEqual(minLengthRule.minLength, 1)
+        
+        let maxLengthRule = rules.rules[1] as! Payments.Validation.MaxLengthRule
+        XCTAssertEqual(maxLengthRule.maxLength, 160)
+    }
+    
+    // MARK: - Test KPP Parameters
+    
+    func testCreateKppParameterSingleCompany() {
+        
+        let model = makeSUT()
+        
+        let companies = [(kpp: "123456789", name: "Company 1")]
+        let kppValidator = validateCompanyNameParameter(model)
+        
+        let kppParameter = model.createKppParameterInput(
+            id: "id",
+            value: companies[0].kpp,
+            validator: kppValidator)
+        
+        XCTAssertEqual(kppParameter.value, "123456789")
+    }
+    
+    func testCreateKppParameterMultipleCompanies() {
+        
+        let model = makeSUT()
+        let companies = [
+            (kpp: "123456789", name: "Company 1"),
+            (kpp: "987654321", name: "Company 2"),
+        ]
+        let options = model.createParameterOptions(companies)
+        let kppValidator = validateCompanyNameParameter(model)
+        let icon = ImageData(named: "ic24FileHash") ?? .parameterDocument
+        let kppParameter = model.createKppParameterInput(
+            id: "kppId",
+            value: options.first?.id,
+            icon: ImageData(named: "ic24FileHash") ?? .parameterDocument,
+            validator: kppValidator
+        )
+        
+        XCTAssertEqual(kppParameter.value, "123456789")
+        XCTAssertEqual(kppParameter.icon, icon)
+    }
+    
+    func testCreateKppParameterNoCompanies() {
+        
+        let model = makeSUT()
+        let kppValidator = validateCompanyNameParameter(model)
+        let kppParameter = model.createKppParameterInput(
+            id: "kppId",
+            validator: kppValidator
+        )
+        
+        XCTAssertNil(kppParameter.value)
+    }
+    
     // MARK: GetCompanyNameParameter Tests
     
     func test_getCompanyNameParameter_withRequisitesService_shouldReturnSuggestCompaniesNameValue() throws {
@@ -42,6 +116,10 @@ final class Model_RequisitesTests: XCTestCase {
         XCTAssertNoDiff(companyParameter.parameter.value, "name")
     }
     
+    func validateCompanyNameParameter(_ model: Model) -> Payments.Validation.RulesSystem {
+        return model.validateCompanyNameParameter()
+    }
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line) -> Model {
@@ -57,4 +135,29 @@ final class Model_RequisitesTests: XCTestCase {
             
             return sut
         }
+    
+    private func makeSUTWithToken(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        spy: HTTPClientSpy,
+        sessionAgent: ActiveInactiveSessionAgent,
+        model: Model,
+        sut: HTTPClient
+    ) {
+        let spy = HTTPClientSpy()
+        let sessionAgent = ActiveInactiveSessionAgent()
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent
+        )
+        let sut = model.authenticatedHTTPClient(
+            httpClient: spy
+        )
+        
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(sessionAgent, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (spy, sessionAgent, model, sut)
+    }
 }

@@ -218,7 +218,7 @@ func paymentContract(
     accountID: Product.AccountID = .init(generateRandom11DigitNumber()),
     contractStatus: UserPaymentSettings.PaymentContract.ContractStatus = .active,
     phoneNumber: PhoneNumber = anyPhoneNumber(),
-    phoneNumberMasked: String = anyMessage()
+    phoneNumberMasked: PhoneNumberMask = .init(anyMessage())
 ) -> UserPaymentSettings.PaymentContract {
     
     .init(

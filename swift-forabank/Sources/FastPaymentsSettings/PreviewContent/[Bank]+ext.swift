@@ -35,3 +35,11 @@ public extension Array where Element == Bank {
         .init(id: "100000000046", name: "Металлинвестбанк"),
     ]
 }
+
+private extension Bank {
+    
+    init(id: Bank.BankID, name: String) {
+        
+        self.init(id: id, name: name, image: .init(systemName: "building.columns"))
+    }
+}

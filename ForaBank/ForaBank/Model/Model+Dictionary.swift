@@ -642,6 +642,19 @@ extension Model {
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
         
+        Task {
+            
+            do {
+                let data = try await Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient()).process("").get()
+                try self.localAgent.store(data, serial: nil)
+                
+            } catch {
+                
+                LoggerAgent().log(category: .cache, message: "Invalid data for getOperatorsListByParam")
+
+            }
+        }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -1693,18 +1706,9 @@ extension Model {
                         return
                     }
                     
-                    var atmDataSource = [AtmData]()
-                    
-                    // load items from cache if exists
-                    if let cached = self.localAgent.load(type: [AtmData].self)  {
-                        atmDataSource.append(contentsOf: cached)
-                    }
-                    
-                    let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
-                    
                     do {
                         
-                        try self.localAgent.store(result, serial: "\(data.version)")
+                        try self.localAgent.store(data.list, serial: "\(data.version)")
                         
                     } catch {
                         

@@ -156,14 +156,3 @@ private extension UserAccountReducer {
         return state
     }
 }
-
-private extension UserAccountReducer.State {
-    
-    var fpsRoute: UserAccountRoute.Link.FastPaymentSettings.FPSRoute? {
-        
-        guard case let .fastPaymentSettings(.new(fpsRoute)) = link
-        else { return nil }
-        
-        return fpsRoute
-    }
-}

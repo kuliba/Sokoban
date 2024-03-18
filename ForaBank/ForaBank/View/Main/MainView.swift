@@ -356,8 +356,7 @@ struct UserAccountButton: View {
                             .frame(width: 20, height: 20)
                         
                         viewModel.logo
-                            .resizable()
-                            .frame(width: 12, height: 12)
+                            .renderingMode(.original)
                     }
                     .offset(x: 18, y: -14)
                     
@@ -438,7 +437,9 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview,
+            makeUtilitiesViewModel: { _,_ in },
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
@@ -455,7 +456,9 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview,
+            makeUtilitiesViewModel: { _,_ in },
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()
@@ -472,7 +475,9 @@ extension MainViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview,
+            makeUtilitiesViewModel: { _,_ in },
+            paymentsTransfersNavigationStateManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient()

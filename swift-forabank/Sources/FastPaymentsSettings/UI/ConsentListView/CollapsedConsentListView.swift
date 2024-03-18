@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     
     let collapsed: ConsentListState.UIState.Collapsed
+    let config: TextConfig
     let icon: () -> Icon
     let expandButton: () -> ExpandButton
     let namespace: Namespace.ID
@@ -17,9 +19,10 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
     
     var body: some View {
         
-        HStack(alignment: .top) {
+        HStack(alignment: alignment, spacing: 16) {
             
             icon()
+                .padding(.top, topPadding)
             
             VStack(alignment: .leading, spacing:6) {
                 
@@ -27,7 +30,7 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
                 
                 if !collapsed.bankNames.isEmpty {
                     
-                    Text(collapsed.bankNames.joined(separator: ", "))
+                    collapsed.bankNames.joined(separator: ", ").text(withConfig: config)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -40,12 +43,67 @@ struct CollapsedConsentListView<Icon: View, ExpandButton: View>: View {
             )
         }
     }
+    
+    private var alignment: VerticalAlignment {
+        
+        collapsed.bankNames.isEmpty ? .center : .top
+    }
+    
+    private var topPadding: CGFloat {
+        
+        collapsed.bankNames.isEmpty ? .zero : 11
+    }
 }
 
-//struct CollapsedConsentListView_Preview: PreviewProvider {
-//
-//    static var previews: some View {
-//        
-//        CollapsedConsentListView()
-//    }
-//}
+struct CollapsedConsentListView_Preview: PreviewProvider {
+    
+    @Namespace private static var animationNamespace
+    
+    static var previews: some View {
+        
+        VStack(spacing: 32, content: previewsGroup)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            collapsedConsentListView(.empty)
+            collapsedConsentListView(.one)
+            collapsedConsentListView(.two)
+            collapsedConsentListView(.preview)
+        }
+        .border(.red)
+    }
+    
+    static func collapsedConsentListView(
+        _ collapsed: ConsentListState.UIState.Collapsed
+    ) -> some View {
+        
+        CollapsedConsentListView(
+            collapsed: collapsed, 
+            config: .init(
+                textFont: .headline, 
+                textColor: .green
+            ),
+            icon: {
+                
+                Image(systemName: "building.columns")
+                    .foregroundColor(.secondary)
+            },
+            expandButton: {
+                
+                HStack {
+                    
+                    Text("Transfer requests")
+                    Spacer()
+                    Image(systemName: "chevron.up")
+                }
+                .foregroundColor(.secondary)
+                .font(.footnote)
+            },
+            namespace: animationNamespace,
+            anchor: .center
+        )
+    }
+}
