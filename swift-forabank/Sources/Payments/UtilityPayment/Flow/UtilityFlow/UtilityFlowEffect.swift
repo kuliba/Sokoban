@@ -5,15 +5,13 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-enum UtilityFlowEffect<LastPayment, Operator, Service> {
+public enum UtilityFlowEffect<LastPayment, Operator, Service> {
     
     case initiate
     case select(Select)
 }
 
-extension UtilityFlowEffect {
+public extension UtilityFlowEffect {
     
     enum Select {
         

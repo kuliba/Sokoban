@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersReducerTests.swift
+//  PaymentsTransfersFlowReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class PaymentsTransfersReducerTests: XCTestCase {
+final class PaymentsTransfersFlowReducerTests: XCTestCase {
     
     // MARK: - back
     
@@ -258,7 +258,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias SUT = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event

@@ -27,7 +27,8 @@ private extension PaymentsTransfersView {
         
         Button(
             "Utility Payment",
-            action: { viewModel.event(.openUtilityPayment) }
+            // action: { viewModel.event(.openUtilityPayment) }
+            action: { fatalError() }
         )
         .navigationDestination(
             item: .init(
@@ -52,7 +53,8 @@ private extension PaymentsTransfersView {
             case .failure:
                 factory.prePaymentFailureView {
                     
-                    viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
+                    // viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
+                    fatalError()
                 }
                 
             case .success:

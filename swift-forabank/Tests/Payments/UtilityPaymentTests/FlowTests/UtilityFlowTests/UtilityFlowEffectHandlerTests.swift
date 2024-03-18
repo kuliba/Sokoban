@@ -12,64 +12,64 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, loader, servicesLoader, paymentStarter) = makeSUT()
+        let (_, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
-        XCTAssertEqual(loader.callCount, 0)
+        XCTAssertEqual(optionsLoader.callCount, 0)
         XCTAssertEqual(paymentStarter.callCount, 0)
         XCTAssertEqual(servicesLoader.callCount, 0)
     }
     
     // MARK: - initiate
     
-    func test_initiate_shouldDeliverFailureOnLoadFailure() {
+    func test_initiate_shouldDeliverFailureOnLoadOptionsFailure() {
         
-        let (sut, loader, _, _) = makeSUT()
-        
-        expect(sut, with: .initiate, toDeliver: .loaded(.failure)) {
-            
-            loader.complete(with: .failure(anyError()))
-        }
-    }
-    
-    func test_initiate_shouldDeliverFailureOnEmptyOperatorListLoadSuccess_emptyLastPayments() {
-        
-        let (sut, loader, _, _) = makeSUT()
+        let (sut, optionsLoader, _, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.failure)) {
             
-            loader.complete(with: .success(([], [])))
+            optionsLoader.complete(with: .failure(anyError()))
         }
     }
     
-    func test_initiate_shouldDeliverFailureOnEmptyOperatorListLoadSuccess_nonEmptyLastPayments() {
+    func test_initiate_shouldDeliverFailureOnEmptyOperatorListLoadOptionsSuccess_emptyLastPayments() {
         
-        let (sut, loader, _, _) = makeSUT()
+        let (sut, optionsLoader, _, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.failure)) {
             
-            loader.complete(with: .success(([makeLastPayment()], [])))
+            optionsLoader.complete(with: .success(([], [])))
         }
     }
     
-    func test_initiate_shouldDeliverOperatorListLoadSuccess_emptyLastPayments() {
+    func test_initiate_shouldDeliverFailureOnEmptyOperatorListLoadOptionsSuccess_nonEmptyLastPayments() {
+        
+        let (sut, optionsLoader, _, _) = makeSUT()
+        
+        expect(sut, with: .initiate, toDeliver: .loaded(.failure)) {
+            
+            optionsLoader.complete(with: .success(([makeLastPayment()], [])))
+        }
+    }
+    
+    func test_initiate_shouldDeliverOperatorListLoadOptionsSuccess_emptyLastPayments() {
         
         let `operator` = makeOperator()
-        let (sut, loader, _, _) = makeSUT()
+        let (sut, optionsLoader, _, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.success([], [`operator`]))) {
             
-            loader.complete(with: .success(([], [`operator`])))
+            optionsLoader.complete(with: .success(([], [`operator`])))
         }
     }
     
-    func test_initiate_shouldDeliverOperatorListLoadSuccess_nonEmptyLastPayments() {
+    func test_initiate_shouldDeliverOperatorListLoadOptionsSuccess_nonEmptyLastPayments() {
         
         let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
-        let (sut, loader, _, _) = makeSUT()
+        let (sut, optionsLoader, _, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.success([lastPayment], [`operator`]))) {
             
-            loader.complete(with: .success(([lastPayment], [`operator`])))
+            optionsLoader.complete(with: .success(([lastPayment], [`operator`])))
         }
     }
     
@@ -82,7 +82,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.select(.last(lastPayment))) { _ in }
         
-        XCTAssertNoDiff(paymentStarter.payloads, [.last(lastPayment)])
+        XCTAssertNoDiff(paymentStarter.payloads, [.withLastPayment(lastPayment)])
     }
     
     func test_select_lastPayment_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
@@ -209,7 +209,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.select(.service(service, for: `operator`))) { _ in }
         
-        XCTAssertNoDiff(paymentStarter.payloads, [.service(service, for: `operator`)])
+        XCTAssertNoDiff(paymentStarter.payloads, [.withService(service, for: `operator`)])
     }
     
     func test_select_service_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
@@ -255,7 +255,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     private typealias Event = UtilityEvent
     private typealias Effect = UtilityEffect
     
-    private typealias LoaderSpy = Spy<Void, SUT.LoadResult>
+    private typealias OptionsLoaderSpy = Spy<Void, SUT.LoadOptionsResult>
     private typealias PaymentStarterSpy = Spy<SUT.StartPaymentPayload, SUT.StartPaymentResult>
     private typealias ServicesLoaderSpy = Spy<SUT.LoadServicesPayload, SUT.LoadServicesResult>
     
@@ -264,26 +264,26 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loader: LoaderSpy,
+        optionsLoader: OptionsLoaderSpy,
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
-        let loader = LoaderSpy()
+        let optionsLoader = OptionsLoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
         
         let sut = SUT(
-            load: loader.process,
+            loadOptions: optionsLoader.process,
             loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(optionsLoader, file: file, line: line)
         trackForMemoryLeaks(servicesLoader, file: file, line: line)
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, loader, servicesLoader, paymentStarter)
+        return (sut, optionsLoader, servicesLoader, paymentStarter)
     }
     
     private func expect(

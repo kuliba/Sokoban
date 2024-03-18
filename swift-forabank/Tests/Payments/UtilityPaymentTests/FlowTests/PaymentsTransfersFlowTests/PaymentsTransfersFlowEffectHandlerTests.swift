@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersEffectHandlerTests.swift
+//  PaymentsTransfersFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class PaymentsTransfersEffectHandlerTests: XCTestCase {
+final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -52,7 +52,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias SUT = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
