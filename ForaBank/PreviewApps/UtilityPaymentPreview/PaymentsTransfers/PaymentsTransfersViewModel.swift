@@ -56,33 +56,6 @@ extension PaymentsTransfersViewModel {
     }
 }
 
-private extension PaymentsTransfersState {
-    
-    var flowState: FlowState {
-        
-        get {
-            
-            guard case let .utilityFlow(utilityFlow) = destination
-            else { return .init() }
-            
-            return .init(route: .utilityFlow(utilityFlow))
-        }
-    }
-    
-    init(flowState: FlowState) {
-        
-        switch flowState.route {
-        case .none:
-            self.init()
-            
-        case let .utilityFlow(utilityFlow):
-            self.init(destination: .utilityFlow(utilityFlow))
-        }
-    }
-    
-    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
-}
-
 extension PaymentsTransfersViewModel {
     
     typealias FlowReduce = (FlowState, FlowEvent) -> (FlowState, FlowEffect?)
@@ -143,4 +116,31 @@ private extension PaymentsTransfersViewModel {
         
         fatalError()
     }
+}
+
+private extension PaymentsTransfersState {
+    
+    var flowState: FlowState {
+        
+        get {
+            
+            guard case let .utilityFlow(utilityFlow) = destination
+            else { return .init() }
+            
+            return .init(route: .utilityFlow(utilityFlow))
+        }
+    }
+    
+    init(flowState: FlowState) {
+        
+        switch flowState.route {
+        case .none:
+            self.init()
+            
+        case let .utilityFlow(utilityFlow):
+            self.init(destination: .utilityFlow(utilityFlow))
+        }
+    }
+    
+    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
 }
