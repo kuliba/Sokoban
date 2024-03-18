@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentState {
     
     var tab: ContentView.Tab = .payments
-    var flowSettings: FlowSettings = .sad
+    var flowSettings: FlowSettings = .happy
     var isShowingSpinner = false
 }
 

@@ -5,6 +5,83 @@
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
+import ForaTools
+
+extension PaymentsTransfersViewModel {
+
+    var navState: [State.Destination.Destination] {
+
+        getNavState()
+    }
+    
+    private func getNavState() -> [State.Destination.Destination] {
+        
+        switch state.destination {
+        case .none:
+            return []
+            
+        case let .utilityFlow(utilityFlow):
+            return utilityFlow.stack.elements
+            
+        case .other:
+            return []
+        }
+    }
+}
+
+extension PaymentsTransfersState {
+    
+    var uiState: UIState? { getUIState() }
+    
+    private func getUIState() -> UIState? {
+        
+        switch destination {
+        case .none:
+            return .none
+            
+        case let .utilityFlow(utilityFlow):
+            switch utilityFlow.current {
+            case .none:
+                return .none
+                
+            case let .failure(serviceFailure):
+                switch serviceFailure {
+                case .connectivityError:
+                    return .failure(.connectivityError)
+                
+                case let .serverError(message):
+                    return .failure(.serverError(message))
+                }
+                
+            case .payment:
+                return .payment
+                
+            case let .prepayment(prepayment):
+                return .prepayment
+                
+            case let .selectFailure(`operator`):
+                return .selectFailure
+                
+            case let .services(services):
+                return .services
+            }
+            
+        case .other:
+            return .other
+        }
+    }
+    
+    enum UIState {
+        
+        case failure(ServiceFailure)
+        case payment
+        case prepayment
+        case other
+        case selectFailure
+        case services
+    }
+}
+
 extension PaymentsTransfersState {
     
     var navigationState: NavigationState? {
