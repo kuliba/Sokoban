@@ -662,7 +662,7 @@ struct ProductView: View {
         }
         
         BackView(
-            back: config.back,
+            backConfig: config.back,
             header: {
                 
                 HeaderBackView.init(
