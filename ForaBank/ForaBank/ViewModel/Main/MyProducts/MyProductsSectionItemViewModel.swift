@@ -85,7 +85,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     func update(with productData: ProductData) {
         
         icon = IconViewModel(with: productData, model: model)
-        name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .navigationTitle)
+        name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
         balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
     }
     
