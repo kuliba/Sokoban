@@ -76,13 +76,13 @@ extension OperationDetailData {
         case .inProgress:
             return BankCell(
                 title: title,
-                icon: .init(.ic16Waiting),
+                icon: .init("waiting"),
                 name: "В обработке")
             
         case .rejected:
             return BankCell(
                 title: title,
-                icon: .init(.ic16Denied),
+                icon: .init("rejected"),
                 name: "Отказ")
             
         case .unknown:
