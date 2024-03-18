@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import PinCodeUI
+import CardUI
 
 //MARK: - ViewModel
 
@@ -16,7 +17,7 @@ extension ProductProfileCardView {
     class ViewModel: ObservableObject {
         
         typealias CardAction = CardDomain.CardAction
-        typealias ShowCVV = (CardDomain.CardId, @escaping (ProductView.ViewModel.CardInfo.CVV?) -> Void) -> Void
+        typealias ShowCVV = (CardDomain.CardId, @escaping (CardInfo.CVV?) -> Void) -> Void
 
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -435,7 +436,7 @@ extension ProductProfileCardView.ViewModel {
         
         struct ShowCVV: Action {
             let cardId: CardDomain.CardId
-            let cvv: ProductView.ViewModel.CardInfo.CVV
+            let cvv: CardInfo.CVV
         }
     }
 }

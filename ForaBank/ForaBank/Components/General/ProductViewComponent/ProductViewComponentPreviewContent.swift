@@ -286,7 +286,7 @@ private extension Appearance.Background {
     )
 }
 
-extension ProductView.ViewModel.CardInfo {
+extension CardInfo {
     
     static let classicCard: Self = .init(
         name: "Classic",
@@ -312,19 +312,19 @@ extension String {
     static let cvvTitle = "CVV"
 }
 
-extension ProductView.ViewModel.CardInfo.CVVTitle {
+extension CardInfo.CVVTitle {
     
     static let cvvTitle: Self = .init(value: "CVV")
     static let emptyTitle: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.FullNumber {
+extension CardInfo.FullNumber {
     
     static let number: Self = .init(value: "4444 4444 4444 4444")
     static let emptyNumber: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.MaskedNumber {
+extension CardInfo.MaskedNumber {
     
     static let maskedNumber: Self = .init(value: "4444 **** **** **44")
     static let emptyMaskedNumber: Self = .init(value: "")

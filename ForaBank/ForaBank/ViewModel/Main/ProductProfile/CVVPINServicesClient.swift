@@ -6,6 +6,7 @@
 //
 
 import PinCodeUI
+import CardUI
 
 typealias CVVPINServicesClient = ActivateCVVPINClient & ShowCVVClient & ChangePINClient
 
@@ -46,7 +47,7 @@ enum ConfirmationCodeError: Error {
 
 protocol ShowCVVClient {
     
-    typealias CVV = ProductView.ViewModel.CardInfo.CVV
+    typealias CVV = CardInfo.CVV
     typealias ShowCVVResult = Result<CVV, ShowCVVError>
     typealias ShowCVVCompletion = (ShowCVVResult) -> Void
     

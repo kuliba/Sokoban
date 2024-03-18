@@ -38,7 +38,7 @@ extension ProductView {
     
     struct HeaderBackView: View {
         
-        @Binding var cardInfo: ProductView.ViewModel.CardInfo
+        @Binding var cardInfo: CardInfo
         let action: () -> Void
         
         var body: some View {
@@ -77,7 +77,7 @@ extension ProductView {
     
     struct CVVView: View {
         
-        @Binding var cardInfo: ProductView.ViewModel.CardInfo
+        @Binding var cardInfo: CardInfo
         let action: () -> Void
         @State private var showDotsAnimation: Bool = false
         
