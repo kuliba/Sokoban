@@ -139,7 +139,7 @@ struct SelectView: View {
         _ option: SelectState.Option
     ) -> some View {
         
-        Button(action: {}) {
+        Button(action: { event(.optionTapped) }) {
             
             HStack(alignment: .top, spacing: 20) {
                 
@@ -168,7 +168,7 @@ struct SelectView: View {
     
     private func chevronButton() -> some View {
         
-        Button(action: {}, label: {
+        Button(action: { event(.chevronTapped) }, label: {
             
             switch state {
             case .collapsed:

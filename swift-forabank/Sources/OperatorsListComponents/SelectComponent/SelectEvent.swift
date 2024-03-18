@@ -9,6 +9,7 @@ import Foundation
 
 enum SelectEvent {
     
+    case chevronTapped
     case optionTapped
     case search
 }
