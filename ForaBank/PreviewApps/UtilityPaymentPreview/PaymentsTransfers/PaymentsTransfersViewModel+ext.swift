@@ -11,14 +11,14 @@ import PrePaymentPicker
 import UtilityPayment
 
 private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
-private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
+private typealias UtilityPaymentReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
-private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
+private typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
 
 private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
 private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
-private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
+private typealias FlowEffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
 
 extension PaymentsTransfersViewModel {
     
@@ -31,13 +31,13 @@ extension PaymentsTransfersViewModel {
         
         let prePaymentOptionsReducer = PPOReducer(observeLast: 3, pageSize: 10)
         
-        let utilityPaymentFlowReducer = FlowReducer(
+        let utilityPaymentFlowReducer = UtilityPaymentReducer(
             prePaymentOptionsReduce: prePaymentOptionsReducer.reduce
         )
         
         let utilityReducer = UtilityReducer()
         
-        let reducer = Reducer(
+        let flowReducer = FlowReducer(
             utilityReduce: utilityReducer.reduce
         )
         
@@ -107,14 +107,14 @@ extension PaymentsTransfersViewModel {
             startPayment: startPayment2
         )
         
-        let effectHandler = EffectHandler(
+        let flowEffectHandler = FlowEffectHandler(
             utilityFlowHandleEffect: utilityFlowEffectHandler.handleEffect
         )
         
         return .init(
             initialState: initialState,
-            flowReduce: reducer.reduce,
-            flowHandleEffect: effectHandler.handleEffect,
+            flowReduce: flowReducer.reduce,
+            flowHandleEffect: flowEffectHandler.handleEffect,
             scheduler: scheduler
         )
     }

@@ -1021,7 +1021,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias Flow = SUT.State.Flow
+    private typealias Flow = SUT.State.Destination
     
     private typealias PPOState = SUT.PPOState
     private typealias PPOEvent = SUT.PPOEvent
