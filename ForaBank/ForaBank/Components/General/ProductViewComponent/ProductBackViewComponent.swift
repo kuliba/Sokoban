@@ -7,12 +7,12 @@
 
 import ProductSelectComponent
 import SwiftUI
-
+import CardUI
 //MARK: - View
 
 struct ProductBackView<Header: View, CVV: View>: View {
     
-    let backViewConfig: ProductView.BackViewConfig
+    let backViewConfig: CardUI.Config.BackView
     
     let headerView: () -> Header
     let cvvView: () -> CVV

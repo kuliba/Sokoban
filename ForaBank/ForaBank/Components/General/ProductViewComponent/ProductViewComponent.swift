@@ -670,7 +670,7 @@ private extension View {
     
     func card(
         viewModel: ProductView.ViewModel,
-        config: ProductView.Config,
+        config: CardUI.Config,
         isFrontView: Bool,
         action: @escaping () -> Void
     ) -> some View {
@@ -712,11 +712,15 @@ private extension View {
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
+    let config: CardUI.Config
     
-    init(viewModel: ViewModel) {
+    init(
+        viewModel: ViewModel
+    ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.config = .config(appearance: viewModel.appearance)
     }
-    
+
     var body: some View {
         
         ProductFrontView(
@@ -727,15 +731,15 @@ struct ProductView: View {
                 },
                 set: { _ in }
             ),
-            config: viewModel.config,
+            config: config,
             headerView: {
                 
-                ProductView.HeaderView(config: viewModel.config, header: viewModel.header)
+                ProductView.HeaderView(config: config, header: viewModel.header)
             },
             footerView: { balance in
                 
                 ProductView.FooterView(
-                    config: viewModel.config,
+                    config: config,
                     footer: .init(
                         get: {
                             .init(
@@ -750,7 +754,7 @@ struct ProductView: View {
             })
         .card(
             viewModel: viewModel,
-            config: viewModel.config,
+            config: config,
             isFrontView: true,
             action: viewModel.productDidTapped
         )
@@ -776,7 +780,7 @@ struct ProductView: View {
         }
         
         ProductBackView(
-            backViewConfig: viewModel.backViewConfig,
+            backViewConfig: config.backView,
             headerView: {
                 
                 ProductView.HeaderBackView.init(
@@ -791,7 +795,7 @@ struct ProductView: View {
         )
         .card(
             viewModel: viewModel,
-            config: viewModel.config,
+            config: config,
             isFrontView: false,
             action: viewModel.productDidTapped
         )
@@ -810,7 +814,7 @@ extension ProductView {
     
     struct HeaderView: View {
         
-        let config: ProductView.Config
+        let config: CardUI.Config
         let header: ProductView.ViewModel.HeaderViewModel
         var body: some View {
             
@@ -819,7 +823,7 @@ extension ProductView {
                 if let number = header.number {
                     
                     Text(number)
-                        .font(config.fontConfig.nameFontForHeader)
+                        .font(config.fonts.header)
                         .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productNumber")
                 }
@@ -831,7 +835,7 @@ extension ProductView {
                         .foregroundColor(config.appearance.textColor)
                     
                     Text(period)
-                        .font(config.fontConfig.nameFontForHeader)
+                        .font(config.fonts.header)
                         .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productPeriod")
                 }
@@ -841,7 +845,7 @@ extension ProductView {
     
     struct FooterView: View {
         
-        let config: ProductView.Config
+        let config: CardUI.Config
         @Binding var footer: ProductView.ViewModel.FooterViewModel
         
         var body: some View {
@@ -851,7 +855,7 @@ extension ProductView {
                 HStack {
                     
                     Text(footer.balance)
-                        .font(config.fontConfig.nameFontForFooter)
+                        .font(config.fonts.footer)
                         .fontWeight(.semibold)
                         .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productBalance")
@@ -865,7 +869,7 @@ extension ProductView {
                         paymentSystem
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: config.sizeConfig.paymentSystemIconSize.width, height: config.sizeConfig.paymentSystemIconSize.height)
+                            .frame(width: config.sizes.paymentSystemIcon.width, height: config.sizes.paymentSystemIcon.height)
                             .foregroundColor(config.appearance.textColor)
                             .accessibilityIdentifier("productPaymentSystemIcon")
                     }
@@ -876,7 +880,7 @@ extension ProductView {
                 HStack {
                     
                     Text(footer.balance)
-                        .font(config.fontConfig.nameFontForFooter)
+                        .font(config.fonts.footer)
                         .fontWeight(.semibold)
                         .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productBalance")
@@ -947,7 +951,7 @@ extension ProductView {
     
     struct CheckView: View {
         
-        let sizeConfig: SizeConfig
+        let sizeConfig: CardUI.Config.Sizes
         
         var body: some View {
             
@@ -955,8 +959,8 @@ extension ProductView {
                 
                 Circle()
                     .frame(
-                        width: sizeConfig.checkViewSize.width,
-                        height: sizeConfig.checkViewSize.height
+                        width: sizeConfig.checkView.width,
+                        height: sizeConfig.checkView.height
                     )
                     .foregroundColor(.mainColorsBlack.opacity(0.12))
                 
@@ -964,7 +968,7 @@ extension ProductView {
                     .resizable()
                     .foregroundColor(.mainColorsWhite)
                     .background(Color.clear)
-                    .frame(width: sizeConfig.checkViewImageSize.width, height: sizeConfig.checkViewImageSize.height)
+                    .frame(width: sizeConfig.checkViewImage.width, height: sizeConfig.checkViewImage.height)
             }
         }
     }
@@ -1059,19 +1063,19 @@ extension ProductView {
         @ObservedObject var viewModel: ViewModel
         
         let isFrontView: Bool
-        let config: ProductView.Config
+        let config: CardUI.Config
         
         @ViewBuilder
         private func checkView() -> some View {
             
             if viewModel.isChecked {
-                CheckView(sizeConfig: config.sizeConfig)
+                CheckView(sizeConfig: config.sizes)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity,
                         alignment: .topTrailing
                     )
-                    .padding(config.cardViewConfig.checkPadding)
+                    .padding(config.cardView.checkPadding)
             }
         }
         
@@ -1104,7 +1108,7 @@ extension ProductView {
                     
                     AnimatedGradientView(duration: 3.0)
                         .blendMode(.colorDodge)
-                        .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius))
+                        .clipShape(RoundedRectangle(cornerRadius: config.cardView.cornerRadius))
                         .zIndex(4)
                 }
             }
@@ -1128,12 +1132,12 @@ extension ProductView {
         func body(content: Content) -> some View {
             
             content
-                .padding(config.cardViewConfig.cardPadding)
+                .padding(config.cardView.cardPadding)
                 .background(background())
                 .overlay(checkView(), alignment: .topTrailing)
                 .overlay(statusActionView(), alignment: .center)
                 .overlay(updatingView(), alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius, style: .circular))
+                .clipShape(RoundedRectangle(cornerRadius: config.cardView.cornerRadius, style: .circular))
         }
     }
 }
