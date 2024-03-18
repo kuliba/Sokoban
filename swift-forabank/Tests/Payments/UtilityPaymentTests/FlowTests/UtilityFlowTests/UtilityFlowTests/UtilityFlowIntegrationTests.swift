@@ -42,8 +42,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     func test_flow() {
         
         let lastPayments = [makeLastPayment()]
-        let `operator` = makeOperator()
-        let operators = [`operator`, makeOperator()]
+        let (`operator`, operators) = makeOperatorOperators()
         let options = Options(lastPayments: lastPayments, operators: operators)
         let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT()
         
@@ -65,17 +64,15 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RxViewModel<State, Event, Effect>
-    #warning("extrat reusable test typealiases")
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     
-    private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    private typealias State = UtilityFlow
+    private typealias Event = UtilityEvent
+    private typealias Effect = UtilityEffect
     
     private typealias Options = Destination.Prepayment.Options
     
-    private typealias Reducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias EffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
+    private typealias Reducer = UtilityReducer
+    private typealias EffectHandler = UtilityEffectHandler
     
     private typealias StateSpy = ValueSpy<State>
     

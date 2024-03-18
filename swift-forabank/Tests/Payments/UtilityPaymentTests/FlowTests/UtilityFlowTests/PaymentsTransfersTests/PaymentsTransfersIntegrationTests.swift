@@ -9,25 +9,6 @@ import RxViewModel
 import UtilityPayment
 import XCTest
 
-private typealias SUT = RxViewModel<State, Event, Effect>
-
-private typealias State = PaymentsTransfersState<Destination>
-private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator>
-
-private typealias StateSpy = ValueSpy<State>
-
-private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
-
-private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPaymentResponse>
-
-private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
-
-private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
-private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
-private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
-private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
-
 final class PaymentsTransfersIntegrationTests: XCTestCase {
     
     // MARK: - back
@@ -50,16 +31,12 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         )
     }
     
-    func test_startPaymentFailureFlow() {
+    func test_restartLoadFailureFlow() {
         
         let lastPayment = makeLastPayment()
-        let `operator` = makeOperator()
-        let operators = [`operator`, makeOperator()]
-        let prepayment = Destination.prepayment(.options(.init(
-            lastPayments: [lastPayment],
-            operators: operators
-        )))
-        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (_, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (sut, spy, loader, _,_) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .failure(anyError()))
@@ -68,6 +45,34 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         
         sut.event(.utilityFlow(.initiate))
         loader.complete(with: .success(([lastPayment], operators)), at: 1)
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(.prepayment(.failure))
+            }, {
+                $0.route = nil
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }
+        )
+    }
+    
+    func test_startPaymentWithLastPaymentFailureFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (_, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (sut, spy, loader, _, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.last(lastPayment))))
         paymentStarter.complete(with: .failure(.connectivityError))
@@ -79,9 +84,59 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             }, {
                 $0.route = emptyUtilityFlow()
             }, {
-                $0.route = utilityFlow(.prepayment(.failure))
+                $0.route = utilityFlow(prepayment)
             }, {
-                $0.route = nil
+                $0.route = utilityFlow(prepayment, .failure(.connectivityError))
+            }
+        )
+    }
+    
+    func test_noServiceOperatorFailureFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (`operator`, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (sut, spy, loader, servicesLoader, _) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success([]))
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = utilityFlow(prepayment, .selectFailure(`operator`))
+            }
+        )
+    }
+    
+    func test_startPaymentWithSingleServiceOperatorFailureFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (`operator`, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let service = makeService()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success([service]))
+        paymentStarter.complete(with: .failure(.connectivityError))
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
             }, {
                 $0.route = emptyUtilityFlow()
             }, {
@@ -92,31 +147,23 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         )
     }
     
-    func test_startPaymentSuccessFlow() {
+    func test_startPaymentWithMultiServiceOperatorFailureFlow() {
         
         let lastPayment = makeLastPayment()
-        let `operator` = makeOperator()
-        let operators = [`operator`, makeOperator()]
-        let prepayment = Destination.prepayment(.options(.init(
-            lastPayments: [lastPayment],
-            operators: operators
-        )))
+        let (`operator`, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (service, services) = makeServiceServices()
         let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
         sut.event(.utilityFlow(.initiate))
-        loader.complete(with: .failure(anyError()))
-        
-        sut.event(.back)
-        
-        sut.event(.utilityFlow(.initiate))
-        loader.complete(with: .success(([lastPayment], operators)), at: 1)
-        
-        sut.event(.utilityFlow(.select(.last(lastPayment))))
-        paymentStarter.complete(with: .success(makeResponse()))
-        
-        sut.event(.back)
+        loader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success(services))
+        
+        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
+        paymentStarter.complete(with: .failure(.connectivityError))
+        
         assert(
             spy,
             .init(route: nil), {
@@ -124,9 +171,35 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
             }, {
                 $0.route = emptyUtilityFlow()
             }, {
-                $0.route = utilityFlow(.prepayment(.failure))
+                $0.route = utilityFlow(prepayment)
             }, {
-                $0.route = nil
+                $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services), .failure(.connectivityError))
+            }
+        )
+    }
+    
+    func test_startPaymentWithLastPaymentSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (_, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (sut, spy, loader, _, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.last(lastPayment))))
+        paymentStarter.complete(with: .success(makeResponse()))
+        
+        sut.event(.back)
+        sut.event(.back)
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
             }, {
                 $0.route = emptyUtilityFlow()
             }, {
@@ -135,11 +208,110 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
                 $0.route = utilityFlow(prepayment, .payment)
             }, {
                 $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
             }
         )
     }
     
+    func test_startPaymentWithSingleServiceOperatorSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (`operator`, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let service = makeService()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success([service]))
+        paymentStarter.complete(with: .success(makeResponse()))
+        
+        sut.event(.back)
+        sut.event(.back)
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = utilityFlow(prepayment, .payment)
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
+            }
+        )
+    }
+    
+    func test_startPaymentWithMultiServiceOperatorSuccessFlow() {
+        
+        let lastPayment = makeLastPayment()
+        let (`operator`, operators) = makeOperatorOperators()
+        let prepayment = makePrepayment([lastPayment], operators)
+        let (service, services) = makeServiceServices()
+        let (sut, spy, loader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        
+        sut.event(.utilityFlow(.initiate))
+        loader.complete(with: .success(([lastPayment], operators)))
+        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+        servicesLoader.complete(with: .success(services))
+        
+        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
+        paymentStarter.complete(with: .success(makeResponse()))
+        
+        sut.event(.back)
+        sut.event(.back)
+        sut.event(.back)
+        
+        assert(
+            spy,
+            .init(route: nil), {
+                _ in
+            }, {
+                $0.route = emptyUtilityFlow()
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services), .payment)
+            }, {
+                $0.route = utilityFlow(prepayment, .services(services))
+            }, {
+                $0.route = utilityFlow(prepayment)
+            }, {
+                $0.route = nil
+            }
+        )
+    }
+    
+#warning("add payment flow")
+    
     // MARK: - Helpers
+    
+    private typealias SUT = RxViewModel<State, Event, Effect>
+    
+    private typealias State = PaymentsTransfersState<Destination>
+    private typealias Event = PaymentsTransfersEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias Effect = PaymentsTransfersEffect<LastPayment, Operator, Service>
+    
+    private typealias StateSpy = ValueSpy<State>
+    
+    private typealias Reducer = PaymentsTransfersReducer<LastPayment, Operator, Service, StartPaymentResponse>
+    
+    private typealias EffectHandler = PaymentsTransfersEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+    
+    private typealias LoaderSpy = Spy<Void, UtilityEffectHandler.LoadResult>
+    private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
+    private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
     
     private func makeSUT(
         initialRoute: State.Route? = nil,
@@ -160,7 +332,7 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
-
+        
         let utilityEffectHandler = UtilityEffectHandler(
             load: loader.process,
             loadServices: servicesLoader.process,
@@ -212,14 +384,14 @@ final class PaymentsTransfersIntegrationTests: XCTestCase {
     }
 }
 
-private func emptyUtilityFlow() -> State.Route {
+private func emptyUtilityFlow() -> PaymentsTransfersState<Destination>.Route {
     
     .utilityFlow(.init())
 }
 
 private func utilityFlow(
     _ destinations: Destination...
-) -> State.Route {
+) -> PaymentsTransfersState<Destination>.Route {
     
     .utilityFlow(.init(stack: .init(destinations)))
 }

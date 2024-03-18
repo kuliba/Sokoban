@@ -70,7 +70,7 @@ extension UtilityFlowEffectHandler {
                             dispatch(.selectFailure(`operator`))
                         
                         case let (1, .some(service)):
-                            startPayment(.operator(`operator`, service)) {
+                            startPayment(.service(service, for: `operator`)) {
                                 
                                 dispatch(.paymentStarted($0))
                             }
@@ -79,6 +79,12 @@ extension UtilityFlowEffectHandler {
                             dispatch(.loadedServices(services))
                         }
                     }
+                }
+                
+            case let .service(service, for: `operator`):
+                startPayment(.service(service, for: `operator`)) {
+                    
+                    dispatch(.paymentStarted($0))
                 }
             }
         }
@@ -100,7 +106,7 @@ extension UtilityFlowEffectHandler {
     enum StartPaymentPayload {
         
         case last(LastPayment)
-        case `operator`(Operator, Service)
+        case service(Service, for: Operator)
     }
     
     typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
@@ -110,7 +116,7 @@ extension UtilityFlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
 }
 
 extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

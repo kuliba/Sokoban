@@ -120,9 +120,7 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     
     private typealias SUT = PushUpdateFlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
-
-    private typealias State = Flow<Destination>
+    private typealias State = UtilityFlow
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     

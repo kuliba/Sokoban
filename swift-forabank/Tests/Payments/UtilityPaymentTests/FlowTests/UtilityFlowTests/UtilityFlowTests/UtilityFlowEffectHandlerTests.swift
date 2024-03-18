@@ -64,8 +64,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_initiate_shouldDeliverOperatorListLoadSuccess_nonEmptyLastPayments() {
         
-        let lastPayment = makeLastPayment()
-        let `operator` = makeOperator()
+        let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
         let (sut, loader, _, _) = makeSUT()
         
         expect(sut, with: .initiate, toDeliver: .loaded(.success([lastPayment], [`operator`]))) {
@@ -76,7 +75,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - select
     
-    func test_select_lastPayment_shouldCallPaymentStarterWithPayload() {
+    func test_select_lastPayment_shouldCallPaymentStarterWithLastPayment() {
         
         let lastPayment = makeLastPayment()
         let (sut, _,_, paymentStarter) = makeSUT()
@@ -128,14 +127,14 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(.select(.operator(`operator`))) { _ in }
         
-         XCTAssertNoDiff(servicesLoader.payloads, [`operator`])
+        XCTAssertNoDiff(servicesLoader.payloads, [`operator`])
     }
     
     func test_select_operator_shouldDeliverSelectFailureOnLoadServiceFailure() {
         
         let `operator` = makeOperator()
         let (sut, _, servicesLoader, _) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .selectFailure(`operator`)) {
             
             servicesLoader.complete(with: .failure(anyError())) // d3, d4, d5
@@ -144,10 +143,9 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_select_operator_shouldDeliverStartPaymentConnectivityErrorOnSingleServiceAndStartPaymentConnectivityErrorFailure() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
+        let (`operator`, service) = (makeOperator(), makeService())
         let (sut, _, servicesLoader, paymentStarter) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
             
             servicesLoader.complete(with: .success([service]))
@@ -159,7 +157,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         
         let `operator` = makeOperator()
         let (sut, _, servicesLoader, _) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .selectFailure(`operator`)) {
             
             servicesLoader.complete(with: .success([]))
@@ -168,11 +166,10 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_select_operator_shouldDeliverStartPaymentServerErrorOnSingleServiceAndStartPaymentServerErrorFailure() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
+        let (`operator`, service) = (makeOperator(), makeService())
         let message = anyMessage()
         let (sut, _, servicesLoader, paymentStarter) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
             
             servicesLoader.complete(with: .success([service]))
@@ -182,11 +179,10 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_select_operator_shouldDeliverStartPaymentSuccessOnSingleServiceAndStartPaymentSuccess() {
         
-        let `operator` = makeOperator()
-        let service = makeService()
+        let (`operator`, service) = (makeOperator(), makeService())
         let response = makeResponse()
         let (sut, _, servicesLoader, paymentStarter) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .paymentStarted(.success(response))) {
             
             servicesLoader.complete(with: .success([service]))
@@ -199,22 +195,65 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         let `operator` = makeOperator()
         let services = [makeService(), makeService()]
         let (sut, _, servicesLoader, _) = makeSUT()
-
+        
         expect(sut, with: .select(.operator(`operator`)), toDeliver: .loadedServices(services)) {
             
             servicesLoader.complete(with: .success(services))
         }
     }
-
+    
+    func test_select_service_shouldCallPaymentStarterWithServiceAndOperator() {
+        
+        let (`operator`, service) = (makeOperator(), makeService())
+        let (sut, _,_, paymentStarter) = makeSUT()
+        
+        sut.handleEffect(.select(.service(service, for: `operator`))) { _ in }
+        
+        XCTAssertNoDiff(paymentStarter.payloads, [.service(service, for: `operator`)])
+    }
+    
+    func test_select_service_shouldDeliverConnectivityErrorOnConnectivityErrorFailure() {
+        
+        let (`operator`, service) = (makeOperator(), makeService())
+        let (sut, _,_, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .select(.service(service, for: `operator`)), toDeliver: .paymentStarted(.failure(.connectivityError))) {
+            
+            paymentStarter.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_select_service_shouldDeliverServerErrorOnServerErrorFailure() {
+        
+        let (`operator`, service) = (makeOperator(), makeService())
+        let message = anyMessage()
+        let (sut, _,_, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .select(.service(service, for: `operator`)), toDeliver: .paymentStarted(.failure(.serverError(message)))) {
+            
+            paymentStarter.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
+    func test_select_service_shouldDeliverResponseOnSuccess() {
+        
+        let (`operator`, service) = (makeOperator(), makeService())
+        let response = makeResponse()
+        let (sut, _,_, paymentStarter) = makeSUT()
+        
+        expect(sut, with: .select(.service(service, for: `operator`)), toDeliver: .paymentStarted(.success(response))) {
+            
+            paymentStarter.complete(with: .success(response))
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPaymentResponse>
+    private typealias SUT = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
-    
-    private typealias State = Flow<Destination>
-    private typealias Event = UtilityFlowEvent<LastPayment, Operator, UtilityService, StartPaymentResponse>
-    private typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    private typealias State = UtilityFlow
+    private typealias Event = UtilityEvent
+    private typealias Effect = UtilityEffect
     
     private typealias LoaderSpy = Spy<Void, SUT.LoadResult>
     private typealias PaymentStarterSpy = Spy<SUT.StartPaymentPayload, SUT.StartPaymentResult>

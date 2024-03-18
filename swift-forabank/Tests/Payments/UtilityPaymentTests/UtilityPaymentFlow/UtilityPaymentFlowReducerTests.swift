@@ -1015,7 +1015,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse, UtilityService>
+    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse, Service>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -1090,7 +1090,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     private func makeSelectingServicesState(
         _ `operator`: Operator = makeOperator(),
-        _ services: [UtilityService]? = nil
+        _ services: [Service]? = nil
     ) -> Flow {
         
         .prePaymentState(.services(`operator`, services ?? [makeService(), makeService()]))

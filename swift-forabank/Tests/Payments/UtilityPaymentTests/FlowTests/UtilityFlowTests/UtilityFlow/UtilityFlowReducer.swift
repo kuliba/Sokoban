@@ -58,9 +58,18 @@ extension UtilityFlowReducer {
             }
             
         case let .select(select):
-            if case .prepayment = state.current {
+            switch select {
+            case .last, .operator:
+                if case .prepayment = state.current {
+                    
+                    effect = .select(select.effectSelect)
+                }
                 
-                effect = .select(select.effectSelect)
+            case let .service(service, for: `operator`):
+                if case .services = state.current {
+                    
+                    effect = .select(.service(service, for: `operator`))
+                }
             }
             
         case let .selectFailure(`operator`):
@@ -73,7 +82,7 @@ extension UtilityFlowReducer {
 
 private extension UtilityFlowEvent.Select {
     
-    var effectSelect: UtilityFlowEffect<LastPayment, Operator>.Select {
+    var effectSelect: UtilityFlowEffect<LastPayment, Operator, Service>.Select {
         
         switch self {
         case let .last(lastPayment):
@@ -81,6 +90,9 @@ private extension UtilityFlowEvent.Select {
             
         case let .operator(`operator`):
             return .operator(`operator`)
+            
+        case let .service(service, for: `operator`):
+            return .service(service, for: `operator`)
         }
     }
 }
@@ -91,5 +103,5 @@ extension UtilityFlowReducer {
     
     typealias State = Flow<Destination>
     typealias Event = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
-    typealias Effect = UtilityFlowEffect<LastPayment, Operator>
+    typealias Effect = UtilityFlowEffect<LastPayment, Operator, Service>
 }

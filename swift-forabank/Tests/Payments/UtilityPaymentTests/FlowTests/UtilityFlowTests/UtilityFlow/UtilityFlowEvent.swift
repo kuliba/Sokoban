@@ -30,6 +30,7 @@ extension UtilityFlowEvent {
         
         case last(LastPayment)
         case `operator`(Operator)
+        case service(Service, for: Operator)
     }
     
     typealias StartPaymentResult = Result<StartPaymentResponse, ServiceFailure>
@@ -38,4 +39,4 @@ extension UtilityFlowEvent {
 extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable, StartPaymentResponse: Equatable {}
 
 extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
-extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
