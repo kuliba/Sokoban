@@ -67,7 +67,6 @@ private extension ResponseMapper {
                 
             case .loan:
                 productSettings = .loan(try container.decode(LoanSettingsDTO.self))
-
             }
         }
     }
@@ -207,11 +206,11 @@ private extension ResponseMapper {
         let interestRate: Double
         let accountID: Int
         let creditMinimumAmount: Double?
-        let minimumBalance: Double?
+        let minimumBalance: Double
         let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
-        let isDebitInterestAvailable: Bool?
+        let isDebitInterestAvailable: Bool
     }
 }
 
@@ -260,7 +259,6 @@ private extension ResponseMapper {
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
         case blocked = "BLOCKED"
-        case unknown
     }
 
     enum CardTypeDTO: String, Decodable {
@@ -291,7 +289,6 @@ private extension ResponseMapper {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
-        case unknown
     }
 }
 
@@ -311,7 +308,6 @@ private extension ProductListData.ProductType {
             
         case .loan:
             self = .loan
-            
         }
     }
 }
@@ -344,24 +340,7 @@ private extension ProductListData.Status {
             
         case .blocked:
             self = .blocked
-            
-        case .unknown:
-            self = .unknown
         }
-    }
-}
-
-private extension ProductListData.Payment {
-    
-    init(paymentDTO: ResponseMapper.PaymentDTO) {
-        
-        self.init(
-            account: paymentDTO.account,
-            date: paymentDTO.date,
-            amount: paymentDTO.amount,
-            currency: paymentDTO.currency,
-            purpose: paymentDTO.purpose
-        )
     }
 }
 
@@ -418,9 +397,6 @@ private extension ProductListData.StatusPC {
             
         case .blockedByClient:
             self = .blockedByClient
-            
-        case .unknown:
-            self = .unknown
         }
     }
 }
@@ -540,7 +516,6 @@ private extension ProductListData {
                     statusCard: .init(statusCardDTO: cardSettingsDTO.statusCard),
                     loanBaseParam: .init(loanDTO: cardSettingsDTO.loanBaseParam),
                     statusPC: .init(statusPCDTO: cardSettingsDTO.statusPC),
-                    miniStatement: cardSettingsDTO.miniStatement.map { .init(paymentDTO: $0) },
                     name: cardSettingsDTO.name,
                     validThru: cardSettingsDTO.validThru,
                     status: .init(statusDTO: cardSettingsDTO.status),
@@ -590,7 +565,6 @@ private extension ProductListData {
                     dateOpen: accountSettingsDTO.dateOpen,
                     status: .init(statusDTO: accountSettingsDTO.status),
                     branchName: accountSettingsDTO.branchName,
-                    miniStatement: accountSettingsDTO.miniStatement.map { .init(paymentDTO: $0) },
                     detailedRatesUrl: accountSettingsDTO.detailedRatesUrl,
                     detailedConditionUrl: accountSettingsDTO.detailedConditionUrl))
             }
