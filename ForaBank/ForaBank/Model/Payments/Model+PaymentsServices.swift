@@ -530,36 +530,37 @@ extension Model {
     
     private enum ParameterType: String {
         
-        case account = "a3_PERSONAL_ACCOUNT_1_1"
+        case personalAccount = "a3_PERSONAL_ACCOUNT_1_1"
+        case account = "account"
         case code = "a3_CODE_3_1"
     }
     
-    private func getValue(for parameterData: ParameterData, qrCode: QRCode) -> String {
+    private func getValue(for parameterData: ParameterData, with qrCode: QRCode) -> String {
         
         switch ParameterType(rawValue: parameterData.id) {
             
-        case .account:
+        case .account, .personalAccount:
             
             return parameterData.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : ""
         case .code:
             
             return qrCode.rawData["category"] ?? ""
         case .none:
-            
+             
             return ""
         }
     }
     
     func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
-
+        
         return operatorData.parameterList.compactMap {
             
             if $0.viewType == .input {
-
+                
                 return PaymentServiceData.AdditionalListData(
                     fieldTitle: $0.title,
                     fieldName: $0.id,
-                    fieldValue: getValue(for: $0, qrCode: qrCode),
+                    fieldValue: getValue(for: $0, with: qrCode),
                     svgImage: $0.svgImage?.description
                 )
                 

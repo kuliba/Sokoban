@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class Model_PaymentsServicesTests: XCTestCase { 
+final class Model_PaymentsServicesTests: XCTestCase {
     
     func test_paymentsOperator_forOperatorCode_shouldThrowOnEmptyOperatorsList() throws {
         
@@ -73,103 +73,145 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
     
-//    func test_getValue_forEmptyQRCode_returnsEmptyString() {
-//        let parameterData: ParameterData = .pdClearOutput
-//        let qrCode: QRCode = .qrPersAcc
-//       let model = makeSUT()
-//        let value = model.getValue(for: parameterData, qrCode: qrCode)
-//       
-//       XCTAssertEqual(value, "")
-//     }
+    //private func
+    //    func test_getValue_forEmptyQRCode_returnsEmptyString() {
+    //        let parameterData: ParameterData = .pdClearOutput
+    //        let qrCode: QRCode = .qrPersAcc
+    //       let model = makeSUT()
+    //        let value = model.getValue(for: parameterData, qrCode: qrCode)
+    //
+    //       XCTAssertEqual(value, "")
+    //     }
+    
     func test_additionalList_PDviewTypeOutput_returnsNil() {
         
         let model = makeSUT()
         let parameterData: ParameterData = .pdClearOutput
         let qrCode: QRCode = .qrPersAcc
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, nil)
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, nil)
+    }
+    
     func test_additionalList_PDviewTypeInput_returnsEmpty() {
         
         let model = makeSUT()
         let parameterData: ParameterData = .pdClearInput
         let qrCode: QRCode = .qrPersAcc
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, "")
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, "")
+    }
+    
     func test_additionalList_AccountinputFieldTypeNil_returnsEmpty() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdAccountInpFTNil
         let qrCode: QRCode = .qrPersAcc
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, "")
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, "")
+        
+    }
     
     func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_returnsEmpty() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrWithoutAccountNumberForPayment
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, "")
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, "")
+    }
     
-    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentpersacc() {
+    func test_additionalList_AccountinputFieldTypePersonalAccount_accountNumberForPaymentpersacc() {
+        
+        let model = makeSUT()
+        let parameterData: ParameterData = .pdAccountInpFTPersonalAccount
+        let qrCode: QRCode = .qrPersAcc
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, qrCode.rawData["persacc"])
+    }
+    
+    func test_additionalList_AccountinputFieldTypeAccount_QRwithRawData_222() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrPersAcc
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, qrCode.rawData["persacc"])
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, qrCode.rawData["persacc"])
+    }
+    
     func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentphone() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrPhone
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, qrCode.rawData["phone"])
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, qrCode.rawData["phone"])
+    }
+    
     func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentnumabo() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrNumAbo
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-       XCTAssertEqual(res, qrCode.rawData["numabo"])
-     }
-    
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, qrCode.rawData["numabo"])
+    }
     
     func test_additionalList_ParameterDataCodeWithCategory_retursRawData() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdCode
         let qrCode: QRCode = .qrPersAcc
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-        let qqqr = qrCode.rawData["category"]
-       XCTAssertEqual(res, "1")
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, "1") // 1 = qrCode.rawData["category"]
+    }
+    
     func test_additionalList_ParameterDataCodeWithoutCategory_retursEmptyString() {
+        
+        let model = makeSUT()
         let parameterData: ParameterData = .pdCode
         let qrCode: QRCode = .qrPersAccCategoryNil
-       let model = makeSUT()
         let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let value = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = value?.first?.fieldValue
-        let qqqr = qrCode.rawData["category"]
-       XCTAssertEqual(res, "")
-     }
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        XCTAssertEqual(res, "") // "" = qrCode.rawData["category"]
+    }
     
     // MARK: - Helper Tests
     
@@ -371,7 +413,9 @@ extension ParameterData {
     
     static let pdAccountInpFTNil: ParameterData = .init(content: nil, dataType: nil, id: "a3_PERSONAL_ACCOUNT_1_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
     
-    static let pdAccountInpFTAccount: ParameterData = .init(content: nil, dataType: nil, id: "a3_PERSONAL_ACCOUNT_1_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: .account, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
+    static let pdAccountInpFTPersonalAccount: ParameterData = .init(content: nil, dataType: nil, id: "a3_PERSONAL_ACCOUNT_1_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: .account, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
+    
+    static let pdAccountInpFTAccount: ParameterData = .init(content: nil, dataType: nil, id: "account", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: .account, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
     
     static let pdCode: ParameterData = .init(content: nil, dataType: nil, id: "a3_CODE_3_1", isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "inputTitle", type: nil, inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)
 }
