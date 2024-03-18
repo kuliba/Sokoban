@@ -72,6 +72,7 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .phoneNumberKit,
+        .nonEmpty,
         .tagged,
         .shimmer,
         .svgKit,
@@ -2194,6 +2195,10 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_identified_collections,
         from: .init(0, 4, 1)
     )
+    static let nonEmpty = Package.Dependency.package(
+        url: .pointFreeGitHub + .swift_nonempty,
+        from: .init(0, 5, 0)
+    )
     static let snapshotTesting = Package.Dependency.package(
         url: .pointFreeGitHub + .swift_snapshot_testing,
         from: .init(1, 10, 0)
@@ -2234,6 +2239,10 @@ private extension Target.Dependency {
         name: .identifiedCollections,
         package: .swift_identified_collections
     )
+    static let nonEmpty = product(
+        name: .nonEmpty,
+        package: .swift_nonempty
+    )
     static let snapshotTesting = product(
         name: .snapshotTesting,
         package: .swift_snapshot_testing
@@ -2271,6 +2280,9 @@ private extension String {
     
     static let identifiedCollections = "IdentifiedCollections"
     static let swift_identified_collections = "swift-identified-collections"
+    
+    static let nonEmpty = "NonEmpty"
+    static let swift_nonempty = "swift-nonempty"
     
     static let snapshotTesting = "SnapshotTesting"
     static let swift_snapshot_testing = "swift-snapshot-testing"
