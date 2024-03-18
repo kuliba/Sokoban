@@ -1,12 +1,11 @@
 @testable import GetProductListByTypeService
 
-extension ProductListData {
+extension ProductResponse {
     
     static let account: Self = .init(
-        serial: "1d53bc5a36cf76161826f559de718ef2",
-        productList: [
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+        products: [
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 10003827714,
                     productType: .account,
                     productState: [
@@ -40,8 +39,8 @@ extension ProductListData {
                         "6D6D6D"
                     ]
                 ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
+                uniqueProperties: .account(
+                    ProductResponse.Account(
                         name: "ВСФ",
                         externalID: 10002053887,
                         dateOpen: 1596402000000,
@@ -52,8 +51,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000102036,
                     productType: .account,
                     productState: [
@@ -87,8 +86,8 @@ extension ProductListData {
                         "6D6D6D"
                     ]
                 ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
+                uniqueProperties: .account(
+                    ProductResponse.Account(
                         name: "ВСФ",
                         externalID: 10002053887,
                         dateOpen: 1706475600000,
@@ -99,8 +98,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000102186,
                     productType: .account,
                     productState: [
@@ -134,8 +133,8 @@ extension ProductListData {
                         "6D6D6D"
                     ]
                 ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
+                uniqueProperties: .account(
+                    ProductResponse.Account(
                         name: "ВСФ",
                         externalID: 10002053887,
                         dateOpen: 1707253200000,
@@ -146,8 +145,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000101514,
                     productType: .account,
                     productState: [
@@ -181,8 +180,8 @@ extension ProductListData {
                         "6D6D6D"
                     ]
                 ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
+                uniqueProperties: .account(
+                    ProductResponse.Account(
                         name: "ВСФ",
                         externalID: 10002053887,
                         dateOpen: 1702501200000,
@@ -193,8 +192,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000101441,
                     productType: .account,
                     productState: [
@@ -228,200 +227,12 @@ extension ProductListData {
                         "6D6D6D"
                     ]
                 ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
+                uniqueProperties: .account(
+                    ProductResponse.Account(
                         name: "ВСФ",
                         externalID: 10002053887,
                         dateOpen: 1701291600000,
                         status: .blockedCredit,
-                        branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
-                        detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
-                        detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"
-                    )
-                )
-            ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
-                    id: 20000101400,
-                    productType: .account,
-                    productState: [
-                        .default,
-                        .notVisible
-                    ],
-                    order: 5,
-                    visibility: true,
-                    number: "40817810588000001487",
-                    numberMasked: "40817-810-X-ХXXX-0001487",
-                    accountNumber: "40817810588000001487",
-                    currency: "RUB",
-                    mainField: "Текущий счет",
-                    additionalField: nil,
-                    customName: nil,
-                    productName: "Текущие счета физ.лиц",
-                    balance: 547729.47,
-                    balanceRUB: 547729.47,
-                    openDate: 1701205200000,
-                    ownerId: 10002053887,
-                    branchId: 2000,
-                    allowDebit: true,
-                    allowCredit: true,
-                    fontDesignColor: "FFFFFF",
-                    smallDesignMd5Hash: "ec5a921eec37d035b2495b5b9377ff28",
-                    mediumDesignMd5Hash: "b5815f4c1bb9e5df4ec66391b14090b7",
-                    largeDesignMd5Hash: "1dbcf5c8a72a84c8266eabac8d893ce9",
-                    xlDesignMd5Hash: "7fba4466c7ee71554a80f2ffa24bd139",
-                    smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-                    background: [
-                        "6D6D6D"
-                    ]
-                ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
-                        name: "ВСФ",
-                        externalID: 10002053887,
-                        dateOpen: 1701205200000,
-                        status: .notBlocked,
-                        branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
-                        detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
-                        detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"
-                    )
-                )
-            ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
-                    id: 20000004912,
-                    productType: .account,
-                    productState: [
-                        .default,
-                        .notVisible
-                    ],
-                    order: 6,
-                    visibility: true,
-                    number: "40817810110010000262",
-                    numberMasked: "40817-810-X-ХXXX-0000262",
-                    accountNumber: "40817810110010000262",
-                    currency: "RUB",
-                    mainField: "Текущий счет",
-                    additionalField: nil,
-                    customName: "ттт",
-                    productName: "Текущие счета физ.лиц",
-                    balance: 932.22,
-                    balanceRUB: 932.22,
-                    openDate: 1695330000000,
-                    ownerId: 10002053887,
-                    branchId: 10000165302,
-                    allowDebit: true,
-                    allowCredit: true,
-                    fontDesignColor: "FFFFFF",
-                    smallDesignMd5Hash: "ec5a921eec37d035b2495b5b9377ff28",
-                    mediumDesignMd5Hash: "b5815f4c1bb9e5df4ec66391b14090b7",
-                    largeDesignMd5Hash: "1dbcf5c8a72a84c8266eabac8d893ce9",
-                    xlDesignMd5Hash: "7fba4466c7ee71554a80f2ffa24bd139",
-                    smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-                    background: [
-                        "6D6D6D"
-                    ]
-                ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
-                        name: "ВСФ",
-                        externalID: 10002053887,
-                        dateOpen: 1695330000000,
-                        status: .notBlocked,
-                        branchName: "042908770",
-                        detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Kaluga_KaluzhskayaOblast_Kolomna_NaroFominsk_Serpukhov_Tula_tarifi.pdf",
-                        detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"
-                    )
-                )
-            ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
-                    id: 10004902232,
-                    productType: .account,
-                    productState: [
-                        .default,
-                        .notVisible
-                    ],
-                    order: 7,
-                    visibility: true,
-                    number: "40817810323000001817",
-                    numberMasked: "40817-810-X-ХXXX-0001817",
-                    accountNumber: "40817810323000001817",
-                    currency: "RUB",
-                    mainField: "Текущий счет",
-                    additionalField: nil,
-                    customName: nil,
-                    productName: "Текущие счета физ.лиц",
-                    balance: 30232.88,
-                    balanceRUB: 30232.88,
-                    openDate: 1684270800000,
-                    ownerId: 10002053887,
-                    branchId: 2000,
-                    allowDebit: true,
-                    allowCredit: true,
-                    fontDesignColor: "FFFFFF",
-                    smallDesignMd5Hash: "ec5a921eec37d035b2495b5b9377ff28",
-                    mediumDesignMd5Hash: "b5815f4c1bb9e5df4ec66391b14090b7",
-                    largeDesignMd5Hash: "1dbcf5c8a72a84c8266eabac8d893ce9",
-                    xlDesignMd5Hash: "7fba4466c7ee71554a80f2ffa24bd139",
-                    smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-                    background: [
-                        "6D6D6D"
-                    ]
-                ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
-                        name: "ВСФ",
-                        externalID: 10002053887,
-                        dateOpen: 1684270800000,
-                        status: .notBlocked,
-                        branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
-                        detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
-                        detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"
-                    )
-                )
-            ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
-                    id: 10004895597,
-                    productType: .account,
-                    productState: [
-                        .default,
-                        .notVisible
-                    ],
-                    order: 8,
-                    visibility: true,
-                    number: "40817840388000000218",
-                    numberMasked: "40817-840-X-ХXXX-0000218",
-                    accountNumber: "40817840388000000218",
-                    currency: "USD",
-                    mainField: "Текущий счет",
-                    additionalField: nil,
-                    customName: nil,
-                    productName: "Текущие счета физ.лиц",
-                    balance: 1205.44,
-                    balanceRUB: 106928.04,
-                    openDate: 1683666000000,
-                    ownerId: 10002053887,
-                    branchId: 2000,
-                    allowDebit: true,
-                    allowCredit: true,
-                    fontDesignColor: "FFFFFF",
-                    smallDesignMd5Hash: "16219f3e4e014be2649facc17365695a",
-                    mediumDesignMd5Hash: "32cb5fe9360c9791592f7e735cd8579b",
-                    largeDesignMd5Hash: "7dab6414bd3db4c51d4e9dbb462bcf9a",
-                    xlDesignMd5Hash: "2494e1e6c80bb78e73bbe31d38137cdb",
-                    smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-                    background: [
-                        "6D6D6D"
-                    ]
-                ),
-                productSettings: .account(
-                    ProductListData.AccountSettings(
-                        name: "ВСФ",
-                        externalID: 10002053887,
-                        dateOpen: 1683666000000,
-                        status: .notBlocked,
                         branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
                         detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"

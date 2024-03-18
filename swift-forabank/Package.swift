@@ -1160,10 +1160,10 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
         resources: [
-            .copy("Resources/AccountStub.json"),
-            .copy("Resources/CardStub.json"),
-            .copy("Resources/DepositStub.json"),
-            .copy("Resources/LoanStub.json")
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
     )
 

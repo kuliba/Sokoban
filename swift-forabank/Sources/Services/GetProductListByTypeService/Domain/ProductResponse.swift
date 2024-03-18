@@ -1,5 +1,5 @@
 //
-//  ProductListData.swift
+//  ProductResponse.swift
 //
 //
 //  Created by Disman Dmitry on 14.03.2024.
@@ -7,37 +7,33 @@
 
 import Foundation
 
-public struct ProductListData: Equatable {
+public struct ProductResponse: Equatable {
     
-    public let serial: String?
-    public let productList: [ProductList]
+    public let products: [Product]
     
-    public init(
-        serial: String?,
-        productList: [ProductList]
-    ) {
-        self.serial = serial
-        self.productList = productList
-    }
-    
-    public struct ProductList: Equatable {
+    public init(products: [Product]) {
         
-        public let commonSettings: CommonProductSettings
-        public let productSettings: ProductSettings
+        self.products = products
     }
     
-    public enum ProductSettings: Equatable {
+    public struct Product: Equatable {
+        
+        public let commonProperties: CommonProperties
+        public let uniqueProperties: UniqueProperties
+    }
+    
+    public enum UniqueProperties: Equatable {
 
-        case card(CardSettings)
-        case loan(LoanSettings)
-        case deposit(DepositSettings)
-        case account(AccountSettings)
+        case card(Card)
+        case loan(Loan)
+        case deposit(Deposit)
+        case account(Account)
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
-    struct CommonProductSettings: Equatable {
+    struct CommonProperties: Equatable {
         
         public let id: Int
         public let productType: ProductType
@@ -52,8 +48,8 @@ public extension ProductListData {
         public let additionalField: String?
         public let customName: String?
         public let productName: String
-        public let balance: Double?
-        public let balanceRUB: Double?
+        public let balance: Decimal?
+        public let balanceRUB: Decimal?
         public let openDate: Int?
         public let ownerId: Int
         public let branchId: Int?
@@ -69,9 +65,9 @@ public extension ProductListData {
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
-    struct CardSettings: Equatable {
+    struct Card: Equatable {
         
         public let cardID: Int
         public let idParent: Int?
@@ -99,28 +95,28 @@ public extension ProductListData {
         public let currencyID: Int?
         public let currencyNumber: Int?
         public let currencyCode: String?
-        public let minimumPayment: Double?
-        public let gracePeriodPayment: Double?
-        public let overduePayment: Double?
-        public let availableExceedLimit: Double?
-        public let ownFunds: Double?
-        public let debtAmount: Double?
-        public let totalAvailableAmount: Double?
-        public let totalDebtAmount: Double?
+        public let minimumPayment: Decimal?
+        public let gracePeriodPayment: Decimal?
+        public let overduePayment: Decimal?
+        public let availableExceedLimit: Decimal?
+        public let ownFunds: Decimal?
+        public let debtAmount: Decimal?
+        public let totalAvailableAmount: Decimal?
+        public let totalDebtAmount: Decimal?
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
-    struct LoanSettings: Decodable, Equatable {
+    struct Loan: Equatable {
         
         public let currencyNumber: Int?
         public let bankProductID: Int
-        public let amount: Double
+        public let amount: Decimal
         public let currentInterestRate: Double
-        public let principalDebt: Double?
-        public let defaultPrincipalDebt: Double?
-        public let totalAmountDebt: Double?
+        public let principalDebt: Decimal?
+        public let defaultPrincipalDebt: Decimal?
+        public let totalAmountDebt: Decimal?
         public let principalDebtAccount: String
         public let settlementAccount: String
         public let settlementAccountId: Int
@@ -129,16 +125,16 @@ public extension ProductListData {
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
-    struct DepositSettings: Equatable {
+    struct Deposit: Equatable {
         
         public let depositProductID: Int
         public let depositID: Int
         public let interestRate: Double
         public let accountID: Int
-        public let creditMinimumAmount: Double?
-        public let minimumBalance: Double
+        public let creditMinimumAmount: Decimal?
+        public let minimumBalance: Decimal
         public let endDate: Int?
         public let endDateNF: Bool
         public let demandDeposit: Bool
@@ -146,9 +142,9 @@ public extension ProductListData {
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
-    struct AccountSettings: Equatable {
+    struct Account: Equatable {
         
         public let name: String
         public let externalID: Int
@@ -160,7 +156,7 @@ public extension ProductListData {
     }
 }
 
-public extension ProductListData {
+public extension ProductResponse {
     
     enum ProductType: Equatable {
         
@@ -178,7 +174,7 @@ public extension ProductListData {
         case notActivated
     }
     
-    enum Status: String, Equatable {
+    enum Status: Equatable {
         
         case blockedByClient
         case active

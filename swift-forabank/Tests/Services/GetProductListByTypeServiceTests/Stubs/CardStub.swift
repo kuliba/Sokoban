@@ -1,12 +1,11 @@
 @testable import GetProductListByTypeService
 
-extension ProductListData {
+extension ProductResponse {
     
     static let card: Self = .init(
-        serial: "a573caa2b73271cf22d69ee59065083f",
-        productList: [
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+        products: [
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 10000184510,
                     productType: .card,
                     productState: [
@@ -43,14 +42,14 @@ extension ProductListData {
                         "FFBB36"
                     ]
                 ),
-                productSettings: .card(
-                    ProductListData.CardSettings(
+                uniqueProperties: .card(
+                    ProductResponse.Card(
                         cardID: 10000184510,
                         idParent: nil,
                         accountID: 10004177075,
                         cardType: .regular,
                         statusCard: .active,
-                        loanBaseParam: ProductListData.LoanBaseParam(
+                        loanBaseParam: ProductResponse.LoanBaseParam(
                             loanID: 20000059293,
                             clientID: 10002053887,
                             number: "БК-240305/5200/1",
@@ -79,8 +78,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 10000184511,
                     productType: .card,
                     productState: [
@@ -117,8 +116,8 @@ extension ProductListData {
                         "FFBB36"
                     ]
                 ),
-                productSettings: .card(
-                    ProductListData.CardSettings(
+                uniqueProperties: .card(
+                    ProductResponse.Card(
                         cardID: 10000184511,
                         idParent: nil,
                         accountID: 10004176990,
@@ -138,8 +137,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000010937,
                     productType: .card,
                     productState: [
@@ -176,8 +175,8 @@ extension ProductListData {
                         "FFBB36"
                     ]
                 ),
-                productSettings: .card(
-                    ProductListData.CardSettings(
+                uniqueProperties: .card(
+                    ProductResponse.Card(
                         cardID: 20000010937,
                         idParent: 20000010935,
                         accountID: 20000101418,
@@ -197,8 +196,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000010933,
                     productType: .card,
                     productState: [
@@ -235,8 +234,8 @@ extension ProductListData {
                         "AAAAAA"
                     ]
                 ),
-                productSettings: .card(
-                    ProductListData.CardSettings(
+                uniqueProperties: .card(
+                    ProductResponse.Card(
                         cardID: 20000010933,
                         idParent: 20000010930,
                         accountID: 20000101401,
