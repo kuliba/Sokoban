@@ -1155,7 +1155,7 @@ private extension Target {
             // external packages
             .customDump,
             // internal modules
-            .urlRequestFactory,
+            .getProductListByTypeService,
         ],
         path: "Tests/Services/\(String.getProductListByTypeServiceTests)"
     )
