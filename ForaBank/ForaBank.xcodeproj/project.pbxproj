@@ -2150,6 +2150,7 @@
 		C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */; };
 		C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F5FD294A50B800FE5703 /* HintView.swift */; };
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
+		D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */ = {isa = PBXBuildFile; productRef = D41D73F92BA25C47002C0688 /* GetProductListByTypeService */; };
 		D46EC0EB2B9D2B1100E70669 /* ProductView_Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46EC0EA2B9D2B1100E70669 /* ProductView_Preview.swift */; };
 		D46EC0F12B9D2E7200E70669 /* NewProductButtonConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46EC0EF2B9D2DC800E70669 /* NewProductButtonConfig.swift */; };
 		D46EC0FC2B9F4B2600E70669 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = D46EC0FB2B9F4B2600E70669 /* UIPrimitives */; };
@@ -4639,6 +4640,7 @@
 		D47C7ED12B9715F700A35A25 /* CarouselPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPreviewApp.swift; sourceTree = "<group>"; };
 		D47C7ED32B9715F700A35A25 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D47C7EDF2B97165000A35A25 /* ContentView_Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView_Preview.swift; sourceTree = "<group>"; };
+		D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeService.xctestplan; sourceTree = "<group>"; };
 		D4BD60732B97511000909F43 /* ColorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorData.swift; sourceTree = "<group>"; };
 		D4BD60742B97511000909F43 /* Date+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		D4BD60752B97511000909F43 /* View+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
@@ -5133,6 +5135,7 @@
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
 				2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */,
+				D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
@@ -7008,6 +7011,7 @@
 				2A566EB42B6816BC00359E05 /* WIPTests.xctestplan */,
 				2AC4BE9B2B62C53C00650962 /* FastPaymentsSettingsPreview.xctestplan */,
 				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
+				D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
@@ -13471,6 +13475,7 @@
 				C19980792B7EB8F500D85C09 /* OperatorsListComponents */,
 				2A392BD72B934B3800029790 /* PrePaymentPicker */,
 				83C6F1152B9601BE00EA892A /* ProductProfileComponents */,
+				D41D73F92BA25C47002C0688 /* GetProductListByTypeService */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -19739,6 +19744,10 @@
 		C1BC73E42AE277CE0022D849 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		D41D73F92BA25C47002C0688 /* GetProductListByTypeService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GetProductListByTypeService;
 		};
 		D46EC0FB2B9F4B2600E70669 /* UIPrimitives */ = {
 			isa = XCSwiftPackageProductDependency;

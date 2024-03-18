@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "3FF68E8A-489F-448E-B4BA-569FEED9070D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProductListByTypeServiceTests",
+        "name" : "GetProductListByTypeServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}
