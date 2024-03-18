@@ -57,7 +57,6 @@ extension Services {
             case v1
             case v2
             case v4
-            case v5
         }
         
         enum ServiceName: String {
@@ -94,7 +93,6 @@ extension Services {
             case showCVV
             case updateFastPaymentContract
             case getOperatorsListByParam
-            case getProductListByType
         }
     }
 }
@@ -336,11 +334,5 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .none,
         serviceName: .getOperatorsListByParam
-    )
-    
-    static let getProductListByType: Self = .init(
-        pathPrefix: .rest,
-        version: .v5,
-        serviceName: .getProductListByType
     )
 }
