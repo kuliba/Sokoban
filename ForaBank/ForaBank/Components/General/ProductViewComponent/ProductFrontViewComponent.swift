@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 import Tagged
+import CardUI
 
 //MARK: - View
 
@@ -21,7 +22,7 @@ struct ProductFrontView<Header: View, Footer: View>: View {
     @Binding var name: String
     @Binding var balance: Balance
     
-    let config: ProductView.Config
+    let config: CardUI.Config
     let headerView: () -> Header
     let footerView: (Balance) -> Footer
     
@@ -30,13 +31,13 @@ struct ProductFrontView<Header: View, Footer: View>: View {
         VStack(alignment: .leading, spacing: 0) {
             
             headerView()
-                .padding(.leading, config.cardViewConfig.headerLeadingPadding)
-                .padding(.top, config.cardViewConfig.headerTopPadding)
+                .padding(.leading, config.front.headerLeadingPadding)
+                .padding(.top, config.front.headerTopPadding)
             
-            VStack(alignment: .leading, spacing: config.cardViewConfig.nameSpacing) {
+            VStack(alignment: .leading, spacing: config.front.nameSpacing) {
                 
                 Text(name)
-                    .font(config.fontConfig.nameFontForCard)
+                    .font(config.fonts.card)
                     .foregroundColor(config.appearance.textColor)
                     .opacity(0.5)
                     .accessibilityIdentifier("productName")

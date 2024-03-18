@@ -7,12 +7,12 @@
 
 import ProductSelectComponent
 import SwiftUI
-
+import CardUI
 //MARK: - View
 
 struct ProductBackView<Header: View, CVV: View>: View {
     
-    let backViewConfig: ProductView.BackViewConfig
+    let backConfig: CardUI.Config.Back
     
     let headerView: () -> Header
     let cvvView: () -> CVV
@@ -22,9 +22,9 @@ struct ProductBackView<Header: View, CVV: View>: View {
         VStack {
             
             headerView()
-                .padding(.leading, backViewConfig.headerLeadingPadding)
-                .padding(.top, backViewConfig.headerLeadingPadding)
-                .padding(.trailing, backViewConfig.headerTrailingPadding)
+                .padding(.leading, backConfig.headerLeadingPadding)
+                .padding(.top, backConfig.headerLeadingPadding)
+                .padding(.trailing, backConfig.headerTrailingPadding)
             
             cvvView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
@@ -38,7 +38,7 @@ extension ProductView {
     
     struct HeaderBackView: View {
         
-        @Binding var cardInfo: ProductView.ViewModel.CardInfo
+        @Binding var cardInfo: CardInfo
         let action: () -> Void
         
         var body: some View {
@@ -77,7 +77,7 @@ extension ProductView {
     
     struct CVVView: View {
         
-        @Binding var cardInfo: ProductView.ViewModel.CardInfo
+        @Binding var cardInfo: CardInfo
         let action: () -> Void
         @State private var showDotsAnimation: Bool = false
         

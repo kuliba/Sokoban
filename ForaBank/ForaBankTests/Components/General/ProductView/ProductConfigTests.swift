@@ -7,86 +7,87 @@
 
 @testable import ForaBank
 import XCTest
+import SwiftUI
 import CardUI
 
 final class ProductConfigTests: XCTestCase {
     
-    // MARK: - Test Card Config
+    // MARK: - Test front Config
     
-    func test_cardConfig_smallSize() {
+    func test_frontConfig_smallSize() {
         
         let sut = makeSUT(size: .small)
         
-        XCTAssertEqual(sut.cardViewConfig.headerLeadingPadding, 29)
-        XCTAssertEqual(sut.cardViewConfig.headerTopPadding, 4)
-        XCTAssertEqual(sut.cardViewConfig.nameSpacing, 4)
-        XCTAssertEqual(sut.cardViewConfig.cardPadding, 8)
-        XCTAssertEqual(sut.cardViewConfig.cornerRadius, 8)
-        XCTAssertEqual(sut.cardViewConfig.checkPadding, 8)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 29)
+        XCTAssertEqual(sut.front.headerTopPadding, 4)
+        XCTAssertEqual(sut.front.nameSpacing, 4)
+        XCTAssertEqual(sut.front.cardPadding, 8)
+        XCTAssertEqual(sut.front.cornerRadius, 8)
+        XCTAssertEqual(sut.front.checkPadding, 8)
     }
     
-    func test_cardConfig_normalSize() {
+    func test_frontConfig_normalSize() {
         
         let sut = makeSUT(size: .normal)
         
-        XCTAssertEqual(sut.cardViewConfig.headerLeadingPadding, 43)
-        XCTAssertEqual(sut.cardViewConfig.headerTopPadding, 6.2)
-        XCTAssertEqual(sut.cardViewConfig.nameSpacing, 6)
-        XCTAssertEqual(sut.cardViewConfig.cardPadding, 12)
-        XCTAssertEqual(sut.cardViewConfig.cornerRadius, 12)
-        XCTAssertEqual(sut.cardViewConfig.checkPadding, 10)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 43)
+        XCTAssertEqual(sut.front.headerTopPadding, 6.2)
+        XCTAssertEqual(sut.front.nameSpacing, 6)
+        XCTAssertEqual(sut.front.cardPadding, 12)
+        XCTAssertEqual(sut.front.cornerRadius, 12)
+        XCTAssertEqual(sut.front.checkPadding, 10)
     }
     
-    func test_cardConfig_largeSize() {
+    func test_frontConfig_largeSize() {
         
         let sut = makeSUT(size: .large)
         
-        XCTAssertEqual(sut.cardViewConfig.headerLeadingPadding, 43)
-        XCTAssertEqual(sut.cardViewConfig.headerTopPadding, 6.2)
-        XCTAssertEqual(sut.cardViewConfig.nameSpacing, 6)
-        XCTAssertEqual(sut.cardViewConfig.cardPadding, 12)
-        XCTAssertEqual(sut.cardViewConfig.cornerRadius, 12)
-        XCTAssertEqual(sut.cardViewConfig.checkPadding, 10)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 43)
+        XCTAssertEqual(sut.front.headerTopPadding, 6.2)
+        XCTAssertEqual(sut.front.nameSpacing, 6)
+        XCTAssertEqual(sut.front.cardPadding, 12)
+        XCTAssertEqual(sut.front.cornerRadius, 12)
+        XCTAssertEqual(sut.front.checkPadding, 10)
     }
     
-    // MARK: - Test BackView Config
+    // MARK: - Test Back Config
     
-    func test_backViewConfig() {
+    func test_backView() {
         
         let sut = makeSUT()
                 
-        XCTAssertEqual(sut.backViewConfig.headerLeadingPadding, .offset_12)
-        XCTAssertEqual(sut.backViewConfig.headerTopPadding, .offset_12)
-        XCTAssertEqual(sut.backViewConfig.headerTrailingPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerLeadingPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerTopPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerTrailingPadding, .offset_12)
     }
     
     // MARK: - Test Font Config
     
-    func test_fontConfig_smallSize() {
+    func test_fonts_smallSize() {
         
         let sut = makeSUT(size: .small)
         
-        XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyXsR11140())
-        XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodyXsR11140())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyXsR11140())
+        XCTAssertEqual(sut.fonts.card, .textBodyXsR11140())
+        XCTAssertEqual(sut.fonts.header, .textBodyXsR11140())
+        XCTAssertEqual(sut.fonts.footer, .textBodyXsR11140())
     }
     
-    func test_fontConfig_normalSize() {
+    func test_fonts_normalSize() {
         
         let sut = makeSUT(size: .normal)
         
-        XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyMR14200())
-        XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodySR12160())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSb14200())
+        XCTAssertEqual(sut.fonts.card, .textBodyMR14200())
+        XCTAssertEqual(sut.fonts.header, .textBodySR12160())
+        XCTAssertEqual(sut.fonts.footer, .textBodyMSb14200())
     }
     
-    func test_fontConfig_largeSize() {
+    func test_fonts_largeSize() {
         
         let sut = makeSUT(size: .large)
         
-        XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyMR14200())
-        XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodySR12160())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSb14200())
+        XCTAssertEqual(sut.fonts.card, .textBodyMR14200())
+        XCTAssertEqual(sut.fonts.header, .textBodySR12160())
+        XCTAssertEqual(sut.fonts.footer, .textBodyMSb14200())
     }
     
     // MARK: - Test Size Config
@@ -95,56 +96,43 @@ final class ProductConfigTests: XCTestCase {
         
         let sut = makeSUT(size: .small)
         
-        XCTAssertEqual(sut.sizeConfig.paymentSystemIconSize, .init(width: 20, height: 20))
-        XCTAssertEqual(sut.sizeConfig.checkViewSize, .init(width: 16, height: 16))
-        XCTAssertEqual(sut.sizeConfig.checkViewImageSize, .init(width: 10, height: 10))
+        XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 20, height: 20))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 16, height: 16))
+        XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 10, height: 10))
     }
     
     func test_sizeConfig_normalSize() {
         
         let sut = makeSUT(size: .normal)
         
-        XCTAssertEqual(sut.sizeConfig.paymentSystemIconSize, .init(width: 28, height: 28))
-        XCTAssertEqual(sut.sizeConfig.checkViewSize, .init(width: 18, height: 18))
-        XCTAssertEqual(sut.sizeConfig.checkViewImageSize, .init(width: 12, height: 12))
+        XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 28, height: 28))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 18, height: 18))
+        XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 12, height: 12))
     }
     
     func test_sizeConfig_largeSize() {
         
         let sut = makeSUT(size: .large)
         
-        XCTAssertEqual(sut.sizeConfig.paymentSystemIconSize, .init(width: 28, height: 28))
-        XCTAssertEqual(sut.sizeConfig.checkViewSize, .init(width: 18, height: 18))
-        XCTAssertEqual(sut.sizeConfig.checkViewImageSize, .init(width: 12, height: 12))
+        XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 28, height: 28))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 18, height: 18))
+        XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 12, height: 12))
     }
     
     // MARK: - Helpers
+    
     private func makeSUT(
-        size: Appearance.Size = .small,
-        cardAction: ProductView.ViewModel.CardAction? = nil,
-        showCVV: ProductView.ViewModel.ShowCVV? = nil,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> ProductView.ViewModel {
-        let sut =  ProductView.ViewModel(
-            id: 1,
-            header: .init(number: "7854"),
-            cardInfo: .classicCard,
-            footer: .init(balance: "170 897 ₽"),
-            statusAction: .init(status: .unblock),
-            appearance: .init(
-                textColor: .clear,
-                background: .init(color: .clear, image: nil),
-                size: size),
-            isUpdating: false,
-            productType: .card,
-            cardAction: cardAction,
-            showCvv: showCVV
+        size: CardUI.Appearance.Size = .small,
+        textColor: Color = .clear,
+        background: Color = .clear,
+        backgroundImage: Image? = nil
+    ) -> CardUI.Config {
+        
+        .config(appearance: .init(
+            textColor: textColor,
+            background: .init(color: background, image: backgroundImage),
+            size: size)
         )
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        
-        return sut
     }
 }
 
