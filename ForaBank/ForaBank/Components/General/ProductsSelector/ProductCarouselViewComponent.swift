@@ -8,6 +8,7 @@
 import Combine
 import ScrollViewProxy
 import SwiftUI
+import CardUI
 
 // MARK: - ViewModel
 
@@ -590,7 +591,7 @@ private extension ProductCarouselView.ViewModel.Style {
         }
     }
     
-    var productAppearanceSize: ProductView.ViewModel.Appearance.Size {
+    var productAppearanceSize: Appearance.Size {
         
         switch self {
         case .regular: return .normal

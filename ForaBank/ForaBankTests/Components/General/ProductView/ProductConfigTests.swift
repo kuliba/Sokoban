@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+import CardUI
 
 final class ProductConfigTests: XCTestCase {
     
@@ -119,7 +120,7 @@ final class ProductConfigTests: XCTestCase {
     
     // MARK: - Helpers
     private func makeSUT(
-        size: ProductView.ViewModel.Appearance.Size = .small,
+        size: Appearance.Size = .small,
         cardAction: ProductView.ViewModel.CardAction? = nil,
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
         file: StaticString = #file,

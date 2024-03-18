@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+import CardUI
 
 final class CardViewComponentTests: XCTestCase {
     
@@ -466,7 +467,7 @@ final class CardViewComponentTests: XCTestCase {
         header: ProductView.ViewModel.HeaderViewModel,
         name: String,
         footer:ProductView.ViewModel.FooterViewModel,
-        appearance: ProductView.ViewModel.Appearance,
+        appearance: Appearance,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
         file: StaticString = #file,
@@ -502,7 +503,7 @@ final class CardViewComponentTests: XCTestCase {
         productType: ProductType = .card,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
-        size: ProductView.ViewModel.Appearance.Size = .small,
+        size: Appearance.Size = .small,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -530,8 +531,8 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productData: ProductData,
-        size: ProductView.ViewModel.Appearance.Size,
-        style: ProductView.ViewModel.Appearance.Style,
+        size: Appearance.Size,
+        style: Appearance.Style,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {

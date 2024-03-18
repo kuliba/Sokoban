@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CardUI
 
 struct Values {
     
@@ -15,8 +16,6 @@ struct Values {
 
 extension ProductView {
     
-    typealias Appearance = ViewModel.Appearance
-
     struct BackViewConfig {
         
         let headerLeadingPadding: CGFloat
