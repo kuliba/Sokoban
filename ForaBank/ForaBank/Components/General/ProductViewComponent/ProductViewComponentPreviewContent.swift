@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CardUI
 
 //MARK: - Preview Content
 
@@ -221,7 +222,7 @@ private extension ProductView.ViewModel.FooterViewModel {
     static let mastercard = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .mastercard)
 }
 
-private extension ProductView.ViewModel.Appearance {
+private extension Appearance {
     
     static func whiteSample(_ size: Size = .normal) -> Self {
         
@@ -268,7 +269,7 @@ private extension ProductView.ViewModel.Appearance {
     }
 }
 
-private extension ProductView.ViewModel.Appearance.Background {
+private extension Appearance.Background {
     
     static let red: Self =          .init(color: .mainColorsRed, image: nil)
     static let cardRIO: Self =      .init(color: .cardRio,       image: nil)

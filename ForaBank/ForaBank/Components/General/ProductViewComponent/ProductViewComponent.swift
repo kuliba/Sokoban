@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import Tagged
 import PinCodeUI
+import CardUI
 
 //MARK: - ViewModel
 
@@ -521,7 +522,7 @@ extension ProductView.ViewModel {
                 }.store(in: &bindings)
         }
         
-        func icon(with style: ProductView.ViewModel.Appearance.Style) -> Image {
+        func icon(with style: Appearance.Style) -> Image {
             
             switch status {
             case .activation:
@@ -538,7 +539,7 @@ extension ProductView.ViewModel {
             }
         }
         
-        func iconSize(with style: ProductView.ViewModel.Appearance.Style) -> CGSize {
+        func iconSize(with style: Appearance.Style) -> CGSize {
             
             switch style {
             case .main: return .init(width: 24, height: 24)
@@ -564,41 +565,7 @@ extension ProductView.ViewModel {
             struct Failed: Action {}
         }
     }
-    
-    struct Appearance {
         
-        let textColor: Color
-        let background: Background
-        var opacity: Double = 1
-        var size: Size = .normal
-        var style: Style = .main
-        
-        struct Background {
-            
-            let color: Color
-            let image: Image?
-        }
-        
-        enum Size {
-            
-            case large
-            case normal
-            case small
-        }
-        
-        enum Style {
-            
-            case main
-            case profile
-        }
-        
-        enum NameOfCreditProduct {
-            
-            case navigationTitle
-            case cardTitle
-        }
-    }
-    
     struct CardInfo: Equatable {
         
         typealias CVV = Tagged<_CVV, String>
@@ -937,7 +904,7 @@ extension ProductView {
         
         let viewModel: ViewModel.StatusActionViewModel
         let color: Color
-        let style: ViewModel.Appearance.Style
+        let style: Appearance.Style
         
         var body: some View {
             
