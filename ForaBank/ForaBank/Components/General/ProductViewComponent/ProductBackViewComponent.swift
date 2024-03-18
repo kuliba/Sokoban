@@ -12,7 +12,7 @@ import CardUI
 
 struct ProductBackView<Header: View, CVV: View>: View {
     
-    let backViewConfig: CardUI.Config.BackView
+    let backViewConfig: CardUI.Config.Back
     
     let headerView: () -> Header
     let cvvView: () -> CVV

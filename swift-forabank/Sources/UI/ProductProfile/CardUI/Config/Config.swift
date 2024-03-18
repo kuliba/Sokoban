@@ -10,8 +10,8 @@ import SwiftUI
 public struct Config {
     
     public let appearance: Appearance
-    public let backView: BackView
-    public let cardView: CardView
+    public let back: Back
+    public let front: Front
     public let fonts: Fonts
     public let sizes: Sizes
     public let colors: Colors
@@ -19,16 +19,16 @@ public struct Config {
     
     public init(
         appearance: Appearance,
-        backView: BackView,
-        cardView: CardView,
+        back: Back,
+        front: Front,
         fonts: Fonts,
         sizes: Sizes,
         colors: Colors,
         copyImage: Image
     ) {
         self.appearance = appearance
-        self.backView = backView
-        self.cardView = cardView
+        self.back = back
+        self.front = front
         self.fonts = fonts
         self.sizes = sizes
         self.colors = colors
@@ -38,7 +38,7 @@ public struct Config {
 
 public extension Config {
     
-    struct BackView {
+    struct Back {
         
         public let headerLeadingPadding: CGFloat
         public let headerTopPadding: CGFloat
@@ -55,7 +55,7 @@ public extension Config {
         }
     }
     
-    struct CardView {
+    struct Front {
         
         public let headerLeadingPadding: CGFloat
         public let headerTopPadding: CGFloat

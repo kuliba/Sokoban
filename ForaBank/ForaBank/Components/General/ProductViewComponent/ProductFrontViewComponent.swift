@@ -31,10 +31,10 @@ struct ProductFrontView<Header: View, Footer: View>: View {
         VStack(alignment: .leading, spacing: 0) {
             
             headerView()
-                .padding(.leading, config.cardView.headerLeadingPadding)
-                .padding(.top, config.cardView.headerTopPadding)
+                .padding(.leading, config.front.headerLeadingPadding)
+                .padding(.top, config.front.headerTopPadding)
             
-            VStack(alignment: .leading, spacing: config.cardView.nameSpacing) {
+            VStack(alignment: .leading, spacing: config.front.nameSpacing) {
                 
                 Text(name)
                     .font(config.fonts.card)

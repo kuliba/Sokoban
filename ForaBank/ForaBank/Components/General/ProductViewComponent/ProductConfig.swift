@@ -14,9 +14,9 @@ struct Values {
     let endValue: Double
 }
 
-extension CardUI.Config.BackView {
+extension CardUI.Config.Back {
     
-    static let backViewConfig: Self = .init(
+    static let backConfig: Self = .init(
         headerLeadingPadding: CGFloat(12).pixelsToPoints(),
         headerTopPadding: CGFloat(12).pixelsToPoints(),
         headerTrailingPadding: CGFloat(12).pixelsToPoints())
@@ -24,7 +24,7 @@ extension CardUI.Config.BackView {
 
 extension CardUI.Config {
     
-    static func cardViewConfig(_ size: Appearance.Size) -> CardView {
+    static func frontConfig(_ size: Appearance.Size) -> Front {
         
         switch size {
             
@@ -52,8 +52,8 @@ extension CardUI.Config {
         
         .init(
             appearance: appearance,
-            backView: .backViewConfig,
-            cardView: cardViewConfig(appearance.size),
+            back: .backConfig,
+            front: frontConfig(appearance.size),
             fonts: fontsConfig(appearance.size),
             sizes: sizesConfig(appearance.size),
             colors: .init(

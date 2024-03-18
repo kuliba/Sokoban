@@ -12,53 +12,53 @@ import CardUI
 
 final class ProductConfigTests: XCTestCase {
     
-    // MARK: - Test Card Config
+    // MARK: - Test front Config
     
-    func test_cardConfig_smallSize() {
+    func test_frontConfig_smallSize() {
         
         let sut = makeSUT(size: .small)
         
-        XCTAssertEqual(sut.cardView.headerLeadingPadding, 29)
-        XCTAssertEqual(sut.cardView.headerTopPadding, 4)
-        XCTAssertEqual(sut.cardView.nameSpacing, 4)
-        XCTAssertEqual(sut.cardView.cardPadding, 8)
-        XCTAssertEqual(sut.cardView.cornerRadius, 8)
-        XCTAssertEqual(sut.cardView.checkPadding, 8)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 29)
+        XCTAssertEqual(sut.front.headerTopPadding, 4)
+        XCTAssertEqual(sut.front.nameSpacing, 4)
+        XCTAssertEqual(sut.front.cardPadding, 8)
+        XCTAssertEqual(sut.front.cornerRadius, 8)
+        XCTAssertEqual(sut.front.checkPadding, 8)
     }
     
-    func test_cardConfig_normalSize() {
+    func test_frontConfig_normalSize() {
         
         let sut = makeSUT(size: .normal)
         
-        XCTAssertEqual(sut.cardView.headerLeadingPadding, 43)
-        XCTAssertEqual(sut.cardView.headerTopPadding, 6.2)
-        XCTAssertEqual(sut.cardView.nameSpacing, 6)
-        XCTAssertEqual(sut.cardView.cardPadding, 12)
-        XCTAssertEqual(sut.cardView.cornerRadius, 12)
-        XCTAssertEqual(sut.cardView.checkPadding, 10)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 43)
+        XCTAssertEqual(sut.front.headerTopPadding, 6.2)
+        XCTAssertEqual(sut.front.nameSpacing, 6)
+        XCTAssertEqual(sut.front.cardPadding, 12)
+        XCTAssertEqual(sut.front.cornerRadius, 12)
+        XCTAssertEqual(sut.front.checkPadding, 10)
     }
     
-    func test_cardConfig_largeSize() {
+    func test_frontConfig_largeSize() {
         
         let sut = makeSUT(size: .large)
         
-        XCTAssertEqual(sut.cardView.headerLeadingPadding, 43)
-        XCTAssertEqual(sut.cardView.headerTopPadding, 6.2)
-        XCTAssertEqual(sut.cardView.nameSpacing, 6)
-        XCTAssertEqual(sut.cardView.cardPadding, 12)
-        XCTAssertEqual(sut.cardView.cornerRadius, 12)
-        XCTAssertEqual(sut.cardView.checkPadding, 10)
+        XCTAssertEqual(sut.front.headerLeadingPadding, 43)
+        XCTAssertEqual(sut.front.headerTopPadding, 6.2)
+        XCTAssertEqual(sut.front.nameSpacing, 6)
+        XCTAssertEqual(sut.front.cardPadding, 12)
+        XCTAssertEqual(sut.front.cornerRadius, 12)
+        XCTAssertEqual(sut.front.checkPadding, 10)
     }
     
-    // MARK: - Test BackView Config
+    // MARK: - Test Back Config
     
     func test_backView() {
         
         let sut = makeSUT()
                 
-        XCTAssertEqual(sut.backView.headerLeadingPadding, .offset_12)
-        XCTAssertEqual(sut.backView.headerTopPadding, .offset_12)
-        XCTAssertEqual(sut.backView.headerTrailingPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerLeadingPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerTopPadding, .offset_12)
+        XCTAssertEqual(sut.back.headerTrailingPadding, .offset_12)
     }
     
     // MARK: - Test Font Config

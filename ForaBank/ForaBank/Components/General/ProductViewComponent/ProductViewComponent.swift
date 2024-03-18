@@ -780,7 +780,7 @@ struct ProductView: View {
         }
         
         ProductBackView(
-            backViewConfig: config.backView,
+            backViewConfig: config.back,
             headerView: {
                 
                 ProductView.HeaderBackView.init(
@@ -1075,7 +1075,7 @@ extension ProductView {
                         maxHeight: .infinity,
                         alignment: .topTrailing
                     )
-                    .padding(config.cardView.checkPadding)
+                    .padding(config.front.checkPadding)
             }
         }
         
@@ -1108,7 +1108,7 @@ extension ProductView {
                     
                     AnimatedGradientView(duration: 3.0)
                         .blendMode(.colorDodge)
-                        .clipShape(RoundedRectangle(cornerRadius: config.cardView.cornerRadius))
+                        .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius))
                         .zIndex(4)
                 }
             }
@@ -1132,12 +1132,12 @@ extension ProductView {
         func body(content: Content) -> some View {
             
             content
-                .padding(config.cardView.cardPadding)
+                .padding(config.front.cardPadding)
                 .background(background())
                 .overlay(checkView(), alignment: .topTrailing)
                 .overlay(statusActionView(), alignment: .center)
                 .overlay(updatingView(), alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: config.cardView.cornerRadius, style: .circular))
+                .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius, style: .circular))
         }
     }
 }
