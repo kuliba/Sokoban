@@ -12,64 +12,64 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (_, prepaymentLoader, servicesLoader, paymentStarter) = makeSUT()
         
-        XCTAssertEqual(optionsLoader.callCount, 0)
+        XCTAssertEqual(prepaymentLoader.callCount, 0)
         XCTAssertEqual(paymentStarter.callCount, 0)
         XCTAssertEqual(servicesLoader.callCount, 0)
     }
     
     // MARK: - initiatePrepayment
     
-    func test_initiatePrepayment_shouldDeliverFailureOnLoadOptionsFailure() {
+    func test_initiatePrepayment_shouldDeliverFailureOnPrepaymentLoaderFailure() {
         
-        let (sut, optionsLoader, _, _) = makeSUT()
+        let (sut, prepaymentLoader, _, _) = makeSUT()
         
-        expect(sut, with: .initiatePrepayment, toDeliver: .loaded(.failure)) {
+        expect(sut, with: .initiatePrepayment, toDeliver: .prepaymentLoaded(.failure)) {
             
-            optionsLoader.complete(with: .failure(anyError()))
+            prepaymentLoader.complete(with: .failure(anyError()))
         }
     }
     
-    func test_initiatePrepayment_shouldDeliverFailureOnEmptyOperatorListLoadOptionsSuccess_emptyLastPayments() {
+    func test_initiatePrepayment_shouldDeliverFailureOnEmptyOperatorListPrepaymentLoaderSuccess_emptyLastPayments() {
         
-        let (sut, optionsLoader, _, _) = makeSUT()
+        let (sut, prepaymentLoader, _, _) = makeSUT()
         
-        expect(sut, with: .initiatePrepayment, toDeliver: .loaded(.failure)) {
+        expect(sut, with: .initiatePrepayment, toDeliver: .prepaymentLoaded(.failure)) {
             
-            optionsLoader.complete(with: .success(([], [])))
+            prepaymentLoader.complete(with: .success(([], [])))
         }
     }
     
-    func test_initiatePrepayment_shouldDeliverFailureOnEmptyOperatorListLoadOptionsSuccess_nonEmptyLastPayments() {
+    func test_initiatePrepayment_shouldDeliverFailureOnEmptyOperatorListPrepaymentLoaderSuccess_nonEmptyLastPayments() {
         
-        let (sut, optionsLoader, _, _) = makeSUT()
+        let (sut, prepaymentLoader, _, _) = makeSUT()
         
-        expect(sut, with: .initiatePrepayment, toDeliver: .loaded(.failure)) {
+        expect(sut, with: .initiatePrepayment, toDeliver: .prepaymentLoaded(.failure)) {
             
-            optionsLoader.complete(with: .success(([makeLastPayment()], [])))
+            prepaymentLoader.complete(with: .success(([makeLastPayment()], [])))
         }
     }
     
-    func test_initiatePrepayment_shouldDeliverOperatorListLoadOptionsSuccess_emptyLastPayments() {
+    func test_initiatePrepayment_shouldDeliverOperatorListPrepaymentLoaderSuccess_emptyLastPayments() {
         
         let `operator` = makeOperator()
-        let (sut, optionsLoader, _, _) = makeSUT()
+        let (sut, prepaymentLoader, _, _) = makeSUT()
         
-        expect(sut, with: .initiatePrepayment, toDeliver: .loaded(.success([], [`operator`]))) {
+        expect(sut, with: .initiatePrepayment, toDeliver: .prepaymentLoaded(.success([], [`operator`]))) {
             
-            optionsLoader.complete(with: .success(([], [`operator`])))
+            prepaymentLoader.complete(with: .success(([], [`operator`])))
         }
     }
     
-    func test_initiatePrepayment_shouldDeliverOperatorListLoadOptionsSuccess_nonEmptyLastPayments() {
+    func test_initiatePrepayment_shouldDeliverOperatorListPrepaymentLoaderSuccess_nonEmptyLastPayments() {
         
         let (lastPayment, `operator`) = (makeLastPayment(), makeOperator())
-        let (sut, optionsLoader, _, _) = makeSUT()
+        let (sut, prepaymentLoader, _, _) = makeSUT()
         
-        expect(sut, with: .initiatePrepayment, toDeliver: .loaded(.success([lastPayment], [`operator`]))) {
+        expect(sut, with: .initiatePrepayment, toDeliver: .prepaymentLoaded(.success([lastPayment], [`operator`]))) {
             
-            optionsLoader.complete(with: .success(([lastPayment], [`operator`])))
+            prepaymentLoader.complete(with: .success(([lastPayment], [`operator`])))
         }
     }
     
@@ -255,7 +255,7 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
     private typealias Event = UtilityEvent
     private typealias Effect = UtilityEffect
     
-    private typealias OptionsLoaderSpy = Spy<Void, SUT.LoadOptionsResult>
+    private typealias PrepaymentLoaderSpy = Spy<Void, SUT.LoadPrepaymentResult>
     private typealias PaymentStarterSpy = Spy<SUT.StartPaymentPayload, SUT.StartPaymentResult>
     private typealias ServicesLoaderSpy = Spy<SUT.LoadServicesPayload, SUT.LoadServicesResult>
     
@@ -264,26 +264,26 @@ final class UtilityFlowEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        optionsLoader: OptionsLoaderSpy,
+        prepaymentLoader: PrepaymentLoaderSpy,
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
-        let optionsLoader = OptionsLoaderSpy()
+        let prepaymentLoader = PrepaymentLoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
         
         let sut = SUT(
-            loadOptions: optionsLoader.process,
+            loadPrepayment: prepaymentLoader.process,
             loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(optionsLoader, file: file, line: line)
+        trackForMemoryLeaks(prepaymentLoader, file: file, line: line)
         trackForMemoryLeaks(servicesLoader, file: file, line: line)
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, optionsLoader, servicesLoader, paymentStarter)
+        return (sut, prepaymentLoader, servicesLoader, paymentStarter)
     }
     
     private func expect(

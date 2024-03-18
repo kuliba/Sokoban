@@ -309,7 +309,7 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     
     private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadOptionsResult>
+    private typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadPrepaymentResult>
     private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
     
@@ -334,7 +334,7 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let paymentStarter = PaymentStarterSpy()
         
         let utilityEffectHandler = UtilityEffectHandler(
-            loadOptions: optionsLoader.process,
+            loadPrepayment: optionsLoader.process,
             loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )

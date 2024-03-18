@@ -7,16 +7,16 @@
 
 public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
     
-    private let loadOptions: LoadOptions
+    private let loadPrepayment: LoadPrepayment
     private let loadServices: LoadServices
     private let startPayment: StartPayment
     
     public init(
-        loadOptions: @escaping LoadOptions,
+        loadPrepayment: @escaping LoadPrepayment,
         loadServices: @escaping LoadServices,
         startPayment: @escaping StartPayment
     ) {
-        self.loadOptions = loadOptions
+        self.loadPrepayment = loadPrepayment
         self.loadServices = loadServices
         self.startPayment = startPayment
     }
@@ -40,10 +40,10 @@ public extension UtilityFlowEffectHandler {
 
 public extension UtilityFlowEffectHandler {
     
-    typealias LoadOptionsResponse = ([LastPayment], [Operator])
-    typealias LoadOptionsResult = Result<LoadOptionsResponse, Error>
-    typealias LoadOptionsCompletion = (LoadOptionsResult) -> Void
-    typealias LoadOptions = (@escaping LoadOptionsCompletion) -> Void
+    typealias LoadPrepaymentResponse = ([LastPayment], [Operator])
+    typealias LoadPrepaymentResult = Result<LoadPrepaymentResponse, Error>
+    typealias LoadPrepaymentCompletion = (LoadPrepaymentResult) -> Void
+    typealias LoadPrepayment = (@escaping LoadPrepaymentCompletion) -> Void
     
     typealias LoadServicesPayload = Operator
     typealias LoadServicesResult = Result<[Service], Error>
@@ -73,17 +73,17 @@ private extension UtilityFlowEffectHandler {
     func initiatePrepayment(
         _ dispatch: @escaping Dispatch
     ) {
-        loadOptions {
+        loadPrepayment {
             
             switch $0 {
             case .failure:
-                dispatch(.loaded(.failure))
+                dispatch(.prepaymentLoaded(.failure))
                 
             case let .success((lastPayments, operators)):
                 if operators.isEmpty {
-                    dispatch(.loaded(.failure))
+                    dispatch(.prepaymentLoaded(.failure))
                 } else {
-                    dispatch(.loaded(.success(lastPayments, operators)))
+                    dispatch(.prepaymentLoaded(.success(lastPayments, operators)))
                 }
             }
         }

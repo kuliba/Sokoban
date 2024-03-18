@@ -29,8 +29,8 @@ public extension UtilityFlowReducer {
                 effect = .initiatePrepayment
             }
             
-        case let .loaded(loaded):
-            state = reduce(state, loaded)
+        case let .prepaymentLoaded(prepaymentLoaded):
+            state = reduce(state, prepaymentLoaded)
             
         case let .loadedServices(services):
             state.push(.services(services))
@@ -62,14 +62,14 @@ private extension UtilityFlowReducer {
     
     func reduce(
         _ state: State,
-        _ loaded: Event.Loaded
+        _ prepaymentLoaded: Event.PrepaymentLoaded
     ) -> State {
         
         var state = state
         
         if state.isEmpty {
             
-            switch loaded {
+            switch prepaymentLoaded {
             case .failure:
                 state.current = .prepayment(.failure)
                 

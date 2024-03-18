@@ -92,13 +92,13 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.initiatePrepayment, on: nonEmptyState, effect: nil)
     }
     
-    // MARK: - loaded
+    // MARK: - prepaymentLoaded
     
     func test_loaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
         
         let emptyState = makeFlow()
         
-        assertState(.loaded(.failure), on: emptyState) {
+        assertState(.prepaymentLoaded(.failure), on: emptyState) {
             
             $0.push(.prepayment(.failure))
         }
@@ -108,21 +108,21 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let emptyState = makeFlow()
         
-        assert(.loaded(.failure), on: emptyState, effect: nil)
+        assert(.prepaymentLoaded(.failure), on: emptyState, effect: nil)
     }
     
     func test_loaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assertState(.loaded(.failure), on: nonEmptyState)
+        assertState(.prepaymentLoaded(.failure), on: nonEmptyState)
     }
     
     func test_loaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assert(.loaded(.failure), on: nonEmptyState, effect: nil)
+        assert(.prepaymentLoaded(.failure), on: nonEmptyState, effect: nil)
     }
     
     func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
@@ -130,7 +130,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let operators = [makeOperator()]
         let emptyState = makeFlow()
         
-        assertState(.loaded(.success([], operators)), on: emptyState) {
+        assertState(.prepaymentLoaded(.success([], operators)), on: emptyState) {
             
             $0.push(makePrepayment([], operators))
         }
@@ -141,7 +141,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let operators = [makeOperator()]
         let emptyState = makeFlow()
         
-        assert(.loaded(.success([], operators)), on: emptyState, effect: nil)
+        assert(.prepaymentLoaded(.success([], operators)), on: emptyState, effect: nil)
     }
     
     func test_loaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
@@ -149,7 +149,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let emptyState = makeFlow()
         
-        assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState) {
             
             $0.push(makePrepayment(lastPayments, operators))
         }
@@ -160,7 +160,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let emptyState = makeFlow()
         
-        assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
     }
     
     func test_loaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
@@ -168,7 +168,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState)
     }
     
     func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
@@ -176,7 +176,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
     }
     
     // MARK: - loadedServices

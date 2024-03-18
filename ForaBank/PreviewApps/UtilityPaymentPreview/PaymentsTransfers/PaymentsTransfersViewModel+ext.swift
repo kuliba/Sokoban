@@ -85,11 +85,11 @@ extension PaymentsTransfersViewModel {
             startPayment: startPayment
         )
                 
-        let loadOptions: UtilityEffectHandler.LoadOptions = { completion in
+        let loadPrepayment: UtilityEffectHandler.LoadPrepayment = { completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                completion(flowSettings.loadOptions.result)
+                completion(flowSettings.loadPrepayment.result)
             }
         }
         
@@ -102,7 +102,7 @@ extension PaymentsTransfersViewModel {
         }
         
         let utilityFlowEffectHandler = UtilityEffectHandler(
-            loadOptions: loadOptions,
+            loadPrepayment: loadPrepayment,
             loadServices: loadServices,
             startPayment: startPayment2
         )
@@ -148,9 +148,9 @@ private extension FlowSettings.LoadOperators {
     }
 }
 
-private extension FlowSettings.LoadOptions {
+private extension FlowSettings.LoadPrepayment {
     
-    var result: UtilityEffectHandler.LoadOptionsResult {
+    var result: UtilityEffectHandler.LoadPrepaymentResult {
         
         switch self {
         case .failure:

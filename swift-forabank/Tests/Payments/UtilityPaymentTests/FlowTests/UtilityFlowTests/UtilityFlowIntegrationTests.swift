@@ -76,7 +76,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias OptionsLoaderSpy = Spy<Void, EffectHandler.LoadOptionsResult>
+    private typealias OptionsLoaderSpy = Spy<Void, EffectHandler.LoadPrepaymentResult>
     private typealias ServicesLoaderSpy = Spy<EffectHandler.LoadServicesPayload, EffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<EffectHandler.StartPaymentPayload, EffectHandler.StartPaymentResult>
     
@@ -98,7 +98,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         let paymentStarter = PaymentStarterSpy()
 
         let effectHandler = EffectHandler(
-            loadOptions: optionsLoader.process,
+            loadPrepayment: optionsLoader.process,
             loadServices: servicesLoader.process,
             startPayment: paymentStarter.process
         )

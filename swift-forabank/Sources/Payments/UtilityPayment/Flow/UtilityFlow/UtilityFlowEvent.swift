@@ -9,7 +9,7 @@ public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentRespons
     
     case back
     case initiatePrepayment
-    case loaded(Loaded) // prepaymentLoaded
+    case prepaymentLoaded(PrepaymentLoaded)
     case paymentStarted(StartPaymentResult)
     case select(Select)
     case selectFailure(Operator)
@@ -18,7 +18,7 @@ public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentRespons
 
 public extension UtilityFlowEvent {
     
-    enum Loaded {
+    enum PrepaymentLoaded {
         
         case failure
         case success([LastPayment], [Operator])
@@ -35,5 +35,5 @@ public extension UtilityFlowEvent {
 }
 
 extension UtilityFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable, StartPaymentResponse: Equatable {}
-extension UtilityFlowEvent.Loaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityFlowEvent.PrepaymentLoaded: Equatable where LastPayment: Equatable, Operator: Equatable {}
 extension UtilityFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

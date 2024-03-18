@@ -30,7 +30,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     
     func test_utilityFlow_shouldDispatchLoadedFailureEventFromUtilityFlowEffectHandler() {
         
-        let event = UtilityEvent.loaded(.failure)
+        let event = UtilityEvent.prepaymentLoaded(.failure)
         let (sut, utilityFlowSpy) = makeSUT()
 
         expect(sut, with: .utilityFlow(.initiatePrepayment), toDeliver: .utilityFlow(event)) {
@@ -41,7 +41,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     
     func test_utilityFlow_shouldDispatchLoadedSuccessEventFromUtilityFlowEffectHandler() {
         
-        let event = UtilityEvent.loaded(.success([makeLastPayment()], [makeOperator()]))
+        let event = UtilityEvent.prepaymentLoaded(.success([makeLastPayment()], [makeOperator()]))
         let (sut, utilityFlowSpy) = makeSUT()
 
         expect(sut, with: .utilityFlow(.initiatePrepayment), toDeliver: .utilityFlow(event)) {
