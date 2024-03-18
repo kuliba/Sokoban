@@ -87,8 +87,8 @@ private extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch (state.route, event) {
-        case (.none, .initiate):
-            let (utilityFlow, utilityEffect) = utilityReduce(.init(), .initiate)
+        case (.none, .initiatePrepayment):
+            let (utilityFlow, utilityEffect) = utilityReduce(.init(), .initiatePrepayment)
             state.route = .utilityFlow(utilityFlow)
             effect = utilityEffect.map { .utilityFlow($0) }
             

@@ -24,9 +24,9 @@ public extension UtilityFlowReducer {
         case .back:
             state.current = nil
             
-        case .initiate:
+        case .initiatePrepayment:
             if state.isEmpty {
-                effect = .initiate
+                effect = .initiatePrepayment
             }
             
         case let .loaded(loaded):

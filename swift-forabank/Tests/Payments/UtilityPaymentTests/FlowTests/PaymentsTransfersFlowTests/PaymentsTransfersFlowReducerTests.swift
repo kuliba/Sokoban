@@ -79,7 +79,7 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         
         let utilityFlowState = makeUtilityFlowState(.init())
         let emptyFlow = UtilityFlow()
-        let effect = UtilityEffect.initiate
+        let effect = UtilityEffect.initiatePrepayment
         let (sut, _) = makeSUT(stub: (emptyFlow, effect))
         
         assert(sut: sut, .back, on: utilityFlowState, effect: nil)
@@ -89,99 +89,99 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         
         let utilityFlowState = makeUtilityFlowState(.init())
         let nonEmptyFlow = makeSingleDestinationUtilityFlow()
-        let effect = UtilityEffect.initiate
+        let effect = UtilityEffect.initiatePrepayment
         let (sut, _) = makeSUT(stub: (nonEmptyFlow, effect))
         
         assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
     }
     
-    // MARK: - initiate utilityFlow
+    // MARK: - initiatePrepayment utilityFlow
     
-    func test_utilityFlow_initiate_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
         
         let emptyFlow = UtilityFlow()
         let state = State(route: nil)
         let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
         
-        _ = sut.reduce(state, .utilityFlow(.initiate))
+        _ = sut.reduce(state, .utilityFlow(.initiatePrepayment))
         
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [emptyFlow])
-        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiatePrepayment])
     }
     
-    func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assertState(sut: sut, .utilityFlow(.initiate), on: state) {
+        assertState(sut: sut, .utilityFlow(.initiatePrepayment), on: state) {
             
             $0.route = .utilityFlow(newFlow)
         }
     }
     
-    func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
+        assert(sut: sut, .utilityFlow(.initiatePrepayment), on: state, effect: nil)
     }
     
-    func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
         let newFlow = makeSingleDestinationUtilityFlow()
-        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiatePrepayment))
         
-        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
+        assert(sut: sut, .utilityFlow(.initiatePrepayment), on: state, effect: .utilityFlow(.initiatePrepayment))
     }
     
-    func test_utilityFlow_initiate_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithFlowAndInitiateOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let (sut, utilityReducerSpy) = makeSUT(stub: (.init(), nil))
         
-        _ = sut.reduce(state, .utilityFlow(.initiate))
+        _ = sut.reduce(state, .utilityFlow(.initiatePrepayment))
         
         XCTAssertNoDiff(utilityReducerSpy.messages.map(\.state), [flow])
-        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiate])
+        XCTAssertNoDiff(utilityReducerSpy.messages.map(\.event), [.initiatePrepayment])
     }
     
-    func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldSetStateToUtilityFlowFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assertState(sut: sut, .utilityFlow(.initiate), on: state) {
+        assertState(sut: sut, .utilityFlow(.initiatePrepayment), on: state) {
             
             $0.route = .utilityFlow(newFlow)
         }
     }
     
-    func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldDeliverNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
-        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
+        assert(sut: sut, .utilityFlow(.initiatePrepayment), on: state, effect: nil)
     }
     
-    func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
+    func test_utilityFlow_initiatePrepayment_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNonNilRoute() {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let newFlow = makeSingleDestinationUtilityFlow()
-        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiatePrepayment))
         
-        assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
+        assert(sut: sut, .utilityFlow(.initiatePrepayment), on: state, effect: .utilityFlow(.initiatePrepayment))
     }
     
     // MARK: - loaded
@@ -213,7 +213,7 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         let nilRouteState = State(route: nil)
         let event = UtilityEvent.loaded(.failure)
         let newFlow = makeSingleDestinationUtilityFlow()
-        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiatePrepayment))
         
         assert(sut: sut, .utilityFlow(event), on: nilRouteState, effect: nil)
     }
@@ -251,9 +251,9 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         let state = State(route: .utilityFlow(flow))
         let event = UtilityEvent.loaded(.failure)
         let newFlow = makeSingleDestinationUtilityFlow()
-        let (sut, _) = makeSUT(stub: (newFlow, .initiate))
+        let (sut, _) = makeSUT(stub: (newFlow, .initiatePrepayment))
         
-        assert(sut: sut, .utilityFlow(event), on: state, effect: .utilityFlow(.initiate))
+        assert(sut: sut, .utilityFlow(event), on: state, effect: .utilityFlow(.initiatePrepayment))
     }
     
     // MARK: - Helpers

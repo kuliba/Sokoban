@@ -29,8 +29,8 @@ public extension UtilityFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiate:
-            self.initiate(dispatch)
+        case .initiatePrepayment:
+            self.initiatePrepayment(dispatch)
             
         case let .select(select):
             self.select(select, dispatch)
@@ -70,7 +70,7 @@ extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPaym
 
 private extension UtilityFlowEffectHandler {
     
-    func initiate(
+    func initiatePrepayment(
         _ dispatch: @escaping Dispatch
     ) {
         loadOptions {

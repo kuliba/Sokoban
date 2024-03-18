@@ -24,7 +24,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         
         let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
-        sut.event(.initiate)
+        sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .failure(anyError()))
         
         assert(
@@ -46,7 +46,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         let options = Options(lastPayments: lastPayments, operators: operators)
         let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
-        sut.event(.initiate)
+        sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .success((lastPayments, operators)))
         
         assert(

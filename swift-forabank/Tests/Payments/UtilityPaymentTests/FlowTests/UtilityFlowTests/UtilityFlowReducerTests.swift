@@ -62,34 +62,34 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.back, on: multiFlowState, effect: nil)
     }
     
-    // MARK: - initiate
+    // MARK: - initiatePrepayment
     
-    func test_initiate_shouldNotChangeEmptyState() {
+    func test_initiatePrepayment_shouldNotChangeEmptyState() {
         
         let emptyState = makeFlow()
         
-        assertState(.initiate, on: emptyState)
+        assertState(.initiatePrepayment, on: emptyState)
     }
     
-    func test_initiate_shouldDeliverEffectOnEmptyState() {
+    func test_initiatePrepayment_shouldDeliverEffectOnEmptyState() {
         
         let emptyState = makeFlow()
         
-        assert(.initiate, on: emptyState, effect: .initiate)
+        assert(.initiatePrepayment, on: emptyState, effect: .initiatePrepayment)
     }
     
-    func test_initiate_shouldNotChangeNonEmptyState() {
+    func test_initiatePrepayment_shouldNotChangeNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assertState(.initiate, on: nonEmptyState)
+        assertState(.initiatePrepayment, on: nonEmptyState)
     }
     
-    func test_initiate_shouldNotDeliverEffectOnNonEmptyState() {
+    func test_initiatePrepayment_shouldNotDeliverEffectOnNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assert(.initiate, on: nonEmptyState, effect: nil)
+        assert(.initiatePrepayment, on: nonEmptyState, effect: nil)
     }
     
     // MARK: - loaded

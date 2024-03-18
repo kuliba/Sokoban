@@ -27,7 +27,7 @@ private extension PaymentsTransfersView {
         
         Button(
             "Utility Payment",
-            action: { viewModel.event(.flow(.utilityFlow(.initiate))) }
+            action: { viewModel.event(.flow(.utilityFlow(.initiatePrepayment))) }
         )
         .navigationDestination(
             item: .init(

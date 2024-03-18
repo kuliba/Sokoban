@@ -7,7 +7,7 @@
 
 public enum UtilityFlowEffect<LastPayment, Operator, Service> {
     
-    case initiate
+    case initiatePrepayment
     case select(Select)
 }
 
