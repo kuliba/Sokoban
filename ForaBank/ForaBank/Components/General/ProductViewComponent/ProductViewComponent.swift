@@ -24,9 +24,9 @@ extension ProductView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let id: ProductData.ID
-        let header: HeaderViewModel
+        let header: HeaderDetails
         @Published var cardInfo: CardInfo
-        @Published var footer: FooterViewModel
+        @Published var footer: FooterDetails
         @Published var statusAction: StatusActionViewModel?
         @Published var isChecked: Bool
         @Published var isUpdating: Bool
@@ -41,9 +41,9 @@ extension ProductView {
         
         internal init(
             id: ProductData.ID,
-            header: HeaderViewModel,
+            header: HeaderDetails,
             cardInfo: CardInfo,
-            footer: FooterViewModel,
+            footer: FooterDetails,
             statusAction: StatusActionViewModel?,
             isChecked: Bool = false,
             appearance: Appearance,
@@ -433,28 +433,7 @@ enum ProductViewModelAction {
 //MARK: - Internal ViewModels
 
 extension ProductView.ViewModel {
-    
-    struct HeaderViewModel {
-        
-        var logo: Image? = nil
-        let number: String?
-        var period: String? = nil
-    }
-    
-    class FooterViewModel: ObservableObject {
-        
-        @Published var balance: String
-        @Published var interestRate: String?
-        let paymentSystem: Image?
-        
-        init(balance: String, interestRate: String? = nil, paymentSystem: Image? = nil) {
             
-            self.balance = balance
-            self.interestRate = interestRate
-            self.paymentSystem = paymentSystem
-        }
-    }
-    
     class StatusActionViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
@@ -639,32 +618,19 @@ struct ProductView: View {
 
     var body: some View {
         
-        ProductFrontView(
-            name: $viewModel.cardInfo.name,
-            balance: .init(
-                get: {
-                    .init(viewModel.footer.balance)
-                },
-                set: { _ in }
-            ),
+        FrontView(
+            name: viewModel.cardInfo.name,
+            balance: .init(viewModel.footer.balance),
             config: config,
-            headerView: {
-                
-                ProductView.HeaderView(config: config, header: viewModel.header)
-            },
+            headerView: { HeaderView(config: config, header: viewModel.header) },
             footerView: { balance in
                 
-                ProductView.FooterView(
+                FooterView(
                     config: config,
                     footer: .init(
-                        get: {
-                            .init(
-                                balance: balance.rawValue,
-                                interestRate: viewModel.footer.interestRate,
-                                paymentSystem: viewModel.footer.paymentSystem
-                            )
-                        },
-                        set: { _ in }
+                        balance: balance.rawValue,
+                        interestRate: viewModel.footer.interestRate,
+                        paymentSystem: viewModel.footer.paymentSystem
                     )
                 )
             })
@@ -695,18 +661,19 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        ProductBackView(
-            backViewConfig: config.back,
-            headerView: {
+        BackView(
+            back: config.back,
+            header: {
                 
-                ProductView.HeaderBackView.init(
-                    cardInfo: $viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard
+                HeaderBackView.init(
+                    cardInfo: viewModel.cardInfo,
+                    action: viewModel.copyCardNumberToClipboard, 
+                    config: config
                 )
             },
-            cvvView: {
+            cvv: {
                 
-                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.showCVVButtonTap)
+                CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
             }
         )
         .card(
@@ -727,98 +694,6 @@ struct ProductView: View {
 //MARK: - Internal Views
 
 extension ProductView {
-    
-    struct HeaderView: View {
-        
-        let config: CardUI.Config
-        let header: ProductView.ViewModel.HeaderViewModel
-        var body: some View {
-            
-            HStack(alignment: .center, spacing: 8) {
-                
-                if let number = header.number {
-                    
-                    Text(number)
-                        .font(config.fonts.header)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productNumber")
-                }
-                
-                if let period = header.period {
-                    
-                    Rectangle()
-                        .frame(width: 1, height: 16)
-                        .foregroundColor(config.appearance.textColor)
-                    
-                    Text(period)
-                        .font(config.fonts.header)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productPeriod")
-                }
-            }
-        }
-    }
-    
-    struct FooterView: View {
-        
-        let config: CardUI.Config
-        @Binding var footer: ProductView.ViewModel.FooterViewModel
-        
-        var body: some View {
-            
-            if let paymentSystem = footer.paymentSystem {
-                
-                HStack {
-                    
-                    Text(footer.balance)
-                        .font(config.fonts.footer)
-                        .fontWeight(.semibold)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productBalance")
-                    
-                    Spacer()
-                    
-                }.overlay(
-                    
-                    HStack {
-                        Spacer()
-                        paymentSystem
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: config.sizes.paymentSystemIcon.width, height: config.sizes.paymentSystemIcon.height)
-                            .foregroundColor(config.appearance.textColor)
-                            .accessibilityIdentifier("productPaymentSystemIcon")
-                    }
-                )
-                
-            } else {
-                
-                HStack {
-                    
-                    Text(footer.balance)
-                        .font(config.fonts.footer)
-                        .fontWeight(.semibold)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productBalance")
-                    
-                    Spacer()
-                    if let text = footer.interestRate {
-                        
-                        ZStack {
-                            
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.mainColorsGrayMedium)
-                                .frame(width: 56, height: 20)
-                            Text(text)
-                                .font(.textBodySM12160())
-                                .fontWeight(.regular)
-                                .foregroundColor(Color.textSecondary)
-                        }
-                    }
-                }
-            }
-        }
-    }
     
     struct StatusActionView: View {
         
