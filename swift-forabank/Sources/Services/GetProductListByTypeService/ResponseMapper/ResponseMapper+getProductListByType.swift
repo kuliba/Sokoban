@@ -13,7 +13,7 @@ public typealias MappingError = Services.ResponseMapper.MappingError
 
 public extension ResponseMapper {
     
-    typealias GetProductListByTypeResult = Result<ProductListData, MappingError>
+    typealias GetProductListByTypeResult = Result<ProductResponse, MappingError>
     
     static func mapGetCardStatementResponse(
         _ data: Data,
@@ -25,9 +25,9 @@ public extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> ProductListData {
+    ) throws -> ProductResponse {
         
-        ProductListData(data: data)
+        ProductResponse(data: data)
     }
 }
 
@@ -67,7 +67,6 @@ private extension ResponseMapper {
                 
             case .loan:
                 productSettings = .loan(try container.decode(LoanSettingsDTO.self))
-
             }
         }
     }
@@ -144,7 +143,6 @@ private extension ResponseMapper {
         let statusCard: StatusCardDTO
         let loanBaseParam: LoanBaseParamDTO?
         let statusPC: StatusPCDTO
-        let miniStatement: [PaymentDTO]
         let name: String
         let validThru: Int
         let status: StatusDTO
@@ -207,11 +205,11 @@ private extension ResponseMapper {
         let interestRate: Double
         let accountID: Int
         let creditMinimumAmount: Double?
-        let minimumBalance: Double?
+        let minimumBalance: Double
         let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
-        let isDebitInterestAvailable: Bool?
+        let isDebitInterestAvailable: Bool
     }
 }
 
@@ -226,7 +224,6 @@ private extension ResponseMapper {
         let dateOpen: Int
         let status: StatusDTO
         let branchName: String
-        let miniStatement: [PaymentDTO]
         let detailedRatesUrl: String
         let detailedConditionUrl: String
     }
@@ -260,7 +257,6 @@ private extension ResponseMapper {
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
         case blocked = "BLOCKED"
-        case unknown
     }
 
     enum CardTypeDTO: String, Decodable {
@@ -291,11 +287,10 @@ private extension ResponseMapper {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
-        case unknown
     }
 }
 
-private extension ProductListData.ProductType {
+private extension ProductResponse.ProductType {
     
     init(productTypeDTO: ResponseMapper.ProductTypeDTO) {
         
@@ -311,12 +306,11 @@ private extension ProductListData.ProductType {
             
         case .loan:
             self = .loan
-            
         }
     }
 }
 
-private extension ProductListData.Status {
+private extension ProductResponse.Status {
     
     init(statusDTO: ResponseMapper.StatusDTO) {
         
@@ -344,33 +338,14 @@ private extension ProductListData.Status {
             
         case .blocked:
             self = .blocked
-            
-        case .unknown:
-            self = .unknown
         }
     }
 }
 
-private extension ProductListData.Payment {
+private extension ProductResponse.LoanBaseParam {
     
-    init(paymentDTO: ResponseMapper.PaymentDTO) {
-        
-        self.init(
-            account: paymentDTO.account,
-            date: paymentDTO.date,
-            amount: paymentDTO.amount,
-            currency: paymentDTO.currency,
-            purpose: paymentDTO.purpose
-        )
-    }
-}
-
-private extension ProductListData.LoanBaseParam {
-    
-    init?(loanDTO: ResponseMapper.LoanBaseParamDTO?) {
-        
-        guard let loanDTO else { return nil }
-        
+    init(loanDTO: ResponseMapper.LoanBaseParamDTO) {
+                
         self.init(
             loanID: loanDTO.loanID,
             clientID: loanDTO.clientID,
@@ -378,19 +353,19 @@ private extension ProductListData.LoanBaseParam {
             currencyID: loanDTO.currencyID,
             currencyNumber: loanDTO.currencyNumber,
             currencyCode: loanDTO.currencyCode,
-            minimumPayment: loanDTO.minimumPayment,
-            gracePeriodPayment: loanDTO.gracePeriodPayment,
-            overduePayment: loanDTO.overduePayment,
-            availableExceedLimit: loanDTO.availableExceedLimit,
-            ownFunds: loanDTO.ownFunds,
-            debtAmount: loanDTO.debtAmount,
-            totalAvailableAmount: loanDTO.totalAvailableAmount,
-            totalDebtAmount: loanDTO.totalDebtAmount
+            minimumPayment: loanDTO.minimumPayment.map{ Decimal($0) },
+            gracePeriodPayment: loanDTO.gracePeriodPayment.map{ Decimal($0) },
+            overduePayment: loanDTO.overduePayment.map{ Decimal($0) },
+            availableExceedLimit: loanDTO.availableExceedLimit.map{ Decimal($0) },
+            ownFunds: loanDTO.ownFunds.map{ Decimal($0) },
+            debtAmount: loanDTO.debtAmount.map{ Decimal($0) },
+            totalAvailableAmount: loanDTO.totalAvailableAmount.map{ Decimal($0) },
+            totalDebtAmount: loanDTO.totalDebtAmount.map{ Decimal($0) }
         )
     }
 }
 
-private extension ProductListData.StatusPC {
+private extension ProductResponse.StatusPC {
     
     init(statusPCDTO: ResponseMapper.StatusPCDTO) {
         
@@ -418,14 +393,11 @@ private extension ProductListData.StatusPC {
             
         case .blockedByClient:
             self = .blockedByClient
-            
-        case .unknown:
-            self = .unknown
         }
     }
 }
 
-private extension ProductListData.StatusCard {
+private extension ProductResponse.StatusCard {
     
     init(statusCardDTO: ResponseMapper.StatusCardDTO) {
         
@@ -445,7 +417,7 @@ private extension ProductListData.StatusCard {
     }
 }
 
-private extension ProductListData.CardType {
+private extension ProductResponse.CardType {
     
     init(cardTypeDTO: ResponseMapper.CardTypeDTO) {
         
@@ -468,7 +440,7 @@ private extension ProductListData.CardType {
     }
 }
 
-private extension ProductListData.ProductState {
+private extension ProductResponse.ProductState {
     
     init(productStateDTO: ResponseMapper.ProductStateDTO) {
         
@@ -491,116 +463,160 @@ private extension ProductListData.ProductState {
     }
 }
 
-private extension ProductListData {
+private extension ProductResponse.Product {
+    
+    init(_ data: ResponseMapper.ProductListDTO) {
+        
+        self.init(
+            commonProperties: .init(data.commonSettings),
+            uniqueProperties: .init(data.productSettings)
+        )
+    }
+}
+
+private extension ProductResponse.CommonProperties {
+    
+    init(_ data: ResponseMapper.CommonSettingsDTO) {
+        
+        self.init(
+            id: data.id,
+            productType: .init(productTypeDTO: data.productType),
+            productState: data.productState.map{ .init(productStateDTO: $0) },
+            order: data.order,
+            visibility: data.visibility,
+            number: data.number,
+            numberMasked: data.numberMasked,
+            accountNumber: data.accountNumber,
+            currency: data.currency,
+            mainField: data.mainField,
+            additionalField: data.additionalField,
+            customName: data.customName,
+            productName: data.productName,
+            balance: data.balance.map{ Decimal($0) },
+            balanceRUB: data.balanceRUB.map{ Decimal($0) },
+            openDate: data.openDate,
+            ownerId: data.ownerID,
+            branchId: data.branchId,
+            allowDebit: data.allowDebit,
+            allowCredit: data.allowCredit,
+            fontDesignColor: data.fontDesignColor,
+            smallDesignMd5Hash: data.smallDesignMd5hash,
+            mediumDesignMd5Hash: data.mediumDesignMd5hash,
+            largeDesignMd5Hash: data.largeDesignMd5hash,
+            xlDesignMd5Hash: data.XLDesignMd5hash,
+            smallBackgroundDesignHash: data.smallBackgroundDesignHash,
+            background: data.background
+        )
+    }
+}
+
+private extension ProductResponse.UniqueProperties {
+    
+    init(_ data: ResponseMapper.ProductSettingsDTO) {
+        
+        switch data {
+        case let .card(card):
+            self = .card(.init(card))
+            
+        case let .loan(loan):
+            self = .loan(.init(loan))
+            
+        case let .deposit(deposit):
+            self = .deposit(.init(deposit))
+            
+        case let .account(account):
+            self = .account(.init(account))
+        }
+    }
+}
+
+private extension ProductResponse.Card {
+    
+    init(_ data: ResponseMapper.CardSettingsDTO) {
+        
+        self.init(
+            cardID: data.cardID,
+            idParent: data.idParent,
+            accountID: data.accountID,
+            cardType: .init(cardTypeDTO: data.cardType),
+            statusCard: .init(statusCardDTO: data.statusCard),
+            loanBaseParam: data.loanBaseParam.map{ .init(loanDTO: $0) },
+            statusPC: .init(statusPCDTO: data.statusPC),
+            name: data.name,
+            validThru: data.validThru,
+            status: .init(statusDTO: data.status),
+            expireDate: data.expireDate,
+            holderName: data.holderName,
+            product: data.product,
+            branch: data.branch,
+            paymentSystemName: data.paymentSystemName,
+            paymentSystemImageMd5Hash: data.paymentSystemImageMd5Hash
+        )
+    }
+}
+
+private extension ProductResponse.Loan {
+    
+    init(_ data: ResponseMapper.LoanSettingsDTO) {
+        
+        self.init(
+            currencyNumber: data.currencyNumber,
+            bankProductID: data.bankProductID,
+            amount: Decimal(data.amount),
+            currentInterestRate: data.currentInterestRate,
+            principalDebt: data.principalDebt.map{ Decimal($0) },
+            defaultPrincipalDebt: data.defaultPrincipalDebt.map{ Decimal($0) },
+            totalAmountDebt: data.totalAmountDebt.map{ Decimal($0) },
+            principalDebtAccount: data.principalDebtAccount,
+            settlementAccount: data.settlementAccount,
+            settlementAccountId: data.settlementAccountId,
+            dateLong: data.dateLong,
+            strDateLong: data.strDateLong
+        )
+    }
+}
+
+private extension ProductResponse.Deposit {
+    
+    init(_ data: ResponseMapper.DepositSettingsDTO) {
+        
+        self.init(
+            depositProductID: data.depositProductID,
+            depositID: data.depositID,
+            interestRate: data.interestRate,
+            accountID: data.accountID,
+            creditMinimumAmount: data.creditMinimumAmount.map{ Decimal($0) },
+            minimumBalance: Decimal(data.minimumBalance),
+            endDate: data.endDate,
+            endDateNF: data.endDate_nf,
+            demandDeposit: data.demandDeposit,
+            isDebitInterestAvailable: data.isDebitInterestAvailable
+        )
+    }
+}
+
+private extension ProductResponse.Account {
+    
+    init(_ data: ResponseMapper.AccountSettingsDTO) {
+        
+        self.init(
+            name: data.name,
+            externalID: data.externalID,
+            dateOpen: data.dateOpen,
+            status: .init(statusDTO: data.status),
+            branchName: data.branchName,
+            detailedRatesUrl: data.detailedRatesUrl,
+            detailedConditionUrl: data.detailedConditionUrl
+        )
+    }
+}
+
+private extension ProductResponse {
     
     init(data: ResponseMapper._Data) {
         
-        let productList: [ProductList] = data.productList.map {
-            
-            let commonSettings = ProductListData.CommonProductSettings(
-                id: $0.commonSettings.id,
-                productType: .init(productTypeDTO: $0.commonSettings.productType),
-                productState: $0.commonSettings.productState.map { .init(productStateDTO: $0) },
-                order: $0.commonSettings.order,
-                visibility: $0.commonSettings.visibility,
-                number: $0.commonSettings.number,
-                numberMasked: $0.commonSettings.numberMasked,
-                accountNumber: $0.commonSettings.accountNumber,
-                currency: $0.commonSettings.currency,
-                mainField: $0.commonSettings.mainField,
-                additionalField: $0.commonSettings.additionalField,
-                customName: $0.commonSettings.customName,
-                productName: $0.commonSettings.productName,
-                balance: $0.commonSettings.balance,
-                balanceRUB: $0.commonSettings.balanceRUB,
-                openDate: $0.commonSettings.openDate,
-                ownerId: $0.commonSettings.ownerID,
-                branchId: $0.commonSettings.branchId,
-                allowDebit: $0.commonSettings.allowDebit,
-                allowCredit: $0.commonSettings.allowCredit,
-                fontDesignColor: $0.commonSettings.fontDesignColor,
-                smallDesignMd5Hash: $0.commonSettings.smallDesignMd5hash,
-                mediumDesignMd5Hash: $0.commonSettings.mediumDesignMd5hash,
-                largeDesignMd5Hash: $0.commonSettings.largeDesignMd5hash,
-                xlDesignMd5Hash: $0.commonSettings.XLDesignMd5hash,
-                smallBackgroundDesignHash: $0.commonSettings.smallBackgroundDesignHash,
-                background: $0.commonSettings.background
-            )
-            
-            let productSettings: ProductSettings
-            
-            switch $0.productSettings {
-            case .card(let cardSettingsDTO):
-                
-                productSettings = .card(.init(
-                    cardID: cardSettingsDTO.cardID,
-                    idParent: cardSettingsDTO.idParent,
-                    accountID: cardSettingsDTO.accountID,
-                    cardType: .init(cardTypeDTO: cardSettingsDTO.cardType),
-                    statusCard: .init(statusCardDTO: cardSettingsDTO.statusCard),
-                    loanBaseParam: .init(loanDTO: cardSettingsDTO.loanBaseParam),
-                    statusPC: .init(statusPCDTO: cardSettingsDTO.statusPC),
-                    miniStatement: cardSettingsDTO.miniStatement.map { .init(paymentDTO: $0) },
-                    name: cardSettingsDTO.name,
-                    validThru: cardSettingsDTO.validThru,
-                    status: .init(statusDTO: cardSettingsDTO.status),
-                    expireDate: cardSettingsDTO.expireDate,
-                    holderName: cardSettingsDTO.holderName,
-                    product: cardSettingsDTO.product,
-                    branch: cardSettingsDTO.branch,
-                    paymentSystemName: cardSettingsDTO.paymentSystemName,
-                    paymentSystemImageMd5Hash: cardSettingsDTO.paymentSystemImageMd5Hash
-                ))
-                                
-            case .loan(let loanSettingsDTO):
-                
-                productSettings = .loan(.init(
-                    currencyNumber: loanSettingsDTO.currencyNumber,
-                    bankProductID: loanSettingsDTO.bankProductID,
-                    amount: loanSettingsDTO.amount,
-                    currentInterestRate: loanSettingsDTO.currentInterestRate,
-                    principalDebt: loanSettingsDTO.principalDebt,
-                    defaultPrincipalDebt: loanSettingsDTO.defaultPrincipalDebt,
-                    totalAmountDebt: loanSettingsDTO.totalAmountDebt,
-                    principalDebtAccount: loanSettingsDTO.principalDebtAccount,
-                    settlementAccount: loanSettingsDTO.settlementAccount,
-                    settlementAccountId: loanSettingsDTO.settlementAccountId,
-                    dateLong: loanSettingsDTO.dateLong,
-                    strDateLong: loanSettingsDTO.strDateLong))
-                
-            case .deposit(let depositSettingsDTO):
-
-                productSettings = .deposit(.init(
-                    depositProductID: depositSettingsDTO.depositProductID,
-                    depositID: depositSettingsDTO.depositID,
-                    interestRate: depositSettingsDTO.interestRate,
-                    accountID: depositSettingsDTO.accountID,
-                    creditMinimumAmount: depositSettingsDTO.creditMinimumAmount,
-                    minimumBalance: depositSettingsDTO.minimumBalance,
-                    endDate: depositSettingsDTO.endDate,
-                    endDateNF: depositSettingsDTO.endDate_nf,
-                    demandDeposit: depositSettingsDTO.demandDeposit,
-                    isDebitInterestAvailable: depositSettingsDTO.isDebitInterestAvailable))
-                
-            case .account(let accountSettingsDTO):
-                
-                productSettings = .account(.init(
-                    name: accountSettingsDTO.name,
-                    externalID: accountSettingsDTO.externalID,
-                    dateOpen: accountSettingsDTO.dateOpen,
-                    status: .init(statusDTO: accountSettingsDTO.status),
-                    branchName: accountSettingsDTO.branchName,
-                    miniStatement: accountSettingsDTO.miniStatement.map { .init(paymentDTO: $0) },
-                    detailedRatesUrl: accountSettingsDTO.detailedRatesUrl,
-                    detailedConditionUrl: accountSettingsDTO.detailedConditionUrl))
-            }
-            
-            return ProductList(
-                commonSettings: commonSettings,
-                productSettings: productSettings
-            )
-        }
-
-        self = .init(serial: data.serial, productList: productList)
+        self.init(
+            products: data.productList.map(ProductResponse.Product.init)
+        )
     }
 }
