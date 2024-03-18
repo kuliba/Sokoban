@@ -1,23 +1,21 @@
 //
-//  PaymentsTransfersReducer.swift
+//  PaymentsTransfersFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-final class PaymentsTransfersReducer<LastPayment, Operator> {
+public final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
     
     private let utilityReduce: UtilityReduce
     
-    init(utilityReduce: @escaping UtilityReduce) {
+    public init(utilityReduce: @escaping UtilityReduce) {
         
         self.utilityReduce = utilityReduce
     }
 }
 
-extension PaymentsTransfersReducer {
+public extension PaymentsTransfersFlowReducer {
     
     func reduce(
         _ state: State,
@@ -39,22 +37,22 @@ extension PaymentsTransfersReducer {
     }
 }
 
-extension PaymentsTransfersReducer {
+public extension PaymentsTransfersFlowReducer {
     
     typealias UtilityReduce = (UtilityState, UtilityEvent) -> (UtilityState, UtilityEffect?)
     
     typealias UtilityState = Flow<Destination>
-    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
-    typealias UtilityEffect = UtilityFlowEffect
+    typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
     
-    typealias Destination = UtilityDestination<LastPayment, Operator>
+    typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = PaymentsTransfersState<Destination>
-    typealias Event = PaymentsTransfersEvent<LastPayment, Operator>
-    typealias Effect = PaymentsTransfersEffect
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
 }
 
-private extension PaymentsTransfersReducer {
+private extension PaymentsTransfersFlowReducer {
     
     func back(
         _ state: State
@@ -105,9 +103,4 @@ private extension PaymentsTransfersReducer {
         
         return (state, effect)
     }
-}
-
-private extension Flow {
-    
-    var isEmpty: Bool { stack.isEmpty }
 }

@@ -5,14 +5,17 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import UtilityPayment
-
-struct PaymentsTransfersState<UtilityDestination> {
+public struct PaymentsTransfersState<UtilityDestination> {
     
-    var route: Route?
+    public var route: Route?
+    
+    public init(route: Route? = nil) {
+     
+        self.route = route
+    }
 }
 
-extension PaymentsTransfersState {
+public extension PaymentsTransfersState {
     
     enum Route {
         
@@ -20,7 +23,7 @@ extension PaymentsTransfersState {
     }
 }
 
-extension PaymentsTransfersState.Route {
+public extension PaymentsTransfersState.Route {
     
     typealias UtilityFlow = Flow<UtilityDestination>
 }

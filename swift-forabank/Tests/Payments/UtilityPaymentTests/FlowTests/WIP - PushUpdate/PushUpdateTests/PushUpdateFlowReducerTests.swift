@@ -51,14 +51,14 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     func test_pushEvent_shouldDeliverPushEffect() {
         
         let effect = PushEffect.push
-        let (sut, _,_) = makeSUT(pushStub: (.services, effect))
+        let (sut, _,_) = makeSUT(pushStub: (.services([makeService(), makeService()]), effect))
         
         assert(sut: sut, .push(.push), on: .init(), effect: .push(effect))
     }
     
     func test_pushEvent_shouldDeliverPushEffect_nil() {
         
-        let (sut, _,_) = makeSUT(pushStub: (.services, nil))
+        let (sut, _,_) = makeSUT(pushStub: (.services([makeService(), makeService()]), nil))
         
         assert(sut: sut, .push(.push), on: .init(), effect: nil)
     }
@@ -104,25 +104,23 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     func test_updateEvent_shouldDeliverUpdateEffect() {
         
         let effect = UpdateEffect.update
-        let (sut, _,_) = makeSUT(updateStub: (.services, effect))
+        let (sut, _,_) = makeSUT(updateStub: (.services([makeService(), makeService()]), effect))
         
         assert(sut: sut, .update(.update), on: .init(), effect: .update(effect))
     }
     
     func test_updateEvent_shouldDeliverUpdateEffect_nil() {
         
-        let (sut, _,_) = makeSUT(updateStub: (.services, nil))
+        let (sut, _,_) = makeSUT(updateStub: (.services([makeService(), makeService()]), nil))
         
         assert(sut: sut, .update(.update), on: .init(), effect: nil)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PushUpdateFlowReducer<UtilityDestination<LastPayment, Operator>, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
+    private typealias SUT = PushUpdateFlowReducer<Destination, PushEvent, UpdateEvent, PushEffect, UpdateEffect>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
-
-    private typealias State = Flow<Destination>
+    private typealias State = UtilityFlow
     private typealias Event = PushUpdateFlowEvent<PushEvent, UpdateEvent>
     private typealias Effect = PushUpdateFlowEffect<PushEffect, UpdateEffect>
     
@@ -130,8 +128,8 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     private typealias UpdateSpy = CallSpy<(Flow<Destination>, UpdateEvent)>
     
     private func makeSUT(
-        pushStub: (Destination, PushEffect?) = (.services, nil),
-        updateStub: (Destination, UpdateEffect?) = (.services, nil),
+        pushStub: (Destination, PushEffect?) = (.services([makeService(), makeService()]), nil),
+        updateStub: (Destination, UpdateEffect?) = (.services([makeService(), makeService()]), nil),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

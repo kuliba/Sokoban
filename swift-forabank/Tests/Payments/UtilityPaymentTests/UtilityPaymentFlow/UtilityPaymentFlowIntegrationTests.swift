@@ -319,7 +319,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Response = StartPaymentResponse
-    private typealias Service = UtilityService
     
     private typealias State = UtilityPaymentFlowState<LastPayment, Operator, Service>
     private typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>

@@ -7,10 +7,13 @@
 
 import PrePaymentPicker
 
-public enum UtilityDestination<LastPayment, Operator> {
+public enum UtilityDestination<LastPayment, Operator, Service> {
     
+    case failure(ServiceFailure)
+    case payment
     case prepayment(Prepayment)
-    case services
+    case selectFailure(Operator)
+    case services([Service]) // more than one
 }
 
 public extension UtilityDestination {
@@ -27,6 +30,6 @@ public extension UtilityDestination.Prepayment {
     typealias Options = PrePaymentOptionsState<LastPayment, Operator>
 }
 
-extension UtilityDestination: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityDestination: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
 
 extension UtilityDestination.Prepayment: Equatable where LastPayment: Equatable, Operator: Equatable {}

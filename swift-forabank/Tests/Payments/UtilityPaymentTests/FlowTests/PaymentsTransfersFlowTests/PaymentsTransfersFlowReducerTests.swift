@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersReducerTests.swift
+//  PaymentsTransfersFlowReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.03.2024.
@@ -8,7 +8,7 @@
 import UtilityPayment
 import XCTest
 
-final class PaymentsTransfersReducerTests: XCTestCase {
+final class PaymentsTransfersFlowReducerTests: XCTestCase {
     
     // MARK: - back
     
@@ -112,7 +112,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldSetStateToUtilityFlowFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(.initiate), on: state) {
@@ -124,7 +124,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldDeliverNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
@@ -133,7 +133,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     func test_utilityFlow_initiate_shouldDeliverNonNilUtilityEffectFromUtilityReduceOnNilRoute() {
         
         let state = State(route: nil)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
@@ -155,7 +155,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(.initiate), on: state) {
@@ -168,7 +168,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: nil)
@@ -178,7 +178,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(.initiate), on: state, effect: .utilityFlow(.initiate))
@@ -202,7 +202,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let nilRouteState = State(route: nil)
         let event = UtilityEvent.loaded(.failure)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(event), on: nilRouteState)
@@ -212,7 +212,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         
         let nilRouteState = State(route: nil)
         let event = UtilityEvent.loaded(.failure)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(event), on: nilRouteState, effect: nil)
@@ -236,7 +236,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let event = UtilityEvent.loaded(.failure)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, nil))
         
         assertState(sut: sut, .utilityFlow(event), on: state) {
@@ -250,7 +250,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         let flow = makeEmptyUtilityFlow()
         let state = State(route: .utilityFlow(flow))
         let event = UtilityEvent.loaded(.failure)
-        let newFlow = UtilityFlow(stack: .init([.services]))
+        let newFlow = makeSingleDestinationUtilityFlow()
         let (sut, _) = makeSUT(stub: (newFlow, .initiate))
         
         assert(sut: sut, .utilityFlow(event), on: state, effect: .utilityFlow(.initiate))
@@ -258,21 +258,15 @@ final class PaymentsTransfersReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersReducer<LastPayment, Operator>
+    private typealias SUT = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
+        
+    private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityEffect>
     
-    private typealias Destination = UtilityDestination<LastPayment, Operator>
-    private typealias UtilityFlow = Flow<Destination>
-    
-    private typealias UtilityReducerSpy = ReducerSpy<UtilityFlow, UtilityEvent, UtilityFlowEffect>
-    private typealias UtilityState = Flow<Destination>
-    private typealias UtilityEvent = UtilityFlowEvent<LastPayment, Operator>
-    private typealias UtilityEffect = UtilityFlowEffect
-    
-    private typealias UtilityReduceStub = (UtilityState, UtilityEffect?)
+    private typealias UtilityReduceStub = (UtilityFlow, UtilityEffect?)
     
     private func makeSUT(
         stub: UtilityReduceStub,
@@ -302,7 +296,7 @@ final class PaymentsTransfersReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(stub: (UtilityState(), nil)).sut
+        let sut = sut ?? makeSUT(stub: (UtilityFlow(), nil)).sut
         
         var expectedState = state
         updateStateToExpected?(&expectedState)

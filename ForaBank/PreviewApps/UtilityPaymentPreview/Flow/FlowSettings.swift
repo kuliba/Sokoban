@@ -1,17 +1,18 @@
 //
-//  Flow.swift
+//  FlowSettings.swift
 //  UtilityPaymentPreview
 //
 //  Created by Igor Malyarov on 03.03.2024.
 //
 
-struct Flow: Equatable {
+struct FlowSettings: Equatable {
     
     var loadLastPayments: LoadLastPayments
     var loadOperators: LoadOperators
+    var loadOptions: LoadOptions
 }
 
-extension Flow {
+extension FlowSettings {
     
     enum LoadLastPayments: String, CaseIterable {
         
@@ -19,6 +20,11 @@ extension Flow {
     }
     
     enum LoadOperators: String, CaseIterable {
+        
+        case success, failure
+    }
+    
+    enum LoadOptions: String, CaseIterable {
         
         case success, failure
     }
