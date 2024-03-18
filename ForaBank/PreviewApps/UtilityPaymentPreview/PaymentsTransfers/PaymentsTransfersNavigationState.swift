@@ -10,14 +10,13 @@ extension PaymentsTransfersState {
     var navigationState: NavigationState? {
         
         let state = getNavigationState()
-        // dump(state)
         
         return state
     }
     
     private func getNavigationState() -> NavigationState? {
         
-        switch route {
+        switch destination {
         case .none:
             return .none
             
@@ -44,6 +43,9 @@ extension PaymentsTransfersState {
             default:
                 fatalError()
             }
+            
+        case .other:
+            return .other
         }
     }
 }
@@ -56,6 +58,7 @@ extension PaymentsTransfersState {
         case prePaymentOptions(PrepaymentOptions)
         case prePayment(Prepayment)
         case scanning
+        case other
         
         var id: ID {
             
@@ -71,6 +74,9 @@ extension PaymentsTransfersState {
                 
             case .scanning:
                 return .scanning
+                
+            case .other:
+                return .other
             }
         }
         
@@ -80,6 +86,7 @@ extension PaymentsTransfersState {
             case prepaymentOptions
             case prepayment
             case scanning
+            case other
         }
     }
     

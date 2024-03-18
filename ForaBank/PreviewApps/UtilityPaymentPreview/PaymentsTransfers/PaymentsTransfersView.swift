@@ -96,6 +96,9 @@ private extension PaymentsTransfersView {
             
         case .scanning:
             Text("TBD: scanning")
+            
+        case .other:
+            Text("Just other destination")
         }
     }
     

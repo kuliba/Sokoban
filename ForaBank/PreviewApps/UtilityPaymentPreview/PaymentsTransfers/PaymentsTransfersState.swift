@@ -7,6 +7,22 @@
 
 import UtilityPayment
 
-typealias PaymentsTransfersState = GenericPaymentsTransfersState<LastPayment, Operator, UtilityService>
+struct PaymentsTransfersState: Equatable {
+    
+    var destination: Destination?
+}
 
-typealias GenericPaymentsTransfersState<LastPayment, Operator, Service> = UtilityPayment.PaymentsTransfersState<UtilityDestination<LastPayment, Operator, Service>>
+extension PaymentsTransfersState {
+    
+    enum Destination: Equatable {
+        
+        case utilityFlow(UtilityFlow)
+        case other
+    }
+}
+
+extension PaymentsTransfersState.Destination {
+    
+    typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
+    typealias UtilityFlow = Flow<Destination>
+}

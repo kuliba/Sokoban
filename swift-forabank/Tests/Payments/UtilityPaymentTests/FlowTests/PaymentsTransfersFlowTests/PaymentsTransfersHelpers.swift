@@ -68,7 +68,7 @@ func makeSingleDestinationUtilityFlow(
 
 func makeUtilityFlowState(
     _ flow: UtilityFlow
-) -> PaymentsTransfersState<Destination> {
+) -> PaymentsTransfersFlowState<Destination> {
     
     .init(route: .utilityFlow(flow))
 }

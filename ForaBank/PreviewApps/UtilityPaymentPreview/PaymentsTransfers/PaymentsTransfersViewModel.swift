@@ -56,13 +56,41 @@ extension PaymentsTransfersViewModel {
     }
 }
 
+private extension PaymentsTransfersState {
+    
+    var flowState: FlowState {
+        
+        get {
+            
+            guard case let .utilityFlow(utilityFlow) = destination
+            else { return .init() }
+            
+            return .init(route: .utilityFlow(utilityFlow))
+        }
+    }
+    
+    init(flowState: FlowState) {
+        
+        switch flowState.route {
+        case .none:
+            self.init()
+            
+        case let .utilityFlow(utilityFlow):
+            self.init(destination: .utilityFlow(utilityFlow))
+        }
+    }
+    
+    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
+}
+
 extension PaymentsTransfersViewModel {
     
-    typealias FlowReduce = (State, FlowEvent) -> (State, FlowEffect?)
+    typealias FlowReduce = (FlowState, FlowEvent) -> (FlowState, FlowEffect?)
     typealias FlowHandleEffect = (FlowEffect, @escaping FlowDispatch) -> Void
     
     typealias FlowDispatch = (FlowEvent) -> Void
     
+    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
     typealias FlowEvent = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
     typealias FlowEffect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
     
@@ -73,10 +101,18 @@ extension PaymentsTransfersViewModel {
 
 private extension PaymentsTransfersViewModel {
     
-    func event(_ event: FlowEvent) {
+    func event(_ flowEvent: FlowEvent) {
         
-        let (state, effect) = reduce(state, event)
+        let (flowState, effect) = flowReduce(state.flowState, flowEvent)
+        let state = State(flowState: flowState)
         stateSubject.send(state)
+        
+        // decoration
+        if effect == nil {
+            rootActions?.spinner.hide()
+        } else {
+            rootActions?.spinner.show()
+        }
         
         if let effect {
             
@@ -87,29 +123,12 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    func reduce(
-        _ state: State,
-        _ event: FlowEvent
-    ) -> (State, Effect?) {
-        
-        let (state, effect) = flowReduce(state, event)
-        
-        // decoration
-        if effect == nil {
-            rootActions?.spinner.hide()
-        } else {
-            rootActions?.spinner.show()
-        }
-        
-        return (state, effect)
-    }
-    
     func handle(_ tapEvent: Event.TapEvent) {
         
         switch tapEvent {
         case .addCompany:
             addCompany()
-
+            
         case .goToMain:
             goToMain()
         }
