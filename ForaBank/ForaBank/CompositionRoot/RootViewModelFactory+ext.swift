@@ -26,15 +26,6 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
-        
-        // typealias Serial = String
-        // in Model: var getProducts: ((Serial) -> async throws [ProductData])?
-        // let getProductService = Services.make...
-        // Adapter from mapping DTO to ProductData
-        // if isV5 {
-        // model.getProducts = getProductService.process
-        // }
-        
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
                 keyTag: .rsa

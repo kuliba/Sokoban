@@ -1,12 +1,11 @@
 @testable import GetProductListByTypeService
 
-extension ProductListData {
+extension ProductResponse {
     
     static let loan: Self = .init(
-        serial: "2a4990a62bf3356254f8f52a7e7ce57e",
-        productList: [
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+        products: [
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 20000002425,
                     productType: .loan,
                     productState: [
@@ -40,8 +39,8 @@ extension ProductListData {
                         "80CBC3"
                     ]
                 ),
-                productSettings: .loan(
-                    ProductListData.LoanSettings(
+                uniqueProperties: .loan(
+                    ProductResponse.Loan(
                         currencyNumber: 2,
                         bankProductID: 10000000194,
                         amount: 500000.0,
@@ -57,8 +56,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 10002699472,
                     productType: .loan,
                     productState: [
@@ -92,8 +91,8 @@ extension ProductListData {
                         "80CBC3"
                     ]
                 ),
-                productSettings: .loan(
-                    ProductListData.LoanSettings(
+                uniqueProperties: .loan(
+                    ProductResponse.Loan(
                         currencyNumber: 2,
                         bankProductID: 10000000210,
                         amount: 300000.0,
@@ -109,8 +108,8 @@ extension ProductListData {
                     )
                 )
             ),
-            ProductListData.ProductList(
-                commonSettings: ProductListData.CommonProductSettings(
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
                     id: 10002156052,
                     productType: .loan,
                     productState: [
@@ -144,8 +143,8 @@ extension ProductListData {
                         "FF9636"
                     ]
                 ),
-                productSettings: .loan(
-                    ProductListData.LoanSettings(
+                uniqueProperties: .loan(
+                    ProductResponse.Loan(
                         currencyNumber: 2,
                         bankProductID: 10000000131,
                         amount: 7000000.0,
