@@ -11,18 +11,15 @@ public final class PrepaymentOptionsEffectHandler<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let debounce: DispatchTimeInterval
-    private let loadLastPayments: LoadLastPayments
     private let loadOperators: LoadOperators
     private let scheduler: AnySchedulerOfDispatchQueue
     
     public init(
         debounce: DispatchTimeInterval = .milliseconds(300),
-        loadLastPayments: @escaping LoadLastPayments,
         loadOperators: @escaping LoadOperators,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.debounce = debounce
-        self.loadLastPayments = loadLastPayments
         self.loadOperators = loadOperators
         self.scheduler = scheduler
     }
@@ -35,9 +32,6 @@ public extension PrepaymentOptionsEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiate:
-            initiate(dispatch)
-            
         case let .paginate(operatorID, pageSize):
             paginate(operatorID, pageSize, dispatch)
             
@@ -50,10 +44,6 @@ public extension PrepaymentOptionsEffectHandler {
 public extension PrepaymentOptionsEffectHandler {
     
     #warning("replace Failure with `struct SimpleServiceFailure: Error & Equatable {}` ??")
-    typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
-    typealias LoadLastPaymentsCompletion = (LoadLastPaymentsResult) -> Void
-    typealias LoadLastPayments = (@escaping LoadLastPaymentsCompletion) -> Void
-    
     typealias PageSize = Int
     typealias LoadOperatorsPayload = (Operator.ID, PageSize)
     typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
@@ -67,18 +57,6 @@ public extension PrepaymentOptionsEffectHandler {
 }
 
 private extension PrepaymentOptionsEffectHandler {
-    
-    func initiate(
-        _ dispatch: @escaping Dispatch
-    ) {
-        loadLastPayments { [weak self] latestPayments in
-            
-            self?.loadOperators(nil) { operators in
-                
-                dispatch(.loaded(latestPayments, operators))
-            }
-        }
-    }
     
     func paginate(
         _ operatorID: Operator.ID,

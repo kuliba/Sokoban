@@ -33,6 +33,9 @@ public extension UtilityFlowEffectHandler {
         case .initiatePrepayment:
             self.initiatePrepayment(dispatch)
             
+        case let .prepaymentOptions(prepaymentOptions):
+            fatalError()
+            
         case let .select(select):
             self.select(select, dispatch)
         }

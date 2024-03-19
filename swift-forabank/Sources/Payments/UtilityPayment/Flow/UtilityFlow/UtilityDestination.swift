@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import PrePaymentPicker
-
 public enum UtilityDestination<LastPayment, Operator, Service> {
     
     case failure(ServiceFailure)
@@ -27,7 +25,7 @@ public extension UtilityDestination {
 
 public extension UtilityDestination.Prepayment {
     
-    typealias Options = PrePaymentOptionsState<LastPayment, Operator>
+    typealias Options = PrepaymentOptionsState<LastPayment, Operator>
 }
 
 extension UtilityDestination: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

@@ -21,6 +21,7 @@ where LastPayment: Equatable & Identifiable,
 
 public extension PrepaymentOptionsReducer {
     
+#warning("fix search")
     func reduce(
         _ state: State,
         _ event: Event
@@ -32,13 +33,6 @@ public extension PrepaymentOptionsReducer {
         switch event {
         case let .didScrollTo(operatorID):
             (state, effect) = reduce(state, operatorID)
-            
-        case .initiate:
-            state.isInflight = true
-            effect = .initiate
-            
-        case let .loaded(latestPayments, operators):
-            (state, effect) = reduce(state, latestPayments, operators)
             
         case let .paginated(paginated):
             (state, effect) = reduce(state, paginated)
@@ -79,27 +73,12 @@ private extension PrepaymentOptionsReducer {
     
     func reduce(
         _ state: State,
-        _ latestPayments: Event.LoadLastPaymentsResult,
-        _ operators: Event.LoadOperatorsResult
-    ) -> (State, Effect?) {
-        
-        var state = state
-        
-        state.lastPayments = (try? latestPayments.get()) ?? []
-        state.operators = (try? operators.get()) ?? []
-        state.isInflight = false
-        
-        return (state, nil)
-    }
-    
-    func reduce(
-        _ state: State,
         _ result: Event.LoadOperatorsResult
     ) -> (State, Effect?) {
         
         var state = state
         
-        var operators = state.operators ?? []
+        var operators = state.operators
         let paged = try? result.get()
         operators.append(contentsOf: paged ?? [])
         state.operators = operators

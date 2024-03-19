@@ -313,8 +313,11 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
     
+    private typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
+
     private func makeSUT(
         initialRoute: State.Route? = nil,
+        ppoStub: [(PPOState, PPOEffect?)] = [makePPOStub()],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -324,7 +327,10 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
-        let utilityReducer = UtilityReducer()
+        let ppoReducer = PPOReducer(stub: ppoStub)
+        let utilityReducer = UtilityReducer(
+            ppoReduce: ppoReducer.reduce(_:_:)
+        )
         let reducer = Reducer(
             utilityReduce: utilityReducer.reduce(_:_:)
         )

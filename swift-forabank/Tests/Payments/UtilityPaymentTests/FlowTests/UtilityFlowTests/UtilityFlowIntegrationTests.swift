@@ -80,8 +80,11 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     private typealias ServicesLoaderSpy = Spy<EffectHandler.LoadServicesPayload, EffectHandler.LoadServicesResult>
     private typealias PaymentStarterSpy = Spy<EffectHandler.StartPaymentPayload, EffectHandler.StartPaymentResult>
     
+    private typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
+
     private func makeSUT(
         initialState: State = .init(),
+        ppoStub: [(PPOState, PPOEffect?)] = [makePPOStub()],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -91,7 +94,8 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
-        let reducer = Reducer()
+        let ppoReducer = PPOReducer(stub: ppoStub)
+        let reducer = Reducer(ppoReduce: ppoReducer.reduce(_:_:))
         
         let optionsLoader = OptionsLoaderSpy()
         let servicesLoader = ServicesLoaderSpy()

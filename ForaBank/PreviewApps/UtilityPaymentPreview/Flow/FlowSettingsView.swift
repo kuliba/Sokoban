@@ -18,7 +18,6 @@ struct FlowSettingsView: View {
             buttons()
             
             pickerSection("Load Prepayment Options", $flowSettings.loadPrepayment)
-            pickerSection("Load Last Payments", $flowSettings.loadLastPayments)
             pickerSection("Load Operators", $flowSettings.loadOperators)
         }
         .listStyle(.plain)

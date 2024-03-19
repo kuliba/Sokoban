@@ -9,15 +9,13 @@ public enum PrepaymentOptionsEvent<LastPayment, Operator>
 where Operator: Identifiable {
     
     case didScrollTo(Operator.ID)
-    case initiate
-    case loaded(LoadLastPaymentsResult, LoadOperatorsResult)
     case paginated(LoadOperatorsResult)
+    #warning("fix search")
     case search(Search)
 }
 
 public extension PrepaymentOptionsEvent {
     
-    typealias LoadLastPaymentsResult = Result<[LastPayment], ServiceFailure>
     typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
     
     enum Search: Equatable {

@@ -79,3 +79,40 @@ func makeFlow(
     
     .init(stack: .init(destinations))
 }
+
+typealias PPOState = UtilityReducer.PPOState
+typealias PPOEvent = UtilityReducer.PPOEvent
+typealias PPOEffect = UtilityReducer.PPOEffect
+
+func makePPOStub(
+    lastPaymentsCount: Int = 0,
+    operatorsCount: Int = 1,
+    searchText: String = "",
+    isInflight: Bool = false,
+    ppoEffect: PPOEffect? = nil
+) -> (PPOState, PPOEffect?) {
+    
+    let ppoState = makePrePaymentOptionsState(
+        lastPaymentsCount: lastPaymentsCount,
+        operatorsCount: operatorsCount,
+        searchText: searchText,
+        isInflight: isInflight
+    )
+    
+    return (ppoState, ppoEffect)
+}
+
+func makePrePaymentOptionsState(
+    lastPaymentsCount: Int = 0,
+    operatorsCount: Int = 1,
+    searchText: String = "",
+    isInflight: Bool = false
+) -> PrepaymentOptionsState<LastPayment, Operator> {
+    
+    .init(
+        lastPayments: (0..<lastPaymentsCount).map { _ in makeLastPayment() },
+        operators: (0..<operatorsCount).map { _ in makeOperator() },
+        searchText: searchText,
+        isInflight: isInflight
+    )
+}

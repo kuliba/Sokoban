@@ -8,7 +8,13 @@
 public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
 where Operator: Identifiable {
     
-    public init() {}
+    private let ppoReduce: PPOReduce
+    
+    public init(
+        ppoReduce: @escaping PPOReduce
+    ) {
+        self.ppoReduce = ppoReduce
+    }
 }
 
 public extension UtilityFlowReducer {
@@ -37,7 +43,7 @@ public extension UtilityFlowReducer {
             state = reduce(state, prepaymentLoaded)
             
         case let .prepaymentOptions(prepaymentOptions):
-            fatalError()
+            (state, effect) = reduce(state, prepaymentOptions)
             
         case let .select(select):
             reduce(state, select, &effect)
@@ -55,6 +61,11 @@ public extension UtilityFlowReducer {
 
 public extension UtilityFlowReducer {
     
+    typealias PPOState = PrepaymentOptionsState<LastPayment, Operator>
+    typealias PPOEvent = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias PPOEffect = PrepaymentOptionsEffect<Operator>
+    typealias PPOReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
+
     typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = Flow<Destination>
@@ -86,6 +97,24 @@ private extension UtilityFlowReducer {
         }
         
         return state
+    }
+    
+    func reduce(
+        _ state: State,
+        _ prepaymentEvent: Event.OptionsEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        if case let .prepayment(.options(prepayment)) = state.current {
+            
+            let (s, e) = ppoReduce(prepayment, prepaymentEvent)
+            state.current = .prepayment(.options(s))
+            effect = e.map { .prepaymentOptions($0) }
+        }
+        
+        return (state, effect)
     }
     
     func reduce(

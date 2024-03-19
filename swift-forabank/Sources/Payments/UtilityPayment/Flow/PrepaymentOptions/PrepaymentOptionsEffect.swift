@@ -8,7 +8,6 @@
 public enum PrepaymentOptionsEffect<Operator>
 where Operator: Identifiable {
     
-    case initiate
     case paginate(Operator.ID, PageSize)
     case search(String)
 }

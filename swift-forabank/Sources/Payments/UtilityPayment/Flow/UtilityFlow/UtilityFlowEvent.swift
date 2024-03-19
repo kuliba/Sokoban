@@ -5,16 +5,14 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-import PrePaymentPicker
-
-public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> 
+public enum UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
 where Operator: Identifiable {
     
     case back
     case initiatePrepayment
     case paymentStarted(StartPaymentResult)
     case prepaymentLoaded(PrepaymentLoaded)
-    case prepaymentOptions(PrepaymentOptions)
+    case prepaymentOptions(OptionsEvent)
     case select(Select)
     case selectFailure(Operator)
     case servicesLoaded([Service]) // more than one
@@ -28,7 +26,7 @@ public extension UtilityFlowEvent {
         case success([LastPayment], [Operator])
     }
     
-    typealias PrepaymentOptions = PrePaymentOptionsEvent<LastPayment, Operator>
+    typealias OptionsEvent = PrepaymentOptionsEvent<LastPayment, Operator>
     
     enum Select {
         
