@@ -175,6 +175,51 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(.tap(.payByInstruction), on: servicesState, effect: nil)
     }
 
+    func test_tap_payByInstruction_shouldReplaceServicesFailureAsCurrentInUtilityFlowWithPayByInstruction() {
+        
+        let servicesFailureState = makeUtilityFlowState(.selectFailure(makeOperator()))
+        
+        assertState(.tap(.payByInstruction), on: servicesFailureState) {
+            
+            $0.route = makeRoute(.payByInstruction)
+        }
+    }
+
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnServicesFailureAsCurrentInUtilityFlow() {
+        
+        let servicesFailureState = makeUtilityFlowState(.selectFailure(makeOperator()))
+
+        assert(.tap(.payByInstruction), on: servicesFailureState, effect: nil)
+    }
+
+    func test_tap_payByInstruction_shouldNotChangeStateOnPaymentAsCurrentInUtilityFlow() {
+        
+        let paymentState = makeUtilityFlowState(.payment)
+        
+        assertState(.tap(.payByInstruction), on: paymentState)
+    }
+    
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnPaymentAsCurrentInUtilityFlow() {
+        
+        let paymentState = makeUtilityFlowState(.payment)
+
+        assert(.tap(.payByInstruction), on: paymentState, effect: nil)
+    }
+
+    func test_tap_payByInstruction_shouldNotChangeStateOnFailureAsCurrentInUtilityFlow() {
+        
+        let paymentFailureState = makeUtilityFlowState(.failure(.connectivityError))
+        
+        assertState(.tap(.payByInstruction), on: paymentFailureState)
+    }
+    
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnFailureAsCurrentInUtilityFlow() {
+        
+        let paymentFailureState = makeUtilityFlowState(.failure(.connectivityError))
+
+        assert(.tap(.payByInstruction), on: paymentFailureState, effect: nil)
+    }
+
     // MARK: - UtilityFlow: initiatePrepayment
     
     func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {

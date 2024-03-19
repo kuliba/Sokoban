@@ -103,6 +103,10 @@ private extension PaymentsTransfersFlowReducer {
                 utilityFlow.current = .payByInstruction
                 state = .init(route: .utilityFlow(utilityFlow))
 
+            case .selectFailure:
+                utilityFlow.current = .payByInstruction
+                state = .init(route: .utilityFlow(utilityFlow))
+                
             case .services:
                 utilityFlow.push(.payByInstruction)
                 state = .init(route: .utilityFlow(utilityFlow))
