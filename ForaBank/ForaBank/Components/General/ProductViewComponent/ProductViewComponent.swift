@@ -564,17 +564,21 @@ extension ProductView.ViewModel {
 private extension View {
     
     func card(
-        viewModel: ProductView.ViewModel,
-        config: CardUI.Config,
+        isChecked: Bool,
         isFrontView: Bool,
+        isUpdating: Bool,
+        statusAction: ProductView.ViewModel.StatusActionViewModel?,
+        config: CardUI.Config,
         action: @escaping () -> Void
     ) -> some View {
         
         self
             .modifier(
                 ProductView.CardModifier(
-                    viewModel: viewModel,
+                    isChecked: isChecked,
                     isFrontView: isFrontView,
+                    isUpdating: isUpdating,
+                    statusAction: statusAction,
                     config: config
                 )
             )
@@ -635,9 +639,11 @@ struct ProductView: View {
                 )
             })
         .card(
-            viewModel: viewModel,
-            config: config,
+            isChecked: viewModel.isChecked,
             isFrontView: true,
+            isUpdating: viewModel.isUpdating,
+            statusAction: viewModel.statusAction,
+            config: config,
             action: viewModel.productDidTapped
         )
         .animation(
@@ -677,9 +683,11 @@ struct ProductView: View {
             }
         )
         .card(
-            viewModel: viewModel,
-            config: config,
+            isChecked: viewModel.isChecked,
             isFrontView: false,
+            isUpdating: viewModel.isUpdating,
+            statusAction: viewModel.statusAction,
+            config: config,
             action: viewModel.productDidTapped
         )
         .animation(
@@ -851,15 +859,16 @@ extension ProductView {
     
     struct CardModifier: ViewModifier {
         
-        @ObservedObject var viewModel: ViewModel
-        
+        let isChecked: Bool
         let isFrontView: Bool
+        let isUpdating: Bool
+        let statusAction: ProductView.ViewModel.StatusActionViewModel?
         let config: CardUI.Config
         
         @ViewBuilder
         private func checkView() -> some View {
             
-            if viewModel.isChecked {
+            if isChecked {
                 CheckView(sizeConfig: config.sizes)
                     .frame(
                         maxWidth: .infinity,
@@ -873,7 +882,7 @@ extension ProductView {
         @ViewBuilder
         private func statusActionView() -> some View {
             
-            if let statusActionViewModel = viewModel.statusAction {
+            if let statusActionViewModel = statusAction {
                 
                 ProductView.StatusActionView(
                     viewModel: statusActionViewModel,
@@ -886,7 +895,8 @@ extension ProductView {
         @ViewBuilder
         private func updatingView() -> some View {
             
-            if viewModel.isUpdating == true {
+            if isUpdating {
+                
                 ZStack {
                     
                     HStack(spacing: 3) {
