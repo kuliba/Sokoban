@@ -27,7 +27,7 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     func test_pushEvent_shouldDeliverPushStateOnEmpty() {
         
         let empty = State()
-        let destination = makeDestination()
+        let destination = makePrepaymentOptions()
         let (sut, _,_) = makeSUT(pushStub: (destination, nil))
         
         assertState(sut: sut, .push(.push), on: empty) {
@@ -38,8 +38,8 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     
     func test_pushEvent_shouldDeliverPushStateOnTopOfNonEmpty() {
         
-        let nonEmpty = State(stack: .init(makeDestination()))
-        let destination = makeDestination()
+        let nonEmpty = State(stack: .init(makePrepaymentOptions()))
+        let destination = makePrepaymentOptions()
         let (sut, _,_) = makeSUT(pushStub: (destination, nil))
         
         assertState(sut: sut, .push(.push), on: nonEmpty) {
@@ -80,7 +80,7 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     func test_updateEvent_shouldDeliverUpdateStateOnEmpty() {
         
         let empty = State()
-        let destination = makeDestination()
+        let destination = makePrepaymentOptions()
         let (sut, _,_) = makeSUT(updateStub: (destination, nil))
         
         assertState(sut: sut, .update(.update), on: empty) {
@@ -91,8 +91,8 @@ final class PushUpdateFlowReducerTests: XCTestCase {
     
     func test_updateEvent_shouldChangeStateToUpdatedOnNonEmpty() {
         
-        let nonEmpty = State(stack: .init(makeDestination()))
-        let destination = makeDestination()
+        let nonEmpty = State(stack: .init(makePrepaymentOptions()))
+        let destination = makePrepaymentOptions()
         let (sut, _,_) = makeSUT(updateStub: (destination, nil))
         
         assertState(sut: sut, .update(.update), on: nonEmpty) {

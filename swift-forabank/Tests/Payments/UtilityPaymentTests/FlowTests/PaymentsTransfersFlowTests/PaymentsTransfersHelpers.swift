@@ -42,9 +42,9 @@ func makeEmptyUtilityFlow(
     return flow
 }
 
-func makeDestination(
+func makePrepaymentOptions(
     lastPayments: [LastPayment] = [],
-    operators: [Operator] = [],
+    operators: [Operator] = [makeOperator()],
     searchText: String = "",
     isInflight: Bool = false
 ) -> Destination {
