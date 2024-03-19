@@ -1166,9 +1166,16 @@ private extension Target {
             // external packages
             .customDump,
             // internal modules
-            .getProductListByTypeService,
+            .urlRequestFactory,
+            .getProductListByTypeService
         ],
-        path: "Tests/Services/\(String.getProductListByTypeServiceTests)"
+        path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
     )
 
     // MARK: - UI
