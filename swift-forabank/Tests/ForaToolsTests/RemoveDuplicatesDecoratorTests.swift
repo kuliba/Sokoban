@@ -9,17 +9,19 @@ final class RemoveDuplicatesDecorator<Payload, Response>
 where Payload: Equatable {
     
     private var lastPayload: Payload?
+    private let queue = DispatchQueue(label: "com.RemoveDuplicatesDecorator.queue")
     
     func callAsFunction(_ f: @escaping F) -> F {
         
         return { [weak self] payload, completion in
             
-            guard let self else { return }
-            
-            guard payload != lastPayload else { return }
-            
-            lastPayload = payload
-            f(payload, completion)
+            self?.queue.sync {
+                
+                guard payload != self?.lastPayload else { return }
+                
+                self?.lastPayload = payload
+                f(payload, completion)
+            }
         }
     }
 }
@@ -74,6 +76,37 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1)
         
         XCTAssertNoDiff(receivedResponse, response)
+    }
+    
+    func test_shouldNotHaveRaceConditionWithConcurrentAccess() {
+        
+        let payload = makePayload()
+        let (sut, spy) = makeSUT()
+        
+        let exp = expectation(description: "Complete multiple concurrent calls")
+        let iterations = 20
+        exp.expectedFulfillmentCount = iterations
+        
+        var lastPayloadProcessed: Payload?
+        let concurrentQueue = DispatchQueue(label: "test.queue", attributes: .concurrent)
+        
+        for _ in 0..<iterations {
+            
+            concurrentQueue.async {
+                
+                sut { payload, completion in
+                    Thread.sleep(forTimeInterval: 0.001)
+                    spy.process(payload, completion: completion)
+                    lastPayloadProcessed = payload
+                    
+                }(payload, { _ in exp.fulfill()})
+                spy.complete(with: makeResponse())
+            }
+        }
+        
+        wait(for: [exp], timeout: 2)
+        
+        XCTAssertNoDiff(lastPayloadProcessed, payload)
     }
     
     func test_shouldNotCallOnInstanceDeallocation() {
