@@ -25,16 +25,17 @@ extension ProductView {
         
         let id: ProductData.ID
         let header: HeaderDetails
-        @Published var cardInfo: CardInfo
-        @Published var footer: FooterDetails
-        @Published var statusAction: StatusActionViewModel?
-        @Published var isChecked: Bool
-        @Published var isUpdating: Bool
-        
-        var appearance: Appearance
+        let isChecked: Bool
         let productType: ProductType
         let cardAction: CardAction?
         let showCvv: ShowCVV?
+        
+        @Published var cardInfo: CardInfo
+        @Published var footer: FooterDetails
+        @Published var statusAction: StatusActionViewModel?
+        
+        var appearance: Appearance
+        var isUpdating: Bool
 
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general

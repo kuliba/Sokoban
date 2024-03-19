@@ -35,7 +35,8 @@ struct CardModifier<StatusAction: View>: ViewModifier {
     @ViewBuilder
     private func updatingView() -> some View {
         
-        if isUpdating == true {
+        if isUpdating {
+            
             ZStack {
                 
                 DotsAnimations()
@@ -64,7 +65,7 @@ struct CardModifier<StatusAction: View>: ViewModifier {
         }
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         
         content
             .padding(config.front.cardPadding)
