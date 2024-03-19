@@ -14,21 +14,21 @@ final class PaymentsTransfersViewModel: ObservableObject {
     
     @Published public private(set) var state: State
     
-    private let paymentsTransfersReduce: PaymentsTransfersReduce
-    private let paymentsTransfersHandleEffect: PaymentsTransfersHandleEffect
+    private let flowReduce: FlowReduce
+    private let flowHandleEffect: FlowHandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
     
     var rootActions: RootActions?
     
     public init(
         initialState: State,
-        paymentsTransfersReduce: @escaping PaymentsTransfersReduce,
-        paymentsTransfersHandleEffect: @escaping PaymentsTransfersHandleEffect,
+        flowReduce: @escaping FlowReduce,
+        flowHandleEffect: @escaping FlowHandleEffect,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
-        self.paymentsTransfersReduce = paymentsTransfersReduce
-        self.paymentsTransfersHandleEffect = paymentsTransfersHandleEffect
+        self.flowReduce = flowReduce
+        self.flowHandleEffect = flowHandleEffect
         
         stateSubject
             .removeDuplicates()
@@ -46,27 +46,39 @@ extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
         
-        let (state, effect) = reduce(state, event)
-        stateSubject.send(state)
-        
-        if let effect {
+        switch event {
+        case let .flow(flowEvent):
+            self.event(flowEvent)
             
-            paymentsTransfersHandleEffect(effect) { [weak self] event in
-                
-                self?.event(event)
-            }
+        case let .tap(tapEvent):
+            self.handle(tapEvent)
         }
     }
 }
 
+extension PaymentsTransfersViewModel {
+    
+    typealias FlowReduce = (FlowState, FlowEvent) -> (FlowState, FlowEffect?)
+    typealias FlowHandleEffect = (FlowEffect, @escaping FlowDispatch) -> Void
+    
+    typealias FlowDispatch = (FlowEvent) -> Void
+    
+    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
+    typealias FlowEvent = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
+    typealias FlowEffect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    
+    typealias State = PaymentsTransfersState
+    typealias Event = PaymentsTransfersEvent
+    typealias Effect = PaymentsTransfersEffect
+}
+
 private extension PaymentsTransfersViewModel {
     
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
+    func event(_ flowEvent: FlowEvent) {
         
-        let (state, effect) = paymentsTransfersReduce(state, event)
+        let (flowState, effect) = flowReduce(state.flowState, flowEvent)
+        let state = State(flowState: flowState)
+        stateSubject.send(state)
         
         // decoration
         if effect == nil {
@@ -75,18 +87,60 @@ private extension PaymentsTransfersViewModel {
             rootActions?.spinner.show()
         }
         
-        return (state, effect)
+        if let effect {
+            
+            flowHandleEffect(effect) { [weak self] in
+                
+                self?.event(.flow($0))
+            }
+        }
+    }
+    
+    func handle(_ tapEvent: Event.TapEvent) {
+        
+        switch tapEvent {
+        case .addCompany:
+            addCompany()
+            
+        case .goToMain:
+            goToMain()
+        }
+    }
+    
+    func addCompany() {
+        
+        fatalError()
+    }
+    
+    func goToMain() {
+        
+        fatalError()
     }
 }
 
-extension PaymentsTransfersViewModel {
+private extension PaymentsTransfersState {
     
-    typealias PaymentsTransfersReduce = (State, Event) -> (State, Effect?)
-    typealias PaymentsTransfersHandleEffect = (Effect, @escaping Dispatch) -> Void
+    var flowState: FlowState {
+        
+        get {
+            
+            guard case let .utilityFlow(utilityFlow) = destination
+            else { return .init() }
+            
+            return .init(route: .utilityFlow(utilityFlow))
+        }
+    }
     
-    typealias Dispatch = (Event) -> Void
+    init(flowState: FlowState) {
+        
+        switch flowState.route {
+        case .none:
+            self.init()
+            
+        case let .utilityFlow(utilityFlow):
+            self.init(destination: .utilityFlow(utilityFlow))
+        }
+    }
     
-    typealias State = PaymentsTransfersState
-    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
-    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    typealias FlowState = PaymentsTransfersFlowState<UtilityDestination<LastPayment, Operator, UtilityService>>
 }

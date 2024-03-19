@@ -794,6 +794,8 @@
 		2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */; };
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
 		2AA555702A3E603B00B13D47 /* Model+PaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556F2A3E603B00B13D47 /* Model+PaymentsTests.swift */; };
+		2AA64CBC2BA71B36004DDC27 /* PaymentsTransfersEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA64CBB2BA71B36004DDC27 /* PaymentsTransfersEvent.swift */; };
+		2AA64CBE2BA71BDF004DDC27 /* PaymentsTransfersEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA64CBD2BA71BDF004DDC27 /* PaymentsTransfersEffect.swift */; };
 		2AA68E822A179C200063BBB0 /* CountryCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA68E812A179C200063BBB0 /* CountryCodes.swift */; };
 		2AA70FB92B529F250061F5DD /* InformerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FB82B529F250061F5DD /* InformerViewModel.swift */; };
 		2AA70FBB2B529F560061F5DD /* Informer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA70FBA2B529F560061F5DD /* Informer.swift */; };
@@ -3320,6 +3322,8 @@
 		2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertThrows.swift"; sourceTree = "<group>"; };
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
 		2AA5556F2A3E603B00B13D47 /* Model+PaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTests.swift"; sourceTree = "<group>"; };
+		2AA64CBB2BA71B36004DDC27 /* PaymentsTransfersEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEvent.swift; sourceTree = "<group>"; };
+		2AA64CBD2BA71BDF004DDC27 /* PaymentsTransfersEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffect.swift; sourceTree = "<group>"; };
 		2AA68E812A179C200063BBB0 /* CountryCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodes.swift; sourceTree = "<group>"; };
 		2AA70FB82B529F250061F5DD /* InformerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerViewModel.swift; sourceTree = "<group>"; };
 		2AA70FBA2B529F560061F5DD /* Informer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Informer.swift; sourceTree = "<group>"; };
@@ -6874,6 +6878,7 @@
 				2A60973C2B9D7C8000AA6C75 /* Flow */,
 				2A625CF02B9483A00017237F /* PrePaymentMockView.swift */,
 				2A625CF22B9484AA0017237F /* PrePaymentFailureMockView.swift */,
+				2AA64CC22BA842B2004DDC27 /* AppDomain */,
 				2A625CD32B946FC70017237F /* PaymentsTransfers */,
 				2A5097EB2B946A3D00CE3242 /* Assets.xcassets */,
 				2A5097ED2B946A3D00CE3242 /* Preview Content */,
@@ -7069,13 +7074,9 @@
 		2A625CD32B946FC70017237F /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
-				2A6097362B9D77CE00AA6C75 /* LastPayment.swift */,
-				2A6097382B9D77FA00AA6C75 /* Operator.swift */,
-				2ADE53322BA70E60003E0EC9 /* StartPayment.swift */,
-				2A625CFA2B94B71B0017237F /* UtilityService.swift */,
 				2A60973D2B9DA0EA00AA6C75 /* LoadServicesResponse.swift */,
-				2A625CD62B946FEC0017237F /* PaymentsTransfersState.swift */,
-				2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */,
+				2AA64CC32BA8430A004DDC27 /* PaymentsTransfersDomain */,
+				2AA64CC12BA8429C004DDC27 /* NavigationState */,
 				2A625CEA2B947B870017237F /* ServiceFailure.swift */,
 				2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */,
 				2A625CD42B946FD50017237F /* PaymentsTransfersViewModel.swift */,
@@ -7589,6 +7590,35 @@
 				2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */,
 			);
 			path = PaymentsProductViewComponent;
+			sourceTree = "<group>";
+		};
+		2AA64CC12BA8429C004DDC27 /* NavigationState */ = {
+			isa = PBXGroup;
+			children = (
+				2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */,
+			);
+			path = NavigationState;
+			sourceTree = "<group>";
+		};
+		2AA64CC22BA842B2004DDC27 /* AppDomain */ = {
+			isa = PBXGroup;
+			children = (
+				2A6097362B9D77CE00AA6C75 /* LastPayment.swift */,
+				2A6097382B9D77FA00AA6C75 /* Operator.swift */,
+				2ADE53322BA70E60003E0EC9 /* StartPayment.swift */,
+				2A625CFA2B94B71B0017237F /* UtilityService.swift */,
+			);
+			path = AppDomain;
+			sourceTree = "<group>";
+		};
+		2AA64CC32BA8430A004DDC27 /* PaymentsTransfersDomain */ = {
+			isa = PBXGroup;
+			children = (
+				2A625CD62B946FEC0017237F /* PaymentsTransfersState.swift */,
+				2AA64CBB2BA71B36004DDC27 /* PaymentsTransfersEvent.swift */,
+				2AA64CBD2BA71BDF004DDC27 /* PaymentsTransfersEffect.swift */,
+			);
+			path = PaymentsTransfersDomain;
 			sourceTree = "<group>";
 		};
 		2AA68E802A179C000063BBB0 /* Adapters */ = {
@@ -14226,6 +14256,7 @@
 			files = (
 				2A625CED2B9483420017237F /* PaymentsTransfersViewFactory.swift in Sources */,
 				2A6097372B9D77CE00AA6C75 /* LastPayment.swift in Sources */,
+				2AA64CBC2BA71B36004DDC27 /* PaymentsTransfersEvent.swift in Sources */,
 				2A625CE72B94735A0017237F /* FlowSettings.swift in Sources */,
 				2A6097392B9D77FA00AA6C75 /* Operator.swift in Sources */,
 				2A625CDF2B9470610017237F /* PaymentsTransfersViewModel.swift in Sources */,
@@ -14236,6 +14267,7 @@
 				2A625CF12B9483A00017237F /* PrePaymentMockView.swift in Sources */,
 				2A625CE52B9472EC0017237F /* PaymentsTransfersView.swift in Sources */,
 				2ADE53332BA70E60003E0EC9 /* StartPayment.swift in Sources */,
+				2AA64CBE2BA71BDF004DDC27 /* PaymentsTransfersEffect.swift in Sources */,
 				2A625CDE2B9470610017237F /* PaymentsTransfersState.swift in Sources */,
 				2A625CF92B949C3C0017237F /* SimpleServiceFailure.swift in Sources */,
 				2A625CE92B9473DA0017237F /* PaymentsTransfersViewModel+ext.swift in Sources */,

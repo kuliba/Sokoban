@@ -113,8 +113,8 @@ extension PaymentsTransfersViewModel {
         
         return .init(
             initialState: initialState,
-            paymentsTransfersReduce: reducer.reduce,
-            paymentsTransfersHandleEffect: effectHandler.handleEffect,
+            flowReduce: reducer.reduce,
+            flowHandleEffect: effectHandler.handleEffect,
             scheduler: scheduler
         )
     }

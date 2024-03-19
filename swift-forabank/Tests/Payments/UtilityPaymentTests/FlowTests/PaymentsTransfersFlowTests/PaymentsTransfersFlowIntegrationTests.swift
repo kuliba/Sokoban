@@ -299,7 +299,7 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     
-    private typealias State = PaymentsTransfersState<Destination>
+    private typealias State = PaymentsTransfersFlowState<Destination>
     private typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
     private typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
     
@@ -384,14 +384,14 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     }
 }
 
-private func emptyUtilityFlow() -> PaymentsTransfersState<Destination>.Route {
+private func emptyUtilityFlow() -> PaymentsTransfersFlowState<Destination>.Route {
     
     .utilityFlow(.init())
 }
 
 private func utilityFlow(
     _ destinations: Destination...
-) -> PaymentsTransfersState<Destination>.Route {
+) -> PaymentsTransfersFlowState<Destination>.Route {
     
     .utilityFlow(.init(stack: .init(destinations)))
 }

@@ -41,7 +41,7 @@ public extension PaymentsTransfersFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias State = PaymentsTransfersState
+    typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
 }
