@@ -578,26 +578,20 @@ struct ProductView: View {
         FrontView(
             name: viewModel.cardInfo.name,
             balance: .init(viewModel.footer.balance),
-            isChecked: viewModel.isChecked,
-            isUpdating: viewModel.isUpdating,
-            opacity: viewModel.appearance.opacity,
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: viewModel.cardInfo.cardWiggle,
+            modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
             config: config,
             headerView: { HeaderView(config: config, header: viewModel.header) },
-            footerView: { balance in
-                
+            footerView: {
                 FooterView(
                     config: config,
                     footer: .init(
-                        balance: balance.rawValue,
+                        balance: $0.rawValue,
                         interestRate: viewModel.footer.interestRate,
                         paymentSystem: viewModel.footer.paymentSystem
                     )
                 )
             },
-            statusActionView: statusView, 
-            action: viewModel.productDidTapped
+            statusActionView: statusView
         )
         .animation(
             .linear(duration: 0.5),
@@ -613,10 +607,7 @@ struct ProductView: View {
         }
         
         BackView(
-            isChecked: viewModel.isChecked,
-            isUpdating: viewModel.isUpdating,
-            opacity: viewModel.appearance.opacity,
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            modifierConfig: modifierConfig(false),
             config: config,
             header: {
                 
@@ -629,8 +620,7 @@ struct ProductView: View {
             cvv: {
                 
                 CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
-            }, 
-            action: viewModel.productDidTapped
+            }
         )
     }
     
@@ -644,6 +634,17 @@ struct ProductView: View {
                 color: config.appearance.textColor,
                 style: config.appearance.style)
         }
+    }
+    
+    private func modifierConfig(_ cardWiggle: Bool) -> ModifierConfig {
+        .init(
+            isChecked: viewModel.isChecked,
+            isUpdating: viewModel.isUpdating,
+            opacity: viewModel.appearance.opacity,
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: cardWiggle,
+            action: viewModel.productDidTapped
+        )
     }
 }
 

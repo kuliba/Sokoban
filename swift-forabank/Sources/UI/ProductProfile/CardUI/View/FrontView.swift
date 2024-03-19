@@ -14,47 +14,29 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     
     let name: String
     let balance: Balance
-    let isChecked: Bool
-    let isUpdating: Bool
-
-    let opacity: Double
-    let isShowingCardBack: Bool
-    let cardWiggle: Bool
-    
+    let modifierConfig: ModifierConfig
     let config: Config
     let headerView: () -> Header
     let footerView: (Balance) -> Footer
     
     let statusActionView: () -> StatusAction?
-    
-    let action: () -> Void
 
     public init(
         name: String,
         balance: Balance,
-        isChecked: Bool,
-        isUpdating: Bool,
-        opacity: Double,
-        isShowingCardBack: Bool,
-        cardWiggle: Bool,
+        modifierConfig: ModifierConfig,
         config: Config,
         headerView: @escaping () -> Header,
         footerView: @escaping (Balance) -> Footer,
-        statusActionView: @escaping () -> StatusAction?,
-        action: @escaping () -> Void
+        statusActionView: @escaping () -> StatusAction?
     ) {
         self.name = name
         self.balance = balance
-        self.isChecked = isChecked
-        self.isUpdating = isUpdating
-        self.opacity = opacity
-        self.isShowingCardBack = isShowingCardBack
-        self.cardWiggle = cardWiggle
+        self.modifierConfig = modifierConfig
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
         self.statusActionView = statusActionView
-        self.action = action
     }
     
     public var body: some View {
@@ -78,19 +60,19 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
         .card(
-            isChecked: isChecked,
-            isUpdating: isUpdating,
+            isChecked: modifierConfig.isChecked,
+            isUpdating: modifierConfig.isUpdating,
             statusActionView: statusActionView(),
             config: config,
             isFrontView: true,
-            action: action
+            action: modifierConfig.action
         )
         .animation(
-            isShowingCardBack: isShowingCardBack,
-            cardWiggle: cardWiggle,
+            isShowingCardBack: modifierConfig.isShowingCardBack,
+            cardWiggle: modifierConfig.cardWiggle,
             opacity: .init(
                 startValue: 0,
-                endValue: opacity),
+                endValue: modifierConfig.opacity),
             radians: .init(startValue: .pi, endValue: 2 * .pi)
         )
     }

@@ -12,37 +12,22 @@ import Foundation
 
 public struct BackView<Header: View, CVV: View>: View {
     
-    let isChecked: Bool
-    let isUpdating: Bool
-
-    let opacity: Double
-    let isShowingCardBack: Bool
-
+    let modifierConfig: ModifierConfig
     let config: Config
     
     let header: () -> Header
     let cvv: () -> CVV
-        
-    let action: () -> Void
-    
+            
     public init(
-        isChecked: Bool,
-        isUpdating: Bool,
-        opacity: Double,
-        isShowingCardBack: Bool,
+        modifierConfig: ModifierConfig,
         config: Config,
         header: @escaping () -> Header,
-        cvv: @escaping () -> CVV,
-        action: @escaping () -> Void
+        cvv: @escaping () -> CVV
     ) {
-        self.isChecked = isChecked
-        self.isUpdating = isUpdating
-        self.opacity = opacity
-        self.isShowingCardBack = isShowingCardBack
+        self.modifierConfig = modifierConfig
         self.config = config
         self.header = header
         self.cvv = cvv
-        self.action = action
     }
     
     public var body: some View {
@@ -58,17 +43,17 @@ public struct BackView<Header: View, CVV: View>: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
         .card(
-            isChecked: isChecked,
-            isUpdating: isUpdating,
+            isChecked: modifierConfig.isChecked,
+            isUpdating: modifierConfig.isUpdating,
             statusActionView: EmptyView(),
             config: config,
             isFrontView: false,
-            action: action
+            action: modifierConfig.action
         )
         .animation(
-            isShowingCardBack: isShowingCardBack,
-            cardWiggle: false,
-            opacity: .init(startValue: opacity, endValue: 0),
+            isShowingCardBack: modifierConfig.isShowingCardBack,
+            cardWiggle: modifierConfig.cardWiggle,
+            opacity: .init(startValue: modifierConfig.opacity, endValue: 0),
             radians: .init(startValue: 0, endValue: .pi)
         )
     }
