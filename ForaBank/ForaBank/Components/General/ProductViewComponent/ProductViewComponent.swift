@@ -582,7 +582,7 @@ private extension View {
     }
 }
 
-private extension View {
+/*private extension View {
     
     func animation(
         isShowingCardBack: Bool,
@@ -602,7 +602,7 @@ private extension View {
                 .degrees(cardWiggle ? -20 : 0),
                 axis: (0, 1, 0))
     }
-}
+}*/
 
 struct ProductView: View {
     
