@@ -38,7 +38,7 @@ public struct HeaderBackView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Button(action: action) {
                         
-                        config.copyImage
+                        config.images.copy
                             .resizable()
                             .frame(width: 24, height: 24, alignment: .center)
                             .foregroundColor(config.colors.foreground)

@@ -735,94 +735,6 @@ extension ProductView {
                 .frame(width: size.width, height: size.height)
         }
     }
-    
-    // MARK: - Check
-    
-    struct CheckView: View {
-        
-        let sizeConfig: CardUI.Config.Sizes
-        
-        var body: some View {
-            
-            ZStack {
-                
-                Circle()
-                    .frame(
-                        width: sizeConfig.checkView.width,
-                        height: sizeConfig.checkView.height
-                    )
-                    .foregroundColor(.mainColorsBlack.opacity(0.12))
-                
-                Image.ic16Check
-                    .resizable()
-                    .foregroundColor(.mainColorsWhite)
-                    .background(Color.clear)
-                    .frame(width: sizeConfig.checkViewImage.width, height: sizeConfig.checkViewImage.height)
-            }
-        }
-    }
-}
-
-//MARK: - Animated Views
-
-extension ProductView {
-    
-    struct AnimatedGradientView: View {
-        
-        var duration: TimeInterval = 1.0
-        @State private var isAnimated: Bool = false
-        
-        var body: some View {
-            
-            GeometryReader { proxy in
-                
-                LinearGradient(colors: [.white.opacity(0), .white.opacity(0.5)], startPoint: .leading, endPoint: .trailing)
-                    .offset(.init(width: isAnimated ? proxy.frame(in: .local).width * 2 : -proxy.frame(in: .local).width, height: 0))
-                    .animation(.easeInOut(duration: duration).repeatForever(autoreverses: false))
-                    .onAppear {
-                        withAnimation {
-                            isAnimated = true
-                        }
-                    }
-            }
-        }
-    }
-    
-    struct AnimatedDotsView: View {
-        
-        var body: some View {
-            
-            HStack(spacing: 3) {
-                
-                ProductView.AnimatedDotView(duration: 0.6, delay: 0)
-                ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
-                ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
-            }
-        }
-    }
-    
-    struct AnimatedDotView: View {
-        
-        var color: Color = .white
-        var size: CGFloat = 3.0
-        var duration: TimeInterval = 1.0
-        var delay: TimeInterval = 0
-        @State private var isAnimated: Bool = false
-        
-        var body: some View {
-            
-            Circle()
-                .frame(width: size, height: size)
-                .foregroundColor(color)
-                .opacity(isAnimated ? 1 : 0)
-                .animation(.easeInOut(duration: duration).repeatForever(autoreverses: true).delay(delay))
-                .onAppear {
-                    withAnimation {
-                        isAnimated = true
-                    }
-                }
-        }
-    }
 }
 
 //MARK: - Modifiers
@@ -841,13 +753,7 @@ extension ProductView {
         private func checkView() -> some View {
             
             if isChecked {
-                CheckView(sizeConfig: config.sizes)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .topTrailing
-                    )
-                    .padding(config.front.checkPadding)
+                CheckView(config: config)
             }
         }
         
@@ -866,12 +772,7 @@ extension ProductView {
             if isUpdating == true {
                 ZStack {
                     
-                    HStack(spacing: 3) {
-                        
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0)
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
-                    }
+                    DotsAnimations()
                     .zIndex(3)
                     
                     AnimatedGradientView(duration: 3.0)

@@ -54,8 +54,10 @@ extension CardUI.Config {
                 foreground: .mainColorsWhite,
                 background: .textPlaceholder,
                 rateFill: .mainColorsGrayMedium,
-                rateForeground: .textSecondary),
-            copyImage: .ic24Copy
+                rateForeground: .textSecondary,
+                checkForeground: .mainColorsBlack
+            ),
+            images: .init(copy: .ic24Copy, check: .ic16Check) 
         )
     }
     
