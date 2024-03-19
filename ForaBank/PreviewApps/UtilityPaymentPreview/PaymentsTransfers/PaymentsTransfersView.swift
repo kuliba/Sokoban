@@ -69,7 +69,7 @@ private extension PaymentsTransfersView {
                 case let .prepayment(prepayment):
                     PrePaymentMockView(
                         event: { _ in fatalError() },// viewModel.event(.flow(.utilityFlow(.prepayment($0)))) },
-                        addCompany: { viewModel.event(.tap(.addCompany)) }
+                        addCompany: { viewModel.event(.alienScope(.addCompany)) }
                     )
                     
                 case let .selectFailure(`operator`):

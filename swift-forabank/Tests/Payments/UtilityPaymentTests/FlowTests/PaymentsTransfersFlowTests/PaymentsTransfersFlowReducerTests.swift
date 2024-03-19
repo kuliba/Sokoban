@@ -95,7 +95,7 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
     }
     
-    // MARK: - initiatePrepayment utilityFlow
+    // MARK: - UtilityFlow: initiatePrepayment
     
     func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
         
@@ -184,7 +184,7 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(sut: sut, .utilityFlow(.initiatePrepayment), on: state, effect: .utilityFlow(.initiatePrepayment))
     }
     
-    // MARK: - prepaymentLoaded
+    // MARK: - UtilityFlow: prepaymentLoaded
     
     func test_utilityFlow_prepaymentLoaded_shouldNotCallUtilityReduceWithFlowAndEventOnNilRoute() {
         

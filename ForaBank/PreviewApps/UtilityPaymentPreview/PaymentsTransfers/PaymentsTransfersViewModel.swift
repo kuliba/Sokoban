@@ -50,8 +50,8 @@ extension PaymentsTransfersViewModel {
         case let .flow(flowEvent):
             self.event(flowEvent)
             
-        case let .tap(tapEvent):
-            self.handle(tapEvent)
+        case let .alienScope(alienScope):
+            self.handle(alienScope)
         }
     }
 }
@@ -96,9 +96,9 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    func handle(_ tapEvent: Event.TapEvent) {
+    func handle(_ alienScopeEvent: Event.AlienScopeEvent) {
         
-        switch tapEvent {
+        switch alienScopeEvent {
         case .addCompany:
             addCompany()
             
