@@ -17,6 +17,19 @@ typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
 typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
 typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
 
+typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
+
+typealias OptionsEffectHandler = PrepaymentOptionsEffectHandler<LastPayment, Operator>
+
+typealias LoadOperatorsSpy = Spy<OptionsEffectHandler.LoadOperatorsPayload, OptionsEffectHandler.LoadOperatorsResult>
+typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadPrepaymentOptionsResult>
+typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
+typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
+
+typealias PPOState = UtilityReducer.PPOState
+typealias PPOEvent = UtilityReducer.PPOEvent
+typealias PPOEffect = UtilityReducer.PPOEffect
+
 func makeEmptyUtilityFlow(
     file: StaticString = #file,
     line: UInt = #line
@@ -79,10 +92,6 @@ func makeFlow(
     
     .init(stack: .init(destinations))
 }
-
-typealias PPOState = UtilityReducer.PPOState
-typealias PPOEvent = UtilityReducer.PPOEvent
-typealias PPOEffect = UtilityReducer.PPOEffect
 
 func makePPOStub(
     lastPaymentsCount: Int = 0,

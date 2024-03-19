@@ -14,9 +14,9 @@ final class PrepaymentOptionsEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, loadOperatorsSpy, _) = makeSUT()
+        let (_, operatorsLoader, _) = makeSUT()
         
-        XCTAssertEqual(loadOperatorsSpy.callCount, 0)
+        XCTAssertEqual(operatorsLoader.callCount, 0)
     }
     
     // MARK: - paginate
@@ -24,33 +24,33 @@ final class PrepaymentOptionsEffectHandlerTests: XCTestCase {
     func test_paginate_shouldCallLoadOperatorWithPayload() {
         
         let (operatorID, pageSize) = anyPayload()
-        let (sut, loadOperatorsSpy, _) = makeSUT()
+        let (sut, operatorsLoader, _) = makeSUT()
         
         sut.handleEffect(.paginate(operatorID, pageSize), { _ in })
         
-        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.0), [operatorID])
-        XCTAssertEqual(loadOperatorsSpy.payloads.map(\.?.1), [pageSize])
+        XCTAssertEqual(operatorsLoader.payloads.map(\.0), [operatorID])
+        XCTAssertEqual(operatorsLoader.payloads.map(\.1), [pageSize])
     }
     
     func test_paginate_shouldDeliverLoadOperatorEmptyResult() {
         
         let (operatorID, pageSize) = anyPayload()
-        let (sut, loadOperatorsSpy, _) = makeSUT()
+        let (sut, operatorsLoader, _) = makeSUT()
         
         expect(sut, with: .paginate(operatorID, pageSize), toDeliver: .paginated(.success([]))) {
             
-            loadOperatorsSpy.complete(with: .success([]))
+            operatorsLoader.complete(with: .success([]))
         }
     }
     
     func test_paginate_shouldDeliverLoadOperatorResult() {
         
         let (operatorID, pageSize) = anyPayload()
-        let (sut, loadOperatorsSpy, _) = makeSUT()
+        let (sut, operatorsLoader, _) = makeSUT()
         
         expect(sut, with: .paginate(operatorID, pageSize), toDeliver: .paginated(.success(.stub))) {
             
-            loadOperatorsSpy.complete(with: .success(.stub))
+            operatorsLoader.complete(with: .success(.stub))
         }
     }
     
@@ -86,30 +86,28 @@ final class PrepaymentOptionsEffectHandlerTests: XCTestCase {
     private typealias SUT = PrepaymentOptionsEffectHandler<LastPayment, Operator>
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-    
-    private typealias LoadOperatorsSpy = Spy<SUT.LoadOperatorsPayload?, SUT.LoadOperatorsResult>
-    
+        
     private func makeSUT(
         debounce: DispatchTimeInterval = .milliseconds(500),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadOperatorsSpy: LoadOperatorsSpy,
+        operatorsLoader: LoadOperatorsSpy,
         scheduler: TestSchedulerOfDispatchQueue
     ) {
-        let loadOperatorsSpy = LoadOperatorsSpy()
+        let operatorsLoader = LoadOperatorsSpy()
         let scheduler = DispatchQueue.test
         let sut = SUT(
             debounce: debounce,
-            loadOperators: loadOperatorsSpy.process(_:completion:),
+            loadOperators: operatorsLoader.process(_:completion:),
             scheduler: scheduler.eraseToAnyScheduler()
         )
         
-        trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
+        trackForMemoryLeaks(operatorsLoader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, loadOperatorsSpy, scheduler)
+        return (sut, operatorsLoader, scheduler)
     }
     
     private func expect(
@@ -140,7 +138,7 @@ final class PrepaymentOptionsEffectHandlerTests: XCTestCase {
     private func anyPayload(
         operatorID: Operator.ID = UUID().uuidString,
         pageSize: Int = 789
-    ) -> SUT.LoadOperatorsPayload {
+    ) -> (Operator.ID, Int) {
         
         (operatorID, pageSize)
     }

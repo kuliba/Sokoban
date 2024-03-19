@@ -11,7 +11,6 @@ import PrePaymentPicker
 import UtilityPayment
 
 private typealias PPOReducer = PrepaymentOptionsReducer<LastPayment, Operator>
-private typealias UtilityPaymentReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
 private typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
 
@@ -47,7 +46,7 @@ extension PaymentsTransfersViewModel {
             }
         }
         
-        let ppoEffectHandler = PPOEffectHandler(
+        let optionsEffectHandler = PPOEffectHandler(
             debounce: debounce,
             loadOperators: loadOperators,
             scheduler: scheduler
@@ -69,12 +68,7 @@ extension PaymentsTransfersViewModel {
             }
         }
         
-        let ppEffectHandler = PPEffectHandler(
-            loadServices: loadServices,
-            startPayment: startPayment
-        )
-                
-        let loadPrepayment: UtilityEffectHandler.LoadPrepayment = { completion in
+        let loadPrepayment: UtilityEffectHandler.LoadPrepaymentOptions = { completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
@@ -91,8 +85,9 @@ extension PaymentsTransfersViewModel {
         }
         
         let utilityFlowEffectHandler = UtilityEffectHandler(
-            loadPrepayment: loadPrepayment,
+            loadPrepaymentOptions: loadPrepayment,
             loadServices: loadServices,
+            optionsEffectHandle: optionsEffectHandler.handleEffect,
             startPayment: startPayment2
         )
         
@@ -125,7 +120,7 @@ private extension FlowSettings.LoadOperators {
 
 private extension FlowSettings.LoadPrepayment {
     
-    var result: UtilityEffectHandler.LoadPrepaymentResult {
+    var result: UtilityEffectHandler.LoadPrepaymentOptionsResult {
         
         switch self {
         case .failure:

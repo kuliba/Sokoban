@@ -13,8 +13,9 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (_,_, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
+        XCTAssertEqual(operatorsLoader.callCount, 0)
         XCTAssertEqual(optionsLoader.callCount, 0)
         XCTAssertEqual(servicesLoader.callCount, 0)
         XCTAssertEqual(paymentStarter.callCount, 0)
@@ -22,7 +23,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     func test_loadOptionsFailureFlow() {
         
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
         sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .failure(anyError()))
@@ -44,7 +45,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         let lastPayments = [makeLastPayment()]
         let (`operator`, operators) = makeOperatorOperators()
         let options = Options(lastPayments: lastPayments, operators: operators)
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
         
         sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .success((lastPayments, operators)))
@@ -75,35 +76,41 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     private typealias EffectHandler = UtilityEffectHandler
     
     private typealias StateSpy = ValueSpy<State>
-    
-    private typealias OptionsLoaderSpy = Spy<Void, EffectHandler.LoadPrepaymentResult>
-    private typealias ServicesLoaderSpy = Spy<EffectHandler.LoadServicesPayload, EffectHandler.LoadServicesResult>
-    private typealias PaymentStarterSpy = Spy<EffectHandler.StartPaymentPayload, EffectHandler.StartPaymentResult>
-    
-    private typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
-
+        
     private func makeSUT(
         initialState: State = .init(),
         ppoStub: [(PPOState, PPOEffect?)] = [makePPOStub()],
+        debounce: DispatchTimeInterval = .never,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         spy: StateSpy,
+        operatorsLoader: LoadOperatorsSpy,
         optionsLoader: OptionsLoaderSpy,
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
+        let scheduler: AnySchedulerOfDispatchQueue = .immediate
+        
         let ppoReducer = PPOReducer(stub: ppoStub)
         let reducer = Reducer(ppoReduce: ppoReducer.reduce(_:_:))
+        
+        let operatorsLoader = LoadOperatorsSpy()
+        let optionsEffectHandler = OptionsEffectHandler(
+            debounce: debounce,
+            loadOperators: operatorsLoader.process,
+            scheduler: scheduler
+        )
         
         let optionsLoader = OptionsLoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
 
         let effectHandler = EffectHandler(
-            loadPrepayment: optionsLoader.process,
+            loadPrepaymentOptions: optionsLoader.process,
             loadServices: servicesLoader.process,
+            optionsEffectHandle: optionsEffectHandler.handleEffect,
             startPayment: paymentStarter.process
         )
         
@@ -111,7 +118,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: .immediate
+            scheduler: scheduler
         )
         
         let spy = StateSpy(sut.$state)
@@ -120,11 +127,12 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
+        trackForMemoryLeaks(operatorsLoader, file: file, line: line)
         trackForMemoryLeaks(optionsLoader, file: file, line: line)
         trackForMemoryLeaks(servicesLoader, file: file, line: line)
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, spy, optionsLoader, servicesLoader, paymentStarter)
+        return (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter)
     }
     
     private func assert(
