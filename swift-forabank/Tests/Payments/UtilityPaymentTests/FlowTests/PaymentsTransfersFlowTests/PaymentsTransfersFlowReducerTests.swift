@@ -95,6 +95,22 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(sut: sut, .back, on: utilityFlowState, effect: .utilityFlow(effect))
     }
     
+    // MARK: - TapEvent: payByInstruction
+    
+    func test_tap_payByInstruction_shouldNotChangeNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assertState(.tap(.payByInstruction), on: nilRouteState)
+    }
+    
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assert(.tap(.payByInstruction), on: nilRouteState, effect: nil)
+    }
+    
     // MARK: - UtilityFlow: initiatePrepayment
     
     func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {

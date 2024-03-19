@@ -9,10 +9,16 @@ public enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaym
 where Operator: Identifiable {
     
     case back
+    case tap(TapEvent)
     case utilityFlow(UtilityFlow)
 }
 
 public extension PaymentsTransfersFlowEvent {
+    
+    enum TapEvent {
+        
+        case payByInstruction
+    }
     
     typealias UtilityFlow = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
 }
