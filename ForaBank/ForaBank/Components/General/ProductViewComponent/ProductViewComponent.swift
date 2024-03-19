@@ -596,7 +596,7 @@ private extension View {
     ) -> some View {
         
         self
-            .modifier(ProductView.FlipOpacity(
+            .modifier(FlipOpacity(
                 percentage: isShowingCardBack ? opacity.startValue : opacity.endValue))
             .rotation3DEffect(
                 .radians(isShowingCardBack ? radians.startValue : radians.endValue),
@@ -836,24 +836,6 @@ extension ProductView {
 }
 
 //MARK: - Modifiers
-
-extension ProductView {
-    
-    struct FlipOpacity: AnimatableModifier {
-        
-        var percentage: CGFloat = 0
-        
-        var animatableData: CGFloat {
-            get { percentage }
-            set { percentage = newValue }
-        }
-        
-        func body(content: Content) -> some View {
-            content
-                .opacity(percentage.rounded())
-        }
-    }
-}
 
 extension ProductView {
     
