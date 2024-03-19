@@ -9,14 +9,14 @@ import ForaTools
 
 extension PaymentsTransfersViewModel {
 
-    var navState: [State.Destination.Destination] {
+    var navState: [State.Route.Destination] {
 
         getNavState()
     }
     
-    private func getNavState() -> [State.Destination.Destination] {
+    private func getNavState() -> [State.Route.Destination] {
         
-        switch state.destination {
+        switch state.route {
         case .none:
             return []
             
@@ -35,7 +35,7 @@ extension PaymentsTransfersState {
     
     private func getUIState() -> UIState? {
         
-        switch destination {
+        switch route {
         case .none:
             return .none
             
@@ -93,7 +93,7 @@ extension PaymentsTransfersState {
     
     private func getNavigationState() -> NavigationState? {
         
-        switch destination {
+        switch route {
         case .none:
             return .none
             

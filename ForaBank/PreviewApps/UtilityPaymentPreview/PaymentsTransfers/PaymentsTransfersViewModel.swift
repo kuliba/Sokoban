@@ -124,7 +124,7 @@ private extension PaymentsTransfersState {
         
         get {
             
-            guard case let .utilityFlow(utilityFlow) = destination
+            guard case let .utilityFlow(utilityFlow) = route
             else { return .init() }
             
             return .init(route: .utilityFlow(utilityFlow))
@@ -138,7 +138,7 @@ private extension PaymentsTransfersState {
             self.init()
             
         case let .utilityFlow(utilityFlow):
-            self.init(destination: .utilityFlow(utilityFlow))
+            self.init(route: .utilityFlow(utilityFlow))
         }
     }
     
