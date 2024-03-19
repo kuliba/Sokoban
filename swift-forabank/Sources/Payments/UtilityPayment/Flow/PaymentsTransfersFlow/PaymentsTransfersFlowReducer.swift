@@ -31,7 +31,7 @@ public extension PaymentsTransfersFlowReducer {
             (state, effect) = back(state)
             
         case let .tap(tapEvent):
-            (state, effect) = reduce(state, tapEvent)
+            state = reduce(state, tapEvent)
             
         case let .utilityFlow(utilityFlowEvent):
             (state, effect) = reduce(state, utilityFlowEvent)
@@ -85,10 +85,9 @@ private extension PaymentsTransfersFlowReducer {
     func reduce(
         _ state: State,
         _ event: Event.TapEvent
-    ) -> (State, Effect?) {
+    ) -> State {
         
         var state = state
-        var effect: Effect?
         
         switch state.route {
         case .none:
@@ -104,12 +103,16 @@ private extension PaymentsTransfersFlowReducer {
                 utilityFlow.current = .payByInstruction
                 state = .init(route: .utilityFlow(utilityFlow))
 
+            case .services:
+                utilityFlow.push(.payByInstruction)
+                state = .init(route: .utilityFlow(utilityFlow))
+                
             default:
                 break
             }
         }
         
-        return (state, effect)
+        return state
     }
 
     func reduce(

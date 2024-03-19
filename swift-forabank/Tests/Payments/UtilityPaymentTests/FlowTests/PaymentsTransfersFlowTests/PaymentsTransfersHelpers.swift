@@ -86,6 +86,13 @@ func makeUtilityFlowState(
     .init(route: .utilityFlow(flow))
 }
 
+func makeUtilityFlowState(
+    _ destinations: Destination...
+) -> PaymentsTransfersFlowState<Destination> {
+    
+    .init(route: .utilityFlow(.init(stack: .init(destinations))))
+}
+
 func makeFlow(
     _ destinations: Destination...
 ) -> Flow<Destination> {
