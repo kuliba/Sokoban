@@ -1,11 +1,11 @@
 //
-//  DuplicatesRemoverTests.swift
+//  RemoveDuplicatesDecoratorTests.swift
 //
 //
 //  Created by Igor Malyarov on 19.03.2024.
 //
 
-final class DuplicatesRemover<Payload, Response>
+final class RemoveDuplicatesDecorator<Payload, Response>
 where Payload: Equatable {
     
     private let f: F
@@ -27,7 +27,7 @@ where Payload: Equatable {
     }
 }
 
-extension DuplicatesRemover {
+extension RemoveDuplicatesDecorator {
     
     typealias Completion = (Response) -> Void
     typealias F = (Payload, @escaping Completion) -> Void
@@ -35,7 +35,7 @@ extension DuplicatesRemover {
 
 import XCTest
 
-final class DuplicatesRemoverTests: XCTestCase {
+final class RemoveDuplicatesDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborator() {
         
@@ -69,7 +69,7 @@ final class DuplicatesRemoverTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = DuplicatesRemover<Payload, Response>
+    private typealias SUT = RemoveDuplicatesDecorator<Payload, Response>
     private typealias Caller = Spy<Payload, Response>
     
     private func makeSUT(
