@@ -209,17 +209,17 @@ private extension Image {
     static let mastercard: Self = .init("Payment System Mastercard")
 }
 
-private extension ProductView.ViewModel.HeaderViewModel {
+private extension HeaderDetails {
     
     static func make(period: String? = "12/24") -> Self {
-        .init(logo: .ic24LogoForaColor, number: "7854", period: period)
+        .init(number: "7854", period: period)
     }
 }
 
-private extension ProductView.ViewModel.FooterViewModel {
+private extension FooterDetails {
     
-    static let visa = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .visa)
-    static let mastercard = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .mastercard)
+    static let visa: Self = .init(balance: "170 897 ₽", paymentSystem: .visa)
+    static let mastercard: Self = .init(balance: "170 897 ₽", paymentSystem: .mastercard)
 }
 
 private extension Appearance {
