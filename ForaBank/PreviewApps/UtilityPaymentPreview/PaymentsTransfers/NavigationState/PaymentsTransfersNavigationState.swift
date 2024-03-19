@@ -8,9 +8,9 @@
 import ForaTools
 
 extension PaymentsTransfersViewModel {
-
+    
     var navState: [State.Route.Destination] {
-
+        
         getNavState()
     }
     
@@ -48,7 +48,7 @@ extension PaymentsTransfersState {
                 switch serviceFailure {
                 case .connectivityError:
                     return .failure(.connectivityError)
-                
+                    
                 case let .serverError(message):
                     return .failure(.serverError(message))
                 }
@@ -61,6 +61,9 @@ extension PaymentsTransfersState {
                 
             case let .prepayment(prepayment):
                 return .prepayment
+                
+            case .scan:
+                return .scan
                 
             case let .selectFailure(`operator`):
                 return .selectFailure
@@ -81,6 +84,7 @@ extension PaymentsTransfersState {
         case payByInstruction
         case prepayment
         case other
+        case scan
         case selectFailure
         case services
     }

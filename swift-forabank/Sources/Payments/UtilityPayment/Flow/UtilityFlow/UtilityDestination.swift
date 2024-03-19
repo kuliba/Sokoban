@@ -11,6 +11,7 @@ public enum UtilityDestination<LastPayment, Operator, Service> {
     case payByInstruction
     case payment
     case prepayment(Prepayment)
+    case scan
     case selectFailure(Operator)
     case services([Service]) // more than one
 }

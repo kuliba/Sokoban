@@ -18,6 +18,7 @@ public extension PaymentsTransfersFlowEvent {
     enum TapEvent {
         
         case payByInstruction
+        case scan
     }
     
     typealias UtilityFlow = UtilityFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>

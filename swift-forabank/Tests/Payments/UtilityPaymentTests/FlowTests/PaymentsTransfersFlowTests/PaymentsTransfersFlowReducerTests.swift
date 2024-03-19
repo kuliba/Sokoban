@@ -220,6 +220,131 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(.tap(.payByInstruction), on: paymentFailureState, effect: nil)
     }
 
+    // MARK: - TapEvent: scan
+    
+    func test_tap_scan_shouldNotChangeNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assertState(.tap(.scan), on: nilRouteState)
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnNilRoute() {
+        
+        let nilRouteState = State(route: nil)
+        
+        assert(.tap(.scan), on: nilRouteState, effect: nil)
+    }
+    
+    func test_tap_scan_shouldPushPayByInstructionOnTopOfPrepaymentOptionsAsCurrentInUtilityFlow() {
+        
+        let prepaymentOptions = makePrepaymentOptions()
+        let withOptionsState = makeUtilityFlowState(prepaymentOptions)
+        
+        assertState(.tap(.scan), on: withOptionsState) {
+            
+            $0.route = makeRoute(
+                prepaymentOptions,
+                .scan
+            )
+        }
+        XCTAssert(isCurrentPrepaymentOptions(withOptionsState))
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnPrepaymentOptionsAsCurrentInUtilityFlow() {
+        
+        let prepaymentOptions = makePrepaymentOptions()
+        let withOptionsState = makeUtilityFlowState(prepaymentOptions)
+
+        assert(.tap(.scan), on: withOptionsState, effect: nil)
+        XCTAssert(isCurrentPrepaymentOptions(withOptionsState))
+    }
+
+    func test_tap_scan_shouldReplacePrepaymentOptionsFailureAsCurrentInUtilityFlowWithPayByInstruction() {
+        
+        let prepaymentFailure = makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        let prepaymentFailureState = makeUtilityFlowState(prepaymentFailure)
+
+        assertState(.tap(.scan), on: prepaymentFailureState) {
+            
+            $0.route = makeRoute(.scan)
+        }
+        XCTAssert(isCurrentPrepaymentFailure(prepaymentFailureState))
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnPrepaymentOptionsFailureAsCurrentInUtilityFlow() {
+        
+        let prepaymentFailure = makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        let prepaymentFailureState = makeUtilityFlowState(prepaymentFailure)
+
+        assert(.tap(.scan), on: prepaymentFailureState, effect: nil)
+        XCTAssert(isCurrentPrepaymentFailure(prepaymentFailureState))
+    }
+
+    func test_tap_scan_shouldPushPayByInstructionOnTopOfServicesAsCurrentInUtilityFlow() {
+        
+        let services = makeServicesDestination()
+        let servicesState = makeUtilityFlowState(services)
+        
+        assertState(.tap(.scan), on: servicesState) {
+            
+            $0.route = makeRoute(services, .scan)
+        }
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnServicesAsCurrentInUtilityFlow() {
+        
+        let services = makeServicesDestination()
+        let servicesState = makeUtilityFlowState(services)
+        
+        assert(.tap(.scan), on: servicesState, effect: nil)
+    }
+
+    func test_tap_scan_shouldReplaceServicesFailureAsCurrentInUtilityFlowWithPayByInstruction() {
+        
+        let servicesFailureState = makeUtilityFlowState(.selectFailure(makeOperator()))
+        
+        assertState(.tap(.scan), on: servicesFailureState) {
+            
+            $0.route = makeRoute(.scan)
+        }
+    }
+
+    func test_tap_scan_shouldNotDeliverEffectOnServicesFailureAsCurrentInUtilityFlow() {
+        
+        let servicesFailureState = makeUtilityFlowState(.selectFailure(makeOperator()))
+
+        assert(.tap(.scan), on: servicesFailureState, effect: nil)
+    }
+
+    func test_tap_scan_shouldNotChangeStateOnPaymentAsCurrentInUtilityFlow() {
+        
+        let paymentState = makeUtilityFlowState(.payment)
+        
+        assertState(.tap(.scan), on: paymentState)
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnPaymentAsCurrentInUtilityFlow() {
+        
+        let paymentState = makeUtilityFlowState(.payment)
+
+        assert(.tap(.scan), on: paymentState, effect: nil)
+    }
+
+    func test_tap_scan_shouldNotChangeStateOnFailureAsCurrentInUtilityFlow() {
+        
+        let paymentFailureState = makeUtilityFlowState(.failure(.connectivityError))
+        
+        assertState(.tap(.scan), on: paymentFailureState)
+    }
+    
+    func test_tap_scan_shouldNotDeliverEffectOnFailureAsCurrentInUtilityFlow() {
+        
+        let paymentFailureState = makeUtilityFlowState(.failure(.connectivityError))
+
+        assert(.tap(.scan), on: paymentFailureState, effect: nil)
+    }
+
     // MARK: - UtilityFlow: initiatePrepayment
     
     func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {

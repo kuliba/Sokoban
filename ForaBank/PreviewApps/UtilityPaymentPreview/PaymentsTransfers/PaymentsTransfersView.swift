@@ -75,6 +75,9 @@ private extension PaymentsTransfersView {
                         addCompany: { viewModel.event(.alienScope(.addCompany)) }
                     )
                     
+                case .scan:
+                    Text("TBD: Scan QR")
+                    
                 case let .selectFailure(`operator`):
                     Text("selectFailure for \(String(describing: `operator`))")
                     
