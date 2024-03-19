@@ -8,25 +8,21 @@
 final class RemoveDuplicatesDecorator<Payload, Response>
 where Payload: Equatable {
     
-    private let f: F
     private var lastPayload: Payload?
     
-    init(_ f: @escaping F) {
+    func callAsFunction(_ f: @escaping F) -> F {
         
-        self.f = f
-    }
-    
-    func callAsFunction(
-        _ payload: Payload,
-        _ completion: @escaping Completion
-    ) {
-        guard payload != lastPayload else { return }
-        
-        lastPayload = payload
-        f(payload, completion)
+        return { [weak self] payload, completion in
+            
+            guard let self else { return }
+            
+            guard payload != lastPayload else { return }
+            
+            lastPayload = payload
+            f(payload, completion)
+        }
     }
 }
-
 extension RemoveDuplicatesDecorator {
     
     typealias Completion = (Response) -> Void
@@ -37,20 +33,13 @@ import XCTest
 
 final class RemoveDuplicatesDecoratorTests: XCTestCase {
     
-    func test_init_shouldNotCallCollaborator() {
-        
-        let (_, spy) = makeSUT()
-        
-        XCTAssertEqual(spy.callCount, 0)
-    }
-    
     func test_shouldNotCallTwiceWithSamePayload() {
         
         let payload = makePayload()
         let (sut, spy) = makeSUT()
         
-        sut(payload) { _ in }
-        sut(payload) { _ in }
+        sut(spy.process)(payload) { _ in }
+        sut(spy.process)(payload) { _ in }
         
         XCTAssertNoDiff(spy.payloads, [payload])
     }
@@ -61,10 +50,26 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         let lastPayload = makePayload()
         let (sut, spy) = makeSUT()
         
-        sut(firstPayload) { _ in }
-        sut(lastPayload) { _ in }
+        sut(spy.process)(firstPayload) { _ in }
+        sut(spy.process)(lastPayload) { _ in }
         
         XCTAssertNoDiff(spy.payloads, [firstPayload, lastPayload])
+    }
+    
+    func test_shouldNotCallOnInstanceDeallocation() {
+        
+        let firstPayload = makePayload()
+        let lastPayload = makePayload()
+        var sut: SUT?
+        let spy: Caller
+        (sut, spy) = makeSUT()
+        
+        sut?(spy.process)(firstPayload) { _ in }
+        sut = nil
+        spy.complete(with: .init())
+        sut?(spy.process)(lastPayload) { _ in }
+        
+        XCTAssertNoDiff(spy.payloads, [firstPayload])
     }
     
     // MARK: - Helpers
@@ -80,7 +85,7 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         spy: Caller
     ) {
         let spy = Caller()
-        let sut = SUT(spy.process(_:completion:))
+        let sut = SUT()
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
