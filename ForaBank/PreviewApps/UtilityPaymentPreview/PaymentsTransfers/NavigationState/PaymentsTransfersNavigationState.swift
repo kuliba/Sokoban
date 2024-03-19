@@ -56,6 +56,9 @@ extension PaymentsTransfersState {
             case .payment:
                 return .payment
                 
+            case .payByInstruction:
+                return .payByInstruction
+                
             case let .prepayment(prepayment):
                 return .prepayment
                 
@@ -75,6 +78,7 @@ extension PaymentsTransfersState {
         
         case failure(ServiceFailure)
         case payment
+        case payByInstruction
         case prepayment
         case other
         case selectFailure

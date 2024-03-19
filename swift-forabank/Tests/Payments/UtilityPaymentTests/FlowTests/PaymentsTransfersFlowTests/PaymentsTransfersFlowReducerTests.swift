@@ -111,6 +111,51 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         assert(.tap(.payByInstruction), on: nilRouteState, effect: nil)
     }
     
+    func test_tap_payByInstruction_shouldPushPayByInstructionOnTopOfPrepaymentOptionsAsCurrentInUtilityFlow() {
+        
+        let prepaymentOptions = makePrepaymentOptions()
+        let withOptionsState = makeUtilityFlowState(.init(stack: [prepaymentOptions]))
+        
+        assertState(.tap(.payByInstruction), on: withOptionsState) {
+            
+            $0.route = .utilityFlow(.init(stack: [
+                prepaymentOptions,
+                .payByInstruction
+            ]))
+        }
+        XCTAssert(isCurrentPrepaymentOptions(withOptionsState))
+    }
+    
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnPrepaymentOptionsAsCurrentInUtilityFlow() {
+        
+        let prepaymentOptions = makePrepaymentOptions()
+        let withOptionsState = makeUtilityFlowState(.init(stack: [prepaymentOptions]))
+
+        assert(.tap(.payByInstruction), on: withOptionsState, effect: nil)
+        XCTAssert(isCurrentPrepaymentOptions(withOptionsState))
+    }
+
+    func test_tap_payByInstruction_shouldReplacePrepaymentOptionsFailureAsCurrentInUtilityFlowWithPayByInstruction() {
+        
+        let prepaymentFailure = makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        let prepaymentFailureState = State(route: .utilityFlow(prepaymentFailure))
+
+        assertState(.tap(.payByInstruction), on: prepaymentFailureState) {
+            
+            $0.route = .utilityFlow(.init(stack: [.payByInstruction]))
+        }
+        XCTAssert(isCurrentPrepaymentFailure(prepaymentFailureState))
+    }
+    
+    func test_tap_payByInstruction_shouldNotDeliverEffectOnPrepaymentOptionsFailureAsCurrentInUtilityFlow() {
+        
+        let prepaymentFailure = makeSingleDestinationUtilityFlow(.prepayment(.failure))
+        let prepaymentFailureState = State(route: .utilityFlow(prepaymentFailure))
+
+        assert(.tap(.payByInstruction), on: prepaymentFailureState, effect: nil)
+        XCTAssert(isCurrentPrepaymentFailure(prepaymentFailureState))
+    }
+
     // MARK: - UtilityFlow: initiatePrepayment
     
     func test_utilityFlow_initiatePrepayment_shouldCallUtilityReduceWithEmptyFlowAndInitiateOnNilRoute() {
@@ -300,6 +345,40 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(utilityReducerSpy, file: file, line: line)
         
         return (sut, utilityReducerSpy)
+    }
+    
+    private func isCurrentPrepaymentOptions(
+        _ state: State
+    ) -> Bool {
+        
+        switch state.route {
+        case let .utilityFlow(utilityFlow):
+            if case .prepayment(.options) = utilityFlow.current {
+                return true
+            } else {
+                return false
+            }
+            
+        default:
+            return false
+        }
+    }
+    
+    private func isCurrentPrepaymentFailure(
+        _ state: State
+    ) -> Bool {
+        
+        switch state.route {
+        case let .utilityFlow(utilityFlow):
+            if case .prepayment(.failure) = utilityFlow.current {
+                return true
+            } else {
+                return false
+            }
+            
+        default:
+            return false
+        }
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

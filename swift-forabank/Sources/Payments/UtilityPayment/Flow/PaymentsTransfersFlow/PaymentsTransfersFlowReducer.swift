@@ -90,6 +90,25 @@ private extension PaymentsTransfersFlowReducer {
         var state = state
         var effect: Effect?
         
+        switch state.route {
+        case .none:
+            break
+            
+        case var .utilityFlow(utilityFlow):
+            switch utilityFlow.current {
+            case .prepayment(.options):
+                utilityFlow.push(.payByInstruction)
+                state = .init(route: .utilityFlow(utilityFlow))
+                
+            case .prepayment(.failure):
+                utilityFlow.current = .payByInstruction
+                state = .init(route: .utilityFlow(utilityFlow))
+
+            default:
+                break
+            }
+        }
+        
         return (state, effect)
     }
 

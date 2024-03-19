@@ -65,6 +65,9 @@ private extension PaymentsTransfersView {
                     
                 case .payment:
                     Text("TBD: payment")
+                
+                case .payByInstruction:
+                    Text("TBD: payByInstruction")
                     
                 case let .prepayment(prepayment):
                     PrePaymentMockView(

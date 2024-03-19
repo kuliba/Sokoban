@@ -8,6 +8,7 @@
 public enum UtilityDestination<LastPayment, Operator, Service> {
     
     case failure(ServiceFailure)
+    case payByInstruction
     case payment
     case prepayment(Prepayment)
     case selectFailure(Operator)
