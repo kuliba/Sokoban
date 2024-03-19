@@ -92,114 +92,6 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.initiatePrepayment, on: nonEmptyState, effect: nil)
     }
     
-    // MARK: - prepaymentLoaded
-    
-    func test_loaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
-        
-        let emptyState = makeFlow()
-        
-        assertState(.prepaymentLoaded(.failure), on: emptyState) {
-            
-            $0.push(.prepayment(.failure))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
-        
-        let emptyState = makeFlow()
-        
-        assert(.prepaymentLoaded(.failure), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
-        
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assertState(.prepaymentLoaded(.failure), on: nonEmptyState)
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
-        
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assert(.prepaymentLoaded(.failure), on: nonEmptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
-        
-        let operators = [makeOperator()]
-        let emptyState = makeFlow()
-        
-        assertState(.prepaymentLoaded(.success([], operators)), on: emptyState) {
-            
-            $0.push(makePrepayment([], operators))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
-        
-        let operators = [makeOperator()]
-        let emptyState = makeFlow()
-        
-        assert(.prepaymentLoaded(.success([], operators)), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let emptyState = makeFlow()
-        
-        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState) {
-            
-            $0.push(makePrepayment(lastPayments, operators))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let emptyState = makeFlow()
-        
-        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState)
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
-    }
-    
-    // MARK: - servicesLoaded
-    
-    func test_loadedServices_shouldPushServicesDestinationOnTop() {
-        
-        let state = makeFlow()
-        let services = makeServices()
-        
-        assertState(.servicesLoaded(services), on: state) {
-            
-            $0.push(.services(services))
-        }
-    }
-    
-    func test_loadedServices_shouldNotDeliverEffect() {
-        
-        let state = makeFlow()
-        let services = makeServices()
-        
-        assert(.servicesLoaded(services), on: state, effect: nil)
-    }
-    
     // MARK: - paymentStarted
     
     func test_paymentStarted_shouldPushFailureDestinationOnConnectivityErrorFailure() {
@@ -253,6 +145,93 @@ final class UtilityFlowReducerTests: XCTestCase {
         let state = makeFlow()
         
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
+    }
+    
+    // MARK: - prepaymentLoaded
+    
+    func test_prepaymentLoaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
+        
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.failure), on: emptyState) {
+            
+            $0.push(.prepayment(.failure))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
+        
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.failure), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
+        
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assertState(.prepaymentLoaded(.failure), on: nonEmptyState)
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
+        
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assert(.prepaymentLoaded(.failure), on: nonEmptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
+        
+        let operators = [makeOperator()]
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.success([], operators)), on: emptyState) {
+            
+            $0.push(makePrepayment([], operators))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
+        
+        let operators = [makeOperator()]
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.success([], operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState) {
+            
+            $0.push(makePrepayment(lastPayments, operators))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState)
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
     }
     
     // MARK: - select
@@ -394,7 +373,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let (`operator`, service) = (makeOperator(), makeService())
         let topServicesState = makeFlow(.services([service, makeService()]))
-
+        
         assertState(.select(.service(service, for: `operator`)), on: topServicesState)
     }
     
@@ -408,6 +387,27 @@ final class UtilityFlowReducerTests: XCTestCase {
             on: topServicesState,
             effect: .select(.service(service, for: `operator`))
         )
+    }
+    
+    // MARK: - servicesLoaded
+    
+    func test_loadedServices_shouldPushServicesDestinationOnTop() {
+        
+        let state = makeFlow()
+        let services = makeServices()
+        
+        assertState(.servicesLoaded(services), on: state) {
+            
+            $0.push(.services(services))
+        }
+    }
+    
+    func test_loadedServices_shouldNotDeliverEffect() {
+        
+        let state = makeFlow()
+        let services = makeServices()
+        
+        assert(.servicesLoaded(services), on: state, effect: nil)
     }
     
     // MARK: - Helpers
