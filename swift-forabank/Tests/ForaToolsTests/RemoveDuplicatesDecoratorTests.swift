@@ -56,6 +56,26 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.payloads, [firstPayload, lastPayload])
     }
     
+    func test_shouldDeliverResponse() {
+        
+        let payload = makePayload()
+        let (sut, spy) = makeSUT()
+        let response = makeResponse()
+        var receivedResponse: Response?
+        let exp = expectation(description: "wait for completion")
+        
+        sut(spy.process)(payload) {
+            
+            receivedResponse = $0
+            exp.fulfill()
+        }
+        spy.complete(with: response)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(receivedResponse, response)
+    }
+    
     func test_shouldNotCallOnInstanceDeallocation() {
         
         let firstPayload = makePayload()
@@ -101,6 +121,13 @@ private func makePayload(
     .init(value: value)
 }
 
+private func makeResponse(
+    value: String = UUID().uuidString
+) -> Response {
+    
+    .init(value: value)
+}
+
 private struct Payload: Equatable {
     
     var value: String
@@ -111,7 +138,7 @@ private struct Payload: Equatable {
     }
 }
 
-private struct Response {
+private struct Response: Equatable {
     
     var value: String
     
