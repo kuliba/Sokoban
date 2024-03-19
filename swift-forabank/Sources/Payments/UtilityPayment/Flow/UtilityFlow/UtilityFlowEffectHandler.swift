@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
     private let loadPrepayment: LoadPrepayment
     private let loadServices: LoadServices

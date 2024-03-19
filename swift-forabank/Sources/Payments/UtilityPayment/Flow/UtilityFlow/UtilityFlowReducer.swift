@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
     public init() {}
 }
@@ -29,20 +30,23 @@ public extension UtilityFlowReducer {
                 effect = .initiatePrepayment
             }
             
+        case let .paymentStarted(result):
+            state = reduce(state, result)
+            
         case let .prepaymentLoaded(prepaymentLoaded):
             state = reduce(state, prepaymentLoaded)
             
-        case let .servicesLoaded(services):
-            state.push(.services(services))
-            
-        case let .paymentStarted(result):
-            state = reduce(state, result)
+        case let .prepaymentOptions(prepaymentOptions):
+            fatalError()
             
         case let .select(select):
             reduce(state, select, &effect)
             
         case let .selectFailure(`operator`):
             state.push(.selectFailure(`operator`))
+            
+        case let .servicesLoaded(services):
+            state.push(.services(services))
         }
         
         return (state, effect)

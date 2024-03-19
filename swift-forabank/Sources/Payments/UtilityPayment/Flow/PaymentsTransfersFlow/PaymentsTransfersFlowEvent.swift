@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse> {
+public enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
     case back
     case utilityFlow(UtilityFlow)
