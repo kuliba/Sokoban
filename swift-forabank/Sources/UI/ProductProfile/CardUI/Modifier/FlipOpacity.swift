@@ -9,15 +9,15 @@ import SwiftUI
 
 public struct FlipOpacity: AnimatableModifier {
     
-    var percentage: CGFloat = 0
-    
-    public init(percentage: CGFloat) {
-        self.percentage = percentage
-    }
-    
+    public var percentage: CGFloat
+        
     public var animatableData: CGFloat {
         get { percentage }
         set { percentage = newValue }
+    }
+    
+    public init(percentage: CGFloat = 0) {
+        self.percentage = percentage
     }
     
     public func body(content: Content) -> some View {

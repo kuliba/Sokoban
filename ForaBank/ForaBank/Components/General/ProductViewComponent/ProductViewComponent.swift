@@ -214,7 +214,7 @@ extension ProductView {
                     amount: loanProduct.amount,
                     debt: loanProduct.totalAmountDebtValue,
                     currency: loanProduct.currency,
-                    style: style, 
+                    style: style,
                     model: model
                 )
             default:
@@ -564,25 +564,43 @@ extension ProductView.ViewModel {
 private extension View {
     
     func card(
-        isChecked: Bool,
-        isFrontView: Bool,
-        isUpdating: Bool,
-        statusAction: ProductView.ViewModel.StatusActionViewModel?,
+        viewModel: ProductView.ViewModel,
         config: CardUI.Config,
+        isFrontView: Bool,
         action: @escaping () -> Void
     ) -> some View {
         
         self
             .modifier(
                 ProductView.CardModifier(
-                    isChecked: isChecked,
+                    viewModel: viewModel,
                     isFrontView: isFrontView,
-                    isUpdating: isUpdating,
-                    statusAction: statusAction,
                     config: config
                 )
             )
             .onTapGesture(perform: action)
+    }
+}
+
+private extension View {
+    
+    func animation(
+        isShowingCardBack: Bool,
+        cardWiggle: Bool,
+        opacity: Values,
+        radians: Values
+    ) -> some View {
+        
+        self
+            .modifier(FlipOpacity(
+                percentage: isShowingCardBack ? opacity.startValue : opacity.endValue))
+            .rotation3DEffect(
+                .radians(isShowingCardBack ? radians.startValue : radians.endValue),
+                axis: (0,1,0),
+                perspective: 0.1)
+            .rotation3DEffect(
+                .degrees(cardWiggle ? -20 : 0),
+                axis: (0, 1, 0))
     }
 }
 
@@ -603,8 +621,6 @@ struct ProductView: View {
         FrontView(
             name: viewModel.cardInfo.name,
             balance: .init(viewModel.footer.balance),
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: viewModel.cardInfo.cardWiggle,
             config: config,
             headerView: { HeaderView(config: config, header: viewModel.header) },
             footerView: { balance in
@@ -619,12 +635,18 @@ struct ProductView: View {
                 )
             })
         .card(
-            isChecked: viewModel.isChecked,
-            isFrontView: true,
-            isUpdating: viewModel.isUpdating,
-            statusAction: viewModel.statusAction,
+            viewModel: viewModel,
             config: config,
+            isFrontView: true,
             action: viewModel.productDidTapped
+        )
+        .animation(
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: viewModel.cardInfo.cardWiggle,
+            opacity: .init(
+                startValue: 0,
+                endValue: viewModel.appearance.opacity),
+            radians: .init(startValue: .pi, endValue: 2 * .pi)
         )
         .animation(
             .linear(duration: 0.5),
@@ -640,14 +662,12 @@ struct ProductView: View {
         }
         
         BackView(
-            opacity: viewModel.appearance.opacity,
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
             backConfig: config.back,
             header: {
                 
                 HeaderBackView.init(
                     cardInfo: viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard, 
+                    action: viewModel.copyCardNumberToClipboard,
                     config: config
                 )
             },
@@ -657,12 +677,16 @@ struct ProductView: View {
             }
         )
         .card(
-            isChecked: viewModel.isChecked,
-            isFrontView: false,
-            isUpdating: viewModel.isUpdating,
-            statusAction: viewModel.statusAction,
+            viewModel: viewModel,
             config: config,
+            isFrontView: false,
             action: viewModel.productDidTapped
+        )
+        .animation(
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: false,
+            opacity: .init(startValue: viewModel.appearance.opacity, endValue: 0),
+            radians: .init(startValue: 0, endValue: .pi)
         )
     }
 }
@@ -809,16 +833,15 @@ extension ProductView {
     
     struct CardModifier: ViewModifier {
         
-        let isChecked: Bool
+        @ObservedObject var viewModel: ViewModel
+        
         let isFrontView: Bool
-        let isUpdating: Bool
-        let statusAction: ProductView.ViewModel.StatusActionViewModel?
         let config: CardUI.Config
         
         @ViewBuilder
         private func checkView() -> some View {
             
-            if isChecked {
+            if viewModel.isChecked {
                 CheckView(sizeConfig: config.sizes)
                     .frame(
                         maxWidth: .infinity,
@@ -832,7 +855,7 @@ extension ProductView {
         @ViewBuilder
         private func statusActionView() -> some View {
             
-            if let statusActionViewModel = statusAction {
+            if let statusActionViewModel = viewModel.statusAction {
                 
                 ProductView.StatusActionView(
                     viewModel: statusActionViewModel,
@@ -845,8 +868,7 @@ extension ProductView {
         @ViewBuilder
         private func updatingView() -> some View {
             
-            if isUpdating {
-                
+            if viewModel.isUpdating == true {
                 ZStack {
                     
                     HStack(spacing: 3) {

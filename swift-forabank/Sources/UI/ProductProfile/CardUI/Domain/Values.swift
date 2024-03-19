@@ -7,8 +7,13 @@
 
 import Foundation
 
-struct Values {
+public struct Values {
     
-    let startValue: Double
-    let endValue: Double
+    public let startValue: Double
+    public let endValue: Double
+    
+    public init(startValue: Double, endValue: Double) {
+        self.startValue = startValue
+        self.endValue = endValue
+    }
 }
