@@ -572,14 +572,26 @@ private extension View {
         action: @escaping () -> Void
     ) -> some View {
         
-        self
+        let statusActionView = {
+            statusAction.map {
+                
+                return ProductView.StatusActionView(
+                    viewModel: $0,
+                    color: config.appearance.textColor,
+                    style: config.appearance.style)
+            }
+        }()
+        
+        return self
             .modifier(
                 ProductView.CardModifier(
                     isChecked: isChecked,
                     isUpdating: isUpdating,
-                    statusAction: statusAction,
                     isFrontView: isFrontView,
-                    config: config
+                    config: config,
+                    statusAction: {
+                        statusActionView
+                    }
                 )
             )
             .onTapGesture(perform: action)
@@ -817,14 +829,14 @@ extension ProductView {
 
 extension ProductView {
     
-    struct CardModifier: ViewModifier {
+    struct CardModifier<StatusAction: View>: ViewModifier {
 
         let isChecked: Bool
         let isUpdating: Bool
-        let statusAction: ViewModel.StatusActionViewModel?
         let isFrontView: Bool
         let config: CardUI.Config
-        
+        let statusAction: () -> StatusAction?
+
         @ViewBuilder
         private func checkView() -> some View {
             
@@ -842,13 +854,9 @@ extension ProductView {
         @ViewBuilder
         private func statusActionView() -> some View {
             
-            if let statusActionViewModel = statusAction {
+            if let statusAction = statusAction() {
                 
-                ProductView.StatusActionView(
-                    viewModel: statusActionViewModel,
-                    color: config.appearance.textColor,
-                    style: config.appearance.style
-                )
+                statusAction
             }
         }
         
