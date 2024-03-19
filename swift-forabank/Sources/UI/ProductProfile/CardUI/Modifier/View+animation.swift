@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public extension View {
+extension View {
     
     func animation(
         isShowingCardBack: Bool,

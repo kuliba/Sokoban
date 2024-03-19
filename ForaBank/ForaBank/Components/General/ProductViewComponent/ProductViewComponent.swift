@@ -561,43 +561,6 @@ extension ProductView.ViewModel {
 
 //MARK: - View
 
-private extension View {
-    
-    func card(
-        isChecked: Bool,
-        isUpdating: Bool,
-        statusAction: ProductView.ViewModel.StatusActionViewModel?,
-        config: CardUI.Config,
-        isFrontView: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        
-        let statusActionView = {
-            statusAction.map {
-                
-                return ProductView.StatusActionView(
-                    viewModel: $0,
-                    color: config.appearance.textColor,
-                    style: config.appearance.style)
-            }
-        }()
-        
-        return self
-            .modifier(
-                ProductView.CardModifier(
-                    isChecked: isChecked,
-                    isUpdating: isUpdating,
-                    isFrontView: isFrontView,
-                    config: config,
-                    statusAction: {
-                        statusActionView
-                    }
-                )
-            )
-            .onTapGesture(perform: action)
-    }
-}
-
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
@@ -615,6 +578,11 @@ struct ProductView: View {
         FrontView(
             name: viewModel.cardInfo.name,
             balance: .init(viewModel.footer.balance),
+            isChecked: viewModel.isChecked,
+            isUpdating: viewModel.isUpdating,
+            opacity: viewModel.appearance.opacity,
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: viewModel.cardInfo.cardWiggle,
             config: config,
             headerView: { HeaderView(config: config, header: viewModel.header) },
             footerView: { balance in
@@ -627,22 +595,9 @@ struct ProductView: View {
                         paymentSystem: viewModel.footer.paymentSystem
                     )
                 )
-            })
-        .card(
-            isChecked: viewModel.isChecked,
-            isUpdating: viewModel.isUpdating,
-            statusAction: viewModel.statusAction,
-            config: config,
-            isFrontView: true,
+            },
+            statusActionView: statusView, 
             action: viewModel.productDidTapped
-        )
-        .animation(
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: viewModel.cardInfo.cardWiggle,
-            opacity: .init(
-                startValue: 0,
-                endValue: viewModel.appearance.opacity),
-            radians: .init(startValue: .pi, endValue: 2 * .pi)
         )
         .animation(
             .linear(duration: 0.5),
@@ -658,7 +613,11 @@ struct ProductView: View {
         }
         
         BackView(
-            backConfig: config.back,
+            isChecked: viewModel.isChecked,
+            isUpdating: viewModel.isUpdating,
+            opacity: viewModel.appearance.opacity,
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            config: config,
             header: {
                 
                 HeaderBackView.init(
@@ -670,22 +629,21 @@ struct ProductView: View {
             cvv: {
                 
                 CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
-            }
-        )
-        .card(
-            isChecked: viewModel.isChecked,
-            isUpdating: viewModel.isUpdating,
-            statusAction: viewModel.statusAction,
-            config: config,
-            isFrontView: false,
+            }, 
             action: viewModel.productDidTapped
         )
-        .animation(
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: false,
-            opacity: .init(startValue: viewModel.appearance.opacity, endValue: 0),
-            radians: .init(startValue: 0, endValue: .pi)
-        )
+    }
+    
+    @ViewBuilder
+    private func statusView() -> (some View)? {
+        
+        viewModel.statusAction.map {
+            
+            return ProductView.StatusActionView(
+                viewModel: $0,
+                color: config.appearance.textColor,
+                style: config.appearance.style)
+        }
     }
 }
 
@@ -733,80 +691,6 @@ extension ProductView {
                 .renderingMode(.template)
                 .foregroundColor(color)
                 .frame(width: size.width, height: size.height)
-        }
-    }
-}
-
-//MARK: - Modifiers
-
-extension ProductView {
-    
-    struct CardModifier<StatusAction: View>: ViewModifier {
-
-        let isChecked: Bool
-        let isUpdating: Bool
-        let isFrontView: Bool
-        let config: CardUI.Config
-        let statusAction: () -> StatusAction?
-
-        @ViewBuilder
-        private func checkView() -> some View {
-            
-            if isChecked {
-                CheckView(config: config)
-            }
-        }
-        
-        @ViewBuilder
-        private func statusActionView() -> some View {
-            
-            if let statusAction = statusAction() {
-                
-                statusAction
-            }
-        }
-        
-        @ViewBuilder
-        private func updatingView() -> some View {
-            
-            if isUpdating == true {
-                ZStack {
-                    
-                    DotsAnimations()
-                    .zIndex(3)
-                    
-                    AnimatedGradientView(duration: 3.0)
-                        .blendMode(.colorDodge)
-                        .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius))
-                        .zIndex(4)
-                }
-            }
-        }
-        
-        @ViewBuilder
-        private func background() -> some View {
-            
-            if isFrontView, let backgroundImage = config.appearance.background.image {
-                
-                backgroundImage
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                
-            } else {
-                
-                config.appearance.background.color
-            }
-        }
-        
-        func body(content: Content) -> some View {
-            
-            content
-                .padding(config.front.cardPadding)
-                .background(background())
-                .overlay(checkView(), alignment: .topTrailing)
-                .overlay(statusActionView(), alignment: .center)
-                .overlay(updatingView(), alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius, style: .circular))
         }
     }
 }

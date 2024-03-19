@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-public struct CheckView: View {
+struct CheckView: View {
     
     let config: Config
     
-    public init(config: Config) {
-        self.config = config
-    }
-
-    public var body: some View {
+    var body: some View {
         
         ZStack {
             

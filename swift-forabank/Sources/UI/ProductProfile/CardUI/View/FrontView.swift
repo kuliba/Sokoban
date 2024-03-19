@@ -10,36 +10,51 @@ import SwiftUI
 
 //MARK: - View
 
-public struct FrontView<Header: View, Footer: View>: View {
+public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     
     let name: String
     let balance: Balance
-   /* let opacity: Double
+    let isChecked: Bool
+    let isUpdating: Bool
+
+    let opacity: Double
     let isShowingCardBack: Bool
-    let cardWiggle: Bool*/
+    let cardWiggle: Bool
     
     let config: Config
     let headerView: () -> Header
     let footerView: (Balance) -> Footer
     
+    let statusActionView: () -> StatusAction?
+    
+    let action: () -> Void
+
     public init(
         name: String,
         balance: Balance,
-        /*opacity: Double,
+        isChecked: Bool,
+        isUpdating: Bool,
+        opacity: Double,
         isShowingCardBack: Bool,
-        cardWiggle: Bool,*/
+        cardWiggle: Bool,
         config: Config,
         headerView: @escaping () -> Header,
-        footerView: @escaping (Balance) -> Footer
+        footerView: @escaping (Balance) -> Footer,
+        statusActionView: @escaping () -> StatusAction?,
+        action: @escaping () -> Void
     ) {
         self.name = name
         self.balance = balance
-        /*self.opacity = opacity
+        self.isChecked = isChecked
+        self.isUpdating = isUpdating
+        self.opacity = opacity
         self.isShowingCardBack = isShowingCardBack
-        self.cardWiggle = cardWiggle*/
+        self.cardWiggle = cardWiggle
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
+        self.statusActionView = statusActionView
+        self.action = action
     }
     
     public var body: some View {
@@ -62,18 +77,26 @@ public struct FrontView<Header: View, Footer: View>: View {
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
-        /*.animation(
+        .card(
+            isChecked: isChecked,
+            isUpdating: isUpdating,
+            statusActionView: statusActionView(),
+            config: config,
+            isFrontView: true,
+            action: action
+        )
+        .animation(
             isShowingCardBack: isShowingCardBack,
             cardWiggle: cardWiggle,
             opacity: .init(
                 startValue: 0,
                 endValue: opacity),
             radians: .init(startValue: .pi, endValue: 2 * .pi)
-        )*/
+        )
     }
 }
 
-struct FrontView_Previews: PreviewProvider {
+/*struct FrontView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -96,6 +119,9 @@ struct FrontView_Previews: PreviewProvider {
                     FooterView(
                         config: .config(.preview),
                         footer: .init(balance: $0.rawValue))
+                }, 
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
             
@@ -116,8 +142,12 @@ struct FrontView_Previews: PreviewProvider {
                     FooterView(
                         config: .config(.preview),
                         footer: .init(balance: $0.rawValue, interestRate: "8.05"))
+                },
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
         }
     }
 }
+*/

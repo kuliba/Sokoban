@@ -12,25 +12,37 @@ import Foundation
 
 public struct BackView<Header: View, CVV: View>: View {
     
-   /* let opacity: Double
-    let isShowingCardBack: Bool*/
-    let backConfig: Config.Back
+    let isChecked: Bool
+    let isUpdating: Bool
+
+    let opacity: Double
+    let isShowingCardBack: Bool
+
+    let config: Config
     
     let header: () -> Header
     let cvv: () -> CVV
+        
+    let action: () -> Void
     
     public init(
-       /* opacity: Double,
-        isShowingCardBack: Bool,*/
-        backConfig: Config.Back,
+        isChecked: Bool,
+        isUpdating: Bool,
+        opacity: Double,
+        isShowingCardBack: Bool,
+        config: Config,
         header: @escaping () -> Header,
-        cvv: @escaping () -> CVV
+        cvv: @escaping () -> CVV,
+        action: @escaping () -> Void
     ) {
-        /*self.opacity = opacity
-        self.isShowingCardBack = isShowingCardBack*/
-        self.backConfig = backConfig
+        self.isChecked = isChecked
+        self.isUpdating = isUpdating
+        self.opacity = opacity
+        self.isShowingCardBack = isShowingCardBack
+        self.config = config
         self.header = header
         self.cvv = cvv
+        self.action = action
     }
     
     public var body: some View {
@@ -38,23 +50,31 @@ public struct BackView<Header: View, CVV: View>: View {
         VStack {
             
             header()
-                .padding(.leading, backConfig.headerLeadingPadding)
-                .padding(.top, backConfig.headerLeadingPadding)
-                .padding(.trailing, backConfig.headerTrailingPadding)
+                .padding(.leading, config.back.headerLeadingPadding)
+                .padding(.top, config.back.headerLeadingPadding)
+                .padding(.trailing, config.back.headerTrailingPadding)
             
             cvv()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
-       /* .animation(
+        .card(
+            isChecked: isChecked,
+            isUpdating: isUpdating,
+            statusActionView: EmptyView(),
+            config: config,
+            isFrontView: false,
+            action: action
+        )
+        .animation(
             isShowingCardBack: isShowingCardBack,
             cardWiggle: false,
             opacity: .init(startValue: opacity, endValue: 0),
             radians: .init(startValue: 0, endValue: .pi)
-        )*/
+        )
     }
 }
 
-struct BackView_Previews: PreviewProvider {
+/*struct BackView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -80,4 +100,4 @@ struct BackView_Previews: PreviewProvider {
         }
         .fixedSize()
     }
-}
+}*/
