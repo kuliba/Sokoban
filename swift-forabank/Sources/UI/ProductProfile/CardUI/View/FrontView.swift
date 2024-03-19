@@ -78,7 +78,7 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     }
 }
 
-/*struct FrontView_Previews: PreviewProvider {
+struct FrontView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -87,9 +87,7 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
             FrontView(
                 name: "Name",
                 balance: .init("123 RUB"),
-               /* opacity: 1,
-                isShowingCardBack: false,
-                cardWiggle: false,*/
+                modifierConfig: .previewUpdating,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
@@ -110,9 +108,7 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
             FrontView(
                 name: "Name",
                 balance: .init("123012 RUB"),
-               /* opacity: 0.5,
-                isShowingCardBack: false,
-                cardWiggle: false,*/
+                modifierConfig: .previewFront,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
@@ -132,4 +128,4 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
         }
     }
 }
-*/
+

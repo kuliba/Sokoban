@@ -36,3 +36,11 @@ struct CheckView: View {
         .padding(config.front.checkPadding)
     }
 }
+
+struct CheckView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        CheckView(config: .config(.preview))
+    }
+}

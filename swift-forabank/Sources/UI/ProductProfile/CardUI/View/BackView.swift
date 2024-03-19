@@ -17,7 +17,7 @@ public struct BackView<Header: View, CVV: View>: View {
     
     let header: () -> Header
     let cvv: () -> CVV
-            
+    
     public init(
         modifierConfig: ModifierConfig,
         config: Config,
@@ -59,30 +59,25 @@ public struct BackView<Header: View, CVV: View>: View {
     }
 }
 
-/*struct BackView_Previews: PreviewProvider {
+struct BackView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ZStack {
-            
-            Color.red
-            BackView(
-               /* opacity: 1,
-                isShowingCardBack: true,*/
-                backConfig: .preview,
-                header: {
-                    HeaderBackView(
-                        cardInfo: .previewWiggleFalse,
-                        action: { print("action") },
-                        config: .config(.preview))
-                },
-                cvv: {
-                    CVVView(
-                        cardInfo: .previewWiggleFalse,
-                        config: .config(.preview),
-                        action: { print("cvv action") })
-                })
-        }
+        BackView(
+            modifierConfig: .previewBack,
+            config: .config(.preview),
+            header: {
+                HeaderBackView(
+                    cardInfo: .previewWiggleFalse,
+                    action: { print("action") },
+                    config: .config(.preview))
+            },
+            cvv: {
+                CVVView(
+                    cardInfo: .previewWiggleFalse,
+                    config: .config(.preview),
+                    action: { print("cvv action") })
+            })
         .fixedSize()
     }
-}*/
+}
