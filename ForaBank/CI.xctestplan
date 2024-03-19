@@ -334,7 +334,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "GetProductListByTypeServiceTests",
         "name" : "GetProductListByTypeServiceTests"
       }
