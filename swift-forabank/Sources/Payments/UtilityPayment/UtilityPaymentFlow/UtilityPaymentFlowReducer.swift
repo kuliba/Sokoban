@@ -7,6 +7,7 @@
 
 import PrePaymentPicker
 
+@available(*, deprecated, message: "use `UtilityFlowReducer`")
 public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     

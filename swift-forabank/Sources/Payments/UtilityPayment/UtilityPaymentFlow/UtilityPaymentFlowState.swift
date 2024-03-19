@@ -7,6 +7,7 @@
 
 import ForaTools
 
+@available(*, deprecated)
 public struct UtilityPaymentFlowState<LastPayment, Operator, Service> {
     
     public var status: Status?

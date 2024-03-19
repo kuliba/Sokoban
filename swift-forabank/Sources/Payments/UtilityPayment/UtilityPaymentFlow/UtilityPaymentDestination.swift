@@ -7,6 +7,7 @@
 
 import PrePaymentPicker
 
+@available(*, deprecated, message: "use `UtilityDestination`")
 public enum UtilityPaymentDestination<LastPayment, Operator, Service> {
     
     case prePaymentOptions(PrePaymentOptions)

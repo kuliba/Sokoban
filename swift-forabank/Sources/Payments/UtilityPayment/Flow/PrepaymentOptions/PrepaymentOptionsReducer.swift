@@ -22,6 +22,7 @@ where LastPayment: Equatable & Identifiable,
 public extension PrepaymentOptionsReducer {
     
 #warning("fix search")
+#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
