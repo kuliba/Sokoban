@@ -445,10 +445,3 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         )
     }
 }
-
-private func makeRoute(
-    _ destinations: Destination...
-) -> PaymentsTransfersFlowState<Destination>.Route {
-
-    .utilityFlow(.init(stack: .init(destinations)))
-}

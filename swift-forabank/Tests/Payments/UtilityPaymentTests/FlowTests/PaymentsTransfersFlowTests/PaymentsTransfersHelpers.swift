@@ -8,6 +8,8 @@
 import UtilityPayment
 import XCTest
 
+typealias Route = PaymentsTransfersFlowState<Destination>.Route
+
 typealias Destination = UtilityDestination<LastPayment, Operator, Service>
 
 typealias UtilityFlow = Flow<Destination>
@@ -29,6 +31,13 @@ typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, Util
 typealias PPOState = UtilityReducer.PPOState
 typealias PPOEvent = UtilityReducer.PPOEvent
 typealias PPOEffect = UtilityReducer.PPOEffect
+
+func makeRoute(
+    _ destinations: Destination...
+) -> Route {
+
+    .utilityFlow(.init(stack: .init(destinations)))
+}
 
 func makeEmptyUtilityFlow(
     file: StaticString = #file,
