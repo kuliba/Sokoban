@@ -150,5 +150,4 @@ private extension String {
       "data":null
     }
 """
-    static let defaultErrorMessage: Self = "Возникла техническая ошибка"
 }
