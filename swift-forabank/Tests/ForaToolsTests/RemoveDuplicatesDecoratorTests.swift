@@ -5,32 +5,7 @@
 //  Created by Igor Malyarov on 19.03.2024.
 //
 
-final class RemoveDuplicatesDecorator<Payload, Response>
-where Payload: Equatable {
-    
-    private var lastPayload: Payload?
-    private let queue = DispatchQueue(label: "com.RemoveDuplicatesDecorator.queue")
-    
-    func callAsFunction(_ f: @escaping F) -> F {
-        
-        return { [weak self] payload, completion in
-            
-            self?.queue.sync {
-                
-                guard payload != self?.lastPayload else { return }
-                
-                self?.lastPayload = payload
-                f(payload, completion)
-            }
-        }
-    }
-}
-extension RemoveDuplicatesDecorator {
-    
-    typealias Completion = (Response) -> Void
-    typealias F = (Payload, @escaping Completion) -> Void
-}
-
+import ForaTools
 import XCTest
 
 final class RemoveDuplicatesDecoratorTests: XCTestCase {
