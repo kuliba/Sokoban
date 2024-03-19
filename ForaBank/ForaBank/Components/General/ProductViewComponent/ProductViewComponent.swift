@@ -582,28 +582,6 @@ private extension View {
     }
 }
 
-/*private extension View {
-    
-    func animation(
-        isShowingCardBack: Bool,
-        cardWiggle: Bool,
-        opacity: Values,
-        radians: Values
-    ) -> some View {
-        
-        self
-            .modifier(FlipOpacity(
-                percentage: isShowingCardBack ? opacity.startValue : opacity.endValue))
-            .rotation3DEffect(
-                .radians(isShowingCardBack ? radians.startValue : radians.endValue),
-                axis: (0,1,0),
-                perspective: 0.1)
-            .rotation3DEffect(
-                .degrees(cardWiggle ? -20 : 0),
-                axis: (0, 1, 0))
-    }
-}*/
-
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
