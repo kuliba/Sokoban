@@ -8,12 +8,6 @@
 import SwiftUI
 import CardUI
 
-struct Values {
-    
-    let startValue: Double
-    let endValue: Double
-}
-
 extension CardUI.Config.Back {
     
     static let backConfig: Self = .init(

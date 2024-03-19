@@ -12,16 +12,22 @@ import Foundation
 
 public struct BackView<Header: View, CVV: View>: View {
     
+    let opacity: Double
+    let isShowingCardBack: Bool
     let backConfig: Config.Back
     
     let header: () -> Header
     let cvv: () -> CVV
     
     public init(
+        opacity: Double,
+        isShowingCardBack: Bool,
         backConfig: Config.Back,
         header: @escaping () -> Header,
         cvv: @escaping () -> CVV
     ) {
+        self.opacity = opacity
+        self.isShowingCardBack = isShowingCardBack
         self.backConfig = backConfig
         self.header = header
         self.cvv = cvv
@@ -39,6 +45,12 @@ public struct BackView<Header: View, CVV: View>: View {
             cvv()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
+        .animation(
+            isShowingCardBack: isShowingCardBack,
+            cardWiggle: false,
+            opacity: .init(startValue: opacity, endValue: 0),
+            radians: .init(startValue: 0, endValue: .pi)
+        )
     }
 }
 
@@ -50,6 +62,8 @@ struct BackView_Previews: PreviewProvider {
             
             Color.red
             BackView(
+                opacity: 1,
+                isShowingCardBack: true,
                 backConfig: .preview,
                 header: {
                     HeaderBackView(

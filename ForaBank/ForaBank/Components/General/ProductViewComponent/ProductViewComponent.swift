@@ -586,28 +586,6 @@ private extension View {
     }
 }
 
-private extension View {
-    
-    func animation(
-        isShowingCardBack: Bool,
-        cardWiggle: Bool,
-        opacity: Values,
-        radians: Values
-    ) -> some View {
-        
-        self
-            .modifier(FlipOpacity(
-                percentage: isShowingCardBack ? opacity.startValue : opacity.endValue))
-            .rotation3DEffect(
-                .radians(isShowingCardBack ? radians.startValue : radians.endValue),
-                axis: (0,1,0),
-                perspective: 0.1)
-            .rotation3DEffect(
-                .degrees(cardWiggle ? -20 : 0),
-                axis: (0, 1, 0))
-    }
-}
-
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
@@ -625,6 +603,8 @@ struct ProductView: View {
         FrontView(
             name: viewModel.cardInfo.name,
             balance: .init(viewModel.footer.balance),
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: viewModel.cardInfo.cardWiggle,
             config: config,
             headerView: { HeaderView(config: config, header: viewModel.header) },
             footerView: { balance in
@@ -647,14 +627,6 @@ struct ProductView: View {
             action: viewModel.productDidTapped
         )
         .animation(
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: viewModel.cardInfo.cardWiggle,
-            opacity: .init(
-                startValue: 0,
-                endValue: viewModel.appearance.opacity),
-            radians: .init(startValue: .pi, endValue: 2 * .pi)
-        )
-        .animation(
             .linear(duration: 0.5),
             value: viewModel.cardInfo.cardWiggle
         )
@@ -668,6 +640,8 @@ struct ProductView: View {
         }
         
         BackView(
+            opacity: viewModel.appearance.opacity,
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
             backConfig: config.back,
             header: {
                 
@@ -689,12 +663,6 @@ struct ProductView: View {
             statusAction: viewModel.statusAction,
             config: config,
             action: viewModel.productDidTapped
-        )
-        .animation(
-            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
-            cardWiggle: false,
-            opacity: .init(startValue: viewModel.appearance.opacity, endValue: 0),
-            radians: .init(startValue: 0, endValue: .pi)
         )
     }
 }

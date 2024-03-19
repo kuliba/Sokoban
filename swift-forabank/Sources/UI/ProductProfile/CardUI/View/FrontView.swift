@@ -14,6 +14,8 @@ public struct FrontView<Header: View, Footer: View>: View {
     
     let name: String
     let balance: Balance
+    let isShowingCardBack: Bool
+    let cardWiggle: Bool
     
     let config: Config
     let headerView: () -> Header
@@ -22,12 +24,16 @@ public struct FrontView<Header: View, Footer: View>: View {
     public init(
         name: String,
         balance: Balance,
+        isShowingCardBack: Bool,
+        cardWiggle: Bool,
         config: Config,
         headerView: @escaping () -> Header,
         footerView: @escaping (Balance) -> Footer
     ) {
         self.name = name
         self.balance = balance
+        self.isShowingCardBack = isShowingCardBack
+        self.cardWiggle = cardWiggle
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
@@ -53,6 +59,14 @@ public struct FrontView<Header: View, Footer: View>: View {
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
+        .animation(
+            isShowingCardBack: isShowingCardBack,
+            cardWiggle: cardWiggle,
+            opacity: .init(
+                startValue: 0,
+                endValue: config.appearance.opacity),
+            radians: .init(startValue: .pi, endValue: 2 * .pi)
+        )
     }
 }
 
@@ -65,6 +79,8 @@ struct FrontView_Previews: PreviewProvider {
             FrontView(
                 name: "Name",
                 balance: .init("123 RUB"),
+                isShowingCardBack: false,
+                cardWiggle: false,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
@@ -82,6 +98,8 @@ struct FrontView_Previews: PreviewProvider {
             FrontView(
                 name: "Name",
                 balance: .init("123012 RUB"),
+                isShowingCardBack: false,
+                cardWiggle: false,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
