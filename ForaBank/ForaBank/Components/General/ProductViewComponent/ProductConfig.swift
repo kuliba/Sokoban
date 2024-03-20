@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CardUI
 
 struct Values {
     
@@ -13,75 +14,21 @@ struct Values {
     let endValue: Double
 }
 
-extension ProductView {
+extension CardUI.Config.Back {
     
-    typealias Appearance = ViewModel.Appearance
-
-    struct BackViewConfig {
-        
-        let headerLeadingPadding: CGFloat
-        let headerTopPadding: CGFloat
-        let headerTrailingPadding: CGFloat
-    }
-        
-    struct CardViewConfig {
-        
-        let headerLeadingPadding: CGFloat
-        let headerTopPadding: CGFloat
-        let nameSpacing: CGFloat
-        let cardPadding: CGFloat
-        let cornerRadius: CGFloat
-        let checkPadding: CGFloat
-    }
-    
-    struct Config {
-        
-        let appearance: Appearance
-        let backViewConfig: BackViewConfig
-        let cardViewConfig: CardViewConfig
-        let fontConfig: FontConfig
-        let sizeConfig: SizeConfig
-    }
-
-    struct FontConfig {
-        
-        let nameFontForCard: Font
-        let nameFontForHeader: Font
-        let nameFontForFooter: Font
-    }
-    
-    struct SizeConfig {
-        
-        let paymentSystemIconSize: CGSize
-        let checkViewSize: CGSize
-        let checkViewImageSize: CGSize
-    }
+    static let backConfig: Self = .init(
+        headerLeadingPadding: CGFloat(12).pixelsToPoints(),
+        headerTopPadding: CGFloat(12).pixelsToPoints(),
+        headerTrailingPadding: CGFloat(12).pixelsToPoints())
 }
 
-extension ProductView.ViewModel {
+extension CardUI.Config {
     
-    var backViewConfig: ProductView.BackViewConfig {
+    static func frontConfig(_ size: Appearance.Size) -> Front {
         
-        return .init(
-            headerLeadingPadding: CGFloat(12).pixelsToPoints(),
-            headerTopPadding: CGFloat(12).pixelsToPoints(),
-            headerTrailingPadding: CGFloat(12).pixelsToPoints())
-    }
-    
-    var cardViewConfig: ProductView.CardViewConfig {
-        
-        switch appearance.size {
+        switch size {
             
-        case .large:
-            return .init(
-                headerLeadingPadding: 43,
-                headerTopPadding: 6.2,
-                nameSpacing: 6,
-                cardPadding: 12,
-                cornerRadius: 12,
-                checkPadding: 10)
-            
-        case .normal:
+        case .large, .normal:
             return .init(
                 headerLeadingPadding: 43,
                 headerTopPadding: 6.2,
@@ -101,61 +48,62 @@ extension ProductView.ViewModel {
         }
     }
     
-    var config: ProductView.Config {
+    static func config(appearance: Appearance) -> Self {
         
         .init(
             appearance: appearance,
-            backViewConfig: backViewConfig,
-            cardViewConfig: cardViewConfig,
-            fontConfig: fontConfig,
-            sizeConfig: sizeConfig)
+            back: .backConfig,
+            front: frontConfig(appearance.size),
+            fonts: fontsConfig(appearance.size),
+            sizes: sizesConfig(appearance.size),
+            colors: .init(
+                foreground: .mainColorsWhite,
+                background: .textPlaceholder,
+                rateFill: .mainColorsGrayMedium,
+                rateForeground: .textSecondary),
+            copyImage: .ic24Copy
+        )
     }
     
-    var fontConfig: ProductView.FontConfig {
+    static func fontsConfig(_ size: Appearance.Size) -> Fonts {
         
-        switch appearance.size {
-            
-        case .large:
+        switch size {
+        case .large, .normal:
             return .init(
-                nameFontForCard: .textBodyMR14200(),
-                nameFontForHeader: .textBodySR12160(),
-                nameFontForFooter: .textBodyMSb14200())
-            
-        case .normal:
-            return .init(
-                nameFontForCard: .textBodyMR14200(),
-                nameFontForHeader: .textBodySR12160(),
-                nameFontForFooter: .textBodyMSb14200())
-            
+                card: .textBodyMR14200(),
+                header: .textBodySR12160(),
+                footer: .textBodyMSb14200(),
+                number: .textH4M16240(),
+                rate: .textBodySM12160()
+            )
+
         case .small:
             return .init(
-                nameFontForCard: .textBodyXsR11140(),
-                nameFontForHeader: .textBodyXsR11140(),
-                nameFontForFooter: .textBodyXsR11140())
+                card: .textBodyXsR11140(),
+                header: .textBodyXsR11140(),
+                footer: .textBodyXsR11140(),
+                number: .textH4M16240(),
+                rate: .textBodySM12160()
+
+            )
         }
     }
     
-    var sizeConfig: ProductView.SizeConfig {
+    static func sizesConfig(_ size: Appearance.Size) -> Sizes {
         
-        switch appearance.size {
+        switch size {
             
-        case .large:
+        case .large, .normal:
             return .init(
-                paymentSystemIconSize: .init(width: 28, height: 28),
-                checkViewSize: .init(width: 18, height: 18),
-                checkViewImageSize: .init(width: 12, height: 12))
-            
-        case .normal:
-            return .init(
-                paymentSystemIconSize: .init(width: 28, height: 28),
-                checkViewSize: .init(width: 18, height: 18),
-                checkViewImageSize: .init(width: 12, height: 12))
-            
+                paymentSystemIcon: .init(width: 28, height: 28),
+                checkView: .init(width: 18, height: 18),
+                checkViewImage: .init(width: 12, height: 12))
+                        
         case .small:
             return .init(
-                paymentSystemIconSize: .init(width: 20, height: 20),
-                checkViewSize: .init(width: 16, height: 16),
-                checkViewImageSize: .init(width: 10, height: 10))
+                paymentSystemIcon: .init(width: 20, height: 20),
+                checkView: .init(width: 16, height: 16),
+                checkViewImage: .init(width: 10, height: 10))
         }
     }
 }

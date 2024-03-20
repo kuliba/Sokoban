@@ -40,6 +40,8 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
                         
                         spoiler(for: group)
                         
+                        sticker(for: group)
+                        
                         productGroupSeparator(for: group)
                     }
                     
@@ -82,13 +84,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
                     
                     shadow()
                     
-                    if product.id.cardType?.isSticker == true {
-                        
-                        stickerView(product)
-                    } else {
-                        
-                        productView(product)
-                    }
+                    productView(product)
                 }
                 .id(group.id)
                 .frame(config.productDimensions, for: \.product)
@@ -134,6 +130,20 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
                 .frame(config.productDimensions, for: \.button)
             }
             .id("spoiler\(group.id)")
+        }
+    }
+    
+    @ViewBuilder
+    private func sticker(for group: ProductGroup) -> some View {
+        
+        if let sticker = state.sticker, state.shouldAddSticker(for: group) {
+            
+            if !state.shouldAddSpoiler(for: group) { separator() }
+            
+            stickerView(sticker)
+                .id(group.id)
+                .frame(config.productDimensions, for: \.product)
+                .accessibilityIdentifier("mainProduct")
         }
     }
     

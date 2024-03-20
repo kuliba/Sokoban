@@ -42,7 +42,7 @@ struct ControlButtonView: View {
                         return route
                     } else { return nil }
                 },
-                set: { if $0 == nil { event(.dismissDestination) }}
+                set: { if $0 == nil { event(.dismissModal) }}
             ),
             content: destinationView
         )

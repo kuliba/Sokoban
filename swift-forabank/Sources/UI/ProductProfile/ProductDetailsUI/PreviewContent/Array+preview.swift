@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Array where Element == ListItem {
+public extension Array where Element == ListItem {
     
-    static let preview: Self = [
+    static let accountItems: Self = [
         .single(.payee),
         .single(.accountNumber),
         .single(.bic),
@@ -19,7 +19,13 @@ extension Array where Element == ListItem {
     
     static let cardItems: Self = [
         .single(.holder),
-        .single(.numberMasked),
+        .single(.number),
         .multiple([.expirationDate, .cvvMasked])
+    ]
+    
+    static let cardItemsWithInfo: Self = [
+        .single(.holder),
+        .single(.number),
+        .multiple([.expirationDate, .info])
     ]
 }

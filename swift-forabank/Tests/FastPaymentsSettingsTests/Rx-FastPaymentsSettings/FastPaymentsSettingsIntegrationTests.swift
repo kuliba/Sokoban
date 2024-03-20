@@ -13,7 +13,7 @@ final class FastPaymentsSettingsIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, _, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy) = makeSUT()
+        let (_,_,_, getSettingsSpy, updateContractSpy, prepareSetBankDefaultSpy, createContractSpy, updateProductSpy) = makeSUT()
         
         XCTAssertEqual(getSettingsSpy.callCount, 0)
         XCTAssertEqual(updateContractSpy.callCount, 0)

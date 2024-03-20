@@ -319,6 +319,13 @@
         "identifier" : "UtilityPaymentTests",
         "name" : "UtilityPaymentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeServiceTests",
+        "name" : "GetProductListByTypeServiceTests"
+      }
     }
   ],
   "version" : 1

@@ -11,6 +11,8 @@ import Foundation
 @_exported import CardGuardianUI
 @_exported import TopUpCardUI
 @_exported import AccountInfoPanel
+@_exported import ProductDetailsUI
+@_exported import CardUI
 
 /// A namespace
 ///
@@ -34,4 +36,6 @@ public extension ProductProfileComponents {
     typealias AccountInfoPanelCard = AccountInfoPanel.Card
     typealias AccountInfoPanelConfig = AccountInfoPanel.Config
     typealias AccountInfoPanelView = AccountInfoPanel.AccountInfoPanelWrappedView
+    
+    typealias ProductDetailsConfig = ProductDetailsUI.Config
 }

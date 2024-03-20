@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import Tagged
 import PinCodeUI
+import CardUI
 
 //MARK: - ViewModel
 
@@ -23,9 +24,9 @@ extension ProductView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let id: ProductData.ID
-        let header: HeaderViewModel
+        let header: HeaderDetails
         @Published var cardInfo: CardInfo
-        @Published var footer: FooterViewModel
+        @Published var footer: FooterDetails
         @Published var statusAction: StatusActionViewModel?
         @Published var isChecked: Bool
         @Published var isUpdating: Bool
@@ -40,9 +41,9 @@ extension ProductView {
         
         internal init(
             id: ProductData.ID,
-            header: HeaderViewModel,
+            header: HeaderDetails,
             cardInfo: CardInfo,
-            footer: FooterViewModel,
+            footer: FooterDetails,
             statusAction: StatusActionViewModel?,
             isChecked: Bool = false,
             appearance: Appearance,
@@ -416,7 +417,7 @@ enum ProductViewModelAction {
     
     struct ShowCVV: Action {
         let cardId: CardDomain.CardId
-        let cvv: ProductView.ViewModel.CardInfo.CVV
+        let cvv: CardInfo.CVV
     }
     
     enum CardActivation {
@@ -432,28 +433,7 @@ enum ProductViewModelAction {
 //MARK: - Internal ViewModels
 
 extension ProductView.ViewModel {
-    
-    struct HeaderViewModel {
-        
-        var logo: Image? = nil
-        let number: String?
-        var period: String? = nil
-    }
-    
-    class FooterViewModel: ObservableObject {
-        
-        @Published var balance: String
-        @Published var interestRate: String?
-        let paymentSystem: Image?
-        
-        init(balance: String, interestRate: String? = nil, paymentSystem: Image? = nil) {
             
-            self.balance = balance
-            self.interestRate = interestRate
-            self.paymentSystem = paymentSystem
-        }
-    }
-    
     class StatusActionViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
@@ -521,7 +501,7 @@ extension ProductView.ViewModel {
                 }.store(in: &bindings)
         }
         
-        func icon(with style: ProductView.ViewModel.Appearance.Style) -> Image {
+        func icon(with style: Appearance.Style) -> Image {
             
             switch status {
             case .activation:
@@ -538,7 +518,7 @@ extension ProductView.ViewModel {
             }
         }
         
-        func iconSize(with style: ProductView.ViewModel.Appearance.Style) -> CGSize {
+        func iconSize(with style: Appearance.Style) -> CGSize {
             
             switch style {
             case .main: return .init(width: 24, height: 24)
@@ -564,124 +544,6 @@ extension ProductView.ViewModel {
             struct Failed: Action {}
         }
     }
-    
-    struct Appearance {
-        
-        let textColor: Color
-        let background: Background
-        var opacity: Double = 1
-        var size: Size = .normal
-        var style: Style = .main
-        
-        struct Background {
-            
-            let color: Color
-            let image: Image?
-        }
-        
-        enum Size {
-            
-            case large
-            case normal
-            case small
-        }
-        
-        enum Style {
-            
-            case main
-            case profile
-        }
-        
-        enum NameOfCreditProduct {
-            
-            case navigationTitle
-            case cardTitle
-        }
-    }
-    
-    struct CardInfo: Equatable {
-        
-        typealias CVV = Tagged<_CVV, String>
-        enum _CVV {}
-
-        var name: String
-        var owner: String
-        
-        let cvvTitle: CVVTitle
-        var cardWiggle: Bool
-        let fullNumber: FullNumber
-        let numberMasked: MaskedNumber
-        var state: State = .showFront
-
-        enum State: Equatable {
-            
-            case awaitingCVV
-            case fullNumberMaskedCVV
-            case maskedNumberCVV(CVV)
-            case showFront
-        }
-        
-        struct FullNumber: Equatable {
-            
-            let value: String
-        }
-        
-        struct MaskedNumber: Equatable {
-            
-            let value: String
-        }
-                
-        struct CVVTitle: Equatable {
-            
-            let value: String
-        }
-        
-        mutating func stateToggle() {
-            
-            switch state {
-                
-            case .showFront:
-                
-                state = .fullNumberMaskedCVV
-                
-            default:
-                
-                state = .showFront
-            }
-        }
-    }
-}
-
-extension ProductView.ViewModel.CardInfo {
-    
-    var numberToDisplay: String {
-        
-        switch state {
-            
-        case .maskedNumberCVV, .awaitingCVV:
-            return numberMasked.value
-            
-        case .fullNumberMaskedCVV, .showFront:
-            return fullNumber.value.formatted()
-        }
-    }
-    
-    var cvvToDisplay: String {
-        
-        switch state {
-            
-        case .fullNumberMaskedCVV, .showFront, .awaitingCVV:
-            return cvvTitle.value
-            
-        case let .maskedNumberCVV(value):
-            return value.rawValue
-        }
-    }
-    
-    var isShowingCardBack: Bool {
-        
-        return state != .showFront
-    }
 }
 
 extension ProductView.ViewModel {
@@ -703,7 +565,7 @@ private extension View {
     
     func card(
         viewModel: ProductView.ViewModel,
-        config: ProductView.Config,
+        config: CardUI.Config,
         isFrontView: Bool,
         action: @escaping () -> Void
     ) -> some View {
@@ -745,45 +607,36 @@ private extension View {
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
+    let config: CardUI.Config
     
-    init(viewModel: ViewModel) {
+    init(
+        viewModel: ViewModel
+    ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.config = .config(appearance: viewModel.appearance)
     }
-    
+
     var body: some View {
         
-        ProductFrontView(
-            name: $viewModel.cardInfo.name,
-            balance: .init(
-                get: {
-                    .init(viewModel.footer.balance)
-                },
-                set: { _ in }
-            ),
-            config: viewModel.config,
-            headerView: {
-                
-                ProductView.HeaderView(config: viewModel.config, header: viewModel.header)
-            },
+        FrontView(
+            name: viewModel.cardInfo.name,
+            balance: .init(viewModel.footer.balance),
+            config: config,
+            headerView: { HeaderView(config: config, header: viewModel.header) },
             footerView: { balance in
                 
-                ProductView.FooterView(
-                    config: viewModel.config,
+                FooterView(
+                    config: config,
                     footer: .init(
-                        get: {
-                            .init(
-                                balance: balance.rawValue,
-                                interestRate: viewModel.footer.interestRate,
-                                paymentSystem: viewModel.footer.paymentSystem
-                            )
-                        },
-                        set: { _ in }
+                        balance: balance.rawValue,
+                        interestRate: viewModel.footer.interestRate,
+                        paymentSystem: viewModel.footer.paymentSystem
                     )
                 )
             })
         .card(
             viewModel: viewModel,
-            config: viewModel.config,
+            config: config,
             isFrontView: true,
             action: viewModel.productDidTapped
         )
@@ -808,23 +661,24 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        ProductBackView(
-            backViewConfig: viewModel.backViewConfig,
-            headerView: {
+        BackView(
+            backConfig: config.back,
+            header: {
                 
-                ProductView.HeaderBackView.init(
-                    cardInfo: $viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard
+                HeaderBackView.init(
+                    cardInfo: viewModel.cardInfo,
+                    action: viewModel.copyCardNumberToClipboard, 
+                    config: config
                 )
             },
-            cvvView: {
+            cvv: {
                 
-                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.showCVVButtonTap)
+                CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
             }
         )
         .card(
             viewModel: viewModel,
-            config: viewModel.config,
+            config: config,
             isFrontView: false,
             action: viewModel.productDidTapped
         )
@@ -841,103 +695,11 @@ struct ProductView: View {
 
 extension ProductView {
     
-    struct HeaderView: View {
-        
-        let config: ProductView.Config
-        let header: ProductView.ViewModel.HeaderViewModel
-        var body: some View {
-            
-            HStack(alignment: .center, spacing: 8) {
-                
-                if let number = header.number {
-                    
-                    Text(number)
-                        .font(config.fontConfig.nameFontForHeader)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productNumber")
-                }
-                
-                if let period = header.period {
-                    
-                    Rectangle()
-                        .frame(width: 1, height: 16)
-                        .foregroundColor(config.appearance.textColor)
-                    
-                    Text(period)
-                        .font(config.fontConfig.nameFontForHeader)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productPeriod")
-                }
-            }
-        }
-    }
-    
-    struct FooterView: View {
-        
-        let config: ProductView.Config
-        @Binding var footer: ProductView.ViewModel.FooterViewModel
-        
-        var body: some View {
-            
-            if let paymentSystem = footer.paymentSystem {
-                
-                HStack {
-                    
-                    Text(footer.balance)
-                        .font(config.fontConfig.nameFontForFooter)
-                        .fontWeight(.semibold)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productBalance")
-                    
-                    Spacer()
-                    
-                }.overlay(
-                    
-                    HStack {
-                        Spacer()
-                        paymentSystem
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: config.sizeConfig.paymentSystemIconSize.width, height: config.sizeConfig.paymentSystemIconSize.height)
-                            .foregroundColor(config.appearance.textColor)
-                            .accessibilityIdentifier("productPaymentSystemIcon")
-                    }
-                )
-                
-            } else {
-                
-                HStack {
-                    
-                    Text(footer.balance)
-                        .font(config.fontConfig.nameFontForFooter)
-                        .fontWeight(.semibold)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productBalance")
-                    
-                    Spacer()
-                    if let text = footer.interestRate {
-                        
-                        ZStack {
-                            
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.mainColorsGrayMedium)
-                                .frame(width: 56, height: 20)
-                            Text(text)
-                                .font(.textBodySM12160())
-                                .fontWeight(.regular)
-                                .foregroundColor(Color.textSecondary)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
     struct StatusActionView: View {
         
         let viewModel: ViewModel.StatusActionViewModel
         let color: Color
-        let style: ViewModel.Appearance.Style
+        let style: Appearance.Style
         
         var body: some View {
             
@@ -980,7 +742,7 @@ extension ProductView {
     
     struct CheckView: View {
         
-        let sizeConfig: SizeConfig
+        let sizeConfig: CardUI.Config.Sizes
         
         var body: some View {
             
@@ -988,8 +750,8 @@ extension ProductView {
                 
                 Circle()
                     .frame(
-                        width: sizeConfig.checkViewSize.width,
-                        height: sizeConfig.checkViewSize.height
+                        width: sizeConfig.checkView.width,
+                        height: sizeConfig.checkView.height
                     )
                     .foregroundColor(.mainColorsBlack.opacity(0.12))
                 
@@ -997,7 +759,7 @@ extension ProductView {
                     .resizable()
                     .foregroundColor(.mainColorsWhite)
                     .background(Color.clear)
-                    .frame(width: sizeConfig.checkViewImageSize.width, height: sizeConfig.checkViewImageSize.height)
+                    .frame(width: sizeConfig.checkViewImage.width, height: sizeConfig.checkViewImage.height)
             }
         }
     }
@@ -1092,19 +854,19 @@ extension ProductView {
         @ObservedObject var viewModel: ViewModel
         
         let isFrontView: Bool
-        let config: ProductView.Config
+        let config: CardUI.Config
         
         @ViewBuilder
         private func checkView() -> some View {
             
             if viewModel.isChecked {
-                CheckView(sizeConfig: config.sizeConfig)
+                CheckView(sizeConfig: config.sizes)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity,
                         alignment: .topTrailing
                     )
-                    .padding(config.cardViewConfig.checkPadding)
+                    .padding(config.front.checkPadding)
             }
         }
         
@@ -1137,7 +899,7 @@ extension ProductView {
                     
                     AnimatedGradientView(duration: 3.0)
                         .blendMode(.colorDodge)
-                        .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius))
+                        .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius))
                         .zIndex(4)
                 }
             }
@@ -1161,12 +923,12 @@ extension ProductView {
         func body(content: Content) -> some View {
             
             content
-                .padding(config.cardViewConfig.cardPadding)
+                .padding(config.front.cardPadding)
                 .background(background())
                 .overlay(checkView(), alignment: .topTrailing)
                 .overlay(statusActionView(), alignment: .center)
                 .overlay(updatingView(), alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius, style: .circular))
+                .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius, style: .circular))
         }
     }
 }

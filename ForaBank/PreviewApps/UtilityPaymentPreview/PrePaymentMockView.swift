@@ -11,7 +11,8 @@ import UtilityPayment
 struct PrePaymentMockView: View {
     
     let event: (PPEvent) -> Void
-    
+    let addCompany: () -> Void
+
     @State private var text = ""
     
     var body: some View {
@@ -32,7 +33,7 @@ struct PrePaymentMockView: View {
             
             Section(header: Text("Footer")) {
                 
-                Button("Add Company") { event(.addCompany) }
+                Button("Add Company", action: addCompany)
                 Button("Pay by Instruction") { event(.payByInstruction) }
                 Button("Scan QR") { event(.scan) }
             }
@@ -61,6 +62,9 @@ struct PrePaymentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PrePaymentMockView(event: { _ in })
+        PrePaymentMockView(
+            event: { _ in },
+            addCompany: {}
+        )
     }
 }

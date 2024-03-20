@@ -13,15 +13,82 @@ func anyMessage() -> String {
     UUID().uuidString
 }
 
+// MARK: - factories
+
+func makeLastPayment(
+    _ value: String = UUID().uuidString
+) -> LastPayment {
+    
+    .init(value: value)
+}
+
+func makeOperator(
+    _ value: String = UUID().uuidString
+) -> Operator {
+    
+    .init(value: value)
+}
+
+func makeOperatorOperators(
+) -> (Operator, [Operator]) {
+    
+    let `operator` = makeOperator()
+    let operators = [`operator`, makeOperator()]
+    
+    return (`operator`, operators)
+}
+
+func makePrepayment(
+    _ lastPayments: [LastPayment] = [],
+    _ operators: [Operator] = []
+) -> Destination {
+    
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators
+    )))
+}
+
+func makeResponse(
+    _ value: String = UUID().uuidString
+) -> StartPaymentResponse {
+    
+    .init(value: value)
+}
+
+func makeService(
+    _ value: String = UUID().uuidString
+) -> Service {
+    
+    .init(value: value)
+}
+
+func makeServiceServices(
+    _ value: String = UUID().uuidString
+) -> (Service, [Service]) {
+    
+    let service = makeService()
+    let services = [service, makeService()]
+    
+    return (service, services)
+}
+
+func makeServices() -> [Service] {
+    
+    [makeService(), makeService()]
+}
+
 func makeCreateAnywayTransferResponse(
+    _ value: String = UUID().uuidString
+
 ) -> CreateAnywayTransferResponse {
     
-    .init()
+    .init(value: value)
 }
 
 func makeFinalStepUtilityPayment(
     verificationCode: VerificationCode? = "654321"
-) -> TestPayment {
+) -> Payment {
     
     .init(
         isFinalStep: true,
@@ -30,7 +97,7 @@ func makeFinalStepUtilityPayment(
 }
 
 func makeNonFinalStepUtilityPayment(
-) -> TestPayment {
+) -> Payment {
     
     .init(isFinalStep: false)
 }
@@ -57,18 +124,39 @@ func makeUtilityPayment(
     isFinalStep: Bool = false,
     verificationCode: VerificationCode? = nil,
     status: PaymentStatus? = nil
-) -> TestPayment {
+) -> Payment {
     
     .init(
-        isFinalStep: isFinalStep, 
+        isFinalStep: isFinalStep,
         verificationCode: verificationCode,
         status: status
     )
 }
 
-struct CreateAnywayTransferResponse: Equatable {}
+// MARK: - Types
 
-struct TestPayment: AnywayPayment {
+struct CreateAnywayTransferResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct LastPayment: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Payment: AnywayPayment {
     
 #warning("TBD")
     // snapshots stack
@@ -87,4 +175,18 @@ struct TestPayment: AnywayPayment {
         self.verificationCode = verificationCode
         self.status = status
     }
+}
+
+struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Service: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
 }

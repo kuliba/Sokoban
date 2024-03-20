@@ -104,11 +104,12 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     
     func test_select_shouldDeliverServicesListOnLoadServicesSuccessWithMoreThanOneService_operator() {
         
-        let effect: Effect = .select(.operator(makeOperator()))
-        let services = [makeUtilityService(), makeUtilityService()]
+        let `operator` = makeOperator()
+        let effect: Effect = .select(.operator(`operator`))
+        let services = [makeService(), makeService()]
         let (sut, _, loadServices) = makeSUT()
         
-        expect(sut, with: effect, toDeliver: .loaded(.list(services)), on: {
+        expect(sut, with: effect, toDeliver: .loaded(.list(`operator`, services)), on: {
             
             loadServices.complete(with: .success(services))
         })
@@ -119,7 +120,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let `operator` = makeOperator()
         let effect: Effect = .select(.operator(`operator`))
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         sut.handleEffect(effect) { _ in }
@@ -131,7 +132,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     func test_select_shouldDeliverConnectivityErrorOnStartPaymentConnectivityErrorFailureOnLoadServicesSuccessWithOneService_operator() {
         
         let effect: Effect = .select(.operator(makeOperator()))
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.failure(.connectivityError)), on: {
@@ -144,7 +145,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     func test_select_shouldDeliverServerErrorOnStartPaymentServerErrorFailureOnLoadServicesSuccessWithOneService_operator() {
         
         let effect: Effect = .select(.operator(makeOperator()))
-        let service = makeUtilityService()
+        let service = makeService()
         let message = anyMessage()
         let (sut, startPayment, loadServices) = makeSUT()
         
@@ -159,7 +160,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         let effect: Effect = .select(.operator(makeOperator()))
         let response = makeResponse()
-        let service = makeUtilityService()
+        let service = makeService()
         let (sut, startPayment, loadServices) = makeSUT()
         
         expect(sut, with: effect, toDeliver: .paymentStarted(.success(response)), on: {
@@ -171,7 +172,7 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PrePaymentEffectHandler<LastPayment, Operator, StartPaymentResponse, UtilityService>
+    private typealias SUT = PrePaymentEffectHandler<LastPayment, Operator, StartPaymentResponse, Service>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -201,34 +202,6 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         return (sut, startPayment, loadServices)
     }
     
-    private func makeLastPayment(
-        _ value: String = UUID().uuidString
-    ) -> LastPayment {
-        
-        .init(value: value)
-    }
-    
-    private func makeOperator(
-        _ value: String = UUID().uuidString
-    ) -> Operator {
-        
-        .init(value: value)
-    }
-    
-    private func makeResponse(
-        _ value: String = UUID().uuidString
-    ) -> StartPaymentResponse {
-        
-        .init(value: value)
-    }
-    
-    private func makeUtilityService(
-        _ value: String = UUID().uuidString
-    ) -> UtilityService {
-        
-        .init(value: value)
-    }
-    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
@@ -253,30 +226,4 @@ final class PrePaymentEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
-}
-
-private struct LastPayment: Equatable {
-    
-    var value: String
-}
-
-private struct Operator: Equatable, Identifiable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct StartPaymentResponse: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct UtilityService: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
 }

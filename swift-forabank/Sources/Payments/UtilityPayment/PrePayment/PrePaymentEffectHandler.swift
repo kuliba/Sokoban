@@ -52,7 +52,7 @@ public extension PrePaymentEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = PrePaymentEvent<LastPayment, Operator, Response, Service>
-    typealias Effect = PrePaymentEffect<LastPayment, Operator>
+    typealias Effect = PrePaymentEffect<LastPayment, Operator, Service>
 }
 
 extension PrePaymentEffectHandler.StartPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
@@ -69,6 +69,9 @@ private extension PrePaymentEffectHandler {
             
         case let .operator(`operator`):
             selectOperator(`operator`, dispatch)
+            
+        case let .service(`operator`, service):
+            selectService(`operator`, service, dispatch)
         }
     }
     
@@ -117,10 +120,20 @@ private extension PrePaymentEffectHandler {
                     }
                     
                 default:
-                    dispatch(.loaded(.list(services)))
+                    dispatch(.loaded(.list(`operator`, services)))
                 }
             }
         }
     }
+    
+    func selectService(
+        _ `operator`: Operator,
+        _ service: Service,
+        _ dispatch: @escaping Dispatch
+    ) {
+        startPayment(.service(`operator`, service)) { [weak self] in
+            
+            self?.handleStartPayment(result: $0, dispatch)
+        }
+    }
 }
-

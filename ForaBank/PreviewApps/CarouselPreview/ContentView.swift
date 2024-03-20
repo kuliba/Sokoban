@@ -12,16 +12,26 @@ import CarouselComponent
 struct ContentView: View {
         
     var body: some View {
-    
+        
         CarouselMainView(
-            viewModel: .init(initialState: .init(products: .allProducts))) { product in
+            viewModel: .init(initialState: .init(products: .allProducts, sticker: .sticker))) { product in
                 
                 switch product.id.type {
                 case .account:
                     return ProductView(viewModel: .account)
                     
                 case .card:
-                    return ProductView(viewModel: .classic)
+                    if product.id.cardType?.isAdditional == true {
+                        return ProductView(viewModel: .additionalCard)
+                    }
+                    else {
+                        if product.id.cardType == .main {
+                            return ProductView(viewModel: .additionalMain)
+                        }
+                        else {
+                            return ProductView(viewModel: .additionalRegular)
+                        }
+                    }
                     
                 case .deposit:
                     return ProductView(viewModel: .depositProfile)
@@ -52,98 +62,94 @@ struct CarouselMainView: View {
         
         CarouselWrapperView(
             viewModel: viewModel,
-            productView: productView
+            productView: productView,
+            stickerView:
+                { _ in
+                    StickerView(
+                        viewModel: .init(
+                            title: "Cтикер",
+                            subTitle: "Тест",
+                            backgroundImage: Image("StickerPreview"),
+                            onTap: { },
+                            onHide: { }
+                        )
+                    )
+                },
+            newProductButton: { NewProductButtonWrapperView(viewModel: .sample, config: .sample, action: { }) },
+            config: carouselComponentConfig
+        )
+    }
+    
+    var carouselComponentConfig: CarouselComponentConfig {
+        
+        .init(carousel: .init(
+            item: .init(
+                spacing: 13,
+                horizontalPadding: 20
+            ),
+            group: .init(
+                spacing: 8,
+                buttonFont: Font.custom("Inter-Medium", size: 14.0),
+                shadowForeground: Color(hex: "#1C1C1C"),
+                buttonForegroundPrimary: Color.bordersDivider,
+                buttonForegroundSecondary: Color.textSecondary,
+                buttonIconForeground: Color.bordersDivider
+            ),
+            spoilerImage: Image("shevronDown"),
+            separatorForeground: Color.bordersDivider,
+            productDimensions: .regular),
+              selector: .init(
+                optionConfig: .init(
+                    frameHeight: 24,
+                    textFont: Font.custom("Inter", size: 12.0),
+                    textForeground: Color.textPlaceholder,
+                    textForegroundSelected: Color.textSecondary,
+                    shapeForeground: .white,
+                    shapeForegroundSelected: Color.grayLightest
+                ),
+                itemSpacing: 8
+              )
         )
     }
 }
 
-//struct ProductProfileView: View {
-//    
-//        
-//    var body: some View {
-//        
-//        openCardGuardianButton()
-//    }
-//    
-//    private func openCardGuardianButton() -> some View {
-//        
-//        Button(
-//            "Управление",
-//            action: viewModel.openCardGuardian
-//        )
-//        .buttonStyle(.bordered)
-//        .controlSize(.large)
-//        .alert(
-//            item: .init(
-//                get: { viewModel.state.alert },
-//                set: { if $0 == nil { viewModel.event(.closeAlert) }}
-//            ),
-//            content: { .init(with: $0, event: viewModel.event) }
-//        )
-//        .sheet(
-//            item: .init(
-//                get: { viewModel.state.modal },
-//                set: { if $0 == nil { viewModel.event(.dismissDestination) }}
-//            ),
-//            content: destinationView
-//        )
-//    }
-//    
-//    private func destinationView(
-//        cgRoute: ProductProfileNavigation.State.ProductProfileRoute
-//    ) -> some View {
-//        
-//        CardGuardianModule.ThreeButtonsWrappedView(
-//            viewModel: cgRoute.viewModel,
-//            config: .preview)
-//        .padding(.top, 26)
-//        .padding(.bottom, 72)
-//        .presentationDetents([.height(300)])
-//    }
-//}
-//
-//#Preview {
-//    ProductProfileView.cardBlockedHideOnMain
-//}
-
-
 //struct TopView: View {
-//    
+//
 //    @StateObject var viewModel: CarouselViewModel
 //    @State private var selectedProduct: Product?
 //    @State private var isShowing = true
-//    
+//
 //    var body: some View {
-//                    
+//
 //        VStack {
-//            
+//
 //            Toggle(isOn: $isShowing) {
-//                
+//
 //                Text("Show/hide")
 //            }
-//            
+//
 //            Button("Update products") {
-//                
+//
 //                viewModel.event(.update(.cards))
 //            }
-//            
+//
 //            Button("Add more products") {
-//                
+//
 //                viewModel.event(.update(.cards + .moreProducts))
 //            }
 //            .padding()
-//            
+//
 //            if isShowing {
-//                
+//
 //                CarouselWrapperView(viewModel: viewModel) { product in
-//                    
+//
 //                    ProductView(product: product)
 //                        .onTapGesture { selectedProduct = product }
 //                }
 //            }
 //        }
 //        .sheet(item: $selectedProduct) {
-//            
+//
 //            $0.color
 //                .frame(width: 200, height: 200)
 //        }
@@ -151,36 +157,36 @@ struct CarouselMainView: View {
 //}
 
 //struct BottomView: View {
-//    
+//
 //    @State private var product: Product = .card
 //    @State private var isShowing = false
-//    
+//
 //    var body: some View {
-//        
+//
 //        VStack {
-//            
+//
 //            HStack {
-//                
+//
 //                product.color
 //                    .frame(width: 100, height: 32)
 //                    .overlay { Text("\(product.id.value.rawValue)") }
-//                
+//
 //                Spacer()
-//                
+//
 //                Button("Show products") {
-//                    
+//
 //                    isShowing.toggle()
 //                }
 //            }
 //            .padding()
-//            
+//
 //            if isShowing {
-//                
+//
 //                CarouselStateWrapperView(products: .cards) { product in
-//                    
+//
 //                    ProductView(product: product)
 //                        .onTapGesture {
-//                            
+//
 //                            self.product = product
 //                            isShowing = false
 //                        }
@@ -191,11 +197,11 @@ struct CarouselMainView: View {
 //}
 //
 //struct ProductView: View {
-//    
+//
 //    let product: Product
-//        
+//
 //    var body: some View {
-//        
+//
 //        product.color
 //            .cornerRadius(10)
 //            .frame(width: 121, height: 70)

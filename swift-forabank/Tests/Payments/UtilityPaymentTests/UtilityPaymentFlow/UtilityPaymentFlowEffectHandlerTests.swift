@@ -321,7 +321,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         })
     }
     
-    // MARK: - startPayment
+    // MARK: - select
     
     func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
         
@@ -347,7 +347,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse, UtilityService>
+    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse, Service>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -416,30 +416,3 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 }
-
-private struct LastPayment: Equatable {
-    
-    var value: String
-}
-
-private struct Operator: Equatable, Identifiable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct StartPaymentResponse: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-private struct UtilityService: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-

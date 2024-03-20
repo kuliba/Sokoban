@@ -335,6 +335,13 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProductListByTypeServiceTests",
+        "name" : "GetProductListByTypeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductDetailsUITests",
         "name" : "ProductDetailsUITests"
       }

@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+@testable import CardUI
 
 final class CardViewComponentTests: XCTestCase {
     
@@ -457,16 +458,16 @@ final class CardViewComponentTests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias FullNumber = ProductView.ViewModel.CardInfo.FullNumber
-    typealias MaskedNumber = ProductView.ViewModel.CardInfo.MaskedNumber
+    typealias FullNumber = CardInfo.FullNumber
+    typealias MaskedNumber = CardInfo.MaskedNumber
     
     private func makeSUT(
         id: ProductData.ID,
         productType: ProductType,
-        header: ProductView.ViewModel.HeaderViewModel,
+        header: HeaderDetails,
         name: String,
-        footer:ProductView.ViewModel.FooterViewModel,
-        appearance: ProductView.ViewModel.Appearance,
+        footer:FooterDetails,
+        appearance: Appearance,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
         file: StaticString = #file,
@@ -502,7 +503,7 @@ final class CardViewComponentTests: XCTestCase {
         productType: ProductType = .card,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
-        size: ProductView.ViewModel.Appearance.Size = .small,
+        size: Appearance.Size = .small,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -530,8 +531,8 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productData: ProductData,
-        size: ProductView.ViewModel.Appearance.Size,
-        style: ProductView.ViewModel.Appearance.Style,
+        size: Appearance.Size,
+        style: Appearance.Style,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -707,7 +708,7 @@ private extension ProductCardData {
     }
 }
 
-private extension ProductView.ViewModel.CardInfo {
+private extension CardInfo {
     
     static let defaultValueEmptyOwner: Self = .init(
         name: "Visa",

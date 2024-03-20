@@ -32,11 +32,10 @@ public struct DocumentItem {
         case kpp
         case payeeName
         case holderName
-        case numberMasked
         case expirationDate
         case number
-        case cvvMasked
         case cvv
+        case info
     }
     
     var title: String {
@@ -55,13 +54,13 @@ public struct DocumentItem {
             return "КПП"
         case .payeeName:
             return "Получатель"
-        case .numberMasked, .number:
+        case .number:
             return "Номер карты"
         case .holderName:
             return "Держатель карты"
         case .expirationDate:
             return "Карта действует до"
-        case .cvvMasked, .cvv:
+        case .cvv, .info:
             return .cvvTitle
         }
     }

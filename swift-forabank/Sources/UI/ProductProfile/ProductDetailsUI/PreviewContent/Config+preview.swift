@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Config {
+public extension Config {
     
     static let preview: Self = .init(
         images: .preview,

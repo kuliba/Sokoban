@@ -39,11 +39,23 @@ public extension ProductProfileNavigationReducer {
                 effect = .create(.accountInfo)
             case .cardGuardian:
                 effect = .create(.cardGuardian)
+            case .productDetails:
+                effect = .create(.productDetails)
             case .topUpCard:
                 effect = .create(.topUpCard)
+            case .share:
+                effect = .create(.share)
+            }
+        case .dismissModal:
+            if let status = state.destination?.viewModel.state.status {
+                if status == .itemTapped(.share) {
+                    state.destination?.viewModel.event(.closeModal)
+                }
+            } else {
+                state.modal = nil
             }
         case .dismissDestination:
-            state.modal = nil
+            state.destination?.viewModel.event(.close)
         case let .showAlert(alert):
             state.alert = alert
         case let .open(panel):
@@ -52,17 +64,26 @@ public extension ProductProfileNavigationReducer {
                 state.modal = .accountInfo( .init(route.viewModel, route.cancellable))
             case let .cardGuardianRoute(route):
                 state.modal = .cardGuardian( .init(route.viewModel, route.cancellable))
+            case let .productDetailsRoute(route):
+                state.modal = nil
+                state.destination = .init(route.viewModel, route.cancellable)
             case let .topUpCardRoute(route):
-                state.modal = .topUpCard( .init(route.viewModel, route.cancellable))
+                state.modal = .topUpCard(.init(route.viewModel, route.cancellable))
+            case let .productDetailsSheetRoute(route):
+                state.modal = .share(.init(route.viewModel, route.cancellable))
             }
         case let .accountInfoPanelInput(accountInfoPanelInput):
             (state, effect) = reduce(state, accountInfoPanelInput)
         case let .cardGuardianInput(cardGuardianInput):
             (state, effect) = reduce(state, cardGuardianInput)
+        case let .productDetailsInput(detailsInput):
+            (state, effect) = reduce(state, detailsInput)
         case let .topUpCardInput(topUpCardInput):
             (state, effect) = reduce(state, topUpCardInput)
 
         case let .productProfile(event):
+            (state, effect) = reduce(state, event)
+        case let .productDetailsSheetInput(event):
             (state, effect) = reduce(state, event)
         }
         return (state, effect)
@@ -177,6 +198,86 @@ private extension ProductProfileNavigationReducer {
     }
 }
 
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ input: ProductDetailsSheetStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        
+        state.alert = nil
+        
+        switch input {
+        case .appear:
+            break
+            
+        case let .buttonTapped(tap):
+            switch tap {
+            case .sendAll:
+                state.modal = nil
+                state.destination?.viewModel.event(.sendAll)
+
+            case .sendSelect:
+                state.modal = nil
+                state.destination?.viewModel.event(.sendSelect)
+            }
+        }
+        return (state, .none)
+    }
+}
+
+private extension ProductProfileNavigationReducer {
+    
+    func reduce(
+        _ state: State,
+        _ input: ProductDetailsStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.alert = nil
+        
+        switch input {
+        
+        case .appear:
+            break
+        case let .itemTapped(tap):
+            switch tap {
+                
+            case let .iconTap(documentId):
+                switch documentId {
+                case .info:
+                    effect = .delayAlert(AlertModelOf.alertCVV(), alertLifespan)
+                default:
+                    effect = .productProfile(.productDetailsIconTap(documentId))
+                }
+
+            case let .longPress(valueForCopy, textForInformer):
+                effect = .productProfile(.productDetailsItemlongPress(valueForCopy, textForInformer))
+                
+            case .share:
+                effect = .create(.share)
+            case .selectAccountValue, .selectCardValue:
+                break
+            }
+        case .close:
+            state.destination = nil
+        case .sendAll:
+            break
+        case .sendSelect:
+            break
+        case .closeModal:
+            if state.destination?.viewModel.state.status == .itemTapped(.share) {
+                state.modal = nil
+            }
+        }
+        
+        return (state, effect)
+    }
+}
 
 private extension ProductProfileNavigationReducer {
     

@@ -8,6 +8,7 @@
 import SwiftUI
 import ProductProfile
 import AccountInfoPanel
+import ProductDetailsUI
 
 struct AccountInfoPanelView: View {
     
@@ -42,10 +43,57 @@ struct AccountInfoPanelView: View {
                         return route
                     } else { return nil }
                 },
-                set: { if $0 == nil { event(.dismissDestination) }}
+                set: { _ in }
             ),
             content: destinationView
         )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            destination: navigationDestination
+        )
+    }
+    
+    private func navigationDestination(
+        route: ProductProfileNavigation.State.ProductDetailsRoute
+    ) -> some View {
+        
+        ProductDetailsWrappedView(
+            viewModel: route.viewModel,
+            config: .preview
+        )
+        .alert(
+            item: .init(
+                get: { state.alert },
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: event) }
+        )
+        .sheet(
+            item: .init(
+                get: {
+                    if case let .share(route) = state.modal {
+                        return route
+                    } else { return nil }
+                },
+                set: { if $0 == nil { route.viewModel.event(.closeModal) }}
+            ),
+            content: sheetView
+        )
+    }
+
+    private func sheetView(
+        route: ProductProfileNavigation.State.ProductDetailsSheetRoute
+    ) -> some View {
+        
+        ProductDetailsSheetWrappedView(
+            viewModel: route.viewModel,
+            config: .preview
+        )
+        .presentationDetents([.height(374)])
     }
     
     private func destinationView(
