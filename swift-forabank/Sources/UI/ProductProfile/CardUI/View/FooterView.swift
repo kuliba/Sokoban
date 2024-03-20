@@ -40,49 +40,45 @@ public struct FooterView: View {
     
     public var body: some View {
         
-        if let paymentSystem = footer.paymentSystem {
+        HStack {
             
-            HStack {
-                
-                Text(footer.balance)
-                    .font(config.fonts.footer)
-                    .fontWeight(.semibold)
-                    .foregroundColor(config.appearance.textColor)
-                    .accessibilityIdentifier("productBalance")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                paymentSystem
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(height: config.sizes.paymentSystemIcon.height)
-                    .foregroundColor(config.appearance.textColor)
-                    .accessibilityIdentifier("productPaymentSystemIcon")
-                    .frame(maxWidth: config.sizes.paymentSystemIcon.width, alignment: .trailing)
-            }
-        } else {
+            Text(footer.balance)
+                .font(config.fonts.footer)
+                .fontWeight(.semibold)
+                .foregroundColor(config.appearance.textColor)
+                .accessibilityIdentifier("productBalance")
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack {
-                
-                Text(footer.balance)
-                    .font(config.fonts.footer)
-                    .fontWeight(.semibold)
-                    .foregroundColor(config.appearance.textColor)
-                    .accessibilityIdentifier("productBalance")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                footer.interestRate.map { text in
-                    
-                    ZStack {
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(config.colors.rateFill)
-                            .frame(width: 56, height: 20)
-                        Text(text)
-                            .font(config.fonts.rate)
-                            .fontWeight(.regular)
-                            .foregroundColor(config.colors.rateForeground)
-                    }
-                }
+            if let paymentSystem = footer.paymentSystem {
+                paymentSystemView(paymentSystem)
+            } else {
+                footer.interestRate.map(interestRateView)
             }
+        }
+    }
+    
+    private func paymentSystemView(_ paymentSystem: Image) -> some View {
+        
+        paymentSystem
+            .renderingMode(.template)
+            .resizable()
+            .frame(height: config.sizes.paymentSystemIcon.height)
+            .foregroundColor(config.appearance.textColor)
+            .accessibilityIdentifier("productPaymentSystemIcon")
+            .frame(maxWidth: config.sizes.paymentSystemIcon.width, alignment: .trailing)
+    }
+    
+    private func interestRateView(_ text: String) -> some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 10)
+                .fill(config.colors.rateFill)
+                .frame(width: 56, height: 20)
+            Text(text)
+                .font(config.fonts.rate)
+                .fontWeight(.regular)
+                .foregroundColor(config.colors.rateForeground)
         }
     }
 }

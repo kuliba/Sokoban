@@ -40,19 +40,24 @@ public struct HeaderView: View {
                     .accessibilityIdentifier("productNumber")
             }
             
-            header.period.map { text in
-               
-                HStack {
-                    
-                    Rectangle()
-                        .frame(width: 1, height: 16)
-                        .foregroundColor(config.appearance.textColor)
-                    
-                    Text(text)
-                        .font(config.fonts.header)
-                        .foregroundColor(config.appearance.textColor)
-                        .accessibilityIdentifier("productPeriod")
-                }
+            period()
+        }
+    }
+    
+    private func period() -> some View {
+        
+        header.period.map { text in
+           
+            HStack {
+                
+                Rectangle()
+                    .frame(width: 1, height: 16)
+                    .foregroundColor(config.appearance.textColor)
+                
+                Text(text)
+                    .font(config.fonts.header)
+                    .foregroundColor(config.appearance.textColor)
+                    .accessibilityIdentifier("productPeriod")
             }
         }
     }

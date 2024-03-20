@@ -10,27 +10,33 @@ import SwiftUI
 
 //MARK: - View
 
-public struct FrontView<Header: View, Footer: View>: View {
+public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     
     let name: String
     let balance: Balance
-    
+    let modifierConfig: ModifierConfig
     let config: Config
     let headerView: () -> Header
     let footerView: (Balance) -> Footer
     
+    let statusActionView: () -> StatusAction?
+
     public init(
         name: String,
         balance: Balance,
+        modifierConfig: ModifierConfig,
         config: Config,
         headerView: @escaping () -> Header,
-        footerView: @escaping (Balance) -> Footer
+        footerView: @escaping (Balance) -> Footer,
+        statusActionView: @escaping () -> StatusAction?
     ) {
         self.name = name
         self.balance = balance
+        self.modifierConfig = modifierConfig
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
+        self.statusActionView = statusActionView
     }
     
     public var body: some View {
@@ -53,6 +59,22 @@ public struct FrontView<Header: View, Footer: View>: View {
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
+        .card(
+            isChecked: modifierConfig.isChecked,
+            isUpdating: modifierConfig.isUpdating,
+            statusActionView: statusActionView(),
+            config: config,
+            isFrontView: true,
+            action: modifierConfig.action
+        )
+        .animation(
+            isShowingCardBack: modifierConfig.isShowingCardBack,
+            cardWiggle: modifierConfig.cardWiggle,
+            opacity: .init(
+                startValue: 0,
+                endValue: modifierConfig.opacity),
+            radians: .init(startValue: .pi, endValue: 2 * .pi)
+        )
     }
 }
 
@@ -65,6 +87,7 @@ struct FrontView_Previews: PreviewProvider {
             FrontView(
                 name: "Name",
                 balance: .init("123 RUB"),
+                modifierConfig: .previewUpdating,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
@@ -76,12 +99,16 @@ struct FrontView_Previews: PreviewProvider {
                     FooterView(
                         config: .config(.preview),
                         footer: .init(balance: $0.rawValue))
+                }, 
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
             
             FrontView(
                 name: "Name",
                 balance: .init("123012 RUB"),
+                modifierConfig: .previewFront,
                 config: .config(.preview),
                 headerView: {
                     HeaderBackView(
@@ -93,8 +120,12 @@ struct FrontView_Previews: PreviewProvider {
                     FooterView(
                         config: .config(.preview),
                         footer: .init(balance: $0.rawValue, interestRate: "8.05"))
+                },
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
         }
     }
 }
+
