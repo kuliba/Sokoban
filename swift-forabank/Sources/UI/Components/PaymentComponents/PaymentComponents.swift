@@ -9,7 +9,6 @@
 @_exported import ButtonComponent
 @_exported import InfoComponent
 @_exported import CheckBoxComponent
-@_exported import CodeComponent
 @_exported import ProductSelectComponent
 @_exported import SharedConfigs
 
@@ -46,7 +45,4 @@ public extension PaymentComponents {
     
     typealias CheckBox = CheckBoxComponent.CheckBoxView
     typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config 
-    
-    typealias CodeView = CodeComponent.CodeInputView
-    typealias CodeConfig = CodeComponent.CodeInputConfig
 }
