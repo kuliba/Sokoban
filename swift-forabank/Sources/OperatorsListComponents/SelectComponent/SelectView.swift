@@ -22,105 +22,107 @@ struct SelectView: View {
         switch state {
         case let .collapsed(option):
             
-            HStack(spacing: 16) {
-                
-                if let option {
-                    
-                    iconOption(option, option.config)
-                        .cornerRadius(20)
-                    
-                } else {
-                    
-                    config.icon
-                        .resizable()
-                        .frame(width: 24, height: 24, alignment: .center)
-                        .foregroundColor(config.foregroundIcon)
-                        .background(config.backgroundIcon)
-                        .cornerRadius(20)
-                }
-                
-                if let option {
-                    
-                    Text(option.title)
-                    
-                } else {
-                    
-                    Text(config.title)
-                        .foregroundColor(Color.gray.opacity(0.6))
-                }
-                
-                Spacer()
-                
-                chevronButton()
-            }
-            .padding(.vertical, 13)
-            .padding(.horizontal, 16)
-            .background(Color.gray.opacity(0.3))
-            .cornerRadius(12)
+            horizontalView(option)
+                .padding(.vertical, 13)
+                .padding(.horizontal, 16)
+                .background(Color.gray.opacity(0.3))
+                .cornerRadius(12)
             
         case let .expanded(options):
             
             VStack(spacing: 20) {
                 
-                HStack(spacing: 16) {
-                    
-                    config.icon
-                        .resizable()
-                        .frame(width: 24, height: 24, alignment: .center)
-                        .foregroundColor(config.foregroundIcon)
-                        .background(config.backgroundIcon)
-                    
-                    VStack(spacing: 4) {
-                        
-                        HStack {
-                            
-                            config.title.text(
-                                withConfig: config.titleConfig
-                            )
-                            .multilineTextAlignment(.leading)
-                            
-                            Spacer()
-                        }
-                        
-                        HStack {
-                        
-                            if config.isSearchable {
-                                
-                                textField()
-                                    .frame(height: 24)
-                                
-                            } else {
-                                
-                                Text(config.placeholder)
-                                    .foregroundColor(.gray.opacity(0.5))
-                            }
-                            
-                            Spacer()
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    chevronButton()
-                }
+                horizontalView(nil)
                 
-                ScrollView(.vertical) {
-                    
-                    VStack(spacing: 20) {
-                        
-                        ForEach(options, id: \.id) { option in
-                            
-                            optionView(option)
-                            
-                        }
-                    }
-                }
-                .frame(height: 200)
+                scrollOptionView(options)
             }
             .padding(.top, 13)
             .padding(.horizontal, 16)
             .background(Color.gray.opacity(0.3))
             .cornerRadius(12)
+        }
+    }
+    
+    private func scrollOptionView(
+        _ options: [SelectState.Option]
+    ) -> some View {
+        
+        ScrollView(.vertical) {
+            
+            VStack(spacing: 20) {
+                
+                ForEach(options, id: \.id) { option in
+                    
+                    optionView(option)
+                    
+                }
+            }
+        }
+        .frame(height: 200)
+    }
+    
+    private func horizontalView(
+        _ option: SelectState.Option?
+    ) -> some View {
+        
+        HStack(spacing: 16) {
+            
+            if let option {
+                
+                circleIcon(option, option.config)
+                    .cornerRadius(20)
+                
+            } else {
+                
+                config.icon
+                    .resizable()
+                    .frame(width: 24, height: 24, alignment: .center)
+                    .foregroundColor(config.foregroundIcon)
+                    .background(config.backgroundIcon)
+                    .cornerRadius(20)
+            }
+            
+            switch state {
+            case let .collapsed(option):
+                
+                Text(option?.title ?? config.title)
+                    .foregroundColor(option?.title != nil ? .black : Color.gray.opacity(0.6))
+                
+            case .expanded:
+            
+                VStack(spacing: 4) {
+                    
+                    HStack {
+                        
+                        config.title.text(
+                            withConfig: config.titleConfig
+                        )
+                        .multilineTextAlignment(.leading)
+                        
+                        Spacer()
+                    }
+                    
+                    HStack {
+                    
+                        if config.isSearchable {
+                            
+                            textField()
+                                .frame(height: 24)
+                            
+                        } else {
+                            
+                            Text(config.placeholder)
+                                .foregroundColor(.gray.opacity(0.5))
+                        }
+                        
+                        Spacer()
+                    }
+                }
+            }
+            
+            Spacer()
+            
+            chevronButton()
         }
     }
     
@@ -143,7 +145,7 @@ struct SelectView: View {
             
             HStack(alignment: .top, spacing: 20) {
                 
-                iconOption(option, option.config)
+                circleIcon(option, option.config)
                     .cornerRadius(20)
                     .frame(height: 50, alignment: .top)
             }
@@ -182,21 +184,6 @@ struct SelectView: View {
         })
     }
     
-    private func iconOption(
-        _ option: SelectState.Option,
-        _ config: SelectState.Option.Config
-    ) -> some View {
-        
-        if option.isSelected {
-            
-            return circleIcon(option, config)
-            
-        } else {
-            
-            return circleIcon(option, config)
-        }
-    }
-    
     private func circleIcon(
         _ option: SelectState.Option,
         _ config: SelectState.Option.Config
@@ -209,22 +196,11 @@ struct SelectView: View {
                 .foregroundColor(config.mainBackground)
                 .background(config.mainBackground)
             
-            if option.isSelected {
-                
-                config.selectIcon
-                    .resizable()
-                    .renderingMode(.template)
-                    .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
-                    .foregroundColor(config.selectForeground)
-                
-            } else {
-                
-                config.icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
-                    .foregroundColor(config.foreground)
-            }
+            (option.isSelected ? config.icon : config.selectIcon)
+                .resizable()
+                .renderingMode(.template)
+                .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                .foregroundColor(option.isSelected ? config.selectForeground : config.foreground)
         }
     }
 }
