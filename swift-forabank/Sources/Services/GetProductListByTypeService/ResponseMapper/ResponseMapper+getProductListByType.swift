@@ -616,6 +616,7 @@ private extension ProductResponse {
     init(data: ResponseMapper._Data) {
         
         self.init(
+            serial: data.serial,
             products: data.productList.map(ProductResponse.Product.init)
         )
     }
