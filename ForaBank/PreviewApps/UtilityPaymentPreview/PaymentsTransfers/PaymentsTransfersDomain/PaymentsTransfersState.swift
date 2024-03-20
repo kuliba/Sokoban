@@ -9,20 +9,19 @@ import UtilityPayment
 
 struct PaymentsTransfersState: Equatable {
     
-    #warning("rename `route: Route``")
-    var destination: Destination?
+    var route: Route?
 }
 
 extension PaymentsTransfersState {
     
-    enum Destination: Equatable {
+    enum Route: Equatable {
         
         case utilityFlow(UtilityFlow)
         case other
     }
 }
 
-extension PaymentsTransfersState.Destination {
+extension PaymentsTransfersState.Route {
     
     typealias Destination = UtilityDestination<LastPayment, Operator, UtilityService>
     typealias UtilityFlow = Flow<Destination>

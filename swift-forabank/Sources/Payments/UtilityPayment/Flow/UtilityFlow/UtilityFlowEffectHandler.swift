@@ -8,17 +8,20 @@
 public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
 where Operator: Identifiable {
     
-    private let loadPrepayment: LoadPrepayment
+    private let loadPrepaymentOptions: LoadPrepaymentOptions
     private let loadServices: LoadServices
+    private let optionsEffectHandle: OptionsEffectHandle
     private let startPayment: StartPayment
     
     public init(
-        loadPrepayment: @escaping LoadPrepayment,
+        loadPrepaymentOptions: @escaping LoadPrepaymentOptions,
         loadServices: @escaping LoadServices,
+        optionsEffectHandle: @escaping OptionsEffectHandle,
         startPayment: @escaping StartPayment
     ) {
-        self.loadPrepayment = loadPrepayment
+        self.loadPrepaymentOptions = loadPrepaymentOptions
         self.loadServices = loadServices
+        self.optionsEffectHandle = optionsEffectHandle
         self.startPayment = startPayment
     }
 }
@@ -33,8 +36,11 @@ public extension UtilityFlowEffectHandler {
         case .initiatePrepayment:
             self.initiatePrepayment(dispatch)
             
-        case let .prepaymentOptions(prepaymentOptions):
-            fatalError()
+        case let .prepaymentOptions(effect):
+            prepaymentOptionsEffectHandle(effect) {
+                
+                dispatch(.prepaymentOptions($0))
+            }
             
         case let .select(select):
             self.select(select, dispatch)
@@ -44,15 +50,20 @@ public extension UtilityFlowEffectHandler {
 
 public extension UtilityFlowEffectHandler {
     
-    typealias LoadPrepaymentResponse = ([LastPayment], [Operator])
-    typealias LoadPrepaymentResult = Result<LoadPrepaymentResponse, Error>
-    typealias LoadPrepaymentCompletion = (LoadPrepaymentResult) -> Void
-    typealias LoadPrepayment = (@escaping LoadPrepaymentCompletion) -> Void
+    typealias LoadPrepaymentOptionsResponse = ([LastPayment], [Operator])
+    typealias LoadPrepaymentOptionsResult = Result<LoadPrepaymentOptionsResponse, Error>
+    typealias LoadPrepaymentOptionsCompletion = (LoadPrepaymentOptionsResult) -> Void
+    typealias LoadPrepaymentOptions = (@escaping LoadPrepaymentOptionsCompletion) -> Void
     
     typealias LoadServicesPayload = Operator
     typealias LoadServicesResult = Result<[Service], Error>
     typealias LoadServicesCompletion = (LoadServicesResult) -> Void
     typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
+    
+    typealias OptionsEvent = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias OptionsEffect = PrepaymentOptionsEffect<Operator>
+    typealias OptionsDispatch = (OptionsEvent) -> Void
+    typealias OptionsEffectHandle = (OptionsEffect, @escaping OptionsDispatch) -> Void
     
     enum StartPaymentPayload {
         
@@ -77,7 +88,7 @@ private extension UtilityFlowEffectHandler {
     func initiatePrepayment(
         _ dispatch: @escaping Dispatch
     ) {
-        loadPrepayment {
+        loadPrepaymentOptions {
             
             switch $0 {
             case .failure:
@@ -91,6 +102,13 @@ private extension UtilityFlowEffectHandler {
                 }
             }
         }
+    }
+    
+    func prepaymentOptionsEffectHandle(
+        _ optionEffect: OptionsEffect,
+        _ dispatch: @escaping OptionsDispatch
+    ) {
+        optionsEffectHandle(optionEffect, dispatch)
     }
     
     func select(

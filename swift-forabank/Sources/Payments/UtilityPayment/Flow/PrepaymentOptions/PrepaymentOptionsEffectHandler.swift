@@ -45,10 +45,10 @@ public extension PrepaymentOptionsEffectHandler {
     
     #warning("replace Failure with `struct SimpleServiceFailure: Error & Equatable {}` ??")
     typealias PageSize = Int
-    typealias LoadOperatorsPayload = (Operator.ID, PageSize)
+    typealias LoadOperatorsPayload = (Operator.ID?, PageSize)
     typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
-    typealias LoadOperators = (LoadOperatorsPayload?, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
