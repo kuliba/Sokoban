@@ -11,10 +11,16 @@ public struct HeaderDetails {
     
     let number: String?
     let period: String?
+    let icon: Image?
     
-    public init(number: String?, period: String? = nil) {
+    public init(
+        number: String?,
+        period: String? = nil,
+        icon: Image? = nil
+    ) {
         self.number = number
         self.period = period
+        self.icon = icon
     }
 }
 
@@ -23,7 +29,10 @@ public struct HeaderView: View {
     let config: Config
     let header: HeaderDetails
     
-    public init(config: Config, header: HeaderDetails) {
+    public init(
+        config: Config,
+        header: HeaderDetails
+    ) {
         self.config = config
         self.header = header
     }
@@ -41,6 +50,13 @@ public struct HeaderView: View {
             }
             
             period()
+            
+            header.icon.map{
+                $0
+                    .renderingMode(.original)
+                    .frame(height: 16, alignment: .center)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
         }
     }
     
@@ -69,7 +85,10 @@ struct HeaderView_Previews: PreviewProvider {
         
         Group {
             
-            HeaderView.init(config: .config(.preview), header: .init(number: "111111"))
+            HeaderView.init(config: .config(.preview), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle")))
+                .border(.red)
+            
+            HeaderView.init(config: .config(.preview), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle.fill")))
             
             HeaderView.init(config: .config(.preview), header: .init(number: nil, period: "01/02"))
             

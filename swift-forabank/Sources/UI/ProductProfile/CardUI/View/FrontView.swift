@@ -90,10 +90,12 @@ struct FrontView_Previews: PreviewProvider {
                 modifierConfig: .previewUpdating,
                 config: .config(.preview),
                 headerView: {
-                    HeaderBackView(
-                        cardInfo: .previewWiggleFalse,
-                        action: { print("action") },
-                        config: .config(.preview))
+                    HeaderView(
+                        config: .config(.preview),
+                        header: .init(
+                            number: "111111",
+                            icon: Image(systemName: "snowflake.circle"))
+                    )
                 },
                 footerView: {
                     FooterView(
@@ -111,10 +113,12 @@ struct FrontView_Previews: PreviewProvider {
                 modifierConfig: .previewFront,
                 config: .config(.preview),
                 headerView: {
-                    HeaderBackView(
-                        cardInfo: .previewWiggleFalse,
-                        action: { print("action") },
-                        config: .config(.preview))
+                    HeaderView(
+                        config: .config(.preview),
+                        header: .init(
+                            number: "111111",
+                            icon: Image(systemName: "snowflake.circle.fill"))
+                    )
                 },
                 footerView: {
                     FooterView(

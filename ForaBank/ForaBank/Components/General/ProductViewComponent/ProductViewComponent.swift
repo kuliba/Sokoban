@@ -33,9 +33,9 @@ extension ProductView {
         @Published var cardInfo: CardInfo
         @Published var footer: FooterDetails
         @Published var statusAction: StatusActionViewModel?
+        @Published var isUpdating: Bool
         
         var appearance: Appearance
-        var isUpdating: Bool
 
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
@@ -99,9 +99,10 @@ extension ProductView {
             let backgroundImage = Self.backgroundImage(with: productData, size: size)
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
+            let icon = Self.iconForCard(product: productData)
             self.init(
                 id: productData.id,
-                header: .init(number: number, period: period),
+                header: .init(number: number, period: period, icon: icon),
                 cardInfo: cardInfo,
                 footer: .init(balance: balance, interestRate: interestRate),
                 statusAction: statusAction,
@@ -205,6 +206,14 @@ extension ProductView {
             default:
                 return nil
             }
+        }
+        
+        static func iconForCard(product: ProductData) -> Image? {
+            
+            /*let isDark: Bool = product.background.first?.description == "F6F6F7"
+            return isDark ? .ic16MainCardGrey : .ic16MainCardWhite*/
+            //TODO: add real image for card - clover
+            return nil
         }
         
         static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
