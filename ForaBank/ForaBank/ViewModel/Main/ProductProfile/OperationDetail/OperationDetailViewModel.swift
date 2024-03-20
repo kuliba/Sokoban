@@ -301,19 +301,37 @@ enum OperationDetailViewModelAction {
     struct CloseFullScreenSheet: Action {}
 }
 
+private enum ScreenSpacing {
+    
+    case small(range: ClosedRange<CGFloat>)
+    case medium(range: ClosedRange<CGFloat>)
+    case large(range: ClosedRange<CGFloat>)
+
+    var spacing: CGFloat {
+        switch self {
+        case .small(let range) where range.contains(UIScreen.main.bounds.width):
+            return 32
+        case .medium(let range) where range.contains(UIScreen.main.bounds.width):
+            return 37
+        case .large(let range) where range.contains(UIScreen.main.bounds.width):
+            return 52
+        default:
+            return 52
+        }
+    }
+
+    static let allCases: [ScreenSpacing] = [
+        .small(range: 320.0...360.0),
+        .medium(range: 361.0...375.0),
+        .large(range: 376.0...1000.0)
+    ]
+}
+
 extension OperationDetailViewModel {
     
     func getSpacingForDocsInHStackForOldIPhones() -> CGFloat {
         
-        let width = UIScreen.main.bounds.width
-        
-        if width <= 360 {
-            return 32
-        } else if width <= 375 {
-            return 37
-        } else {
-            return 52
-        }
+        return ScreenSpacing.allCases.first { $0.spacing == UIScreen.main.bounds.width }?.spacing ?? 52
     }
 }
 

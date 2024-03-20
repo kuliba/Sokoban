@@ -16,7 +16,7 @@ final class InfoProductViewModelTests: XCTestCase {
     typealias ItemViewModelWithAction = InfoProductViewModel.ItemViewModelWithAction
     typealias ItemViewModelForList = InfoProductViewModel.ItemViewModelForList
     typealias ItemViewModel = InfoProductViewModel.ItemViewModel
-
+    
     //MARK: - test init InfoProductViewModel
     
     func test_init_infoProductViewModel_shouldSetAllValue() {
@@ -59,22 +59,22 @@ final class InfoProductViewModelTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertFalse(sut.needShowCheckbox)
-
+        
         sut.needShowCheckbox = true
         
         XCTAssertTrue(sut.needShowCheckbox)
         XCTAssertFalse(sut.accountInfoSelected)
         XCTAssertFalse(sut.cardInfoSelected)
-
+        
         XCTAssertTrue(sut.isDisableShareButton)
     }
-
+    
     func test_isDisableShareButton_needShowCheckboxTrueSelectedAccountBlock_shouldTrue() {
         
         let sut = makeSUT()
         
         XCTAssertFalse(sut.needShowCheckbox)
-
+        
         sut.needShowCheckbox = true
         
         XCTAssertTrue(sut.needShowCheckbox)
@@ -88,13 +88,13 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertFalse(sut.cardInfoSelected)
         XCTAssertFalse(sut.isDisableShareButton)
     }
-
+    
     func test_isDisableShareButton_needShowCheckboxTrueSelectedCardBlock_shouldTrue() {
         
         let sut = makeSUT()
         
         XCTAssertFalse(sut.needShowCheckbox)
-
+        
         sut.needShowCheckbox = true
         
         XCTAssertTrue(sut.needShowCheckbox)
@@ -361,7 +361,7 @@ final class InfoProductViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(item.currentValueString, "")
     }
-        
+    
     //MARK: - test makeItemViewModelSingle
     
     func test_makeItemViewModelSingle_shouldSetAllValue() {
@@ -664,38 +664,38 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let cardInfo = try XCTUnwrap(sut.additionalList)
         let items = arrayOfIds(items: cardInfo)
-
+        
         XCTAssertTrue(items.contains(.numberMasked))
         XCTAssertFalse(items.contains(.number))
-
+        
         sut.action.send(InfoProductModelAction.ToogleCardNumber(productCardData: InfoProductViewModelTests.productCardDataFull))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let cardInfoNew = try XCTUnwrap(sut.additionalList)
-
+        
         let itemsNew = arrayOfIds(items: cardInfoNew)
-
+        
         XCTAssertTrue(itemsNew.contains(.number))
         XCTAssertFalse(itemsNew.contains(.numberMasked))
     }
-
+    
     func test_action_shouldCvvToogle() throws {
         
         let sut = makeSUT(card: InfoProductViewModelTests.productCardDataFull)
         
         let cardInfo = try XCTUnwrap(sut.additionalList)
         let items = arrayOfIds(items: cardInfo)
-
+        
         XCTAssertTrue(items.contains(.cvvMasked))
         XCTAssertFalse(items.contains(.cvv))
-
+        
         sut.action.send(InfoProductModelAction.ToogleCVV(productCardData: InfoProductViewModelTests.productCardDataFull))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let cardInfoNew = try XCTUnwrap(sut.additionalList)
-
+        
         let itemsNew = arrayOfIds(items: cardInfoNew)
         
         XCTAssertTrue(itemsNew.contains(.cvv))
@@ -708,22 +708,22 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let cardInfo = try XCTUnwrap(sut.additionalList)
         let items = arrayOfIds(items: cardInfo)
-
+        
         XCTAssertTrue(items.contains(.numberMasked))
         XCTAssertFalse(items.contains(.number))
         XCTAssertTrue(items.contains(.cvvMasked))
         XCTAssertFalse(items.contains(.cvv))
-
+        
         let response = ResponseDeposits.success(data: .dataOtherId)
-
+        
         sut.action.send(response)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let cardInfoNew = try XCTUnwrap(sut.additionalList)
-
+        
         let itemsNew = arrayOfIds(items: cardInfoNew)
-
+        
         XCTAssertTrue(itemsNew.contains(.numberMasked))
         XCTAssertFalse(itemsNew.contains(.number))
         XCTAssertTrue(items.contains(.cvvMasked))
@@ -736,30 +736,30 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let cardInfoOld = try XCTUnwrap(sut.additionalList)
         let itemsOld = arrayOfIds(items: cardInfoOld)
-
+        
         XCTAssertTrue(itemsOld.contains(.cvvMasked))
         XCTAssertFalse(itemsOld.contains(.cvv))
         XCTAssertTrue(itemsOld.contains(.numberMasked))
         XCTAssertFalse(itemsOld.contains(.number))
-
+        
         sut.action.send(InfoProductModelAction.ToogleCVV(productCardData: InfoProductViewModelTests.productCardDataFull))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let cardInfo = try XCTUnwrap(sut.additionalList)
         let items = arrayOfIds(items: cardInfo)
-
+        
         XCTAssertTrue(items.contains(.cvv))
         XCTAssertFalse(items.contains(.cvvMasked))
         XCTAssertTrue(items.contains(.numberMasked))
         XCTAssertFalse(items.contains(.number))
-
+        
         sut.action.send(InfoProductModelAction.ToogleCardNumber(productCardData: InfoProductViewModelTests.productCardDataFull))
-
+        
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
+        
         let cardInfoNew = try XCTUnwrap(sut.additionalList)
-
+        
         let itemsNew = arrayOfIds(items: cardInfoNew)
         
         XCTAssertTrue(itemsNew.contains(.cvvMasked))
@@ -791,7 +791,7 @@ final class InfoProductViewModelTests: XCTestCase {
         let sut = makeSUT()
         let cardInfo: [ItemViewModelForList] = .cardItems
         let items: [ItemViewModel] = .items
-
+        
         let result = sut.itemsToString(items: [items, cardInfo])
         
         XCTAssertNoDiff(result, .stringForShare)
@@ -811,7 +811,7 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertNotNil(list)
         XCTAssertNotNil(listWithAction)
         XCTAssertNotNil(additionallist)
-
+        
         let result = sut.dataForShare
         
         XCTAssertNoDiff(result.count, 3)
@@ -831,7 +831,7 @@ final class InfoProductViewModelTests: XCTestCase {
         sut.needShowCheckbox = true
         sut.accountInfoSelected = true
         sut.cardInfoSelected = false
-
+        
         let result = sut.dataForShare
         
         XCTAssertNoDiff(result.count, 2)
@@ -851,12 +851,12 @@ final class InfoProductViewModelTests: XCTestCase {
         sut.needShowCheckbox = true
         sut.cardInfoSelected = true
         sut.accountInfoSelected = false
-
+        
         let result = sut.dataForShare
         
         XCTAssertNoDiff(result.count, 2)
     }
-
+    
     func test_dataForShare_onlyList() {
         
         let sut = makeSUT(product: .firstValue())
@@ -871,12 +871,48 @@ final class InfoProductViewModelTests: XCTestCase {
         sut.needShowCheckbox = true
         sut.cardInfoSelected = false
         sut.accountInfoSelected = false
-
+        
         let result = sut.dataForShare
         
         XCTAssertNoDiff(result.count, 1)
     }
-
+    
+    ///
+    // MARK: - Test Data
+    
+    func test_moscowTime_sameTimeZone_returnsSelf() {
+        
+        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow")!
+        let moscowDate = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())
+        
+        let moscowTime = moscowDate?.moscowTime
+        
+        XCTAssertEqual(moscowTime, moscowDate)
+    }
+    
+    
+    func testMoscowTimeForInvalidTimezoneIdentifier() {
+        
+        let invalidTimezoneIdentifier = "Invalid/Timezone"
+        let originalDate = Date()
+        
+        guard let invalidTimeZone = TimeZone(identifier: invalidTimezoneIdentifier) else {
+            
+            let invalidTimezoneDate = originalDate.moscowTime
+            XCTAssertEqual(invalidTimezoneDate, originalDate, "moscowTime should return the original date if the timezone identifier is invalid")
+            return
+        }
+        
+        XCTFail("Expected an invalid timezone, but a valid one was created")
+    }
+    
+    func testMoscowTimeForDateInMoscowTimezone() {
+        
+        let moscowTime: Date = .testDateInMoscowTimezone.moscowTime
+        
+        XCTAssertEqual(moscowTime, .expectedMoscowTime, "moscowTime should be equal to the expected value for a date in the Moscow timezone")
+    }
+    
     // MARK: - Helpers
     
     typealias ResponseDeposits = ModelAction.Deposits.Info.Single.Response
@@ -919,7 +955,7 @@ final class InfoProductViewModelTests: XCTestCase {
         //TODO: test memoryleak
         return sut
     }
-
+    
     func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -942,7 +978,7 @@ final class InfoProductViewModelTests: XCTestCase {
         
         return sut
     }
-        
+    
     func makeSUT1(
         product: ProductData,
         file: StaticString = #file,
@@ -1346,4 +1382,12 @@ extension Array where Element == String {
         "Корреспондентский счет: corrAccount",
         "ИНН: inn\nКПП: kpp"
     ]
+}
+
+private extension Date {
+    
+    static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
+    static let expectedMoscowTime = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
+    static let testDateInDifferentTimezone = Date(timeIntervalSince1970: 1679286300) // 2023-03-20 03:00:00 +0500
+    static let expectedDifferentTimezoneResult = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
 }

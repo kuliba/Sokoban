@@ -111,6 +111,7 @@ extension DateFormatter {
     }()
     
     static let detailFormatter: DateFormatter = {
+        
         let formatter = DateFormatter()
         formatter.dateFormat =  "d MMMM yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
@@ -143,7 +144,10 @@ extension Date {
     
     var moscowTime: Date {
         
-        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow")!
+        guard let moscowTimeZone = TimeZone(identifier: "Europe/Moscow") else {
+            return self
+        }
+
         let localTimeZone = TimeZone.current
         let seconds = TimeInterval(moscowTimeZone.secondsFromGMT(for: self) - localTimeZone.secondsFromGMT(for: self))
         
