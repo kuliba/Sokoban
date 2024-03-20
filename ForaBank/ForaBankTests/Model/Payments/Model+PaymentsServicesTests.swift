@@ -73,132 +73,78 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
     
-    func test_additionalList_PDviewTypeOutput_returnsNil() {
+    // MARK: - AdditionalList
+    
+    func test_additionalList_QRPersAccWithViewTypeOutput_returnsNil() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdClearOutput
-        let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(.qrPersAcc, parameterData: .pdClearOutput)
         
         XCTAssertEqual(res, nil)
     }
     
-    func test_additionalList_PDviewTypeInput_returnsEmpty() {
+    func test_additionalList_QRPersAccWithViewTypeIntput_returnsEmpty() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdClearInput
-        let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(.qrPersAcc, parameterData: .pdClearInput)
         
         XCTAssertEqual(res, "")
     }
     
-    func test_additionalList_AccountinputFieldTypeNil_returnsEmpty() {
+    func test_additionalList_QRPersAccWithAccountInputFieldTypeNil_returnsEmpty() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTNil
-        let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
-        
-        XCTAssertEqual(res, "")
-        
-    }
-    
-    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_returnsEmpty() {
-        
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTAccount
-        let qrCode: QRCode = .qrWithoutAccountNumberForPayment
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(.qrPersAcc, parameterData: .pdAccountInpFTNil)
         
         XCTAssertEqual(res, "")
     }
     
-    func test_additionalList_AccountinputFieldTypePersonalAccount_accountNumberForPaymentpersacc() {
+    func test_additionalList_AccountInputFieldTypeAccount_QRwithoutRawData_returnsEmpty() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTPersonalAccount
+        let res = makeListValue(.qrWithoutAccountNumberForPayment, parameterData: .pdAccountInpFTAccount)
+        
+        XCTAssertEqual(res, "")
+    }
+    
+    func test_additionalList_PersonalAccountWithInputAccount_returnQRPersaccValue() {
+        
         let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(qrCode, parameterData: .pdAccountInpFTPersonalAccount)
         
         XCTAssertEqual(res, qrCode.rawData["persacc"])
     }
     
-    func test_additionalList_AccountinputFieldTypeAccount_QRwithRawData_222() {
+    func test_additionalList_AccountWithInputAccount_returnQRValue() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(qrCode, parameterData: .pdAccountInpFTAccount)
         
         XCTAssertEqual(res, qrCode.rawData["persacc"])
     }
     
-    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentphone() {
+    func test_additionalList_AccountWithInputAccount_WithPhoneNumber_returnQRPhoneValue() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrPhone
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(qrCode, parameterData: .pdAccountInpFTAccount)
         
         XCTAssertEqual(res, qrCode.rawData["phone"])
     }
     
-    func test_additionalList_AccountinputFieldTypeAccount_QRwithoutRawData_accountNumberForPaymentnumabo() {
+    func test_additionalList_AccountWithInputAccount_WithNumabo_returnQRNumaboValue() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdAccountInpFTAccount
         let qrCode: QRCode = .qrNumAbo
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(qrCode, parameterData: .pdAccountInpFTAccount)
         
         XCTAssertEqual(res, qrCode.rawData["numabo"])
     }
     
-    func test_additionalList_ParameterDataCodeWithCategory_retursRawData() {
+    func test_additionalList_CodeWithCategory_returтRawData() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdCode
-        let qrCode: QRCode = .qrPersAcc
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(.qrPersAcc, parameterData: .pdCode)
         
         XCTAssertEqual(res, "1")
     }
     
-    func test_additionalList_ParameterDataCodeWithoutCategory_retursEmptyString() {
+    func test_additionalList_CodeWithoutCategory_retursEmpty() {
         
-        let model = makeSUT()
-        let parameterData: ParameterData = .pdCode
-        let qrCode: QRCode = .qrPersAccCategoryNil
-        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
-        
-        let list = model.additionalList(for: operatorData, qrCode: qrCode)
-        let res = list?.first?.fieldValue
+        let res = makeListValue(.qrPersAccCategoryNil, parameterData: .pdCode)
         
         XCTAssertEqual(res, "")
     }
@@ -235,6 +181,20 @@ final class Model_PaymentsServicesTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeListValue(
+        _ qrCode: QRCode,
+        parameterData: ParameterData
+    ) ->  String? {
+        
+        let model = makeSUT()
+        let operatorData: OperatorGroupData.OperatorData = .test(code: "code", name: "name", parameterList: [parameterData], parentCode: "parentCode")
+        
+        let list = model.additionalList(for: operatorData, qrCode: qrCode)
+        let res = list?.first?.fieldValue
+        
+        return res
     }
 }
 

@@ -61,8 +61,7 @@ final class QRResolverTests: XCTestCase {
     
     func  test_defaultURLString_shouldDeliverURL() {
         
-        let lnk: String = "https://yandex.ru"
-        let url = anyURL(string: lnk)
+        let url = anyURL(string: "https://yandex.ru")
         
         XCTAssertNoDiff(resolve(url), .url(url))
     }
