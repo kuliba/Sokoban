@@ -9,13 +9,23 @@ import SwiftUI
 import TextFieldComponent
 import SearchBarComponent
 
-struct InputPhoneView: View {
+public struct InputPhoneView: View {
     
     let state: InputPhoneState
     let event: InputPhoneEvent
     let config: InputPhoneConfig
     
-    var body: some View {
+    init(
+        state: InputPhoneState,
+        event: InputPhoneEvent,
+        config: InputPhoneConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         HStack(spacing: 12) {
             
