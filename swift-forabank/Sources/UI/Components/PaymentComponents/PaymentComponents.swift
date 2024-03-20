@@ -44,5 +44,5 @@ public extension PaymentComponents {
     typealias ProductCardView = ProductSelectComponent.ProductCardView
     
     typealias CheckBox = CheckBoxComponent.CheckBoxView
-    typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
+    typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config 
 }

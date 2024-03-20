@@ -38,6 +38,7 @@ public struct LatestPaymentView: View {
                     
                     Image.defaultIcon(
                         backgroundColor: config.backgroundColor,
+                        foregroundColor: .white,
                         icon: config.defaultImage
                     )
                 }
