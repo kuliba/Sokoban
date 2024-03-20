@@ -8,14 +8,12 @@
 extension FlowSettings {
     
     static let happy: Self = .init(
-        loadLastPayments: .success,
         loadOperators: .success,
-        loadOptions: .success
+        loadPrepayment: .success
     )
     
     static let sad: Self = .init(
-        loadLastPayments: .failure,
         loadOperators: .failure,
-        loadOptions: .failure
+        loadPrepayment: .failure
     )
 }

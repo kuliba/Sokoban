@@ -8,6 +8,8 @@
 import UtilityPayment
 import XCTest
 
+typealias Route = PaymentsTransfersFlowState<Destination>.Route
+
 typealias Destination = UtilityDestination<LastPayment, Operator, Service>
 
 typealias UtilityFlow = Flow<Destination>
@@ -16,6 +18,26 @@ typealias UtilityEffect = UtilityFlowEffect<LastPayment, Operator, Service>
 
 typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
 typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+
+typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
+
+typealias OptionsEffectHandler = PrepaymentOptionsEffectHandler<LastPayment, Operator>
+
+typealias LoadOperatorsSpy = Spy<OptionsEffectHandler.LoadOperatorsPayload, OptionsEffectHandler.LoadOperatorsResult>
+typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadPrepaymentOptionsResult>
+typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
+typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
+
+typealias PPOState = UtilityReducer.PPOState
+typealias PPOEvent = UtilityReducer.PPOEvent
+typealias PPOEffect = UtilityReducer.PPOEffect
+
+func makeRoute(
+    _ destinations: Destination...
+) -> Route {
+
+    .utilityFlow(.init(stack: .init(destinations)))
+}
 
 func makeEmptyUtilityFlow(
     file: StaticString = #file,
@@ -29,9 +51,9 @@ func makeEmptyUtilityFlow(
     return flow
 }
 
-func makeDestination(
+func makePrepaymentOptions(
     lastPayments: [LastPayment] = [],
-    operators: [Operator] = [],
+    operators: [Operator] = [makeOperator()],
     searchText: String = "",
     isInflight: Bool = false
 ) -> Destination {
@@ -73,9 +95,49 @@ func makeUtilityFlowState(
     .init(route: .utilityFlow(flow))
 }
 
+func makeUtilityFlowState(
+    _ destinations: Destination...
+) -> PaymentsTransfersFlowState<Destination> {
+    
+    .init(route: .utilityFlow(.init(stack: .init(destinations))))
+}
+
 func makeFlow(
     _ destinations: Destination...
 ) -> Flow<Destination> {
     
     .init(stack: .init(destinations))
+}
+
+func makePPOStub(
+    lastPaymentsCount: Int = 0,
+    operatorsCount: Int = 1,
+    searchText: String = "",
+    isInflight: Bool = false,
+    ppoEffect: PPOEffect? = nil
+) -> (PPOState, PPOEffect?) {
+    
+    let ppoState = makePrePaymentOptionsState(
+        lastPaymentsCount: lastPaymentsCount,
+        operatorsCount: operatorsCount,
+        searchText: searchText,
+        isInflight: isInflight
+    )
+    
+    return (ppoState, ppoEffect)
+}
+
+func makePrePaymentOptionsState(
+    lastPaymentsCount: Int = 0,
+    operatorsCount: Int = 1,
+    searchText: String = "",
+    isInflight: Bool = false
+) -> PrepaymentOptionsState<LastPayment, Operator> {
+    
+    .init(
+        lastPayments: (0..<lastPaymentsCount).map { _ in makeLastPayment() },
+        operators: (0..<operatorsCount).map { _ in makeOperator() },
+        searchText: searchText,
+        isInflight: isInflight
+    )
 }

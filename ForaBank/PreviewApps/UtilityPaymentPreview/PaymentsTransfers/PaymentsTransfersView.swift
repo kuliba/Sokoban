@@ -27,7 +27,7 @@ private extension PaymentsTransfersView {
         
         Button(
             "Utility Payment",
-            action: { viewModel.event(.flow(.utilityFlow(.initiate))) }
+            action: { viewModel.event(.flow(.utilityFlow(.initiatePrepayment))) }
         )
         .navigationDestination(
             item: .init(
@@ -65,12 +65,18 @@ private extension PaymentsTransfersView {
                     
                 case .payment:
                     Text("TBD: payment")
+                
+                case .payByInstruction:
+                    Text("TBD: payByInstruction")
                     
                 case let .prepayment(prepayment):
                     PrePaymentMockView(
                         event: { _ in fatalError() },// viewModel.event(.flow(.utilityFlow(.prepayment($0)))) },
-                        addCompany: { viewModel.event(.tap(.addCompany)) }
+                        addCompany: { viewModel.event(.alienScope(.addCompany)) }
                     )
+                    
+                case .scan:
+                    Text("TBD: Scan QR")
                     
                 case let .selectFailure(`operator`):
                     Text("selectFailure for \(String(describing: `operator`))")

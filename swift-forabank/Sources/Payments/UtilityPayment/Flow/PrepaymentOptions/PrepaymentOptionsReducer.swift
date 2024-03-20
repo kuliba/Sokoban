@@ -1,12 +1,11 @@
 //
-//  PrePaymentOptionsReducer.swift
+//  PrepaymentOptionsReducer.swift
 //
 //
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
-@available(*, deprecated, message: "Use `PrepaymentOptionsReducer` from `UtilityPayment` module")
-public final class PrePaymentOptionsReducer<LastPayment, Operator>
+public final class PrepaymentOptionsReducer<LastPayment, Operator>
 where LastPayment: Equatable & Identifiable,
       Operator: Equatable & Identifiable {
     
@@ -20,8 +19,10 @@ where LastPayment: Equatable & Identifiable,
     }
 }
 
-public extension PrePaymentOptionsReducer {
+public extension PrepaymentOptionsReducer {
     
+#warning("fix search")
+#warning("add tests")
     func reduce(
         _ state: State,
         _ event: Event
@@ -34,13 +35,6 @@ public extension PrePaymentOptionsReducer {
         case let .didScrollTo(operatorID):
             (state, effect) = reduce(state, operatorID)
             
-        case .initiate:
-            state.isInflight = true
-            effect = .initiate
-            
-        case let .loaded(latestPayments, operators):
-            (state, effect) = reduce(state, latestPayments, operators)
-            
         case let .paginated(paginated):
             (state, effect) = reduce(state, paginated)
             
@@ -52,14 +46,14 @@ public extension PrePaymentOptionsReducer {
     }
 }
 
-public extension PrePaymentOptionsReducer {
+public extension PrepaymentOptionsReducer {
     
-    typealias State = PrePaymentOptionsState<LastPayment, Operator>
-    typealias Event = PrePaymentOptionsEvent<LastPayment, Operator>
-    typealias Effect = PrePaymentOptionsEffect<Operator>
+    typealias State = PrepaymentOptionsState<LastPayment, Operator>
+    typealias Event = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias Effect = PrepaymentOptionsEffect<Operator>
 }
 
-private extension PrePaymentOptionsReducer {
+private extension PrepaymentOptionsReducer {
     
     func reduce(
         _ state: State,
@@ -68,8 +62,9 @@ private extension PrePaymentOptionsReducer {
         
         var effect: Effect?
         
-        guard let lastObserved = state.operators?.map(\.id).suffix(observeLast),
-              Set(lastObserved).contains(operatorID)
+        let lastObserved = state.operators.map(\.id).suffix(observeLast)
+        
+        guard Set(lastObserved).contains(operatorID)
         else { return (state, nil) }
         
         effect = .paginate(operatorID, pageSize)
@@ -79,27 +74,12 @@ private extension PrePaymentOptionsReducer {
     
     func reduce(
         _ state: State,
-        _ latestPayments: Event.LoadLastPaymentsResult,
-        _ operators: Event.LoadOperatorsResult
-    ) -> (State, Effect?) {
-        
-        var state = state
-        
-        state.lastPayments = try? latestPayments.get()
-        state.operators = try? operators.get()
-        state.isInflight = false
-        
-        return (state, nil)
-    }
-    
-    func reduce(
-        _ state: State,
         _ result: Event.LoadOperatorsResult
     ) -> (State, Effect?) {
         
         var state = state
         
-        var operators = state.operators ?? []
+        var operators = state.operators
         let paged = try? result.get()
         operators.append(contentsOf: paged ?? [])
         state.operators = operators

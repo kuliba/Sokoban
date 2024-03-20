@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
     private let utilityReduce: UtilityReduce
     
@@ -28,6 +29,9 @@ public extension PaymentsTransfersFlowReducer {
         switch event {
         case .back:
             (state, effect) = back(state)
+            
+        case let .tap(tapEvent):
+            reduce(&state, tapEvent)
             
         case let .utilityFlow(utilityFlowEvent):
             (state, effect) = reduce(state, utilityFlowEvent)
@@ -79,6 +83,70 @@ private extension PaymentsTransfersFlowReducer {
     }
     
     func reduce(
+        _ state: inout State,
+        _ event: Event.TapEvent
+    ) {
+        switch state.route {
+        case .none:
+            break
+            
+        case var .utilityFlow(utilityFlow):
+            switch event {
+            case .payByInstruction:
+                payByInstruction(&utilityFlow)
+                state = .init(route: .utilityFlow(utilityFlow))
+
+            case .scan:
+                scan(&utilityFlow)
+                state = .init(route: .utilityFlow(utilityFlow))
+            }
+        }
+    }
+    
+    func payByInstruction(
+        _ utilityFlow: inout State.Route.UtilityFlow
+    ) {
+        switch utilityFlow.current {
+        case .prepayment(.options):
+            utilityFlow.push(.payByInstruction)
+            
+        case .prepayment(.failure):
+            utilityFlow.current = .payByInstruction
+            
+        case .selectFailure:
+            utilityFlow.current = .payByInstruction
+            
+        case .services:
+            utilityFlow.push(.payByInstruction)
+            
+        default:
+            break
+        }
+    }
+
+    func scan(
+        _ utilityFlow: inout State.Route.UtilityFlow
+    ) {
+        switch utilityFlow.current {
+        case .prepayment(.options):
+            utilityFlow.push(.scan)
+            
+        case .prepayment(.failure):
+            utilityFlow.current = .scan
+            
+        case .selectFailure:
+            utilityFlow.current = .scan
+            
+        case .services:
+            utilityFlow.push(.scan)
+            
+        default:
+            break
+        }
+    }
+
+
+    func reduce(
         _ state: State,
         _ event: Event.UtilityFlow
     ) -> (State, Effect?) {
@@ -87,8 +155,8 @@ private extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch (state.route, event) {
-        case (.none, .initiate):
-            let (utilityFlow, utilityEffect) = utilityReduce(.init(), .initiate)
+        case (.none, .initiatePrepayment):
+            let (utilityFlow, utilityEffect) = utilityReduce(.init(), .initiatePrepayment)
             state.route = .utilityFlow(utilityFlow)
             effect = utilityEffect.map { .utilityFlow($0) }
             

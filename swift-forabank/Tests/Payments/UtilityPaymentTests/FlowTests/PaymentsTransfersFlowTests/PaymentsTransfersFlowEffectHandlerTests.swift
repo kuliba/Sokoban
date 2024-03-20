@@ -23,17 +23,17 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         
         let (sut, utilityFlowSpy) = makeSUT()
         
-        sut.handleEffect(.utilityFlow(.initiate)) { _ in }
+        sut.handleEffect(.utilityFlow(.initiatePrepayment)) { _ in }
         
-        XCTAssertNoDiff(utilityFlowSpy.messages.map(\.effect), [.initiate])
+        XCTAssertNoDiff(utilityFlowSpy.messages.map(\.effect), [.initiatePrepayment])
     }
     
     func test_utilityFlow_shouldDispatchLoadedFailureEventFromUtilityFlowEffectHandler() {
         
-        let event = UtilityEvent.loaded(.failure)
+        let event = UtilityEvent.prepaymentLoaded(.failure)
         let (sut, utilityFlowSpy) = makeSUT()
 
-        expect(sut, with: .utilityFlow(.initiate), toDeliver: .utilityFlow(event)) {
+        expect(sut, with: .utilityFlow(.initiatePrepayment), toDeliver: .utilityFlow(event)) {
             
             utilityFlowSpy.complete(with: event)
         }
@@ -41,10 +41,10 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     
     func test_utilityFlow_shouldDispatchLoadedSuccessEventFromUtilityFlowEffectHandler() {
         
-        let event = UtilityEvent.loaded(.success([makeLastPayment()], [makeOperator()]))
+        let event = UtilityEvent.prepaymentLoaded(.success([makeLastPayment()], [makeOperator()]))
         let (sut, utilityFlowSpy) = makeSUT()
 
-        expect(sut, with: .utilityFlow(.initiate), toDeliver: .utilityFlow(event)) {
+        expect(sut, with: .utilityFlow(.initiatePrepayment), toDeliver: .utilityFlow(event)) {
             
             utilityFlowSpy.complete(with: event)
         }

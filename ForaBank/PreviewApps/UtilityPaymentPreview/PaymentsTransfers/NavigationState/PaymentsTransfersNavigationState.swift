@@ -8,15 +8,15 @@
 import ForaTools
 
 extension PaymentsTransfersViewModel {
-
-    var navState: [State.Destination.Destination] {
-
+    
+    var navState: [State.Route.Destination] {
+        
         getNavState()
     }
     
-    private func getNavState() -> [State.Destination.Destination] {
+    private func getNavState() -> [State.Route.Destination] {
         
-        switch state.destination {
+        switch state.route {
         case .none:
             return []
             
@@ -35,7 +35,7 @@ extension PaymentsTransfersState {
     
     private func getUIState() -> UIState? {
         
-        switch destination {
+        switch route {
         case .none:
             return .none
             
@@ -48,7 +48,7 @@ extension PaymentsTransfersState {
                 switch serviceFailure {
                 case .connectivityError:
                     return .failure(.connectivityError)
-                
+                    
                 case let .serverError(message):
                     return .failure(.serverError(message))
                 }
@@ -56,8 +56,14 @@ extension PaymentsTransfersState {
             case .payment:
                 return .payment
                 
+            case .payByInstruction:
+                return .payByInstruction
+                
             case let .prepayment(prepayment):
                 return .prepayment
+                
+            case .scan:
+                return .scan
                 
             case let .selectFailure(`operator`):
                 return .selectFailure
@@ -75,8 +81,10 @@ extension PaymentsTransfersState {
         
         case failure(ServiceFailure)
         case payment
+        case payByInstruction
         case prepayment
         case other
+        case scan
         case selectFailure
         case services
     }
@@ -93,7 +101,7 @@ extension PaymentsTransfersState {
     
     private func getNavigationState() -> NavigationState? {
         
-        switch destination {
+        switch route {
         case .none:
             return .none
             
@@ -108,13 +116,7 @@ extension PaymentsTransfersState {
                     return .prePaymentOptions(.failure)
                     
                 case let .options(options):
-                    switch options.operators {
-                    case .none:
-                        return .prePaymentOptions(.failure)
-                        
-                    case let .some(operators):
-                        return .prePaymentOptions(.success)
-                    }
+                    return .prePaymentOptions(.success)
                 }
                 
             default:
