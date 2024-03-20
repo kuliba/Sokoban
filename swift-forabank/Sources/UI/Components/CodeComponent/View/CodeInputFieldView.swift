@@ -1,14 +1,15 @@
 //
-//  OTPInputFieldView.swift
-//  OTPInputComponentPreview
+//  CodeInputFieldView.swift
+//
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
 import SwiftUI
 import OTPInputComponent
+import UIPrimitives
 
-struct OTPInputFieldView: View {
+struct CodeInputFieldView: View {
     
     let state: OTPFieldState
     let event: (OTPFieldEvent) -> Void
@@ -51,7 +52,7 @@ struct OTPInputFieldView: View {
     }
 }
 
-struct OTPInputFieldView_Previews: PreviewProvider {
+struct CodeInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -64,22 +65,22 @@ struct OTPInputFieldView_Previews: PreviewProvider {
         
         Group {
             
-            otpInputView(.init())
+            codeInputView(.init())
                 .previewDisplayName("empty")
             
-            otpInputView(.init(text: "1234"))
+            codeInputView(.init(text: "1234"))
                 .previewDisplayName("partial")
             
-            otpInputView(.init(text: "123456", isInputComplete: true))
+            codeInputView(.init(text: "123456", isInputComplete: true))
                 .previewDisplayName("full")
         }
     }
     
-    private static func otpInputView(
+    private static func codeInputView(
         _ state: OTPFieldState
     ) -> some View {
         
-        OTPInputFieldView(
+        CodeInputFieldView(
             state: state,
             event: { _ in },
             config: .init(

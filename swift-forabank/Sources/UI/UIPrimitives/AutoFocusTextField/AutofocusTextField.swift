@@ -1,23 +1,39 @@
 //
 //  AutofocusTextField.swift
-//  OTPInputComponentPreview
 //
-//  Created by Igor Malyarov on 19.01.2024.
+//
+//  Created by Дмитрий Савушкин on 12.03.2024.
 //
 
 import SwiftUI
 import UIKit
 
-struct AutofocusTextField: UIViewRepresentable {
+public struct AutofocusTextField: UIViewRepresentable {
     
     let placeholder: String
     @Binding var text: String
-    var isFirstResponder: Bool = false
+    var isFirstResponder: Bool
     let textColor: UIColor
     let backgroundColor: UIColor
     let keyboardType: UIKeyboardType
     
-    func makeUIView(context: Context) -> UITextField {
+    public init(
+        placeholder: String,
+        text: Binding<String>,
+        isFirstResponder: Bool = false,
+        textColor: UIColor,
+        backgroundColor: UIColor,
+        keyboardType: UIKeyboardType
+    ) {
+        self.placeholder = placeholder
+        self._text = text
+        self.isFirstResponder = isFirstResponder
+        self.textColor = textColor
+        self.backgroundColor = backgroundColor
+        self.keyboardType = keyboardType
+    }
+    
+    public func makeUIView(context: Context) -> UITextField {
         
         let textField = UITextField(frame: .zero)
         textField.placeholder = placeholder
@@ -35,7 +51,7 @@ struct AutofocusTextField: UIViewRepresentable {
     }
     
     // TODO: fix keyboard hangs
-    func updateUIView(_ uiView: UITextField, context: Context) {
+    public func updateUIView(_ uiView: UITextField, context: Context) {
         
         if uiView.text != text {
             
@@ -52,12 +68,12 @@ struct AutofocusTextField: UIViewRepresentable {
         }
     }
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         
         return Coordinator(self)
     }
     
-    class Coordinator: NSObject, UITextFieldDelegate {
+    public class Coordinator: NSObject, UITextFieldDelegate {
         
         var parent: AutofocusTextField
         var didBecomeFirstResponder = false
@@ -67,7 +83,7 @@ struct AutofocusTextField: UIViewRepresentable {
             self.parent = textField
         }
         
-        func textFieldDidChangeSelection(_ textField: UITextField) {
+        public func textFieldDidChangeSelection(_ textField: UITextField) {
             
             parent.text = textField.text ?? ""
         }
