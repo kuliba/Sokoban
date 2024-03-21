@@ -11,11 +11,12 @@ import SwiftUI
 import PDFKit
 import PinCodeUI
 import Tagged
+import CardUI
 
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = CardDomain.CardAction
-    typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
+    typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
     
@@ -2285,7 +2286,7 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    typealias ShowCVVCompletion = (ProductView.ViewModel.CardInfo.CVV?) -> Void
+    typealias ShowCVVCompletion = (CardInfo.CVV?) -> Void
     
     func showCvvByTap(
         cardId: CardDomain.CardId,

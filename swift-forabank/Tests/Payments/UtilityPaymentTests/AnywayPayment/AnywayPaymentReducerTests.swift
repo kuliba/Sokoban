@@ -781,14 +781,14 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = AnywayPaymentReducer<TestPayment, CreateAnywayTransferResponse>
+    private typealias SUT = AnywayPaymentReducer<Payment, CreateAnywayTransferResponse>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
-        update: @escaping (inout TestPayment, CreateAnywayTransferResponse) -> Void,
+        update: @escaping (inout Payment, CreateAnywayTransferResponse) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {

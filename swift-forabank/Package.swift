@@ -41,6 +41,7 @@ let package = Package(
         .symmetricEncryption,
         .transferPublicKey,
         .urlRequestFactory,
+        .getProductListByTypeService,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -72,6 +73,7 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .phoneNumberKit,
+        .nonEmpty,
         .tagged,
         .shimmer,
         .svgKit,
@@ -136,11 +138,15 @@ let package = Package(
         .transferPublicKeyTests,
         .urlRequestFactory,
         .urlRequestFactoryTests,
+        .getProductListByTypeService,
+        .getProductListByTypeServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .cardUI,
+        .cardUITests,
         .productDetailsUI,
         .productDetailsUITests,
         .buttonWithSheet,
@@ -308,6 +314,13 @@ private extension Product {
         ]
     )
     
+    static let cardUI = library(
+        name: .cardUI,
+        targets: [
+            .cardUI
+        ]
+    )
+    
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
@@ -459,6 +472,7 @@ private extension Product {
         targets: [
             .activateSlider,
             .accountInfoPanel,
+            .cardUI,
             .productDetailsUI,
             .cardGuardianUI,
             .productProfileComponents,
@@ -592,6 +606,13 @@ private extension Product {
         name: .transferPublicKey,
         targets: [
             .transferPublicKey,
+        ]
+    )
+    
+    static let getProductListByTypeService = library(
+        name: .getProductListByTypeService,
+        targets: [
+            .getProductListByTypeService
         ]
     )
     
@@ -1130,6 +1151,32 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.urlRequestFactoryTests)"
     )
+    
+    static let getProductListByTypeService = target(
+        name: .getProductListByTypeService,
+        dependencies: [
+            .services
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeService)"
+    )
+    
+    static let getProductListByTypeServiceTests = testTarget(
+        name: .getProductListByTypeServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeService
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
 
     // MARK: - UI
     
@@ -1181,6 +1228,31 @@ private extension Target {
             .services,
         ],
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
+    )
+    
+    static let cardUI = target(
+        name: .cardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.cardUI)"
+    )
+
+    static let cardUITests = testTarget(
+        name: .cardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardUI,
+            .services,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.cardUITests)"
     )
     
     static let productDetailsUI = target(
@@ -1526,6 +1598,7 @@ private extension Target {
         dependencies: [
             .activateSlider,
             .accountInfoPanel,
+            .cardUI,
             .productDetailsUI,
             .cardGuardianUI,
             .topUpCardUI,
@@ -1747,6 +1820,10 @@ private extension Target.Dependency {
         name: .accountInfoPanel
     )
     
+    static let cardUI = byName(
+        name: .cardUI
+    )
+
     static let productDetailsUI = byName(
         name: .productDetailsUI
     )
@@ -1913,6 +1990,10 @@ private extension Target.Dependency {
         name: .urlRequestFactory
     )
     
+    static let getProductListByTypeService = byName(
+        name: .getProductListByTypeService
+    )
+    
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -1975,6 +2056,9 @@ private extension String {
 
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
+    
+    static let cardUI = "CardUI"
+    static let cardUITests = "CardUITests"
 
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
@@ -2101,6 +2185,9 @@ private extension String {
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
 
+    static let getProductListByTypeService = "GetProductListByTypeService"
+    static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
+
     // MARK: - Tools
     
     static let foraTools = "ForaTools"
@@ -2151,6 +2238,10 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_identified_collections,
         from: .init(0, 4, 1)
     )
+    static let nonEmpty = Package.Dependency.package(
+        url: .pointFreeGitHub + .swift_nonempty,
+        from: .init(0, 5, 0)
+    )
     static let snapshotTesting = Package.Dependency.package(
         url: .pointFreeGitHub + .swift_snapshot_testing,
         from: .init(1, 10, 0)
@@ -2191,6 +2282,10 @@ private extension Target.Dependency {
         name: .identifiedCollections,
         package: .swift_identified_collections
     )
+    static let nonEmpty = product(
+        name: .nonEmpty,
+        package: .swift_nonempty
+    )
     static let snapshotTesting = product(
         name: .snapshotTesting,
         package: .swift_snapshot_testing
@@ -2228,6 +2323,9 @@ private extension String {
     
     static let identifiedCollections = "IdentifiedCollections"
     static let swift_identified_collections = "swift-identified-collections"
+    
+    static let nonEmpty = "NonEmpty"
+    static let swift_nonempty = "swift-nonempty"
     
     static let snapshotTesting = "SnapshotTesting"
     static let swift_snapshot_testing = "swift-snapshot-testing"

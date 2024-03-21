@@ -37,16 +37,16 @@ final class AnywayPaymentIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = AnywayPaymentState<TestPayment>
+    private typealias State = AnywayPaymentState<Payment>
     private typealias Event = AnywayPaymentEvent<CreateAnywayTransferResponse>
-    private typealias Effect = AnywayPaymentEffect<TestPayment>
+    private typealias Effect = AnywayPaymentEffect<Payment>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
     
-    private typealias Reducer = AnywayPaymentReducer<TestPayment, CreateAnywayTransferResponse>
+    private typealias Reducer = AnywayPaymentReducer<Payment, CreateAnywayTransferResponse>
     
-    private typealias EffectHandler = AnywayPaymentEffectHandler<TestPayment, CreateAnywayTransferResponse>
+    private typealias EffectHandler = AnywayPaymentEffectHandler<Payment, CreateAnywayTransferResponse>
     private typealias CreateAnywayTransferSpy = Spy<EffectHandler.CreateAnywayTransferPayload, EffectHandler.CreateAnywayTransferResult>
     private typealias MakeTransferSpy = Spy<EffectHandler.MakeTransferPayload, EffectHandler.MakeTransferResult>
 

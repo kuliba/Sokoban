@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
+@available(*, deprecated, message: "Use `PrepaymentOptionsEffect` from `UtilityPayment` module")
 public enum PrePaymentOptionsEffect<Operator>
 where Operator: Identifiable {
     

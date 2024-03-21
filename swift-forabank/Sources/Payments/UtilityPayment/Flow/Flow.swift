@@ -9,7 +9,7 @@ import ForaTools
 
 public struct Flow<Destination> {
     
-    private(set) var stack: Stack<Destination>
+    public private(set) var stack: Stack<Destination>
     
     public init(stack: Stack<Destination> = .init([])) {
         
@@ -24,6 +24,8 @@ public extension Flow {
         get { stack.top }
         set { stack.top = newValue }
     }
+    
+    var isEmpty: Bool { stack.isEmpty }
     
     mutating func push(_ destination: Destination) {
         

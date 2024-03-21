@@ -331,6 +331,13 @@
         "identifier" : "UtilityPaymentTests",
         "name" : "UtilityPaymentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProductListByTypeServiceTests",
+        "name" : "GetProductListByTypeServiceTests"
+      }
     }
   ],
   "version" : 1

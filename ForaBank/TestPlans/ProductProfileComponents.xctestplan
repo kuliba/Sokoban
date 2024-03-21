@@ -46,6 +46,13 @@
         "identifier" : "ProductDetailsUITests",
         "name" : "ProductDetailsUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardUITests",
+        "name" : "CardUITests"
+      }
     }
   ],
   "version" : 1
