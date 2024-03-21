@@ -1,0 +1,11 @@
+//
+//  PaymentEffect.swift
+//
+//
+//  Created by Igor Malyarov on 21.03.2024.
+//
+
+enum PaymentEffect: Equatable {
+    
+    case parameter(PaymentParameterEffect)
+}
