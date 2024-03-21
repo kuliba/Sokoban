@@ -87,6 +87,98 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertTrue(sut.hasTemplate(withID: templateID))
     }
     
+    typealias PPIcon = Payments.ParameterHeader.Icon
+    
+    func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
+        
+        let source = Payments.Operation.Source.sfp(phone: "123", bankId: .foraBankId)
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForOperation(source: source)
+        
+        XCTAssertNil(icon)
+    }
+    
+    func test_getHeaderIconForOperation_sfpNonForaBank_returnsSbpIcon() {
+        
+        let source = Payments.Operation.Source.sfp(phone: "123", bankId: "123123123")
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForOperation(source: source)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForOperation_otherSource_returnsSbpIcon() {
+        
+        let source = Payments.Operation.Source.avtodor
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForOperation(source: source)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForOperation_nilSource_returnsSbpIcon() {
+        
+        let source: Payments.Operation.Source? = nil
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForOperation(source: source)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
+    //getHeaderIconForParameters:
+    
+    func test_getHeaderIconForParameters_emptyParameters_returnsNil() {
+        
+        let parameters: [PaymentsParameterRepresentable] = []
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForParameters(parameters)
+        
+        XCTAssertNil(icon)
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
+        
+        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora()
+        let parameters: [PaymentsParameterRepresentable] = [parameter]
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForParameters(parameters)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
+        
+        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora(value: .foraBankId)
+        let parameters: [PaymentsParameterRepresentable] = [parameter]
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForParameters(parameters)
+        
+        XCTAssertNil(icon)
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankWithEmptyVal_returnsSbpIcon() {
+        
+        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora(value: "")
+        let parameters: [PaymentsParameterRepresentable] = [parameter]
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForParameters(parameters)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
+        
+        let par1 = Payments.ParameterSelectBank.getTestParametersWithFora()
+        let par2 = Payments.ParameterSelectBank.getTestParametersWithFora(bankId: "qwe", value: "qwe", name: "gaz")
+        let parameters: [PaymentsParameterRepresentable] = [
+            par1, par2
+        ]
+        let sut: Model = .mockWithEmptyExcept()
+        let icon = sut.getHeaderIconForParameters(parameters)
+        
+        XCTAssertEqual(icon, .testSBPIcon)
+    }
+    
     // MARK: - Helpers
     
     private func makeTemplate(
@@ -115,5 +207,52 @@ extension Model {
     func hasTemplate(withID templateID: Int) -> Bool {
         
         paymentTemplates.value.first { $0.id == templateID } != nil
+    }
+}
+
+extension Payments.ParameterHeader.Icon: Equatable {
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case let (.name(l), .name(r)):
+            return l == r
+        default:
+            return false
+        }
+    }
+}
+
+private extension String {
+    
+    static let foraBankId = "100000000217"
+}
+
+private extension Payments.ParameterHeader.Icon {
+    
+    static let testSBPIcon: Self = .name("ic24Sbp")
+}
+
+private extension Payments.ParameterSelectBank {
+    
+    static func getTestParametersWithFora(
+        bankId: String = "BankRecipientID",
+        value: String = "1crt88888881",
+        name: String = "ФОРА-БАНК",
+        optionId: String = .foraBankId
+    ) -> PaymentsParameterRepresentable {
+        
+        Payments.ParameterSelectBank(
+            .init(
+                id: bankId,
+                value: value
+            ),
+            icon: .empty,
+            title: "Банк получателя",
+            options: [
+                .init(id: optionId, name: name, subtitle: nil, icon: .empty, searchValue: name)
+            ],
+            placeholder: "Начните ввод для поиска",
+            keyboardType: .normal
+        )
     }
 }

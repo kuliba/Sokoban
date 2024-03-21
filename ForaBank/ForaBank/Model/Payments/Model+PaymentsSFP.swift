@@ -17,12 +17,15 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
-            // header              
+            // header
+            let headerIcon: Payments.ParameterHeader.Icon? = getHeaderIconForOperation(source: operation.source)
+            
             let headerParameter: Payments.ParameterHeader = parameterHeader(
                 source: operation.source,
                 header: .init(
                     title: "Перевод по номеру телефона",
-                    icon: .name("ic24Sbp"))
+                    icon: headerIcon
+                )
             )
             
             // phone
@@ -33,7 +36,7 @@ extension Model {
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             
             let options = self.bankList.value.map( { Payments.ParameterSelectBank.Option(id: $0.id, name: $0.memberNameRus, subtitle: nil, icon: .init(with: $0.svgImage), searchValue: $0.memberNameRus)} )
-
+            
             let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banks), keyboardType: .normal)
             
             // product
@@ -65,7 +68,7 @@ extension Model {
     
     // update parameter value with source
     func paymentsProcessSourceReducerSFP(phone: String, bankId: BankData.ID, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
-
+        
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
             return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
@@ -87,7 +90,7 @@ extension Model {
             guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
                 return nil
             }
-        
+            
             var currencySymbol = amountParameter.currencySymbol
             var maxAmount = amountParameter.validator.maxAmount
             
@@ -117,14 +120,11 @@ extension Model {
             }
             
             return updatedAmountParameter
-
+            
         case Payments.Parameter.Identifier.header.rawValue:
-            let codeParameterId = Payments.Parameter.Identifier.code.rawValue
-            let parametersIds = parameters.map{ $0.id }
-            guard parametersIds.contains(codeParameterId) else {
-                return nil
-            }
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .name("ic24Sbp"))
+            
+            let headerIcon: Payments.ParameterHeader.Icon? = getHeaderIconForParameters(parameters)
+            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: headerIcon)
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             
@@ -134,14 +134,14 @@ extension Model {
             
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             guard let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
-               let bankParameterValue = bankParameter.value else {
+                  let bankParameterValue = bankParameter.value else {
                 return nil
             }
             
             if isForaBank(bankId: bankParameterValue) == true {
                 
                 return messageParameter.updated(isEditable: false)
-
+                
             } else {
                 
                 return messageParameter.updated(isEditable: true)
@@ -177,10 +177,10 @@ extension Model {
             return .remote(.start)
         }
     }
-
+    
     // process remote confirm step for payment to Fora clint
     func paymentsProcessRemoteStepSFP(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
-
+        
         var parameters = [PaymentsParameterRepresentable]()
         
         if let customerName = response.payeeName {
@@ -193,9 +193,9 @@ extension Model {
             
             parameters.append(customerParameter)
         }
-
+        
         if let amountValue = response.debitAmount,
-              let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
+           let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
             
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
@@ -266,7 +266,7 @@ extension Model {
                   let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) else {
                 return nil
             }
-
+            
             return Payments.ParameterInfo(
                 .init(id: additionalData.fieldName, value: amountFormatted),
                 icon: .local("ic24Coins"),
@@ -283,7 +283,7 @@ extension Model {
         }
     }
     
-    // resets visible items and order 
+    // resets visible items and order
     func paymentsProcessOperationResetVisibleSFP(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         // check if current step stage is confirm
@@ -304,7 +304,7 @@ extension Model {
                     Payments.Parameter.Identifier.code.rawValue]
             
         } else {
-
+            
             return [Payments.Parameter.Identifier.header.rawValue,
                     Payments.Parameter.Identifier.sfpPhone.rawValue,
                     Payments.Parameter.Identifier.sftRecipient.rawValue,
@@ -313,7 +313,6 @@ extension Model {
                     Payments.Parameter.Identifier.fee.rawValue,
                     Payments.Parameter.Identifier.code.rawValue]
         }
-
     }
     
     // debug mock
@@ -328,6 +327,36 @@ extension Model {
         )
     }
 }
+
+ extension Model {
+    
+     func getHeaderIconForOperation(source: Payments.Operation.Source?) -> Payments.ParameterHeader.Icon? {
+         
+         if case let .sfp(_, bankId) = source {
+             return (bankId != .foraBankId) ? .name("ic24Sbp") : nil
+             
+         } else {
+             return .name("ic24Sbp")
+         }
+     }
+     
+     func getHeaderIconForParameters(_ parameters: [PaymentsParameterRepresentable]) -> Payments.ParameterHeader.Icon? {
+         
+         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+       
+         if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
+            let bankParameterValue = bankParameter.value,
+            bankParameterValue != .foraBankId {
+             
+            return .name("ic24Sbp")
+             
+         } else {
+             return nil
+         }
+     }
+}
+
+
 
 extension Payments.ParameterAmount {
     
@@ -347,7 +376,7 @@ extension Payments.ParameterAmount {
 extension Model {
     
     func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
-    
+        
         switch source {
         case let .template(templateID):
             let template = paymentTemplates.value.first { $0.id == templateID }
@@ -357,4 +386,9 @@ extension Model {
             return productId
         }
     }
+}
+
+private extension String {
+    
+    static let foraBankId = "100000000217"
 }
