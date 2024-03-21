@@ -3,6 +3,7 @@
 extension ProductResponse {
     
     static let card: Self = .init(
+        serial: "a573caa2b73271cf22d69ee59065083f",
         products: [
             ProductResponse.Product(
                 commonProperties: ProductResponse.CommonProperties(

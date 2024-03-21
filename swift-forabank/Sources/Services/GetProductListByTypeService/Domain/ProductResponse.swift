@@ -9,10 +9,14 @@ import Foundation
 
 public struct ProductResponse: Equatable {
     
+    public let serial: String?
     public let products: [Product]
     
-    public init(products: [Product]) {
-        
+    public init(
+        serial: String?,
+        products: [Product]
+    ) {
+        self.serial = serial
         self.products = products
     }
     
