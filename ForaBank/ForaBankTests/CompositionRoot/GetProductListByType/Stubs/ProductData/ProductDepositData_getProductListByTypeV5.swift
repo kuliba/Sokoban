@@ -1,14 +1,14 @@
 @testable import ForaBank
 import Foundation
 
-public extension Array where Element == ProductData {
+public extension Array where Element == ProductDepositData {
     
     static let depositStubs: Self = [.depositStub1, .depositStub2, .depositStub3, .depositStub4, .depositStub5]
 }
 
-extension ProductData {
-    
-    static let depositStub1 = ProductData(
+extension ProductDepositData {
+        
+    static let depositStub1 = ProductDepositData(
         id: 20000058973,
         productType: .deposit,
         number: "00081_224RUB0000/24",
@@ -34,13 +34,23 @@ extension ProductData {
         background: [
             ColorData(description: "FF3636")
         ],
+        depositProductId: 10000003006,
+        depositId: 20000058973,
+        interestRate: 7.1,
+        accountId: 20000102037,
+        creditMinimumAmount: 2000.0,
+        minimumBalance: 5000.0,
+        endDate: Date.dateUTC(with: 1709154000000),
+        endDateNf: false,
+        isDemandDeposit: false,
+        isDebitInterestAvailable: false,
         order: 0,
-        isVisible: true,
+        visibility: true,
         smallDesignMd5hash: "9cd404ac011454ad95146de6560dd794",
         smallBackgroundDesignHash: "714bbb74c410e835ce7f8e47dafe27a6"
     )
     
-    static let depositStub2 = ProductData(
+    static let depositStub2 = ProductDepositData(
         id: 20000058906,
         productType: .deposit,
         number: "00054_224RUB0000/24",
@@ -66,13 +76,23 @@ extension ProductData {
         background: [
             ColorData(description: "FF3636")
         ],
+        depositProductId: 10000003006,
+        depositId: 20000058906,
+        interestRate: 7.1,
+        accountId: 20000101933,
+        creditMinimumAmount: 2000.0,
+        minimumBalance: 5000.0,
+        endDate: Date.dateUTC(with: 1708722000000),
+        endDateNf: false,
+        isDemandDeposit: false,
+        isDebitInterestAvailable: false,
         order: 1,
-        isVisible: true,
+        visibility: true,
         smallDesignMd5hash: "9cd404ac011454ad95146de6560dd794",
         smallBackgroundDesignHash: "714bbb74c410e835ce7f8e47dafe27a6"
     )
     
-    static let depositStub3 = ProductData(
+    static let depositStub3 = ProductDepositData(
         id: 20000058836,
         productType: .deposit,
         number: "00008_305RUB5200/24",
@@ -98,13 +118,23 @@ extension ProductData {
         background: [
             ColorData(description: "FF3636")
         ],
+        depositProductId: 10000003792,
+        depositId: 20000058836,
+        interestRate: 12.2,
+        accountId: 20000101822,
+        creditMinimumAmount: 5000.0,
+        minimumBalance: 10000.0,
+        endDate: Date.dateUTC(with: 1715893200000),
+        endDateNf: false,
+        isDemandDeposit: false,
+        isDebitInterestAvailable: true,
         order: 2,
-        isVisible: true,
+        visibility: true,
         smallDesignMd5hash: "9cd404ac011454ad95146de6560dd794",
         smallBackgroundDesignHash: "714bbb74c410e835ce7f8e47dafe27a6"
     )
     
-    static let depositStub4 = ProductData(
+    static let depositStub4 = ProductDepositData(
         id: 20000058832,
         productType: .deposit,
         number: "00032_224RUB5200/24",
@@ -130,13 +160,23 @@ extension ProductData {
         background: [
             ColorData(description: "FF3636")
         ],
+        depositProductId: 10000003006,
+        depositId: 20000058832,
+        interestRate: 0.01,
+        accountId: 20000102599,
+        creditMinimumAmount: 2000.0,
+        minimumBalance: 5000.0,
+        endDate: nil,
+        endDateNf: true,
+        isDemandDeposit: false,
+        isDebitInterestAvailable: false,
         order: 3,
-        isVisible: true,
+        visibility: true,
         smallDesignMd5hash: "9cd404ac011454ad95146de6560dd794",
         smallBackgroundDesignHash: "714bbb74c410e835ce7f8e47dafe27a6"
     )
     
-    static let depositStub5 = ProductData(
+    static let depositStub5 = ProductDepositData(
         id: 20000058830,
         productType: .deposit,
         number: "00030_224RUB0000/24",
@@ -162,8 +202,18 @@ extension ProductData {
         background: [
             ColorData(description: "FF3636")
         ],
+        depositProductId: 10000003006,
+        depositId: 20000058830,
+        interestRate: 7.1,
+        accountId: 20000101813,
+        creditMinimumAmount: 2000.0,
+        minimumBalance: 5000.0,
+        endDate: Date.dateUTC(with: 1708117200000),
+        endDateNf: false,
+        isDemandDeposit: false,
+        isDebitInterestAvailable: false,
         order: 4,
-        isVisible: true,
+        visibility: true,
         smallDesignMd5hash: "9cd404ac011454ad95146de6560dd794",
         smallBackgroundDesignHash: "714bbb74c410e835ce7f8e47dafe27a6"
     )
