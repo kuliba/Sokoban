@@ -50,8 +50,8 @@ extension CarouselReducer {
                 state.selector.selected = groupID
             }
             
-        case let .update(products, sticker: sticker):
-            state = .init(products: products, sticker: sticker)
+        case let .update(products):
+            state = .init(products: products)
         }
         
         return (state, effect)
