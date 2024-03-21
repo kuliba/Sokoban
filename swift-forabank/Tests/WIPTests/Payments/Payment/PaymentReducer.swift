@@ -62,6 +62,9 @@ extension PaymentReducer {
         var effect: Effect?
         
         switch event {
+        case let .input(inputParameterEvent):
+            break
+            
         case let .select(selectParameterEvent):
             if case let .select(selectParameter) = state[.select] {
                 

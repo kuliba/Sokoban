@@ -7,5 +7,6 @@
 
 enum PaymentParameterEffect: Equatable {
     
+    case input(InputParameterEffect)
     case select(SelectParameterEffect)
 }

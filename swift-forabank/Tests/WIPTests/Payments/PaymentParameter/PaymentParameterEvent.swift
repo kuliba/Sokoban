@@ -7,5 +7,6 @@
 
 enum PaymentParameterEvent: Equatable {
     
+    case input(InputParameterEvent)
     case select(SelectParameterEvent)
 }

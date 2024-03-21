@@ -7,6 +7,7 @@
 
 enum PaymentParameter: Equatable {
     
+    case input(InputParameter)
     case select(SelectParameter)
 }
 
@@ -15,12 +16,14 @@ extension PaymentParameter: Identifiable {
     var id: ID {
         
         switch self {
+        case .input:  return .input
         case .select: return .select
         }
     }
     
     enum ID {
         
+        case input
         case select
     }
 }
