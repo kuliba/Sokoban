@@ -9,18 +9,105 @@ import XCTest
 
 final class PaymentReducerTests: XCTestCase {
     
+    // MARK: InputParameter
+    
+    func test_inputParameterEvent_edit_shouldNotCallParameterReduceWithParameterAndEventOnMissingInputParameter() {
+        
+        let state = makeState()
+        let event = inputEvent()
+        let (sut, inputSpy, _) = makeSUT()
+        
+        _ = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(inputSpy.payloads.map(\.0), [])
+        XCTAssertNoDiff(inputSpy.payloads.map(\.1), [])
+        XCTAssertNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotChangeStateOnMissingInputParameter() {
+        
+        let state = makeState()
+        let event = inputEvent()
+        
+        assertState(.parameter(event), on: state)
+        XCTAssertNil(parameter(withID: .input, in: state))
+        
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotDeliverEffectOnMissingInputParameter() {
+        
+        let state = makeState()
+        let event = inputEvent()
+        
+        assert(.parameter(event), on: state, effect: nil)
+        XCTAssertNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldCallParameterReduceWithParameterAndEventOnPresentInputParameter() {
+        
+        let input = makeInputParameter()
+        let state = makeState(.input(input))
+        let event = InputParameterEvent.edit("abc123")
+        let (sut, inputSpy, _) = makeSUT()
+        
+        _ = sut.reduce(state, .parameter(.input(event)))
+        
+        XCTAssertNoDiff(inputSpy.payloads.map(\.0), [input])
+        XCTAssertNoDiff(inputSpy.payloads.map(\.1), [event])
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldChangeInputParameterOnPresentInputParameter() {
+        
+        let newInput = makeInputParameter()
+        let state = makeState(.input(makeInputParameter()))
+        let event = inputEvent()
+        let (sut, _,_) = makeSUT(inputParameterReduceStub: (newInput, .none))
+        
+        assertState(sut: sut, .parameter(event), on: state) {
+            
+            $0 = .init(parameters: [.input(newInput)])
+        }
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldDeliverEffectOnPresentInputParameter_nonNil() {
+        
+        let state = makeState(.input(makeInputParameter()))
+        let event = inputEvent()
+        let effect = InputParameterEffect.effect
+        let (sut, _,_) = makeSUT(
+            inputParameterReduceStub: (makeInputParameter(), effect)
+        )
+        
+        assert(sut: sut, .parameter(event), on: state, effect: .parameter(.input(effect)))
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotDeliverEffectOnPresentInputParameter_nil() {
+        
+        let state = makeState(.input(makeInputParameter()))
+        let event = inputEvent()
+        let (sut, _,_) = makeSUT(
+            inputParameterReduceStub: (makeInputParameter(), nil)
+        )
+        
+        assert(sut: sut, .parameter(event), on: state, effect: nil)
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
     // MARK: SelectParameter
     
     func test_selectParameterEvent_toggleChevron_shouldNotCallParameterReduceWithParameterAndEventOnMissingSelectParameter() {
         
         let state = makeState()
         let event = selectEvent()
-        let (sut, spy) = makeSUT()
+        let (sut, _, selectSpy) = makeSUT()
         
         _ = sut.reduce(state, event)
         
-        XCTAssertNoDiff(spy.payloads.map(\.0), [])
-        XCTAssertNoDiff(spy.payloads.map(\.1), [])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.0), [])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.1), [])
         XCTAssertNil(parameter(withID: .select, in: state))
     }
     
@@ -48,12 +135,12 @@ final class PaymentReducerTests: XCTestCase {
         let select = makeSelectParameter()
         let state = makeState(.select(select))
         let event = SelectParameterEvent.toggleChevron
-        let (sut, spy) = makeSUT()
+        let (sut, _, selectSpy) = makeSUT()
         
         _ = sut.reduce(state, .parameter(.select(event)))
         
-        XCTAssertNoDiff(spy.payloads.map(\.0), [select])
-        XCTAssertNoDiff(spy.payloads.map(\.1), [event])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.0), [select])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.1), [event])
         XCTAssertNotNil(parameter(withID: .select, in: state))
     }
     
@@ -62,7 +149,7 @@ final class PaymentReducerTests: XCTestCase {
         let newSelect = makeSelectParameter()
         let state = makeState(.select(makeSelectParameter()))
         let event = selectEvent()
-        let (sut, _) = makeSUT(selectParameterReduceStub: (newSelect, .none))
+        let (sut, _,_) = makeSUT(selectParameterReduceStub: (newSelect, .none))
         
         assertState(sut: sut, .parameter(event), on: state) {
             
@@ -76,7 +163,7 @@ final class PaymentReducerTests: XCTestCase {
         let state = makeState(.select(makeSelectParameter()))
         let event = selectEvent()
         let effect = SelectParameterEffect.effect
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             selectParameterReduceStub: (makeSelectParameter(), effect)
         )
         
@@ -88,7 +175,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let state = makeState(.select(makeSelectParameter()))
         let event = selectEvent()
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             selectParameterReduceStub: (makeSelectParameter(), nil)
         )
         
@@ -107,37 +194,58 @@ final class PaymentReducerTests: XCTestCase {
     private typealias ParameterReduceSpy = Spy<(PaymentParameter, PaymentParameterEvent), Void>
     private typealias ParameterReduceStub = (PaymentParameter, PaymentParameterEffect?)
     
+    private typealias InputParameterReduceSpy = Spy<(InputParameter, InputParameterEvent), Void>
+    private typealias InputParameterReduceStub = (InputParameter, InputParameterEffect?)
+    
     private typealias SelectParameterReduceSpy = Spy<(SelectParameter, SelectParameterEvent), Void>
     private typealias SelectParameterReduceStub = (SelectParameter, SelectParameterEffect?)
     
     private func makeSUT(
+        inputParameterReduceStub: InputParameterReduceStub? = nil,
         selectParameterReduceStub: SelectParameterReduceStub? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        inputParameterReduceSpy: InputParameterReduceSpy,
         selectParameterReduceSpy: SelectParameterReduceSpy
     ) {
-        let parameterReduceStub = selectParameterReduceStub ?? makeParameterReduceStub()
+        let inputParameterReduceStub = inputParameterReduceStub ?? makeInputParameterReduceStub()
+        let inputParameterReduceSpy = InputParameterReduceSpy()
+        
+        let selectParameterReduceStub = selectParameterReduceStub ?? makeSelectParameterReduceStub()
         let selectParameterReduceSpy = SelectParameterReduceSpy()
+        
         let sut = SUT(
             parameterReduce: .init(
+                inputReduce: {
+                    
+                    inputParameterReduceSpy.process(($0, $1)) { _ in }
+                    return inputParameterReduceStub
+                },
                 selectReduce: {
                     
                     selectParameterReduceSpy.process(($0, $1)) { _ in }
-                    return parameterReduceStub
+                    return selectParameterReduceStub
                 }
             )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(inputParameterReduceSpy, file: file, line: line)
         trackForMemoryLeaks(selectParameterReduceSpy, file: file, line: line)
         
-        return (sut, selectParameterReduceSpy)
+        return (sut, inputParameterReduceSpy, selectParameterReduceSpy)
     }
     
-    private func makeParameterReduceStub(
-        _ parameter: PaymentParameter? = nil,
+    private func makeInputParameterReduceStub(
+        _ effect: InputParameterEffect? = nil
+    ) -> InputParameterReduceStub {
+        
+        (makeInputParameter(), effect)
+    }
+    
+    private func makeSelectParameterReduceStub(
         _ effect: SelectParameterEffect? = nil
     ) -> SelectParameterReduceStub {
         
@@ -151,11 +259,24 @@ final class PaymentReducerTests: XCTestCase {
         .init(parameters: parameters)
     }
     
-    private func selectEvent(
-        _ paymentParameterEvent: PaymentParameterEvent? = nil
+    private func inputEvent(
+        _ value: String = UUID().uuidString
     ) -> PaymentParameterEvent {
         
-        paymentParameterEvent ?? .select(.toggleChevron)
+        .input(.edit(value))
+    }
+    
+    private func selectEvent(
+    ) -> PaymentParameterEvent {
+        
+        .select(.toggleChevron)
+    }
+    
+    private func makeInputParameter(
+        value: String = UUID().uuidString
+    ) -> InputParameter {
+        
+        .init(value: value)
     }
     
     private func makeSelectParameter(
