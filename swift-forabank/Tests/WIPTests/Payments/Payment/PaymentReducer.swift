@@ -9,7 +9,7 @@ final class PaymentReducer {
     
     let parameterReduce: ParameterReduce
     
-    init(parameterReduce: @escaping ParameterReduce) {
+    init(parameterReduce: ParameterReduce) {
         
         self.parameterReduce = parameterReduce
     }
@@ -36,11 +36,19 @@ extension PaymentReducer {
 
 extension PaymentReducer {
     
-    typealias ParameterReduce = (PaymentParameter, PaymentParameterEvent) -> (PaymentParameter, PaymentParameterEffect?)
+    struct ParameterReduce {
+        
+        let selectReduce: SelectReduce
+    }
     
     typealias State = Payment
     typealias Event = PaymentEvent
     typealias Effect = PaymentEffect
+}
+
+extension PaymentReducer.ParameterReduce {
+    
+    typealias SelectReduce = (SelectParameter, SelectParameterEvent) -> (SelectParameter, SelectParameterEffect?)
 }
 
 extension PaymentReducer {
@@ -55,11 +63,11 @@ extension PaymentReducer {
         
         switch event {
         case let .select(selectParameterEvent):
-            if let selectParameter = state[.select] {
+            if case let .select(selectParameter) = state[.select] {
                 
-                let (s, e) = parameterReduce(selectParameter, .select(selectParameterEvent))
-                state[.select] = s
-                effect = e.map { .parameter($0) }
+                let (s, e) = parameterReduce.selectReduce(selectParameter, selectParameterEvent)
+                state[.select] = .select(s)
+                effect = e.map { .parameter(.select($0)) }
             }
         }
         
