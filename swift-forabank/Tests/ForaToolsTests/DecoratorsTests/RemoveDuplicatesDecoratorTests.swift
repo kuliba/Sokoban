@@ -70,11 +70,11 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
             concurrentQueue.async {
                 
                 sut { payload, completion in
+                    
                     Thread.sleep(forTimeInterval: 0.001)
                     spy.process(payload, completion: completion)
                     lastPayloadProcessed = payload
-                    
-                }(payload, { _ in exp.fulfill()})
+                }(payload) { _ in exp.fulfill() }
                 spy.complete(with: makeResponse())
             }
         }
