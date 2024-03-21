@@ -13,8 +13,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotCallParameterReduceWithParameterAndEventOnMissingInputParameter() {
         
-        let state = makeState()
-        let event = inputEvent()
+        let (state, event) = (makeState(), inputEvent())
         let (sut, inputSpy, _) = makeSUT()
         
         _ = sut.reduce(state, event)
@@ -26,18 +25,15 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotChangeStateOnMissingInputParameter() {
         
-        let state = makeState()
-        let event = inputEvent()
+        let (state, event) = (makeState(), inputEvent())
         
         assertState(.parameter(event), on: state)
         XCTAssertNil(parameter(withID: .input, in: state))
-        
     }
     
     func test_inputParameterEvent_edit_shouldNotDeliverEffectOnMissingInputParameter() {
         
-        let state = makeState()
-        let event = inputEvent()
+        let (state, event) = (makeState(), inputEvent())
         
         assert(.parameter(event), on: state, effect: nil)
         XCTAssertNil(parameter(withID: .input, in: state))
@@ -100,8 +96,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotCallParameterReduceWithParameterAndEventOnMissingSelectParameter() {
         
-        let state = makeState()
-        let event = selectEvent()
+        let (state, event) = (makeState(), selectEvent())
         let (sut, _, selectSpy) = makeSUT()
         
         _ = sut.reduce(state, event)
@@ -113,18 +108,15 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotChangeStateOnMissingSelectParameter() {
         
-        let state = makeState()
-        let event = selectEvent()
+        let (state, event) = (makeState(), selectEvent())
         
         assertState(.parameter(event), on: state)
         XCTAssertNil(parameter(withID: .select, in: state))
-        
     }
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnMissingSelectParameter() {
         
-        let state = makeState()
-        let event = selectEvent()
+        let (state, event) = (makeState(), selectEvent())
         
         assert(.parameter(event), on: state, effect: nil)
         XCTAssertNil(parameter(withID: .select, in: state))
