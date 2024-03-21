@@ -36,21 +36,9 @@ extension PaymentReducer {
 
 extension PaymentReducer {
     
-    struct ParameterReduce {
-        
-        let inputReduce: InputReduce
-        let selectReduce: SelectReduce
-    }
-    
     typealias State = Payment
     typealias Event = PaymentEvent
     typealias Effect = PaymentEffect
-}
-
-extension PaymentReducer.ParameterReduce {
-    
-    typealias InputReduce = (InputParameter, InputParameterEvent) -> (InputParameter, InputParameterEffect?)
-    typealias SelectReduce = (SelectParameter, SelectParameterEvent) -> (SelectParameter, SelectParameterEffect?)
 }
 
 extension PaymentReducer {
