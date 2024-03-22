@@ -607,20 +607,12 @@ struct ProductView: View {
         }
         
         BackView(
+            cardInfo: viewModel.cardInfo,
+            actions: .init(
+                header: viewModel.copyCardNumberToClipboard,
+                cvv: viewModel.showCVVButtonTap),
             modifierConfig: modifierConfig(false),
-            config: config,
-            header: {
-                
-                HeaderBackView.init(
-                    cardInfo: viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard,
-                    config: config
-                )
-            },
-            cvv: {
-                
-                CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
-            }
+            config: config
         )
     }
     
