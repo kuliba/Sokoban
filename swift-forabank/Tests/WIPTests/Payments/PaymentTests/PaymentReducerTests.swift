@@ -9,7 +9,7 @@ import XCTest
 
 final class PaymentReducerTests: XCTestCase {
     
-    // MARK: InputParameter
+    // MARK: InputParameterEvent
     
     func test_inputParameterEvent_edit_shouldNotCallParameterReduceWithParameterAndEventOnMissingInputParameter() {
         
@@ -92,7 +92,7 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNotNil(parameter(withID: .input, in: state))
     }
     
-    // MARK: SelectParameter
+    // MARK: SelectParameterEvent
     
     func test_selectParameterEvent_toggleChevron_shouldNotCallParameterReduceWithParameterAndEventOnMissingSelectParameter() {
         
@@ -249,33 +249,6 @@ final class PaymentReducerTests: XCTestCase {
     ) -> SUT.State {
         
         .init(parameters: parameters)
-    }
-    
-    private func inputEvent(
-        _ value: String = UUID().uuidString
-    ) -> PaymentParameterEvent {
-        
-        .input(.edit(value))
-    }
-    
-    private func selectEvent(
-    ) -> PaymentParameterEvent {
-        
-        .select(.toggleChevron)
-    }
-    
-    private func makeInputParameter(
-        value: String = UUID().uuidString
-    ) -> InputParameter {
-        
-        .init(value: value)
-    }
-    
-    private func makeSelectParameter(
-        id: String = UUID().uuidString
-    ) -> SelectParameter {
-        
-        .init(id: id)
     }
     
     private func parameter(

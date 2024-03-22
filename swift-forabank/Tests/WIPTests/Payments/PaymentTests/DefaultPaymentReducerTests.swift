@@ -1,6 +1,6 @@
 //
 //  DefaultPaymentReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 21.03.2024.
 //
@@ -116,17 +116,15 @@ final class DefaultPaymentReducerTests: XCTestCase {
     private typealias ParameterReduceSpy = Spy<(PaymentParameter, PaymentParameterEvent), Void>
     private typealias ParameterReduceStub = (PaymentParameter, PaymentParameterEffect?)
     
-    private typealias InputParameterReduceSpy = Spy<(InputParameter, InputParameterEvent), Void>
     private typealias InputParameterReduceStub = (InputParameter, InputParameterEffect?)
     
-    private typealias SelectParameterReduceSpy = Spy<(SelectParameter, SelectParameterEvent), Void>
     private typealias SelectParameterReduceStub = (SelectParameter, SelectParameterEffect?)
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
-
+        
         let sut = SUT(parameterReduce: .default)
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -153,33 +151,6 @@ final class DefaultPaymentReducerTests: XCTestCase {
     ) -> SUT.State {
         
         .init(parameters: parameters)
-    }
-    
-    private func inputEvent(
-        _ value: String = UUID().uuidString
-    ) -> PaymentParameterEvent {
-        
-        .input(.edit(value))
-    }
-    
-    private func selectEvent(
-    ) -> PaymentParameterEvent {
-        
-        .select(.toggleChevron)
-    }
-    
-    private func makeInputParameter(
-        value: String = UUID().uuidString
-    ) -> InputParameter {
-        
-        .init(value: value)
-    }
-    
-    private func makeSelectParameter(
-        id: String = UUID().uuidString
-    ) -> SelectParameter {
-        
-        .init(id: id)
     }
     
     private func parameter(
