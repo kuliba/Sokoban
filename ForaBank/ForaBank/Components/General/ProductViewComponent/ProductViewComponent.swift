@@ -587,21 +587,11 @@ struct ProductView: View {
         
         FrontView(
             name: viewModel.cardInfo.name,
-            balance: .init(viewModel.footer.balance),
+            headerDetails: viewModel.header,
+            footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
-            config: config,
-            headerView: { HeaderView(config: config, header: viewModel.header) },
-            footerView: {
-                FooterView(
-                    config: config,
-                    footer: .init(
-                        balance: $0.rawValue,
-                        interestRate: viewModel.footer.interestRate,
-                        paymentSystem: viewModel.footer.paymentSystem
-                    )
-                )
-            },
-            statusActionView: statusView
+            statusActionView: statusView, 
+            config: config
         )
         .animation(
             .linear(duration: 0.5),
