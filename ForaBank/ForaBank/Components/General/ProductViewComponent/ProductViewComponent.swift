@@ -585,23 +585,13 @@ struct ProductView: View {
 
     var body: some View {
         
-        FrontView(
+        ProductFrontView(
             name: viewModel.cardInfo.name,
-            balance: .init(viewModel.footer.balance),
+            headerDetails: viewModel.header,
+            footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
-            config: config,
-            headerView: { HeaderView(config: config, header: viewModel.header) },
-            footerView: {
-                FooterView(
-                    config: config,
-                    footer: .init(
-                        balance: $0.rawValue,
-                        interestRate: viewModel.footer.interestRate,
-                        paymentSystem: viewModel.footer.paymentSystem
-                    )
-                )
-            },
-            statusActionView: statusView
+            activationView: activationView,
+            config: config
         )
         .animation(
             .linear(duration: 0.5),
@@ -616,26 +606,18 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        BackView(
+        ProductBackView(
+            cardInfo: viewModel.cardInfo,
+            actions: .init(
+                header: viewModel.copyCardNumberToClipboard,
+                cvv: viewModel.showCVVButtonTap),
             modifierConfig: modifierConfig(false),
-            config: config,
-            header: {
-                
-                HeaderBackView.init(
-                    cardInfo: viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard,
-                    config: config
-                )
-            },
-            cvv: {
-                
-                CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
-            }
+            config: config
         )
     }
     
     @ViewBuilder
-    private func statusView() -> (some View)? {
+    private func activationView() -> (some View)? {
         
         viewModel.statusAction.map {
             
