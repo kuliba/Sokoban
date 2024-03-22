@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ProductFrontView<StatusAction: View>: View {
+public struct ProductFrontView<ActivationView: View>: View {
     
     let name: String
     let headerDetails: HeaderDetails
@@ -15,21 +15,21 @@ public struct ProductFrontView<StatusAction: View>: View {
     let modifierConfig: ModifierConfig
     let config: Config
     
-    let statusActionView: () -> StatusAction?
+    let activationView: () -> ActivationView?
     
     public init(
         name: String,
         headerDetails: HeaderDetails,
         footerDetails: FooterDetails,
         modifierConfig: ModifierConfig,
-        statusActionView: @escaping () -> StatusAction?,
+        activationView: @escaping () -> ActivationView?,
         config: Config
     ) {
         self.name = name
         self.headerDetails = headerDetails
         self.footerDetails = footerDetails
         self.modifierConfig = modifierConfig
-        self.statusActionView = statusActionView
+        self.activationView = activationView
         self.config = config
     }
     
@@ -41,7 +41,7 @@ public struct ProductFrontView<StatusAction: View>: View {
             config: config,
             headerView: { HeaderView(config: config, header: headerDetails) },
             footerView: { FooterView(config: config, footer: footerDetails) },
-            statusActionView: statusActionView
+            statusActionView: activationView
         )
     }
 }

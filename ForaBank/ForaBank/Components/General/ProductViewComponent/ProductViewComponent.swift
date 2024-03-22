@@ -590,7 +590,7 @@ struct ProductView: View {
             headerDetails: viewModel.header,
             footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
-            statusActionView: statusView, 
+            activationView: activationView,
             config: config
         )
         .animation(
@@ -617,7 +617,7 @@ struct ProductView: View {
     }
     
     @ViewBuilder
-    private func statusView() -> (some View)? {
+    private func activationView() -> (some View)? {
         
         viewModel.statusAction.map {
             
