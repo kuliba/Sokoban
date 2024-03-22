@@ -9,6 +9,40 @@ import XCTest
 
 final class PaymentReducerTests: XCTestCase {
     
+    // MARK: - Continue
+    
+    func test_continue_shouldNotChangeStateOnInvalidPayment() {
+        
+        let invalid = makeInvalidState()
+        
+        assertState(.continue, on: invalid)
+        XCTAssert(isInvalid(invalid))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnInvalidPayment() {
+        
+        let invalid = makeInvalidState()
+        
+        assert(.continue, on: invalid, effect: nil)
+        XCTAssert(isInvalid(invalid))
+    }
+    
+    func test_continue_shouldNotChangeStateOnValidPayment() {
+        
+        let valid = makeState()
+        
+        assertState(.continue, on: valid)
+        XCTAssert(isValid(valid))
+    }
+    
+    func test_continue_shouldDeliverEffectOnValidPayment() {
+        
+        let valid = makeState()
+        
+        assert(.continue, on: valid, effect: .continue(valid))
+        XCTAssert(isValid(valid))
+    }
+    
     // MARK: InputParameterEvent
     
     func test_inputParameterEvent_edit_shouldNotCallParameterReduceWithParameterAndEventOnMissingInputParameter() {
@@ -244,19 +278,40 @@ final class PaymentReducerTests: XCTestCase {
         (makeSelectParameter(), effect)
     }
     
+    private func makeInvalidState() -> State {
+        
+        .init(parameters: [
+            .input(makeInputParameter(isValid: false))
+        ])
+    }
+              
     private func makeState(
         _ parameters: PaymentParameter...
-    ) -> SUT.State {
+    ) -> State {
         
         .init(parameters: parameters)
     }
     
     private func parameter(
         withID id: PaymentParameter.ID,
-        in state: SUT.State
+        in state: State
     ) -> PaymentParameter? {
         
         state.parameters.first { $0.id == id }
+    }
+    
+    private func isValid(
+        _ state: State
+    ) -> Bool {
+        
+        return state.isValid
+    }
+    
+    private func isInvalid(
+        _ state: State
+    ) -> Bool {
+        
+        !isValid(state)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

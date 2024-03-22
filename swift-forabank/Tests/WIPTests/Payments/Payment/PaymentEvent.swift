@@ -7,5 +7,6 @@
 
 enum PaymentEvent: Equatable {
     
+    case `continue`
     case parameter(PaymentParameterEvent)
 }

@@ -11,6 +11,20 @@ enum PaymentParameter: Equatable {
     case select(SelectParameter)
 }
 
+extension PaymentParameter {
+    
+    var isValid: Bool {
+        
+        switch self {
+        case let .input(inputParameter):
+            return inputParameter.isValid
+            
+        case let .select(selectParameter):
+            return selectParameter.isValid
+        }
+    }
+}
+
 extension PaymentParameter: Identifiable {
     
     var id: ID {

@@ -8,4 +8,5 @@
 struct SelectParameter: Equatable {
     
     var id: String
+    var isValid: Bool
 }

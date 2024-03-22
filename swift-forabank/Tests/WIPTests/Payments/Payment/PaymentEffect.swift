@@ -7,5 +7,6 @@
 
 enum PaymentEffect: Equatable {
     
+    case `continue`(Payment)
     case parameter(PaymentParameterEffect)
 }

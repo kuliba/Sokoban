@@ -9,3 +9,8 @@ struct Payment: Equatable {
     
     var parameters: [PaymentParameter]
 }
+
+extension Payment {
+    
+    var isValid: Bool { parameters.allSatisfy { $0.isValid }}
+}

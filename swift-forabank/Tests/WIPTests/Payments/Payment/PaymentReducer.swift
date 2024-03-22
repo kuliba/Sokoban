@@ -26,6 +26,11 @@ extension PaymentReducer {
         var effect: Effect?
         
         switch event {
+        case .continue:
+            if state.isValid {
+                effect = .continue(state)
+            }
+            
         case let .parameter(paymentParameterEvent):
             (state, effect) = reduce(state, paymentParameterEvent)
         }

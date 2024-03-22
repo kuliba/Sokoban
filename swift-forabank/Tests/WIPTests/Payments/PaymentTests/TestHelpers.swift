@@ -21,15 +21,17 @@ func selectEvent(
 }
 
 func makeInputParameter(
-    value: String = UUID().uuidString
+    value: String = UUID().uuidString,
+    isValid: Bool = true
 ) -> InputParameter {
     
-    .init(value: value)
+    .init(value: value, isValid: isValid)
 }
 
 func makeSelectParameter(
-    id: String = UUID().uuidString
+    id: String = UUID().uuidString,
+    isValid: Bool = true
 ) -> SelectParameter {
     
-    .init(id: id)
+    .init(id: id, isValid: isValid)
 }
