@@ -2,126 +2,108 @@
 //  ContentView_Preview.swift
 //  CarouselPreview
 //
-//  Created by Disman Dmitry on 26.02.2024.
+//  Created by Andryusina Nataly on 22.03.2024.
 //
 
 import CarouselComponent
 import SwiftUI
 
-typealias ProductSeparators = [Product.ID.ProductType: [Product.ID]]
+typealias CarouselProduct = CarouselComponent.Product
 
-extension Array where Element == Product {
+extension CarouselProduct {
     
-    static let empty: Self = []
+    static let card: Self = .init(id: 1, order: 0, type: .card, cardType: .main)
+    static let cardAdditionalOther: Self = .init(id: 2, order: 1, type: .card, cardType: .additionalOther)
+    static let cardAdditionalSelf: Self = .init(id: 3, order: 2, type: .card, cardType: .additionalSelf)
+    static let cardAdditionalSelfAccOwn: Self = .init(id: 4, order: 3, type: .card, cardType: .additionalSelfAccOwn)
+    static let cardRegular: Self = .init(id: 5, order: 4, type: .card, cardType: .regular)
     
-    static let cards: Self = [
-        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
-        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3
-    ]
+    static let account1: Self = .init(id: 6, order: 0, type: .account, cardType: .none)
+    static let account2: Self = .init(id: 16, order: 0, type: .account, cardType: .none)
+    static let account3: Self = .init(id: 26, order: 0, type: .account, cardType: .none)
     
-    static let moreProducts: Self = [
-        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4,
-        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
-        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
-    ]
+    static let deposit1: Self = .init(id: 7, order: 0, type: .deposit, cardType: .none)
+    static let deposit2: Self = .init(id: 17, order: 0, type: .deposit, cardType: .none)
+    static let deposit3: Self = .init(id: 27, order: 0, type: .deposit, cardType: .none)
     
-    static let allProducts: Self = [
-        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
-        .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3,
-        .account1, .deposit1, .loan1, .account2, .account3, .loan2, .deposit2, .account4,
-        .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
-        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
-    ]
+    static let loan1: Self = .init(id: 8, order: 0, type: .loan, cardType: .none)
+    static let loan2: Self = .init(id: 9, order: 0, type: .loan, cardType: .none)
+    static let loan3: Self = .init(id: 10, order: 0, type: .loan, cardType: .none)
+    
+    static let sticker: Self = .init(id: 28, order: 0, type: .card, cardType: .sticker)
 }
 
 extension Product {
     
-    private init(
-        id: Int,
-        _ type: ID.ProductType,
-        _ cardType: ID.CardType? = nil,
-        _ order: Int
-    ) {
-        self.init(
-            id: .init(value: .init(id), type: type, cardType: cardType),
-            order: order
-        )
-    }
-        
-    static let card: Self = .init(id: 1, .card, .main, 0)
-    static let cardAdditionalOther: Self = .init(id: 2, .card, .additionalOther, 1)
-    static let cardAdditionalSelf: Self = .init(id: 3, .card, .additionalSelf, 2)
-    static let cardAdditionalSelfAccOwn: Self = .init(id: 4, .card, .additionalSelfAccOwn, 3)
-    static let cardRegular: Self = .init(id: 5, .card, .regular, 4)
-    static let cardAdditionalOther2: Self = .init(id: 6, .card, .additionalOther, 5)
-    static let cardAdditionalSelf2: Self = .init(id: 7, .card, .additionalSelf, 6)
-    static let cardAdditionalOther3: Self = .init(id: 8, .card, .additionalOther, 7)
+    static let card1: Self = .init(id: 1, productType: .card, number: "1111", balance: "111.11 rub", productName: "Card 1")
+    static let card2: Self = .init(id: 2, productType: .card, number: "2222", balance: "222.11 rub", productName: "Card 2")
+    static let card3: Self = .init(id: 3, productType: .card, number: "3333", balance: "333.33 rub", productName: "Card 3")
+    static let card4: Self = .init(id: 4, productType: .card, number: "4444", balance: "444.44 rub", productName: "Card 4")
+    static let card5: Self = .init(id: 5, productType: .card, number: "5555", balance: "555.55 rub", productName: "Card 5")
     
-    static let account1: Self = .init(id: 9, .account, nil, 0)
-    static let deposit1: Self = .init(id: 10, .deposit, nil, 0)
-    static let loan1: Self = .init(id: 11, .loan, nil, 0)
-    static let account2: Self = .init(id: 12, .account, nil, 0)
-    static let account3: Self = .init(id: 13, .account, nil, 0)
-    static let loan2: Self = .init(id: 14, .loan, nil, 0)
-    static let deposit2: Self = .init(id: 15, .deposit, nil, 0)
-    static let account4: Self = .init(id: 16, .account, nil, 0)
+    static let account1: Self = .init(id: 6, productType: .account, number: "6661", balance: "23.11 rub", productName: "Account 1")
+    static let account2: Self = .init(id: 16, productType: .account, number: "6662", balance: "56.11 rub", productName: "Account 2")
+    static let account3: Self = .init(id: 26, productType: .account, number: "6663", balance: "78.11 rub", productName: "Account 3")
     
-    static let cardAdditionalOther4: Self = .init(id: 17, .card, .additionalOther, 8)
-    static let cardAdditionalOther5: Self = .init(id: 18, .card, .additionalOther, 9)
-    static let cardAdditionalSelf3: Self = .init(id: 19, .card, .additionalSelf, 10)
-    static let cardAdditionalSelfAccOwn2: Self = .init(id: 20, .card, .additionalSelfAccOwn, 11)
-    static let cardRegular2: Self = .init(id: 21, .card, .regular, 12)
-    static let cardAdditionalOther6: Self = .init(id: 22, .card, .additionalOther, 13)
-    static let cardAdditionalSelf4: Self = .init(id: 23, .card, .additionalSelf, 14)
-    static let cardAdditionalOther7: Self = .init(id: 24, .card, .additionalOther, 15)
+    static let deposit1: Self = .init(id: 7, productType: .deposit, number: "7771", balance: "89.77 rub", productName: "Deposit 1")
+    static let deposit2: Self = .init(id: 17, productType: .deposit, number: "7772", balance: "78.77 rub", productName: "Deposit 2")
+    static let deposit3: Self = .init(id: 27, productType: .deposit, number: "7773", balance: "56.77 rub", productName: "Deposit 3")
     
-    static let sticker: Self = .init(id: 25, .card, .sticker, 16)
+    static let loan1: Self = .init(id: 8, productType: .loan, number: "8888", balance: "89.8 rub", productName: "Loan 1")
+    static let loan2: Self = .init(id: 9, productType: .loan, number: "9999", balance: "26.8 rub", productName: "Loan 2")
+    static let loan3: Self = .init(id: 10, productType: .loan, number: "1010", balance: "89.8 rub", productName: "Loan 3")
 }
 
-extension Array where Element == ProductGroup {
-    
-    static let cards: Self = [
-        .init(id: .card, products: .cards)
-    ]
-    
-    static let moreProducts: Self = [
-        
-        .init(id: .card, products: [
-            .cardAdditionalOther4,.cardAdditionalOther5, .cardAdditionalSelf3,
-            .cardAdditionalSelfAccOwn2, .cardRegular2, .cardAdditionalOther6,
-            .cardAdditionalSelf4, .cardAdditionalOther7
-        ]),
-        .init(id: .account, products: [.account1, .account2, .account3, .account4]),
-        .init(id: .deposit, products: [.deposit1, .deposit2]),
-        .init(id: .loan, products: [.loan1, .loan2])
-    ]
+extension Array where Element == CarouselProduct {
     
     static let allProducts: Self = [
-        
-        .init(id: .card, products: [
-            .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn, .cardRegular,
-            .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3, .cardAdditionalOther4,
-            .cardAdditionalOther5, .cardAdditionalSelf3,.cardAdditionalSelfAccOwn2, .cardRegular2,
-            .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
-        ]),
-        .init(id: .account, products: [.account1, .account2, .account3, .account4]),
-        .init(id: .deposit, products: [.deposit1, .deposit2]),
-        .init(id: .loan, products: [.loan1, .loan2])
+        .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn, .cardRegular,
+        .account1, .account2, .account3,
+        .deposit1, .deposit2, .deposit3,
+        .loan1, .loan2, .loan3
     ]
 }
 
-extension ProductSeparators {
+extension Array where Element == Product {
     
-    static let separatorsForPreviewProducts: Self = [.card: [
-        Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id]
-    ]
-    
-    static let separatorsForMoreProducts: Self = [.card: [
-        Product.cardAdditionalSelfAccOwn2.id, Product.cardRegular2.id ]
-    ]
-    
-    static let separatorsForAllProducts: Self = [.card: [
-        Product.cardAdditionalSelfAccOwn.id, Product.cardRegular.id,
-        Product.cardAdditionalSelfAccOwn2.id, Product.cardRegular2.id ]
+    static let preview: Self = [
+        .card1, .card2, .card3, .card4, .card5,
+        .account1, .account2, .account3,
+        .deposit1, .deposit2, .deposit3,
+        .loan1, .loan2, .loan3
     ]
 }
+
+extension CarouselComponentConfig {
+    
+    static let preview: Self = .init(
+        carousel: .init(
+            item: .init(
+                spacing: 13,
+                horizontalPadding: 20
+            ),
+            group: .init(
+                spacing: 8,
+                buttonFont: .footnote,
+                shadowForeground: Color(red: 0.11, green: 0.11, blue: 0.11),
+                buttonForegroundPrimary: Color(red: 0.91, green: 0.92, blue: 0.92),
+                buttonForegroundSecondary: Color(red: 28/255, green: 28/255, blue: 28/255),
+                buttonIconForeground: Color(red: 0.91, green: 0.92, blue: 0.92)
+            ),
+            spoilerImage: Image("chevron"),
+            separatorForeground: Color(red: 0.91, green: 0.92, blue: 0.92),
+            productDimensions: .regular),
+        selector: .init(
+            optionConfig: .init(
+                frameHeight: 24,
+                textFont: .caption2,
+                textForeground: Color(red: 0.6, green: 0.6, blue: 0.6),
+                textForegroundSelected: Color(red: 0.11, green: 0.11, blue: 0.11),
+                shapeForeground: .white,
+                shapeForegroundSelected: Color(red: 0.96, green: 0.96, blue: 0.96)
+            ),
+            itemSpacing: 8
+        )
+    )
+}
+

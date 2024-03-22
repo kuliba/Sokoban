@@ -85,14 +85,14 @@ struct HeaderView_Previews: PreviewProvider {
         
         Group {
             
-            HeaderView.init(config: .config(.preview), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle")))
+            HeaderView.init(config: .config(.previewCard), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle")))
                 .border(.red)
             
-            HeaderView.init(config: .config(.preview), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle.fill")))
+            HeaderView.init(config: .config(.previewAccount), header: .init(number: "111111", icon: Image(systemName: "snowflake.circle.fill")))
             
-            HeaderView.init(config: .config(.preview), header: .init(number: nil, period: "01/02"))
+            HeaderView.init(config: .config(.previewLoan), header: .init(number: nil, period: "01/02"))
             
-            HeaderView.init(config: .config(.preview), header: .init(number: "45454", period: "01/02"))
+            HeaderView.init(config: .config(.previewDeposit), header: .init(number: "45454", period: "01/02"))
         }
     }
 }

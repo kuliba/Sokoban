@@ -89,15 +89,15 @@ struct FooterView_Previews: PreviewProvider {
         
         Group {
             FooterView(
-                config: .config(.preview),
+                config: .config(.previewCard),
                 footer: .init(balance: "1235 RUB"))
             
             FooterView(
-                config: .config(.preview),
+                config: .config(.previewAccount),
                 footer: .init(balance: "1235 RUB", interestRate: "Rate"))
             
             FooterView(
-                config: .config(.preview),
+                config: .config(.previewLoan),
                 footer: .init(
                     balance: "1235 RUB",
                     paymentSystem: Image(systemName: "person.text.rectangle"))

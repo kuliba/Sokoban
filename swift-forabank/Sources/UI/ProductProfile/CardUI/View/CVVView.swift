@@ -55,7 +55,7 @@ struct CVVView_Previews: PreviewProvider {
         
         CVVView(
             cardInfo: .previewWiggleTrue,
-            config: .config(.preview),
+            config: .config(.previewCard),
             action: { print("cvv tap")})
     }
 }

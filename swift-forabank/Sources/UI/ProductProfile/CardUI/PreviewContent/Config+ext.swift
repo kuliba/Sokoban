@@ -150,3 +150,12 @@ public extension CGFloat {
         return self / UIScreen.main.scale
     }
 }
+
+public extension Config {
+    
+    static let preview: Self = .config(.previewCard)
+    static let previewAccount: Self = .config(.previewAccount)
+    static let previewLoan: Self = .config(.previewLoan)
+    static let previewDeposit: Self = .config(.previewDeposit)
+}
+
