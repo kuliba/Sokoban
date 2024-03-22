@@ -9,35 +9,148 @@ import XCTest
 
 final class PaymentReducerTests: XCTestCase {
     
-    // MARK: SelectParameter
+    // MARK: - Continue
     
-    func test_selectParameterEvent_toggleChevron_shouldNotCallParameterReduceWithParameterAndEventOnMissingSelectParameter() {
+    func test_continue_shouldNotChangeStateOnInvalidPayment() {
         
-        let state = makeState()
-        let event = selectEvent()
-        let (sut, spy) = makeSUT()
+        let invalid = makeInvalidState()
+        
+        assertState(.continue, on: invalid)
+        XCTAssert(isInvalid(invalid))
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnInvalidPayment() {
+        
+        let invalid = makeInvalidState()
+        
+        assert(.continue, on: invalid, effect: nil)
+        XCTAssert(isInvalid(invalid))
+    }
+    
+    func test_continue_shouldNotChangeStateOnValidPayment() {
+        
+        let valid = makePayment()
+        
+        assertState(.continue, on: valid)
+        XCTAssert(isValid(valid))
+    }
+    
+    func test_continue_shouldDeliverEffectOnValidPayment() {
+        
+        let valid = makePayment()
+        
+        assert(.continue, on: valid, effect: .continue(valid))
+        XCTAssert(isValid(valid))
+    }
+    
+    // MARK: InputParameterEvent
+    
+    func test_inputParameterEvent_edit_shouldNotCallParameterReduceWithParameterAndEventOnMissingInputParameter() {
+        
+        let (state, event) = (makePayment(), inputEvent())
+        let (sut, inputSpy, _) = makeSUT()
         
         _ = sut.reduce(state, event)
         
-        XCTAssertNoDiff(spy.payloads.map(\.0), [])
-        XCTAssertNoDiff(spy.payloads.map(\.1), [])
+        XCTAssertNoDiff(inputSpy.payloads.map(\.0), [])
+        XCTAssertNoDiff(inputSpy.payloads.map(\.1), [])
+        XCTAssertNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotChangeStateOnMissingInputParameter() {
+        
+        let (state, event) = (makePayment(), inputEvent())
+        
+        assertState(.parameter(event), on: state)
+        XCTAssertNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotDeliverEffectOnMissingInputParameter() {
+        
+        let (state, event) = (makePayment(), inputEvent())
+        
+        assert(.parameter(event), on: state, effect: nil)
+        XCTAssertNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldCallParameterReduceWithParameterAndEventOnPresentInputParameter() {
+        
+        let input = makeInputParameter()
+        let state = makePayment(.input(input))
+        let event = InputParameterEvent.edit("abc123")
+        let (sut, inputSpy, _) = makeSUT()
+        
+        _ = sut.reduce(state, .parameter(.input(event)))
+        
+        XCTAssertNoDiff(inputSpy.payloads.map(\.0), [input])
+        XCTAssertNoDiff(inputSpy.payloads.map(\.1), [event])
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldChangeInputParameterOnPresentInputParameter() {
+        
+        let newInput = makeInputParameter()
+        let state = makePayment(.input(makeInputParameter()))
+        let event = inputEvent()
+        let (sut, _,_) = makeSUT(inputParameterReduceStub: (newInput, .none))
+        
+        assertState(sut: sut, .parameter(event), on: state) {
+            
+            $0 = makePayment(.input(newInput))
+        }
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldDeliverEffectOnPresentInputParameter_nonNil() {
+        
+        let state = makePayment(.input(makeInputParameter()))
+        let event = inputEvent()
+        let effect = InputParameterEffect.effect
+        let (sut, _,_) = makeSUT(
+            inputParameterReduceStub: (makeInputParameter(), effect)
+        )
+        
+        assert(sut: sut, .parameter(event), on: state, effect: .parameter(.input(effect)))
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    func test_inputParameterEvent_edit_shouldNotDeliverEffectOnPresentInputParameter_nil() {
+        
+        let state = makePayment(.input(makeInputParameter()))
+        let event = inputEvent()
+        let (sut, _,_) = makeSUT(
+            inputParameterReduceStub: (makeInputParameter(), nil)
+        )
+        
+        assert(sut: sut, .parameter(event), on: state, effect: nil)
+        XCTAssertNotNil(parameter(withID: .input, in: state))
+    }
+    
+    // MARK: SelectParameterEvent
+    
+    func test_selectParameterEvent_toggleChevron_shouldNotCallParameterReduceWithParameterAndEventOnMissingSelectParameter() {
+        
+        let (state, event) = (makePayment(), selectEvent())
+        let (sut, _, selectSpy) = makeSUT()
+        
+        _ = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(selectSpy.payloads.map(\.0), [])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.1), [])
         XCTAssertNil(parameter(withID: .select, in: state))
     }
     
     func test_selectParameterEvent_toggleChevron_shouldNotChangeStateOnMissingSelectParameter() {
         
-        let state = makeState()
-        let event = selectEvent()
+        let (state, event) = (makePayment(), selectEvent())
         
         assertState(.parameter(event), on: state)
         XCTAssertNil(parameter(withID: .select, in: state))
-        
     }
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnMissingSelectParameter() {
         
-        let state = makeState()
-        let event = selectEvent()
+        let (state, event) = (makePayment(), selectEvent())
         
         assert(.parameter(event), on: state, effect: nil)
         XCTAssertNil(parameter(withID: .select, in: state))
@@ -46,37 +159,37 @@ final class PaymentReducerTests: XCTestCase {
     func test_selectParameterEvent_toggleChevron_shouldCallParameterReduceWithParameterAndEventOnPresentSelectParameter() {
         
         let select = makeSelectParameter()
-        let state = makeState(.select(select))
+        let state = makePayment(.select(select))
         let event = SelectParameterEvent.toggleChevron
-        let (sut, spy) = makeSUT()
+        let (sut, _, selectSpy) = makeSUT()
         
         _ = sut.reduce(state, .parameter(.select(event)))
         
-        XCTAssertNoDiff(spy.payloads.map(\.0), [select])
-        XCTAssertNoDiff(spy.payloads.map(\.1), [event])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.0), [select])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.1), [event])
         XCTAssertNotNil(parameter(withID: .select, in: state))
     }
     
     func test_selectParameterEvent_toggleChevron_shouldChangeSelectParameterOnPresentSelectParameter() {
         
         let newSelect = makeSelectParameter()
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
-        let (sut, _) = makeSUT(selectParameterReduceStub: (newSelect, .none))
+        let (sut, _,_) = makeSUT(selectParameterReduceStub: (newSelect, .none))
         
         assertState(sut: sut, .parameter(event), on: state) {
             
-            $0 = .init(parameters: [.select(newSelect)])
+            $0 = makePayment(.select(newSelect))
         }
         XCTAssertNotNil(parameter(withID: .select, in: state))
     }
     
     func test_selectParameterEvent_toggleChevron_shouldDeliverEffectOnPresentSelectParameter_nonNil() {
         
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
         let effect = SelectParameterEffect.effect
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             selectParameterReduceStub: (makeSelectParameter(), effect)
         )
         
@@ -86,9 +199,9 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnPresentSelectParameter_nil() {
         
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             selectParameterReduceStub: (makeSelectParameter(), nil)
         )
         
@@ -107,70 +220,92 @@ final class PaymentReducerTests: XCTestCase {
     private typealias ParameterReduceSpy = Spy<(PaymentParameter, PaymentParameterEvent), Void>
     private typealias ParameterReduceStub = (PaymentParameter, PaymentParameterEffect?)
     
+    private typealias InputParameterReduceSpy = Spy<(InputParameter, InputParameterEvent), Void>
+    private typealias InputParameterReduceStub = (InputParameter, InputParameterEffect?)
+    
     private typealias SelectParameterReduceSpy = Spy<(SelectParameter, SelectParameterEvent), Void>
     private typealias SelectParameterReduceStub = (SelectParameter, SelectParameterEffect?)
     
     private func makeSUT(
+        inputParameterReduceStub: InputParameterReduceStub? = nil,
         selectParameterReduceStub: SelectParameterReduceStub? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        inputParameterReduceSpy: InputParameterReduceSpy,
         selectParameterReduceSpy: SelectParameterReduceSpy
     ) {
-        let parameterReduceStub = selectParameterReduceStub ?? makeParameterReduceStub()
+        let inputParameterReduceStub = inputParameterReduceStub ?? makeInputParameterReduceStub()
+        let inputParameterReduceSpy = InputParameterReduceSpy()
+        
+        let selectParameterReduceStub = selectParameterReduceStub ?? makeSelectParameterReduceStub()
         let selectParameterReduceSpy = SelectParameterReduceSpy()
+        
         let sut = SUT(
             parameterReduce: .init(
+                inputReduce: {
+                    
+                    inputParameterReduceSpy.process(($0, $1)) { _ in }
+                    return inputParameterReduceStub
+                },
                 selectReduce: {
                     
                     selectParameterReduceSpy.process(($0, $1)) { _ in }
-                    return parameterReduceStub
+                    return selectParameterReduceStub
                 }
             )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(inputParameterReduceSpy, file: file, line: line)
         trackForMemoryLeaks(selectParameterReduceSpy, file: file, line: line)
         
-        return (sut, selectParameterReduceSpy)
+        return (sut, inputParameterReduceSpy, selectParameterReduceSpy)
     }
     
-    private func makeParameterReduceStub(
-        _ parameter: PaymentParameter? = nil,
+    private func makeInputParameterReduceStub(
+        _ effect: InputParameterEffect? = nil
+    ) -> InputParameterReduceStub {
+        
+        (makeInputParameter(), effect)
+    }
+    
+    private func makeSelectParameterReduceStub(
         _ effect: SelectParameterEffect? = nil
     ) -> SelectParameterReduceStub {
         
         (makeSelectParameter(), effect)
     }
     
-    private func makeState(
-        _ parameters: PaymentParameter...
-    ) -> SUT.State {
+    private func makeInvalidState() -> State {
         
-        .init(parameters: parameters)
-    }
-    
-    private func selectEvent(
-        _ paymentParameterEvent: PaymentParameterEvent? = nil
-    ) -> PaymentParameterEvent {
-        
-        paymentParameterEvent ?? .select(.toggleChevron)
-    }
-    
-    private func makeSelectParameter(
-        id: String = UUID().uuidString
-    ) -> SelectParameter {
-        
-        .init(id: id)
+        makePayment((
+            .input(makeInputParameter()),
+            isValid: false
+        ))
     }
     
     private func parameter(
         withID id: PaymentParameter.ID,
-        in state: SUT.State
+        in state: State
     ) -> PaymentParameter? {
         
         state.parameters.first { $0.id == id }
+    }
+    
+    private func isValid(
+        _ state: State
+    ) -> Bool {
+        
+        return state.isValid
+    }
+    
+    private func isInvalid(
+        _ state: State
+    ) -> Bool {
+        
+        !isValid(state)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

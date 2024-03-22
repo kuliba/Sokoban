@@ -26,6 +26,11 @@ extension PaymentReducer {
         var effect: Effect?
         
         switch event {
+        case .continue:
+            if state.isValid {
+                effect = .continue(state)
+            }
+            
         case let .parameter(paymentParameterEvent):
             (state, effect) = reduce(state, paymentParameterEvent)
         }
@@ -36,19 +41,9 @@ extension PaymentReducer {
 
 extension PaymentReducer {
     
-    struct ParameterReduce {
-        
-        let selectReduce: SelectReduce
-    }
-    
     typealias State = Payment
     typealias Event = PaymentEvent
     typealias Effect = PaymentEffect
-}
-
-extension PaymentReducer.ParameterReduce {
-    
-    typealias SelectReduce = (SelectParameter, SelectParameterEvent) -> (SelectParameter, SelectParameterEffect?)
 }
 
 extension PaymentReducer {
@@ -62,11 +57,19 @@ extension PaymentReducer {
         var effect: Effect?
         
         switch event {
+        case let .input(inputParameterEvent):
+            if case let .input(inputParameter) = state[.input]?.parameter {
+                
+                let (s, e) = parameterReduce.inputReduce(inputParameter, inputParameterEvent)
+                state[.input]?.parameter = .input(s)
+                effect = e.map { .parameter(.input($0)) }
+            }
+            
         case let .select(selectParameterEvent):
-            if case let .select(selectParameter) = state[.select] {
+            if case let .select(selectParameter) = state[.select]?.parameter {
                 
                 let (s, e) = parameterReduce.selectReduce(selectParameter, selectParameterEvent)
-                state[.select] = .select(s)
+                state[.select]?.parameter = .select(s)
                 effect = e.map { .parameter(.select($0)) }
             }
         }
