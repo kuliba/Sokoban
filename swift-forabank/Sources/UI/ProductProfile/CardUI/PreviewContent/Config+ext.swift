@@ -150,3 +150,9 @@ public extension CGFloat {
         return self / UIScreen.main.scale
     }
 }
+
+public extension Config {
+    
+    static let preview: Self = .config(.preview)
+}
+

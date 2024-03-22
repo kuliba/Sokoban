@@ -8,75 +8,82 @@
 import SwiftUI
 import Tagged
 
-public struct Product: Equatable, Identifiable {
-    
-    public typealias IDParent = Tagged<_IDParent, Int>
-    public enum _IDParent {}
+public struct Product: Equatable, Identifiable, Hashable {
     
     public let id: ID
     let order: Int
+    public let type: ProductType
+    public let cardType: CardType?
     
-    public init(
-        id: ID,
-        order: Int
-    ) {
+    public init(id: ID, order: Int, type: ProductType, cardType: CardType?) {
         self.id = id
         self.order = order
+        self.type = type
+        self.cardType = cardType
     }
 }
 
 public extension Product {
     
-    struct ID: Hashable {
+    enum ProductType: Identifiable, Hashable {
         
-        public let value: Tagged<Self, Int>
-        public let type: ProductType
-        public let cardType: CardType?
+        case card, account, deposit, loan
         
-        public enum ProductType: Hashable {
+        public var id: _Case { _case }
+
+        var _case: _Case {
+            
+            switch self {
+            case .account: return .account
+            case .card: return .card
+            case .deposit: return .deposit
+            case .loan: return .loan
+            }
+        }
+        
+        public enum _Case {
             
             case card, account, deposit, loan
         }
+    }
+    
+#warning("Добавить недостающие поля в v6/getProductListByType")
+    enum CardType: Int, Hashable, CaseIterable {
         
-        #warning("Добавить недостающие поля в v6/getProductListByType")
-        public enum CardType: Int, Hashable, CaseIterable {
-            
-            case regular
-            case main
-            case additionalSelf
-            case additionalSelfAccOwn
-            case additionalOther
-            case sticker
-            
-            public var isAdditional: Bool {
-                self == .additionalSelf ||
-                self == .additionalSelfAccOwn ||
-                self == .additionalOther
-            }
-            
-            public var isMainOrRegular: Bool {
-                self == .main ||
-                self == .regular
-            }
-            
-            public var isSticker: Bool {
-                self == .sticker
-            }
+        case regular
+        case main
+        case additionalSelf
+        case additionalSelfAccOwn
+        case additionalOther
+        case sticker
+        
+        public var isAdditional: Bool {
+            self == .additionalSelf ||
+            self == .additionalSelfAccOwn ||
+            self == .additionalOther
         }
         
-        public init(
-            value: Tagged<Self, Int>,
-            type: ProductType,
-            cardType: CardType? = nil
-        ) {
-            self.value = value
-            self.type = type
-            self.cardType = cardType
+        public var isMainOrRegular: Bool {
+            self == .main ||
+            self == .regular
+        }
+        
+        public var isSticker: Bool {
+            self == .sticker
         }
     }
 }
 
-extension Product.ID.ProductType {
+public extension Product {
+    
+    typealias IDParent = Tagged<_IDParent, Int>
+    enum _IDParent {}
+    
+    typealias ID = Tagged<_ID, Int>
+    enum _ID {}
+}
+
+extension Product.ProductType {
     
     var pluralName: String {
         

@@ -9,16 +9,16 @@ import SwiftUI
 
 public struct CarouselState: Equatable {
     
-    public typealias SelectorProductType = Product.ID.ProductType
+    public typealias SelectorProductType = Product.ProductType
     public typealias ProductGroups = [ProductGroup]
-    public typealias ProductSeparators = [Product.ID.ProductType: [Product.ID]]
+    public typealias ProductSeparators = [Product.ProductType: [Product]]
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
     var sticker: Product?
     var separators: ProductSeparators
     
-    var selectedProductType: Product.ID.ProductType?
+    var selectedProductType: Product.ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
     var carouselDimensions: CarouselConfig.ProductDimensions
@@ -29,7 +29,7 @@ public struct CarouselState: Equatable {
         productGroups: ProductGroups,
         sticker: Product? = nil,
         separators: ProductSeparators = [:],
-        selectedProductType: Product.ID.ProductType? = nil,
+        selectedProductType: Product.ProductType? = nil,
         carouselDimensions: CarouselConfig.ProductDimensions = .regular,
         numberOfItemsBeforeSpoiler: Int = 3
     ) {
@@ -80,17 +80,17 @@ public extension CarouselState {
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
-            .map { $0.id.type }
+            .map { $0.type }
             .uniqueValues
             .sorted(by: { $0.order < $1.order })
         
         let groupedByType = Dictionary(
             grouping: products,
-            by: { $0.id.type }
+            by: { $0.type }
         )
                 
         let productGroups = productTypes
-            .compactMap { productType -> (Product.ID.ProductType, [Product])? in
+            .compactMap { productType -> (Product.ProductType, [Product])? in
                                 
                 guard let productsArray = groupedByType[productType] else {
                     return nil
@@ -102,17 +102,17 @@ public extension CarouselState {
                 productGroups.append(
                     
                     ProductGroup(
-                        id: productsArray.0,
+                        productType: productsArray.0,
                         products: productsArray.1
                     )
                 )
             }
         
-        let cardProducts = products.filter { $0.id.type == .card }
+        let cardProducts = products.filter { $0.type == .card }
         
         let separators = zip(cardProducts, cardProducts.dropFirst())
             .enumerated()
-            .map { (pairIndex, products) -> Product.ID? in
+            .map { (pairIndex, products) -> Product? in
                 
                 productIdForSeparator(
                     pairIndex: pairIndex,
@@ -140,20 +140,20 @@ public extension CarouselState {
         pairIndex: Int,
         firstProduct: Product,
         secondProduct: Product
-    ) -> Product.ID? {
+    ) -> Product? {
         
-        if firstProduct.id.cardType?.isMainOrRegular == true
-            && secondProduct.id.cardType?.isAdditional == true {
+        if firstProduct.cardType?.isMainOrRegular == true
+            && secondProduct.cardType?.isAdditional == true {
             
             guard pairIndex > 0 else { return nil }
             
-            return firstProduct.id
+            return firstProduct
         }
 
-        if firstProduct.id.cardType?.isAdditional == true
-            && secondProduct.id.cardType?.isMainOrRegular == true {
+        if firstProduct.cardType?.isAdditional == true
+            && secondProduct.cardType?.isMainOrRegular == true {
             
-            return firstProduct.id
+            return firstProduct
         }
         
         return nil
@@ -217,7 +217,7 @@ extension CarouselState {
     
     func shouldAddSeparator(for product: Product) -> Bool {
         
-        separators[product.id.type]?.contains(product.id) == true
+        separators[product.type]?.contains(product) == true
     }
     
     func shouldAddGroupSeparator(for productGroup: ProductGroup) -> Bool {
