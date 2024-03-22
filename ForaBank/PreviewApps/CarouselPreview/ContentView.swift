@@ -11,7 +11,7 @@ import CarouselComponent
 import CardUI
 
 struct ContentView: View {
-        
+    
     var body: some View {
         
         CarouselMainView(
@@ -19,9 +19,10 @@ struct ContentView: View {
                 initialState: .init(
                     products: .allProducts,
                     sticker: .sticker)
-            ), 
+            ),
             products: .preview
         )
+        .padding()
     }
 }
 
@@ -29,7 +30,7 @@ struct CarouselMainView: View {
     
     @ObservedObject var viewModel: CarouselViewModel
     let products: [ProductData]
-
+    
     init(
         viewModel: CarouselViewModel,
         products: [ProductData]
@@ -64,7 +65,9 @@ struct CarouselMainView: View {
     private func productView(_ product: Product) -> some View {
         
         VStack {
+            
             if let productData = products.first(where: { $0.id == product.id.rawValue }) {
+                
                 ProductFrontView(
                     name: productData.productName,
                     headerDetails: .init(number: productData.number),
@@ -77,7 +80,18 @@ struct CarouselMainView: View {
                         cardWiggle: false,
                         action: { print("Card tap") }),
                     activationView: { EmptyView() },
-                    config: .preview)
+                    config: {
+                        switch product.type {
+                        case .card:
+                                .preview
+                        case .account:
+                                .previewAccount
+                        case .deposit:
+                                .previewDeposit
+                        case .loan:
+                                .previewLoan
+                        }
+                    }())
             } else { Text("Empty View") }
         }
     }

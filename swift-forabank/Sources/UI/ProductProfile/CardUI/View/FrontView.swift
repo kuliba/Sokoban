@@ -84,10 +84,10 @@ struct FrontView_Previews: PreviewProvider {
             FrontView(
                 name: "Name",
                 modifierConfig: .previewUpdating,
-                config: .config(.preview),
+                config: .config(.previewCard),
                 headerView: {
                     HeaderView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         header: .init(
                             number: "111111",
                             icon: Image(systemName: "snowflake.circle"))
@@ -95,7 +95,7 @@ struct FrontView_Previews: PreviewProvider {
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         footer: .init(balance: "123 RUB"))
                 },
                 statusActionView: {
@@ -106,10 +106,10 @@ struct FrontView_Previews: PreviewProvider {
             FrontView(
                 name: "Name",
                 modifierConfig: .previewFront,
-                config: .config(.preview),
+                config: .config(.previewAccount),
                 headerView: {
                     HeaderView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         header: .init(
                             number: "111111",
                             icon: Image(systemName: "snowflake.circle.fill"))
@@ -117,7 +117,7 @@ struct FrontView_Previews: PreviewProvider {
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         footer: .init(balance: "123012 RUB", interestRate: "8.05"))
                 },
                 statusActionView: {

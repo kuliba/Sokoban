@@ -65,7 +65,7 @@ struct HeaderBackView_Previews: PreviewProvider {
             HeaderBackView(
                 cardInfo: .previewWiggleFalse,
                 action: { print("action") },
-                config: .config(.preview)
+                config: .config(.previewCard)
             )
         }
     }
