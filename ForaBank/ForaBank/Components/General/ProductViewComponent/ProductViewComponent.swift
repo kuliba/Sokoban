@@ -585,7 +585,7 @@ struct ProductView: View {
 
     var body: some View {
         
-        FrontView(
+        ProductFrontView(
             name: viewModel.cardInfo.name,
             headerDetails: viewModel.header,
             footerDetails: viewModel.footer,
@@ -606,7 +606,7 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        BackView(
+        ProductBackView(
             cardInfo: viewModel.cardInfo,
             actions: .init(
                 header: viewModel.copyCardNumberToClipboard,

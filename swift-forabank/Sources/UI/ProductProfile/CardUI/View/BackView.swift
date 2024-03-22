@@ -1,66 +1,83 @@
 //
 //  BackView.swift
-//  
 //
-//  Created by Andryusina Nataly on 22.03.2024.
+//
+//  Created by Andryusina Nataly on 18.03.2024.
 //
 
 import SwiftUI
+import Foundation
 
-public struct BackView: View {
+//MARK: - View
+
+struct BackView<Header: View, CVV: View>: View {
     
-    let cardInfo: CardInfo
-    let actions: BackActions
     let modifierConfig: ModifierConfig
     let config: Config
     
-    public init(
-        cardInfo: CardInfo,
-        actions: BackActions,
+    let header: () -> Header
+    let cvv: () -> CVV
+    
+    init(
         modifierConfig: ModifierConfig,
-        config: Config
+        config: Config,
+        header: @escaping () -> Header,
+        cvv: @escaping () -> CVV
     ) {
-        self.cardInfo = cardInfo
-        self.actions = actions
         self.modifierConfig = modifierConfig
         self.config = config
+        self.header = header
+        self.cvv = cvv
     }
-
-    public var body: some View {
+    
+    var body: some View {
         
-        Back(
-            modifierConfig: modifierConfig,
+        VStack {
+            
+            header()
+                .padding(.leading, config.back.headerLeadingPadding)
+                .padding(.top, config.back.headerLeadingPadding)
+                .padding(.trailing, config.back.headerTrailingPadding)
+            
+            cvv()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        }
+        .card(
+            isChecked: modifierConfig.isChecked,
+            isUpdating: modifierConfig.isUpdating,
+            statusActionView: EmptyView(),
             config: config,
-            header: {
-                
-                HeaderBackView.init(
-                    cardInfo: cardInfo,
-                    action: actions.header,
-                    config: config
-                )
-            },
-            cvv: {
-                
-                CVVView.init(
-                    cardInfo: cardInfo,
-                    config: config,
-                    action: actions.cvv
-                )
-            }
+            isFrontView: false,
+            action: modifierConfig.action
+        )
+        .animation(
+            isShowingCardBack: modifierConfig.isShowingCardBack,
+            cardWiggle: modifierConfig.cardWiggle,
+            opacity: .init(startValue: modifierConfig.opacity, endValue: 0),
+            radians: .init(startValue: 0, endValue: .pi)
         )
     }
 }
 
-public struct BackActions {
+struct BackView_Previews: PreviewProvider {
     
-    let header: () -> Void
-    let cvv: () -> Void
-    
-    public init(
-        header: @escaping () -> Void,
-        cvv: @escaping () -> Void
-    ) {
-        self.header = header
-        self.cvv = cvv
+    static var previews: some View {
+        
+        BackView(
+            modifierConfig: .previewBack,
+            config: .config(.preview),
+            header: {
+                HeaderBackView(
+                    cardInfo: .previewWiggleFalse,
+                    action: { print("action") },
+                    config: .config(.preview))
+            },
+            cvv: {
+                CVVView(
+                    cardInfo: .previewWiggleFalse,
+                    config: .config(.preview),
+                    action: { print("cvv action") })
+            })
+        .fixedSize()
     }
 }
