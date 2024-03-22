@@ -70,7 +70,7 @@ struct CarouselMainView: View {
                 
                 ProductFrontView(
                     name: productData.productName,
-                    headerDetails: .init(number: productData.number),
+                    headerDetails: headerDetails(product, productData),
                     footerDetails: .init(balance: productData.balance),
                     modifierConfig: .init(
                         isChecked: false,
@@ -93,6 +93,20 @@ struct CarouselMainView: View {
                         }
                     }())
             } else { Text("Empty View") }
+        }
+    }
+    
+    private func headerDetails(_ product: Product, _ productData: ProductData) -> HeaderDetails {
+        
+        switch product.cardType {
+        case .regular, .main:
+            return .init(number: productData.number, icon: Image(systemName: "circle.grid.cross.fill"))
+            
+        case .additionalSelf, .additionalSelfAccOwn, .additionalOther:
+            return .init(number: productData.number, icon: Image(systemName: "circle.grid.cross.right.filled"))
+            
+        case .sticker, .none:
+            return .init(number: productData.number)
         }
     }
 }
