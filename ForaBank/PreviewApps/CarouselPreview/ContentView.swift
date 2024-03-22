@@ -29,11 +29,11 @@ struct ContentView: View {
 struct CarouselMainView: View {
     
     @ObservedObject var viewModel: CarouselViewModel
-    let products: [ProductData]
+    let products: [Product]
     
     init(
         viewModel: CarouselViewModel,
-        products: [ProductData]
+        products: [Product]
     ) {
         self.viewModel = viewModel
         self.products = products
@@ -62,16 +62,16 @@ struct CarouselMainView: View {
     }
     
     
-    private func productView(_ product: Product) -> some View {
+    private func productView(_ carouselProduct: CarouselProduct) -> some View {
         
         VStack {
             
-            if let productData = products.first(where: { $0.id == product.id.rawValue }) {
+            if let product = products.first(where: { $0.id == carouselProduct.id.rawValue }) {
                 
                 ProductFrontView(
-                    name: productData.productName,
-                    headerDetails: headerDetails(product, productData),
-                    footerDetails: .init(balance: productData.balance),
+                    name: product.productName,
+                    headerDetails: headerDetails(carouselProduct, product),
+                    footerDetails: .init(balance: product.balance),
                     modifierConfig: .init(
                         isChecked: false,
                         isUpdating: false,
@@ -81,7 +81,7 @@ struct CarouselMainView: View {
                         action: { print("Card tap") }),
                     activationView: { EmptyView() },
                     config: {
-                        switch product.type {
+                        switch carouselProduct.type {
                         case .card:
                                 .preview
                         case .account:
@@ -96,17 +96,17 @@ struct CarouselMainView: View {
         }
     }
     
-    private func headerDetails(_ product: Product, _ productData: ProductData) -> HeaderDetails {
+    private func headerDetails(_ carouselProduct: CarouselProduct, _ product: Product) -> HeaderDetails {
         
-        switch product.cardType {
+        switch carouselProduct.cardType {
         case .regular, .main:
-            return .init(number: productData.number, icon: Image(systemName: "circle.grid.cross.fill"))
+            return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.fill"))
             
         case .additionalSelf, .additionalSelfAccOwn, .additionalOther:
-            return .init(number: productData.number, icon: Image(systemName: "circle.grid.cross.right.filled"))
+            return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.right.filled"))
             
         case .sticker, .none:
-            return .init(number: productData.number)
+            return .init(number: product.number)
         }
     }
 }

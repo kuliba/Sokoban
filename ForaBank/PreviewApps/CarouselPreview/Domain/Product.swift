@@ -1,5 +1,5 @@
 //
-//  ProductData.swift
+//  Product.swift
 //  CarouselPreview
 //
 //  Created by Andryusina Nataly on 22.03.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProductData: Identifiable {
+struct Product: Identifiable {
     
     let id: Int
     let productType: ProductType

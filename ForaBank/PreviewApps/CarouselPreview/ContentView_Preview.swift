@@ -8,7 +8,9 @@
 import CarouselComponent
 import SwiftUI
 
-extension Product {
+typealias CarouselProduct = CarouselComponent.Product
+
+extension CarouselProduct {
     
     static let card: Self = .init(id: 1, order: 0, type: .card, cardType: .main)
     static let cardAdditionalOther: Self = .init(id: 2, order: 1, type: .card, cardType: .additionalOther)
@@ -31,7 +33,7 @@ extension Product {
     static let sticker: Self = .init(id: 28, order: 0, type: .card, cardType: .sticker)
 }
 
-extension ProductData {
+extension Product {
     
     static let card1: Self = .init(id: 1, productType: .card, number: "1111", balance: "111.11 rub", productName: "Card 1")
     static let card2: Self = .init(id: 2, productType: .card, number: "2222", balance: "222.11 rub", productName: "Card 2")
@@ -52,7 +54,7 @@ extension ProductData {
     static let loan3: Self = .init(id: 10, productType: .loan, number: "1010", balance: "89.8 rub", productName: "Loan 3")
 }
 
-extension Array where Element == Product {
+extension Array where Element == CarouselProduct {
     
     static let allProducts: Self = [
         .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn, .cardRegular,
@@ -62,7 +64,7 @@ extension Array where Element == Product {
     ]
 }
 
-extension Array where Element == ProductData {
+extension Array where Element == Product {
     
     static let preview: Self = [
         .card1, .card2, .card3, .card4, .card5,
