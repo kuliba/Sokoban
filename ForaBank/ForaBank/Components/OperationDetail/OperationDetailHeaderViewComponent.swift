@@ -14,19 +14,21 @@ extension OperationDetailViewModel {
     struct HeaderViewModel {
         
         let logo: Image?
-        var status: StatusViewModel?
+        let status: StatusViewModel?
         let title: String
         let category: String?
-        var amountStatusImage: Image?
+        let amountStatusImage: Image?
         
         internal init(
             logo: Image?,
             status: OperationDetailViewModel.StatusViewModel?,
+            amountStatusImage: Image?,
             title: String,
             category: String?
         ) {
             self.logo = logo
             self.status = status
+            self.amountStatusImage = amountStatusImage
             self.title = title
             self.category = category
         }
@@ -35,84 +37,87 @@ extension OperationDetailViewModel {
             
             let image = model.images.value[statement.md5hash]?.image
             
+            let status: StatusViewModel? = {
+                
+                switch statement.operationType {
+                    
+                case .credit, .debit:
+                    return .success
+                    
+                case .creditPlan, .debitPlan:
+                    return .processing
+                    
+                case .creditFict, .debitFict:
+                    return .reject
+                    
+                case .open, .demandDepositFromAccount, .unknown:
+                    return nil
+                }
+            }()
+            
+            let amountStatusImage: Image? = {
+                
+                switch statement.operationType {
+                    
+                case .creditPlan, .debitPlan:
+                    return .ic16Waiting
+                    
+                case .creditFict, .debitFict:
+                    return .ic16Denied
+                    
+                case .credit, .debit, .open, .demandDepositFromAccount, .unknown:
+                    return nil
+                }
+            }()
+
             switch statement.paymentDetailType {
                 
             case .insideBank:
-                self.init(logo: image, status: nil, title: statement.merchant, category: statement.groupName)
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: statement.groupName)
                 
             case .betweenTheir:
-                self.init(logo: image, status: nil, title: statement.groupName, category: "Переводы")
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.groupName, category: "Переводы")
                 
             case .otherBank:
-                self.init(logo: image, status: nil, title: statement.merchant, category: statement.groupName)
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: statement.groupName)
                 
-            case .contactAddressless, .direct: // Mig perevod
-                self.init(logo: image, status: nil, title: statement.groupName, category: nil)
+            case .contactAddressless, .direct:
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.groupName, category: nil)
                 
             case .externalIndivudual, .externalEntity:
              
-                self.init(logo: image, status: nil, title: statement.groupName, category: nil)
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.groupName, category: nil)
                 
             case .housingAndCommunalService, .insideOther, .internet, .mobile:
-                self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName)")
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: "\(statement.groupName)")
                 
             case .outsideCash:
-                self.init(logo: image, status: nil, title: statement.groupName, category: "Прочие")
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.groupName, category: "Прочие")
                 
             case .outsideOther:
                 if let mcc = statement.mcc {
                     
-                    self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName) (MCC \(mcc))")
+                    self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: "\(statement.groupName) (MCC \(mcc))")
                 } else {
                     
-                    self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName)")
+                    self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: "\(statement.groupName)")
                 }
                 
             case .sfp:
-                self.init(logo: Image("Operation Type SFP Icon"), status: nil, title: statement.groupName, category: nil)
+                self.init(logo: Image("Operation Type SFP Icon"), status: status, amountStatusImage: amountStatusImage, title: statement.groupName, category: nil)
                 
             case .transport:
-                self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName)")
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: "\(statement.groupName)")
                 
             case .c2b:
-                self.init(logo: Image("sbpindetails"), status: statement.isReturn ? .purchase_return : .success, title: "\(statement.groupName)", category: nil)
+                self.init(logo: Image("sbpindetails"), status: statement.isReturn ? .purchase_return : .success, amountStatusImage: amountStatusImage, title: "\(statement.groupName)", category: nil)
                 
             case .sberQRPayment:
-                self.init(logo: image, status: nil, title: "\(statement.groupName)", category: nil)
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: "\(statement.groupName)", category: nil)
                 
             default:
                 //FIXME: taxes
-                self.init(logo: image, status: nil, title: statement.merchant, category: "\(statement.groupName)")
-            }
-            
-            self.status = setStatus(statement)
-            self.amountStatusImage = setStatusImage(statement)
-        }
-        
-        private func setStatusImage(_ statement: ProductStatementData) -> Image? {
-            
-            switch statement.operationType {
-                
-            case .creditPlan, .debitPlan:
-                return .ic16Waiting
-            case .creditFict, .debitFict:
-                return .ic16Denied
-            case .credit, .debit, .open, .demandDepositFromAccount, .unknown:
-                return nil
-            }
-        }
-        
-        private  func setStatus(_ statement: ProductStatementData) -> StatusViewModel? {
-            switch statement.operationType {
-                
-            case .credit, .debit:
-                return .success
-            case .creditPlan, .debitPlan:
-                return .processing
-            case .creditFict, .debitFict:
-                return .reject
-            case .open, .demandDepositFromAccount, .unknown:
-                return nil
+                self.init(logo: image, status: status, amountStatusImage: amountStatusImage, title: statement.merchant, category: "\(statement.groupName)")
             }
         }
     }
@@ -145,7 +150,7 @@ extension OperationDetailView {
                     }
                 }
                 
-                if let status = viewModel.status { // operationType
+                if let status = viewModel.status {
                     
                     Text(status.name)
                         .font(.system(size: 16, weight: .medium))
@@ -187,5 +192,5 @@ struct OperationDetailHeaderViewComponent_Previews: PreviewProvider {
 
 extension OperationDetailViewModel.HeaderViewModel {
     
-    static let sample = OperationDetailViewModel.HeaderViewModel(logo: .ic16Denied, status: .processing, title: "Перевод по реквизитам", category: nil)
+    static let sample = OperationDetailViewModel.HeaderViewModel(logo: .ic16Denied, status: .processing, amountStatusImage: .ic16Waiting, title: "Перевод по реквизитам", category: nil)
 }

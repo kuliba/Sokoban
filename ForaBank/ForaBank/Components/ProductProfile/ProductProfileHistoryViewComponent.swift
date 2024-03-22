@@ -151,16 +151,14 @@ extension ProductProfileHistoryView {
                 
                 statementFilteredOperation = statements
                     .filter {
-                        ($0.operationType == OperationType.credit && $0.groupName == "Выплата процентов") ||
-                        ($0.operationType == OperationType.creditPlan && $0.groupName == "Выплата процентов")
+                        ($0.operationType == .credit || $0.operationType == .creditPlan) && $0.groupName == "Выплата процентов"
                     }
                 
             case .account, .card:
                 
                 statementFilteredOperation = statements
-                    .filter { statement in
-                        return statement.operationType == OperationType.debit ||
-                        statement.operationType == OperationType.debitPlan
+                    .filter {
+                        $0.operationType == .debit || $0.operationType == .debitPlan
                     }
                 
             case .loan: return
@@ -471,7 +469,7 @@ extension ProductProfileHistoryView.ViewModel {
                 @Published var image: Image?
                 let subtitle: String
                 let amount: Amount?
-                var amountStatusImage: Image?
+                let amountStatusImage: Image?
                 let action: () -> Void
                 
                 internal init(statement: StatementBasicData, title: String, image: Image?, subtitle: String, amount: Amount?, amountStatusImage: Image?, action: @escaping () -> Void = {}) {
@@ -501,6 +499,7 @@ extension ProductProfileHistoryView.ViewModel {
                     } else {
                         
                         self.amount = nil
+                        self.amountStatusImage = nil
                     }
    
                     self.action = action
