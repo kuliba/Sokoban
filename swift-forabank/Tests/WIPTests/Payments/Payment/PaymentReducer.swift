@@ -58,18 +58,18 @@ extension PaymentReducer {
         
         switch event {
         case let .input(inputParameterEvent):
-            if case let .input(inputParameter) = state[.input] {
+            if case let .input(inputParameter) = state[.input]?.parameter {
                 
                 let (s, e) = parameterReduce.inputReduce(inputParameter, inputParameterEvent)
-                state[.input] = .input(s)
+                state[.input]?.parameter = .input(s)
                 effect = e.map { .parameter(.input($0)) }
             }
             
         case let .select(selectParameterEvent):
-            if case let .select(selectParameter) = state[.select] {
+            if case let .select(selectParameter) = state[.select]?.parameter {
                 
                 let (s, e) = parameterReduce.selectReduce(selectParameter, selectParameterEvent)
-                state[.select] = .select(s)
+                state[.select]?.parameter = .select(s)
                 effect = e.map { .parameter(.select($0)) }
             }
         }

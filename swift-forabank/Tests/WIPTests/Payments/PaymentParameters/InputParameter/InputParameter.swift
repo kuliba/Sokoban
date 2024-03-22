@@ -8,5 +8,4 @@
 struct InputParameter: Equatable {
     
     var value: String
-    var isValid: Bool
 }

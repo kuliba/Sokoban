@@ -7,6 +7,26 @@
 
 import Foundation
 
+func makePayment(
+    _ parameter: PaymentParameter.Parameter,
+    _ parameters: PaymentParameter.Parameter...
+) -> Payment {
+    
+    .init(
+        parameters: ([parameter] + parameters)
+            .map { .init(parameter: $0, isValid: true) }
+    )
+}
+
+func makePayment(
+    _ parameters: (PaymentParameter.Parameter, Bool)...
+) -> Payment {
+    
+    .init(parameters: parameters.map {
+        .init(parameter: $0.0, isValid: $0.1)
+    })
+}
+
 func inputEvent(
     _ value: String = UUID().uuidString
 ) -> PaymentParameterEvent {
@@ -20,18 +40,24 @@ func selectEvent(
     .select(.toggleChevron)
 }
 
-func makeInputParameter(
-    value: String = UUID().uuidString,
+func makePaymentParameter(
+    _ parameter: PaymentParameter.Parameter,
     isValid: Bool = true
+) -> PaymentParameter {
+    
+    .init(parameter: parameter, isValid: isValid)
+}
+
+func makeInputParameter(
+    value: String = UUID().uuidString
 ) -> InputParameter {
     
-    .init(value: value, isValid: isValid)
+    .init(value: value)
 }
 
 func makeSelectParameter(
-    id: String = UUID().uuidString,
-    isValid: Bool = true
+    id: String = UUID().uuidString
 ) -> SelectParameter {
     
-    .init(id: id, isValid: isValid)
+    .init(id: id)
 }

@@ -13,7 +13,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotChangeStateOnMissingInputParameter() {
         
-        let (state, event) = (makeState(), inputEvent())
+        let (state, event) = (makePayment(), inputEvent())
         
         assertState(.parameter(event), on: state)
         XCTAssertNil(parameter(withID: .input, in: state))
@@ -21,7 +21,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotDeliverEffectOnMissingInputParameter() {
         
-        let (state, event) = (makeState(), inputEvent())
+        let (state, event) = (makePayment(), inputEvent())
         
         assert(.parameter(event), on: state, effect: nil)
         XCTAssertNil(parameter(withID: .input, in: state))
@@ -29,7 +29,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldChangeInputParameterOnPresentInputParameter() {
         
-        let state = makeState(.input(makeInputParameter()))
+        let state = makePayment(.input(makeInputParameter()))
         let event = inputEvent()
         let sut = makeSUT()
         
@@ -39,7 +39,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotDeliverEffectOnPresentInputParameter_nonNil() {
         
-        let state = makeState(.input(makeInputParameter()))
+        let state = makePayment(.input(makeInputParameter()))
         let event = inputEvent()
         let sut = makeSUT()
         
@@ -49,7 +49,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_inputParameterEvent_edit_shouldNotDeliverEffectOnPresentInputParameter_nil() {
         
-        let state = makeState(.input(makeInputParameter()))
+        let state = makePayment(.input(makeInputParameter()))
         let event = inputEvent()
         let sut = makeSUT()
         
@@ -61,7 +61,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotChangeStateOnMissingSelectParameter() {
         
-        let (state, event) = (makeState(), selectEvent())
+        let (state, event) = (makePayment(), selectEvent())
         
         assertState(.parameter(event), on: state)
         XCTAssertNil(parameter(withID: .select, in: state))
@@ -69,7 +69,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnMissingSelectParameter() {
         
-        let (state, event) = (makeState(), selectEvent())
+        let (state, event) = (makePayment(), selectEvent())
         
         assert(.parameter(event), on: state, effect: nil)
         XCTAssertNil(parameter(withID: .select, in: state))
@@ -77,7 +77,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotChangeSelectParameterOnPresentSelectParameter() {
         
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
         let sut = makeSUT()
         
@@ -87,7 +87,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnPresentSelectParameter_nonNil() {
         
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
         let sut = makeSUT()
         
@@ -97,7 +97,7 @@ final class DefaultPaymentReducerTests: XCTestCase {
     
     func test_selectParameterEvent_toggleChevron_shouldNotDeliverEffectOnPresentSelectParameter_nil() {
         
-        let state = makeState(.select(makeSelectParameter()))
+        let state = makePayment(.select(makeSelectParameter()))
         let event = selectEvent()
         let sut = makeSUT()
         
@@ -144,13 +144,6 @@ final class DefaultPaymentReducerTests: XCTestCase {
     ) -> SelectParameterReduceStub {
         
         (makeSelectParameter(), effect)
-    }
-    
-    private func makeState(
-        _ parameters: PaymentParameter...
-    ) -> SUT.State {
-        
-        .init(parameters: parameters)
     }
     
     private func parameter(

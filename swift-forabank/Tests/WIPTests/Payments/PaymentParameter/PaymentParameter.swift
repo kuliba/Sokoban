@@ -5,23 +5,18 @@
 //  Created by Igor Malyarov on 21.03.2024.
 //
 
-enum PaymentParameter: Equatable {
+struct PaymentParameter: Equatable {
     
-    case input(InputParameter)
-    case select(SelectParameter)
+    var parameter: Parameter
+    var isValid: Bool
 }
 
 extension PaymentParameter {
     
-    var isValid: Bool {
+    enum Parameter: Equatable {
         
-        switch self {
-        case let .input(inputParameter):
-            return inputParameter.isValid
-            
-        case let .select(selectParameter):
-            return selectParameter.isValid
-        }
+        case input(InputParameter)
+        case select(SelectParameter)
     }
 }
 
@@ -29,7 +24,7 @@ extension PaymentParameter: Identifiable {
     
     var id: ID {
         
-        switch self {
+        switch parameter {
         case .input:  return .input
         case .select: return .select
         }
