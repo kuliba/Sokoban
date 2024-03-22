@@ -10,7 +10,7 @@ import Foundation
 
 //MARK: - View
 
-public struct BackView<Header: View, CVV: View>: View {
+struct BackView<Header: View, CVV: View>: View {
     
     let modifierConfig: ModifierConfig
     let config: Config
@@ -18,7 +18,7 @@ public struct BackView<Header: View, CVV: View>: View {
     let header: () -> Header
     let cvv: () -> CVV
     
-    public init(
+    init(
         modifierConfig: ModifierConfig,
         config: Config,
         header: @escaping () -> Header,
@@ -30,7 +30,7 @@ public struct BackView<Header: View, CVV: View>: View {
         self.cvv = cvv
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack {
             

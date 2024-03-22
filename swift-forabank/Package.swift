@@ -460,6 +460,7 @@ private extension Product {
         targets: [
             .amountComponent,
             .buttonComponent,
+            .carouselComponent,
             .infoComponent,
             .paymentComponents,
             .productSelectComponent,
@@ -1586,6 +1587,7 @@ private extension Target {
         dependencies: [
             .amountComponent,
             .buttonComponent,
+            .carouselComponent,
             .infoComponent,
             .productSelectComponent,
             .sharedConfigs,
