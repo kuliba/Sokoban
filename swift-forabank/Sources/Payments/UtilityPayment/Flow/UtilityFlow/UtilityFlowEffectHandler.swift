@@ -36,8 +36,8 @@ public extension UtilityFlowEffectHandler {
         case .initiatePrepayment:
             self.initiatePrepayment(dispatch)
             
-        case let .prepaymentOptions(effect):
-            prepaymentOptionsEffectHandle(effect) {
+        case let .prepaymentOptions(optionEffect):
+            self.optionsEffectHandle(optionEffect) {
                 
                 dispatch(.prepaymentOptions($0))
             }
@@ -102,13 +102,6 @@ private extension UtilityFlowEffectHandler {
                 }
             }
         }
-    }
-    
-    func prepaymentOptionsEffectHandle(
-        _ optionEffect: OptionsEffect,
-        _ dispatch: @escaping OptionsDispatch
-    ) {
-        optionsEffectHandle(optionEffect, dispatch)
     }
     
     func select(
