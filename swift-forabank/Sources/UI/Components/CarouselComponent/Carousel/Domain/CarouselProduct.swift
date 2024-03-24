@@ -14,11 +14,9 @@ public struct CarouselProduct: CarouselProductProtocol, Identifiable {
     public var cardType: CarouselCardType?
     
     public let id: ID
-    let order: Int
     
-    public init(id: ID, order: Int, type: ProductType, cardType: CardType?) {
+    public init(id: ID, type: ProductType, cardType: CardType?) {
         self.id = id
-        self.order = order
         self.type = type
         self.cardType = cardType
     }

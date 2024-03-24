@@ -10,7 +10,7 @@ import SwiftUI
 
 extension CarouselProduct {
     
-    static let sticker: Self = .init(id: 28, order: 0, type: .card, cardType: .sticker)
+    static let sticker: Self = .init(id: 28, type: .card, cardType: .sticker)
 }
 
 extension Product {

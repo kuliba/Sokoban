@@ -26,7 +26,6 @@ struct CarouselMainView: View {
                 products: products.map {
                     .init(
                         id: .init($0.id),
-                        order: $0.order,
                         type: $0.productType.type,
                         cardType: $0.cardType?.type)
                 },
