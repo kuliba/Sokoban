@@ -27,6 +27,9 @@ extension Product {
     static let loan1: Self = .init(id: 8, productType: .loan, number: "8888", balance: "89.8 rub", productName: "Loan 1", cardType: nil)
     static let loan2: Self = .init(id: 9, productType: .loan, number: "9999", balance: "26.8 rub", productName: "Loan 2", cardType: nil)
     static let loan3: Self = .init(id: 10, productType: .loan, number: "1010", balance: "89.8 rub", productName: "Loan 3", cardType: nil)
+    static let loan4: Self = .init(id: 11, productType: .loan, number: "9878", balance: "78.8 rub", productName: "Loan 4", cardType: nil)
+    static let loan5: Self = .init(id: 12, productType: .loan, number: "9949", balance: "39.8 rub", productName: "Loan 5", cardType: nil)
+    static let loan6: Self = .init(id: 13, productType: .loan, number: "1510", balance: "782.8 rub", productName: "Loan 6", cardType: nil)
 }
 
 extension Array where Element == Product {
@@ -35,7 +38,7 @@ extension Array where Element == Product {
         .card1, .card2, .card3, .card4, .card5,
         .account1, .account2, .account3,
         .deposit1, .deposit2, .deposit3,
-        .loan1, .loan2, .loan3
+        .loan1, .loan2, .loan3, .loan4, .loan5, .loan6
     ]
 }
 
