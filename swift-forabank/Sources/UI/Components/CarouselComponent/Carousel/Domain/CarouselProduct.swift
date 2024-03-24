@@ -8,19 +8,10 @@
 import SwiftUI
 import Tagged
 
-public protocol CarouselProductProtocol: Identifiable {
+public struct CarouselProduct: CarouselProductProtocol, Identifiable {
     
-    associatedtype ProductType: Equatable, Identifiable, Hashable
-    associatedtype CardType: Equatable
-    
-    var type: ProductType { get }
-    var cardType: CardType? { get }
-}
-
-public struct CarouselProduct: CarouselProductProtocol, Equatable, Identifiable, Hashable {
-    
-    public var type: ProductType
-    public var cardType: CardType?
+    public var type: CarouselProductType
+    public var cardType: CarouselCardType?
     
     public let id: ID
     let order: Int
@@ -35,30 +26,13 @@ public struct CarouselProduct: CarouselProductProtocol, Equatable, Identifiable,
 
 public extension CarouselProduct {
     
-    enum ProductType: Equatable, Identifiable, Hashable {
+    enum CarouselProductType: Equatable {
         
         case card, account, deposit, loan
-        
-        public var id: _Case { _case }
-
-        var _case: _Case {
-            
-            switch self {
-            case .account: return .account
-            case .card: return .card
-            case .deposit: return .deposit
-            case .loan: return .loan
-            }
-        }
-        
-        public enum _Case {
-            
-            case card, account, deposit, loan
-        }
     }
     
 #warning("Добавить недостающие поля в v6/getProductListByType")
-    enum CardType: Hashable, CaseIterable {
+    enum CarouselCardType {
         
         case regular
         case main
@@ -93,7 +67,7 @@ public extension CarouselProduct {
     enum _ID {}
 }
 
-extension CarouselProduct.ProductType {
+extension CarouselProduct.CarouselProductType {
     
     var pluralName: String {
         
