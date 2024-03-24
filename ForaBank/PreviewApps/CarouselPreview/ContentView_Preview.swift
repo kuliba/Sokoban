@@ -8,11 +8,6 @@
 import CarouselComponent
 import SwiftUI
 
-extension CarouselProduct {
-    
-    static let sticker: Self = .init(id: 28, type: .card, cardType: .sticker)
-}
-
 extension Product {
     
     static let card1: Self = .init(id: 1, productType: .card, number: "1111", balance: "111.11 rub", productName: "Card 1", cardType: .main)
