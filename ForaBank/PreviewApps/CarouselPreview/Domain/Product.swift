@@ -15,7 +15,6 @@ struct Product: Identifiable {
     let number: String
     let balance: String
     let productName: String
-    let order: Int
     let cardType: CardType?
     
     enum ProductType {
