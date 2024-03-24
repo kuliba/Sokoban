@@ -10,11 +10,20 @@ import SwiftUI
 struct ContentView: View {
     
     var body: some View {
-        
-        CarouselMainView(
-            products: .preview,
-            sticker: .sticker
-        )
-        .padding()
+       
+        VStack(spacing: 40) {
+            
+            CarouselMainView(
+                products: .preview,
+                needShowSticker: true
+            )
+            .padding()
+            
+            CarouselMainView(
+                products: .preview,
+                needShowSticker: false
+            )
+            .padding()
+        }
     }
 }

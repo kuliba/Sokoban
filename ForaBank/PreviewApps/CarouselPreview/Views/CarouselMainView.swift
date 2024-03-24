@@ -14,13 +14,13 @@ struct CarouselMainView: View {
     
     @ObservedObject var viewModel: CarouselViewModel
     let products: [Product]
-    let sticker: CarouselProduct
+    let needShowSticker: Bool
     
     init(
         products: [Product],
-        sticker: CarouselProduct
+        needShowSticker: Bool
     ) {
-        self.sticker = sticker
+        self.needShowSticker = needShowSticker
         self.viewModel = .init(
             initialState: .init(
                 products: products.map {
@@ -29,7 +29,7 @@ struct CarouselMainView: View {
                         type: $0.productType.type,
                         cardType: $0.cardType?.type)
                 },
-                sticker: sticker))
+                needShowSticker: needShowSticker))
         self.products = products
     }
     

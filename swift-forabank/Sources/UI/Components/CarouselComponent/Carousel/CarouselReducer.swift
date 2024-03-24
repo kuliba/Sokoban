@@ -51,7 +51,10 @@ extension CarouselReducer {
             }
             
         case let .update(products):
-            state = .init(products: products)
+            state = .init(products: products, needShowSticker: state.needShowSticker)
+            
+        case .closeSticker:
+            state.needShowSticker = false
         }
         
         return (state, effect)

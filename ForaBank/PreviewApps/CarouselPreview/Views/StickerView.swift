@@ -14,8 +14,7 @@ struct StickerView: View {
     var body: some View {
         
         StickerImageView(
-            backgroundImage: viewModel.backgroundImage,
-            onHide: viewModel.onHide
+            backgroundImage: viewModel.backgroundImage
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onTapGesture(perform: viewModel.onTap)
@@ -39,8 +38,7 @@ extension StickerView {
         var body: some View {
             
             StickerImageView(
-                backgroundImage: viewModel.backgroundImage,
-                onHide: viewModel.onHide
+                backgroundImage: viewModel.backgroundImage
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .onTapGesture(perform: viewModel.onTap)
@@ -50,18 +48,16 @@ extension StickerView {
     struct StickerImageView: View {
         
         let backgroundImage: Image
-        let onHide: () -> Void
         
         var body: some View {
             
-            StickerBackgroundImageView(backgroundImage: backgroundImage, onHide: onHide)
+            StickerBackgroundImageView(backgroundImage: backgroundImage)
         }
     }
     
     struct StickerBackgroundImageView: View {
         
         let backgroundImage: Image
-        let onHide: () -> Void
         
         var body: some View {
             ZStack(alignment: .topTrailing) {
@@ -69,38 +65,9 @@ extension StickerView {
                     .resizable()
                     .scaledToFill()
                     .frame(width: 164, height: 104)
-                
-                StickerCloseButtonView(action: onHide)
             }
             .frame(width: 164, height: 104)
             .cornerRadius(12)
-        }
-    }
-    
-    struct StickerCloseButtonView: View {
-        
-        let action: () -> Void
-        
-        var body: some View {
-            
-            Button {
-                withAnimation { action() }
-                
-            } label: {
-                
-                ZStack {
-                    Circle()
-                        .foregroundColor(.gray)
-                        .frame(width: 20, height: 20)
-                    
-                    Image(systemName: "xmark")
-                        .renderingMode(.template)
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
-                }
-                .frame(width: 20, height: 20)
-            }
-            .padding(4)
         }
     }
 }

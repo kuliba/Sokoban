@@ -15,7 +15,7 @@ public struct CarouselState: Equatable {
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
-    var sticker: CarouselProduct?
+    var needShowSticker: Bool
     var separators: ProductSeparators
     
     var selectedProductType: CarouselProduct.ProductType?
@@ -27,7 +27,7 @@ public struct CarouselState: Equatable {
     public init(
         selector: ProductTypeSelector,
         productGroups: ProductGroups,
-        sticker: CarouselProduct? = nil,
+        needShowSticker: Bool,
         separators: ProductSeparators = [:],
         selectedProductType: CarouselProduct.ProductType? = nil,
         carouselDimensions: CarouselConfig.ProductDimensions = .regular,
@@ -35,7 +35,7 @@ public struct CarouselState: Equatable {
     ) {
         self.selector = selector
         self.productGroups = productGroups
-        self.sticker = sticker
+        self.needShowSticker = needShowSticker
         self.separators = separators
         self.selectedProductType = selectedProductType
         self.carouselDimensions = carouselDimensions
@@ -59,7 +59,7 @@ public struct CarouselState: Equatable {
 
 public extension CarouselState {
     
-    init(products: [CarouselProduct], sticker: CarouselProduct? = nil) {
+    init(products: [CarouselProduct], needShowSticker: Bool) {
         
         let productsMapper = Self.map(products: products)
         
@@ -70,7 +70,7 @@ public extension CarouselState {
         self.init(
             selector: selector,
             productGroups: productGroups,
-            sticker: sticker,
+            needShowSticker: needShowSticker,
             separators: separators
         )
     }
@@ -239,7 +239,7 @@ extension CarouselState {
     
     func shouldAddSticker(for productGroup: ProductGroup) -> Bool {
         
-        sticker != nil && productGroup.id == .card
+        needShowSticker && productGroup.id == .card
     }
     
     func spoilerTitle(for productGroup: ProductGroup) -> String? {

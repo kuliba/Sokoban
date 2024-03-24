@@ -22,7 +22,7 @@ final public class CarouselFactory {
 public extension CarouselFactory {
     
     func makeViewModel(
-        initialState: CarouselState = .init(products: []),
+        initialState: CarouselState,
         reducer: CarouselReducer = CarouselReducer(),
         effectHandler: CarouselEffectHandler = CarouselEffectHandler()
     ) -> CarouselViewModel {

@@ -136,14 +136,18 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     @ViewBuilder
     private func sticker(for group: ProductGroup) -> some View {
         
-        if let _ = state.sticker, state.shouldAddSticker(for: group) {
+        if state.needShowSticker, state.shouldAddSticker(for: group) {
             
             if !state.shouldAddSpoiler(for: group) { separator() }
             
-            stickerView()
-                .id(group.id)
-                .frame(config.productDimensions, for: \.product)
-                .accessibilityIdentifier("mainProduct")
+            ZStack(alignment: .topTrailing) {
+                
+                stickerView()
+                    .id(group.id)
+                    .frame(config.productDimensions, for: \.product)
+                    .accessibilityIdentifier("mainProduct")
+                StickerCloseButtonView(action: { event(.closeSticker) })
+            }
         }
     }
     
@@ -207,5 +211,32 @@ private extension View {
             width: size.width,
             height: size.height
         )
+    }
+}
+
+struct StickerCloseButtonView: View {
+    
+    let action: () -> Void
+    
+    var body: some View {
+        
+        Button {
+            withAnimation { action() }
+            
+        } label: {
+            
+            ZStack {
+                Circle()
+                    .foregroundColor(.gray)
+                    .frame(width: 20, height: 20)
+                
+                Image(systemName: "xmark")
+                    .renderingMode(.template)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 20, height: 20)
+        }
+        .padding(4)
     }
 }
