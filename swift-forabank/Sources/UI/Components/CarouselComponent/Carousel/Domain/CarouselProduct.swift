@@ -1,5 +1,5 @@
 //
-//  Product.swift
+//  CarouselProduct.swift
 //
 //
 //  Created by Disman Dmitry on 20.02.2024.
@@ -8,12 +8,22 @@
 import SwiftUI
 import Tagged
 
-public struct Product: Equatable, Identifiable, Hashable {
+public protocol CarouselProductProtocol: Identifiable {
+    
+    associatedtype ProductType: Equatable, Identifiable, Hashable
+    associatedtype CardType: Equatable
+    
+    var type: ProductType { get }
+    var cardType: CardType? { get }
+}
+
+public struct CarouselProduct: CarouselProductProtocol, Equatable, Identifiable, Hashable {
+    
+    public var type: ProductType
+    public var cardType: CardType?
     
     public let id: ID
     let order: Int
-    public let type: ProductType
-    public let cardType: CardType?
     
     public init(id: ID, order: Int, type: ProductType, cardType: CardType?) {
         self.id = id
@@ -23,9 +33,9 @@ public struct Product: Equatable, Identifiable, Hashable {
     }
 }
 
-public extension Product {
+public extension CarouselProduct {
     
-    enum ProductType: Identifiable, Hashable {
+    enum ProductType: Equatable, Identifiable, Hashable {
         
         case card, account, deposit, loan
         
@@ -48,7 +58,7 @@ public extension Product {
     }
     
 #warning("Добавить недостающие поля в v6/getProductListByType")
-    enum CardType: Int, Hashable, CaseIterable {
+    enum CardType: Hashable, CaseIterable {
         
         case regular
         case main
@@ -74,7 +84,7 @@ public extension Product {
     }
 }
 
-public extension Product {
+public extension CarouselProduct {
     
     typealias IDParent = Tagged<_IDParent, Int>
     enum _IDParent {}
@@ -83,7 +93,7 @@ public extension Product {
     enum _ID {}
 }
 
-extension Product.ProductType {
+extension CarouselProduct.ProductType {
     
     var pluralName: String {
         

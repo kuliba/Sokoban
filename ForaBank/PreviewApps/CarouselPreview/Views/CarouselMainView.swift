@@ -1,0 +1,105 @@
+//
+//  CarouselMainView.swift
+//  CarouselPreview
+//
+//  Created by Andryusina Nataly on 24.03.2024.
+//
+
+import RxViewModel
+import SwiftUI
+import CarouselComponent
+import CardUI
+
+struct CarouselMainView: View {
+    
+    @ObservedObject var viewModel: CarouselViewModel
+    let products: [Product]
+    let sticker: CarouselProduct
+    
+    init(
+        products: [Product],
+        sticker: CarouselProduct
+    ) {
+        self.sticker = sticker
+        self.viewModel = .init(
+            initialState: .init(
+                products: products.map {
+                    .init(
+                        id: .init($0.id),
+                        order: $0.order,
+                        type: $0.productType.type,
+                        cardType: $0.cardType?.type)
+                },
+                sticker: sticker))
+        self.products = products
+    }
+    
+    var body: some View {
+        
+        CarouselWrapperView(
+            viewModel: viewModel,
+            productView: productView(_:),
+            stickerView:
+                {
+                    StickerView(
+                        viewModel: .init(
+                            backgroundImage: Image(systemName: "creditcard.fill"),
+                            onTap: { },
+                            onHide: { }
+                        )
+                    )
+                },
+            newProductButton: { NewProductButtonWrapperView(viewModel: .sample, config: .preview, action: { }) },
+            config: .preview
+        )
+    }
+    
+    
+    private func productView(_ carouselProduct: CarouselProduct) -> some View {
+        
+        VStack {
+            
+            if let product = products.first(where: { $0.id == carouselProduct.id.rawValue }) {
+                
+                ProductFrontView(
+                    name: product.productName,
+                    headerDetails: headerDetails(carouselProduct, product),
+                    footerDetails: .init(balance: product.balance),
+                    modifierConfig: .init(
+                        isChecked: false,
+                        isUpdating: false,
+                        opacity: 1,
+                        isShowingCardBack: false,
+                        cardWiggle: false,
+                        action: { print("Card tap") }),
+                    activationView: { EmptyView() },
+                    config: {
+                        switch carouselProduct.type {
+                        case .card:
+                                .preview
+                        case .account:
+                                .previewAccount
+                        case .deposit:
+                                .previewDeposit
+                        case .loan:
+                                .previewLoan
+                        }
+                    }())
+            } else { Text("Empty View") }
+        }
+    }
+    
+    private func headerDetails(_ carouselProduct: CarouselProduct, _ product: Product) -> HeaderDetails {
+        
+        switch carouselProduct.cardType {
+        case .regular, .main:
+            return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.fill"))
+            
+        case .additionalSelf, .additionalSelfAccOwn, .additionalOther:
+            return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.right.filled"))
+            
+        case .sticker, .none:
+            return .init(number: product.number)
+        }
+    }
+}

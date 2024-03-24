@@ -26,8 +26,6 @@ extension StickerView {
     
     struct StickerViewModel {
         
-        let title: String
-        let subTitle: String
         let backgroundImage: Image
         
         let onTap: () -> Void

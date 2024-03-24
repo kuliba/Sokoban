@@ -11,16 +11,16 @@ public struct CarouselStateWrapperView<ProductView: View, NewProductButton: View
     
     @StateObject private var viewModel: CarouselViewModel
     
-    private let productView: (Product) -> ProductView
-    private let stickerView: (Product) -> StickerView?
+    private let productView: (CarouselProduct) -> ProductView
+    private let stickerView: () -> StickerView?
     private let newProductButton: () -> NewProductButton?
     
     private let config: CarouselComponentConfig
     
     public init(
-        products: [Product],
-        productView: @escaping (Product) -> ProductView,
-        stickerView: @escaping (Product) -> StickerView?,
+        products: [CarouselProduct],
+        productView: @escaping (CarouselProduct) -> ProductView,
+        stickerView: @escaping () -> StickerView?,
         newProductButton: @escaping () -> NewProductButton?,
         config: CarouselComponentConfig
     ) {

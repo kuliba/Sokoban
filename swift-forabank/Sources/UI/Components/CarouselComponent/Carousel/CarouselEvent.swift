@@ -17,5 +17,5 @@ public enum CarouselEvent: Equatable {
     case scrolledTo(ProductGroup.ID)
     case select(ProductGroup.ID, delay: TimeInterval = 0.2)
     case didScrollTo(CGFloat)
-    case update([Product])
+    case update([CarouselProduct])
 }

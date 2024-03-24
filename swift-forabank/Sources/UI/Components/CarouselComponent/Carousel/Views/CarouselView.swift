@@ -12,8 +12,8 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
     let state: CarouselState
     let event: (CarouselEvent) -> Void
     
-    let productView: (Product) -> ProductView
-    let stickerView: (Product) -> StickerView?
+    let productView: (CarouselProduct) -> ProductView
+    let stickerView: () -> StickerView?
     let newProductButton: () -> NewProductButton?
     
     let config: CarouselComponentConfig
@@ -21,8 +21,8 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
     public init(
         state: CarouselState,
         event: @escaping (CarouselEvent) -> Void,
-        productView: @escaping (Product) -> ProductView,
-        stickerView: @escaping (Product) -> StickerView?,
+        productView: @escaping (CarouselProduct) -> ProductView,
+        stickerView: @escaping () -> StickerView?,
         newProductButton: @escaping () -> NewProductButton?,
         config: CarouselComponentConfig
     ) {

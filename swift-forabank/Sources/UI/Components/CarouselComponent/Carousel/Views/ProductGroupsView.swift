@@ -13,8 +13,8 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     let groups: CarouselState.ProductGroups
     let event: (CarouselEvent) -> Void
     
-    let productView: (Product) -> ProductView
-    let stickerView: (Product) -> StickerView?
+    let productView: (CarouselProduct) -> ProductView
+    let stickerView: () -> StickerView?
     let newProductButton: () -> NewProductButton?
     
     let config: CarouselConfig
@@ -136,11 +136,11 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     @ViewBuilder
     private func sticker(for group: ProductGroup) -> some View {
         
-        if let sticker = state.sticker, state.shouldAddSticker(for: group) {
+        if let _ = state.sticker, state.shouldAddSticker(for: group) {
             
             if !state.shouldAddSpoiler(for: group) { separator() }
             
-            stickerView(sticker)
+            stickerView()
                 .id(group.id)
                 .frame(config.productDimensions, for: \.product)
                 .accessibilityIdentifier("mainProduct")

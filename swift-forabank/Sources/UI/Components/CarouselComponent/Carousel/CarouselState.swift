@@ -9,16 +9,16 @@ import SwiftUI
 
 public struct CarouselState: Equatable {
     
-    public typealias SelectorProductType = Product.ProductType
+    public typealias SelectorProductType = CarouselProduct.ProductType
     public typealias ProductGroups = [ProductGroup]
-    public typealias ProductSeparators = [Product.ProductType: [Product]]
+    public typealias ProductSeparators = [CarouselProduct.ProductType: [CarouselProduct]]
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
-    var sticker: Product?
+    var sticker: CarouselProduct?
     var separators: ProductSeparators
     
-    var selectedProductType: Product.ProductType?
+    var selectedProductType: CarouselProduct.ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
     var carouselDimensions: CarouselConfig.ProductDimensions
@@ -27,9 +27,9 @@ public struct CarouselState: Equatable {
     public init(
         selector: ProductTypeSelector,
         productGroups: ProductGroups,
-        sticker: Product? = nil,
+        sticker: CarouselProduct? = nil,
         separators: ProductSeparators = [:],
-        selectedProductType: Product.ProductType? = nil,
+        selectedProductType: CarouselProduct.ProductType? = nil,
         carouselDimensions: CarouselConfig.ProductDimensions = .regular,
         numberOfItemsBeforeSpoiler: Int = 3
     ) {
@@ -59,7 +59,7 @@ public struct CarouselState: Equatable {
 
 public extension CarouselState {
     
-    init(products: [Product], sticker: Product? = nil) {
+    init(products: [CarouselProduct], sticker: CarouselProduct? = nil) {
         
         let productsMapper = Self.map(products: products)
         
@@ -76,7 +76,7 @@ public extension CarouselState {
     }
     
     static private func map(
-        products: [Product]
+        products: [CarouselProduct]
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
@@ -90,7 +90,7 @@ public extension CarouselState {
         )
                 
         let productGroups = productTypes
-            .compactMap { productType -> (Product.ProductType, [Product])? in
+            .compactMap { productType -> (CarouselProduct.ProductType, [CarouselProduct])? in
                                 
                 guard let productsArray = groupedByType[productType] else {
                     return nil
@@ -112,7 +112,7 @@ public extension CarouselState {
         
         let separators = zip(cardProducts, cardProducts.dropFirst())
             .enumerated()
-            .map { (pairIndex, products) -> Product? in
+            .map { (pairIndex, products) -> CarouselProduct? in
                 
                 productIdForSeparator(
                     pairIndex: pairIndex,
@@ -138,9 +138,9 @@ public extension CarouselState {
     
     private static func productIdForSeparator(
         pairIndex: Int,
-        firstProduct: Product,
-        secondProduct: Product
-    ) -> Product? {
+        firstProduct: CarouselProduct,
+        secondProduct: CarouselProduct
+    ) -> CarouselProduct? {
         
         if firstProduct.cardType?.isMainOrRegular == true
             && secondProduct.cardType?.isAdditional == true {
@@ -215,7 +215,7 @@ public extension CarouselState {
 
 extension CarouselState {
     
-    func shouldAddSeparator(for product: Product) -> Bool {
+    func shouldAddSeparator(for product: CarouselProduct) -> Bool {
         
         separators[product.type]?.contains(product) == true
     }
@@ -249,7 +249,7 @@ extension CarouselState {
             .spoilerTitle(count: numberOfItemsBeforeSpoiler)
     }
     
-    func visibleProducts(for productGroup: ProductGroup) -> [Product] {
+    func visibleProducts(for productGroup: ProductGroup) -> [CarouselProduct] {
         
         productGroups
             .first(where: { $0 == productGroup })?
