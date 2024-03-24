@@ -61,7 +61,7 @@ struct CarouselMainView: View {
                 ProductFrontView(
                     name: product.productName,
                     headerDetails: headerDetails(carouselProduct, product),
-                    footerDetails: .init(balance: product.balance),
+                    footerDetails: .init(balance: product.balance, paymentSystem: Image(systemName: "sparkles")),
                     modifierConfig: .init(
                         isChecked: false,
                         isUpdating: false,
