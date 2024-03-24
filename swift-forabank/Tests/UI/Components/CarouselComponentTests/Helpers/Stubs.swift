@@ -51,7 +51,7 @@ extension Array where Element == CarouselProduct {
         .card, .cardAdditionalOther, .cardAdditionalSelf, .cardAdditionalSelfAccOwn,
         .cardRegular, .cardAdditionalOther2, .cardAdditionalSelf2, .cardAdditionalOther3,
         .cardAdditionalOther4, .cardAdditionalOther5, .cardAdditionalSelf3, .cardAdditionalSelfAccOwn2,
-        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7, .sticker
+        .cardRegular2, .cardAdditionalOther6, .cardAdditionalSelf4, .cardAdditionalOther7
     ]
     
     static let accountProducts: Self = [
@@ -107,8 +107,6 @@ extension CarouselProduct {
     static let cardAdditionalOther6: Self = .init(id: 22, .card, .additionalOther)
     static let cardAdditionalSelf4: Self = .init(id: 23, .card, .additionalSelf)
     static let cardAdditionalOther7: Self = .init(id: 24, .card, .additionalOther)
-    
-    static let sticker: Self = .init(id: 25, .card, .sticker)
 }
 
 extension Array where Element == ProductGroup {

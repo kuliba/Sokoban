@@ -37,7 +37,6 @@ public extension CarouselProduct {
         case additionalSelf
         case additionalSelfAccOwn
         case additionalOther
-        case sticker
         
         public var isAdditional: Bool {
             self == .additionalSelf ||
@@ -48,10 +47,6 @@ public extension CarouselProduct {
         public var isMainOrRegular: Bool {
             self == .main ||
             self == .regular
-        }
-        
-        public var isSticker: Bool {
-            self == .sticker
         }
     }
 }

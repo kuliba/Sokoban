@@ -97,7 +97,7 @@ struct CarouselMainView: View {
         case .additionalSelf, .additionalSelfAccOwn, .additionalOther:
             return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.right.filled"))
             
-        case .sticker, .none:
+        case .none:
             return .init(number: product.number)
         }
     }

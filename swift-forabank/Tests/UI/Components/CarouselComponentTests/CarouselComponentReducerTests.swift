@@ -225,16 +225,6 @@ final class CarouselComponentReducerTests: XCTestCase {
         XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProducts)
     }
     
-    func test_spoilerTitle_shouldUpdateWithAllCardProductsWithSticker() {
-                
-        let sut = makeSUT()
-        
-        let reduce = reduce(sut, event: .update(.allCardProductsWithSticker))
-        let spoilerTitle = reduce.state.spoilerTitle(for: .allCardProductsWithSticker)
-                
-        XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProductsWithSticker)
-    }
-    
     private typealias SUT = CarouselReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event

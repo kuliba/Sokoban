@@ -45,7 +45,6 @@ struct Product: Identifiable {
         case additionalSelf
         case additionalSelfAccOwn
         case additionalOther
-        case sticker
         
         var type: CarouselProduct.CardType {
             switch self {
@@ -59,8 +58,6 @@ struct Product: Identifiable {
                 return .additionalSelfAccOwn
             case .additionalOther:
                 return .additionalOther
-            case .sticker:
-                return .sticker
             }
         }
     }
