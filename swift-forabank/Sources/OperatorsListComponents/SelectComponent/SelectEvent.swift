@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SelectEvent {
+public enum SelectEvent {
     
     case chevronTapped
     case optionTapped
