@@ -9,8 +9,8 @@ import Foundation
 
 public protocol CarouselProduct {
     
-    associatedtype ProductType: Equatable
-    associatedtype CardType: Equatable
+    associatedtype ProductType
+    associatedtype CardType
     
     var type: ProductType { get }
     var cardType: CardType? { get }

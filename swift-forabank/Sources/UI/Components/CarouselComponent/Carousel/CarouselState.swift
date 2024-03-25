@@ -9,16 +9,16 @@ import SwiftUI
 
 public struct CarouselState: Equatable {
     
-    public typealias SelectorProductType = Product.ProductType
+    public typealias SelectorProductType = ProductType
     public typealias ProductGroups = [ProductGroup]
-    public typealias ProductSeparators = [Product.ProductType: [Product]]
+    public typealias ProductSeparators = [ProductType: [Product]]
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
     var needShowSticker: Bool
     var separators: ProductSeparators
     
-    var selectedProductType: Product.ProductType?
+    var selectedProductType: ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
     var carouselDimensions: CarouselConfig.ProductDimensions
@@ -29,7 +29,7 @@ public struct CarouselState: Equatable {
         productGroups: ProductGroups,
         needShowSticker: Bool,
         separators: ProductSeparators = [:],
-        selectedProductType: Product.ProductType? = nil,
+        selectedProductType: ProductType? = nil,
         carouselDimensions: CarouselConfig.ProductDimensions = .regular,
         numberOfItemsBeforeSpoiler: Int = 3
     ) {
@@ -97,7 +97,7 @@ public extension CarouselState {
         )
                 
         let productGroups = productTypes
-            .compactMap { productType -> (Product.ProductType, [Product])? in
+            .compactMap { productType -> (ProductType, [Product])? in
                                 
                 guard let productsArray = groupedByType[productType] else {
                     return nil

@@ -10,8 +10,8 @@ import Tagged
 
 public struct Product: CarouselProduct, Equatable, Identifiable {
     
-    public var type: CarouselProductType
-    public var cardType: CarouselCardType?
+    public var type: ProductType
+    public var cardType: CardType?
     
     public let id: ID
     
@@ -22,34 +22,32 @@ public struct Product: CarouselProduct, Equatable, Identifiable {
     }
 }
 
-public extension Product {
+public enum ProductType: Equatable {
     
-    enum CarouselProductType: Equatable {
-        
-        case card, account, deposit, loan
+    case card, account, deposit, loan
+}
+
+#warning("Добавить недостающие поля в v6/getProductListByType")
+public enum CardType {
+    
+    case regular
+    case main
+    case additionalSelf
+    case additionalSelfAccOwn
+    case additionalOther
+    
+    public var isAdditional: Bool {
+        self == .additionalSelf ||
+        self == .additionalSelfAccOwn ||
+        self == .additionalOther
     }
     
-#warning("Добавить недостающие поля в v6/getProductListByType")
-    enum CarouselCardType {
-        
-        case regular
-        case main
-        case additionalSelf
-        case additionalSelfAccOwn
-        case additionalOther
-        
-        public var isAdditional: Bool {
-            self == .additionalSelf ||
-            self == .additionalSelfAccOwn ||
-            self == .additionalOther
-        }
-        
-        public var isMainOrRegular: Bool {
-            self == .main ||
-            self == .regular
-        }
+    public var isMainOrRegular: Bool {
+        self == .main ||
+        self == .regular
     }
 }
+
 
 public extension Product {
     
@@ -60,7 +58,7 @@ public extension Product {
     enum _ID {}
 }
 
-extension Product.CarouselProductType {
+extension ProductType {
     
     var pluralName: String {
         

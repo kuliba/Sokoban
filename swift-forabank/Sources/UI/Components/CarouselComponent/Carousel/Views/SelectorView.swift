@@ -12,7 +12,7 @@ struct SelectorView: View {
     typealias Selector = CarouselState.ProductTypeSelector
     
     let state: Selector
-    let event: (Product.ProductType) -> Void
+    let event: (ProductType) -> Void
     let config: SelectorConfig
         
     var body: some View {

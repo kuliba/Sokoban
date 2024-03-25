@@ -9,13 +9,13 @@ import Foundation
 
 public struct ProductGroup: Equatable, Identifiable {
     
-    let productType: Product.ProductType
-    public var id: Product.ProductType { productType }
+    let productType: ProductType
+    public var id: ProductType { productType }
     let products: [Product]
     var state: State
     
     public init(
-        productType: Product.ProductType,
+        productType: ProductType,
         products: [Product],
         state: State = .collapsed
     ) {
