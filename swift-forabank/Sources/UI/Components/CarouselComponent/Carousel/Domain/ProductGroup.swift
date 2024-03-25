@@ -76,7 +76,7 @@ extension ProductGroup {
     }
 }
 
-public extension ProductGroup.State {
+extension ProductGroup.State {
     
     mutating func toggle() {
         
