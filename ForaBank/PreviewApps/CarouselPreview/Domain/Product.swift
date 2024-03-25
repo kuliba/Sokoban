@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CarouselComponent
 
 struct Product: Identifiable {
     
@@ -14,6 +15,7 @@ struct Product: Identifiable {
     let number: String
     let balance: String
     let productName: String
+    let cardType: CardType?
     
     enum ProductType {
         
@@ -21,5 +23,33 @@ struct Product: Identifiable {
         case account
         case deposit
         case loan
+        
+        var type: CarouselComponent.ProductType {
+            switch self {
+            case .card:
+                return .card
+            case .account:
+                return .account
+            case .deposit:
+                return .deposit
+            case .loan:
+                return .loan
+            }
+        }
+    }
+    
+    enum CardType {
+        
+        case regular
+        case main
+        case additionalSelf
+        case additionalSelfAccOwn
+        case additionalOther
+        
+        var isAdditional: Bool {
+            self == .additionalSelf ||
+            self == .additionalSelfAccOwn ||
+            self == .additionalOther
+        }
     }
 }

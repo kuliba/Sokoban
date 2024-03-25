@@ -7,15 +7,15 @@
 
 import Foundation
 
-public struct ProductGroup: Equatable, Identifiable {
+public struct ProductGroup<Product>: Identifiable {
     
-    let productType: Product.ProductType
-    public var id: Product.ProductType { productType }
+    let productType: ProductType
+    public var id: ProductType { productType }
     let products: [Product]
     var state: State
     
     public init(
-        productType: Product.ProductType,
+        productType: ProductType,
         products: [Product],
         state: State = .collapsed
     ) {
@@ -42,7 +42,6 @@ public struct ProductGroup: Equatable, Identifiable {
             
             case collapsed, expanded
         }
-        
     }
 }
 
@@ -72,6 +71,19 @@ extension ProductGroup {
             
         case .expanded:
             return nil
+        }
+    }
+}
+
+extension ProductGroup: Equatable where Product: Equatable {}
+
+extension ProductGroup.State {
+    
+    mutating func toggle() {
+        
+        switch self {
+        case .collapsed: self = .expanded
+        case .expanded:  self = .collapsed
         }
     }
 }
