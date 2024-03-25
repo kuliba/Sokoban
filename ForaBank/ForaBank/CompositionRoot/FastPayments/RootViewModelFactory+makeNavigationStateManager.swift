@@ -11,6 +11,7 @@ import Foundation
 import GenericRemoteService
 import ManageSubscriptionsUI
 import OTPInputComponent
+import RemoteServices
 import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
@@ -88,7 +89,7 @@ struct FastPaymentsSettingsOTPServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) {
         typealias ForaRequestFactory = ForaBank.RequestFactory
-        typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+        typealias FastResponseMapper = RemoteServices.ResponseMapper
         
         let initiateOTP = adaptedLoggingFetch(
             ForaRequestFactory.createPrepareSetBankDefaultRequest,
@@ -161,7 +162,7 @@ struct FastPaymentsSettingsOTPServices {
 private extension OTPInputComponent.ServiceFailure {
     
     init(
-        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+        error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
     ) {
         switch error {
         case .createRequest, .performRequest:

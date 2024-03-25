@@ -1,15 +1,14 @@
 //
-//  RequestFactory+createGetC2BSubRequestTests.swift
+//  RequestFactory+createEmptyRequestTests.swift
 //  
 //
-//  Created by Igor Malyarov on 29.12.2023.
+//  Created by Igor Malyarov on 25.03.2024.
 //
 
-import FastPaymentsSettings
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
+final class RequestFactory_createEmptyRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetURL() {
         
@@ -19,9 +18,15 @@ final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
         XCTAssertNoDiff(request.url, url)
     }
     
+    func test_createRequest_shouldSetHTTPMethodToGet() {
+        
+        let request = createRequest(.get)
+        
+        XCTAssertNoDiff(request.httpMethod, "GET")
+    }
     func test_createRequest_shouldSetHTTPMethodToPOST() {
         
-        let request = createRequest()
+        let request = createRequest(.post)
         
         XCTAssertNoDiff(request.httpMethod, "POST")
     }
@@ -43,9 +48,10 @@ final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func createRequest(
+        _ httpMethod: URLRequest.HTTPMethod = .post,
         url: URL = anyURL()
     ) -> URLRequest {
         
-        RequestFactory.createGetC2BSubRequest(url: url)
+        RequestFactory.createEmptyRequest(httpMethod, with: url)
     }
 }

@@ -650,6 +650,7 @@ private extension Target {
             .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
+            .remoteServices,
             .uiPrimitives,
         ]
     )

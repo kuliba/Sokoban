@@ -7,13 +7,14 @@
 
 import C2BSubscriptionUI
 import FastPaymentsSettings
+import RemoteServices
 
 extension FastPaymentsSettingsEffectHandler {
     
     typealias ForaRequestFactory = ForaBank.RequestFactory
     
-    typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
-    typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
+    typealias FastResponseMapper = RemoteServices.ResponseMapper
+    typealias FastRequestFactory = RemoteServices.RequestFactory
     
     convenience init(
         facade: MicroServices.Facade,
@@ -87,7 +88,7 @@ extension FastPaymentsSettingsEffectHandler {
 
 private extension FastPaymentsSettingsEffectHandler.UpdateProductPayload {
     
-    var payload: FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractPayload {
+    var payload: RemoteServices.RequestFactory.UpdateFastPaymentContractPayload {
         
         .init(
             contractID: .init(contractID.rawValue),
