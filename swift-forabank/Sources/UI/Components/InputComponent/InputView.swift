@@ -33,6 +33,7 @@ public struct InputView: View {
                 state.image()
                     .resizable()
                     .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .center)
+                    .foregroundColor(Color.gray.opacity(0.7))
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
@@ -125,7 +126,7 @@ public extension InputView.Config {
         hintFont: .body,
         hintColor: .gray,
         backgroundColor: .gray.opacity(0.1),
-        imageSize: .large
+        imageSize: .small
     )
 }
 

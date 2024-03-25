@@ -30,6 +30,7 @@ public struct InputPhoneView: View {
         HStack(spacing: 12) {
             
             config.icon
+                .resizable()
                 .frame(width: 24, height: 24, alignment: .center)
                 .foregroundColor(config.iconForeground)
             
@@ -70,6 +71,7 @@ public struct InputPhoneView: View {
                 label: {
                     
                     config.buttonIcon
+                        .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
                         .foregroundColor(config.buttonForeground)
                 })
@@ -130,7 +132,7 @@ public extension InputPhoneView {
 public extension InputPhoneView.InputPhoneConfig {
     
     static let preview: Self = .init(
-        icon: .init(systemName: "photo.artframe"),
+        icon: .init(systemName: "iphone"),
         iconForeground: .gray.opacity(0.7),
         placeholder: "Введите номер телефона",
         placeholderForeground: .gray.opacity(0.7),
