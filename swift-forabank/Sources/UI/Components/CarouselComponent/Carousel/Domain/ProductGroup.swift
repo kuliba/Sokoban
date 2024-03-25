@@ -75,3 +75,14 @@ extension ProductGroup {
         }
     }
 }
+
+public extension ProductGroup.State {
+    
+    mutating func toggle() {
+        
+        switch self {
+        case .collapsed: self = .expanded
+        case .expanded:  self = .collapsed
+        }
+    }
+}
