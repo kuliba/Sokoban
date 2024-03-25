@@ -13,13 +13,11 @@ public struct Product: CarouselProduct, Equatable, Identifiable {
     public let id: ID
     public var type: ProductType
     public var isAdditional: Bool?
-    public var isMainOrRegular: Bool?
     
-    public init(id: ID, type: ProductType, isAdditional: Bool? = nil, isMainOrRegular: Bool? = nil) {
+    public init(id: ID, type: ProductType, isAdditional: Bool? = nil) {
         self.id = id
         self.type = type
         self.isAdditional = isAdditional
-        self.isMainOrRegular = isMainOrRegular
     }
 }
 

@@ -125,7 +125,7 @@ public extension CarouselState {
         secondProduct: Product
     ) -> Product? {
         
-        if firstProduct.isMainOrRegular == true
+        if firstProduct.isAdditional == false
             && secondProduct.isAdditional == true {
             
             guard pairIndex > 0 else { return nil }
@@ -134,7 +134,7 @@ public extension CarouselState {
         }
 
         if firstProduct.isAdditional == true
-            && secondProduct.isMainOrRegular == true {
+            && secondProduct.isAdditional == false {
             
             return firstProduct
         }

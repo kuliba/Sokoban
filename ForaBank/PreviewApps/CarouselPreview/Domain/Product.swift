@@ -51,10 +51,5 @@ struct Product: Identifiable {
             self == .additionalSelfAccOwn ||
             self == .additionalOther
         }
-        
-        var isMainOrRegular: Bool {
-            self == .main ||
-            self == .regular
-        }
     }
 }

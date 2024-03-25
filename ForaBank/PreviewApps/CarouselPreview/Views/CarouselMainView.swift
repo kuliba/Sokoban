@@ -27,8 +27,7 @@ struct CarouselMainView: View {
                     .init(
                         id: .init($0.id),
                         type: $0.productType.type,
-                        isAdditional: $0.cardType?.isAdditional,
-                        isMainOrRegular: $0.cardType?.isMainOrRegular
+                        isAdditional: $0.cardType?.isAdditional
                     )
                 },
                 needShowSticker: needShowSticker))

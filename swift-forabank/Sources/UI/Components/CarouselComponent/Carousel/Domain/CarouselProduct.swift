@@ -14,5 +14,4 @@ public protocol CarouselProduct {
     var type: ProductType { get }
     
     var isAdditional: Bool? { get }
-    var isMainOrRegular: Bool? { get }
 }
