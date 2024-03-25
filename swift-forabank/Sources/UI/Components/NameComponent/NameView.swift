@@ -88,7 +88,7 @@ public struct NameView: View {
                     action: { },
                     label: {
                         
-                        Image(systemName: "chevron.up")
+                        Image(systemName: "chevron.down")
                             .foregroundColor(Color.gray.opacity(0.7))
                     })
             }
