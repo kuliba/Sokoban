@@ -21,13 +21,7 @@ struct CarouselMainView: View {
     ) {
         self.viewModel = .init(
             initialState: .init(
-                products: products.map {
-                    .init(
-                        id: .init($0.id),
-                        type: $0.productType.type,
-                        isAdditional: $0.cardType?.isAdditional
-                    )
-                },
+                products: .initialState(products),
                 needShowSticker: needShowSticker),
             reduce: CarouselReducer().reduce,
             handleEffect: CarouselEffectHandler().handleEffect
@@ -102,5 +96,25 @@ struct CarouselMainView: View {
         case .none:
             return .init(number: product.number)
         }
+    }
+}
+
+private extension CarouselProduct {
+    
+    init(_ product: Product) {
+        
+        self.init(
+            id: .init(product.id),
+            type: product.productType.type,
+            isAdditional: product.cardType?.isAdditional
+        )
+    }
+}
+
+private extension Array where Element == CarouselProduct {
+    
+    static func initialState(_ products: [Product]) -> Self {
+        
+        .init(products.map(CarouselProduct.init))
     }
 }
