@@ -354,6 +354,13 @@
         "identifier" : "ProductDetailsUITests",
         "name" : "ProductDetailsUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RemoteServicesTests",
+        "name" : "RemoteServicesTests"
+      }
     }
   ],
   "version" : 1
