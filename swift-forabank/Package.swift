@@ -27,6 +27,7 @@ let package = Package(
         .fetcher,
         .keyChainStore,
         // Payments
+        .anywayPayment,
         .utilityPayment,
         // Services
         .cardStatementAPI,
@@ -111,6 +112,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Payments
+        .anywayPayment,
+        .anywayPaymentTests,
         .utilityPayment,
         .utilityPaymentTests,
         // Services
@@ -516,6 +519,13 @@ private extension Product {
     
     // MARK: - Payments
     
+    static let anywayPayment = library(
+        name: .anywayPayment,
+        targets: [
+            .anywayPayment,
+        ]
+    )
+
     static let utilityPayment = library(
         name: .utilityPayment,
         targets: [
@@ -911,6 +921,23 @@ private extension Target {
     )
     
     // MARK: - Payments
+    
+    static let anywayPayment = target(
+        name: .anywayPayment,
+        dependencies: [
+        ],
+        path: "Sources/Payments/\(String.anywayPayment)"
+    )
+    static let anywayPaymentTests = testTarget(
+        name: .anywayPaymentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .anywayPayment,
+        ],
+        path: "Tests/Payments/\(String.anywayPaymentTests)"
+    )
     
     static let utilityPayment = target(
         name: .utilityPayment,
@@ -1713,6 +1740,7 @@ private extension Target {
             .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
+            .anywayPayment,
             .utilityPayment,
         ]
     )
@@ -1942,6 +1970,10 @@ private extension Target.Dependency {
     
     // MARK: - Payments
 
+    static let anywayPayment = byName(
+        name: .anywayPayment
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2146,6 +2178,9 @@ private extension String {
     
     // MARK: - Payments
     
+    static let anywayPayment = "AnywayPayment"
+    static let anywayPaymentTests = "AnywayPaymentTests"
+
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
 
