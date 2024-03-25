@@ -925,6 +925,8 @@ private extension Target {
     static let anywayPayment = target(
         name: .anywayPayment,
         dependencies: [
+            .services,
+            .tagged,
         ],
         path: "Sources/Payments/\(String.anywayPayment)"
     )
@@ -935,6 +937,8 @@ private extension Target {
             .customDump,
             // internal modules
             .anywayPayment,
+            .services,
+            .tagged,
         ],
         path: "Tests/Payments/\(String.anywayPaymentTests)"
     )
