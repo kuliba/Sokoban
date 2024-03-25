@@ -8,7 +8,7 @@
 import SwiftUI
 import Tagged
 
-public struct Product: CarouselProduct, Identifiable {
+public struct Product: CarouselProduct, Equatable, Identifiable {
     
     public var type: CarouselProductType
     public var cardType: CarouselCardType?

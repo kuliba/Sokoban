@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol CarouselProduct: Equatable {
+public protocol CarouselProduct {
     
     associatedtype ProductType: Equatable
     associatedtype CardType: Equatable
