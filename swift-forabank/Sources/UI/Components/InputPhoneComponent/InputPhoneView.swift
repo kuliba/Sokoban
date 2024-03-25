@@ -101,7 +101,46 @@ public extension InputPhoneView {
         let buttonForeground: Color
         
         let textFieldConfig: TextFieldView.TextFieldConfig
+        
+        public init(
+            icon: Image,
+            iconForeground: Color,
+            placeholder: String,
+            placeholderForeground: Color,
+            title: String,
+            titleFont: Font,
+            titleForeground: Color,
+            buttonIcon: Image,
+            buttonForeground: Color,
+            textFieldConfig: TextFieldView.TextFieldConfig
+        ) {
+            self.icon = icon
+            self.iconForeground = iconForeground
+            self.placeholder = placeholder
+            self.placeholderForeground = placeholderForeground
+            self.title = title
+            self.titleFont = titleFont
+            self.titleForeground = titleForeground
+            self.buttonIcon = buttonIcon
+            self.buttonForeground = buttonForeground
+            self.textFieldConfig = textFieldConfig
+        }
     }
+}
+public extension InputPhoneView.InputPhoneConfig {
+    
+    static let preview: Self = .init(
+        icon: .init(systemName: "photo.artframe"),
+        iconForeground: .gray.opacity(0.7),
+        placeholder: "Введите номер телефона",
+        placeholderForeground: .gray.opacity(0.7),
+        title: "Номер телефона",
+        titleFont: .system(size: 14),
+        titleForeground: .gray.opacity(0.7),
+        buttonIcon: .init(systemName: "person"),
+        buttonForeground: .gray.opacity(0.7),
+        textFieldConfig: .preview
+    )
 }
 
 struct InputPhoneView_Previews: PreviewProvider {
@@ -112,38 +151,15 @@ struct InputPhoneView_Previews: PreviewProvider {
             InputPhoneView(
                 state: .placeholder,
                 event: .init(),
-                config: .init(
-                    icon: .init(systemName: "photo.artframe"),
-                    iconForeground: .gray.opacity(0.7),
-                    placeholder: "Введите номер телефона",
-                    placeholderForeground: .gray.opacity(0.7),
-                    title: "Номер телефона",
-                    titleFont: .system(size: 14),
-                    titleForeground: .gray.opacity(0.7),
-                    buttonIcon: .init(systemName: "person"),
-                    buttonForeground: .gray.opacity(0.7),
-                    textFieldConfig: .preview
-                )
+                config: .preview
             )
-            .padding(20)
             
             InputPhoneView(
                 state: .entered,
                 event: .init(),
-                config: .init(
-                    icon: .init(systemName: "photo.artframe"),
-                    iconForeground: .gray.opacity(0.7),
-                    placeholder: "Введите номер телефона",
-                    placeholderForeground: .gray.opacity(0.7),
-                    title: "Номер телефона",
-                    titleFont: .system(size: 14),
-                    titleForeground: .gray.opacity(0.7),
-                    buttonIcon: .init(systemName: "person"),
-                    buttonForeground: .gray.opacity(0.7),
-                    textFieldConfig: .preview
-                )
+                config: .preview
             )
-            .padding(20)
         }
+        .padding(20)
     }
 }
