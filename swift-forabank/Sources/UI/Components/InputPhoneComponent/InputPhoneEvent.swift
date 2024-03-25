@@ -7,4 +7,4 @@
 
 import Foundation
 
-struct InputPhoneEvent {}
+public struct InputPhoneEvent {}

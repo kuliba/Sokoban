@@ -15,7 +15,7 @@ public struct InputPhoneView: View {
     let event: InputPhoneEvent
     let config: InputPhoneConfig
     
-    init(
+    public init(
         state: InputPhoneState,
         event: InputPhoneEvent,
         config: InputPhoneConfig
@@ -83,7 +83,7 @@ public struct InputPhoneView: View {
     }
 }
 
-extension InputPhoneView {
+public extension InputPhoneView {
     
     struct InputPhoneConfig {
         

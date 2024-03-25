@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum InputPhoneState {
+public enum InputPhoneState {
     
     case placeholder
     case entered

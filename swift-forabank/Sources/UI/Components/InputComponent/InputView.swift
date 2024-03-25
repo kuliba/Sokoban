@@ -113,7 +113,7 @@ public struct InputView: View {
     }
 }
 
-private extension InputView.Config {
+public extension InputView.Config {
     
     static let preview: Self = .init(
         title: "Лицевой счет",
