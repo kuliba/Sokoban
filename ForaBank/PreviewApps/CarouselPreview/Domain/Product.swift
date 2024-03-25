@@ -46,19 +46,15 @@ struct Product: Identifiable {
         case additionalSelfAccOwn
         case additionalOther
         
-        var type: CarouselProduct.CardType {
-            switch self {
-            case .regular:
-                return .regular
-            case .main:
-                return .main
-            case .additionalSelf:
-                return .additionalSelf
-            case .additionalSelfAccOwn:
-                return .additionalSelfAccOwn
-            case .additionalOther:
-                return .additionalOther
-            }
+        var isAdditional: Bool {
+            self == .additionalSelf ||
+            self == .additionalSelfAccOwn ||
+            self == .additionalOther
+        }
+        
+        var isMainOrRegular: Bool {
+            self == .main ||
+            self == .regular
         }
     }
 }

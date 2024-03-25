@@ -76,37 +76,38 @@ extension Product {
     private init(
         id: Int,
         _ type: ProductType,
-        _ cardType: CardType? = nil
+        _ isAdditional: Bool? = nil,
+        _ isMainOrRegular: Bool? = nil
     ) {
-        self.init(id: .init(id), type: type, cardType: cardType)
+        self.init(id: .init(id), type: type, isAdditional: isAdditional, isMainOrRegular: isMainOrRegular)
     }
         
-    static let card: Self = .init(id: 1, .card, .main)
-    static let cardAdditionalOther: Self = .init(id: 2, .card, .additionalOther)
-    static let cardAdditionalSelf: Self = .init(id: 3, .card, .additionalSelf)
-    static let cardAdditionalSelfAccOwn: Self = .init(id: 4, .card, .additionalSelfAccOwn)
-    static let cardRegular: Self = .init(id: 5, .card, .regular)
-    static let cardAdditionalOther2: Self = .init(id: 6, .card, .additionalOther)
-    static let cardAdditionalSelf2: Self = .init(id: 7, .card, .additionalSelf)
-    static let cardAdditionalOther3: Self = .init(id: 8, .card, .additionalOther)
+    static let card: Self = .init(id: 1, .card, false, true)
+    static let cardAdditionalOther: Self = .init(id: 2, .card, true, false)
+    static let cardAdditionalSelf: Self = .init(id: 3, .card, true, false)
+    static let cardAdditionalSelfAccOwn: Self = .init(id: 4, .card, true, false)
+    static let cardRegular: Self = .init(id: 5, .card, false, true)
+    static let cardAdditionalOther2: Self = .init(id: 6, .card, true, false)
+    static let cardAdditionalSelf2: Self = .init(id: 7, .card, true, false)
+    static let cardAdditionalOther3: Self = .init(id: 8, .card, true, false)
     
-    static let account1: Self = .init(id: 9, .account, nil)
-    static let deposit1: Self = .init(id: 10, .deposit, nil)
-    static let loan1: Self = .init(id: 11, .loan, nil)
-    static let account2: Self = .init(id: 12, .account, nil)
-    static let account3: Self = .init(id: 13, .account, nil)
-    static let loan2: Self = .init(id: 14, .loan, nil)
-    static let deposit2: Self = .init(id: 15, .deposit, nil)
-    static let account4: Self = .init(id: 16, .account, nil)
+    static let account1: Self = .init(id: 9, .account)
+    static let deposit1: Self = .init(id: 10, .deposit)
+    static let loan1: Self = .init(id: 11, .loan)
+    static let account2: Self = .init(id: 12, .account)
+    static let account3: Self = .init(id: 13, .account)
+    static let loan2: Self = .init(id: 14, .loan)
+    static let deposit2: Self = .init(id: 15, .deposit)
+    static let account4: Self = .init(id: 16, .account)
     
-    static let cardAdditionalOther4: Self = .init(id: 17, .card, .additionalOther)
-    static let cardAdditionalOther5: Self = .init(id: 18, .card, .additionalOther)
-    static let cardAdditionalSelf3: Self = .init(id: 19, .card, .additionalSelf)
-    static let cardAdditionalSelfAccOwn2: Self = .init(id: 20, .card, .additionalSelfAccOwn)
-    static let cardRegular2: Self = .init(id: 21, .card, .regular)
-    static let cardAdditionalOther6: Self = .init(id: 22, .card, .additionalOther)
-    static let cardAdditionalSelf4: Self = .init(id: 23, .card, .additionalSelf)
-    static let cardAdditionalOther7: Self = .init(id: 24, .card, .additionalOther)
+    static let cardAdditionalOther4: Self = .init(id: 17, .card, true, false)
+    static let cardAdditionalOther5: Self = .init(id: 18, .card, true, false)
+    static let cardAdditionalSelf3: Self = .init(id: 19, .card, true, false)
+    static let cardAdditionalSelfAccOwn2: Self = .init(id: 20, .card, true, false)
+    static let cardRegular2: Self = .init(id: 21, .card, false, true)
+    static let cardAdditionalOther6: Self = .init(id: 22, .card, true, false)
+    static let cardAdditionalSelf4: Self = .init(id: 23, .card, true, false)
+    static let cardAdditionalOther7: Self = .init(id: 24, .card, true, false)
 }
 
 extension Array where Element == ProductGroup {

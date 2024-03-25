@@ -27,7 +27,9 @@ struct CarouselMainView: View {
                     .init(
                         id: .init($0.id),
                         type: $0.productType.type,
-                        cardType: $0.cardType?.type)
+                        isAdditional: $0.cardType?.isAdditional,
+                        isMainOrRegular: $0.cardType?.isMainOrRegular
+                    )
                 },
                 needShowSticker: needShowSticker))
         self.products = products
@@ -62,7 +64,7 @@ struct CarouselMainView: View {
                 
                 ProductFrontView(
                     name: product.productName,
-                    headerDetails: headerDetails(carouselProduct, product),
+                    headerDetails: headerDetails(product),
                     footerDetails: .init(balance: product.balance, paymentSystem: Image(systemName: "sparkles")),
                     modifierConfig: .init(
                         isChecked: false,
@@ -88,9 +90,9 @@ struct CarouselMainView: View {
         }
     }
     
-    private func headerDetails(_ carouselProduct: CarouselProduct, _ product: Product) -> HeaderDetails {
+    private func headerDetails(_ product: Product) -> HeaderDetails {
         
-        switch carouselProduct.cardType {
+        switch product.cardType {
         case .regular, .main:
             return .init(number: product.number, icon: Image(systemName: "circle.grid.cross.fill"))
             

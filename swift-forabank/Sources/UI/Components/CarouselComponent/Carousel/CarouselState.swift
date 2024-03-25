@@ -125,16 +125,16 @@ public extension CarouselState {
         secondProduct: Product
     ) -> Product? {
         
-        if firstProduct.cardType?.isMainOrRegular == true
-            && secondProduct.cardType?.isAdditional == true {
+        if firstProduct.isMainOrRegular == true
+            && secondProduct.isAdditional == true {
             
             guard pairIndex > 0 else { return nil }
             
             return firstProduct
         }
 
-        if firstProduct.cardType?.isAdditional == true
-            && secondProduct.cardType?.isMainOrRegular == true {
+        if firstProduct.isAdditional == true
+            && secondProduct.isMainOrRegular == true {
             
             return firstProduct
         }

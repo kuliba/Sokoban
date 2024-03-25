@@ -10,15 +10,16 @@ import Tagged
 
 public struct Product: CarouselProduct, Equatable, Identifiable {
     
-    public var type: ProductType
-    public var cardType: CardType?
-    
     public let id: ID
+    public var type: ProductType
+    public var isAdditional: Bool?
+    public var isMainOrRegular: Bool?
     
-    public init(id: ID, type: ProductType, cardType: CardType?) {
+    public init(id: ID, type: ProductType, isAdditional: Bool? = nil, isMainOrRegular: Bool? = nil) {
         self.id = id
         self.type = type
-        self.cardType = cardType
+        self.isAdditional = isAdditional
+        self.isMainOrRegular = isMainOrRegular
     }
 }
 
@@ -26,28 +27,6 @@ public enum ProductType: Equatable {
     
     case card, account, deposit, loan
 }
-
-#warning("Добавить недостающие поля в v6/getProductListByType")
-public enum CardType {
-    
-    case regular
-    case main
-    case additionalSelf
-    case additionalSelfAccOwn
-    case additionalOther
-    
-    public var isAdditional: Bool {
-        self == .additionalSelf ||
-        self == .additionalSelfAccOwn ||
-        self == .additionalOther
-    }
-    
-    public var isMainOrRegular: Bool {
-        self == .main ||
-        self == .regular
-    }
-}
-
 
 public extension Product {
     
