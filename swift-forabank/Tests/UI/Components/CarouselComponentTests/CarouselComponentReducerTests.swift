@@ -225,7 +225,7 @@ final class CarouselComponentReducerTests: XCTestCase {
         XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProducts)
     }
     
-    private typealias SUT = CarouselReducer
+    private typealias SUT = CarouselReducer<Product>
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -311,7 +311,7 @@ final class CarouselComponentReducerTests: XCTestCase {
     }
 }
 
-private extension CarouselReducer.State {
+private extension CarouselReducer<Product>.State {
     
     static let empty: Self = .init(products: [], needShowSticker: true)
     static let cards: Self = .init(products: .cards, needShowSticker: true)

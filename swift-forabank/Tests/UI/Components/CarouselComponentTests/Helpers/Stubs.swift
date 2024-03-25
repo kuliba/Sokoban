@@ -7,7 +7,14 @@
 
 import CarouselComponent
 
-typealias ProductSeparators = [Product.ProductType: [Product]]
+struct Product: CarouselProduct, Equatable, Identifiable {
+    
+    let id: Int
+    let type: ProductType
+    let isAdditional: Bool?
+}
+
+typealias ProductSeparators = [ProductType: [Product]]
 
 extension Array where Element == Product {
     
@@ -109,7 +116,7 @@ extension Product {
     static let cardAdditionalOther7: Self = .init(id: 24, .card, true)
 }
 
-extension Array where Element == ProductGroup {
+extension Array where Element == ProductGroup<Product> {
     
     static let cards: Self = [
         .init(productType: .card, products: .cards)
@@ -169,7 +176,7 @@ extension ProductSeparators {
     ]
 }
 
-extension ProductGroup {
+extension ProductGroup<Product> {
     
     static let cards: Self = .init(productType: .card, products: .cards)
     static let allCardProducts: Self = .init(productType: .card, products: .allCardProducts)
@@ -184,5 +191,4 @@ extension String {
     
     static let spoilerTitleForCardProducts: Self = .init("+5")
     static let spoilerTitleForAllCardProducts: Self = .init("+13")
-    static let spoilerTitleForAllCardProductsWithSticker: Self = .init("+14")
 }
