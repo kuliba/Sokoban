@@ -326,6 +326,34 @@
         "identifier" : "GetProductListByTypeServiceTests",
         "name" : "GetProductListByTypeServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AccountInfoPanelTests",
+        "name" : "AccountInfoPanelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentTests",
+        "name" : "AnywayPaymentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardUITests",
+        "name" : "CardUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
     }
   ],
   "version" : 1
