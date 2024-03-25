@@ -40,6 +40,13 @@ extension Array where Element == Product {
         .deposit1, .deposit2, .deposit3,
         .loan1, .loan2, .loan3, .loan4, .loan5, .loan6
     ]
+    
+    static let previewWithOneCard: Self = [
+        .card1,
+        .account1, .account2, .account3,
+        .deposit1, .deposit2, .deposit3,
+        .loan1, .loan2, .loan3, .loan4, .loan5, .loan6
+    ]
 }
 
 extension CarouselComponentConfig {

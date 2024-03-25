@@ -45,8 +45,10 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
                         productGroupSeparator(for: group)
                     }
                     
-                    newProductButton()
-                        .frame(config.productDimensions, for: \.new)
+                    if state.needShowAddNewProduct {
+                        newProductButton()
+                            .frame(config.productDimensions, for: \.new)
+                    }
                 }
                 .onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })
                 .onChange(of: state.selectedProductType) { productType in

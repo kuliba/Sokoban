@@ -20,7 +20,7 @@ struct ContentView: View {
             .padding()
             
             CarouselMainView(
-                products: .preview,
+                products: .previewWithOneCard,
                 needShowSticker: false
             )
             .padding()

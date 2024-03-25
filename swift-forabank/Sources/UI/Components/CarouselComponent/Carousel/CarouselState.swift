@@ -55,6 +55,13 @@ public struct CarouselState: Equatable {
             self.items = items
         }
     }
+    
+    var needShowAddNewProduct: Bool {
+        if let cards = productGroups.first(where: { $0.productType == .card }), cards.products.count > 1 {
+            return false
+        }
+        return true
+    }
 }
 
 public extension CarouselState {
