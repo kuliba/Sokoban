@@ -8,7 +8,9 @@
 @_exported import AmountComponent
 @_exported import ButtonComponent
 @_exported import FooterComponent
+@_exported import InputComponent
 @_exported import InfoComponent
+@_exported import NameComponent
 @_exported import CheckBoxComponent
 @_exported import ProductSelectComponent
 @_exported import SharedConfigs
@@ -36,6 +38,9 @@ public extension PaymentComponents {
     typealias InfoConfig = InfoComponent.InfoConfig
     typealias InfoView = InfoComponent.InfoView
     
+    typealias InputView = InputComponent.InputView
+    typealias InputConfig = InputComponent.InputView.Config
+    
     typealias ProductSelect = ProductSelectComponent.ProductSelect
     typealias ProductSelectConfig = ProductSelectComponent.ProductSelectConfig
     typealias ProductSelectView = ProductSelectComponent.ProductSelectView
@@ -46,6 +51,9 @@ public extension PaymentComponents {
     
     typealias CheckBox = CheckBoxComponent.CheckBoxView
     typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
+    
+    typealias NameView = NameComponent.NameView
+    typealias NameConfig = InputComponent.InputView.Config
     
     typealias FooterView = FooterComponent.FooterView
     typealias FooterConfig = FooterComponent.FooterView.Config

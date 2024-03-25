@@ -8,14 +8,26 @@
 import SwiftUI
 import InputComponent
 
-struct NameView: View {
+public struct NameView: View {
     
     let state: NameViewState
     @State private var text: String = ""
     let event: (NameEvent) -> Void
     let config: InputView.Config
     
-    var body: some View {
+    init(
+        state: NameViewState,
+        text: String,
+        event: @escaping (NameEvent) -> Void,
+        config: InputView.Config
+    ) {
+        self.state = state
+        self.text = text
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         switch state.state {
         case .collapse:
@@ -147,12 +159,14 @@ struct NameView_Previews: PreviewProvider {
                 
                 NameView(
                     state: .init(state: .collapse),
+                    text: "",
                     event: { state in },
                     config: .preview
                 )
                 
                 NameView(
                     state: .init(state: .expended),
+                    text: "",
                     event: { state in },
                     config: .preview
                 )
