@@ -76,7 +76,8 @@ public struct NameView: View {
         HStack {
             
             InputView(
-                state: .init(image: { .init(systemName: "person") }),
+                state: .init(image: { .init(systemName: "person") }), 
+                text: text,
                 event: { event in },
                 config: setupConfig(title, placeholder)
             )
@@ -128,7 +129,7 @@ private extension NameView {
             hint: nil,
             hintFont: config.hintFont,
             hintColor: config.hintColor,
-            backgroundColor: config.backgroundColor,
+            backgroundColor: .clear,
             imageSize: .small
         )
     }

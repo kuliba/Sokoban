@@ -16,10 +16,12 @@ public struct InputView: View {
     
     public init(
         state: InputState,
+        text: String,
         event: @escaping (InputEvent) -> Void,
         config: InputView.Config
     ) {
         self.state = state
+        self.text = text
         self.event = event
         self.config = config
     }
@@ -137,6 +139,7 @@ struct InputView_Previews: PreviewProvider {
             
             InputView(
                 state: .init(image: { .init(systemName: "photo.artframe") }),
+                text: "792347111222",
                 event: { _ in },
                 config: .preview
             )
@@ -144,6 +147,7 @@ struct InputView_Previews: PreviewProvider {
             
             InputView(
                 state: .init(image: { .init(systemName: "photo.artframe") }),
+                text: "",
                 event: { _ in },
                 config: .preview
             )
