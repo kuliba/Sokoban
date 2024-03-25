@@ -9,14 +9,14 @@ import Foundation
 
 public struct ProductGroup: Equatable, Identifiable {
     
-    let productType: CarouselProduct.ProductType
-    public var id: CarouselProduct.ProductType { productType }
-    let products: [CarouselProduct]
+    let productType: Product.ProductType
+    public var id: Product.ProductType { productType }
+    let products: [Product]
     var state: State
     
     public init(
-        productType: CarouselProduct.ProductType,
-        products: [CarouselProduct],
+        productType: Product.ProductType,
+        products: [Product],
         state: State = .collapsed
     ) {
         self.productType = productType
@@ -48,7 +48,7 @@ public struct ProductGroup: Equatable, Identifiable {
 
 extension ProductGroup {
     
-    func visibleProducts(count: Int) -> [CarouselProduct] {
+    func visibleProducts(count: Int) -> [Product] {
         
         switch state {
         case .collapsed:

@@ -13,7 +13,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     let groups: CarouselState.ProductGroups
     let event: (CarouselEvent) -> Void
     
-    let productView: (CarouselProduct) -> ProductView
+    let productView: (Product) -> ProductView
     let stickerView: () -> StickerView?
     let newProductButton: () -> NewProductButton?
     

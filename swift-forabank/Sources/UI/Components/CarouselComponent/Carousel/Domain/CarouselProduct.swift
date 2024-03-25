@@ -1,92 +1,17 @@
 //
 //  CarouselProduct.swift
+//  
 //
+//  Created by Andryusina Nataly on 24.03.2024.
 //
-//  Created by Disman Dmitry on 20.02.2024.
-//
 
-import SwiftUI
-import Tagged
+import Foundation
 
-public struct CarouselProduct: CarouselProductProtocol, Identifiable {
+public protocol CarouselProduct: Equatable {
     
-    public var type: CarouselProductType
-    public var cardType: CarouselCardType?
+    associatedtype ProductType: Equatable
+    associatedtype CardType: Equatable
     
-    public let id: ID
-    
-    public init(id: ID, type: ProductType, cardType: CardType?) {
-        self.id = id
-        self.type = type
-        self.cardType = cardType
-    }
-}
-
-public extension CarouselProduct {
-    
-    enum CarouselProductType: Equatable {
-        
-        case card, account, deposit, loan
-    }
-    
-#warning("Добавить недостающие поля в v6/getProductListByType")
-    enum CarouselCardType {
-        
-        case regular
-        case main
-        case additionalSelf
-        case additionalSelfAccOwn
-        case additionalOther
-        
-        public var isAdditional: Bool {
-            self == .additionalSelf ||
-            self == .additionalSelfAccOwn ||
-            self == .additionalOther
-        }
-        
-        public var isMainOrRegular: Bool {
-            self == .main ||
-            self == .regular
-        }
-    }
-}
-
-public extension CarouselProduct {
-    
-    typealias IDParent = Tagged<_IDParent, Int>
-    enum _IDParent {}
-    
-    typealias ID = Tagged<_ID, Int>
-    enum _ID {}
-}
-
-extension CarouselProduct.CarouselProductType {
-    
-    var pluralName: String {
-        
-        switch self {
-        case .card:
-            return "Карты"
-        case .account:
-            return "Счета"
-        case .deposit:
-            return "Вклады"
-        case .loan:
-            return "Кредиты"
-        }
-    }
-    
-    var order: Int {
-        
-        switch self {
-        case .card:
-            return 0
-        case .account:
-            return 1
-        case .deposit:
-            return 2
-        case .loan:
-            return 3
-        }
-    }
+    var type: ProductType { get }
+    var cardType: CardType? { get }
 }

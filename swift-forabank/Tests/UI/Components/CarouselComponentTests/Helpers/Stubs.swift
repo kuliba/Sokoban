@@ -7,9 +7,9 @@
 
 import CarouselComponent
 
-typealias ProductSeparators = [CarouselProduct.ProductType: [CarouselProduct]]
+typealias ProductSeparators = [Product.ProductType: [Product]]
 
-extension Array where Element == CarouselProduct {
+extension Array where Element == Product {
     
     static let empty: Self = []
     
@@ -71,7 +71,7 @@ extension Array where Element == CarouselProduct {
     ]
 }
 
-extension CarouselProduct {
+extension Product {
     
     private init(
         id: Int,

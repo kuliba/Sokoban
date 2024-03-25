@@ -10,6 +10,8 @@ import SwiftUI
 import CarouselComponent
 import CardUI
 
+typealias CarouselProduct = CarouselComponent.Product
+
 struct CarouselMainView: View {
     
     @ObservedObject var viewModel: CarouselViewModel
