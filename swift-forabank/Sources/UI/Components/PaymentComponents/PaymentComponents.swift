@@ -9,6 +9,7 @@
 @_exported import ButtonComponent
 @_exported import FooterComponent
 @_exported import InputComponent
+@_exported import InputPhoneComponent
 @_exported import InfoComponent
 @_exported import NameComponent
 @_exported import CheckBoxComponent
@@ -40,6 +41,9 @@ public extension PaymentComponents {
     
     typealias InputView = InputComponent.InputView
     typealias InputConfig = InputComponent.InputView.Config
+    
+    typealias InputPhoneView = InputPhoneComponent.InputPhoneView
+    typealias InputPhoneConfig = InputPhoneComponent.InputPhoneView.InputPhoneConfig
     
     typealias ProductSelect = ProductSelectComponent.ProductSelect
     typealias ProductSelectConfig = ProductSelectComponent.ProductSelectConfig
