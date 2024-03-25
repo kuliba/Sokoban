@@ -12,12 +12,12 @@ import SearchBarComponent
 public struct InputPhoneView: View {
     
     let state: InputPhoneState
-    let event: InputPhoneEvent
+    let event: (InputPhoneEvent) -> Void
     let config: InputPhoneConfig
     
     public init(
         state: InputPhoneState,
-        event: InputPhoneEvent,
+        event: @escaping (InputPhoneEvent) -> Void,
         config: InputPhoneConfig
     ) {
         self.state = state
@@ -150,13 +150,13 @@ struct InputPhoneView_Previews: PreviewProvider {
             
             InputPhoneView(
                 state: .placeholder,
-                event: .init(),
+                event: { _ in },
                 config: .preview
             )
             
             InputPhoneView(
                 state: .entered,
-                event: .init(),
+                event: { _ in },
                 config: .preview
             )
         }
