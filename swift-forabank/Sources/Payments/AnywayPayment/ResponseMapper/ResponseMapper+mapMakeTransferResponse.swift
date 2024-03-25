@@ -15,7 +15,7 @@ public extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> MakeTransferResponse? {
         
-        try? map(data, httpURLResponse, mapOrThrow: map).get()
+        try? map(data, httpURLResponse, mapOrThrow: MakeTransferResponse.init).get()
     }
 }
 
@@ -45,13 +45,6 @@ public extension ResponseMapper.MakeTransferResponse {
 }
 
 private extension ResponseMapper {
-    
-    private static func map(
-        _ data: _Data
-    ) -> MakeTransferResponse? {
-        
-        .init(data)
-    }
     
     struct _Data: Decodable {
         
