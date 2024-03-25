@@ -1,12 +1,11 @@
 //
-//  Product.swift
+//  ProductType.swift
 //
 //
 //  Created by Disman Dmitry on 20.02.2024.
 //
 
 import SwiftUI
-import Tagged
 
 public enum ProductType: Equatable {
     
