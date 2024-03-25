@@ -341,30 +341,37 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "AccountInfoPanelTests",
         "name" : "AccountInfoPanelTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "AnywayPaymentTests",
         "name" : "AnywayPaymentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CardUITests",
         "name" : "CardUITests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductDetailsUITests",
         "name" : "ProductDetailsUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "RemoteServicesTests",
+        "name" : "RemoteServicesTests"
       }
     }
   ],

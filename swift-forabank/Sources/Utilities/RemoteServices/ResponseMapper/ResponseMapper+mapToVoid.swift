@@ -2,7 +2,7 @@
 //  ResponseMapper+mapToVoid.swift
 //
 //
-//  Created by Igor Malyarov on 28.12.2023.
+//  Created by Andryusina Nataly on 13.02.2024.
 //
 
 import Foundation

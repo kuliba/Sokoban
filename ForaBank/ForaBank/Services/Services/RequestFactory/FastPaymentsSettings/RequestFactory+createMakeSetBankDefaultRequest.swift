@@ -7,18 +7,19 @@
 
 import FastPaymentsSettings
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
     static func createMakeSetBankDefaultRequest(
-        payload: FastPaymentsSettings.RequestFactory.VerificationCode
+        payload: RemoteServices.RequestFactory.VerificationCode
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
         let endpoint = Services.Endpoint.makeSetBankDefault
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try FastPaymentsSettings.RequestFactory.createMakeSetBankDefaultRequest(
+        return try RemoteServices.RequestFactory.createMakeSetBankDefaultRequest(
             url: endpointURL,
             payload: payload
         )
