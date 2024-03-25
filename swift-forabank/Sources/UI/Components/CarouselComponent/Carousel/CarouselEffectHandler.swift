@@ -15,10 +15,8 @@ public final class CarouselEffectHandler {
 
 extension CarouselEffectHandler: EffectHandler {
     
-    public typealias Dispatch = (CarouselEvent) -> Void
-    
     public func handleEffect(
-        _ effect: CarouselEffect,
+        _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
@@ -30,4 +28,11 @@ extension CarouselEffectHandler: EffectHandler {
             })
         }
     }
+}
+
+public extension CarouselEffectHandler {
+    
+    typealias Effect = CarouselEffect
+    typealias Event = CarouselEvent
+    typealias Dispatch = (Event) -> Void
 }

@@ -9,11 +9,7 @@ import RxViewModel
 import Foundation
 
 public final class CarouselReducer {
-    
-    public typealias State = CarouselState
-    public typealias Event = CarouselEvent
-    public typealias Effect = CarouselEffect
-    
+        
     public init() { }
 }
 
@@ -59,4 +55,11 @@ extension CarouselReducer {
         
         return (state, effect)
     }
+}
+
+public extension CarouselReducer {
+    
+    typealias State = CarouselState
+    typealias Event = CarouselEvent
+    typealias Effect = CarouselEffect
 }

@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView: View>: View {
     
-    var state: CarouselState
-    let groups: CarouselState.ProductGroups
-    let event: (CarouselEvent) -> Void
+    var state: State
+    let groups: Groups
+    let event: (Event) -> Void
     
     let productView: (Product) -> ProductView
     let stickerView: () -> StickerView?
@@ -26,7 +26,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
         groupView(groups: groups)
     }
     
-    private func groupView(groups: CarouselState.ProductGroups) -> some View {
+    private func groupView(groups: Groups) -> some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             
@@ -76,7 +76,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
         .coordinateSpace(name: coordinateSpaceName)
     }
     
-    private func visibleProducts(for group: ProductGroup) -> some View {
+    private func visibleProducts(for group: Group) -> some View {
         
         ForEach(
             state.visibleProducts(for: group),
@@ -107,7 +107,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     }
     
     @ViewBuilder
-    private func spoiler(for group: ProductGroup) -> some View {
+    private func spoiler(for group: Group) -> some View {
                         
         if state.shouldAddSpoiler(for: group) {
             
@@ -136,7 +136,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     }
     
     @ViewBuilder
-    private func sticker(for group: ProductGroup) -> some View {
+    private func sticker(for group: Group) -> some View {
         
         if state.needShowSticker, state.shouldAddSticker(for: group) {
             
@@ -154,7 +154,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     }
     
     @ViewBuilder
-    private func productGroupSeparator(for group: ProductGroup) -> some View {
+    private func productGroupSeparator(for group: Group) -> some View {
         
         if state.shouldAddGroupSeparator(for: group) { separator() }
     }
@@ -241,4 +241,13 @@ struct StickerCloseButtonView: View {
         }
         .padding(4)
     }
+}
+
+extension ProductGroupsView {
+    
+    typealias State = CarouselState
+    typealias Event = CarouselEvent
+    
+    typealias Group = ProductGroup
+    typealias Groups = [Group]
 }

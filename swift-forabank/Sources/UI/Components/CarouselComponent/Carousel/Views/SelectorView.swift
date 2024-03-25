@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct SelectorView: View {
-    
-    typealias Selector = CarouselState.ProductTypeSelector
-    
-    let state: Selector
-    let event: (ProductType) -> Void
+        
+    let state: State
+    let action: (ProductType) -> Void
     let config: SelectorConfig
         
     var body: some View {
@@ -28,7 +26,7 @@ struct SelectorView: View {
                         shouldSelect: productType == state.selected,
                         config: config
                     ) {
-                        event(productType)
+                        action(productType)
                     }
                     .frame(height: config.optionConfig.frameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")
@@ -69,4 +67,9 @@ extension SelectorView {
             action()
         }
     }
+}
+
+extension SelectorView {
+    
+    typealias State = CarouselState.ProductTypeSelector
 }

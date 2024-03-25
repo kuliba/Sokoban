@@ -7,34 +7,18 @@
 
 import SwiftUI
 
-public struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View>: View {
 
-    let state: CarouselState
-    let event: (CarouselEvent) -> Void
+    let state: State
+    let event: (Event) -> Void
     
     let productView: (Product) -> ProductView
     let stickerView: () -> StickerView?
     let newProductButton: () -> NewProductButton?
     
     let config: CarouselComponentConfig
-    
-    public init(
-        state: CarouselState,
-        event: @escaping (CarouselEvent) -> Void,
-        productView: @escaping (Product) -> ProductView,
-        stickerView: @escaping () -> StickerView?,
-        newProductButton: @escaping () -> NewProductButton?,
-        config: CarouselComponentConfig
-    ) {
-        self.state = state
-        self.event = event
-        self.productView = productView
-        self.stickerView = stickerView
-        self.newProductButton = newProductButton
-        self.config = config
-    }
-    
-    public var body: some View {
+        
+    var body: some View {
                 
         if isEmptyProducts {
             
@@ -46,7 +30,7 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
                 
                 SelectorView(
                     state: state.selector,
-                    event: { event(.select($0, delay: 0.2)) }, 
+                    action: { event(.select($0, delay: 0.2)) }, 
                     config: config.selector
                 )
                 
@@ -67,4 +51,10 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
         
         state.productGroups.isEmpty
     }
+}
+
+extension CarouselView {
+    
+    typealias State = CarouselState
+    typealias Event = CarouselEvent
 }
