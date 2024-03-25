@@ -53,7 +53,7 @@ extension MicroServices.Facade {
         
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
-        typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, RemoteServices.MappingError>
+        typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, RemoteServices.ResponseMapper.MappingError>
         
         func adaptedLoggingFetch<Payload, Input, Output>(
             mapPayload: @escaping (Payload) -> Input,
