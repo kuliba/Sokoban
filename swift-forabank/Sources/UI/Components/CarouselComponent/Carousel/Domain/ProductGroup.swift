@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ProductGroup: Equatable, Identifiable {
+public struct ProductGroup<Product>: Identifiable {
     
     let productType: ProductType
     public var id: ProductType { productType }
@@ -42,7 +42,6 @@ public struct ProductGroup: Equatable, Identifiable {
             
             case collapsed, expanded
         }
-        
     }
 }
 
@@ -75,6 +74,8 @@ extension ProductGroup {
         }
     }
 }
+
+extension ProductGroup: Equatable where Product: Equatable {}
 
 extension ProductGroup.State {
     

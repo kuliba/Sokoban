@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+struct ProductGroupsView<Product, ProductView, NewProductButton, StickerView>: View
+where Product: CarouselProduct & Equatable & Identifiable,
+      ProductView: View,
+      NewProductButton: View,
+      StickerView: View {
     
     var state: State
     let groups: Groups
@@ -245,9 +249,9 @@ struct StickerCloseButtonView: View {
 
 extension ProductGroupsView {
     
-    typealias State = CarouselState
-    typealias Event = CarouselEvent
+    typealias State = CarouselState<Product>
+    typealias Event = CarouselEvent<Product>
     
-    typealias Group = ProductGroup
+    typealias Group = ProductGroup<Product>
     typealias Groups = [Group]
 }

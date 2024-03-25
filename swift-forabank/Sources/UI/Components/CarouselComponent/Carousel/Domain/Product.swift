@@ -8,31 +8,9 @@
 import SwiftUI
 import Tagged
 
-public struct Product: CarouselProduct, Equatable, Identifiable {
-    
-    public let id: ID
-    public var type: ProductType
-    public var isAdditional: Bool?
-    
-    public init(id: ID, type: ProductType, isAdditional: Bool? = nil) {
-        self.id = id
-        self.type = type
-        self.isAdditional = isAdditional
-    }
-}
-
 public enum ProductType: Equatable {
     
     case card, account, deposit, loan
-}
-
-public extension Product {
-    
-    typealias IDParent = Tagged<_IDParent, Int>
-    enum _IDParent {}
-    
-    typealias ID = Tagged<_ID, Int>
-    enum _ID {}
 }
 
 extension ProductType {

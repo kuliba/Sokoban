@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-public struct CarouselState: Equatable {
+public struct CarouselState<Product: CarouselProduct & Equatable>: Equatable {
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
@@ -143,20 +143,17 @@ public extension CarouselState {
     }
 }
 
-public extension CarouselState {
+struct ProductTypeSelector: Equatable {
     
-    struct ProductTypeSelector: Equatable {
-        
-        public var selected: ProductType?
-        public var items: [ProductType]
-        
-        public init(
-            selected: ProductType? = .card,
-            items: [ProductType]
-        ) {
-            self.selected = selected
-            self.items = items
-        }
+    public var selected: ProductType?
+    public var items: [ProductType]
+    
+    public init(
+        selected: ProductType? = .card,
+        items: [ProductType]
+    ) {
+        self.selected = selected
+        self.items = items
     }
 }
 
@@ -169,7 +166,6 @@ extension CarouselState {
         return true
     }
 }
-
 
 extension CarouselState {
     
@@ -208,7 +204,7 @@ extension CarouselState {
 
 public extension CarouselState {
     
-    subscript(_ productType: ProductType) -> ProductGroup? {
+    subscript(_ productType: ProductType) -> Group? {
         
         get { productGroups.first(matching: productType) }
         
@@ -231,36 +227,36 @@ extension CarouselState {
         separators[product.type]?.contains(product) == true
     }
     
-    func shouldAddGroupSeparator(for productGroup: ProductGroup) -> Bool {
+    func shouldAddGroupSeparator(for productGroup: Group) -> Bool {
         
         productGroups.last != productGroup
     }
     
-    func productGroupIsCollapsed(_ productGroup: ProductGroup) -> Bool {
+    func productGroupIsCollapsed(_ productGroup: Group) -> Bool {
         
         productGroups
             .contains(where: { $0 == productGroup && $0.state == .collapsed })        
     }
     
-    func shouldAddSpoiler(for productGroup: ProductGroup) -> Bool {
+    func shouldAddSpoiler(for productGroup: Group) -> Bool {
         
         productGroups
             .first(where: { $0 == productGroup && $0.products.count > numberOfItemsBeforeSpoiler }) != nil
     }
     
-    func shouldAddSticker(for productGroup: ProductGroup) -> Bool {
+    func shouldAddSticker(for productGroup: Group) -> Bool {
         
         needShowSticker && productGroup.id == .card
     }
     
-    func spoilerTitle(for productGroup: ProductGroup) -> String? {
+    func spoilerTitle(for productGroup: Group) -> String? {
         
         productGroups
             .first(where: { $0 == productGroup })?
             .spoilerTitle(count: numberOfItemsBeforeSpoiler)
     }
     
-    func visibleProducts(for productGroup: ProductGroup) -> [Product] {
+    func visibleProducts(for productGroup: Group) -> [Product] {
         
         productGroups
             .first(where: { $0 == productGroup })?
@@ -270,6 +266,8 @@ extension CarouselState {
 
 public extension CarouselState {
     
-    typealias ProductGroups = [ProductGroup]
+    typealias Group = ProductGroup<Product>
+    typealias ProductGroups = [ProductGroup<Product>]
     typealias ProductSeparators = [ProductType: [Product]]
 }
+

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CarouselEvent: Equatable {
+public enum CarouselEvent<Product> {
     
     case toggle(
         id: ProductType,
@@ -20,3 +20,5 @@ public enum CarouselEvent: Equatable {
     case update([Product])
     case closeSticker
 }
+
+extension CarouselEvent: Equatable where Product: Equatable {}

@@ -7,9 +7,15 @@
 
 import SwiftUI
 
-public struct CarouselWrapperView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+public struct CarouselWrapperView<Product, ProductView, NewProductButton, StickerView>: View
+where Product: CarouselProduct & Equatable & Identifiable,
+      ProductView: View,
+      NewProductButton: View,
+      StickerView: View {
     
-    @ObservedObject var viewModel: CarouselViewModel
+    public typealias ViewModel = CarouselViewModel<Product>
+    
+    @ObservedObject var viewModel: ViewModel
     
     private let productView: (Product) -> ProductView
     private let stickerView: () -> StickerView?
@@ -18,7 +24,7 @@ public struct CarouselWrapperView<ProductView: View, NewProductButton: View, Sti
     private let config: CarouselComponentConfig
     
     public init(
-        viewModel: CarouselViewModel,
+        viewModel: ViewModel,
         productView: @escaping (Product) -> ProductView,
         stickerView: @escaping () -> StickerView?,
         newProductButton: @escaping () -> NewProductButton?,

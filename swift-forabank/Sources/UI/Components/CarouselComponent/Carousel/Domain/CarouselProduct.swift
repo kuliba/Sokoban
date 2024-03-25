@@ -8,9 +8,7 @@
 import Foundation
 
 public protocol CarouselProduct {
-    
-    associatedtype ProductType
-    
+        
     var type: ProductType { get }
     
     var isAdditional: Bool? { get }

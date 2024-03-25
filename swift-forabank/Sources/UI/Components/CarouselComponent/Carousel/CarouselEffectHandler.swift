@@ -5,15 +5,14 @@
 //  Created by Disman Dmitry on 02.02.2024.
 //
 
-import RxViewModel
 import Foundation
 
-public final class CarouselEffectHandler {
+public final class CarouselEffectHandler<Product> {
     
     public init() { }
 }
 
-extension CarouselEffectHandler: EffectHandler {
+extension CarouselEffectHandler {
     
     public func handleEffect(
         _ effect: Effect,
@@ -33,6 +32,6 @@ extension CarouselEffectHandler: EffectHandler {
 public extension CarouselEffectHandler {
     
     typealias Effect = CarouselEffect
-    typealias Event = CarouselEvent
+    typealias Event = CarouselEvent<Product>
     typealias Dispatch = (Event) -> Void
 }

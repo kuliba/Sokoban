@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+struct CarouselView<Product, ProductView, NewProductButton, StickerView>: View
+where Product: CarouselProduct & Equatable & Identifiable,
+      ProductView: View,
+      NewProductButton: View,
+      StickerView: View {
 
     let state: State
     let event: (Event) -> Void
@@ -29,12 +33,12 @@ struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View
             VStack() {
                 
                 SelectorView(
-                    state: state.selector,
+                    selector: state.selector,
                     action: { event(.select($0, delay: 0.2)) }, 
                     config: config.selector
                 )
                 
-                ProductGroupsView<ProductView, NewProductButton, StickerView>(
+                ProductGroupsView<Product, ProductView, NewProductButton, StickerView>(
                     state: state,
                     groups: state.productGroups,
                     event: event,
@@ -55,6 +59,6 @@ struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View
 
 extension CarouselView {
     
-    typealias State = CarouselState
-    typealias Event = CarouselEvent
+    typealias State = CarouselState<Product>
+    typealias Event = CarouselEvent<Product>
 }

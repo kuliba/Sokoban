@@ -24,7 +24,7 @@ struct Product: Identifiable {
         case deposit
         case loan
         
-        var type: CarouselProduct.ProductType {
+        var type: CarouselComponent.ProductType {
             switch self {
             case .card:
                 return .card

@@ -10,11 +10,9 @@ import SwiftUI
 import CarouselComponent
 import CardUI
 
-typealias CarouselProduct = CarouselComponent.Product
-
 struct CarouselMainView: View {
     
-    @ObservedObject var viewModel: CarouselViewModel
+    @ObservedObject var viewModel: CarouselViewModel<CarouselProduct>
     let products: [Product]
     
     init(
@@ -30,7 +28,10 @@ struct CarouselMainView: View {
                         isAdditional: $0.cardType?.isAdditional
                     )
                 },
-                needShowSticker: needShowSticker))
+                needShowSticker: needShowSticker),
+            reduce: CarouselReducer().reduce,
+            handleEffect: CarouselEffectHandler().handleEffect
+        )
         self.products = products
     }
     
@@ -59,7 +60,7 @@ struct CarouselMainView: View {
         
         VStack {
             
-            if let product = products.first(where: { $0.id == carouselProduct.id.rawValue }) {
+            if let product = products.first(where: { $0.id == carouselProduct.id }) {
                 
                 ProductFrontView(
                     name: product.productName,

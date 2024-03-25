@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SelectorView: View {
         
-    let state: State
+    let selector: ProductTypeSelector
     let action: (ProductType) -> Void
     let config: SelectorConfig
         
@@ -19,11 +19,11 @@ struct SelectorView: View {
             
             HStack(spacing: config.itemSpacing) {
                                 
-                ForEach(state.items.uniqueValues, id: \.self) { productType in
+                ForEach(selector.items.uniqueValues, id: \.self) { productType in
                                             
                     labelView(
                         title: productType.pluralName,
-                        shouldSelect: productType == state.selected,
+                        shouldSelect: productType == selector.selected,
                         config: config
                     ) {
                         action(productType)
@@ -67,9 +67,4 @@ extension SelectorView {
             action()
         }
     }
-}
-
-extension SelectorView {
-    
-    typealias State = CarouselState.ProductTypeSelector
 }
