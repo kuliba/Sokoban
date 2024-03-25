@@ -15,7 +15,7 @@ public struct NameView: View {
     let event: (NameEvent) -> Void
     let config: InputView.Config
     
-    init(
+    public init(
         state: NameViewState,
         text: String,
         event: @escaping (NameEvent) -> Void,
