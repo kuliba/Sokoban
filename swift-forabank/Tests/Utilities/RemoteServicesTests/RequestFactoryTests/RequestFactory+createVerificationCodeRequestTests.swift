@@ -1,15 +1,14 @@
 //
-//  RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift
-//  
+//  RequestFactory+createVerificationCodeRequestTests.swift
 //
-//  Created by Igor Malyarov on 29.12.2023.
+//
+//  Created by Igor Malyarov on 25.03.2024.
 //
 
-import FastPaymentsSettings
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTestCase {
+final class RequestFactory_createVerificationCodeRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetURL() throws {
         
@@ -39,28 +38,19 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
         let request = try createRequest(payload: payload)
         
         let body = try request.decodedBody(as: Body.self)
-        XCTAssertNoDiff(body.payload, payload)
+        XCTAssertNoDiff(body.verificationCode, payload.rawValue)
     }
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
-        let id = UUID().uuidString
-        let id2 = UUID().uuidString
-        let id3 = UUID().uuidString
-        let id4 = UUID().uuidString
-        let payload = anyPayload([id, id2, id3, id4])
+        let payload = anyPayload()
         let request = try createRequest(payload: payload)
         
         try assertBody(of: request, hasJSON: """
-        {
-            "bankIdList": [
-                "\(id)",
-                "\(id2)",
-                "\(id3)",
-                "\(id4)"
-            ]
-        }
-        """
+            {
+                "verificationCode": "\(payload.rawValue)"
+            }
+            """
         )
     }
     
@@ -68,29 +58,24 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: RequestFactory.BankIDList = [.init(UUID().uuidString)]
+        payload: RequestFactory.VerificationCode = .init(UUID().uuidString)
     ) throws -> URLRequest {
         
-        try RequestFactory.createChangeClientConsentMe2MePullRequest(
+        try RequestFactory.createVerificationCodeRequest(
             url: url,
             payload: payload
         )
     }
     
     private func anyPayload(
-        _ value: [String] = [UUID().uuidString]
-    ) -> RequestFactory.BankIDList {
+        _ value: String = UUID().uuidString
+    ) -> RequestFactory.VerificationCode {
         
-        value.map(RequestFactory.BankID.init(rawValue:))
+        .init(value)
     }
     
     private struct Body: Decodable {
         
-        let bankIdList: [String]
-        
-        var payload: RequestFactory.BankIDList {
-            
-            bankIdList.map(RequestFactory.BankID.init(rawValue:))
-        }
+        let verificationCode: String
     }
 }

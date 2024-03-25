@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
@@ -17,6 +18,6 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.getClientConsentMe2MePull
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return FastPaymentsSettings.RequestFactory.createGetClientConsentMe2MePullRequest(url: endpointURL)
+        return RemoteServices.RequestFactory.createGetClientConsentMe2MePullRequest(url: endpointURL)
     }
 }

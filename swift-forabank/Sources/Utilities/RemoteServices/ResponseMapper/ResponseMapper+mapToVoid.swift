@@ -9,7 +9,7 @@ import Foundation
 
 public extension ResponseMapper {
     
-    public typealias VoidMappingResult = MappingResult<Void>
+    typealias VoidMappingResult = MappingResult<Void>
     
     static func mapToVoid(
         _ data: Data,

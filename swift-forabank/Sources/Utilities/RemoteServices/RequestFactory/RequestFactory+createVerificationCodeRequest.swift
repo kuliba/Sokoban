@@ -1,41 +1,46 @@
 //
-//  RequestFactory+createGetBankDefaultRequest.swift
+//  RequestFactory+createVerificationCodeRequest.swift
 //
 //
-//  Created by Igor Malyarov on 29.12.2023.
+//  Created by Igor Malyarov on 25.03.2024.
 //
 
 import Foundation
-import RemoteServices
 import Tagged
 
 public extension RequestFactory {
     
-    static func createGetBankDefaultRequest(
+    static func createVerificationCodeRequest(
         url: URL,
-        payload: PhoneNumber
+        payload: VerificationCode
     ) throws -> URLRequest {
         
         guard !payload.isEmpty else {
-            throw EmptyPhoneNumber()
+            throw EmptyVerificationCode()
         }
         
         var request = createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody
         return request
     }
-    
-    struct EmptyPhoneNumber: Error {}
 }
 
-private extension PhoneNumber {
+public extension RequestFactory {
+    
+    typealias VerificationCode = Tagged<_VerificationCode, String>
+    enum _VerificationCode {}
+    
+    struct EmptyVerificationCode: Error {}
+}
+
+private extension RequestFactory.VerificationCode {
     
     var httpBody: Data {
         
         get throws {
             
             try JSONSerialization.data(withJSONObject: [
-                "phoneNumber": rawValue
+                "verificationCode": rawValue
             ] as [String: String])
         }
     }
