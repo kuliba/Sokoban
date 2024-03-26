@@ -12,7 +12,6 @@ import GetProductListByTypeService
 extension Services {
         
     typealias GetProductsResponse = ServerCommands.ProductController.GetProductListByType.Response.List
-    typealias GetProducts = (ProductType) async throws -> GetProductsResponse
     
     typealias GetProductListByTypeResponse = GetProductListByTypeService.ProductResponse
     
@@ -41,22 +40,6 @@ extension Services {
             }
         }
     }
-
-        
-        
-      /*  return { productType in
-
-            let getProductService = RemoteService(
-                createRequest: RequestFactory.createGetProductListByTypeRequest,
-                performRequest: httpClient.performRequest,
-                mapResponse: GetProductListByTypeService.ResponseMapper.mapGetProductListByTypeResponse
-            )
-            
-            return try await mapProductResponse(
-                getProductService.process(productType)
-            )
-        }
-    }*/
     
     static func mapProductResponse(
         _ productResponse: ProductResponse
