@@ -15,7 +15,7 @@ public extension ResponseMapper {
     
     typealias GetProductListByTypeResult = Result<ProductResponse, MappingError>
     
-    static func mapGetCardStatementResponse(
+    static func mapGetProductListByTypeResponse(
         _ data: Data,
         _ response: HTTPURLResponse
     ) -> GetProductListByTypeResult {

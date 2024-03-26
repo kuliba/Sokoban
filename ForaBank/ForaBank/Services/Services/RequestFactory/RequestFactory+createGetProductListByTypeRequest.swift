@@ -13,27 +13,20 @@ extension RequestFactory {
         _ productType: ProductType
     ) throws -> URLRequest {
         
-        let base = Config.serverAgentEnvironment.baseURL
+        let parameters: [(String, String)] = [
+            ("productType", productType.rawValue)
+        ]
         let endpoint = Services.Endpoint.getProductListByType
-        let endpointURL = try! endpoint.url(withBase: base)
+        let url = try! endpoint.url(
+            withBase: Config.serverAgentEnvironment.baseURL,
+            parameters: parameters
+        )
         
-        var request = URLRequest(url: endpointURL)
-        request.httpMethod = "POST"
-        request.httpBody = try? productType.json
+        var request = URLRequest(url: url)
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        return request
-    }
-}
-
-private extension ProductType {
-    
-    var json: Data {
         
-        get throws {
-            
-            try JSONSerialization.data(withJSONObject: [
-                "productType": self.rawValue
-            ] as [String: String])
-        }
+        request.httpMethod = RequestMethod.get.rawValue
+        
+        return request
     }
 }

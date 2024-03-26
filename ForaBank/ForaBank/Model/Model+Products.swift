@@ -495,8 +495,16 @@ extension Model {
                              
                 do {
                     
-                    let result = try await productsFetchWithCommand(command: command)
-  
+                    let result: (products: [ProductData], serial: String) = try await {
+                        
+                        if let getProducts {
+                            
+                            let getProductsList = try await getProducts(productType)
+                            return (getProductsList.productList, getProductsList.serial)
+                            
+                        } else { return ([], "")}
+                    }()
+                    
                     // updating status
                     if let index = self.productsUpdating.value.firstIndex(of: productType) {
                         
@@ -511,7 +519,7 @@ extension Model {
                     let md5Products = result.products.reduce(Set<String>(), {
                         $0.union([$1.smallDesignMd5hash,
                                   $1.smallBackgroundDesignHash]) })
-                    
+                                        
                     let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
                     if !md5ToUpload.isEmpty {
                         action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
@@ -574,7 +582,15 @@ extension Model {
 
             do {
 
-                let result = try await productsFetchWithCommand(command: command)
+                let result: (products: [ProductData], serial: String) = try await {
+                    
+                    if let getProducts {
+                        
+                        let getProductsList = try await getProducts(payload.productType)
+                        return (getProductsList.productList, getProductsList.serial)
+                        
+                    } else { return ([], "")}
+                }()
 
                 // updating status
                 if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {

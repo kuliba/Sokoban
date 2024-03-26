@@ -26,6 +26,8 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
+        model.getProducts = Services.makeGetProducts(httpClient)
+
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
                 keyTag: .rsa

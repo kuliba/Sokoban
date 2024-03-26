@@ -158,7 +158,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: card.currency,
                             style: .clipped
                            ),
-                           let icon = card.smallDesign.image,
+                           let icon = model.images.value[card.smallDesignMd5hash]?.image,
                            let additional = card.additionalField {
                             
                             cells.append(ProductCellViewModel(
@@ -204,7 +204,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: card.currency,
                             style: .clipped
                            ),
-                           let icon = card.smallDesign.image,
+                           let icon = model.images.value[card.smallDesignMd5hash]?.image,
                            let additional = card.additionalField {
                             
                             cells.append(ProductCellViewModel(
@@ -498,7 +498,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                            let balanceFormatted = model.amountFormatted(amount: balance,
                                                                         currencyCode: productInfo.currency,
                                                                         style: .clipped),
-                           let icon = productInfo.smallDesign.image,
+                           let icon = model.images.value[productInfo.smallDesignMd5hash]?.image,
                            let additional = productInfo.additionalField {
                             
                             cells.append(ProductCellViewModel(
@@ -1152,7 +1152,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: productInfo.currency,
                             style: .clipped
                            ),
-                           let icon = productInfo.smallDesign.image,
+                           let icon = model.images.value[productInfo.smallDesignMd5hash]?.image,
                            let additional = productInfo.additionalField {
                             
                             cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: productInfo.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
@@ -1393,7 +1393,7 @@ private extension OperationDetailInfoViewModel {
         let productCurrency = product.currency
         let title = operationType == .debit ? "Счет списания" : "Счет зачисления"
         
-        guard let smallDesign = product.smallDesign.image,
+        guard let smallDesign = model.images.value[product.smallDesignMd5hash]?.image,
               let description = product.number?.suffix(4),
               let balanceString = model.amountFormatted(
                 amount: product.balanceValue,
@@ -2265,7 +2265,7 @@ extension OperationDetailInfoViewModel {
         
         guard let productId = productId,
               let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
-              let icon = productData.smallDesign.image,
+              let icon = model.images.value[productData.smallDesignMd5hash]?.image,
               let balance = productData.balance,
               let formattedBalance = model.amountFormatted(
                 amount: balance,

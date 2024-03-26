@@ -123,6 +123,9 @@ class Model {
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
     
+    // MARK: GetProductListByTypev5
+    var getProducts: ((ProductType) async throws -> ServerCommands.ProductController.GetProductListByType.Response.List)?
+
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol

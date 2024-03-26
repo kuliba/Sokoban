@@ -294,8 +294,9 @@ extension ProductSelectorView.ViewModel {
             if let product = productData as? ProductCardData {
                 paymentSystemImage = product.paymentSystemImage
             }
+            let cardIcon = model.images.value[productData.smallDesignMd5hash]?.image
             
-            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
+            self.init(id: productData.id, title: context.title, cardIcon: cardIcon, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
         }
         
         func update(context: ProductSelectorView.ViewModel.Context) {
