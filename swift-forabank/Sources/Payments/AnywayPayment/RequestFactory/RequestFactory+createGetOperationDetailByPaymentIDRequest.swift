@@ -36,7 +36,7 @@ private extension RequestFactory.OperationDetailID {
             
             try JSONSerialization.data(withJSONObject: [
                 "paymentOperationDetailId": rawValue
-            ] as [String: Any])
+            ] as [String: Int])
         }
     }
 }
