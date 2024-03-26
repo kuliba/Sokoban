@@ -225,7 +225,9 @@ extension OperationDetailInfoInternalView {
                         
                         HStack{
                             
-                            viewModel.iconPaymentService?
+                            viewModel.iconPaymentService? 
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fit)
                                 .frame(width: 24, height: 24, alignment: .center)
                                 .accessibilityIdentifier("OperationDetailInfoProductItemPaymentSystemIcon")
                             
