@@ -14,11 +14,37 @@ extension Services {
     typealias GetProductsResponse = ServerCommands.ProductController.GetProductListByType.Response.List
     typealias GetProducts = (ProductType) async throws -> GetProductsResponse
     
+    typealias GetProductListByTypeResponse = GetProductListByTypeService.ProductResponse
+    
+    typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
+    typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
+
     static func makeGetProducts(
-        _ httpClient: HTTPClient
-    ) -> GetProducts {
+        _ httpClient: HTTPClient,
+        logger: LoggerAgentProtocol
+    ) -> GetProductListByType {
         
-        return { productType in
+        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
+
+        let loggingRemoteService = LoggingRemoteServiceDecorator(
+            createRequest: RequestFactory.createGetProductListByTypeRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: GetProductListByTypeService.ResponseMapper.mapGetProductListByTypeResponse,
+            log: infoNetworkLog
+        ).remoteService
+        
+        return { productType, completion in
+            
+            loggingRemoteService.process(productType) { result in
+                
+                completion(try? result.get())
+            }
+        }
+    }
+
+        
+        
+      /*  return { productType in
 
             let getProductService = RemoteService(
                 createRequest: RequestFactory.createGetProductListByTypeRequest,
@@ -30,9 +56,9 @@ extension Services {
                 getProductService.process(productType)
             )
         }
-    }
+    }*/
     
-    private static func mapProductResponse(
+    static func mapProductResponse(
         _ productResponse: ProductResponse
     ) -> GetProductsResponse {
         

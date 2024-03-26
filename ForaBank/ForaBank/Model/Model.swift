@@ -13,6 +13,7 @@ import os
 import ServerAgent
 import SymmetricEncryption
 import UserModel
+import GetProductListByTypeService
 
 class Model {
     
@@ -124,7 +125,12 @@ class Model {
     var clientInformStatus: ClientInformStatus
     
     // MARK: GetProductListByTypev5
-    var getProducts: ((ProductType) async throws -> ServerCommands.ProductController.GetProductListByType.Response.List)?
+    typealias GetProductListByTypeResponse = GetProductListByTypeService.ProductResponse
+    
+    typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
+    typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
+
+    var getProducts: GetProductListByType
 
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -231,6 +237,7 @@ class Model {
         self.clientInform = .init(.notRecieved)
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
+        self.getProducts = { _, _ in }
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent

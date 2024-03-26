@@ -492,80 +492,11 @@ extension Model {
                 }
                 
                 let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                             
-                do {
-                    
-                    let result: (products: [ProductData], serial: String) = try await {
-                        
-                        if let getProducts {
-                            
-                            let getProductsList = try await getProducts(productType)
-                            return (getProductsList.productList, getProductsList.serial)
-                            
-                        } else { return ([], "")}
-                    }()
-                    
-                    // updating status
-                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                        
-                        self.productsUpdating.value.remove(at: index)
-                    }
-                    
-                    // update products
-                    let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
-                    self.products.send(updatedProducts)
-                    
-                    //md5hash -> image
-                    let md5Products = result.products.reduce(Set<String>(), {
-                        $0.union([$1.smallDesignMd5hash,
-                                  $1.smallBackgroundDesignHash,
-                                  $1.xlDesignMd5Hash,
-                                  $1.largeDesignMd5Hash,
-                                  $1.mediumDesignMd5Hash
-                                 ]) })
-                                        
-                    let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
-                    if !md5ToUpload.isEmpty {
-                        action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
-                    }
-                    
-                    // cache products
-                    do {
-                        
-                        try self.productsCacheStore(productsData: updatedProducts)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                    // update additional products data
-                    switch productType {
-                    case .deposit:
-                        self.action.send(ModelAction.Deposits.Info.All())
-                        
-                    case .loan:
-                        self.action.send(ModelAction.Loans.Update.All())
-                        
-                    default:
-                        break
-                    }
-
-                } catch {
-                    
-                    // updating status
-                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                        
-                        self.productsUpdating.value.remove(at: index)
-                    }
-                    
-                    self.handleServerCommandError(error: error, command: command)
-                    //TODO: show error message in UI
-                }
+                updateProduct(command, productType: productType)
             }
         }
     }
-
+    
     func handleProductsUpdateTotalProduct(_ payload: ModelAction.Products.Update.ForProductType) {
 
         guard productsUpdating.value.contains(payload.productType) == false,
@@ -584,29 +515,41 @@ extension Model {
 
             let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
 
-            do {
-
-                let result: (products: [ProductData], serial: String) = try await {
+            updateProduct(command, productType: payload.productType)
+        }
+    }
+    
+    func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
+        
+        getProducts(productType) { response in
+            
+            if let response {
+                
+                let result = Services.mapProductResponse(response)
+                
+                if let index = self.productsUpdating.value.firstIndex(of: productType) {
                     
-                    if let getProducts {
-                        
-                        let getProductsList = try await getProducts(payload.productType)
-                        return (getProductsList.productList, getProductsList.serial)
-                        
-                    } else { return ([], "")}
-                }()
-
-                // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
-
                     self.productsUpdating.value.remove(at: index)
                 }
-
+                
                 // update products
-                let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: payload.productType)
+                let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
                 
-                //TODO: - hash image
+                //md5hash -> image
+                let md5Products = result.productList.reduce(Set<String>(), {
+                    $0.union([$1.smallDesignMd5hash,
+                              $1.smallBackgroundDesignHash,
+                              $1.xlDesignMd5Hash,
+                              $1.largeDesignMd5Hash,
+                              $1.mediumDesignMd5Hash,
+                              $1.paymentSystemMd5Hash
+                             ]) })
+                
+                let md5ToUpload = Array(md5Products.subtracting(self.images.value.keys))
+                if !md5ToUpload.isEmpty {
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+                }
                 
                 // cache products
                 do {
@@ -619,7 +562,7 @@ extension Model {
                 }
                 
                 // update additional products data
-                switch payload.productType {
+                switch productType {
                 case .deposit:
                     self.action.send(ModelAction.Deposits.Info.All())
                     
@@ -629,17 +572,6 @@ extension Model {
                 default:
                     break
                 }
-
-            } catch {
-
-                // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
-
-                    self.productsUpdating.value.remove(at: index)
-                }
-
-                self.handleServerCommandError(error: error, command: command)
-                //TODO: show error message in UI
             }
         }
     }
