@@ -11,42 +11,80 @@ import XCTest
 
 final class ResponseMapper_mapMakeTransferResponseTests: XCTestCase {
     
-    func test_map_shouldDeliverNilOnEmptyData() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
-        XCTAssertNil(map(.empty))
+        let emptyData: Data = .empty
+
+        XCTAssertNoDiff(
+            map(emptyData),
+                .failure(.invalid(statusCode: 200, data: emptyData))
+        )
     }
     
-    func test_map_shouldDeliverNilOnInvalidData() {
+    func test_map_shouldDeliverInvalidFailureOnInvalidData() {
         
-        XCTAssertNil(map(.invalidData))
+        let invalidData: Data = .invalidData
+        
+        XCTAssertNoDiff(
+            map(invalidData),
+                .failure(.invalid(statusCode: 200, data: invalidData))
+        )
     }
     
-    func test_map_shouldDeliverNilOnEmptyJSON() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyJSON() {
         
-        XCTAssertNil(map(.emptyJSON))
+        let emptyJSON: Data = .emptyJSON
+        
+        XCTAssertNoDiff(
+            map(emptyJSON),
+                .failure(.invalid(statusCode: 200, data: emptyJSON))
+        )
     }
     
-    func test_map_shouldDeliverNilOnEmptyDataResponse() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyDataResponse() {
         
-        XCTAssertNil(map(.emptyDataResponse))
+        let emptyDataResponse: Data = .emptyDataResponse
+        
+        XCTAssertNoDiff(
+            map(emptyDataResponse),
+            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+        )
     }
     
-    func test_map_shouldDeliverNilOnNullServerResponse() {
+    func test_map_shouldDeliverInvalidFailureOnNullServerResponse() {
         
-        XCTAssertNil(map(.nullServerResponse))
+        let nullServerResponse: Data = .nullServerResponse
+        
+        XCTAssertNoDiff(
+            map(.nullServerResponse),
+            .failure(.invalid(statusCode: 200, data: nullServerResponse))
+        )
     }
     
-    func test_map_shouldDeliverNilOnServerError() {
+    func test_map_shouldDeliverServerErrorOnServerError() {
         
-        XCTAssertNil(map(.serverError))
+        XCTAssertNoDiff(
+            map(.serverError),
+            .failure(.server(
+                statusCode: 102,
+                errorMessage: "Возникла техническая ошибка"
+            ))
+        )
     }
     
-    func test_map_shouldDeliverNilOnNonOkHTTPResponse() {
+    func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() {
         
         for statusCode in [199, 201, 399, 400, 401, 404] {
             
             let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
-            XCTAssertNil(map(.validDataComplete, nonOkResponse))
+            
+            XCTAssertNoDiff(
+                map(.validDataComplete, nonOkResponse),
+                .failure(.invalid(
+                    statusCode: statusCode,
+                    data: .validDataComplete
+                ))
+            )
         }
     }
     
@@ -76,60 +114,25 @@ final class ResponseMapper_mapMakeTransferResponseTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias MappingResult = ResponseMapper.MappingResult<ResponseMapper.MakeTransferResponse>
+    
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MakeTransferResponse? {
+    ) -> MappingResult {
         
         ResponseMapper.mapMakeTransferResponse(data, httpURLResponse)
     }
     
     private func assert(
         _ data: Data,
-        _ response: EquatableMakeTransferResponse,
+        _ response: ResponseMapper.MakeTransferResponse,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        let receivedResponse = try XCTUnwrap(map(data))
-        XCTAssertNoDiff(.init(receivedResponse), response, file: file, line: line)
-    }
-}
-
-private struct EquatableMakeTransferResponse: Equatable {
-    
-    let operationDetailID: Int
-    let documentStatus: EquatableDocumentStatus
-}
-
-private extension EquatableMakeTransferResponse {
-    
-    init(_ response: ResponseMapper.MakeTransferResponse) {
-        
-        self.init(
-            operationDetailID: response.operationDetailID,
-            documentStatus: .init(response.documentStatus)
-        )
-    }
-
-    enum EquatableDocumentStatus: Equatable {
-        
-        case complete, inProgress, rejected
-    }
-}
-
-private extension EquatableMakeTransferResponse.EquatableDocumentStatus {
-    
-    init(_ documentStatus: ResponseMapper.MakeTransferResponse.DocumentStatus) {
-        
-        switch documentStatus {
-        case .complete:
-            self = .complete
-        case .inProgress:
-            self = .inProgress
-        case .rejected:
-            self = .rejected
-        }
+        let receivedResponse = try map(data).get()
+        XCTAssertNoDiff(receivedResponse, response, file: file, line: line)
     }
 }
 
