@@ -209,7 +209,9 @@ extension OperationDetailInfoInternalView {
             HStack(alignment: .center, spacing: 15) {
                 
                 viewModel.icon
-                    .frame(width: 32, height: 22, alignment: .center)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fit)
+                    .frame(width: 32, height: 32, alignment: .center)
                     .accessibilityIdentifier("OperationDetailInfoProductItemIcon")
                 
                 HStack{

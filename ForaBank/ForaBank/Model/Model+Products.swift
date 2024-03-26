@@ -518,7 +518,11 @@ extension Model {
                     //md5hash -> image
                     let md5Products = result.products.reduce(Set<String>(), {
                         $0.union([$1.smallDesignMd5hash,
-                                  $1.smallBackgroundDesignHash]) })
+                                  $1.smallBackgroundDesignHash,
+                                  $1.xlDesignMd5Hash,
+                                  $1.largeDesignMd5Hash,
+                                  $1.mediumDesignMd5Hash
+                                 ]) })
                                         
                     let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
                     if !md5ToUpload.isEmpty {

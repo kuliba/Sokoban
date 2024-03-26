@@ -403,9 +403,9 @@ private extension Model {
                 style: .clipped
             ) ?? "",
             description: $0.displayNumber ?? "",
-            cardImage: .data($0.smallDesign.uiImage?.pngData()),
-            paymentSystem: .data($0.paymentSystemData),
-            backgroundImage: .data($0.largeDesign.uiImage?.pngData()),
+            cardImage: .data(self.images.value[$0.smallDesignMd5hash]?.uiImage?.pngData()),
+            paymentSystem: .data(self.images.value[$0.paymentSystemImageMd5Hash]?.uiImage?.pngData()),
+            backgroundImage: .data(self.images.value[$0.largeDesignMd5Hash]?.uiImage?.pngData()),
             backgroundColor: $0.backgroundColor.description
         )})
         

@@ -165,7 +165,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 title: "Счет пополнения",
                                 icon: icon,
                                 name: card.displayName,
-                                iconPaymentService: card.paymentSystem,
+                                iconPaymentService: model.images.value[card.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -211,7 +211,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 title: "Счет списания",
                                 icon: icon,
                                 name: card.displayName,
-                                iconPaymentService: card.paymentSystem,
+                                iconPaymentService: model.images.value[card.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -505,7 +505,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 title: "Счет пополнения",
                                 icon: icon,
                                 name: productInfo.displayName,
-                                iconPaymentService: productInfo.paymentSystem,
+                                iconPaymentService: model.images.value[productInfo.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -1154,8 +1154,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                            ),
                            let icon = model.images.value[productInfo.smallDesignMd5hash]?.image,
                            let additional = productInfo.additionalField {
+                           let iconPaymentService = model.images.value[productInfo.paymentSystemMd5Hash]?.image
                             
-                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: productInfo.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: iconPaymentService, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
@@ -1407,7 +1408,7 @@ private extension OperationDetailInfoViewModel {
                 title: title,
                 icon: smallDesign,
                 name: product.displayName,
-                iconPaymentService: product.paymentSystem,
+                iconPaymentService: model.images.value[product.paymentSystemMd5Hash]?.image,
                 balance: balanceString,
                 description: "· \(description) · \(additionalField)")
         } else {
@@ -1416,7 +1417,7 @@ private extension OperationDetailInfoViewModel {
                 title: title,
                 icon: smallDesign,
                 name: product.displayName,
-                iconPaymentService: product.paymentSystem,
+                iconPaymentService: model.images.value[product.paymentSystemMd5Hash]?.image,
                 balance: balanceString,
                 description: "· \(description)")
         }
@@ -2286,7 +2287,7 @@ extension OperationDetailInfoViewModel {
             title: title,
             icon: icon,
             name: name,
-            iconPaymentService: productData.paymentSystem,
+            iconPaymentService: model.images.value[productData.paymentSystemMd5Hash]?.image,
             balance: formattedBalance,
             description: "\(lastNumber)\(description)")
         

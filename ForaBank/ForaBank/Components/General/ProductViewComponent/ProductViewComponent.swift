@@ -96,7 +96,7 @@ extension ProductView {
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
             let backgroundColor = productData.backgroundColor
-            let backgroundImage = Self.backgroundImage(with: productData, size: size)
+            let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[$0]?.image })
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
             let icon = Self.iconForCard(product: productData)
@@ -376,12 +376,12 @@ extension ProductView {
             }
         }
         
-        static func backgroundImage(with productData: ProductData, size: Appearance.Size) -> Image? {
+        static func backgroundImage(with productData: ProductData, size: Appearance.Size, getImage: @escaping (String) -> Image?) -> Image? {
             
             switch size {
-            case .large: return productData.extraLargeDesign.image
-            case .normal: return productData.largeDesign.image
-            case .small: return productData.mediumDesign.image
+            case .large: return getImage(productData.xlDesignMd5Hash)
+            case .normal: return getImage(productData.largeDesignMd5Hash)
+            case .small: return getImage(productData.mediumDesignMd5Hash)
             }
         }
         

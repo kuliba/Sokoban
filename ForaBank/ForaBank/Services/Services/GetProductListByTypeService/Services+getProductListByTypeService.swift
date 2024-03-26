@@ -41,7 +41,7 @@ extension Services {
             productList: productResponse.products.map {
                 
                 switch $0.uniqueProperties {
-                case let  .card(cardData):
+                case let .card(cardData):
                     return ProductCardData(
                         commonData: $0.commonProperties,
                         cardData: cardData
@@ -95,10 +95,10 @@ private extension ProductCardData {
             branchId: commonData.branchId,
             allowCredit: commonData.allowCredit,
             allowDebit: commonData.allowDebit,
-            extraLargeDesign: .init(description: commonData.xlDesignMd5Hash),
-            largeDesign: .init(description: commonData.largeDesignMd5Hash),
-            mediumDesign: .init(description: commonData.mediumDesignMd5Hash),
-            smallDesign: .init(description: commonData.smallDesignMd5Hash),
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
             fontDesignColor: .init(description: commonData.fontDesignColor),
             background: commonData.background.map { .init(description: $0) },
             accountId: cardData.accountID,
@@ -112,10 +112,10 @@ private extension ProductCardData {
             branch: cardData.branch,
             miniStatement: nil,
             paymentSystemName: cardData.paymentSystemName,
-            paymentSystemImage: .init(description: cardData.paymentSystemImageMd5Hash),
+            paymentSystemImage: nil,
             loanBaseParam: cardData.loanBaseParam.map { .init(loan: $0) },
             statusPc: .init(cardData.statusPC),
-            isMain: cardData.cardType == .main,
+            isMain: cardData.cardType == .main || cardData.cardType == .regular,
             externalId: nil,
             order: commonData.order,
             visibility: commonData.visibility,
@@ -126,6 +126,11 @@ private extension ProductCardData {
         self.statusCard = .init(cardData.statusCard)
         self.cardType = .init(cardData.cardType)
         self.idParent = cardData.idParent
+        self.paymentSystemImageMd5Hash = cardData.paymentSystemImageMd5Hash
+        
+        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
+        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
+        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
     }
 }
 
@@ -154,10 +159,10 @@ private extension ProductLoanData {
             branchId: commonData.branchId,
             allowCredit: commonData.allowCredit,
             allowDebit: commonData.allowDebit,
-            extraLargeDesign: .init(description: commonData.xlDesignMd5Hash),
-            largeDesign: .init(description: commonData.largeDesignMd5Hash),
-            mediumDesign: .init(description: commonData.mediumDesignMd5Hash),
-            smallDesign: .init(description: commonData.smallDesignMd5Hash),
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
             fontDesignColor: .init(description: commonData.fontDesignColor),
             background: commonData.background.map { .init(description: $0) },
             currencyNumber: loanData.currencyNumber,
@@ -177,6 +182,9 @@ private extension ProductLoanData {
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
             smallBackgroundDesignHash: commonData.smallBackgroundDesignHash
         )
+        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
+        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
+        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
     }
 }
 
@@ -205,10 +213,10 @@ private extension ProductDepositData {
             branchId: commonData.branchId,
             allowCredit: commonData.allowCredit,
             allowDebit: commonData.allowDebit,
-            extraLargeDesign: .init(description: commonData.xlDesignMd5Hash),
-            largeDesign: .init(description: commonData.largeDesignMd5Hash),
-            mediumDesign: .init(description: commonData.mediumDesignMd5Hash),
-            smallDesign: .init(description: commonData.smallDesignMd5Hash),
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
             fontDesignColor: .init(description: commonData.fontDesignColor),
             background: commonData.background.map { .init(description: $0) },
             depositProductId: depositData.depositProductID,
@@ -226,6 +234,9 @@ private extension ProductDepositData {
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
             smallBackgroundDesignHash: commonData.smallBackgroundDesignHash
         )
+        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
+        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
+        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
     }
 }
 
@@ -254,10 +265,10 @@ private extension ProductAccountData {
             branchId: commonData.branchId,
             allowCredit: commonData.allowCredit,
             allowDebit: commonData.allowDebit,
-            extraLargeDesign: .init(description: commonData.xlDesignMd5Hash),
-            largeDesign: .init(description: commonData.largeDesignMd5Hash),
-            mediumDesign: .init(description: commonData.mediumDesignMd5Hash),
-            smallDesign: .init(description: commonData.smallDesignMd5Hash),
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
             fontDesignColor: .init(description: commonData.fontDesignColor),
             background: commonData.background.map { .init(description: $0) },
             externalId: accountData.externalID,
@@ -273,6 +284,9 @@ private extension ProductAccountData {
             detailedRatesUrl: accountData.detailedRatesUrl,
             detailedConditionUrl: accountData.detailedConditionUrl
         )
+        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
+        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
+        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
     }
 }
 
