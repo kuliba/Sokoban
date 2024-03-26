@@ -42,6 +42,7 @@ class ProductData: Identifiable, Codable {
     
     let extraLargeDesign: SVGImageData
     let largeDesign: SVGImageData
+    let mediumDesign: SVGImageData
     let smallDesign: SVGImageData
     let fontDesignColor: ColorData
     let background: [ColorData]
@@ -55,7 +56,7 @@ class ProductData: Identifiable, Codable {
     var largeDesignMd5Hash: String = ""
     var xlDesignMd5Hash: String = ""
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.id = id
         self.productType = productType
@@ -76,6 +77,7 @@ class ProductData: Identifiable, Codable {
         self.allowDebit = allowDebit
         self.extraLargeDesign = extraLargeDesign
         self.largeDesign = largeDesign
+        self.mediumDesign = mediumDesign
         self.smallDesign = smallDesign
         self.fontDesignColor = fontDesignColor
         self.background = background
@@ -90,7 +92,7 @@ class ProductData: Identifiable, Codable {
         case extraLargeDesign = "XLDesign"
         case balanceRub = "balanceRUB"
         case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash
     }
     
     required init(from decoder: Decoder) throws {
@@ -121,6 +123,7 @@ class ProductData: Identifiable, Codable {
         allowDebit = try container.decode(Bool.self, forKey: .allowDebit)
         extraLargeDesign = try container.decode(SVGImageData.self, forKey: .extraLargeDesign)
         largeDesign = try container.decode(SVGImageData.self, forKey: .largeDesign)
+        mediumDesign = try container.decode(SVGImageData.self, forKey: .mediumDesign)
         smallDesign = try container.decode(SVGImageData.self, forKey: .smallDesign)
         fontDesignColor = try container.decode(ColorData.self, forKey: .fontDesignColor)
         background = try container.decode([ColorData].self, forKey: .background)
@@ -154,6 +157,7 @@ class ProductData: Identifiable, Codable {
         try container.encode(allowDebit, forKey: .allowDebit)
         try container.encode(extraLargeDesign, forKey: .extraLargeDesign)
         try container.encode(largeDesign, forKey: .largeDesign)
+        try container.encode(mediumDesign, forKey: .mediumDesign)
         try container.encode(smallDesign, forKey: .smallDesign)
         try container.encode(fontDesignColor, forKey: .fontDesignColor)
         try container.encode(background, forKey: .background)
@@ -323,6 +327,7 @@ extension ProductData: Equatable {
         lhs.allowDebit == rhs.allowDebit &&
         lhs.extraLargeDesign == rhs.extraLargeDesign &&
         lhs.largeDesign == rhs.largeDesign &&
+        lhs.mediumDesign == rhs.mediumDesign &&
         lhs.smallDesign == rhs.smallDesign &&
         lhs.fontDesignColor == rhs.fontDesignColor &&
         lhs.background == rhs.background &&
