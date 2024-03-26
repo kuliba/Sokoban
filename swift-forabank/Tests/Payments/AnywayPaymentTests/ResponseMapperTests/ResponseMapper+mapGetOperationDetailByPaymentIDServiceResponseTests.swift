@@ -11,42 +11,77 @@ import XCTest
 
 final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTestCase {
     
-    func test_map_shouldDeliverNilOnEmptyData() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
-        XCTAssertNil(map(.empty))
+        let emptyData: Data = .empty
+
+        XCTAssertNoDiff(
+            map(emptyData),
+                .failure(.invalid(statusCode: 200, data: emptyData))
+        )
     }
     
-    func test_map_shouldDeliverNilOnInvalidData() {
+    func test_map_shouldDeliverInvalidFailureOnInvalidData() {
         
-        XCTAssertNil(map(.invalidData))
+        let invalidData: Data = .invalidData
+        
+        XCTAssertNoDiff(
+            map(invalidData),
+                .failure(.invalid(statusCode: 200, data: invalidData))
+        )
     }
     
-    func test_map_shouldDeliverNilOnEmptyJSON() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyJSON() {
         
-        XCTAssertNil(map(.emptyJSON))
+        let emptyJSON: Data = .emptyJSON
+        
+        XCTAssertNoDiff(
+            map(emptyJSON),
+                .failure(.invalid(statusCode: 200, data: emptyJSON))
+        )
     }
     
-    func test_map_shouldDeliverNilOnEmptyDataResponse() {
+    func test_map_shouldDeliverInvalidFailureOnEmptyDataResponse() {
         
-        XCTAssertNil(map(.emptyDataResponse))
+        let emptyDataResponse: Data = .emptyDataResponse
+        
+        XCTAssertNoDiff(
+            map(emptyDataResponse),
+            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+        )
     }
     
-    func test_map_shouldDeliverNilOnNullServerResponse() {
+    func test_map_shouldDeliverInvalidFailureOnNullServerResponse() {
         
-        XCTAssertNil(map(.nullServerResponse))
+        let nullServerResponse: Data = .nullServerResponse
+        
+        XCTAssertNoDiff(
+            map(.nullServerResponse),
+            .failure(.invalid(statusCode: 200, data: nullServerResponse))
+        )
     }
     
-    func test_map_shouldDeliverNilOnServerError() {
+    func test_map_shouldDeliverServerErrorOnServerError() {
         
-        XCTAssertNil(map(.serverError))
+        XCTAssertNoDiff(
+            map(.serverError),
+            .failure(.server(
+                statusCode: 102,
+                errorMessage: "Возникла техническая ошибка"
+            ))
+        )
     }
     
-    func test_map_shouldDeliverNilOnNonOkHTTPResponse() {
+    func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() {
         
         for statusCode in [199, 201, 399, 400, 401, 404] {
             
             let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
-            XCTAssertNil(map(.validData, nonOkResponse))
+            
+            XCTAssertNoDiff(
+                map(.validData, nonOkResponse),
+                .failure(.invalid(statusCode: statusCode, data: .validData))
+            )
         }
     }
     
@@ -66,12 +101,12 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
     
     // MARK: - Helpers
     
-    typealias MappingResult = ResponseMapper.MappingResult<ResponseMapper.GetOperationDetailByPaymentIDResponse>
+    private typealias MappingResult = ResponseMapper.MappingResult<ResponseMapper.GetOperationDetailByPaymentIDResponse>
     
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.GetOperationDetailByPaymentIDResponse? {
+    ) -> MappingResult {
         
         ResponseMapper.mapGetOperationDetailByPaymentIDResponse(data, httpURLResponse)
     }
@@ -83,7 +118,8 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         line: UInt = #line
     ) throws {
         
-        XCTAssertNoDiff(map(data), response, file: file, line: line)
+        let receivedResponse = try map(data).get()
+        XCTAssertNoDiff(receivedResponse, response, file: file, line: line)
     }
 }
 

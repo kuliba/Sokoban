@@ -13,11 +13,9 @@ public extension ResponseMapper {
     static func mapGetOperationDetailByPaymentIDResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetOperationDetailByPaymentIDResponse? {
+    ) -> MappingResult<GetOperationDetailByPaymentIDResponse> {
         
-        let result = map(data, httpURLResponse, mapOrThrow: GetOperationDetailByPaymentIDResponse.init)
-        
-        return try? result.get()
+        map(data, httpURLResponse, mapOrThrow: GetOperationDetailByPaymentIDResponse.init)
     }
 }
 
