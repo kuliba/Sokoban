@@ -405,7 +405,7 @@ private extension Model {
             description: $0.displayNumber ?? "",
             cardImage: .data(self.images.value[$0.smallDesignMd5hash]?.uiImage?.pngData()),
             paymentSystem: .data(self.images.value[$0.paymentSystemImageMd5Hash]?.uiImage?.pngData()),
-            backgroundImage: .data(self.images.value[$0.largeDesignMd5Hash]?.uiImage?.pngData()),
+            backgroundImage: .data(self.images.value[$0.largeDesignMd5Hash]?.data),
             backgroundColor: $0.backgroundColor.description
         )})
         
