@@ -13,15 +13,15 @@ public extension ResponseMapper {
     static func mapMakeTransferResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MakeTransferResponse? {
+    ) -> MappingResult<MakeTransferResponse> {
         
-        try? map(data, httpURLResponse, mapOrThrow: MakeTransferResponse.init).get()
+        map(data, httpURLResponse, mapOrThrow: MakeTransferResponse.init)
     }
 }
 
 extension ResponseMapper {
     
-    public struct MakeTransferResponse {
+    public struct MakeTransferResponse: Equatable {
         
         public let operationDetailID: Int
         public let documentStatus: DocumentStatus
