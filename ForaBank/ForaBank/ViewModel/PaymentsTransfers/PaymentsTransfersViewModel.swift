@@ -24,7 +24,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         avatar: nil,
         action: { [weak self] in
             self?.action.send(PaymentsTransfersViewModelAction
-                .ButtonTapped.UserAccount())})
+                .ButtonTapped.UserAccount())
+        }
+    )
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
