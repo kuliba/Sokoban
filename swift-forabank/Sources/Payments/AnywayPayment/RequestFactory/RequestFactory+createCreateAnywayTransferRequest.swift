@@ -56,6 +56,7 @@ extension RequestFactory {
         }
     }
 }
+
 extension RequestFactory.CreateAnywayTransferResponsePayload {
     
     public struct Additional: Equatable {
@@ -113,7 +114,7 @@ private extension RequestFactory.CreateAnywayTransferResponsePayload {
     }
 }
 
-extension RequestFactory._DTO {
+private extension RequestFactory._DTO {
     
     init(_ payload: RequestFactory.CreateAnywayTransferResponsePayload) {
         
@@ -130,7 +131,7 @@ extension RequestFactory._DTO {
     }
 }
 
-extension RequestFactory {
+private extension RequestFactory {
     
     struct _DTO: Codable, Equatable {
         
@@ -145,7 +146,7 @@ extension RequestFactory {
     }
 }
 
-extension RequestFactory._DTO {
+private extension RequestFactory._DTO {
     
     struct _Additional: Codable, Equatable {
         
