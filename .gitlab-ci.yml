@@ -2,13 +2,14 @@
 
 stages:
   - test
-  - build
+  - build-beta
   - deploy
 
 variables:
   LC_ALL: "en_US.UTF-8"
   LANG: "en_US.UTF-8"
-  GIT_STRATEGY: clone
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: 10
   GEM_HOME: .vendor/gem_install
 
 before_script:
@@ -31,11 +32,12 @@ fastlane-test:
     - bundle exec fastlane test
 
 fastlane-build-beta:
-  stage: build
-  when: on_success
-  allow_failure: false
+  stage: build-beta
+  when: manual
   only:
+    - release
     - develop
+    - merge_request
   script:
     - bundle exec fastlane build production:false
   artifacts:
@@ -45,8 +47,9 @@ fastlane-build-beta:
 
 fastlane-deploy:
   stage: deploy
-  when: on_success
+  when: manual
   only:
+    - release
     - develop
   script:
     - bundle exec fastlane deploy
