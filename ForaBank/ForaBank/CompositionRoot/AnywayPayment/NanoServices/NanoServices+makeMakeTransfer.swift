@@ -6,6 +6,7 @@
 //
 
 import AnywayPayment
+import Fetcher
 import RemoteServices
 
 extension NanoServices {
@@ -26,13 +27,9 @@ extension NanoServices {
             line: line
         ).remoteService
         
-        return { code, completion in
-            
-            loggingRemoteService.process(code) { result in
-                
-                completion(try? result.get())
-            }
-        }
+        let nilified = NilifyDecorator(decoratee: loggingRemoteService.process(_:completion:))
+        
+        return nilified.process(_:_:)
     }
 }
 
