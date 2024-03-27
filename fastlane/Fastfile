@@ -20,7 +20,7 @@ platform :ios do
   before_all do |lane, options|
 
     # update fastlane to the latest version
-    # update_fastlane
+    update_fastlane
 
     # create API KEY Hash and store it to APP_STORE_CONNECT_API_KEY
     app_store_connect_api_key(
@@ -50,7 +50,7 @@ platform :ios do
     run_tests(
       project: ENV["XCODE_PROJECT"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
-      clean: false,
+      clean: true,
       suppress_xcode_output: false)
 
   end
