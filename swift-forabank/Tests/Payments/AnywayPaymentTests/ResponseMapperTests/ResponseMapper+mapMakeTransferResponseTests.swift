@@ -114,7 +114,8 @@ final class ResponseMapper_mapMakeTransferResponseTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias MappingResult = ResponseMapper.MappingResult<ResponseMapper.MakeTransferResponse>
+    private typealias Response = ResponseMapper.MakeTransferResponse
+    private typealias MappingResult = ResponseMapper.MappingResult<Response>
     
     private func map(
         _ data: Data,
@@ -126,7 +127,7 @@ final class ResponseMapper_mapMakeTransferResponseTests: XCTestCase {
     
     private func assert(
         _ data: Data,
-        _ response: ResponseMapper.MakeTransferResponse,
+        _ response: Response,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
