@@ -36,6 +36,7 @@ extension ProductView {
         @Published var isUpdating: Bool
         
         var appearance: Appearance
+        var config: CardUI.Config
 
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
@@ -64,6 +65,7 @@ extension ProductView {
             self.productType = productType
             self.cardAction = cardAction
             self.showCvv = showCvv
+            self.config = .config(appearance: appearance)
         }
         
         convenience init(
@@ -193,7 +195,9 @@ extension ProductView {
             cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-            
+            let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
+            appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
+            config = .config(appearance: appearance)
             bind(statusAction)
         }
         
@@ -383,7 +387,8 @@ extension ProductView {
             
             switch size {
             case .large: return getImage(.init(productData.xlDesignMd5Hash))
-            case .normal: return getImage(.init(productData.largeDesignMd5Hash))
+            case .normal:
+                return getImage(.init(productData.largeDesignMd5Hash))
             case .small: return getImage(.init(productData.mediumDesignMd5Hash))
             }
         }
@@ -577,13 +582,11 @@ extension ProductView.ViewModel {
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
-    let config: CardUI.Config
     
     init(
         viewModel: ViewModel
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
-        self.config = .config(appearance: viewModel.appearance)
     }
 
     var body: some View {
@@ -594,7 +597,7 @@ struct ProductView: View {
             footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
             activationView: activationView,
-            config: config
+            config: viewModel.config
         )
         .animation(
             .linear(duration: 0.5),
@@ -615,7 +618,7 @@ struct ProductView: View {
                 header: viewModel.copyCardNumberToClipboard,
                 cvv: viewModel.showCVVButtonTap),
             modifierConfig: modifierConfig(false),
-            config: config
+            config: viewModel.config
         )
     }
     
@@ -626,8 +629,8 @@ struct ProductView: View {
             
             return ProductView.StatusActionView(
                 viewModel: $0,
-                color: config.appearance.textColor,
-                style: config.appearance.style)
+                color: viewModel.config.appearance.textColor,
+                style: viewModel.config.appearance.style)
         }
     }
     
