@@ -166,7 +166,7 @@ private extension ResponseMapper {
         let needOTP: Bool?
         let needSum: Bool
         let parameterListForNextStep: [_Parameter]
-        let paymentOperationDetailId: Int
+        let paymentOperationDetailId: Int?
         let payeeName: String?
         let printFormType: String?
         let scenario: String?
@@ -193,7 +193,7 @@ private extension ResponseMapper._Data {
         let dataType: String
         let group: String?
         let id: String
-        let inputFieldType: String
+        let inputFieldType: String?
         let inputMask: String?
         let isPrint: Bool?
         let isRequired: Bool?
@@ -207,7 +207,7 @@ private extension ResponseMapper._Data {
         let regExp: String
         let subGroup: String?
         let subTitle: String?
-        let svgImage: String
+        let svgImage: String?
         let title: String
         let type: String
         let viewType: ViewType

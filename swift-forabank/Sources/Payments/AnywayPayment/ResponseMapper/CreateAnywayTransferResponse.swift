@@ -28,7 +28,7 @@ extension ResponseMapper {
         public let needOTP: Bool
         public let needSum: Bool
         public let parametersForNextStep: [Parameter]
-        public let paymentOperationDetailID: Int
+        public let paymentOperationDetailID: Int?
         public let payeeName: String?
         public let printFormType: String?
         public let scenario: AntiFraudScenario?
@@ -50,7 +50,7 @@ extension ResponseMapper {
             needOTP: Bool,
             needSum: Bool,
             parametersForNextStep: [Parameter],
-            paymentOperationDetailID: Int,
+            paymentOperationDetailID: Int?,
             payeeName: String? = nil,
             printFormType: String? = nil,
             scenario: AntiFraudScenario? = nil
@@ -134,7 +134,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let regExp: String
         public let subGroup: String?
         public let subTitle: String?
-        public let svgImage: String
+        public let svgImage: String?
         public let title: String
         public let type: String
         public let viewType: ViewType
@@ -160,7 +160,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             regExp: String,
             subGroup: String? = nil,
             subTitle: String? = nil,
-            svgImage: String,
+            svgImage: String?,
             title: String,
             type: String,
             viewType: ViewType
