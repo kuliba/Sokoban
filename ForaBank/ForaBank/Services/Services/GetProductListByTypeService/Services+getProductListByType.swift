@@ -1,5 +1,5 @@
 //
-//  Services+getProductListByTypeService.swift
+//  Services+getProductListByType.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 26.03.2024.
@@ -18,7 +18,7 @@ extension Services {
     typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
     typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
 
-    static func makeGetProducts(
+    static func getProductListByType(
         _ httpClient: HTTPClient,
         logger: LoggerAgentProtocol
     ) -> GetProductListByType {
