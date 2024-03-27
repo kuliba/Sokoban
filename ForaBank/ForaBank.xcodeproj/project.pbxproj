@@ -441,6 +441,8 @@
 		2A2E3FCE2BB2D80300730D37 /* NanoServices+makeGetOperationDetailByPaymentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FCD2BB2D80300730D37 /* NanoServices+makeGetOperationDetailByPaymentID.swift */; };
 		2A2E3FD02BB3F22600730D37 /* RequestFactory+createCreateAnywayTransferRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FCF2BB3F22600730D37 /* RequestFactory+createCreateAnywayTransferRequestTests.swift */; };
 		2A2E3FD22BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD12BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift */; };
+		2A2E3FD52BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD42BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift */; };
+		2A2E3FD72BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD62BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift */; };
 		2A2ECBBB2AE51D6F00F3C946 /* GenericLoaderOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBBA2AE51D6F00F3C946 /* GenericLoaderOf.swift */; };
 		2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBBC2AE5242000F3C946 /* ResponseMapper.swift */; };
 		2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */; };
@@ -2970,6 +2972,8 @@
 		2A2E3FCD2BB2D80300730D37 /* NanoServices+makeGetOperationDetailByPaymentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetOperationDetailByPaymentID.swift"; sourceTree = "<group>"; };
 		2A2E3FCF2BB3F22600730D37 /* RequestFactory+createCreateAnywayTransferRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferRequestTests.swift"; sourceTree = "<group>"; };
 		2A2E3FD12BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferNewRequestTests.swift"; sourceTree = "<group>"; };
+		2A2E3FD42BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferNewRequest.swift"; sourceTree = "<group>"; };
+		2A2E3FD62BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferRequest.swift"; sourceTree = "<group>"; };
 		2A2ECBBA2AE51D6F00F3C946 /* GenericLoaderOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericLoaderOf.swift; sourceTree = "<group>"; };
 		2A2ECBBC2AE5242000F3C946 /* ResponseMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMapper.swift; sourceTree = "<group>"; };
 		2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeGetProcessingSessionCode.swift"; sourceTree = "<group>"; };
@@ -6400,10 +6404,10 @@
 		2A2E3FBF2BB2C6DF00730D37 /* AnywayPayment */ = {
 			isa = PBXGroup;
 			children = (
-				2A2E3FC02BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift */,
 				2A2E3FCF2BB3F22600730D37 /* RequestFactory+createCreateAnywayTransferRequestTests.swift */,
 				2A2E3FD12BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift */,
 				2A2E3FC72BB2CC5500730D37 /* RequestFactory+createGetOperationDetailByPaymentIDRequestModuleTests.swift */,
+				2A2E3FC02BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -6411,8 +6415,10 @@
 		2A2E3FC22BB2CB4D00730D37 /* AnywayPayment */ = {
 			isa = PBXGroup;
 			children = (
-				2A2E3FC32BB2CB5E00730D37 /* RequestFactory+createMakeTransferRequest.swift */,
+				2A2E3FD42BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift */,
+				2A2E3FD62BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift */,
 				2A2E3FC52BB2CC3900730D37 /* RequestFactory+createGetOperationDetailByPaymentIDRequestModule.swift */,
+				2A2E3FC32BB2CB5E00730D37 /* RequestFactory+createMakeTransferRequest.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -6428,8 +6434,8 @@
 		2A2E3FD32BB3FB8800730D37 /* NanoServices */ = {
 			isa = PBXGroup;
 			children = (
-				2A2E3FCB2BB2D1DF00730D37 /* NanoServices+makeMakeTransfer.swift */,
 				2A2E3FCD2BB2D80300730D37 /* NanoServices+makeGetOperationDetailByPaymentID.swift */,
+				2A2E3FCB2BB2D1DF00730D37 /* NanoServices+makeMakeTransfer.swift */,
 			);
 			path = NanoServices;
 			sourceTree = "<group>";
@@ -15339,6 +15345,7 @@
 				834E3F6A2AC2C77600E49C2B /* QRDataMapper.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
+				2A2E3FD72BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				77EC58F4277381970054D75C /* OperationType.swift in Sources */,
 				0BE0BDFD29071BE10064549E /* QRButtonsViewComponent.swift in Sources */,
@@ -15444,6 +15451,7 @@
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,
 				83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
+				2A2E3FD52BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				2A7688D32AF3914C00045293 /* Store.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,

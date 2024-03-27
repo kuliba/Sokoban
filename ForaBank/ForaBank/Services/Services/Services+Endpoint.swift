@@ -28,16 +28,16 @@ extension Services {
                 switch self {
                 case let .processing(processing):
                     return "processing/\(processing.rawValue)"
-
+                    
                 case .dict:
                     return "dict"
-
+                    
                 case .binding:
                     return "rest/binding"
-
+                    
                 case .rest:
                     return "rest"
-
+                    
                 case .transfer:
                     return "rest/transfer"
                 }
@@ -169,6 +169,12 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let createAnywayTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .createAnywayTransfer
+    )
+    
     static let createCommissionProductTransfer: Self = .init(
         pathPrefix: .transfer,
         version: nil,
@@ -216,25 +222,25 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .getBankDefault
     )
-
+    
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getC2BSub
     )
-
+    
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
         version: nil,
         serviceName: .getCardStatementForPeriod_V3
     )
-
+    
     static let getClientConsentMe2MePull: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .getClientConsentMe2MePull
     )
-
+    
     static let getImageList: Self = .init(
         pathPrefix: .dict,
         version: nil,
@@ -270,13 +276,13 @@ extension Services.Endpoint {
         version: .v2,
         serviceName: .getProductDetails
     )
-
+    
     static let getProductDynamicParamsList: Self = .init(
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getProductDynamicParamsList
     )
-
+    
     static let getSberQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
