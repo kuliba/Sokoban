@@ -13,7 +13,7 @@ public extension RequestFactory {
     
     static func createCreateAnywayTransferRequest(
         url: URL,
-        payload: CreateAnywayTransferResponsePayload
+        payload: CreateAnywayTransferPayload
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -24,7 +24,7 @@ public extension RequestFactory {
 
 extension RequestFactory {
     
-    public struct CreateAnywayTransferResponsePayload: Equatable {
+    public struct CreateAnywayTransferPayload: Equatable {
         
         public let additionals: [Additional]
         public let amount: Decimal?
@@ -57,7 +57,7 @@ extension RequestFactory {
     }
 }
 
-extension RequestFactory.CreateAnywayTransferResponsePayload {
+extension RequestFactory.CreateAnywayTransferPayload {
     
     public struct Additional: Equatable {
         
@@ -103,7 +103,7 @@ extension RequestFactory.CreateAnywayTransferResponsePayload {
     }
 }
 
-private extension RequestFactory.CreateAnywayTransferResponsePayload {
+private extension RequestFactory.CreateAnywayTransferPayload {
     
     var httpBody: Data {
         
@@ -116,7 +116,7 @@ private extension RequestFactory.CreateAnywayTransferResponsePayload {
 
 private extension RequestFactory._DTO {
     
-    init(_ payload: RequestFactory.CreateAnywayTransferResponsePayload) {
+    init(_ payload: RequestFactory.CreateAnywayTransferPayload) {
         
         self.init(
             additional: payload.additionals.map { .init($0) },
@@ -168,7 +168,7 @@ private extension RequestFactory._DTO {
 
 private extension RequestFactory._DTO._Additional {
     
-    init(_ additional: RequestFactory.CreateAnywayTransferResponsePayload.Additional) {
+    init(_ additional: RequestFactory.CreateAnywayTransferPayload.Additional) {
         
         self.init(
             fieldid: additional.fieldID,
@@ -180,7 +180,7 @@ private extension RequestFactory._DTO._Additional {
 
 private extension RequestFactory._DTO._Payer {
     
-    init(_ payer: RequestFactory.CreateAnywayTransferResponsePayload.Payer) {
+    init(_ payer: RequestFactory.CreateAnywayTransferPayload.Payer) {
         
         self.init(
             accountId: payer.accountID,

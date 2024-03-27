@@ -50,7 +50,7 @@ extension ResponseMapper {
             needOTP: Bool,
             needSum: Bool,
             parametersForNextStep: [Parameter],
-            paymentOperationDetailID: Int?,
+            paymentOperationDetailID: Int? = nil,
             payeeName: String? = nil,
             printFormType: String? = nil,
             scenario: AntiFraudScenario? = nil

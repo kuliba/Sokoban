@@ -38,7 +38,9 @@ extension NanoServices {
 
 extension NanoServices {
     
+    typealias MakeTransferPayload = RemoteServices.RequestFactory.VerificationCode
     typealias MakeTransferResponse = RemoteServices.ResponseMapper.MakeTransferResponse
-    typealias MakeTransferCompletion = (MakeTransferResponse?) -> Void
-    typealias MakeTransfer = (RemoteServices.RequestFactory.VerificationCode, @escaping MakeTransferCompletion) -> Void
+    typealias MakeTransferResult = MakeTransferResponse?
+    typealias MakeTransferCompletion = (MakeTransferResult) -> Void
+    typealias MakeTransfer = (MakeTransferPayload, @escaping MakeTransferCompletion) -> Void
 }
