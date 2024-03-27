@@ -83,7 +83,11 @@ extension ProductProfileCardView {
             let productsViewModelsIds = productsViewModels.map{ $0.id }
             let productsForTypeDisplayed = productsWithRelated.filter({ productsViewModelsIds.contains($0.id)})
             
-            self.selector = SelectorViewModel(with: productsForTypeDisplayed, selected: productData.id)
+            self.selector = SelectorViewModel(
+                with: productsForTypeDisplayed,
+                selected: productData.id,
+                getImage: { model.images.value[.init($0)]?.image }
+            )
             self.products = productsViewModels
             self.activeProductId = productData.id
             self.productType = productData.productType
@@ -186,7 +190,11 @@ extension ProductProfileCardView {
                         // update selector
                         let productsViewModelsIds = updatedProducts.map{ $0.id }
                         let productsForTypeDisplayed = productsWithRelated.filter({ productsViewModelsIds.contains($0.id)})
-                        selector = SelectorViewModel(with: productsForTypeDisplayed, selected: activeProductId)
+                        selector = SelectorViewModel(
+                            with: productsForTypeDisplayed,
+                            selected: activeProductId,
+                            getImage: { self.model.images.value[.init($0)]?.image }
+                        )
                         bind(selector)
                         
                         // update selected product
@@ -360,23 +368,29 @@ extension ProductProfileCardView.ViewModel {
         
         lazy var moreButton: MoreButtonViewModel = .init(action: { [weak self] in self?.action.send(SelectorViewModelAction.MoreButtonTapped()) })
         
-        init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID) {
+        init(
+            thumbnails: [ThumbnailViewModel],
+            selected: ThumbnailViewModel.ID
+        ) {
             
             self.thumbnails = thumbnails
             self.selected = selected
         }
         
-        init(with products: [ProductData], selected: ProductData.ID) {
+        init(with products: [ProductData], selected: ProductData.ID, getImage: @escaping (MD5Hash) -> Image?) {
             
             self.thumbnails = []
             self.selected = selected
             
             self.thumbnails = products.map { product in
                 
-                ThumbnailViewModel(with: product) { [weak self] productId in
-                    self?.selected = productId
-                    self?.action.send(ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected(thunmbnailId: productId))
-                }
+                ThumbnailViewModel(
+                    with: product,
+                    action: { [weak self] productId in
+                        self?.selected = productId
+                        self?.action.send(ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected(thunmbnailId: productId))
+                    },
+                    getImage: getImage)
             }
         }
         
@@ -385,22 +399,24 @@ extension ProductProfileCardView.ViewModel {
             let id: ProductData.ID
             let background: Background
             let action: (ProductData.ID) -> Void
+            let getImage: (MD5Hash) -> Image?
             
-            init(id: ProductData.ID, background: Background, action: @escaping (ProductData.ID) -> Void) {
+            init(id: ProductData.ID, background: Background, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (MD5Hash) -> Image?) {
                 
                 self.id = id
                 self.background = background
                 self.action = action
+                self.getImage = getImage
             }
             
-            init(with productData: ProductData, action: @escaping (ProductData.ID) -> Void) {
+            init(with productData: ProductData, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (MD5Hash) -> Image?) {
                 
                 self.id = productData.id
-   
-                if let backgroundImage = productData.smallDesign.image {
+                self.getImage = getImage
+
+                if let backgroundImage = getImage(.init(productData.smallDesignMd5hash)) {
                     
                     self.background = .image(backgroundImage)
-                    
                 } else {
                     
                     self.background = .color(productData.backgroundColor)
@@ -622,11 +638,11 @@ extension ProductProfileCardView.ViewModel {
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {
     
-    static let sampleColorPurpule = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 0, background: .color(.purple), action: { _ in  })
+    static let sampleColorPurpule = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 0, background: .color(.purple), action: { _ in  }, getImage: { _ in  .none})
     
-    static let sampleColorBlue = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 1, background: .color(.blue), action: { _ in  })
+    static let sampleColorBlue = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 1, background: .color(.blue), action: { _ in  }, getImage: { _ in  .none})
     
-    static let sampleColorOrange = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 2, background: .color(.orange), action: { _ in  })
+    static let sampleColorOrange = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 2, background: .color(.orange), action: { _ in  }, getImage: { _ in  .none})
 }
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel {

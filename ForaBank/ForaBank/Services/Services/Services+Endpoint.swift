@@ -57,6 +57,7 @@ extension Services {
             case v1
             case v2
             case v4
+            case v5
         }
         
         enum ServiceName: String {
@@ -81,9 +82,10 @@ extension Services {
             case getOperatorsListByParam
             case getPINConfirmationCode
             case getPrintForm
-            case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
+            case getProductListByType
+            case getProcessingSessionCode
             case getScenarioQRData
             case getSberQRData
             case getStickerPayment
@@ -283,6 +285,12 @@ extension Services.Endpoint {
         serviceName: .getProductDynamicParamsList
     )
     
+    static let getProductListByType: Self = .init(
+        pathPrefix: .rest,
+        version: .v5,
+        serviceName: .getProductListByType
+    )
+
     static let getSberQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,

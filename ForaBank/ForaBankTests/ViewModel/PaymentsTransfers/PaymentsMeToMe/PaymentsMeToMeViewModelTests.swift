@@ -399,7 +399,7 @@ extension ProductData {
             background: [.init(description: "")],
             order: 1,
             isVisible: true,
-            smallDesignMd5hash: "",
+            smallDesignMd5hash: "1",
             smallBackgroundDesignHash: ""
         )
     }
