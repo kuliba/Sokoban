@@ -329,6 +329,7 @@
 		2A01F9402AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */; };
 		2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */; };
 		2A0439C72BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439C62BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift */; };
+		2A0439C92BB420040063B7AB /* NanoServicesTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439C82BB420040063B7AB /* NanoServicesTestHelpers.swift */; };
 		2A05586E2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */; };
 		2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5190302A7E0BE80014B0B7 /* URLRequestFactory */; };
 		2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A06DC2F2AFACBDD0049709E /* ServerAgent */; };
@@ -2852,6 +2853,7 @@
 		2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ChangePINClient.swift"; sourceTree = "<group>"; };
 		2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+composedCVVPINService.swift"; sourceTree = "<group>"; };
 		2A0439C62BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeMakeTransferTests.swift"; sourceTree = "<group>"; };
+		2A0439C82BB420040063B7AB /* NanoServicesTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanoServicesTestHelpers.swift; sourceTree = "<group>"; };
 		2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationViewModelParameterInputTests.swift; sourceTree = "<group>"; };
 		2A06DC312AFB72500049709E /* Services+makeActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationService.swift"; sourceTree = "<group>"; };
 		2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+getJSON.swift"; sourceTree = "<group>"; };
@@ -6093,6 +6095,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0439C62BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift */,
+				2A0439C82BB420040063B7AB /* NanoServicesTestHelpers.swift */,
 			);
 			path = NanoServices;
 			sourceTree = "<group>";
@@ -16387,6 +16390,7 @@
 				77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */,
 				2AA555682A3E02F500B13D47 /* ServerAgentTestStub.swift in Sources */,
 				8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */,
+				2A0439C92BB420040063B7AB /* NanoServicesTestHelpers.swift in Sources */,
 				2A3BD6002B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift in Sources */,
 				77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */,
 				C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */,

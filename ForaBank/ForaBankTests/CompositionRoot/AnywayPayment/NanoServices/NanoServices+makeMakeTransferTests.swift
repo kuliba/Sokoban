@@ -255,7 +255,7 @@ private let okResponse = anyHTTPURLResponse(with: 200)
 
 private extension Data {
     
-    static let valid = String.valid.json
+    static let valid = json(.valid)
 }
 
 private extension String {
@@ -268,66 +268,6 @@ private extension String {
         "paymentOperationDetailId": 18483,
         "documentStatus": "COMPLETE"
     }
-}
-"""
-}
-
-// MARK: - reusable
-
-extension Data {
-    
-    static let empty: Self = .init()
-    static let emptyJSON: Self = "{}".json
-    static let emptyArrayJSON: Self = "[]".json
-    static let invalid: Self = "invalid data".json
-    static let nullServerResponse: Self = String.nullServerResponse.json
-    static let emptyServerData: Self = String.emptyServerData.json
-    static let emptyArrayServerData: Self = String.emptyArrayServerData.json
-    static let invalidServerData: Self = String.invalidServerData.json
-    static let serverError: Self = String.serverError.json
-}
-
-private extension String {
-    
-    var json: Data { .init(self.utf8) }
-    
-    static let nullServerResponse = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": null
-}
-"""
-    
-    static let emptyServerData = """
-{
-    "statusCode": 102,
-    "errorMessage": null,
-    "data": {}
-}
-"""
-    
-    static let emptyArrayServerData = """
-{
-    "statusCode": 102,
-    "errorMessage": null,
-    "data": []
-}
-"""
-    
-    static let invalidServerData = """
-{
-    "statusCode": 102,
-    "errorMessage": null,
-    "data": { "a": "junk" }
-}
-"""
-    
-    static let serverError = """
-{
-    "statusCode": 102,
-    "errorMessage": "Возникла техническая ошибка",
-    "data": null
 }
 """
 }
