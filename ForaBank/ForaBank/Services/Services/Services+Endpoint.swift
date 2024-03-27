@@ -64,10 +64,11 @@ extension Services {
             case bindPublicKeyWithEventId
             case changeClientConsentMe2MePull
             case changePIN
+            case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
-            case createStickerPayment
             case createSberQRPayment
+            case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
             case getBankDefault
@@ -76,23 +77,23 @@ extension Services {
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getJsonAbroad
-            case makeSetBankDefault
-            case getSberQRData
             case getOperationDetailByPaymentId
+            case getOperatorsListByParam
             case getPINConfirmationCode
             case getPrintForm
             case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
-            case getSvgImageList
             case getScenarioQRData
+            case getSberQRData
             case getStickerPayment
+            case getSvgImageList
+            case makeSetBankDefault
             case makeTransfer
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
-            case getOperatorsListByParam
         }
     }
 }
