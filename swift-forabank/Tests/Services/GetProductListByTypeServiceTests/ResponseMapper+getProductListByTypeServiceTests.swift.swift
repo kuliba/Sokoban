@@ -74,7 +74,7 @@ final class ResponseMapper_getProductListByTypeServiceTests: XCTestCase {
         data: Data
     ) -> Result {
         
-        ResponseMapper.mapGetCardStatementResponse(
+        ResponseMapper.mapGetProductListByTypeResponse(
             data,
             anyHTTPURLResponse(statusCode: statusCode)
         )

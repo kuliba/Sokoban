@@ -182,6 +182,8 @@ public extension ProductResponse {
         
         case blockedByClient
         case active
+        case notActivated
+        case blockedUnlockAvailable
         case issuedToClient
         case blockedByBank
         case notBlocked

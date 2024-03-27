@@ -20,6 +20,7 @@ class ProductCardData: ProductData {
     let branch: String
     let miniStatement: [PaymentDataItem]?
     let paymentSystemName: String?
+    #warning("use paymentSystemImageMd5Hash")
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
     private(set) var statusPc: StatusPC?
@@ -31,6 +32,7 @@ class ProductCardData: ProductData {
     var statusCard: StatusCard? = nil
     var cardType: CardType? = nil
     var idParent: Int? = nil
+    var paymentSystemImageMd5Hash: String = ""
     
     init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
 
