@@ -1,15 +1,15 @@
 //
-//  RequestFactory+createMakeTransferRequestTests.swift
-//  
+//  RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift
+//
 //
 //  Created by Igor Malyarov on 25.03.2024.
 //
 
-import AnywayPayment
+import AnywayPaymentBackend
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
+final class RequestFactory_createGetOperationDetailByPaymentIDRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetURL() throws {
         
@@ -37,9 +37,9 @@ final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
         
         let payload = anyPayload()
         let request = try createRequest(payload: payload)
-     
+        
         let body = try request.decodedBody(as: Body.self)
-        XCTAssertNoDiff(body.verificationCode, payload.rawValue)
+        XCTAssertNoDiff(body.paymentOperationDetailId, payload.rawValue)
     }
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
@@ -49,7 +49,7 @@ final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
         
         try assertBody(of: request, hasJSON: """
         {
-            "verificationCode": "\(payload.rawValue)"
+            "paymentOperationDetailId": \(payload.rawValue)
         }
         """
         )
@@ -59,24 +59,24 @@ final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: RequestFactory.VerificationCode = .init(UUID().uuidString)
+        payload: RequestFactory.OperationDetailID = 123456
     ) throws -> URLRequest {
         
-        try RequestFactory.createMakeTransferRequest(
+        try RequestFactory.createGetOperationDetailByPaymentIDRequest(
             url: url,
             payload: payload
         )
     }
     
     private func anyPayload(
-        _ value: String = UUID().uuidString
-    ) -> RequestFactory.VerificationCode {
+        _ value: Int = generateRandom11DigitNumber()
+    ) -> RequestFactory.OperationDetailID {
         
         .init(value)
     }
     
     private struct Body: Decodable {
         
-        let verificationCode: String
+        let paymentOperationDetailId: Int
     }
 }

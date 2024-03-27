@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 26.03.2024.
 //
 
-import AnywayPayment
+import AnywayPaymentBackend
 import Fetcher
 import RemoteServices
 
