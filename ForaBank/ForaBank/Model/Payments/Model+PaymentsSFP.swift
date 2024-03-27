@@ -27,15 +27,16 @@ extension Model {
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя", countryCode: .russian)
+            let phoneParameter = Payments.ParameterInputPhone(
+                .init(id: phoneParameterId, value: nil),
+                title: "Номер телефона получателя",
+                countryCode: .russian
+            )
             
             // bank
+            let bankParameter = bankParameter(operation)
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-            
-            let options = self.bankList.value.map( { Payments.ParameterSelectBank.Option(id: $0.id, name: $0.memberNameRus, subtitle: nil, icon: .init(with: $0.svgImage), searchValue: $0.memberNameRus)} )
 
-            let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banks), keyboardType: .normal)
-            
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
@@ -346,6 +347,57 @@ extension Payments.ParameterAmount {
 
 extension Model {
     
+    private func bankParameter(
+        _ operation: Payments.Operation
+    ) -> Payments.ParameterSelectBank {
+    
+        switch operation.source {
+        case let .latestPayment(latestPaymentId):
+            
+            if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+            
+                return filterByPhone(latestPayment.phoneNumber.digits)
+            } else {
+                return filterByPhone(nil)
+            }
+            
+        case let .sfp(phone: phone, bankId: _):
+            return filterByPhone(phone)
+            
+        case let .mock(mock):
+            return filterByPhone(mock.parameters.first?.value)
+            
+        default:
+            return filterByPhone(nil)
+        }
+    }
+    
+    private func filterByPhone(
+        _ phone: String?
+    ) -> Payments.ParameterSelectBank{
+    
+        let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+        
+        let banksID = banksByPhone?.compactMap({ $0.bankId })
+        
+        let options = self.reduceBanks(
+            bankList: bankList.value,
+            preferred: banksID ?? []
+        )
+
+        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+        return Payments.ParameterSelectBank(
+            .init(id: bankParameterId, value: nil),
+            icon: .iconPlaceholder,
+            title: "Банк получателя",
+            options: options,
+            placeholder: "Начните ввод для поиска",
+            selectAll: .init(type: .banks),
+            keyboardType: .normal
+        )
+    }
+    
     func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
     
         switch source {
@@ -355,6 +407,31 @@ extension Model {
             
         default:
             return productId
+        }
+    }
+    
+    private func reduceBanks(
+        bankList: [BankData],
+        preferred: [String]
+    ) -> [Payments.ParameterSelectBank.Option] {
+        
+        let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
+        let otherBanks = bankList.filter{ preferred.contains($0.id) == false }
+            .sorted(by: {$0.memberNameRus.lowercased() < $1.memberNameRus.lowercased()})
+            .sorted(by: {$0.memberNameRus.localizedCaseInsensitiveCompare($1.memberNameRus) == .orderedAscending})
+        
+        let allBanks = preferredBanks + otherBanks
+        
+        return allBanks
+            .filter({ $0.bankType == .sfp })
+            .map { item in
+            Payments.ParameterSelectBank.Option(
+                id: item.id,
+                name: item.memberNameRus,
+                subtitle: nil,
+                icon: .init(with: item.svgImage),
+                searchValue: item.memberNameRus
+            )
         }
     }
 }
