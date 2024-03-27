@@ -38,7 +38,9 @@ extension NanoServices {
 
 extension NanoServices {
     
+    typealias GetOperationDetailByPaymentIDPayload = RemoteServices.RequestFactory.OperationDetailID
     typealias GetOperationDetailByPaymentIDResponse = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
-    typealias GetOperationDetailByPaymentIDCompletion = (GetOperationDetailByPaymentIDResponse?) -> Void
-    typealias GetOperationDetailByPaymentID = (RemoteServices.RequestFactory.OperationDetailID, @escaping GetOperationDetailByPaymentIDCompletion) -> Void
+    typealias GetOperationDetailByPaymentIDResult = GetOperationDetailByPaymentIDResponse?
+    typealias GetOperationDetailByPaymentIDCompletion = (GetOperationDetailByPaymentIDResult) -> Void
+    typealias GetOperationDetailByPaymentID = (GetOperationDetailByPaymentIDPayload, @escaping GetOperationDetailByPaymentIDCompletion) -> Void
 }
