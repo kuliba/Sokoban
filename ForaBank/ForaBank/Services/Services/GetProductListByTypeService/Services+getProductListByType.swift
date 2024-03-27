@@ -347,6 +347,12 @@ private extension ProductData.Status {
             
         case .blocked:
             self = .blocked
+            
+        case .notActivated:
+            self = .notActivated
+            
+        case .blockedUnlockAvailable:
+            self = .blockedUnlockAvailable
         }
     }
 }

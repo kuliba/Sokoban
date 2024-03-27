@@ -342,12 +342,14 @@ extension ProductData {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
+        case notActivated = "Не активирована"
         case issuedToClient = "Выдано клиенту"
+        case blockedUnlockAvailable = "Карта блокирована, разблокировка доступна"
         case blockedByBank = "Заблокирована банком"
         case notBlocked = "NOT_BLOCKED"
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
-        case blocked = "BLOCKED"
+        case blocked = "BLOCKED" 
         case unknown
     }
     
