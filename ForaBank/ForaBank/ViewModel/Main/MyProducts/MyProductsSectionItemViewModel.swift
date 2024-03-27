@@ -47,7 +47,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     convenience init(productData: ProductData, model: Model) {
 
         let icon = IconViewModel(with: productData, model: model)
-        let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
+        let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData, getImage: { model.images.value[.init($0)]?.image })
         let name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .navigationTitle)
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
         let descriptions = productData.description

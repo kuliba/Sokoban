@@ -57,7 +57,7 @@ extension RootViewModelFactory {
             getSubscriptionProducts(
                 items: model.subscriptions.value?.list ?? [],
                 getProduct: model.product(forID:),
-                getImage: { model.images.value[$0]?.image },
+                getImage: { model.images.value[.init($0)]?.image },
                 formatBalance: model.formatBalanceFraction(product:),
                 makeSubscriptionViewModel: {
                     
@@ -82,7 +82,7 @@ extension RootViewModelFactory {
     static func getSubscriptionProducts(
         items: [C2BSubscription.ProductSubscription],
         getProduct: @escaping (ProductID) -> ProductData?,
-        getImage: @escaping (String) -> Image?,
+        getImage: @escaping (MD5Hash) -> Image?,
         formatBalance: @escaping (ProductData) -> String?,
         makeSubscriptionViewModel: @escaping MakeSubscriptionViewModel
     ) -> [SubscriptionsViewModel.Product] {
@@ -91,7 +91,7 @@ extension RootViewModelFactory {
             
             guard let product = getProduct(item.productId),
                   let balance = formatBalance(product),
-                  let icon = getImage(product.smallDesignMd5hash)
+                  let icon = getImage(.init(product.smallDesignMd5hash))
             else { return nil }
             
             let subscriptions = item.subscriptions.map(makeSubscriptionViewModel)

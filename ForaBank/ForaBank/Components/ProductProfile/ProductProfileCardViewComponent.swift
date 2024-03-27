@@ -86,7 +86,7 @@ extension ProductProfileCardView {
             self.selector = SelectorViewModel(
                 with: productsForTypeDisplayed,
                 selected: productData.id,
-                getImage: { model.images.value[$0]?.image }
+                getImage: { model.images.value[.init($0)]?.image }
             )
             self.products = productsViewModels
             self.activeProductId = productData.id
@@ -193,7 +193,7 @@ extension ProductProfileCardView {
                         selector = SelectorViewModel(
                             with: productsForTypeDisplayed,
                             selected: activeProductId,
-                            getImage: { self.model.images.value[$0]?.image }
+                            getImage: { self.model.images.value[.init($0)]?.image }
                         )
                         bind(selector)
                         
@@ -377,7 +377,7 @@ extension ProductProfileCardView.ViewModel {
             self.selected = selected
         }
         
-        init(with products: [ProductData], selected: ProductData.ID, getImage: @escaping (String) -> Image?) {
+        init(with products: [ProductData], selected: ProductData.ID, getImage: @escaping (MD5Hash) -> Image?) {
             
             self.thumbnails = []
             self.selected = selected
@@ -399,9 +399,9 @@ extension ProductProfileCardView.ViewModel {
             let id: ProductData.ID
             let background: Background
             let action: (ProductData.ID) -> Void
-            let getImage: (String) -> Image?
+            let getImage: (MD5Hash) -> Image?
             
-            init(id: ProductData.ID, background: Background, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (String) -> Image?) {
+            init(id: ProductData.ID, background: Background, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (MD5Hash) -> Image?) {
                 
                 self.id = id
                 self.background = background
@@ -409,12 +409,12 @@ extension ProductProfileCardView.ViewModel {
                 self.getImage = getImage
             }
             
-            init(with productData: ProductData, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (String) -> Image?) {
+            init(with productData: ProductData, action: @escaping (ProductData.ID) -> Void, getImage: @escaping (MD5Hash) -> Image?) {
                 
                 self.id = productData.id
                 self.getImage = getImage
 
-                if let backgroundImage = getImage(productData.smallDesignMd5hash) {
+                if let backgroundImage = getImage(.init(productData.smallDesignMd5hash)) {
                     
                     self.background = .image(backgroundImage)
                 } else {

@@ -289,14 +289,14 @@ extension ProductSelectorView.ViewModel {
             let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
             let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
             
-            var paymentSystemImage: SVGImageData?
+            var paymentSystemImage: Image?
             
             if let product = productData as? ProductCardData {
-                paymentSystemImage = product.paymentSystemImage
+                paymentSystemImage = model.images.value[product.paymentSystemMd5Hash]?.image
             }
             let cardIcon = model.images.value[productData.smallDesignMd5hash]?.image
             
-            self.init(id: productData.id, title: context.title, cardIcon: cardIcon, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
+            self.init(id: productData.id, title: context.title, cardIcon: cardIcon, paymentIcon: paymentSystemImage, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
         }
         
         func update(context: ProductSelectorView.ViewModel.Context) {
