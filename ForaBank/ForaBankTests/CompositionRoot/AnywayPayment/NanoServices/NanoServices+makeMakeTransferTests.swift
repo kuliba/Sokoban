@@ -37,128 +37,69 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     
     func test_shouldDeliverNilOnFailure() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .failure(anyError()))
-        }
+        expect(toDeliver: nil, on: .failure(anyError()))
     }
     
     func test_shouldDeliverNilOnEmptyData() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .empty)
-        }
+        expect(toDeliver: nil, onData: .empty)
     }
     
     func test_shouldDeliverNilOnEmptyJSON() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .emptyJSON)
-        }
+        expect(toDeliver: nil, onData: .emptyJSON)
     }
     
     func test_shouldDeliverNilOnEmptyArrayJSON() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .emptyArrayJSON)
-        }
+        expect(toDeliver: nil, onData: .emptyArrayJSON)
     }
     
     func test_shouldDeliverNilOnInvalidData() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .invalid)
-        }
+        expect(toDeliver: nil, onData:  .invalid)
     }
     
     func test_shouldDeliverNilOnNullServerResponse() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .nullServerResponse)
-        }
+        expect(toDeliver: nil, onData: .nullServerResponse)
     }
     
     func test_shouldDeliverNilOnEmptyServerData() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .emptyServerData)
-        }
+        expect(toDeliver: nil, onData: .emptyServerData)
     }
     
     func test_shouldDeliverNilOnEmptyArrayServerData() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .emptyArrayServerData)
-        }
+        expect(toDeliver: nil, onData: .emptyArrayServerData)
     }
     
     func test_shouldDeliverNilOnInvalidServerData() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .invalidServerData)
-        }
+        expect(toDeliver: nil, onData: .invalidServerData)
     }
     
     func test_shouldDeliverNilOnServerError() {
         
-        let (make, httpClient) = makeSUT()
-        
-        expect(make, toDeliver: nil) {
-            
-            httpClient.complete(with: .serverError)
-        }
+        expect(toDeliver: nil, onData: .serverError)
     }
     
     func test_shouldDeliverNilOnValidDataNonOKStatusCode() {
         
         for nonOkStatusCode in [199, 201, 399, 400, 401, 404] {
             
-            let (make, httpClient) = makeSUT()
             let nonOKResponse = anyHTTPURLResponse(with: nonOkStatusCode)
-            
-            expect(make, toDeliver: nil) {
-                
-                httpClient.complete(with: .success((.valid, nonOKResponse)))
-            }
+            expect(toDeliver: nil, on: .success((.valid, nonOKResponse)))
         }
     }
     
     func test_shouldDeliverResponseOnValidData() {
         
-        let (make, httpClient) = makeSUT()
-
-        expect(make, toDeliver: .init(
-            operationDetailID: 18483,
-            documentStatus: .complete
-        )) {
-            httpClient.complete(with: .valid)
-        }
+        expect(
+            toDeliver: .init(operationDetailID: 18483, documentStatus: .complete),
+            onData: .valid
+        )
     }
     
     // MARK: - Helpers
@@ -234,7 +175,7 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     private func expect(
         with payload: Payload = makePayload(),
         toDeliver expectedResult: MakeTransferResult,
-        onHTTPClientResult: HTTPClient.Result,
+        onData data: Data,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -244,7 +185,25 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
             make,
             with: payload,
             toDeliver: expectedResult,
-            on: { httpClient.complete(with: onHTTPClientResult) },
+            on: { httpClient.complete(with: .success((data, okResponse))) },
+            file: file, line: line
+        )
+    }
+    
+    private func expect(
+        with payload: Payload = makePayload(),
+        toDeliver expectedResult: MakeTransferResult,
+        on httpClientResult: HTTPClient.Result,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let (make, httpClient) = makeSUT()
+        
+        expect(
+            make,
+            with: payload,
+            toDeliver: expectedResult,
+            on: { httpClient.complete(with: httpClientResult) },
             file: file, line: line
         )
     }
