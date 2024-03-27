@@ -43,6 +43,18 @@ final class RequestFactory_createCreateAnywayTransferRequestTests: XCTestCase {
         XCTAssertEqual(body, _DTO(payload))
     }
     
+    // MARK: - Test DTO tests
+    
+    func test_dto_shouldBeDecodedFromJSONWithFieldNameTwekedToString() {
+        
+        for string in [String.sber01_new, .sber02, .sber03, .sber04, .sber05] {
+            
+            try XCTAssertNoThrow(
+                JSONDecoder().decode(_DTO.self, from: Data(string.utf8))
+            )
+        }
+    }
+    
     // MARK: - Helpers
     
     private func createRequest(
@@ -170,4 +182,124 @@ private func makePayload(
         ),
         puref: puref
     )
+}
+
+private extension String {
+    
+    static let sber01_new = """
+{
+    "additional": [],
+    "amount": null,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184511
+    },
+    "puref": "iForaNKORR||126733"
+}
+"""
+    
+    static let sber02 = """
+{
+    "additional": [
+        {
+            "fieldid": 1,
+            "fieldname": "1",
+            "fieldvalue": "100611401082"
+        }
+    ],
+    "amount": null,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184511
+    },
+    "puref": "iForaNKORR||126733"
+}
+"""
+    
+    static let sber03 = """
+{
+    "additional": [{
+            "fieldid": 1,
+            "fieldname": "1",
+            "fieldvalue": "100611401082"
+        },
+        {
+            "fieldid": 2,
+            "fieldname": "2",
+            "fieldvalue":  "БЕЗ СТРАХОВОГО ВЗНОСА"
+        }],
+    "amount": null,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184511
+    },
+    "puref": "iForaNKORR||126733"
+}
+"""
+    
+    static let sber04 = """
+{
+    "additional": [
+        {
+            "fieldid": 1,
+            "fieldname": "1",
+            "fieldvalue": "100611401082"
+        },
+        {
+            "fieldid": 2,
+            "fieldname": "2",
+            "fieldvalue":  "БЕЗ СТРАХОВОГО ВЗНОСА"
+        },
+        {
+            "fieldid": 3,
+            "fieldname": "5",
+            "fieldvalue": "022024"
+        }
+    ],
+    "amount": 5888.1,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184511
+    },
+    "puref": "iForaNKORR||126733"
+}
+"""
+    
+    static let sber05 = """
+{
+    "additional": [
+        {
+            "fieldid": 1,
+            "fieldname": "1",
+            "fieldvalue": "100611401082"
+        },
+        {
+            "fieldid": 2,
+            "fieldname": "2",
+            "fieldvalue":  "БЕЗ СТРАХОВОГО ВЗНОСА"
+        },
+        {
+            "fieldid": 3,
+            "fieldname": "5",
+            "fieldvalue": "022024"
+        },
+                {
+            "fieldid": 4,
+            "fieldname": "SumSTrs",
+            "fieldvalue": "5888.1"
+        }
+    ],
+    "amount": 5888.1,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184511
+    },
+    "puref": "iForaNKORR||126733"
+}
+"""
 }
