@@ -6420,10 +6420,18 @@
 		2A2E3FCA2BB2D1D100730D37 /* AnywayPayment */ = {
 			isa = PBXGroup;
 			children = (
+				2A2E3FD32BB3FB8800730D37 /* NanoServices */,
+			);
+			path = AnywayPayment;
+			sourceTree = "<group>";
+		};
+		2A2E3FD32BB3FB8800730D37 /* NanoServices */ = {
+			isa = PBXGroup;
+			children = (
 				2A2E3FCB2BB2D1DF00730D37 /* NanoServices+makeMakeTransfer.swift */,
 				2A2E3FCD2BB2D80300730D37 /* NanoServices+makeGetOperationDetailByPaymentID.swift */,
 			);
-			path = AnywayPayment;
+			path = NanoServices;
 			sourceTree = "<group>";
 		};
 		2A2ECBC02AE5264C00F3C946 /* ResponseMapper */ = {
