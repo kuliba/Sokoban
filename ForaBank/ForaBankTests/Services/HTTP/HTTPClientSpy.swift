@@ -30,3 +30,15 @@ final class HTTPClientSpy: HTTPClient {
         messages[index].completion(result)
     }
 }
+
+extension HTTPClientSpy {
+    
+    func complete(
+        with data: Data,
+        at index: Int = 0
+    ) {
+        complete(with: .success((data, okResponse)), at: index)
+    }
+}
+
+private let okResponse = anyHTTPURLResponse(with: 200)

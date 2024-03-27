@@ -106,7 +106,7 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     
     private typealias SUT = NanoServices.MakeTransfer
     private typealias Payload = NanoServices.MakeTransferPayload
-    private typealias MakeTransferResult = NanoServices.MakeTransferResult
+    private typealias Result = NanoServices.MakeTransferResult
     private typealias Response = NanoServices.MakeTransferResponse
     
     private func makeSUT(
@@ -174,7 +174,7 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     
     private func expect(
         with payload: Payload = makePayload(),
-        toDeliver expectedResult: MakeTransferResult,
+        toDeliver expectedResult: Result,
         onData data: Data,
         file: StaticString = #file,
         line: UInt = #line
@@ -192,7 +192,7 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     
     private func expect(
         with payload: Payload = makePayload(),
-        toDeliver expectedResult: MakeTransferResult,
+        toDeliver expectedResult: Result,
         on httpClientResult: HTTPClient.Result,
         file: StaticString = #file,
         line: UInt = #line
@@ -211,13 +211,13 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     private func expect(
         _ sut: @escaping SUT,
         with payload: Payload = makePayload(),
-        toDeliver expectedResult: MakeTransferResult,
+        toDeliver expectedResult: Result,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "wait for completion")
-        var receivedResult: MakeTransferResult?
+        var receivedResult: Result?
         
         sut(payload) {
             
@@ -233,25 +233,14 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     }
 }
 
+private let okResponse = anyHTTPURLResponse(with: 200)
+
 private func makePayload(
     _ rawValue: String = UUID().uuidString
 ) -> NanoServices.MakeTransferPayload {
     
     .init(rawValue)
 }
-
-private extension HTTPClientSpy {
-    
-    func complete(
-        with data: Data,
-        at index: Int = 0
-    ) {
-        
-        complete(with: .success((data, okResponse)), at: index)
-    }
-}
-
-private let okResponse = anyHTTPURLResponse(with: 200)
 
 private extension Data {
     
