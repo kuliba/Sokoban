@@ -135,21 +135,8 @@ extension PaymentsSelectBankView.ViewModel {
                       let selectAllOption = parameterSelectBank.selectAll else {
                     return
                 }
-
-                //TODO: move ContactsViewModel initialization to PaymentsOperationViewModel.
-                let contactsViewModel: ContactsViewModel = {
-                    
-                    switch selectAllOption.type {
-                    case .banks:
-                        return model.makeContactsViewModel(forMode: .select(.banks))
-                    case .banksFullInfo:
-                        return model.makeContactsViewModel(forMode: .select(.banksFullInfo))
-                    }
-                    
-                }()
                 
-                bind(contactsViewModel: contactsViewModel)
-                action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(viewModel: contactsViewModel))
+                action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(type: selectAllOption.type))
                 
             }.store(in: &bindings)
         
@@ -170,36 +157,6 @@ extension PaymentsSelectBankView.ViewModel {
               
             }.store(in: &bindings)
     }
-}
-
-extension PaymentsSelectBankView.ViewModel {
-    
-    private func bind(contactsViewModel: ContactsViewModel) {
-            
-            contactsViewModel.action
-                .compactMap({$0 as? ContactsViewModelAction.BankSelected })
-                .map(\.bankId)
-                .receive(on: scheduler)
-                .sink { [weak self] bankId in
-                    
-                    guard let self = self else { return }
-                    
-                    guard let parameterSelectBank = self.parameterSelectBank,
-                          let option = parameterSelectBank.options.first(where: { $0.id == bankId } ) else {
-                        return
-                    }
-                    
-                    self.update(value: option.id)
-                    
-                    withAnimation {
-                        self.state = .collapsed(.init(value: self.value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
-                    }
-                    
-                    self.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
-   
-                }.store(in: &bindings)
-        }
-
 }
 
 //MARK: - Types
@@ -479,7 +436,7 @@ extension PaymentsParameterViewModelAction {
             
             struct Show: Action {
                 
-                let viewModel: ContactsViewModel
+                let type: Payments.ParameterSelectBank.SelectAllOption.Kind
             }
             
             struct Close: Action {}
