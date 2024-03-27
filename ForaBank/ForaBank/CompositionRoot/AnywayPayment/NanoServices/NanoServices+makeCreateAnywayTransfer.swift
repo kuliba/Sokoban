@@ -18,22 +18,15 @@ extension NanoServices {
         line: UInt = #line
     ) -> CreateAnywayTransfer {
         
-        let loggingRemoteService = LoggingRemoteServiceDecorator(
+        adaptedLoggingFetch(
             createRequest: RequestFactory.createCreateAnywayTransferNewRequest,
-            performRequest: httpClient.performRequest,
+            httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
+            mapError: ServiceFailure.init,
             log: log,
             file: file,
             line: line
-        ).remoteService
-        
-        return { id, completion in
-            
-            loggingRemoteService.process(id) { result in
-                
-                completion(result.mapError(ServiceFailure.init))
-            }
-        }
+        )
     }
     
     static func makeCreateAnywayTransfer(
@@ -43,22 +36,15 @@ extension NanoServices {
         line: UInt = #line
     ) -> CreateAnywayTransfer {
         
-        let loggingRemoteService = LoggingRemoteServiceDecorator(
+        adaptedLoggingFetch(
             createRequest: RequestFactory.createCreateAnywayTransferRequest,
-            performRequest: httpClient.performRequest,
+            httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
+            mapError: ServiceFailure.init,
             log: log,
             file: file,
             line: line
-        ).remoteService
-        
-        return { id, completion in
-            
-            loggingRemoteService.process(id) { result in
-                
-                completion(result.mapError(ServiceFailure.init))
-            }
-        }
+        )
     }
 }
 
