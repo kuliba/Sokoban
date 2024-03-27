@@ -26,7 +26,20 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     private let searchTextFieldFactory: () -> RegularFieldViewModel
     
-    private init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchTextField: RegularFieldViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], bankType: BankType? = nil, phone: String?, filter: String? = nil, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
+    private init(
+        _ model: Model,
+        header: ContactsSectionHeaderView.ViewModel,
+        isCollapsed: Bool,
+        mode: Mode,
+        searchTextField: RegularFieldViewModel?,
+        options: OptionSelectorView.ViewModel,
+        visible: [ContactsItemViewModel],
+        items: [ContactsItemViewModel],
+        bankType: BankType? = nil,
+        phone: String?,
+        filter: String? = nil,
+        searchTextFieldFactory: @escaping () -> RegularFieldViewModel
+    ) {
         
         self.searchTextField = searchTextField
         self.options = options
@@ -40,7 +53,13 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
     
-    convenience init(_ model: Model, mode: Mode, phone: String?, bankDictionary: BankDictionary, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
+    convenience init(
+        _ model: Model,
+        mode: Mode,
+        phone: String?,
+        bankDictionary: BankDictionary,
+        searchTextFieldFactory: @escaping () -> RegularFieldViewModel
+    ) {
         
         let options = Self.createOptionViewModel()
         self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchTextField: nil, options: options, visible: [], items: [], phone: phone, searchTextFieldFactory: searchTextFieldFactory)
