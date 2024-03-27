@@ -5,40 +5,8 @@
 //  Created by Igor Malyarov on 27.03.2024.
 //
 
+import Fetcher
 import XCTest
-
-final class NilifyDecorator<Payload, Response, Failure: Error> {
-    
-    private let decoratee: Decoratee
-    
-    init(decoratee: @escaping Decoratee) {
-        
-        self.decoratee = decoratee
-    }
-}
-
-extension NilifyDecorator {
-    
-    func process(
-        _ payload: Payload,
-        _ completion: @escaping Completion
-    ) {
-        decoratee(payload) { [weak self] in
-            
-            guard self != nil else { return }
-            
-            completion(try? $0.get())
-        }
-    }
-}
-
-extension NilifyDecorator {
-    
-    typealias DecorateeCompletion = (Result<Response, Failure>) -> Void
-    typealias Decoratee = (Payload, @escaping DecorateeCompletion) -> Void
-    
-    typealias Completion = (Response?) -> Void
-}
 
 final class NilifyDecoratorTests: XCTestCase {
     
