@@ -64,7 +64,7 @@ extension NanoServices {
 
 extension NanoServices {
     
-    typealias CreateAnywayTransferPayload = RemoteServices.RequestFactory.CreateAnywayTransferResponsePayload
+    typealias CreateAnywayTransferPayload = RemoteServices.RequestFactory.CreateAnywayTransferPayload
     typealias CreateAnywayTransferResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
     typealias CreateAnywayTransferResult = Result<CreateAnywayTransferResponse, ServiceFailure>
     typealias CreateAnywayTransferCompletion = (CreateAnywayTransferResult) -> Void

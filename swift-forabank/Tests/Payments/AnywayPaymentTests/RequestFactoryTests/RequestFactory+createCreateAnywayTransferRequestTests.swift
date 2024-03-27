@@ -59,7 +59,7 @@ final class RequestFactory_createCreateAnywayTransferRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: RequestFactory.CreateAnywayTransferResponsePayload = makePayload()
+        payload: RequestFactory.CreateAnywayTransferPayload = makePayload()
     ) throws -> URLRequest {
         
         try RequestFactory.createCreateAnywayTransferRequest(
@@ -100,7 +100,7 @@ private struct _DTO: Decodable, Equatable {
 
 private extension _DTO {
     
-    init(_ payload: RequestFactory.CreateAnywayTransferResponsePayload) {
+    init(_ payload: RequestFactory.CreateAnywayTransferPayload) {
         
         self.init(
             additional: payload.additionals.map { .init($0) },
@@ -117,7 +117,7 @@ private extension _DTO {
 
 private extension _DTO._Additional {
     
-    init(_ payload: RequestFactory.CreateAnywayTransferResponsePayload.Additional) {
+    init(_ payload: RequestFactory.CreateAnywayTransferPayload.Additional) {
         
         self.init(
             fieldid: payload.fieldID,
@@ -129,7 +129,7 @@ private extension _DTO._Additional {
 
 private extension _DTO._Payer {
     
-    init(_ payer: RequestFactory.CreateAnywayTransferResponsePayload.Payer) {
+    init(_ payer: RequestFactory.CreateAnywayTransferPayload.Payer) {
         
         self.init(
             accountId: payer.accountID,
@@ -157,7 +157,7 @@ private func makePayload(
     mcc: String? = nil,
     phoneNumber: String? = nil,
     puref: String? = nil
-) -> RequestFactory.CreateAnywayTransferResponsePayload {
+) -> RequestFactory.CreateAnywayTransferPayload {
     
     .init(
         additionals: [

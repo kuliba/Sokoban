@@ -12,7 +12,7 @@ import RemoteServices
 extension ForaBank.RequestFactory {
     
     static func createCreateAnywayTransferRequest(
-        _ payload: RemoteServices.RequestFactory.CreateAnywayTransferResponsePayload
+        _ payload: RemoteServices.RequestFactory.CreateAnywayTransferPayload
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL

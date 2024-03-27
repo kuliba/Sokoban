@@ -83,7 +83,7 @@ final class RequestFactory_createCreateAnywayTransferNewRequestTests: XCTestCase
     }
 }
 
-private typealias CreateAnywayTransferResponsePayload = RemoteServices.RequestFactory.CreateAnywayTransferResponsePayload
+private typealias CreateAnywayTransferResponsePayload = RemoteServices.RequestFactory.CreateAnywayTransferPayload
 
 private struct _DTO: Decodable, Equatable {
     
