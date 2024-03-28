@@ -37,10 +37,22 @@ extension PaymentEffectHandler {
     ) {
         switch effect {
         case let .continue(digest):
-            process(digest) {
-                
-                dispatch(.update($0))
-            }
+            process(digest, dispatch)
+        }
+    }
+}
+
+private extension PaymentEffectHandler {
+    
+    func process(
+        _ digest: Digest,
+        _ dispatch: @escaping Dispatch
+    ) {
+        process(digest) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            dispatch(.update($0))
         }
     }
 }
@@ -83,6 +95,20 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         let update = makeUpdate()
         expect(toDeliver: .update(update), on: .continue(makeDigest()), with: update)
+    }
+    
+    func test_continue_shouldNotDeliverProcessingResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let processing: Processing
+        (sut, processing) = makeSUT()
+        var received = [SUT.Event]()
+        
+        sut?.handleEffect(.continue(makeDigest())) { received.append($0) }
+        sut = nil
+        processing.complete(with: makeUpdate())
+        
+        XCTAssert(received.isEmpty)
     }
     
     // MARK: - Helpers
