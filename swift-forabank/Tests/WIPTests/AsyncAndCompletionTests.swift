@@ -9,6 +9,7 @@ import XCTest
 
 final class AsyncAndCompletionTests: XCTestCase {
     
+    @available(iOS 16.0, *)
     func test_() async throws {
         
         let spy = Spy<Void, String>()

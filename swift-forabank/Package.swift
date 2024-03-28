@@ -112,8 +112,10 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Payments
-        .anywayPayment,
-        .anywayPaymentTests,
+        .anywayPaymentBackend,
+        .anywayPaymentBackendTests,
+        .anywayPaymentCore,
+        .anywayPaymentCoreTests,
         .utilityPayment,
         .utilityPaymentTests,
         // Services
@@ -523,7 +525,8 @@ private extension Product {
     static let anywayPayment = library(
         name: .anywayPayment,
         targets: [
-            .anywayPayment,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
         ]
     )
 
@@ -924,25 +927,46 @@ private extension Target {
     
     // MARK: - Payments
     
-    static let anywayPayment = target(
-        name: .anywayPayment,
+    static let anywayPaymentBackend = target(
+        name: .anywayPaymentBackend,
         dependencies: [
             .remoteServices,
             .tagged,
         ],
-        path: "Sources/Payments/\(String.anywayPayment)"
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentBackend)"
     )
-    static let anywayPaymentTests = testTarget(
-        name: .anywayPaymentTests,
+    static let anywayPaymentBackendTests = testTarget(
+        name: .anywayPaymentBackendTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .anywayPayment,
+            .anywayPaymentBackend,
             .remoteServices,
             .tagged,
         ],
-        path: "Tests/Payments/\(String.anywayPaymentTests)"
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentBackendTests)"
+    )
+    
+    static let anywayPaymentCore = target(
+        name: .anywayPaymentCore,
+        dependencies: [
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentCore)"
+    )
+    static let anywayPaymentCoreTests = testTarget(
+        name: .anywayPaymentCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .anywayPaymentCore,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
     )
     
     static let utilityPayment = target(
@@ -1760,7 +1784,8 @@ private extension Target {
             .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
-            .anywayPayment,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
             .utilityPayment,
         ]
     )
@@ -1990,8 +2015,12 @@ private extension Target.Dependency {
     
     // MARK: - Payments
 
-    static let anywayPayment = byName(
-        name: .anywayPayment
+    static let anywayPaymentBackend = byName(
+        name: .anywayPaymentBackend
+    )
+
+    static let anywayPaymentCore = byName(
+        name: .anywayPaymentCore
     )
 
     static let utilityPayment = byName(
@@ -2200,7 +2229,10 @@ private extension String {
     // MARK: - Payments
     
     static let anywayPayment = "AnywayPayment"
-    static let anywayPaymentTests = "AnywayPaymentTests"
+    static let anywayPaymentBackend = "AnywayPaymentBackend"
+    static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
+    static let anywayPaymentCore = "AnywayPaymentCore"
+    static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
