@@ -15,8 +15,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "AnywayPaymentTests",
-        "name" : "AnywayPaymentTests"
+        "identifier" : "AnywayPaymentBackendTests",
+        "name" : "AnywayPaymentBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentCoreTests",
+        "name" : "AnywayPaymentCoreTests"
       }
     }
   ],
