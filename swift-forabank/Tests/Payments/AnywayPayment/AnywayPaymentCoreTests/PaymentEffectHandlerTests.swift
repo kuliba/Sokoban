@@ -219,35 +219,6 @@ final class PaymentEffectHandlerTests: XCTestCase {
         .completePayment(.failure(.init()))
     }
     
-    private func transactionDetailsEvent(
-        _ transactionDetails: SUT.Event.TransactionDetails
-    ) -> SUT.Event {
-        
-        .completePayment(.success(transactionDetails))
-    }
-    
-    private func makeDetailIDTransactionDetails(
-        documentStatus: DocumentStatus = .complete,
-        _ id: Int = generateRandom11DigitNumber()
-    ) -> SUT.Event.TransactionDetails {
-        
-        .init(
-            documentStatus: documentStatus,
-            details: .paymentOperationDetailID(.init(id))
-        )
-    }
-    
-    private func makeOperationDetailsTransactionDetails(
-        documentStatus: DocumentStatus = .complete,
-        _ value: String = UUID().uuidString
-    ) -> SUT.Event.TransactionDetails {
-        
-        .init(
-            documentStatus: documentStatus,
-            details: .operationDetails(.init(value: value))
-        )
-    }
-    
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
@@ -330,4 +301,33 @@ private func makeVerificationCode(
 ) -> VerificationCode {
     
     .init(value)
+}
+
+private func transactionDetailsEvent(
+    _ transactionDetails: TransactionDetails<DocumentStatus, OperationDetails>
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    .completePayment(.success(transactionDetails))
+}
+
+private func makeDetailIDTransactionDetails(
+    documentStatus: DocumentStatus = .complete,
+    _ id: Int = generateRandom11DigitNumber()
+) -> TransactionDetails<DocumentStatus, OperationDetails> {
+    
+    .init(
+        documentStatus: documentStatus,
+        details: .paymentOperationDetailID(.init(id))
+    )
+}
+
+private func makeOperationDetailsTransactionDetails(
+    documentStatus: DocumentStatus = .complete,
+    _ value: String = UUID().uuidString
+) -> TransactionDetails<DocumentStatus, OperationDetails> {
+    
+    .init(
+        documentStatus: documentStatus,
+        details: .operationDetails(.init(value: value))
+    )
 }
