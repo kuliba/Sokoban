@@ -37,10 +37,10 @@ public extension TransactionPerformer {
             guard let self else { return }
             
             switch $0 {
-            case let .failure(makeTransferError):
-                completion(.failure(makeTransferError))
+            case .none:
+                completion(nil)
                 
-            case let .success(response):
+            case let .some(response):
                 getDetails(response, completion)
             }
         }
@@ -49,53 +49,20 @@ public extension TransactionPerformer {
 
 public extension TransactionPerformer {
     
-    func getDetails(
-        _ response: MakeTransferResponse,
-        _ completion: @escaping Completion
-    ) {
-        getDetails(response.detailsID) { [weak self] in
-            
-            guard self != nil else { return }
-            
-            switch $0 {
-            case .failure:
-                completion(.success(.init(
-                    makeTransferResponse: response,
-                    details: nil
-                )))
-                
-            case let .success(details):
-                completion(.success(.init(
-                    makeTransferResponse: response,
-                    details: details
-                )))
-            }
-        }
-    }
-}
-
-public extension TransactionPerformer {
-    
-    typealias GetDetailsResult = Result<Details, Error>
+    typealias GetDetailsResult = Details?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias DetailsID = MakeTransferResponse.DetailsID
     typealias GetDetails = (DetailsID, @escaping GetDetailsCompletion) -> Void
     
-    
-    typealias MakeTransferResult = Result<MakeTransferResponse, MakeTransferError>
+    typealias MakeTransferResult = MakeTransferResponse?
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void
     typealias MakeTransfer = (Code, @escaping MakeTransferCompletion) -> Void
     
-    typealias ProcessResult = Result<ProcessResponse, MakeTransferError>
+    typealias ProcessResult = ProcessResponse?
     typealias Completion = (ProcessResult) -> Void
 }
 
 extension TransactionPerformer {
-    
-    public struct MakeTransferError: Error, Equatable {
-        
-        public init() {}
-    }
     
     public struct ProcessResponse {
         
@@ -113,3 +80,21 @@ extension TransactionPerformer {
 }
 
 extension TransactionPerformer.ProcessResponse: Equatable where MakeTransferResponse: Equatable, Details: Equatable {}
+
+private extension TransactionPerformer {
+    
+    func getDetails(
+        _ response: MakeTransferResponse,
+        _ completion: @escaping Completion
+    ) {
+        getDetails(response.detailsID) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            completion(.init(
+                makeTransferResponse: response,
+                details: $0
+            ))
+        }
+    }
+}

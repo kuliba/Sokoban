@@ -32,9 +32,9 @@ final class TransactionPerformerTests: XCTestCase {
         
         let (sut, makeTransfer, _) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.init()), on: {
+        expect(sut, toDeliver: nil, on: {
             
-            makeTransfer.complete(with: .failure(.init()))
+            makeTransfer.complete(with: nil)
         })
     }
     
@@ -46,7 +46,7 @@ final class TransactionPerformerTests: XCTestCase {
         let (sut, makeTransfer, getDetails) = makeSUT()
         
         sut.process(code) { _ in }
-        makeTransfer.complete(with: .success(payload))
+        makeTransfer.complete(with: payload)
         
         XCTAssertNoDiff(getDetails.payloads, [detailsID])
     }
@@ -57,10 +57,10 @@ final class TransactionPerformerTests: XCTestCase {
         let payload = Payload(detailsID: detailsID)
         let (sut, makeTransfer, getDetails) = makeSUT()
         
-        expect(sut, toDeliver: .success(.init(makeTransferResponse: payload, details: nil)), on: {
+        expect(sut, toDeliver: .init(makeTransferResponse: payload, details: nil), on: {
             
-            makeTransfer.complete(with: .success(payload))
-            getDetails.complete(with: .failure(anyError()))
+            makeTransfer.complete(with: payload)
+            getDetails.complete(with: nil)
         })
     }
     
@@ -71,10 +71,10 @@ final class TransactionPerformerTests: XCTestCase {
         let details = Details()
         let (sut, makeTransfer, getDetails) = makeSUT()
         
-        expect(sut, toDeliver: .success(.init(makeTransferResponse: payload, details: details)), on: {
+        expect(sut, toDeliver: .init(makeTransferResponse: payload, details: details), on: {
             
-            makeTransfer.complete(with: .success(payload))
-            getDetails.complete(with: .success(details))
+            makeTransfer.complete(with: payload)
+            getDetails.complete(with: details)
         })
     }
     
@@ -83,15 +83,15 @@ final class TransactionPerformerTests: XCTestCase {
         var sut: SUT?
         let makeTransfer: MakeTransferSpy
         (sut, makeTransfer, _) = makeSUT()
-        var response: SUT.ProcessResult?
+        var responses = [SUT.ProcessResult]()
         
-        sut?.process(.init()) { response = $0 }
+        sut?.process(.init()) { responses.append($0) }
         sut = nil
-        makeTransfer.complete(with: .failure(.init()))
+        makeTransfer.complete(with: nil)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertNil(response)
+        XCTAssert(responses.isEmpty)
     }
     
     func test_process_shouldNotDeliverGetDetailsResultOnInstanceDeallocation() {
@@ -100,16 +100,16 @@ final class TransactionPerformerTests: XCTestCase {
         let makeTransfer: MakeTransferSpy
         let getDetails: GetDetailsSpy
         (sut, makeTransfer, getDetails) = makeSUT()
-        var response: SUT.ProcessResult?
+        var responses = [SUT.ProcessResult]()
         
-        sut?.process(.init()) { response = $0 }
-        makeTransfer.complete(with: .success(.init(detailsID: .init())))
+        sut?.process(.init()) { responses.append($0) }
+        makeTransfer.complete(with: .init(detailsID: .init()))
         sut = nil
-        getDetails.complete(with: .failure(anyError()))
+        getDetails.complete(with: nil)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertNil(response)
+        XCTAssert(responses.isEmpty)
     }
     
     // MARK: - Helpers
@@ -153,7 +153,7 @@ final class TransactionPerformerTests: XCTestCase {
         
         sut.process(code) {
             
-            XCTAssertNoDiff($0, expected, "\nExpected \(expected), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff($0, expected, "\nExpected \(String(describing: expected)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }
         
