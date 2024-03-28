@@ -79,8 +79,8 @@ final class CardChooseView: UIView {
 
         imageView.image = {
             if let getUImage {
-                getUImage(model.smallDesignMd5Hash ?? "") ?? #imageLiteral(resourceName: "AccImage")
-            } else {#imageLiteral(resourceName: "AccImage")}
+                getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage(named:"AccImage")
+            } else {UIImage(named:"AccImage")}
         }()
         imageView.accessibilityIdentifier = "ChooseProductIcon"
         
@@ -151,8 +151,8 @@ final class CardChooseView: UIView {
         var balance = Double(modelBalance)
         
         imageView.image = {
-            if let getUImage { getUImage(model.smallDesignMd5Hash ?? "") ?? #imageLiteral(resourceName: "AccImage") }
-            else { #imageLiteral(resourceName: "AccImage") }
+            if let getUImage { getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage(named:"AccImage") }
+            else { UIImage(named:"AccImage") }
         }()
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
             
