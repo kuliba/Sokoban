@@ -419,14 +419,26 @@ extension Model {
                     ContactsListSectionViewModel(model, mode: .select)
                 ]
                 
-            case .banks:
+            case let .banks(phone):
                 return [
-                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banks, searchTextFieldFactory: { .bank() })
+                    ContactsBanksSectionViewModel(
+                        model,
+                        mode: .select,
+                        phone: phone,
+                        bankDictionary: .banks,
+                        searchTextFieldFactory: { .bank() }
+                    )
                 ]
                 
             case .banksFullInfo:
                 return [
-                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banksFullInfo, searchTextFieldFactory: { .bank() })
+                    ContactsBanksSectionViewModel(
+                        model,
+                        mode: .select,
+                        phone: nil,
+                        bankDictionary: .banksFullInfo,
+                        searchTextFieldFactory: { .bank() }
+                    )
                 ]
                 
             case .countries:
