@@ -60,7 +60,9 @@ class AccountStatementController: UIViewController {
         super.viewDidLoad()
         title = "Выписка по счету"
         view.backgroundColor = .white
-        cardFromField.getUImage = viewModel?.getUImage
+        if let viewModel {
+            cardFromField.getUImage = viewModel.getUImage
+        }
         cardFromField.model = startProduct
 //        setupCloseButton()
         setupUI()
@@ -224,8 +226,8 @@ class AccountStatementController: UIViewController {
             DispatchQueue.main.async {
                 let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
-                        if card.id == cardId {
-                            self.cardFromField.getUImage = self.viewModel?.getUImage
+                    if card.id == cardId, let viewModel = self.viewModel {
+                            self.cardFromField.getUImage = viewModel.getUImage
                         self.cardFromField.model = card
                         if self.cardListView.isHidden == false {
                             self.hideView(self.cardListView, needHide: true)
