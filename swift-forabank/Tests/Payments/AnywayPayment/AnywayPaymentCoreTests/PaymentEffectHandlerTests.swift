@@ -7,7 +7,7 @@
 
 enum PaymentEvent<Update> {
     
-    case update(Update)
+    case update(Result<Update, ServiceFailure>)
 }
 
 extension PaymentEvent: Equatable where Update: Equatable {}
@@ -54,10 +54,10 @@ private extension PaymentEffectHandler {
             
             switch $0 {
             case let .failure(serviceFailure):
-                fatalError()
+                dispatch(.update(.failure(serviceFailure)))
                 
             case let .success(update):
-                dispatch(.update(update))
+                dispatch(.update(.success(update)))
             }
         }
     }
@@ -98,20 +98,57 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(processing.payloads, [digest])
     }
     
+    func test_continue_shouldDeliverConnectivityErrorOnProcessingConnectivityErrorFailure() {
+        
+        expect(
+            toDeliver: updateEvent(.connectivityError), 
+            for: continueEffect(),
+            onProcessing: .failure(.connectivityError)
+        )
+    }
+    
+    func test_continue_shouldDeliverServerErrorOnProcessingServerErrorFailure() {
+        
+        let message = anyMessage()
+        expect(
+            toDeliver: updateEvent(.serverError(message)), 
+            for: continueEffect(),
+            onProcessing: .failure(.serverError(message))
+        )
+    }
+    
     func test_continue_shouldDeliverUpdateOnProcessingSuccess() {
         
         let update = makeUpdate()
-        expect(toDeliver: .update(update), on: .continue(makeDigest()), with: .success(update))
+        expect(
+            toDeliver: updateEvent(update),
+            for: continueEffect(),
+            onProcessing: .success(update)
+        )
     }
     
-    func test_continue_shouldNotDeliverProcessingResultOnInstanceDeallocation() {
+    func test_continue_shouldNotDeliverProcessingFailureOnInstanceDeallocation() {
         
         var sut: SUT?
         let processing: Processing
         (sut, processing) = makeSUT()
         var received = [SUT.Event]()
         
-        sut?.handleEffect(.continue(makeDigest())) { received.append($0) }
+        sut?.handleEffect(continueEffect()) { received.append($0) }
+        sut = nil
+        processing.complete(with: .failure(.connectivityError))
+        
+        XCTAssert(received.isEmpty)
+    }
+    
+    func test_continue_shouldNotDeliverProcessingSuccessResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let processing: Processing
+        (sut, processing) = makeSUT()
+        var received = [SUT.Event]()
+        
+        sut?.handleEffect(continueEffect()) { received.append($0) }
         sut = nil
         processing.complete(with: .success(makeUpdate()))
         
@@ -139,10 +176,29 @@ final class PaymentEffectHandlerTests: XCTestCase {
         return (sut, processing)
     }
     
+    private func continueEffect() -> SUT.Effect {
+        
+        .continue(makeDigest())
+    }
+    
+    private func updateEvent(
+        _ update: Update
+    ) -> SUT.Event {
+        
+        .update(.success(update))
+    }
+    
+    private func updateEvent(
+        _ serviceFailure: ServiceFailure
+    ) -> SUT.Event {
+        
+        .update(.failure(serviceFailure))
+    }
+    
     private func expect(
         toDeliver expectedEvent: SUT.Event,
-        on effect: SUT.Effect,
-        with processingResult: SUT.ProcessResult,
+        for effect: SUT.Effect,
+        onProcessing processingResult: SUT.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -151,7 +207,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut.handleEffect(effect) {
             
-            XCTAssertNoDiff(expectedEvent, $0, "Expected \(expectedEvent), but got \($0) instead.")
+            XCTAssertNoDiff(expectedEvent, $0, "Expected \(expectedEvent), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
         }
         
