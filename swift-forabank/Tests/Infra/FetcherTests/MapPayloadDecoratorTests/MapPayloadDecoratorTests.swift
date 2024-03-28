@@ -5,42 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-final class MapPayloadDecorator<Payload, NewPayload, Response> {
-    
-    private let decoratee: Decoratee
-    private let mapPayload: MapPayload
-    
-    init(
-        decoratee: @escaping Decoratee,
-        mapPayload: @escaping (Payload) -> NewPayload
-    ) {
-        self.decoratee = decoratee
-        self.mapPayload = mapPayload
-    }
-}
-
-extension MapPayloadDecorator {
-    
-    func callAsFunction(
-        _ payload: Payload,
-        completion: @escaping DecorateeCompletion
-    ) {
-        decoratee(mapPayload(payload)) { [weak self] in
-            
-            guard self != nil else { return }
-            
-            completion($0)
-        }
-    }
-}
-
-extension MapPayloadDecorator {
-    
-    typealias DecorateeCompletion = (Response) -> Void
-    typealias Decoratee = (NewPayload, @escaping DecorateeCompletion) -> Void
-    typealias MapPayload = (Payload) -> NewPayload
-}
-
+import Fetcher
 import XCTest
 
 final class MapPayloadDecoratorTests: XCTestCase {
