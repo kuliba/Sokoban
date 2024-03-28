@@ -18,7 +18,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
             card: card,
             getUIImage: { 
                 if let getUImage { getUImage }
-                else { { _ in UIImage() } }
+                else { { _ in return UIImage()} }
             }()
         )
         balanceLabel.text = viewModel.balance
@@ -30,7 +30,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     var card: UserAllCardsModel? {
         didSet {
             if let getUImage { configure(getUImage: getUImage) }
-            else { configure(getUImage:{ _ in nil }) }
+            else { configure(getUImage: { _ in return UIImage()}) }
         }
     }
     
