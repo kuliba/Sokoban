@@ -33,7 +33,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_continue_shouldDeliverConnectivityErrorOnProcessingConnectivityErrorFailure() {
         
         expect(
-            toDeliver: updateEvent(.connectivityError), 
+            toDeliver: updateEvent(.connectivityError),
             for: continueEffect(),
             onProcessing: .failure(.connectivityError)
         )
@@ -43,7 +43,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         let message = anyMessage()
         expect(
-            toDeliver: updateEvent(.serverError(message)), 
+            toDeliver: updateEvent(.serverError(message)),
             for: continueEffect(),
             onProcessing: .failure(.serverError(message))
         )
@@ -99,11 +99,32 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(paymentMaker.payloads, [code])
     }
     
+    func test_makePayment_shouldDeliverDetailIDOnOperationDetailID() {
+        
+        let transactionDetails = makeDetailIDTransactionDetails()
+        expect(
+            toDeliver: transactionDetailsEvent(transactionDetails),
+            for: makePaymentEffect(),
+            onMakePayment: transactionDetails
+        )
+    }
+    
+    func test_makePayment_shouldDeliverOperationDetailsOnOperationDetails() {
+        
+        let transactionDetails = makeOperationDetailsTransactionDetails()
+        expect(
+            toDeliver: transactionDetailsEvent(transactionDetails),
+            for: makePaymentEffect(),
+            onMakePayment: transactionDetails
+        )
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, Update>
+    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update>
+    
     private typealias Processing = Spy<Digest, SUT.ProcessResult>
-    private typealias PaymentMaker = Spy<VerificationCode, Void>
+    private typealias PaymentMaker = Spy<VerificationCode, SUT.MakePaymentResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -127,9 +148,18 @@ final class PaymentEffectHandlerTests: XCTestCase {
         return (sut, processing, paymentMaker)
     }
     
-    private func continueEffect() -> SUT.Effect {
+    private func continueEffect(
+        _ digest: Digest = makeDigest()
+    ) -> SUT.Effect {
         
-        .continue(makeDigest())
+        .continue(digest)
+    }
+    
+    private func makePaymentEffect(
+        _ verificationCode: VerificationCode = makeVerificationCode()
+    ) -> SUT.Effect {
+        
+        .makePayment(verificationCode)
     }
     
     private func updateEvent(
@@ -144,6 +174,35 @@ final class PaymentEffectHandlerTests: XCTestCase {
     ) -> SUT.Event {
         
         .update(.failure(serviceFailure))
+    }
+    
+    private func transactionDetailsEvent(
+        _ transactionDetails: SUT.Event.TransactionDetails
+    ) -> SUT.Event {
+        
+        .completePayment(transactionDetails)
+    }
+    
+    private func makeDetailIDTransactionDetails(
+        documentStatus: DocumentStatus = .complete,
+        _ id: Int = generateRandom11DigitNumber()
+    ) -> SUT.Event.TransactionDetails {
+        
+        .init(
+            documentStatus: documentStatus,
+            details: .paymentOperationDetailID(.init(id))
+        )
+    }
+    
+    private func makeOperationDetailsTransactionDetails(
+        documentStatus: DocumentStatus = .complete,
+        _ value: String = UUID().uuidString
+    ) -> SUT.Event.TransactionDetails {
+        
+        .init(
+            documentStatus: documentStatus,
+            details: .operationDetails(.init(value: value))
+        )
     }
     
     private func expect(
@@ -166,9 +225,40 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
+    
+    private func expect(
+        toDeliver expectedEvent: SUT.Event,
+        for effect: SUT.Effect,
+        onMakePayment makePaymentResult: SUT.MakePaymentResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let (sut, _, makePayment) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.handleEffect(effect) {
+            
+            XCTAssertNoDiff(expectedEvent, $0, "Expected \(expectedEvent), but got \($0) instead.", file: file, line: line)
+            exp.fulfill()
+        }
+        
+        makePayment.complete(with: makePaymentResult)
+        
+        wait(for: [exp], timeout: 1)
+    }
 }
 
 private struct Digest: Equatable {
+    
+    let value: String
+}
+
+private enum DocumentStatus: Equatable {
+    
+    case complete, inflight
+}
+
+private struct OperationDetails: Equatable {
     
     let value: String
 }

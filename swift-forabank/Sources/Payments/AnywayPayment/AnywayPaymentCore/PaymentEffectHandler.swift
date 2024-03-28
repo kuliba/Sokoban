@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class PaymentEffectHandler<Digest, Update> {
+public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update> {
     
     private let process: Process
     private let makePayment: MakePayment
@@ -59,7 +59,10 @@ private extension PaymentEffectHandler {
         _ verificationCode: VerificationCode,
         _ dispatch: @escaping Dispatch
     ) {
-        makePayment(verificationCode) { _ in }
+        makePayment(verificationCode) {
+        
+            dispatch(.completePayment($0))
+        }
     }
 }
 
@@ -69,11 +72,12 @@ public extension PaymentEffectHandler {
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias Process = (Digest, @escaping ProcessCompletion) -> Void
     
-    typealias MakePaymentCompletion = (Void) -> Void
+    typealias MakePaymentResult = Event.TransactionDetails
+    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentEvent<Update>
+    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
     typealias Effect = PaymentEffect<Digest>
 }
