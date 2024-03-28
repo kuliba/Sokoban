@@ -13,17 +13,9 @@ public enum PaymentEvent<DocumentStatus, OperationDetails, Update> {
 
 public extension PaymentEvent {
     
-    typealias TransactionResult = Result<TransactionDetails<DocumentStatus, OperationDetails>, TransactionFailure>
+    typealias TransactionResult = TransactionDetails<DocumentStatus, OperationDetails>?
     
     typealias UpdateResult = Result<Update, ServiceFailure>
-}
-
-extension PaymentEvent {
-    
-    public struct TransactionFailure: Error, Equatable {
-        
-        public init() {}
-    }
 }
 
 extension PaymentEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, Update: Equatable {}
