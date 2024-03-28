@@ -35,6 +35,22 @@ public extension PaymentEffectHandler {
     }
 }
 
+public extension PaymentEffectHandler {
+    
+    typealias ProcessResult = Event.UpdateResult
+    typealias ProcessCompletion = (ProcessResult) -> Void
+    typealias Process = (Digest, @escaping ProcessCompletion) -> Void
+    
+    typealias MakePaymentResult = Event.TransactionResult
+    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
+    typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
+    
+    typealias Dispatch = (Event) -> Void
+    
+    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
+    typealias Effect = PaymentEffect<Digest>
+}
+
 private extension PaymentEffectHandler {
     
     func process(
@@ -45,13 +61,7 @@ private extension PaymentEffectHandler {
             
             guard self != nil else { return }
             
-            switch $0 {
-            case let .failure(serviceFailure):
-                dispatch(.update(.failure(serviceFailure)))
-                
-            case let .success(update):
-                dispatch(.update(.success(update)))
-            }
+            dispatch(.update($0))
         }
     }
     
@@ -59,25 +69,11 @@ private extension PaymentEffectHandler {
         _ verificationCode: VerificationCode,
         _ dispatch: @escaping Dispatch
     ) {
-        makePayment(verificationCode) {
-        
+        makePayment(verificationCode) { [weak self] in
+            
+            guard self != nil else { return }
+            
             dispatch(.completePayment($0))
         }
     }
-}
-
-public extension PaymentEffectHandler {
-    
-    typealias ProcessResult = Result<Update, ServiceFailure>
-    typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias Process = (Digest, @escaping ProcessCompletion) -> Void
-    
-    typealias MakePaymentResult = Event.TransactionDetails
-    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
-    typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
-    typealias Effect = PaymentEffect<Digest>
 }

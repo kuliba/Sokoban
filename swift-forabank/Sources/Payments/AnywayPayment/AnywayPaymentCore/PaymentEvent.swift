@@ -9,8 +9,8 @@ import Tagged
 
 public enum PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
-    case update(Result<Update, ServiceFailure>)
-    case completePayment(TransactionDetails)
+    case update(UpdateResult)
+    case completePayment(TransactionResult)
 }
 
 extension PaymentEvent {
@@ -28,6 +28,15 @@ extension PaymentEvent {
             self.details = details
         }
     }
+    
+    public struct TransactionFailure: Error, Equatable {
+        
+        public init() {}
+    }
+    
+    public typealias TransactionResult = Result<TransactionDetails, TransactionFailure>
+
+    public typealias UpdateResult = Result<Update, ServiceFailure>
 }
 
 public extension PaymentEvent.TransactionDetails {

@@ -99,13 +99,23 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(paymentMaker.payloads, [code])
     }
     
+    func test_makePayment_shouldDeliverTransactionFailureOnMakePaymentFailure() {
+        
+        let transactionDetails = makeDetailIDTransactionDetails()
+        expect(
+            toDeliver: completePaymentFailureEvent(),
+            for: makePaymentEffect(),
+            onMakePayment: .failure(.init())
+        )
+    }
+    
     func test_makePayment_shouldDeliverDetailIDOnOperationDetailID() {
         
         let transactionDetails = makeDetailIDTransactionDetails()
         expect(
             toDeliver: transactionDetailsEvent(transactionDetails),
             for: makePaymentEffect(),
-            onMakePayment: transactionDetails
+            onMakePayment: .success(transactionDetails)
         )
     }
     
@@ -115,8 +125,36 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             toDeliver: transactionDetailsEvent(transactionDetails),
             for: makePaymentEffect(),
-            onMakePayment: transactionDetails
+            onMakePayment: .success(transactionDetails)
         )
+    }
+    
+    func test_makePayment_shouldNotDeliverPaymentFailureOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let paymentMaker: PaymentMaker
+        (sut, _, paymentMaker) = makeSUT()
+        var received = [SUT.Event]()
+        
+        sut?.handleEffect(makePaymentEffect()) { received.append($0) }
+        sut = nil
+        paymentMaker.complete(with: .failure(.init()))
+        
+        XCTAssert(received.isEmpty)
+    }
+    
+    func test_makePayment_shouldNotDeliverPaymentResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let paymentMaker: PaymentMaker
+        (sut, _, paymentMaker) = makeSUT()
+        var received = [SUT.Event]()
+        
+        sut?.handleEffect(makePaymentEffect()) { received.append($0) }
+        sut = nil
+        paymentMaker.complete(with: .success(makeOperationDetailsTransactionDetails()))
+        
+        XCTAssert(received.isEmpty)
     }
     
     // MARK: - Helpers
@@ -176,11 +214,16 @@ final class PaymentEffectHandlerTests: XCTestCase {
         .update(.failure(serviceFailure))
     }
     
+    private func completePaymentFailureEvent() -> SUT.Event {
+        
+        .completePayment(.failure(.init()))
+    }
+    
     private func transactionDetailsEvent(
         _ transactionDetails: SUT.Event.TransactionDetails
     ) -> SUT.Event {
         
-        .completePayment(transactionDetails)
+        .completePayment(.success(transactionDetails))
     }
     
     private func makeDetailIDTransactionDetails(
