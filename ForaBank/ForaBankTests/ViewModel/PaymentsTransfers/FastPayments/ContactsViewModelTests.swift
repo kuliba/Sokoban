@@ -236,7 +236,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialValues_select_banks() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         XCTAssertNoDiff(sut.textFieldModelText, nil)
         XCTAssertNoDiff(sut.textFieldModelStateCase, .idle)
@@ -247,7 +247,7 @@ final class ContactsViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.visible.map(\.id), [])
         XCTAssertNoDiff(sut.visible.map(\.type), [])
         XCTAssertNoDiff(sut.visible.map(\.mode), [])
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.title, "Выберите банк")
         
         scheduler.advance(by: 300)
@@ -261,7 +261,7 @@ final class ContactsViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.visible.map(\.id), ["banks"])
         XCTAssertNoDiff(sut.visible.map(\.type), [.banks])
         XCTAssertNoDiff(sut.visible.map(\.mode), [.select])
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.title, "Выберите банк")
     }
     
@@ -385,7 +385,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_init_shouldSetKeyboardType_select_banks() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance(by: 300)
         
@@ -445,13 +445,13 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_lastPaymentsSectionShouldNotBeVisibleOnInit_select_banks() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.$mode)
         
         scheduler.advance(by: 300)
         
         XCTAssertFalse(sut.isLastPaymentsSectionVisible)
-        XCTAssertNoDiff(spy.values, [.select(.banks),])
+        XCTAssertNoDiff(spy.values, [.select(.banks(phone: nil)),])
     }
     
     func test_lastPaymentsSectionShouldNotBeVisibleOnInit_select_banksFullInfo() {
@@ -535,7 +535,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_lastPaymentsSectionShouldNotChangeViisibilityOnTextFieldActivationDeactivation_select_banks() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.$mode)
 
         scheduler.advance(by: 300)
@@ -549,7 +549,7 @@ final class ContactsViewModelTests: XCTestCase {
         sut.deactivateTextFieldAndWait(on: scheduler)
 
         XCTAssertFalse(sut.isLastPaymentsSectionVisible)
-        XCTAssertNoDiff(spy.values, [.select(.banks)])
+        XCTAssertNoDiff(spy.values, [.select(.banks(phone: nil))])
     }
     
     func test_lastPaymentsSectionShouldNotChangeViisibilityOnTextFieldActivationDeactivation_select_banksFullInfo() {
@@ -756,7 +756,7 @@ final class ContactsViewModelTests: XCTestCase {
             [.contacts],
         ])
         
-        sut.setModeAndWait(.select(.banks), on: scheduler)
+        sut.setModeAndWait(.select(.banks(phone: nil)), on: scheduler)
         
         XCTAssertNoDiff(typeSpy.values, [
             [],
@@ -767,7 +767,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_visibleType_shouldChange_onModeChange_fromBanksToBanksFullInfo() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let typeSpy = ValueSpy(sut.$visible.map { $0.map(\.type) })
         
         scheduler.advance(by: 300)
@@ -1189,61 +1189,61 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_textFieldChange_shouldChangeBankSectionFilter_onSelect_banks_nilText() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, nil)
         
         sut.typeAndWait(nil, on: scheduler)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, nil)
     }
     
     func test_textFieldChange_shouldChangeBankSectionFilter_onSelect_banks_emptyText() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, nil)
         
         sut.typeAndWait("", on: scheduler)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, "")
     }
     
     func test_textFieldChange_shouldChangeBankSectionFilter_onSelect_banks_invalidPhone() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, nil)
         
         sut.typeAndWait("+7 911", on: scheduler)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, "+7 911")
     }
     
     func test_textFieldChange_shouldChangeBankSectionFilter_onSelect_banks_validPhone() {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, nil)
         
         sut.typeAndWait("+7 911 111 11 11", on: scheduler)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(sut.banksSection?.filter.value, "+7 911 111 11 11")
     }
     
@@ -1903,7 +1903,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldSendBankSelectedAction_onBanksItemDidTapped_select_banks() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.action.compactMap { $0 as? ContactsViewModelAction.BankSelected })
         let section = try XCTUnwrap(sut.firstSection)
         
@@ -1911,13 +1911,13 @@ final class ContactsViewModelTests: XCTestCase {
         
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(spy.values.map(\.bankId), [])
 
         section.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bankID))
         scheduler.advance(by: 300)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(spy.values.map(\.bankId), [bankID])
     }
     
@@ -2114,14 +2114,14 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldSendPaymentRequestedAction_onCountriesItemDidTapped_select_banks_direct() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.countryIDPublisher)
         let section = try XCTUnwrap(sut.firstSection)
         
         let countryID = "RUS"
         let source: Payments.Operation.Source = .direct(countryId: countryID)
         
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(spy.values, [])
         
         section.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(source: source))
@@ -2183,14 +2183,14 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldSendPaymentRequestedAction_onCountriesItemDidTapped_select_banks_template() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.paymentTemplateDataIDPublisher)
         let section = try XCTUnwrap(sut.firstSection)
 
         let paymentTemplateDataID = 123
         let source: Payments.Operation.Source = .template(paymentTemplateDataID)
 
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(spy.values, [])
         
         section.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(source: source))
@@ -2255,14 +2255,14 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldSendPaymentRequestedAction_onCountriesItemDidTapped_select_banks_latestPayment() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.latestPaymentPublisher)
         let section = try XCTUnwrap(sut.firstSection)
 
         let latestPaymentID = 123
         let source: Payments.Operation.Source = .latestPayment(latestPaymentID)
 
-        XCTAssertNoDiff(sut.mode, .select(.banks))
+        XCTAssertNoDiff(sut.mode, .select(.banks(phone: nil)))
         XCTAssertNoDiff(spy.values, [])
         
         section.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(source: source))
@@ -2405,7 +2405,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldRemoveCountriesFromVisible_onCollapsableHideCountries_select_banks() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.$visible.map { $0.map(\.type) })
         let section = try XCTUnwrap(sut.firstSection)
 
@@ -2570,7 +2570,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldChangeVisible_onCollapsableResetSections_select_banks() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.$visible.map { $0.map(\.type) })
         let section = try XCTUnwrap(sut.firstSection)
 
@@ -2777,7 +2777,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_shouldChangeVisible_onContactsDidScroll_select_banks() throws {
         
-        let (sut, scheduler, _) = makeSUT(.select(.banks))
+        let (sut, scheduler, _) = makeSUT(.select(.banks(phone: nil)))
         let spy = ValueSpy(sut.$visible.map { $0.map(\.type) })
         let section = try XCTUnwrap(sut.firstSection)
 
@@ -2934,7 +2934,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     func test_sectionsForModeShouldCreateSections_select_banks() {
         
-        let mode: ContactsViewModel.Mode = .select(.banks)
+        let mode: ContactsViewModel.Mode = .select(.banks(phone: nil))
         let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)

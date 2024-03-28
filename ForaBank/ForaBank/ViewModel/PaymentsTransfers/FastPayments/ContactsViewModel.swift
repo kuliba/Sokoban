@@ -303,7 +303,7 @@ extension ContactsViewModel {
         enum Select: Equatable {
             
             case contacts
-            case banks
+            case banks(phone: String?)
             case banksFullInfo
             case countries
         }
