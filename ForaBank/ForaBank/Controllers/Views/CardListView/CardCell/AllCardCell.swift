@@ -11,7 +11,7 @@ class AllCardCell: UICollectionViewCell, SelfConfiguringCell {
    
     static var reuseId = "AllCardCell"
     
-    func configure<U>(with value: U) where U : Hashable {
+    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
         
     }
     

@@ -160,6 +160,7 @@ extension CardsScrollView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         // Если нужно добавлять новую карту
         if canAddNewCard {
             if indexPath.item == 0 {
@@ -171,7 +172,7 @@ extension CardsScrollView: UICollectionViewDataSource {
             } else {
                 
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
-                
+                cell.getUImage = { self.model.images.value [$0]?.uiImage }
                 if isFiltered {
                     cell.card = filteredCardList[indexPath.item - 1]
                 } else {
@@ -184,10 +185,12 @@ extension CardsScrollView: UICollectionViewDataSource {
         } else {
             if  indexPath.item == cardList.count  {
                 let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
+
                 return cellLast
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
-                
+                cell.getUImage = { self.model.images.value [$0]?.uiImage }
+
                 if isFiltered {
                     
                     cell.card = filteredCardList[indexPath.item ]

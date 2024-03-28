@@ -9,23 +9,23 @@ import UIKit
 
 class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
-    func configure<U>(with value: U) where U : Hashable {
+    var getUImage: (Md5hash) -> UIImage? = { _ in nil }
+    
+    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardsScrollModel(card: card)
+        let viewModel = CardsScrollModel(card: card, getUIImage: getUImage)
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
-        
+        self.getUImage = getUImage
     }
   
     static var reuseId: String = "CardCell"
     //MARK: - Properties
     var card: UserAllCardsModel? {
-        didSet { configure() }
+        didSet { configure(getUImage: getUImage) }
     }
-    
-
-    
+        
     public let maskCardLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11 )
@@ -61,7 +61,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         super.init(frame: frame)
         backgroundColor = .white
         setupUI()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -75,10 +74,12 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     //MARK: - Helpers
-    func configure() {
+    func configure(
+        getUImage: @escaping (Md5hash) -> UIImage?
+    ) {
         guard let card = card else { return }
         
-        let viewModel = CardsScrollModel(card: card)
+        let viewModel = CardsScrollModel(card: card, getUIImage: getUImage)
         backgroundImageView.image = viewModel.backgroundImage
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText

@@ -11,18 +11,18 @@ import UIKit
 // MARK: - Data Source PaymentsViewControllerDataSource
 extension PaymentsViewController {
        
-    func createDataSource() {
+    func createDataSource(getUImage: @escaping (Md5hash) -> UIImage?) {
         dataSource = UICollectionViewDiffableDataSource<Section, PaymentsModel>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, item) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
             switch section {
             case .payments:
-                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath, getUImage: getUImage)
             case .transfers:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath, getUImage: getUImage)
             case .pay:
-                return self.configure(collectionView: collectionView, cellType: PayCell.self, with: item, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: PayCell.self, with: item, for: indexPath, getUImage: getUImage)
             }
         })
         dataSource?.supplementaryViewProvider = {

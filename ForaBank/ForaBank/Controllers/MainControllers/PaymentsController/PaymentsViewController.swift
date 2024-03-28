@@ -32,7 +32,8 @@ class PaymentsViewController: UIViewController {
     lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
     let phoneFormatter = PhoneNumberKitFormater()
-
+    var getUImage: (String) -> UIImage? = { _ in nil}
+    
     enum Section: Int, CaseIterable {
         case payments, transfers, pay
         func description() -> String {
@@ -69,7 +70,7 @@ class PaymentsViewController: UIViewController {
         setupData()
         setupSearchBar()
         setupCollectionView()
-        createDataSource()
+        createDataSource(getUImage: getUImage)
         reloadData(with: nil)
         loadAllLastLatestPayments()
     }

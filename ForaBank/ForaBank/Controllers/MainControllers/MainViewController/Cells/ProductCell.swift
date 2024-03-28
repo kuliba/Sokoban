@@ -12,7 +12,7 @@ import CardUI
 
 class ProductCell: UICollectionViewCell, SelfConfiguringCell {
  
-    func configure<U>(with value: U) where U : Hashable {
+    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
         guard let card = card else { return }
         
         let viewModel = CardViewModelFromRealm(card: card)

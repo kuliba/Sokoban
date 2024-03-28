@@ -19,7 +19,7 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         setupUI()
     }
     
-    func configure<U>(with value: U) where U : Hashable {
+    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
         guard let payments: PaymentsModel = value as? PaymentsModel else { return }
         paymentsName.text = payments.name
         iconImageView.image = UIImage(named: payments.iconName ?? "")

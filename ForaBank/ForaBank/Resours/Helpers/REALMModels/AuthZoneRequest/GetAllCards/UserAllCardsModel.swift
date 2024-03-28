@@ -42,6 +42,10 @@ class UserAllCardsModel: Object {
     @objc dynamic var endDate: Int = 0
     @objc dynamic var endDate_nf: Bool = false
     
+    @objc dynamic var smallDesignMd5Hash: String?
+    @objc dynamic var mediumDesignMd5Hash: String?
+    @objc dynamic var largeDesignMd5Hash: String?
+    
     var background = List<UserAllCardsbackgroundModel>()
     @objc dynamic var openDate = 0
     @objc dynamic var branchId = 0
@@ -161,7 +165,10 @@ extension UserAllCardsModel: Identifiable {
         isMain             = data.isMain ?? true
         endDate            = data.endDate ?? 0
         endDate_nf            = data.endDate_nf ?? false
-        
+        smallDesignMd5Hash = data.smallDesignMd5Hash
+        mediumDesignMd5Hash = data.mediumDesignMd5Hash
+        largeDesignMd5Hash = data.largeDesignMd5Hash
+
         data.background.forEach { color in
             
             background.append(UserAllCardsbackgroundModel(with: color))
