@@ -89,11 +89,21 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - makePayment
     
+    func test_makePayment_shouldCallProcessingWithDigest() {
+        
+        let code = makeVerificationCode()
+        let (sut, _, paymentMaker) = makeSUT()
+        
+        sut.handleEffect(.makePayment(code)) { _ in }
+        
+        XCTAssertNoDiff(paymentMaker.payloads, [code])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentEffectHandler<Digest, Update>
     private typealias Processing = Spy<Digest, SUT.ProcessResult>
-    private typealias PaymentMaker = Spy<Void, Void>
+    private typealias PaymentMaker = Spy<VerificationCode, Void>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -180,4 +190,11 @@ private func makeUpdate(
 ) -> Update {
     
     .init(value: value)
+}
+
+private func makeVerificationCode(
+    _ value: String = UUID().uuidString
+) -> VerificationCode {
+    
+    .init(value)
 }

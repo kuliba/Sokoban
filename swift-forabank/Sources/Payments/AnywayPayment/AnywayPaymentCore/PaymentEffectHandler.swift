@@ -29,8 +29,8 @@ public extension PaymentEffectHandler {
         case let .continue(digest):
             process(digest, dispatch)
             
-        case .makePayment:
-            makePayment(dispatch)
+        case let .makePayment(verificationCode):
+            makePayment(verificationCode, dispatch)
         }
     }
 }
@@ -56,9 +56,10 @@ private extension PaymentEffectHandler {
     }
     
     func makePayment(
+        _ verificationCode: VerificationCode,
         _ dispatch: @escaping Dispatch
     ) {
-        
+        makePayment(verificationCode) { _ in }
     }
 }
 
@@ -69,7 +70,7 @@ public extension PaymentEffectHandler {
     typealias Process = (Digest, @escaping ProcessCompletion) -> Void
     
     typealias MakePaymentCompletion = (Void) -> Void
-    typealias MakePayment = (@escaping MakePaymentCompletion) -> Void
+    typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
