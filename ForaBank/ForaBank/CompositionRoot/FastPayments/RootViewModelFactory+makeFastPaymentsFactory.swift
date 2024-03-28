@@ -101,10 +101,7 @@ private extension Model {
         
         let getLook = { [weak self] in
                 
-            self?.look(of: $0) ?? .init(
-                background: .image(.cardPlaceholder),
-                color: Color.clear.description,
-                icon: .image(.cardPlaceholder))
+            self?.look(of: $0) ?? .default
         }
         
         return allProducts.compactMap {
@@ -135,6 +132,14 @@ private extension Model {
             $0.c2bSubscriptionUIProduct(formatBalance: formatBalance)
         }
     }
+}
+
+private extension FastPaymentsSettings.Product.Look {
+    
+    static let `default`: Self = .init(
+        background: .image(.cardPlaceholder),
+        color: Color.clear.description,
+        icon: .image(.cardPlaceholder))
 }
 
 private extension ProductData {
