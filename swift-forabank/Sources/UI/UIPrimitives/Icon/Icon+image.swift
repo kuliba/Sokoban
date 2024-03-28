@@ -13,8 +13,8 @@ public extension Icon {
     var image: Image? {
         
         switch self {
-        case let .svg(svg): Image(svg: svg)
-        case let .image(image): image
+        case let .svg(svg): return Image(svg: svg)
+        case let .image(image): return image
         }
     }
     

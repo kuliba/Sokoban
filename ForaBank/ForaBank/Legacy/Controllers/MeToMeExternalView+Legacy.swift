@@ -41,7 +41,6 @@ struct MeToMeExternalViewModel {
     let productTo: ProductData?
     let closeAction: () -> Void
     let getUImage: (Md5hash) -> UIImage?
-
     
     init(
         productTo: ProductData? = nil,

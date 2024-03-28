@@ -79,6 +79,7 @@ extension ProductData {
                                      smallDesignMd5Hash: card.smallDesignMd5hash,
                                      mediumDesignMd5Hash: card.mediumDesignMd5Hash,
                                      largeDesignMd5Hash: card.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: card.paymentSystemImageMd5Hash,
                                      isMain: card.isMain
             )
         case let account as ProductAccountData:
@@ -145,6 +146,7 @@ extension ProductData {
                                      smallDesignMd5Hash: account.smallDesignMd5hash,
                                      mediumDesignMd5Hash: account.mediumDesignMd5Hash,
                                      largeDesignMd5Hash: account.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
                                      isMain: nil
             )
 
@@ -212,6 +214,7 @@ extension ProductData {
                                      smallDesignMd5Hash: deposit.smallDesignMd5hash,
                                      mediumDesignMd5Hash: deposit.mediumDesignMd5Hash,
                                      largeDesignMd5Hash: deposit.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
                                      isMain: nil
             )
         case let loan as ProductLoanData:
@@ -278,6 +281,7 @@ extension ProductData {
                                      smallDesignMd5Hash: loan.smallDesignMd5hash,
                                      mediumDesignMd5Hash: loan.mediumDesignMd5Hash,
                                      largeDesignMd5Hash: loan.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
                                      isMain: nil
 )
         default:
@@ -343,6 +347,7 @@ extension ProductData {
                                      smallDesignMd5Hash: nil,
                                      mediumDesignMd5Hash: nil,
                                      largeDesignMd5Hash: nil,
+                                     paymentSystemImageMd5Hash: nil,
                                      isMain: nil)
         }
         

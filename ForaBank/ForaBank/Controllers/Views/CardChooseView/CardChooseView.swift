@@ -136,7 +136,10 @@ final class CardChooseView: UIView {
             break
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
+        self.cardTypeImage.image = {
+            if let getUImage { getUImage(model.paymentSystemImageMd5Hash ?? "") ?? UIImage() }
+            else { UIImage() }
+        }()
         self.cardTypeImage.accessibilityIdentifier = "ChooseProductPaymentSystemIcon"
     }
     
@@ -147,8 +150,10 @@ final class CardChooseView: UIView {
         
         var balance = Double(modelBalance)
         
-        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
-                
+        imageView.image = {
+            if let getUImage { getUImage(model.smallDesignMd5Hash ?? "") ?? #imageLiteral(resourceName: "AccImage") }
+            else { #imageLiteral(resourceName: "AccImage") }
+        }()
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
             
         let text = NSAttributedString(
@@ -205,7 +210,10 @@ final class CardChooseView: UIView {
             break
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
+        self.cardTypeImage.image = {
+            if let getUImage { getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage() }
+            else { UIImage() }
+        }()
     }
     
     private func setupCustomData(with model: CastomCardViewModel) {
