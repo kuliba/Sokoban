@@ -18,11 +18,11 @@ extension PaymentsViewController {
             }
             switch section {
             case .payments:
-                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath, getUImage: getUImage)
+                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
             case .transfers:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath, getUImage: getUImage)
+                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
             case .pay:
-                return self.configure(collectionView: collectionView, cellType: PayCell.self, with: item, for: indexPath, getUImage: getUImage)
+                return self.configure(collectionView: collectionView, cellType: PayCell.self, with: item, for: indexPath)
             }
         })
         dataSource?.supplementaryViewProvider = {

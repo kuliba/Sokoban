@@ -73,7 +73,7 @@ class PaymentsMainCell: UICollectionViewCell, SelfConfiguringCell {
         return iconBackgroundView
     }()
     
-    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
+    func configure<U>(with value: U) where U : Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
         titleLabel.text = payment.name
         if let iconName = payment.iconName {

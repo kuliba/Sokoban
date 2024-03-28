@@ -27,7 +27,7 @@ class CurrencyExchangeCollectionViewCell: UICollectionViewCell, SelfConfiguringC
     }
     @IBOutlet weak var viewCurrency: UIView!
     
-    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
+    func configure<U>(with value: U) where U : Hashable {
         self.layer.cornerRadius = 10
 
     }

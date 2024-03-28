@@ -10,7 +10,7 @@ import UIKit
 struct CardsScrollModel {
     
     let card: UserAllCardsModel
-    let getUIImage: (Md5hash) -> UIImage?
+    var getUIImage: ((Md5hash) -> UIImage?)?
     
     var cardNumber: String? {
         return card.number
@@ -60,8 +60,8 @@ struct CardsScrollModel {
     }
     
     var backgroundImage: UIImage {
-        if let md5Hash = card.mediumDesignMd5Hash {
-            return  getUIImage(md5Hash) ?? UIImage()
+        if let getUIImage, let md5Hash = card.mediumDesignMd5Hash {
+            return getUIImage(md5Hash) ?? UIImage()
         } else {
             return UIImage()
         }

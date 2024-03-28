@@ -9,5 +9,5 @@ import UIKit
 
 protocol SelfConfiguringCell {
     static var reuseId: String { get }
-    func configure<U: Hashable>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?)
+    func configure<U: Hashable>(with value: U)
 }

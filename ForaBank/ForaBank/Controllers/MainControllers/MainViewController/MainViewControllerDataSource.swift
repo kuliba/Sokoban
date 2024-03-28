@@ -78,7 +78,7 @@ extension MainViewController {
                     withReuseIdentifier: PaymentsMainCell.reuseId,
                     for: indexPath) as? PaymentsMainCell
                 
-                cell?.configure(with: item, getUImage: { self.model.images.value[$0]?.uiImage })
+                cell?.configure(with: item)
                 
                 return cell
                 
@@ -87,7 +87,7 @@ extension MainViewController {
                     withReuseIdentifier: NewProductCell.reuseId,
                     for: indexPath) as? NewProductCell
                 
-                cell?.configure(with: item, getUImage: { self.model.images.value[$0]?.uiImage })
+                cell?.configure(with: item)
                 
                 return cell
                 

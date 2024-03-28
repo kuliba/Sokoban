@@ -59,7 +59,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
 
-    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U: Hashable {
+    func configure<U>(with value: U) where U: Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         avatarImageView.image = nil

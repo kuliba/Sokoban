@@ -10,7 +10,7 @@ import UIKit
 
 class CardCell: UICollectionViewCell, SelfConfiguringCell {
    
-    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
+    func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)

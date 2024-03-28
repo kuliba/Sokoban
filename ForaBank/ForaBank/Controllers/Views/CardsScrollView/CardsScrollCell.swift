@@ -11,21 +11,31 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
     var getUImage: ((Md5hash) -> UIImage?)?
     
-    func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
+    func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardsScrollModel(card: card, getUIImage: getUImage)
+        let viewModel = CardsScrollModel(
+            card: card,
+            getUIImage: { if let getUImage {
+                getUImage
+            } else {
+                { _ in nil }
+            }
+            }()
+        )
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
-        self.getUImage = getUImage
     }
   
     static var reuseId: String = "CardCell"
     //MARK: - Properties
     var card: UserAllCardsModel? {
         didSet {
-            if let getUImage { configure(getUImage: getUImage) }
-            else { configure(getUImage: { _ in nil }) }
+            if let getUImage {
+                configure(getUImage: getUImage)
+            } else {
+                configure(getUImage:{ _ in nil })
+            }
         }
     }
     
