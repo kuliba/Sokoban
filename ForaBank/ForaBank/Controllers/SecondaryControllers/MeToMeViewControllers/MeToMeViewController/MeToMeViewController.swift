@@ -46,8 +46,8 @@ class MeToMeViewController: UIViewController {
     //MARK: - Viewlifecicle
     init(cardFrom: UserAllCardsModel?, getUImage: @escaping (Md5hash) -> UIImage?) {
         cardFromField = CardChooseView()
-        cardFromField.model = cardFrom
         cardFromField.getUImage = getUImage
+        cardFromField.model = cardFrom
         super.init(nibName: nil, bundle: nil)
     }
     

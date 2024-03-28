@@ -80,8 +80,7 @@ final class CardChooseView: UIView {
         imageView.image = {
             if let getUImage {
                 getUImage(model.smallDesignMd5Hash ?? "") ?? #imageLiteral(resourceName: "AccImage")
-            }
-            else {#imageLiteral(resourceName: "AccImage") }
+            } else {#imageLiteral(resourceName: "AccImage")}
         }()
         imageView.accessibilityIdentifier = "ChooseProductIcon"
         

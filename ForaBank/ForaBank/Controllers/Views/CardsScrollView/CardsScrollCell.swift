@@ -9,7 +9,7 @@ import UIKit
 
 class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
-    var getUImage: (Md5hash) -> UIImage? = { _ in nil }
+    var getUImage: ((Md5hash) -> UIImage?)?
     
     func configure<U>(with value: U, getUImage: @escaping (Md5hash) -> UIImage?) where U : Hashable {
         guard let card = card else { return }
@@ -23,9 +23,12 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     static var reuseId: String = "CardCell"
     //MARK: - Properties
     var card: UserAllCardsModel? {
-        didSet { configure(getUImage: getUImage) }
+        didSet {
+            if let getUImage { configure(getUImage: getUImage) }
+            else { configure(getUImage: { _ in nil }) }
+        }
     }
-        
+    
     public let maskCardLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11 )
