@@ -77,7 +77,7 @@ private extension Product {
         .init(
             id: productSelectProductID,
             type: productSelectProductType,
-            isAdditional: nil, // TODO: add real value for Additional card
+            isAdditional: false, // TODO: add real value for Additional card
             header: header,
             title: title,
             footer: number,

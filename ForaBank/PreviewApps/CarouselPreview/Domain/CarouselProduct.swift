@@ -12,5 +12,5 @@ struct CarouselProduct: CarouselComponent.CarouselProduct, Equatable, Identifiab
     
     let id: Int
     let type: ProductType
-    let isAdditional: Bool?
+    let isAdditional: Bool
 }

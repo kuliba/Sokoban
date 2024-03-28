@@ -47,7 +47,7 @@ extension ProductData {
             return .init(
                 id: .init(card.id),
                 type: .card,
-                isAdditional: nil, // TODO: add real value for Additional card
+                isAdditional: false, // TODO: add real value for Additional card
                 header: "Счет списания",
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
@@ -66,7 +66,7 @@ extension ProductData {
             return .init(
                 id: .init(account.id),
                 type: .account,
-                isAdditional: nil,
+                isAdditional: false,
                 header: "Счет списания",
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
