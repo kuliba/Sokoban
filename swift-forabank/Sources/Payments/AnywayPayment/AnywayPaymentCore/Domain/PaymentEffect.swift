@@ -8,6 +8,7 @@
 public enum PaymentEffect<Digest> {
     
     case `continue`(Digest)
+    case makePayment(VerificationCode)
 }
 
 extension PaymentEffect: Equatable where Digest: Equatable {}
