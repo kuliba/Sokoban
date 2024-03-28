@@ -104,7 +104,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             toDeliver: completePaymentFailureEvent(),
             for: makePaymentEffect(),
-            onMakePayment: .failure(.init())
+            onMakePayment: nil
         )
     }
     
@@ -114,7 +114,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             toDeliver: transactionDetailsEvent(transactionDetails),
             for: makePaymentEffect(),
-            onMakePayment: .success(transactionDetails)
+            onMakePayment: transactionDetails
         )
     }
     
@@ -124,7 +124,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             toDeliver: transactionDetailsEvent(transactionDetails),
             for: makePaymentEffect(),
-            onMakePayment: .success(transactionDetails)
+            onMakePayment: transactionDetails
         )
     }
     
@@ -137,7 +137,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makePaymentEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: .failure(.init()))
+        paymentMaker.complete(with: nil)
         
         XCTAssert(received.isEmpty)
     }
@@ -151,7 +151,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makePaymentEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: .success(makeOperationDetailsTransactionDetails()))
+        paymentMaker.complete(with: makeOperationDetailsTransactionDetails())
         
         XCTAssert(received.isEmpty)
     }
@@ -215,7 +215,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     private func completePaymentFailureEvent() -> SUT.Event {
         
-        .completePayment(.failure(.init()))
+        .completePayment(nil)
     }
     
     private func expect(
@@ -306,7 +306,7 @@ private func transactionDetailsEvent(
     _ transactionDetails: TransactionDetails<DocumentStatus, OperationDetails>
 ) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
-    .completePayment(.success(transactionDetails))
+    .completePayment(transactionDetails)
 }
 
 private func makeDetailIDTransactionDetails(
