@@ -11,7 +11,7 @@ import UIKit
 // MARK: - Data Source PaymentsViewControllerDataSource
 extension PaymentsViewController {
        
-    func createDataSource(getUImage: @escaping (Md5hash) -> UIImage?) {
+    func createDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, PaymentsModel>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, item) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")

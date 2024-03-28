@@ -16,11 +16,9 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         
         let viewModel = CardsScrollModel(
             card: card,
-            getUIImage: { if let getUImage {
-                getUImage
-            } else {
-                { _ in nil }
-            }
+            getUIImage: { 
+                if let getUImage { getUImage }
+                else { { _ in nil } }
             }()
         )
         balanceLabel.text = viewModel.balance
@@ -31,13 +29,12 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     //MARK: - Properties
     var card: UserAllCardsModel? {
         didSet {
-            if let getUImage {
-                configure(getUImage: getUImage)
-            } else {
-                configure(getUImage:{ _ in nil })
-            }
+            if let getUImage { configure(getUImage: getUImage) }
+            else { configure(getUImage:{ _ in nil }) }
         }
     }
+    
+
     
     public let maskCardLabel: UILabel = {
         let label = UILabel()
@@ -74,6 +71,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         super.init(frame: frame)
         backgroundColor = .white
         setupUI()
+        
     }
     
     required init?(coder: NSCoder) {

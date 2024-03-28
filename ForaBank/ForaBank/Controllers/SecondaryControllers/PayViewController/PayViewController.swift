@@ -108,7 +108,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                                 }
                                 self?.navigationController?.pushViewController(vc, animated: true)
                             } else {
-                                let viewController = MeToMeViewController(cardFrom: self?.card, getUImage: self?.getUImage ?? { _ in nil })
+                                let viewController = MeToMeViewController(cardFrom: self?.card, getUImage: self?.getUImage ?? { _ in UIImage() })
                                 
                                 viewController.meToMeContract = contractList
                                 viewController.addCloseButton()

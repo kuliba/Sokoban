@@ -10,7 +10,7 @@ import AVFoundation
 
 class PaymentsViewController: UIViewController {
     
-    var strongSelf: PaymentsServiceViewModel?
+    var strongSelf: PaymentsServicesViewModel?
     
     // QR data
     var qrData = [String: String]()
@@ -32,8 +32,7 @@ class PaymentsViewController: UIViewController {
     lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
     let phoneFormatter = PhoneNumberKitFormater()
-    var getUImage: ((Md5hash) -> UIImage?)?
-    
+
     enum Section: Int, CaseIterable {
         case payments, transfers, pay
         func description() -> String {
@@ -70,15 +69,7 @@ class PaymentsViewController: UIViewController {
         setupData()
         setupSearchBar()
         setupCollectionView()
-        createDataSource(getUImage: {
-           
-            if let getUImage {
-                getUImage
-            } else {
-                { _ in nil }
-            }
-        }()
-        )
+        createDataSource()
         reloadData(with: nil)
         loadAllLastLatestPayments()
     }
