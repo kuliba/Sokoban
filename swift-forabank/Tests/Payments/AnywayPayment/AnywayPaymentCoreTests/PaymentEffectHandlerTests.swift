@@ -12,9 +12,10 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, processing) = makeSUT()
+        let (_, processing, paymentMaker) = makeSUT()
         
         XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     // MARK: - continue
@@ -22,7 +23,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_continue_shouldCallProcessingWithDigest() {
         
         let digest = makeDigest()
-        let (sut, processing) = makeSUT()
+        let (sut, processing, _) = makeSUT()
         
         sut.handleEffect(.continue(digest)) { _ in }
         
@@ -62,7 +63,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let processing: Processing
-        (sut, processing) = makeSUT()
+        (sut, processing, _) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(continueEffect()) { received.append($0) }
@@ -76,7 +77,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let processing: Processing
-        (sut, processing) = makeSUT()
+        (sut, processing, _) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(continueEffect()) { received.append($0) }
@@ -86,25 +87,34 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssert(received.isEmpty)
     }
     
+    // MARK: - makePayment
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentEffectHandler<Digest, Update>
     private typealias Processing = Spy<Digest, SUT.ProcessResult>
+    private typealias PaymentMaker = Spy<Void, Void>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        processing: Processing
+        processing: Processing,
+        paymentMaker: PaymentMaker
     ) {
         let processing = Processing()
-        let sut = SUT(process: processing.process)
+        let paymentMaker = PaymentMaker()
+        let sut = SUT(
+            process: processing.process,
+            makePayment: paymentMaker.process
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(processing, file: file, line: line)
+        trackForMemoryLeaks(paymentMaker, file: file, line: line)
         
-        return (sut, processing)
+        return (sut, processing, paymentMaker)
     }
     
     private func continueEffect() -> SUT.Effect {
@@ -133,7 +143,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let (sut, processing) = makeSUT()
+        let (sut, processing, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.handleEffect(effect) {

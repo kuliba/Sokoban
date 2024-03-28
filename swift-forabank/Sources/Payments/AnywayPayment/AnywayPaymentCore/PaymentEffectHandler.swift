@@ -8,10 +8,14 @@
 public final class PaymentEffectHandler<Digest, Update> {
     
     private let process: Process
+    private let makePayment: MakePayment
     
-    public init(process: @escaping Process) {
-        
+    public init(
+        process: @escaping Process,
+        makePayment: @escaping MakePayment
+    ) {
         self.process = process
+        self.makePayment = makePayment
     }
 }
 
@@ -24,6 +28,9 @@ public extension PaymentEffectHandler {
         switch effect {
         case let .continue(digest):
             process(digest, dispatch)
+            
+        case .makePayment:
+            makePayment(dispatch)
         }
     }
 }
@@ -47,6 +54,12 @@ private extension PaymentEffectHandler {
             }
         }
     }
+    
+    func makePayment(
+        _ dispatch: @escaping Dispatch
+    ) {
+        
+    }
 }
 
 public extension PaymentEffectHandler {
@@ -54,6 +67,9 @@ public extension PaymentEffectHandler {
     typealias ProcessResult = Result<Update, ServiceFailure>
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias Process = (Digest, @escaping ProcessCompletion) -> Void
+    
+    typealias MakePaymentCompletion = (Void) -> Void
+    typealias MakePayment = (@escaping MakePaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
