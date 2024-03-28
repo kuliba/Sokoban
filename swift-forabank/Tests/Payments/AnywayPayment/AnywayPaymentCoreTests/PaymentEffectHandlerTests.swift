@@ -52,14 +52,21 @@ private extension PaymentEffectHandler {
             
             guard self != nil else { return }
             
-            dispatch(.update($0))
+            switch $0 {
+            case let .failure(serviceFailure):
+                fatalError()
+                
+            case let .success(update):
+                dispatch(.update(update))
+            }
         }
     }
 }
 
 extension PaymentEffectHandler {
     
-    typealias ProcessCompletion = (Update) -> Void
+    typealias ProcessResult = Result<Update, ServiceFailure>
+    typealias ProcessCompletion = (ProcessResult) -> Void
     typealias Process = (Digest, @escaping ProcessCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
@@ -94,7 +101,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_continue_shouldDeliverUpdateOnProcessingSuccess() {
         
         let update = makeUpdate()
-        expect(toDeliver: .update(update), on: .continue(makeDigest()), with: update)
+        expect(toDeliver: .update(update), on: .continue(makeDigest()), with: .success(update))
     }
     
     func test_continue_shouldNotDeliverProcessingResultOnInstanceDeallocation() {
@@ -106,7 +113,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(.continue(makeDigest())) { received.append($0) }
         sut = nil
-        processing.complete(with: makeUpdate())
+        processing.complete(with: .success(makeUpdate()))
         
         XCTAssert(received.isEmpty)
     }
@@ -114,7 +121,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = PaymentEffectHandler<Digest, Update>
-    private typealias Processing = Spy<Digest, Update>
+    private typealias Processing = Spy<Digest, SUT.ProcessResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -135,7 +142,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         on effect: SUT.Effect,
-        with processingResult: Update,
+        with processingResult: SUT.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
