@@ -15,6 +15,7 @@ public extension ProductSelect {
         
         public let id: ID
         public let type: ProductType
+        public let isAdditional: Bool?
         let header: String
         let title: String
         let number: String
@@ -25,6 +26,7 @@ public extension ProductSelect {
         public init(
             id: ID,
             type: ProductType,
+            isAdditional: Bool?,
             header: String,
             title: String,
             footer: String,
@@ -34,6 +36,7 @@ public extension ProductSelect {
         ) {
             self.id = id
             self.type = type
+            self.isAdditional = isAdditional
             self.header = header
             self.title = title
             self.number = footer
