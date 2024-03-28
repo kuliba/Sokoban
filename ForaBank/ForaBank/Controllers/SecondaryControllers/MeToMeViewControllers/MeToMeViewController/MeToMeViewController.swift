@@ -24,7 +24,7 @@ class MeToMeViewController: UIViewController {
             bankListView.bankList = banks
         }
     }
-    var cardFromField = CardChooseView()
+    var cardFromField: CardChooseView
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var bankField = ForaInput(
         viewModel: ForaInputModel(
@@ -44,9 +44,11 @@ class MeToMeViewController: UIViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     //MARK: - Viewlifecicle
-    init(cardFrom: UserAllCardsModel?) {
-        super.init(nibName: nil, bundle: nil)
+    init(cardFrom: UserAllCardsModel?, getUImage: @escaping (Md5hash) -> UIImage?) {
+        cardFromField = CardChooseView()
         cardFromField.model = cardFrom
+        cardFromField.getUImage = getUImage
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

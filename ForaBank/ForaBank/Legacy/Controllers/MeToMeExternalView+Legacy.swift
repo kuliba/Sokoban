@@ -14,7 +14,7 @@ struct MeToMeExternalView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> MeToMeViewController {
         
-        let controller = MeToMeViewController(cardFrom: viewModel.productTo?.userAllProducts())
+        let controller = MeToMeViewController(cardFrom: viewModel.productTo?.userAllProducts(), getUImage: viewModel.getUImage)
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
@@ -40,10 +40,17 @@ struct MeToMeExternalViewModel {
     
     let productTo: ProductData?
     let closeAction: () -> Void
+    let getUImage: (Md5hash) -> UIImage?
+
     
-    init(productTo: ProductData? = nil, closeAction: @escaping () -> Void) {
+    init(
+        productTo: ProductData? = nil,
+        closeAction: @escaping () -> Void,
+        getUImage: @escaping (Md5hash) -> UIImage?
+    ) {
         
         self.productTo = productTo
         self.closeAction = closeAction
+        self.getUImage = getUImage
     }
 }

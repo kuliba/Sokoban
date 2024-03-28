@@ -23,7 +23,7 @@ final class CardChooseView: UIView {
     @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
     @IBOutlet weak var choseButton: UIButton?
     
-    
+    var getUImage: ((Md5hash) -> UIImage?)?
     var didChooseButtonTapped: (() -> Void)?
     
     var cardModel: GetProductListDatum? {
@@ -77,7 +77,12 @@ final class CardChooseView: UIView {
         
         var balance = Double(model.balance)
 
-        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
+        imageView.image = {
+            if let getUImage {
+                getUImage(model.smallDesignMd5Hash ?? "") ?? #imageLiteral(resourceName: "AccImage")
+            }
+            else {#imageLiteral(resourceName: "AccImage") }
+        }()
         imageView.accessibilityIdentifier = "ChooseProductIcon"
         
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
