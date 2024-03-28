@@ -101,7 +101,6 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     func test_makePayment_shouldDeliverTransactionFailureOnMakePaymentFailure() {
         
-        let transactionDetails = makeDetailIDTransactionDetails()
         expect(
             toDeliver: completePaymentFailureEvent(),
             for: makePaymentEffect(),
