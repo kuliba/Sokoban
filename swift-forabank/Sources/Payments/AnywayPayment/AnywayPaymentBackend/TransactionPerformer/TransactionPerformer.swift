@@ -49,33 +49,6 @@ public extension TransactionPerformer {
 
 public extension TransactionPerformer {
     
-    func getDetails(
-        _ response: MakeTransferResponse,
-        _ completion: @escaping Completion
-    ) {
-        getDetails(response.detailsID) { [weak self] in
-            
-            guard self != nil else { return }
-            
-            switch $0 {
-            case .failure:
-                completion(.success(.init(
-                    makeTransferResponse: response,
-                    details: nil
-                )))
-                
-            case let .success(details):
-                completion(.success(.init(
-                    makeTransferResponse: response,
-                    details: details
-                )))
-            }
-        }
-    }
-}
-
-public extension TransactionPerformer {
-    
     typealias GetDetailsResult = Result<Details, Error>
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias DetailsID = MakeTransferResponse.DetailsID
@@ -113,3 +86,30 @@ extension TransactionPerformer {
 }
 
 extension TransactionPerformer.ProcessResponse: Equatable where MakeTransferResponse: Equatable, Details: Equatable {}
+
+private extension TransactionPerformer {
+    
+    func getDetails(
+        _ response: MakeTransferResponse,
+        _ completion: @escaping Completion
+    ) {
+        getDetails(response.detailsID) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            switch $0 {
+            case .failure:
+                completion(.success(.init(
+                    makeTransferResponse: response,
+                    details: nil
+                )))
+                
+            case let .success(details):
+                completion(.success(.init(
+                    makeTransferResponse: response,
+                    details: details
+                )))
+            }
+        }
+    }
+}
