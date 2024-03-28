@@ -1252,7 +1252,11 @@ private extension ProductProfileViewModel {
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
-                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                            let productStatementViewModel = ProductStatementViewModel(
+                                product: productData,
+                                closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                                getUImage: { self.model.images.value[$0]?.uiImage }
+                            )
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:

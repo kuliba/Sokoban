@@ -60,6 +60,7 @@ class AccountStatementController: UIViewController {
         super.viewDidLoad()
         title = "Выписка по счету"
         view.backgroundColor = .white
+        cardFromField.getUImage = viewModel?.getUImage
         cardFromField.model = startProduct
 //        setupCloseButton()
         setupUI()
@@ -224,6 +225,7 @@ class AccountStatementController: UIViewController {
                 let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                         if card.id == cardId {
+                            self.cardFromField.getUImage = self.viewModel?.getUImage
                         self.cardFromField.model = card
                         if self.cardListView.isHidden == false {
                             self.hideView(self.cardListView, needHide: true)
