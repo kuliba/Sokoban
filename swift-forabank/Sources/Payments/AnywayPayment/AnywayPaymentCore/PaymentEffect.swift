@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-enum PaymentEffect<Digest> {
+public enum PaymentEffect<Digest> {
     
     case `continue`(Digest)
 }

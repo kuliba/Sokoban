@@ -5,17 +5,17 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-final class PaymentEffectHandler<Digest, Update> {
+public final class PaymentEffectHandler<Digest, Update> {
     
     private let process: Process
     
-    init(process: @escaping Process) {
+    public init(process: @escaping Process) {
         
         self.process = process
     }
 }
 
-extension PaymentEffectHandler {
+public extension PaymentEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -49,7 +49,7 @@ private extension PaymentEffectHandler {
     }
 }
 
-extension PaymentEffectHandler {
+public extension PaymentEffectHandler {
     
     typealias ProcessResult = Result<Update, ServiceFailure>
     typealias ProcessCompletion = (ProcessResult) -> Void

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
+import AnywayPaymentCore
 import XCTest
 
 final class PaymentEffectHandlerTests: XCTestCase {
