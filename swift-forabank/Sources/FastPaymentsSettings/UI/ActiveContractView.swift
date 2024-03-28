@@ -127,6 +127,7 @@ private extension Product.Look.Icon {
         
         switch self {
         case let .svg(svg): return .svg(svg)
+        case let .image(image): return .image(image)
         }
     }
 }
