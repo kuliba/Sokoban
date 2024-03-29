@@ -113,6 +113,12 @@ func makePaymentEffect(
     .makePayment(verificationCode)
 }
 
+func makePaymentState(
+) -> PaymentState {
+    
+    .init()
+}
+
 func makeResponse(
     _ documentStatus: DocumentStatus = .complete,
     id: Int = generateRandom11DigitNumber()
@@ -136,4 +142,22 @@ func makeUpdate(
 ) -> Update {
     
     .init(value: value)
+}
+
+func makeUpdateFailureEvent(
+    _ message: String? = nil
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    if let message {
+        return .update(.failure(.serverError(message)))
+    } else {
+        return .update(.failure(.connectivityError))
+    }
+}
+
+func makeUpdateEvent(
+    _ update: Update = makeUpdate()
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    .update(.success(update))
 }
