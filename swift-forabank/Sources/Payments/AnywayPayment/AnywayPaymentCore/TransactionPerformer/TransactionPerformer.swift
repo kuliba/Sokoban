@@ -5,14 +5,7 @@
 //  Created by Igor Malyarov on 24.03.2024.
 //
 
-public protocol Detailable<DetailsID> {
-    
-    associatedtype DetailsID
-    
-    var detailsID: DetailsID { get }
-}
-
-public final class TransactionPerformer<Details, MakeTransferResponse: Detailable> {
+public final class TransactionPerformer<DocumentStatus, OperationDetails> {
     
     private let getDetails: GetDetails
     private let makeTransfer: MakeTransfer
@@ -49,37 +42,39 @@ public extension TransactionPerformer {
 
 public extension TransactionPerformer {
     
-    typealias GetDetailsResult = Details?
+    typealias Report = TransactionReport<DocumentStatus, OperationDetails>
+    typealias PaymentOperationDetailID = Report.Details.PaymentOperationDetailID
+    
+    typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
-    typealias DetailsID = MakeTransferResponse.DetailsID
-    typealias GetDetails = (DetailsID, @escaping GetDetailsCompletion) -> Void
+    typealias GetDetails = (PaymentOperationDetailID, @escaping GetDetailsCompletion) -> Void
     
     typealias MakeTransferResult = MakeTransferResponse?
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void
     typealias MakeTransfer = (VerificationCode, @escaping MakeTransferCompletion) -> Void
     
-    typealias ProcessResult = ProcessResponse?
+    typealias ProcessResult = TransactionReport<DocumentStatus, OperationDetails>?
     typealias Completion = (ProcessResult) -> Void
 }
 
 extension TransactionPerformer {
     
-    public struct ProcessResponse {
+    public struct MakeTransferResponse {
         
-        public let makeTransferResponse: MakeTransferResponse
-        public let details: Details?
+        public let documentStatus: DocumentStatus
+        public let paymentOperationDetailID: PaymentOperationDetailID
         
         public init(
-            makeTransferResponse: MakeTransferResponse,
-            details: Details?
+            documentStatus: DocumentStatus,
+            paymentOperationDetailID: PaymentOperationDetailID
         ) {
-            self.makeTransferResponse = makeTransferResponse
-            self.details = details
+            self.documentStatus = documentStatus
+            self.paymentOperationDetailID = paymentOperationDetailID
         }
     }
 }
 
-extension TransactionPerformer.ProcessResponse: Equatable where MakeTransferResponse: Equatable, Details: Equatable {}
+extension TransactionPerformer.MakeTransferResponse: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
 
 private extension TransactionPerformer {
     
@@ -87,14 +82,30 @@ private extension TransactionPerformer {
         _ response: MakeTransferResponse,
         _ completion: @escaping Completion
     ) {
-        getDetails(response.detailsID) { [weak self] in
+        getDetails(response.paymentOperationDetailID) { [weak self] in
             
             guard self != nil else { return }
             
-            completion(.init(
-                makeTransferResponse: response,
-                details: $0
-            ))
+            completion(.init(response: response, operationDetails: $0))
+        }
+    }
+}
+
+private extension TransactionReport {
+    
+    init(
+        response: TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse,
+        operationDetails: OperationDetails?
+    ) {
+        switch operationDetails {
+        case .none:
+            self.documentStatus = response.documentStatus
+            self.details = .paymentOperationDetailID(response.paymentOperationDetailID)
+            
+            
+        case let .some(operationDetails):
+            self.documentStatus = response.documentStatus
+            self.details = .operationDetails(operationDetails)
         }
     }
 }

@@ -40,41 +40,37 @@ final class TransactionPerformerTests: XCTestCase {
     
     func test_process_shouldCallGetDetailsWithDetailsID() {
         
-        let code = makeVerificationCode()
-        let detailsID = DetailsID()
-        let payload = Payload(detailsID: detailsID)
+        let id = generateRandom11DigitNumber()
         let (sut, makeTransfer, getDetails) = makeSUT()
         
-        sut.process(code) { _ in }
-        makeTransfer.complete(with: payload)
+        sut.process(makeVerificationCode()) { _ in }
+        makeTransfer.complete(with: makeResponse(id: id))
         
-        XCTAssertNoDiff(getDetails.payloads, [detailsID])
+        XCTAssertNoDiff(getDetails.payloads, [.init(id)])
     }
     
-    func test_process_shouldDeliverMakeTransferResponseOnGetDetailsFailure() {
+    func test_process_shouldDeliverTransactionReportWithDetailIDOnGetDetailsFailure() {
         
-        let detailsID = DetailsID()
-        let payload = Payload(detailsID: detailsID)
+        let id = generateRandom11DigitNumber()
         let (sut, makeTransfer, getDetails) = makeSUT()
         
-        expect(sut, toDeliver: .init(makeTransferResponse: payload, details: nil), on: {
+        expect(sut, toDeliver: makeDetailIDTransactionReport(id), on: {
             
-            makeTransfer.complete(with: payload)
+            makeTransfer.complete(with: makeResponse(id: id))
             getDetails.complete(with: nil)
         })
     }
     
-    func test_process_shouldDeliverMakeTransferResponseWithDetailsOnGetDetailsSuccess() {
+    func test_process_shouldDeliverTransactionReportWithOperationDetailsOnGetDetailsSuccess() {
         
-        let detailsID = DetailsID()
-        let payload = Payload(detailsID: detailsID)
-        let details = Details()
+        let operationDetails = makeOperationDetails()
+        let report = makeOperationDetailsTransactionReport(operationDetails)
         let (sut, makeTransfer, getDetails) = makeSUT()
         
-        expect(sut, toDeliver: .init(makeTransferResponse: payload, details: details), on: {
+        expect(sut, toDeliver: report, on: {
             
-            makeTransfer.complete(with: payload)
-            getDetails.complete(with: details)
+            makeTransfer.complete(with: makeResponse())
+            getDetails.complete(with: operationDetails)
         })
     }
     
@@ -97,13 +93,12 @@ final class TransactionPerformerTests: XCTestCase {
     func test_process_shouldNotDeliverGetDetailsResultOnInstanceDeallocation() {
         
         var sut: SUT?
-        let makeTransfer: MakeTransferSpy
-        let getDetails: GetDetailsSpy
+        let (makeTransfer, getDetails): (MakeTransferSpy, GetDetailsSpy)
         (sut, makeTransfer, getDetails) = makeSUT()
         var responses = [SUT.ProcessResult]()
         
         sut?.process(makeVerificationCode()) { responses.append($0) }
-        makeTransfer.complete(with: .init(detailsID: .init()))
+        makeTransfer.complete(with: makeResponse())
         sut = nil
         getDetails.complete(with: nil)
         
@@ -114,9 +109,9 @@ final class TransactionPerformerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionPerformer<Details, Payload>
+    private typealias SUT = TransactionPerformer<DocumentStatus, OperationDetails>
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.MakeTransferResult>
-    private typealias GetDetailsSpy = Spy<DetailsID, SUT.GetDetailsResult>
+    private typealias GetDetailsSpy = Spy<SUT.PaymentOperationDetailID, SUT.GetDetailsResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -173,17 +168,13 @@ private struct Details: Equatable {
     }
 }
 
-private struct DetailsID: Equatable {
+private func makeResponse(
+    _ documentStatus: DocumentStatus = .complete,
+    id: Int = generateRandom11DigitNumber()
+) -> TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse {
     
-    let value: String
-    
-    init(value: String = UUID().uuidString) {
-        
-        self.value = value
-    }
-}
-
-private struct Payload: Detailable, Equatable {
-    
-    let detailsID: DetailsID
+    .init(
+        documentStatus: documentStatus,
+        paymentOperationDetailID: .init(id)
+    )
 }

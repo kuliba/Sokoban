@@ -266,16 +266,6 @@ private struct Digest: Equatable {
     let value: String
 }
 
-private enum DocumentStatus: Equatable {
-    
-    case complete, inflight
-}
-
-private struct OperationDetails: Equatable {
-    
-    let value: String
-}
-
 private struct Update: Equatable {
     
     let value: String
@@ -300,26 +290,4 @@ private func transactionReportEvent(
 ) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
     .completePayment(transactionReport)
-}
-
-private func makeDetailIDTransactionReport(
-    documentStatus: DocumentStatus = .complete,
-    _ id: Int = generateRandom11DigitNumber()
-) -> TransactionReport<DocumentStatus, OperationDetails> {
-    
-    .init(
-        documentStatus: documentStatus,
-        details: .paymentOperationDetailID(.init(id))
-    )
-}
-
-private func makeOperationDetailsTransactionReport(
-    documentStatus: DocumentStatus = .complete,
-    _ value: String = UUID().uuidString
-) -> TransactionReport<DocumentStatus, OperationDetails> {
-    
-    .init(
-        documentStatus: documentStatus,
-        details: .operationDetails(.init(value: value))
-    )
 }
