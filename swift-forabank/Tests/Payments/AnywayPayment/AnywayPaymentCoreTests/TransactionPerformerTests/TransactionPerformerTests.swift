@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 24.03.2024.
 //
 
-import AnywayPaymentBackend
+import AnywayPaymentCore
 import XCTest
 
 final class TransactionPerformerTests: XCTestCase {
