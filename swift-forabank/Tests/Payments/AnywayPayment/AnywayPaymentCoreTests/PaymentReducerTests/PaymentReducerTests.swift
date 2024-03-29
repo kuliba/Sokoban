@@ -15,28 +15,27 @@ extension PaymentState {
     
     enum Status {
         
-        case completed(Completed)
+        case result(Result<Report, Terminated>)
         case serverError(String)
     }
 }
 
 extension PaymentState.Status {
     
-    enum Completed {
+    enum Terminated: Error {
         
-        case terminated
-        case processed(Report)
+        case transactionFailure
+        case updateFailure
     }
 }
 
-extension PaymentState.Status.Completed {
+extension PaymentState.Status {
     
     typealias Report = TransactionReport<DocumentStatus, OperationDetails>
 }
 
 extension PaymentState: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
 extension PaymentState.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension PaymentState.Status.Completed: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
 
 final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update> {
     
@@ -87,10 +86,10 @@ private extension PaymentReducer {
     ) {
         switch transactionResult {
         case .none:
-            state.status = .completed(.terminated)
+            state.status = .result(.failure(.transactionFailure))
             
         case let .some(report):
-            state.status = .completed(.processed(report))
+            state.status = .result(.success(report))
         }
     }
     
@@ -102,7 +101,7 @@ private extension PaymentReducer {
         case let .failure(serviceFailure):
             switch serviceFailure {
             case .connectivityError:
-                state.status = .completed(.terminated)
+                state.status = .result(.failure(.updateFailure))
                 
             case let .serverError(message):
                 state.status = .serverError(message)
@@ -121,31 +120,31 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
-    func test_completePayment_shouldChangeStatusToCompletedTerminatedOnReportFailure() {
+    func test_completePayment_shouldChangeStatusToTerminatedTransactionFailureOnReportFailure() {
         
         assertState(.completePayment(nil), on: makePaymentState()) {
             
-            $0.status = .completed(.terminated)
+            $0.status = .result(.failure(.transactionFailure))
         }
     }
     
-    func test_completePayment_shouldChangeStatusToCompletedProcessedDetailIDTransactionReport() {
+    func test_completePayment_shouldChangeStatusToProcessedDetailIDTransactionReport() {
         
         let report = makeDetailIDTransactionReport()
         
         assertState(.completePayment(report), on: makePaymentState()) {
             
-            $0.status = .completed(.processed(report))
+            $0.status = .result(.success(report))
         }
     }
     
-    func test_completePayment_shouldChangeStatusToCompletedProcessedOperationDetailsTransactionReport() {
+    func test_completePayment_shouldChangeStatusToProcessedOperationDetailsTransactionReport() {
         
         let report = makeOperationDetailsTransactionReport()
         
         assertState(.completePayment(report), on: makePaymentState()) {
             
-            $0.status = .completed(.processed(report))
+            $0.status = .result(.success(report))
         }
     }
     
@@ -166,11 +165,11 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - update
     
-    func test_update_shouldChangeStatusToTerminatedOnConnectivityErrorFailure() {
+    func test_update_shouldChangeStatusToTerminatedUpdateFailureOnConnectivityErrorFailure() {
         
         assertState(makeUpdateFailureEvent(), on: makePaymentState()) {
             
-            $0.status = .completed(.terminated)
+            $0.status = .result(.failure(.updateFailure))
         }
     }
     
