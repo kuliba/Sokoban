@@ -271,9 +271,9 @@ extension CarouselComponentConfig {
                 buttonForegroundSecondary: Color(red: 28/255, green: 28/255, blue: 28/255),
                 buttonIconForeground: Color(red: 0.91, green: 0.92, blue: 0.92)
             ),
-            spoilerImage: Image("chevron"),
+            spoilerImage: Image(systemName: "chevron.left.2"),
             separatorForeground: Color(red: 0.91, green: 0.92, blue: 0.92),
-            productDimensions: .regular),
+            productDimensions: .small),
         selector: .init(
             optionConfig: .init(
                 frameHeight: 24,
