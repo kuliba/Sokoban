@@ -33,16 +33,11 @@ public struct ProductCardView: View {
     
     public var body: some View {
         
-        ZStack(alignment: .top) {
+        ZStack(alignment: .topTrailing) {
             
-            shadow
+            cardView()
             
-            ZStack(alignment: .topTrailing) {
-                
-                cardView()
-                
-                selectedCardMarkView()
-            }
+            selectedCardMarkView()
         }
     }
     
@@ -93,16 +88,6 @@ public struct ProductCardView: View {
         productCard.look.background
             .image(orColor: productCard.look.backgroundColor)
             .background(Color.white)
-    }
-    
-    private var shadow: some View {
-        
-        config.shadowColor
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .frame(shadowSize)
-            .padding(.top, offsetY)
-            .padding(.bottom, 4)
-            .blur(radius: 4)
     }
 }
 
