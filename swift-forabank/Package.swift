@@ -1715,6 +1715,7 @@ private extension Target {
             .sharedConfigs,
             .tagged,
             .uiPrimitives,
+            .carouselComponent,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
     )
