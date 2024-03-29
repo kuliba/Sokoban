@@ -129,8 +129,8 @@ final class TransactionPerformerTests: XCTestCase {
         let makeTransfer = MakeTransferSpy()
         let getDetails = GetDetailsSpy()
         let sut = SUT(
-            makeTransfer: makeTransfer.process,
-            getDetails: getDetails.process
+            getDetails: getDetails.process,
+            makeTransfer: makeTransfer.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

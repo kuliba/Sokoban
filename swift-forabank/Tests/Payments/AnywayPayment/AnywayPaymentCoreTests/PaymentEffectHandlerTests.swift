@@ -174,8 +174,8 @@ final class PaymentEffectHandlerTests: XCTestCase {
         let processing = Processing()
         let paymentMaker = PaymentMaker()
         let sut = SUT(
-            process: processing.process,
-            makePayment: paymentMaker.process
+            makePayment: paymentMaker.process,
+            process: processing.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

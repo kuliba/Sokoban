@@ -14,15 +14,15 @@ public protocol Detailable<DetailsID> {
 
 public final class TransactionPerformer<Code, Details, MakeTransferResponse: Detailable> {
     
-    private let makeTransfer: MakeTransfer
     private let getDetails: GetDetails
+    private let makeTransfer: MakeTransfer
     
     public init(
-        makeTransfer: @escaping MakeTransfer,
-        getDetails: @escaping GetDetails
+        getDetails: @escaping GetDetails,
+        makeTransfer: @escaping MakeTransfer
     ) {
-        self.makeTransfer = makeTransfer
         self.getDetails = getDetails
+        self.makeTransfer = makeTransfer
     }
 }
 
