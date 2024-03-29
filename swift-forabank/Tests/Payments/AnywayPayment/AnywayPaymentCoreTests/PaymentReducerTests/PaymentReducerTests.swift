@@ -7,6 +7,24 @@
 
 struct PaymentState: Equatable {
     
+    var status: Status?
+}
+
+extension PaymentState {
+    
+    enum Status: Equatable {
+        
+        case completed(Completed)
+        case serverError(String)
+    }
+}
+
+extension PaymentState.Status {
+    
+    enum Completed: Equatable {
+        
+        case terminated
+    }
 }
 
 final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Update> {}
@@ -21,9 +39,13 @@ extension PaymentReducer {
         var state = state
         var effect: Effect?
         
-        //        switch event {
-        //
-        //        }
+        switch event {
+        case let .update(updateResult):
+            reduce(&state, with: updateResult)
+            
+        default:
+            break
+        }
         
         return (state, effect)
         
@@ -37,10 +59,34 @@ extension PaymentReducer {
     typealias Effect = PaymentEffect<Digest>
 }
 
+private extension PaymentReducer {
+    
+    func reduce(
+        _ state: inout State,
+        with updateResult: Event.UpdateResult
+    ) {
+        switch updateResult {
+        case let .failure(serviceFailure):
+            switch serviceFailure {
+            case .connectivityError:
+                state.status = .completed(.terminated)
+                
+            case let .serverError(message):
+                state.status = .serverError(message)
+            }
+            
+        case let .success(update):
+            break
+        }
+    }
+}
+
 import AnywayPaymentCore
 import XCTest
 
 final class PaymentReducerTests: XCTestCase {
+    
+    // MARK: - completePayment
     
     func test_completePayment_shouldNotDeliverEffectOnReportFailure() {
         
@@ -55,6 +101,29 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnOperationDetailsReport() {
         
         assert(completePaymentReportEvent(makeDetailIDTransactionReport()), on: makePaymentState(), effect: nil)
+    }
+    
+    // MARK: - update
+    
+    func test_update_shouldChangeStatusToTerminatedOnConnectivityErrorFailure() {
+        
+        let state = makePaymentState()
+        
+        assertState(makeUpdateFailureEvent(), on: state) {
+            
+            $0.status = .completed(.terminated)
+        }
+    }
+    
+    func test_update_shouldChangeStatusToServerErrorOnServerErrorFailure() {
+        
+        let message = anyMessage()
+        let state = makePaymentState()
+        
+        assertState(makeUpdateFailureEvent(message), on: state) {
+            
+            $0.status = .serverError(message)
+        }
     }
     
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {
