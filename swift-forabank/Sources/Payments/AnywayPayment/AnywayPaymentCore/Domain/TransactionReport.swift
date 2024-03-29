@@ -1,5 +1,5 @@
 //
-//  TransactionDetails.swift
+//  TransactionReport.swift
 //
 //
 //  Created by Igor Malyarov on 28.03.2024.
@@ -7,7 +7,7 @@
 
 import Tagged
 
-public struct TransactionDetails<DocumentStatus, OperationDetails> {
+public struct TransactionReport<DocumentStatus, OperationDetails> {
     
     public let documentStatus: DocumentStatus
     public let details: Details
@@ -21,7 +21,7 @@ public struct TransactionDetails<DocumentStatus, OperationDetails> {
     }
 }
 
-public extension TransactionDetails {
+public extension TransactionReport {
     
     enum Details {
         
@@ -30,11 +30,11 @@ public extension TransactionDetails {
     }
 }
 
-public extension TransactionDetails.Details {
+public extension TransactionReport.Details {
     
     typealias PaymentOperationDetailID = Tagged<_PaymentOperationDetailID, Int>
     enum _PaymentOperationDetailID {}
 }
 
-extension TransactionDetails: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension TransactionDetails.Details: Equatable where OperationDetails: Equatable {}
+extension TransactionReport: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension TransactionReport.Details: Equatable where OperationDetails: Equatable {}

@@ -13,7 +13,7 @@ public enum PaymentEvent<DocumentStatus, OperationDetails, Update> {
 
 public extension PaymentEvent {
     
-    typealias TransactionResult = TransactionDetails<DocumentStatus, OperationDetails>?
+    typealias TransactionResult = TransactionReport<DocumentStatus, OperationDetails>?
     
     typealias UpdateResult = Result<Update, ServiceFailure>
 }

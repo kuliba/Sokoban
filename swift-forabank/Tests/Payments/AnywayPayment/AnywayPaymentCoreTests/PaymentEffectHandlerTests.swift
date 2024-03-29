@@ -110,21 +110,21 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     func test_makePayment_shouldDeliverDetailIDOnOperationDetailID() {
         
-        let transactionDetails = makeDetailIDTransactionDetails()
+        let transactionReport = makeDetailIDTransactionReport()
         expect(
-            toDeliver: transactionDetailsEvent(transactionDetails),
+            toDeliver: transactionReportEvent(transactionReport),
             for: makePaymentEffect(),
-            onMakePayment: transactionDetails
+            onMakePayment: transactionReport
         )
     }
     
     func test_makePayment_shouldDeliverOperationDetailsOnOperationDetails() {
         
-        let transactionDetails = makeOperationDetailsTransactionDetails()
+        let transactionReport = makeOperationDetailsTransactionReport()
         expect(
-            toDeliver: transactionDetailsEvent(transactionDetails),
+            toDeliver: transactionReportEvent(transactionReport),
             for: makePaymentEffect(),
-            onMakePayment: transactionDetails
+            onMakePayment: transactionReport
         )
     }
     
@@ -151,7 +151,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makePaymentEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: makeOperationDetailsTransactionDetails())
+        paymentMaker.complete(with: makeOperationDetailsTransactionReport())
         
         XCTAssert(received.isEmpty)
     }
@@ -295,17 +295,17 @@ private func makeUpdate(
     .init(value: value)
 }
 
-private func transactionDetailsEvent(
-    _ transactionDetails: TransactionDetails<DocumentStatus, OperationDetails>
+private func transactionReportEvent(
+    _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
 ) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
-    .completePayment(transactionDetails)
+    .completePayment(transactionReport)
 }
 
-private func makeDetailIDTransactionDetails(
+private func makeDetailIDTransactionReport(
     documentStatus: DocumentStatus = .complete,
     _ id: Int = generateRandom11DigitNumber()
-) -> TransactionDetails<DocumentStatus, OperationDetails> {
+) -> TransactionReport<DocumentStatus, OperationDetails> {
     
     .init(
         documentStatus: documentStatus,
@@ -313,10 +313,10 @@ private func makeDetailIDTransactionDetails(
     )
 }
 
-private func makeOperationDetailsTransactionDetails(
+private func makeOperationDetailsTransactionReport(
     documentStatus: DocumentStatus = .complete,
     _ value: String = UUID().uuidString
-) -> TransactionDetails<DocumentStatus, OperationDetails> {
+) -> TransactionReport<DocumentStatus, OperationDetails> {
     
     .init(
         documentStatus: documentStatus,
