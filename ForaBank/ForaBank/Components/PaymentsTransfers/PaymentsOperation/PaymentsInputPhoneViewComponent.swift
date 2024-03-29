@@ -68,9 +68,6 @@ extension PaymentsInputPhoneView {
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
-            let validator = PhoneValidator()
-            let transformer = Transformers.phoneKit
-            
             if let phone = phone {
 #if DEBUG
                 if phone.digits != "70115110217" {
@@ -134,7 +131,8 @@ extension PaymentsInputPhoneView {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
-    
+                        self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: payload.phone))
+                        
                     default:
                         break
                     }

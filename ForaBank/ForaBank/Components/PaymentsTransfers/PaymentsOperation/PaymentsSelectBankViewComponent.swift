@@ -140,6 +140,44 @@ extension PaymentsSelectBankView.ViewModel {
                 
             }.store(in: &bindings)
         
+        model.action
+            .compactMap({ $0 as? ModelAction.LatestPayments.BanksList.Response })
+            .receive(on: scheduler)
+            .sink { [unowned self] payload in
+                
+                let result = payload.result
+                
+                var bankId = ""
+                switch result {
+                case let .success(phoneData):
+                    let defaultBank = phoneData.first { $0.defaultBank == true }
+                    
+                    if let defaultBank {
+                        
+                        let bankValue = self.parameterSelectBank?.options.first { $0.id == defaultBank.bankId }
+                        if let bankId = bankValue?.id {
+                            
+                            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                                id: bankId
+                            ))
+                        }
+                        
+                    } else {
+                        if let bankId = phoneData.first?.bankId {
+                            
+                            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                                id: bankId
+                            ))
+                        }
+                    }
+                    
+                case .failure:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        
         $isEditable
             .dropFirst()
             .removeDuplicates()
