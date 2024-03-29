@@ -10,11 +10,12 @@ import UIPrimitives
 public extension Array where Element == ProductSelect.Product {
     
     static let allProducts: Self = [
-        .accountPreview,
-        .account2Preview,
         .cardPreview,
         .card2Preview,
         .card3Preview,
+        .card4Preview,
+        .accountPreview,
+        .account2Preview,
     ]
 }
 
@@ -88,6 +89,22 @@ extension ProductSelect.Product {
         id: 1234567893,
         type: .card,
         isAdditional: false,
+        header: "Счет списания",
+        title: "Card 3",
+        footer: "7893",
+        amountFormatted: "123 456.78 ₽",
+        balance: 123_456.78,
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
+    )
+    
+    static let card4Preview: Self = .init(
+        id: 1234567894,
+        type: .card,
+        isAdditional: true,
         header: "Счет списания",
         title: "Card 3",
         footer: "7893",
