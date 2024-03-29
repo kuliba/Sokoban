@@ -371,22 +371,23 @@ extension CurrencyWalletSelectorViewModel {
                 let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
                 let description = product.additionalField
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-                
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
+                let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
+                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
                 
             case let product as ProductAccountData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-                
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
+                let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
+                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
                 
             case let product as ProductDepositData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-                
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
+                let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
+
+                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
 
                 
             default:

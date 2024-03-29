@@ -15,7 +15,7 @@ public extension ResponseMapper {
     
     typealias GetProductListByTypeResult = Result<ProductResponse, MappingError>
     
-    static func mapGetCardStatementResponse(
+    static func mapGetProductListByTypeResponse(
         _ data: Data,
         _ response: HTTPURLResponse
     ) -> GetProductListByTypeResult {
@@ -251,8 +251,10 @@ private extension ResponseMapper {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
+        case notActivated = "Не активирована"
         case issuedToClient = "Выдано клиенту"
         case blockedByBank = "Заблокирована банком"
+        case blockedUnlockAvailable = "Карта блокирована, разблокировка доступна"
         case notBlocked = "NOT_BLOCKED"
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
@@ -338,6 +340,12 @@ private extension ProductResponse.Status {
             
         case .blocked:
             self = .blocked
+            
+        case .notActivated:
+            self = .notActivated
+            
+        case .blockedUnlockAvailable:
+            self = .blockedUnlockAvailable
         }
     }
 }

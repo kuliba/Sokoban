@@ -349,13 +349,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "AnywayPaymentTests",
-        "name" : "AnywayPaymentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CardUITests",
         "name" : "CardUITests"
       }
@@ -372,6 +365,20 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "RemoteServicesTests",
         "name" : "RemoteServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentBackendTests",
+        "name" : "AnywayPaymentBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentCoreTests",
+        "name" : "AnywayPaymentCoreTests"
       }
     }
   ],
