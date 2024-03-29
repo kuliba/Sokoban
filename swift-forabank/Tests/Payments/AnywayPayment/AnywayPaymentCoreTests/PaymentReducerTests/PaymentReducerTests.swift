@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
-struct PaymentState<Payment> {
+struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     var payment: Payment
     var status: Status?
@@ -13,7 +13,7 @@ struct PaymentState<Payment> {
 
 extension PaymentState {
     
-    enum Status: Equatable {
+    enum Status {
         
         case completed(Completed)
         case serverError(String)
@@ -22,13 +22,21 @@ extension PaymentState {
 
 extension PaymentState.Status {
     
-    enum Completed: Equatable {
+    enum Completed {
         
         case terminated
+        case processed(Report)
     }
 }
 
-extension PaymentState: Equatable where Payment: Equatable {}
+extension PaymentState.Status.Completed {
+    
+    typealias Report = TransactionReport<DocumentStatus, OperationDetails>
+}
+
+extension PaymentState: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension PaymentState.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension PaymentState.Status.Completed: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
 
 final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update> {
     
@@ -51,15 +59,14 @@ extension PaymentReducer {
         var effect: Effect?
         
         switch event {
+        case let .completePayment(transactionResult):
+            reduce(&state, with: transactionResult)
+            
         case let .update(updateResult):
             reduce(&state, with: updateResult)
-            
-        default:
-            break
         }
         
         return (state, effect)
-        
     }
 }
 
@@ -67,12 +74,25 @@ extension PaymentReducer {
     
     typealias UpdatePayment = (Payment, Update) -> Payment
     
-    typealias State = PaymentState<Payment>
+    typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
     typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
     typealias Effect = PaymentEffect<Digest>
 }
 
 private extension PaymentReducer {
+    
+    func reduce(
+        _ state: inout State,
+        with transactionResult: Event.TransactionResult
+    ) {
+        switch transactionResult {
+        case .none:
+            state.status = .completed(.terminated)
+            
+        case let .some(report):
+            state.status = .completed(.processed(report))
+        }
+    }
     
     func reduce(
         _ state: inout State,
@@ -101,6 +121,34 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
+    func test_completePayment_shouldChangeStatusToTerminatedOnReportFailure() {
+        
+        assertState(.completePayment(nil), on: makePaymentState()) {
+            
+            $0.status = .completed(.terminated)
+        }
+    }
+    
+    func test_completePayment_shouldChangeStatusToCompletedProcessedDetailIDTransactionReport() {
+        
+        let report = makeDetailIDTransactionReport()
+        
+        assertState(.completePayment(report), on: makePaymentState()) {
+            
+            $0.status = .completed(.processed(report))
+        }
+    }
+    
+    func test_completePayment_shouldChangeStatusToCompletedProcessedOperationDetailsTransactionReport() {
+        
+        let report = makeOperationDetailsTransactionReport()
+        
+        assertState(.completePayment(report), on: makePaymentState()) {
+            
+            $0.status = .completed(.processed(report))
+        }
+    }
+    
     func test_completePayment_shouldNotDeliverEffectOnReportFailure() {
         
         assert(.completePayment(nil), on: makePaymentState(), effect: nil)
@@ -120,9 +168,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldChangeStatusToTerminatedOnConnectivityErrorFailure() {
         
-        let state = makePaymentState()
-        
-        assertState(makeUpdateFailureEvent(), on: state) {
+        assertState(makeUpdateFailureEvent(), on: makePaymentState()) {
             
             $0.status = .completed(.terminated)
         }
@@ -131,9 +177,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldChangeStatusToServerErrorOnServerErrorFailure() {
         
         let message = anyMessage()
-        let state = makePaymentState()
         
-        assertState(makeUpdateFailureEvent(message), on: state) {
+        assertState(makeUpdateFailureEvent(message), on: makePaymentState()) {
             
             $0.status = .serverError(message)
         }
@@ -158,15 +203,15 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldSetPaymentToUpdatedValue() {
         
-        let state = makePaymentState()
+        let payment = makeSimplePayment()
         let updatedPayment = makeSimplePayment()
         let sut = makeSUT(updatePayment: { _, _ in updatedPayment })
         
-        assertState(sut: sut, makeUpdateEvent(makeUpdate()), on: state) {
+        assertState(sut: sut, makeUpdateEvent(makeUpdate()), on: makePaymentState(payment)) {
             
             $0.payment = updatedPayment
         }
-        XCTAssertNotEqual(state.payment, updatedPayment)
+        XCTAssertNotEqual(payment, updatedPayment)
     }
     
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {

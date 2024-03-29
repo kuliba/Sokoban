@@ -120,8 +120,8 @@ func makePaymentEffect(
 
 func makePaymentState(
     _ payment: SimplePayment = makeSimplePayment(),
-    status: PaymentState<SimplePayment>.Status? = nil
-) -> PaymentState<SimplePayment> {
+    status: PaymentState<SimplePayment, DocumentStatus, OperationDetails>.Status? = nil
+) -> PaymentState<SimplePayment, DocumentStatus, OperationDetails> {
     
     .init(payment: payment, status: status)
 }
