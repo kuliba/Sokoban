@@ -63,13 +63,13 @@ public extension CarouselState {
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
-            .map { $0.type }
+            .map { $0.productType }
             .uniqueValues
             .sorted(by: { $0.order < $1.order })
         
         let groupedByType = Dictionary(
             grouping: products,
-            by: { $0.type }
+            by: { $0.productType }
         )
                 
         let productGroups = productTypes
@@ -91,7 +91,7 @@ public extension CarouselState {
                 )
             }
         
-        let cardProducts = products.filter { $0.type == .card }
+        let cardProducts = products.filter { $0.productType == .card }
         
         let separators = zip(cardProducts, cardProducts.dropFirst())
             .enumerated()
@@ -108,7 +108,7 @@ public extension CarouselState {
                 
                 resultingArray.append(
                     element: product,
-                    toValueOfKey: product.type
+                    toValueOfKey: product.productType
                 )
             }
         
@@ -224,7 +224,7 @@ extension CarouselState {
     
     func shouldAddSeparator(for product: Product) -> Bool {
         
-        separators[product.type]?.contains(product) == true
+        separators[product.productType]?.contains(product) == true
     }
     
     func shouldAddGroupSeparator(for productGroup: Group) -> Bool {
