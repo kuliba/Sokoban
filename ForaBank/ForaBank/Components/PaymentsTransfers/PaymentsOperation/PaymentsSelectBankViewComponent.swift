@@ -147,7 +147,6 @@ extension PaymentsSelectBankView.ViewModel {
                 
                 let result = payload.result
                 
-                var bankId = ""
                 switch result {
                 case let .success(phoneData):
                     let defaultBank = phoneData.first { $0.defaultBank == true }
@@ -176,7 +175,6 @@ extension PaymentsSelectBankView.ViewModel {
                 }
                 
             }.store(in: &bindings)
-        
         
         $isEditable
             .dropFirst()
