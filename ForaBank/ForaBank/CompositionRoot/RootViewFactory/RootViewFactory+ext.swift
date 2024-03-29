@@ -12,7 +12,7 @@ import SwiftUI
 
 extension RootViewFactory {
     
-    init(with imageCache: ImageCache) {
+    init(with imageCache: ImageCache, getUImage: @escaping (Md5hash) -> UIImage?) {
         
         let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = { viewModel in
             
@@ -41,7 +41,8 @@ extension RootViewFactory {
                         viewFactory: .init(
                             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                             makeUserAccountView: makeUserAccountView
-                        )
+                        ), 
+                        getUImage: getUImage
                     )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,

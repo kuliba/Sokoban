@@ -106,7 +106,7 @@ private extension CarouselProduct {
         self.init(
             id: .init(product.id),
             type: product.productType.type,
-            isAdditional: product.cardType?.isAdditional
+            isAdditional: product.cardType?.isAdditional ?? false
         )
     }
 }

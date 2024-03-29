@@ -19,6 +19,7 @@ struct MainView<NavigationOperationView: View>: View {
     
     let viewFactory: MainViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -157,7 +158,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -181,7 +183,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .country(countyViewModel):
@@ -245,7 +248,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -425,7 +429,8 @@ struct MainView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ), 
+            getUImage: { _ in nil }
         )
     }
 }
