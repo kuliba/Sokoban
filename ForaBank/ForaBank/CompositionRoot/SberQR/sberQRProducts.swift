@@ -7,39 +7,45 @@
 
 import ProductSelectComponent
 import SberQR
+import SwiftUI
 
 extension Array where Element == ProductData {
     
     func mapToSberQRProducts(
         response: GetSberQRDataResponse,
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
     ) -> [ProductSelect.Product] {
         
         mapToSberQRProducts(
             productTypes: response.productTypes,
             currencies: response.currencies,
-            formatBalance: formatBalance
+            formatBalance: formatBalance,
+            getImage: getImage
         )
     }
     
     func mapToSberQRProducts(
         productTypes: [ProductType],
         currencies: [String],
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
+
     ) -> [ProductSelect.Product] {
         
         self.filter {
             productTypes.contains($0.productType)
             && currencies.contains($0.currency)
         }
-        .compactMap { $0.sberQRProduct(formatBalance: formatBalance) }
+        .compactMap { $0.sberQRProduct(formatBalance: formatBalance, getImage: getImage) }
     }
 }
 
 extension ProductData {
     
     func sberQRProduct(
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
     ) -> ProductSelect.Product? {
         
         if let card = self as? ProductCardData {
@@ -54,9 +60,9 @@ extension ProductData {
                 amountFormatted: formatBalance(card),
                 balance: .init(card.balanceValue),
                 look: .init(
-                    background: .svg(card.largeDesign.description),
+                    background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
                     color: card.backgroundColor.description,
-                    icon: .svg(card.smallDesign.description)
+                    icon: .image(getImage(card.smallDesignMd5hash) ?? .cardPlaceholder)
                 )
             )
         }
@@ -73,9 +79,9 @@ extension ProductData {
                 amountFormatted: formatBalance(account),
                 balance: .init(account.balanceValue),
                 look: .init(
-                    background: .svg(account.largeDesign.description),
+                    background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
                     color: account.backgroundColor.description,
-                    icon: .svg(account.smallDesign.description)
+                    icon: .image(getImage(account.smallDesignMd5hash) ?? .cardPlaceholder)
                 )
             )
         }
