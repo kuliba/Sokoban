@@ -5,8 +5,9 @@
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
-struct PaymentState: Equatable {
+struct PaymentState<Payment> {
     
+    var payment: Payment
     var status: Status?
 }
 
@@ -27,7 +28,17 @@ extension PaymentState.Status {
     }
 }
 
-final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Update> {}
+extension PaymentState: Equatable where Payment: Equatable {}
+
+final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update> {
+    
+    private let updatePayment: UpdatePayment
+    
+    init(updatePayment: @escaping UpdatePayment) {
+        
+        self.updatePayment = updatePayment
+    }
+}
 
 extension PaymentReducer {
     
@@ -54,7 +65,9 @@ extension PaymentReducer {
 
 extension PaymentReducer {
     
-    typealias State = PaymentState
+    typealias UpdatePayment = (Payment, Update) -> Payment
+    
+    typealias State = PaymentState<Payment>
     typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
     typealias Effect = PaymentEffect<Digest>
 }
@@ -76,7 +89,7 @@ private extension PaymentReducer {
             }
             
         case let .success(update):
-            break
+            state.payment = updatePayment(state.payment, update)
         }
     }
 }
@@ -126,6 +139,36 @@ final class PaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_update_shouldCallUpdateWithPaymentAndUpdate() {
+        
+        let payment = makeSimplePayment()
+        let update = makeUpdate()
+        var updatePayloads = [(payment: Payment, update: Update)]()
+        let sut = makeSUT(updatePayment: {
+            
+            updatePayloads.append(($0, $1))
+            return $0
+        })
+        
+        _ = sut.reduce(makePaymentState(payment), makeUpdateEvent(update))
+        
+        XCTAssertNoDiff(updatePayloads.map(\.payment), [payment])
+        XCTAssertNoDiff(updatePayloads.map(\.update), [update])
+    }
+    
+    func test_update_shouldSetPaymentToUpdatedValue() {
+        
+        let state = makePaymentState()
+        let updatedPayment = makeSimplePayment()
+        let sut = makeSUT(updatePayment: { _, _ in updatedPayment })
+        
+        assertState(sut: sut, makeUpdateEvent(makeUpdate()), on: state) {
+            
+            $0.payment = updatedPayment
+        }
+        XCTAssertNotEqual(state.payment, updatedPayment)
+    }
+    
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         assert(makeUpdateFailureEvent(), on: makePaymentState(), effect: nil)
@@ -143,18 +186,21 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, Update>
+    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, SimplePayment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias Payment = SimplePayment
+    
     private func makeSUT(
+        updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(updatePayment: updatePayment)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
