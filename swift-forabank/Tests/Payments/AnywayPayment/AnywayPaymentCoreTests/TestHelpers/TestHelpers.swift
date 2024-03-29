@@ -10,6 +10,11 @@ import Foundation
 
 // MARK: - Test Types
 
+struct Digest: Equatable {
+    
+    let value: String
+}
+
 enum DocumentStatus: Equatable {
     
     case complete, inflight
@@ -20,7 +25,32 @@ struct OperationDetails: Equatable {
     let value: String
 }
 
+struct Update: Equatable {
+    
+    let value: String
+}
+
 // MARK: - Factories
+
+func completePaymentFailureEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    .completePayment(nil)
+}
+
+func completePaymentReportEvent(
+    _ report: TransactionReport<DocumentStatus, OperationDetails>
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    .completePayment(report)
+}
+
+func continueEffect(
+    _ digest: Digest = makeDigest()
+) -> PaymentEffect<Digest> {
+    
+    .continue(digest)
+}
 
 func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
@@ -38,6 +68,13 @@ func makeDetailIDTransactionReport(
         documentStatus: documentStatus,
         details: .paymentOperationDetailID(.init(id))
     )
+}
+
+func makeDigest(
+    _ value: String = UUID().uuidString
+) -> Digest {
+    
+    .init(value: value)
 }
 
 func makeOperationDetailsTransactionReport(
@@ -69,9 +106,34 @@ func makeOperationDetails(
     .init(value: value)
 }
 
+func makePaymentEffect(
+    _ verificationCode: VerificationCode = makeVerificationCode()
+) -> PaymentEffect<Digest> {
+    
+    .makePayment(verificationCode)
+}
+
+func makeResponse(
+    _ documentStatus: DocumentStatus = .complete,
+    id: Int = generateRandom11DigitNumber()
+) -> TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse {
+    
+    .init(
+        documentStatus: documentStatus,
+        paymentOperationDetailID: .init(id)
+    )
+}
+
 func makeVerificationCode(
     _ value: String = UUID().uuidString
 ) -> VerificationCode {
     
     .init(value)
+}
+
+func makeUpdate(
+    _ value: String = UUID().uuidString
+) -> Update {
+    
+    .init(value: value)
 }

@@ -69,6 +69,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         sut?.handleEffect(continueEffect()) { received.append($0) }
         sut = nil
         processing.complete(with: .failure(.connectivityError))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
     }
@@ -83,6 +84,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         sut?.handleEffect(continueEffect()) { received.append($0) }
         sut = nil
         processing.complete(with: .success(makeUpdate()))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
     }
@@ -138,6 +140,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         sut?.handleEffect(makePaymentEffect()) { received.append($0) }
         sut = nil
         paymentMaker.complete(with: nil)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
     }
@@ -152,6 +155,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         sut?.handleEffect(makePaymentEffect()) { received.append($0) }
         sut = nil
         paymentMaker.complete(with: makeOperationDetailsTransactionReport())
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
     }
@@ -185,20 +189,6 @@ final class PaymentEffectHandlerTests: XCTestCase {
         return (sut, processing, paymentMaker)
     }
     
-    private func continueEffect(
-        _ digest: Digest = makeDigest()
-    ) -> SUT.Effect {
-        
-        .continue(digest)
-    }
-    
-    private func makePaymentEffect(
-        _ verificationCode: VerificationCode = makeVerificationCode()
-    ) -> SUT.Effect {
-        
-        .makePayment(verificationCode)
-    }
-    
     private func updateEvent(
         _ update: Update
     ) -> SUT.Event {
@@ -211,11 +201,6 @@ final class PaymentEffectHandlerTests: XCTestCase {
     ) -> SUT.Event {
         
         .update(.failure(serviceFailure))
-    }
-    
-    private func completePaymentFailureEvent() -> SUT.Event {
-        
-        .completePayment(nil)
     }
     
     private func expect(
@@ -259,30 +244,6 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
-}
-
-private struct Digest: Equatable {
-    
-    let value: String
-}
-
-private struct Update: Equatable {
-    
-    let value: String
-}
-
-private func makeDigest(
-    _ value: String = UUID().uuidString
-) -> Digest {
-    
-    .init(value: value)
-}
-
-private func makeUpdate(
-    _ value: String = UUID().uuidString
-) -> Update {
-    
-    .init(value: value)
 }
 
 private func transactionReportEvent(

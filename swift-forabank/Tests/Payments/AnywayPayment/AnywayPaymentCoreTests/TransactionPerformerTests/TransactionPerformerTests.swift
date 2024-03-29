@@ -84,7 +84,6 @@ final class TransactionPerformerTests: XCTestCase {
         sut?.process(makeVerificationCode()) { responses.append($0) }
         sut = nil
         makeTransfer.complete(with: nil)
-        
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssert(responses.isEmpty)
@@ -101,7 +100,6 @@ final class TransactionPerformerTests: XCTestCase {
         makeTransfer.complete(with: makeResponse())
         sut = nil
         getDetails.complete(with: nil)
-        
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssert(responses.isEmpty)
@@ -166,15 +164,4 @@ private struct Details: Equatable {
         
         self.value = value
     }
-}
-
-private func makeResponse(
-    _ documentStatus: DocumentStatus = .complete,
-    id: Int = generateRandom11DigitNumber()
-) -> TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse {
-    
-    .init(
-        documentStatus: documentStatus,
-        paymentOperationDetailID: .init(id)
-    )
 }
