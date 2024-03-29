@@ -11,7 +11,7 @@ struct Product: CarouselProduct, Equatable, Identifiable {
     
     let id: Int
     let type: ProductType
-    let isAdditional: Bool?
+    let isAdditional: Bool
 }
 
 typealias ProductSeparators = [ProductType: [Product]]
@@ -83,7 +83,7 @@ extension Product {
     private init(
         id: Int,
         _ type: ProductType,
-        _ isAdditional: Bool? = nil
+        _ isAdditional: Bool = false
     ) {
         self.init(id: .init(id), type: type, isAdditional: isAdditional)
     }
