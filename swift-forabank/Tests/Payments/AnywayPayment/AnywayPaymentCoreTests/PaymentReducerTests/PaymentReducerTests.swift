@@ -121,7 +121,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
-    func test_completePayment_shouldChangeStatusToTerminatedOnReportFailure() {
+    func test_completePayment_shouldChangeStatusToCompletedTerminatedOnReportFailure() {
         
         assertState(.completePayment(nil), on: makePaymentState()) {
             
