@@ -295,13 +295,6 @@ private func makeUpdate(
     .init(value: value)
 }
 
-private func makeVerificationCode(
-    _ value: String = UUID().uuidString
-) -> VerificationCode {
-    
-    .init(value)
-}
-
 private func transactionDetailsEvent(
     _ transactionDetails: TransactionDetails<DocumentStatus, OperationDetails>
 ) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {

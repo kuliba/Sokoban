@@ -12,7 +12,7 @@ public protocol Detailable<DetailsID> {
     var detailsID: DetailsID { get }
 }
 
-public final class TransactionPerformer<Code, Details, MakeTransferResponse: Detailable> {
+public final class TransactionPerformer<Details, MakeTransferResponse: Detailable> {
     
     private let getDetails: GetDetails
     private let makeTransfer: MakeTransfer
@@ -29,7 +29,7 @@ public final class TransactionPerformer<Code, Details, MakeTransferResponse: Det
 public extension TransactionPerformer {
     
     func process(
-        _ code: Code,
+        _ code: VerificationCode,
         _ completion: @escaping Completion
     ) {
         makeTransfer(code) { [weak self] in
@@ -56,7 +56,7 @@ public extension TransactionPerformer {
     
     typealias MakeTransferResult = MakeTransferResponse?
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void
-    typealias MakeTransfer = (Code, @escaping MakeTransferCompletion) -> Void
+    typealias MakeTransfer = (VerificationCode, @escaping MakeTransferCompletion) -> Void
     
     typealias ProcessResult = ProcessResponse?
     typealias Completion = (ProcessResult) -> Void

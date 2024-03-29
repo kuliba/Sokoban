@@ -20,7 +20,7 @@ final class TransactionPerformerTests: XCTestCase {
     
     func test_process_shouldCallMakeTransferWithCode() {
         
-        let code = Code()
+        let code = makeVerificationCode()
         let (sut, makeTransfer, _) = makeSUT()
         
         sut.process(code) { _ in }
@@ -40,7 +40,7 @@ final class TransactionPerformerTests: XCTestCase {
     
     func test_process_shouldCallGetDetailsWithDetailsID() {
         
-        let code = Code()
+        let code = makeVerificationCode()
         let detailsID = DetailsID()
         let payload = Payload(detailsID: detailsID)
         let (sut, makeTransfer, getDetails) = makeSUT()
@@ -85,7 +85,7 @@ final class TransactionPerformerTests: XCTestCase {
         (sut, makeTransfer, _) = makeSUT()
         var responses = [SUT.ProcessResult]()
         
-        sut?.process(.init()) { responses.append($0) }
+        sut?.process(makeVerificationCode()) { responses.append($0) }
         sut = nil
         makeTransfer.complete(with: nil)
         
@@ -102,7 +102,7 @@ final class TransactionPerformerTests: XCTestCase {
         (sut, makeTransfer, getDetails) = makeSUT()
         var responses = [SUT.ProcessResult]()
         
-        sut?.process(.init()) { responses.append($0) }
+        sut?.process(makeVerificationCode()) { responses.append($0) }
         makeTransfer.complete(with: .init(detailsID: .init()))
         sut = nil
         getDetails.complete(with: nil)
@@ -114,8 +114,8 @@ final class TransactionPerformerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionPerformer<Code, Details, Payload>
-    private typealias MakeTransferSpy = Spy<Code, SUT.MakeTransferResult>
+    private typealias SUT = TransactionPerformer<Details, Payload>
+    private typealias MakeTransferSpy = Spy<VerificationCode, SUT.MakeTransferResult>
     private typealias GetDetailsSpy = Spy<DetailsID, SUT.GetDetailsResult>
     
     private func makeSUT(
@@ -142,7 +142,7 @@ final class TransactionPerformerTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        with code: Code = .init(),
+        with code: VerificationCode = makeVerificationCode(),
         toDeliver expected: SUT.ProcessResult,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 0.05,
@@ -160,16 +160,6 @@ final class TransactionPerformerTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: timeout)
-    }
-}
-
-private struct Code: Equatable {
-    
-    let value: String
-    
-    init(value: String = UUID().uuidString) {
-        
-        self.value = value
     }
 }
 
