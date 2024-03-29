@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIPrimitives
+import CarouselComponent
 
 public struct ProductSelectView<ProductView: View>: View {
     
@@ -140,15 +141,21 @@ public struct ProductSelectView<ProductView: View>: View {
         products: [ProductSelect.Product]
     ) -> some View {
         
-        ScrollView(.horizontal, showsIndicators: false) {
-            
-            HStack(spacing: 10) {
-                
-                ForEach(products, content: _productView)
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 8)
-        }
+        let viewModel: CarouselViewModel<ProductSelect.Product> = .init(
+            initialState: .init(
+                products: products,
+                needShowSticker: false
+            ),
+            reduce: CarouselReducer().reduce,
+            handleEffect: CarouselEffectHandler().handleEffect)
+        
+        CarouselStateWrapperView(
+            viewModel: viewModel,
+            productView: _productView,
+            stickerView: { EmptyView() },
+            newProductButton: { EmptyView() },
+            config: .preview
+        )
     }
     
     private func _productView(
@@ -245,5 +252,48 @@ private extension ProductSelect {
     ) -> Self {
         
         .init(selected: selected, products: .allProducts)
+    }
+}
+
+extension CarouselComponentConfig {
+    
+    static let preview: Self = .init(
+        carousel: .init(
+            item: .init(
+                spacing: 13,
+                horizontalPadding: 20
+            ),
+            group: .init(
+                spacing: 8,
+                buttonFont: .footnote,
+                shadowForeground: Color(red: 0.11, green: 0.11, blue: 0.11),
+                buttonForegroundPrimary: Color(red: 0.91, green: 0.92, blue: 0.92),
+                buttonForegroundSecondary: Color(red: 28/255, green: 28/255, blue: 28/255),
+                buttonIconForeground: Color(red: 0.91, green: 0.92, blue: 0.92)
+            ),
+            spoilerImage: Image("chevron"),
+            separatorForeground: Color(red: 0.91, green: 0.92, blue: 0.92),
+            productDimensions: .regular),
+        selector: .init(
+            optionConfig: .init(
+                frameHeight: 24,
+                textFont: .caption2,
+                textForeground: Color(red: 0.6, green: 0.6, blue: 0.6),
+                textForegroundSelected: Color(red: 0.11, green: 0.11, blue: 0.11),
+                shapeForeground: .white,
+                shapeForegroundSelected: Color(red: 0.96, green: 0.96, blue: 0.96)
+            ),
+            itemSpacing: 8
+        )
+    )
+}
+
+extension ProductSelect.Product: CarouselProduct {
+    
+    public var productType: CarouselComponent.ProductType {
+        switch type {
+        case .account: return .account
+        case .card: return .card
+        }
     }
 }
