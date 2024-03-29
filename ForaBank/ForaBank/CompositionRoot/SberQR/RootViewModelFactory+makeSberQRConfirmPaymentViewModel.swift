@@ -60,7 +60,8 @@ private extension Model {
                 formatBalance: { [weak self] in
                     
                     self?.formattedBalance(of: $0) ?? ""
-                }
+                }, 
+                getImage: { self.images.value[$0]?.image }
             )
     }
 }
