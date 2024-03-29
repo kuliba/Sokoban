@@ -25,6 +25,11 @@ struct OperationDetails: Equatable {
     let value: String
 }
 
+struct SimplePayment: Equatable {
+    
+    let value: String
+}
+
 struct Update: Equatable {
     
     let value: String
@@ -113,6 +118,14 @@ func makePaymentEffect(
     .makePayment(verificationCode)
 }
 
+func makePaymentState(
+    _ payment: SimplePayment = makeSimplePayment(),
+    status: PaymentState<SimplePayment, DocumentStatus, OperationDetails>.Status? = nil
+) -> PaymentState<SimplePayment, DocumentStatus, OperationDetails> {
+    
+    .init(payment: payment, status: status)
+}
+
 func makeResponse(
     _ documentStatus: DocumentStatus = .complete,
     id: Int = generateRandom11DigitNumber()
@@ -122,6 +135,13 @@ func makeResponse(
         documentStatus: documentStatus,
         paymentOperationDetailID: .init(id)
     )
+}
+
+func makeSimplePayment(
+    _ value: String = UUID().uuidString
+) -> SimplePayment {
+    
+    .init(value: value)
 }
 
 func makeVerificationCode(
@@ -136,4 +156,22 @@ func makeUpdate(
 ) -> Update {
     
     .init(value: value)
+}
+
+func makeUpdateFailureEvent(
+    _ message: String? = nil
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    if let message {
+        return .update(.failure(.serverError(message)))
+    } else {
+        return .update(.failure(.connectivityError))
+    }
+}
+
+func makeUpdateEvent(
+    _ update: Update = makeUpdate()
+) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+    
+    .update(.success(update))
 }

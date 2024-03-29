@@ -7,8 +7,8 @@
 
 public enum PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
-    case update(UpdateResult)
     case completePayment(TransactionResult)
+    case update(UpdateResult)
 }
 
 public extension PaymentEvent {
