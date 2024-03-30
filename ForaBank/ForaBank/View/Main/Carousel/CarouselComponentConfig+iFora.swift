@@ -33,8 +33,8 @@ extension CarouselComponentConfig {
                     textFont: .textBodySR12160(),
                     textForeground: .textPlaceholder,
                     textForegroundSelected: .textSecondary,
-                    shapeForeground: .white,
-                    shapeForegroundSelected: .mainColorsGrayLightest
+                    shapeForeground: .mainColorsGrayLightest,
+                    shapeForegroundSelected: .white
             ),
             itemSpacing: 8
         )
