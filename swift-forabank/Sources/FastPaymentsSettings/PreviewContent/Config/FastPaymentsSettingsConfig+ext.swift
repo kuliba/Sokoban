@@ -13,6 +13,7 @@ public extension FastPaymentsSettingsConfig {
         accountLinking: .preview,
         backgroundColor: .orange.opacity(0.5),
         bankDefault: .preview,
+        carousel: .preview,
         consentList: .preview,
         paymentContract: .preview,
         productSelect: .preview

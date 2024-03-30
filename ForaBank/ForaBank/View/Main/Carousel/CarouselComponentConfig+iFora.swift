@@ -1,30 +1,16 @@
 //
-//  CarouselComponentConfig.swift
+//  CarouselComponentConfig+iFora.swift
+//  ForaBank
 //
-//
-//  Created by Disman Dmitry on 14.02.2024.
+//  Created by Andryusina Nataly on 30.03.2024.
 //
 
+import CarouselComponent
 import SwiftUI
-import Tagged
 
-public struct CarouselComponentConfig {
+extension CarouselComponentConfig {
     
-    public let carousel: CarouselConfig
-    public let selector: SelectorConfig
-    
-    public init(
-        carousel: CarouselConfig,
-        selector: SelectorConfig
-    ) {
-        self.carousel = carousel
-        self.selector = selector
-    }
-}
-
-public extension CarouselComponentConfig {
-    
-    static let preview: Self = .init(
+    static let iForaSmall: Self = .init(
         carousel: .init(
             item: .init(
                 spacing: 13,
@@ -38,7 +24,7 @@ public extension CarouselComponentConfig {
                 buttonForegroundSecondary: Color(red: 28/255, green: 28/255, blue: 28/255),
                 buttonIconForeground: Color(red: 0.91, green: 0.92, blue: 0.92)
             ),
-            spoilerImage: Image(systemName: "chevron.left.2"),
+            spoilerImage: .ic24ChevronsLeft,
             separatorForeground: Color(red: 0.91, green: 0.92, blue: 0.92),
             productDimensions: .small),
         selector: .init(

@@ -15,7 +15,8 @@ extension SberQR.Config {
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        button: .iFora,
+        button: .iFora, 
+        carousel: .iForaSmall,
         info: .iFora,
         productSelect: .iFora
     )
