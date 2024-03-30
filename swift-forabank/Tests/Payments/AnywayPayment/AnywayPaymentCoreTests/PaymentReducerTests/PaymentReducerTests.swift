@@ -185,7 +185,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldCallUpdateWithPaymentAndUpdate() {
         
-        let payment = makeSimplePayment()
+        let payment = makePayment()
         let update = makeUpdate()
         var updatePayloads = [(payment: Payment, update: Update)]()
         let sut = makeSUT(updatePayment: {
@@ -202,8 +202,8 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldSetPaymentToUpdatedValue() {
         
-        let payment = makeSimplePayment()
-        let updatedPayment = makeSimplePayment()
+        let payment = makePayment()
+        let updatedPayment = makePayment()
         let sut = makeSUT(updatePayment: { _, _ in updatedPayment })
         
         assertState(sut: sut, makeUpdateEvent(makeUpdate()), on: makePaymentState(payment)) {

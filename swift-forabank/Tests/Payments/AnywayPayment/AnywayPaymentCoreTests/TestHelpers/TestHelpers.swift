@@ -119,7 +119,7 @@ func makePaymentEffect(
 }
 
 func makePaymentState(
-    _ payment: SimplePayment = makeSimplePayment(),
+    _ payment: SimplePayment = makePayment(),
     status: PaymentState<SimplePayment, DocumentStatus, OperationDetails>.Status? = nil
 ) -> PaymentState<SimplePayment, DocumentStatus, OperationDetails> {
     
@@ -137,7 +137,7 @@ func makeResponse(
     )
 }
 
-func makeSimplePayment(
+func makePayment(
     _ value: String = UUID().uuidString
 ) -> SimplePayment {
     
