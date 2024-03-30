@@ -25,7 +25,7 @@ struct OperationDetails: Equatable {
     let value: String
 }
 
-struct SimplePayment: Equatable {
+struct Payment: Equatable {
     
     let value: String
 }
@@ -119,9 +119,9 @@ func makePaymentEffect(
 }
 
 func makePaymentState(
-    _ payment: SimplePayment = makePayment(),
-    status: PaymentState<SimplePayment, DocumentStatus, OperationDetails>.Status? = nil
-) -> PaymentState<SimplePayment, DocumentStatus, OperationDetails> {
+    _ payment: Payment = makePayment(),
+    status: PaymentState<Payment, DocumentStatus, OperationDetails>.Status? = nil
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     .init(payment: payment, status: status)
 }
@@ -139,7 +139,7 @@ func makeResponse(
 
 func makePayment(
     _ value: String = UUID().uuidString
-) -> SimplePayment {
+) -> Payment {
     
     .init(value: value)
 }

@@ -230,13 +230,11 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, SimplePayment, Update>
+    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-    
-    private typealias Payment = SimplePayment
     
     private func makeSUT(
         updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
