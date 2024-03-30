@@ -5,15 +5,21 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-import AnywayPaymentCore
-
-struct PaymentState<Payment, DocumentStatus, OperationDetails> {
+public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     
-    var payment: Payment
-    var status: Status?
+    public var payment: Payment
+    public var status: Status?
+    
+    public init(
+        payment: Payment, 
+        status: Status? = nil
+    ) {
+        self.payment = payment
+        self.status = status
+    }
 }
 
-extension PaymentState {
+public extension PaymentState {
     
     enum Status {
         
@@ -22,7 +28,7 @@ extension PaymentState {
     }
 }
 
-extension PaymentState.Status {
+public extension PaymentState.Status {
     
     enum Terminated: Error {
         
@@ -31,7 +37,7 @@ extension PaymentState.Status {
     }
 }
 
-extension PaymentState.Status {
+public extension PaymentState.Status {
     
     typealias Report = TransactionReport<DocumentStatus, OperationDetails>
 }

@@ -5,14 +5,12 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-import AnywayPaymentCore
-
-final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, Payment, Update> {
+public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
     private let parameterReduce: ParameterReduce
     private let updatePayment: UpdatePayment
     
-    init(
+    public init(
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment
     ) {
@@ -21,7 +19,7 @@ final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEf
     }
 }
 
-extension PaymentReducer {
+public extension PaymentReducer {
     
     func reduce(
         _ state: State,
@@ -46,7 +44,7 @@ extension PaymentReducer {
     }
 }
 
-extension PaymentReducer {
+public extension PaymentReducer {
     
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment

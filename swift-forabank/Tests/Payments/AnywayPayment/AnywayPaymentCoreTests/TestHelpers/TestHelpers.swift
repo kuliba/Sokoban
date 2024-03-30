@@ -140,6 +140,12 @@ func makeParameterEvent(
     .select
 }
 
+func makeParameterPaymentEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .parameter(.select)
+}
+
 func makePaymentEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
 ) -> PaymentEffect<Digest, ParameterEffect> {

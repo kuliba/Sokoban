@@ -77,13 +77,12 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldSetPaymentToParameterReducePayment() {
         
-        let (payment, event) = (makePayment(), makeParameterEvent())
         let newPayment = makePayment()
         let sut = makeSUT(
             parameterReduce: { _,_ in (newPayment, nil) }
         )
         
-        assertState(sut: sut, .parameter(event), on: makePaymentState(payment)) {
+        assertState(sut: sut, makeParameterPaymentEvent(), on: makePaymentState()) {
             
             $0.payment = newPayment
         }
@@ -91,13 +90,12 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldSetEffectToParameterReduceEffect() {
         
-        let (payment, event) = (makePayment(), makeParameterEvent())
         let effect = makeParameterPaymentEffect()
         let sut = makeSUT(
             parameterReduce: { _,_ in (makePayment(), effect) }
         )
         
-        assert(sut: sut, .parameter(event), on: makePaymentState(payment), effect: effect)
+        assert(sut: sut, makeParameterPaymentEvent(), on: makePaymentState(), effect: effect)
     }
     
     // MARK: - update
@@ -122,8 +120,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldCallUpdateWithPaymentAndUpdate() {
         
-        let payment = makePayment()
-        let update = makeUpdate()
+        let (payment, update) = (makePayment(), makeUpdate())
         var updatePayloads = [(payment: Payment, update: Update)]()
         let sut = makeSUT(updatePayment: {
             
@@ -167,7 +164,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, Payment, Update>
+    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
