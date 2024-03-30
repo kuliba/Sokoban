@@ -122,9 +122,16 @@ func makeOperationDetails(
 }
 
 func makeParameterEffect(
+) -> ParameterEffect {
+    
+    .select
+}
+
+func makeParameterPaymentEffect(
+    _ effect: ParameterEffect = makeParameterEffect()
 ) -> PaymentEffect<Digest, ParameterEffect> {
     
-    .parameter(.select)
+    .parameter(effect)
 }
 
 func makeParameterEvent(

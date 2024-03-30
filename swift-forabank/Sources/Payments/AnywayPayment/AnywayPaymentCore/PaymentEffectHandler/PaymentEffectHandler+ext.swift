@@ -12,6 +12,7 @@ public extension PaymentEffectHandler {
     convenience init(
         getDetails: @escaping Performer.GetDetails,
         makeTransfer: @escaping Performer.MakeTransfer,
+        parameterEffectHandle: @escaping ParameterEffectHandle,
         process: @escaping Process
     ) {
         let transactionPerformer = Performer(
@@ -21,6 +22,7 @@ public extension PaymentEffectHandler {
         
         self.init(
             makePayment: transactionPerformer.process,
+            parameterEffectHandle: parameterEffectHandle,
             process: process
         )
     }

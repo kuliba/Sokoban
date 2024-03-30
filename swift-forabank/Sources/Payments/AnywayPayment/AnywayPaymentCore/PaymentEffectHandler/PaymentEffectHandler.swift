@@ -8,13 +8,16 @@
 public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
     
     private let makePayment: MakePayment
+    private let parameterEffectHandle: ParameterEffectHandle
     private let process: Process
     
     public init(
         makePayment: @escaping MakePayment,
+        parameterEffectHandle: @escaping ParameterEffectHandle,
         process: @escaping Process
     ) {
         self.makePayment = makePayment
+        self.parameterEffectHandle = parameterEffectHandle
         self.process = process
     }
 }
@@ -33,8 +36,7 @@ public extension PaymentEffectHandler {
             makePayment(verificationCode, dispatch)
             
         case let .parameter(parameterEffect):
-            #warning("FIXME")
-            break
+            handle(parameterEffect, dispatch)
         }
     }
 }
@@ -48,6 +50,9 @@ public extension PaymentEffectHandler {
     typealias MakePaymentResult = Event.TransactionResult
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
+    
+    typealias ParameterDispatch = (ParameterEvent) -> Void
+    typealias ParameterEffectHandle = (ParameterEffect, @escaping ParameterDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -78,6 +83,18 @@ private extension PaymentEffectHandler {
             guard self != nil else { return }
             
             dispatch(.completePayment($0))
+        }
+    }
+    
+    func handle(
+        _ parameterEffect: ParameterEffect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        parameterEffectHandle(parameterEffect) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            dispatch(.parameter($0))
         }
     }
 }
