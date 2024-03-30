@@ -39,10 +39,14 @@ extension PaymentState.Status: Equatable where DocumentStatus: Equatable, Operat
 
 final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, Payment, Update> {
     
+    private let parameterReduce: ParameterReduce
     private let updatePayment: UpdatePayment
     
-    init(updatePayment: @escaping UpdatePayment) {
-        
+    init(
+        parameterReduce: @escaping ParameterReduce,
+        updatePayment: @escaping UpdatePayment
+    ) {
+        self.parameterReduce = parameterReduce
         self.updatePayment = updatePayment
     }
 }
@@ -62,8 +66,7 @@ extension PaymentReducer {
             reduce(&state, with: transactionResult)
             
         case let .parameter(parameterEvent):
-#warning("FIXME")
-            break
+            reduce(&state, &effect, with: parameterEvent)
             
         case let .update(updateResult):
             reduce(&state, with: updateResult)
@@ -75,6 +78,7 @@ extension PaymentReducer {
 
 extension PaymentReducer {
     
+    typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
     
     typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
@@ -95,6 +99,16 @@ private extension PaymentReducer {
         case let .some(report):
             state.status = .result(.success(report))
         }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: ParameterEvent
+    ) {
+        let (payment, e) = parameterReduce(state.payment, event)
+        state.payment = payment
+        effect = e
     }
     
     func reduce(
@@ -165,6 +179,51 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnOperationDetailsReport() {
         
         assert(completePaymentReportEvent(makeDetailIDTransactionReport()), on: makePaymentState(), effect: nil)
+    }
+    
+    // MARK: - parameter (or field) event
+    
+    func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
+        
+        let (payment, event) = (makePayment(), makeParameterEvent())
+        var payloads = [(payment: Payment, event: ParameterEvent)]()
+        let sut = makeSUT(
+            parameterReduce: { payment, event in
+                
+                payloads.append((payment, event))
+                return (payment, nil)
+            }
+        )
+        
+        _ = sut.reduce(makePaymentState(payment), .parameter(event))
+        
+        XCTAssertNoDiff(payloads.map(\.payment), [payment])
+        XCTAssertNoDiff(payloads.map(\.event), [event])
+    }
+    
+    func test_parameter_shouldSetPaymentToParameterReducePayment() {
+        
+        let (payment, event) = (makePayment(), makeParameterEvent())
+        let newPayment = makePayment()
+        let sut = makeSUT(
+            parameterReduce: { _,_ in (newPayment, nil) }
+        )
+        
+        assertState(sut: sut, .parameter(event), on: makePaymentState(payment)) {
+            
+            $0.payment = newPayment
+        }
+    }
+    
+    func test_parameter_shouldSetEffectToParameterReduceEffect() {
+        
+        let (payment, event) = (makePayment(), makeParameterEvent())
+        let effect = makeParameterPaymentEffect()
+        let sut = makeSUT(
+            parameterReduce: { _,_ in (makePayment(), effect) }
+        )
+        
+        assert(sut: sut, .parameter(event), on: makePaymentState(payment), effect: effect)
     }
     
     // MARK: - update
@@ -241,13 +300,16 @@ final class PaymentReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
-        parameterEventReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
+        parameterReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
         updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(updatePayment: updatePayment)
+        let sut = SUT(
+            parameterReduce: parameterReduce,
+            updatePayment: updatePayment
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
