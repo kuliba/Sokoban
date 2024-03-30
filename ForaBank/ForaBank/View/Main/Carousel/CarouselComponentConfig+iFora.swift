@@ -18,23 +18,23 @@ extension CarouselComponentConfig {
             ),
             group: .init(
                 spacing: 8,
-                buttonFont: .footnote,
-                shadowForeground: Color(red: 0.11, green: 0.11, blue: 0.11),
-                buttonForegroundPrimary: Color(red: 0.91, green: 0.92, blue: 0.92),
-                buttonForegroundSecondary: Color(red: 28/255, green: 28/255, blue: 28/255),
-                buttonIconForeground: Color(red: 0.91, green: 0.92, blue: 0.92)
+                buttonFont: .textBodyMM14200(),
+                shadowForeground: Color(hex: "#1C1C1C"),
+                buttonForegroundPrimary: .bordersDivider,
+                buttonForegroundSecondary: .textSecondary,
+                buttonIconForeground: .textSecondary
             ),
             spoilerImage: .ic24ChevronsLeft,
-            separatorForeground: Color(red: 0.91, green: 0.92, blue: 0.92),
+            separatorForeground: .bordersDivider,
             productDimensions: .small),
-        selector: .init(
-            optionConfig: .init(
-                frameHeight: 24,
-                textFont: .caption2,
-                textForeground: Color(red: 0.6, green: 0.6, blue: 0.6),
-                textForegroundSelected: Color(red: 0.11, green: 0.11, blue: 0.11),
-                shapeForeground: .white,
-                shapeForegroundSelected: Color(red: 0.96, green: 0.96, blue: 0.96)
+              selector: .init(
+                optionConfig: .init(
+                    frameHeight: 24,
+                    textFont: .textBodySR12160(),
+                    textForeground: .textPlaceholder,
+                    textForegroundSelected: .textSecondary,
+                    shapeForeground: .white,
+                    shapeForegroundSelected: .mainColorsGrayLightest
             ),
             itemSpacing: 8
         )
