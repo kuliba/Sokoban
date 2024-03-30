@@ -159,10 +159,10 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         XCTAssert(received.isEmpty)
     }
-    
+
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update>
+    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
     
     private typealias Processing = Spy<Digest, SUT.ProcessResult>
     private typealias PaymentMaker = Spy<VerificationCode, SUT.MakePaymentResult>
@@ -211,17 +211,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) {
         let (sut, processing, _) = makeSUT()
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) {
-            
-            XCTAssertNoDiff(expectedEvent, $0, "Expected \(expectedEvent), but got \($0) instead.", file: file, line: line)
-            exp.fulfill()
-        }
-        
-        processing.complete(with: processingResult)
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toDeliver: expectedEvent, for: effect, on: { processing.complete(with: processingResult) }, file: file, line: line)
     }
     
     private func expect(
@@ -232,6 +222,17 @@ final class PaymentEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) {
         let (sut, _, makePayment) = makeSUT()
+        expect(sut, toDeliver: expectedEvent, for: effect, on: { makePayment.complete(with: makePaymentResult) }, file: file, line: line)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        toDeliver expectedEvent: SUT.Event,
+        for effect: SUT.Effect,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
         let exp = expectation(description: "wait for completion")
         
         sut.handleEffect(effect) {
@@ -240,7 +241,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
             exp.fulfill()
         }
         
-        makePayment.complete(with: makePaymentResult)
+        action()
         
         wait(for: [exp], timeout: 1)
     }
@@ -248,7 +249,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
 
 private func transactionReportEvent(
     _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
-) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(transactionReport)
 }

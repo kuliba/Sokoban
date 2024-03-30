@@ -37,7 +37,7 @@ extension PaymentState.Status {
 extension PaymentState: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
 extension PaymentState.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
 
-final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update> {
+final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, Payment, Update> {
     
     private let updatePayment: UpdatePayment
     
@@ -61,6 +61,10 @@ extension PaymentReducer {
         case let .completePayment(transactionResult):
             reduce(&state, with: transactionResult)
             
+        case let .parameter(parameterEvent):
+#warning("FIXME")
+            break
+            
         case let .update(updateResult):
             reduce(&state, with: updateResult)
         }
@@ -74,8 +78,8 @@ extension PaymentReducer {
     typealias UpdatePayment = (Payment, Update) -> Payment
     
     typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
-    typealias Effect = PaymentEffect<Digest>
+    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
+    typealias Effect = PaymentEffect<Digest, ParameterEffect>
 }
 
 private extension PaymentReducer {
@@ -230,13 +234,14 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, Payment, Update>
+    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, Payment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        parameterEventReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
         updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
         file: StaticString = #file,
         line: UInt = #line

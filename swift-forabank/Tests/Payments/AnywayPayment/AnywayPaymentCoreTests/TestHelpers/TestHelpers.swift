@@ -25,6 +25,16 @@ struct OperationDetails: Equatable {
     let value: String
 }
 
+enum ParameterEffect {
+    
+    case select
+}
+
+enum ParameterEvent {
+    
+    case select
+}
+
 struct Payment: Equatable {
     
     let value: String
@@ -38,21 +48,21 @@ struct Update: Equatable {
 // MARK: - Factories
 
 func completePaymentFailureEvent(
-) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(nil)
 }
 
 func completePaymentReportEvent(
     _ report: TransactionReport<DocumentStatus, OperationDetails>
-) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(report)
 }
 
 func continueEffect(
     _ digest: Digest = makeDigest()
-) -> PaymentEffect<Digest> {
+) -> PaymentEffect<Digest, ParameterEffect> {
     
     .continue(digest)
 }
@@ -111,9 +121,21 @@ func makeOperationDetails(
     .init(value: value)
 }
 
+func makeParameterEffect(
+) -> PaymentEffect<Digest, ParameterEffect> {
+    
+    .parameter(.select)
+}
+
+func makeParameterEvent(
+) -> ParameterEvent {
+    
+    .select
+}
+
 func makePaymentEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
-) -> PaymentEffect<Digest> {
+) -> PaymentEffect<Digest, ParameterEffect> {
     
     .makePayment(verificationCode)
 }
@@ -160,7 +182,7 @@ func makeUpdate(
 
 func makeUpdateFailureEvent(
     _ message: String? = nil
-) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     if let message {
         return .update(.failure(.serverError(message)))
@@ -171,7 +193,7 @@ func makeUpdateFailureEvent(
 
 func makeUpdateEvent(
     _ update: Update = makeUpdate()
-) -> PaymentEvent<DocumentStatus, OperationDetails, Update> {
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .update(.success(update))
 }

@@ -170,7 +170,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update>
+    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
     
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.Performer.MakeTransferResult>
     private typealias GetDetailsSpy = Spy<SUT.Performer.PaymentOperationDetailID, SUT.Performer.GetDetailsResult>
@@ -212,17 +212,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.handleEffect(effect) {
-            
-            XCTAssertNoDiff(expectedEvent, $0, "Expected \(expectedEvent), but got \($0) instead.", file: file, line: line)
-            exp.fulfill()
-        }
-        
-        processing.complete(with: processingResult)
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut, toDeliver: expectedEvent, for: effect, on: { processing.complete(with: processingResult) }, file: file, line: line)
     }
     
     private func expect(

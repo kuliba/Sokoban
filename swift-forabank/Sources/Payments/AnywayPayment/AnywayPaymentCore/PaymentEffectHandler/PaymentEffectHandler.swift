@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update> {
+public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
     
     private let makePayment: MakePayment
     private let process: Process
@@ -31,6 +31,10 @@ public extension PaymentEffectHandler {
             
         case let .makePayment(verificationCode):
             makePayment(verificationCode, dispatch)
+            
+        case let .parameter(parameterEffect):
+            #warning("FIXME")
+            break
         }
     }
 }
@@ -47,8 +51,8 @@ public extension PaymentEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, Update>
-    typealias Effect = PaymentEffect<Digest>
+    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
+    typealias Effect = PaymentEffect<Digest, ParameterEffect>
 }
 
 private extension PaymentEffectHandler {
