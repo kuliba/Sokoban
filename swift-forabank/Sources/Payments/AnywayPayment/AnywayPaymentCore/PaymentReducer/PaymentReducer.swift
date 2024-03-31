@@ -18,16 +18,12 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         self.parameterReduce = {
          
             let (payment, effect) = parameterReduce($0, $1)
-            let isValid = validate(payment)
-            
-            return (payment, effect, isValid)
+            return (payment, effect, validate(payment))
         }
         self.adaptedUpdatePayments = {
             
             let updated = updatePayment($0, $1)
-            let isValid = validate(updated)
-            
-            return (updated, isValid)
+            return (updated, validate(updated))
         }
     }
 }
