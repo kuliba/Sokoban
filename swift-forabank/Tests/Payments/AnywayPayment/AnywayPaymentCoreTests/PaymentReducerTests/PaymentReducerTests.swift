@@ -75,12 +75,29 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNoDiff(payloads.map(\.event), [event])
     }
     
+    func test_parameter_shouldCallValidateWithUpdatedPayment() {
+        
+        let (payment, updated) = (makePayment(), makePayment())
+        var payloads = [Payment]()
+        let sut = makeSUT(
+            parameterReduce: { _,_ in return (updated, nil) },
+            validate: {
+                
+                payloads.append($0)
+                return false
+            }
+        )
+        
+        _ = sut.reduce(makePaymentState(payment), .parameter(makeParameterEvent()))
+        
+        XCTAssertNoDiff(payloads, [updated])
+        XCTAssertNotEqual(payment, updated)
+    }
+    
     func test_parameter_shouldSetPaymentToParameterReducePayment() {
         
         let newPayment = makePayment()
-        let sut = makeSUT(
-            parameterReduce: { _,_ in (newPayment, nil) }
-        )
+        let sut = makeSUT(parameterReduce: { _,_ in (newPayment, nil) })
         
         assertState(sut: sut, makeParameterPaymentEvent(), on: makePaymentState()) {
             
@@ -91,11 +108,27 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldSetEffectToParameterReduceEffect() {
         
         let effect = makeParameterPaymentEffect()
-        let sut = makeSUT(
-            parameterReduce: { _,_ in (makePayment(), effect) }
-        )
+        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), effect) })
         
         assert(sut: sut, makeParameterPaymentEvent(), on: makePaymentState(), effect: effect)
+    }
+    
+    func test_parameter_shouldSetPaymentValidationToValidateResult_notValid() {
+        
+        let sut = makeSUT(validate: { _ in false })
+        
+        let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
+        
+        XCTAssertFalse(isValid(state))
+    }
+    
+    func test_parameter_shouldSetPaymentValidationToValidateResult_valid() {
+        
+        let sut = makeSUT(validate: { _ in true })
+        
+        let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
+        
+        XCTAssertTrue(isValid(state))
     }
     
     // MARK: - update
@@ -173,13 +206,15 @@ final class PaymentReducerTests: XCTestCase {
     private func makeSUT(
         parameterReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
         updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
+        validate: @escaping (Payment) -> Bool = { _ in false },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
         let sut = SUT(
             parameterReduce: parameterReduce,
-            updatePayment: updatePayment
+            updatePayment: updatePayment,
+            validate: validate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

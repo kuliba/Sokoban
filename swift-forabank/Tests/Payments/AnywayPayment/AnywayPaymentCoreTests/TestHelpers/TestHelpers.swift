@@ -67,6 +67,13 @@ func continueEffect(
     .continue(digest)
 }
 
+func isValid(
+    _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
+) -> Bool {
+    
+    state.isValid
+}
+
 func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> TransactionReport<DocumentStatus, OperationDetails>.Details.PaymentOperationDetailID {

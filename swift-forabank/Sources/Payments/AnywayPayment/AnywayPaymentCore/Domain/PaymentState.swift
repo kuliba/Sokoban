@@ -8,13 +8,16 @@
 public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     public var payment: Payment
+    public var isValid: Bool
     public var status: Status?
     
     public init(
-        payment: Payment, 
+        payment: Payment,
+        isValid: Bool = false,
         status: Status? = nil
     ) {
         self.payment = payment
+        self.isValid = isValid
         self.status = status
     }
 }
