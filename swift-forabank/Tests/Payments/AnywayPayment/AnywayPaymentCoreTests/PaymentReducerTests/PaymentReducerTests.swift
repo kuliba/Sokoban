@@ -318,7 +318,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
-        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(
             parameterReduce: { _,_ in return (updated, nil) },
             validatePayment: validatePaymentSpy.call
@@ -412,7 +412,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallValidateOnConnectivityErrorFailure() {
         
-        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
@@ -422,7 +422,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallFraudCheckOnConnectivityErrorFailure() {
         
-        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
@@ -447,7 +447,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallValidateOnServerErrorFailure() {
         
-        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call(payload:))
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
@@ -457,7 +457,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallFraudCheckOnServerErrorFailure() {
         
-        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
@@ -480,7 +480,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
-        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(
             updatePayment: { _, _ in updated },
             validatePayment: validatePaymentSpy.call
@@ -492,15 +492,15 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNotEqual(payment, updated)
     }
     
-    func test_update_shouldCallFraudCheckWithUpdate() {
+    func test_update_shouldCallFraudCheckWithUpdated() {
         
         let update = makeUpdate()
-        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makePaymentState(), makeUpdateEvent(update))
+        let (updated, _) = sut.reduce(makePaymentState(), makeUpdateEvent(update))
         
-        XCTAssertNoDiff(checkFraudSpy.payloads, [update])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.payment])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -620,8 +620,10 @@ final class PaymentReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias CheckFraudSpy = CallSpy<Payment, Bool>
     private typealias ParameterReduceSpy = CallSpy<(Payment, ParameterEvent), (Payment, SUT.Effect?)>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
+    private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },

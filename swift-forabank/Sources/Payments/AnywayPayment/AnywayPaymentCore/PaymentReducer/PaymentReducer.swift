@@ -70,7 +70,7 @@ public extension PaymentReducer {
 
 public extension PaymentReducer {
     
-    typealias CheckFraud = (Update) -> Bool
+    typealias CheckFraud = (Payment) -> Bool
     typealias MakeDigest = (Payment) -> Digest
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
@@ -154,7 +154,7 @@ private extension PaymentReducer {
             let updated = updatePayment(state.payment, update)
             state.payment = updated
             state.isValid = validatePayment(updated)
-            state.status = checkFraud(update) ? .fraudSuspected : nil
+            state.status = checkFraud(updated) ? .fraudSuspected : nil
         }
     }
 }
