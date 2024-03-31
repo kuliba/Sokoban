@@ -169,16 +169,12 @@ final class PaymentReducerTests: XCTestCase {
     func test_continue_shouldCallMakeDigestWithPaymentOnValidPayment() {
         
         let payment = makePayment()
-        var payloads = [Payment]()
-        let sut = makeSUT(makeDigest: {
-        
-            payloads.append($0)
-            return makeDigest()
-        })
+        let makeDigestSpy = CallSpy<Payment, Digest>(response: makeDigest())
+        let sut = makeSUT(makeDigest: makeDigestSpy.call)
         
         _ = sut.reduce(makeValidPaymentState(payment), .continue)
         
-        XCTAssertNoDiff(payloads, [payment])
+        XCTAssertNoDiff(makeDigestSpy.payloads, [payment])
     }
     
     // MARK: - fraud
@@ -257,37 +253,27 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
         
         let (payment, event) = (makePayment(), makeParameterEvent())
-        var payloads = [(payment: Payment, event: ParameterEvent)]()
-        let sut = makeSUT(
-            parameterReduce: { payment, event in
-                
-                payloads.append((payment, event))
-                return (payment, nil)
-            }
-        )
+        let parameterReduceSpy = ParameterReduceSpy(response: (payment, nil))
+        let sut = makeSUT(parameterReduce: parameterReduceSpy.call)
         
         _ = sut.reduce(makePaymentState(payment), .parameter(event))
         
-        XCTAssertNoDiff(payloads.map(\.payment), [payment])
-        XCTAssertNoDiff(payloads.map(\.event), [event])
+        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.0), [payment])
+        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.1), [event])
     }
     
     func test_parameter_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
-        var payloads = [Payment]()
+        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
         let sut = makeSUT(
             parameterReduce: { _,_ in return (updated, nil) },
-            validatePayment: {
-                
-                payloads.append($0)
-                return false
-            }
+            validatePayment: validatePaymentSpy.call
         )
         
         _ = sut.reduce(makePaymentState(payment), .parameter(makeParameterEvent()))
         
-        XCTAssertNoDiff(payloads, [updated])
+        XCTAssertNoDiff(validatePaymentSpy.payloads, [updated])
         XCTAssertNotEqual(payment, updated)
     }
     
@@ -359,34 +345,22 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallValidateOnConnectivityErrorFailure() {
         
-        var payloads = [Payment]()
-        let sut = makeSUT(
-            validatePayment: {
-                
-                payloads.append($0)
-                return false
-            }
-        )
+        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let sut = makeSUT(validatePayment: validatePaymentSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
         
-        XCTAssert(payloads.isEmpty)
+        XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
     
     func test_update_shouldNotCallFraudCheckOnConnectivityErrorFailure() {
         
-        var payloads = [Update]()
-        let sut = makeSUT(
-            checkFraud: {
-                
-                payloads.append($0)
-                return false
-            }
-        )
+        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
         
-        XCTAssert(payloads.isEmpty)
+        XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatusOnServerErrorFailure() {
@@ -406,88 +380,60 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotCallValidateOnServerErrorFailure() {
         
-        let message = anyMessage()
-        var payloads = [Payment]()
-        let sut = makeSUT(
-            validatePayment: {
-                
-                payloads.append($0)
-                return false
-            }
-        )
+        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
+        let sut = makeSUT(validatePayment: validatePaymentSpy.call(payload:))
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
         
-        XCTAssert(payloads.isEmpty)
+        XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
     
     func test_update_shouldNotCallFraudCheckOnServerErrorFailure() {
         
-        let message = anyMessage()
-        var payloads = [Update]()
-        let sut = makeSUT(
-            checkFraud: {
-                
-                payloads.append($0)
-                return false
-            }
-        )
+        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
         
-        XCTAssert(payloads.isEmpty)
+        XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
     
     func test_update_shouldCallUpdateWithPaymentAndUpdate() {
         
         let (payment, update) = (makePayment(), makeUpdate())
-        var updatePayloads = [(payment: Payment, update: Update)]()
-        let sut = makeSUT(updatePayment: {
-            
-            updatePayloads.append(($0, $1))
-            return $0
-        })
+        let updatePaymentSpy = UpdatePaymentSpy(response: makePayment())
+        let sut = makeSUT(updatePayment: updatePaymentSpy.call)
         
         _ = sut.reduce(makePaymentState(payment), makeUpdateEvent(update))
         
-        XCTAssertNoDiff(updatePayloads.map(\.payment), [payment])
-        XCTAssertNoDiff(updatePayloads.map(\.update), [update])
+        XCTAssertNoDiff(updatePaymentSpy.payloads.map(\.0), [payment])
+        XCTAssertNoDiff(updatePaymentSpy.payloads.map(\.1), [update])
     }
     
     func test_update_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
-        var payloads = [Payment]()
+        let validatePaymentSpy = CallSpy<Payment, Bool>(response: false)
         let sut = makeSUT(
             updatePayment: { _, _ in updated },
-            validatePayment: {
-                
-                payloads.append($0)
-                return false
-            }
+            validatePayment: validatePaymentSpy.call
         )
         
         _ = sut.reduce(makePaymentState(payment), makeUpdateEvent())
         
-        XCTAssertNoDiff(payloads, [updated])
+        XCTAssertNoDiff(validatePaymentSpy.payloads, [updated])
         XCTAssertNotEqual(payment, updated)
     }
     
     func test_update_shouldCallFraudCheckWithUpdate() {
         
         let update = makeUpdate()
-        var payloads = [Update]()
-        let sut = makeSUT(
-            checkFraud: {
-                
-                payloads.append($0)
-                return false
-            }
-        )
+        let checkFraudSpy = CallSpy<Update, Bool>(response: false)
+        let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
         _ = sut.reduce(makePaymentState(), makeUpdateEvent(update))
         
-        XCTAssertNoDiff(payloads, [update])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [update])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -582,6 +528,9 @@ final class PaymentReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
+    
+    private typealias ParameterReduceSpy = CallSpy<(Payment, ParameterEvent), (Payment, SUT.Effect?)>
+    private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
     
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
