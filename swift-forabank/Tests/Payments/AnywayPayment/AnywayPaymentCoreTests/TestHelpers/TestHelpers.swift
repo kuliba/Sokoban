@@ -74,6 +74,13 @@ func isValid(
     state.isValid
 }
 
+func isFraudSuspected(
+    _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
+) -> Bool {
+    
+    state.status == .fraudSuspected
+}
+
 func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> TransactionReport<DocumentStatus, OperationDetails>.Details.PaymentOperationDetailID {

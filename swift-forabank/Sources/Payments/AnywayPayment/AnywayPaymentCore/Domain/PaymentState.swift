@@ -26,6 +26,7 @@ public extension PaymentState {
     
     enum Status {
         
+        case fraudSuspected
         case result(Result<Report, Terminated>)
         case serverError(String)
     }

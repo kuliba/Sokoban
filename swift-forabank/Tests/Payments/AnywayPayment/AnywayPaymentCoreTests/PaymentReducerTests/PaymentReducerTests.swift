@@ -161,7 +161,11 @@ final class PaymentReducerTests: XCTestCase {
         
         var payloads = [Update]()
         let sut = makeSUT(
-            checkFraud: { payloads.append($0) }
+            checkFraud: {
+                
+                payloads.append($0)
+                return false
+            }
         )
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
@@ -201,7 +205,11 @@ final class PaymentReducerTests: XCTestCase {
         let message = anyMessage()
         var payloads = [Update]()
         let sut = makeSUT(
-            checkFraud: { payloads.append($0) }
+            checkFraud: {
+                
+                payloads.append($0)
+                return false
+            }
         )
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
@@ -249,7 +257,11 @@ final class PaymentReducerTests: XCTestCase {
         let update = makeUpdate()
         var payloads = [Update]()
         let sut = makeSUT(
-            checkFraud: { payloads.append($0) }
+            checkFraud: {
+                
+                payloads.append($0)
+                return false
+            }
         )
         
         _ = sut.reduce(makePaymentState(), makeUpdateEvent(update))
@@ -287,6 +299,24 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertTrue(isValid(state))
     }
     
+    func test_update_shouldSetFraudToCheckFraudResult_notSuspected() {
+        
+        let sut = makeSUT(checkFraud: { _ in false })
+        
+        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        
+        XCTAssertFalse(isFraudSuspected(state))
+    }
+    
+    func test_update_shouldSetFraudToCheckFraudResult_suspected() {
+        
+        let sut = makeSUT(checkFraud: { _ in true })
+        
+        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        
+        XCTAssertTrue(isFraudSuspected(state))
+    }
+    
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         assert(makeUpdateFailureEvent(), on: makePaymentState(), effect: nil)
@@ -311,10 +341,10 @@ final class PaymentReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
-        checkFraud: @escaping (Update) -> Void = { _ in },
-        parameterReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
-        updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
-        validate: @escaping (Payment) -> Bool = { _ in false },
+        checkFraud: @escaping SUT.CheckFraud = { _ in false },
+        parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
+        updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
+        validate: @escaping SUT.Validate = { _ in false },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {

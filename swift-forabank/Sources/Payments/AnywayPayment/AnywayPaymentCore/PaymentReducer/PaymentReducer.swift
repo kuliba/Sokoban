@@ -8,7 +8,7 @@
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
     private let parameterReduce: AdaptedParameterReduce
-    private let adaptedUpdatePayments: AdaptedUpdatePayment
+    private let adaptedUpdatePayment: AdaptedUpdatePayment
     
     public init(
         checkFraud: @escaping CheckFraud,
@@ -17,15 +17,14 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         validate: @escaping Validate
     ) {
         self.parameterReduce = {
-         
+            
             let (payment, effect) = parameterReduce($0, $1)
             return (payment, effect, validate(payment))
         }
-        self.adaptedUpdatePayments = {
+        self.adaptedUpdatePayment = {
             
             let updated = updatePayment($0, $1)
-            checkFraud($1)
-            return (updated, validate(updated))
+            return (updated, validate(updated), checkFraud($1) ? .fraudSuspected : nil)
         }
     }
 }
@@ -55,15 +54,17 @@ public extension PaymentReducer {
     }
 }
 
+private extension PaymentReducer {
+    
+    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
+    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool, State.Status?)
+}
+
 public extension PaymentReducer {
     
-    typealias CheckFraud = (Update) -> Void
-    
+    typealias CheckFraud = (Update) -> Bool
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
-    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
-    
     typealias UpdatePayment = (Payment, Update) -> Payment
-    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool)
     
     typealias Validate = (Payment) -> Bool
     
@@ -110,7 +111,7 @@ private extension PaymentReducer {
             }
             
         case let .success(update):
-            (state.payment, state.isValid) = adaptedUpdatePayments(state.payment, update)
+            (state.payment, state.isValid, state.status) = adaptedUpdatePayment(state.payment, update)
         }
     }
 }
