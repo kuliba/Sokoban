@@ -141,6 +141,22 @@ final class PaymentReducerTests: XCTestCase {
         }
     }
     
+    func test_update_shouldNotCallValidateOnConnectivityErrorFailure() {
+        
+        var payloads = [Payment]()
+        let sut = makeSUT(
+            validate: {
+                
+                payloads.append($0)
+                return false
+            }
+        )
+        
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
+        
+        XCTAssert(payloads.isEmpty)
+    }
+    
     func test_update_shouldChangeStatusToServerErrorOnServerErrorFailure() {
         
         let message = anyMessage()
@@ -149,6 +165,23 @@ final class PaymentReducerTests: XCTestCase {
             
             $0.status = .serverError(message)
         }
+    }
+    
+    func test_update_shouldNotCallValidateOnServerErrorFailure() {
+        
+        let message = anyMessage()
+        var payloads = [Payment]()
+        let sut = makeSUT(
+            validate: {
+                
+                payloads.append($0)
+                return false
+            }
+        )
+        
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
+        
+        XCTAssert(payloads.isEmpty)
     }
     
     func test_update_shouldCallUpdateWithPaymentAndUpdate() {
@@ -167,17 +200,53 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNoDiff(updatePayloads.map(\.update), [update])
     }
     
+    func test_update_shouldCallValidateWithUpdatedPayment() {
+        
+        let (payment, updated) = (makePayment(), makePayment())
+        var payloads = [Payment]()
+        let sut = makeSUT(
+            updatePayment: { _, _ in updated },
+            validate: {
+                
+                payloads.append($0)
+                return false
+            }
+        )
+        
+        _ = sut.reduce(makePaymentState(payment), makeUpdateEvent())
+        
+        XCTAssertNoDiff(payloads, [updated])
+        XCTAssertNotEqual(payment, updated)
+    }
+
     func test_update_shouldSetPaymentToUpdatedValue() {
         
-        let payment = makePayment()
-        let updatedPayment = makePayment()
-        let sut = makeSUT(updatePayment: { _, _ in updatedPayment })
+        let (payment, updated) = (makePayment(), makePayment())
+        let sut = makeSUT(updatePayment: { _, _ in updated })
         
-        assertState(sut: sut, makeUpdateEvent(makeUpdate()), on: makePaymentState(payment)) {
+        assertState(sut: sut, makeUpdateEvent(), on: makePaymentState(payment)) {
             
-            $0.payment = updatedPayment
+            $0.payment = updated
         }
-        XCTAssertNotEqual(payment, updatedPayment)
+        XCTAssertNotEqual(payment, updated)
+    }
+    
+    func test_update_shouldSetPaymentValidationToValidateResult_notValid() {
+        
+        let sut = makeSUT(validate: { _ in false })
+        
+        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        
+        XCTAssertFalse(isValid(state))
+    }
+    
+    func test_update_shouldSetPaymentValidationToValidateResult_valid() {
+        
+        let sut = makeSUT(validate: { _ in true })
+        
+        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        
+        XCTAssertTrue(isValid(state))
     }
     
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {

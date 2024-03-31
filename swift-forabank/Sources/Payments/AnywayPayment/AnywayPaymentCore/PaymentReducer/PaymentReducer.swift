@@ -99,7 +99,9 @@ private extension PaymentReducer {
             }
             
         case let .success(update):
-            state.payment = updatePayment(state.payment, update)
+            let updatedPayment = updatePayment(state.payment, update)
+            state.payment = updatedPayment
+            state.isValid = validate(updatedPayment)
         }
     }
 }
