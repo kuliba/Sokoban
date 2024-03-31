@@ -7,16 +7,21 @@
 
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
-    private let parameterReduce: ParameterReduce
+    private let parameterReduce: AdaptedParameterReduce
     private let adaptedUpdatePayments: AdaptedUpdatePayment
-    private let validate: Validate
     
     public init(
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment,
         validate: @escaping Validate
     ) {
-        self.parameterReduce = parameterReduce
+        self.parameterReduce = {
+         
+            let (payment, effect) = parameterReduce($0, $1)
+            let isValid = validate(payment)
+            
+            return (payment, effect, isValid)
+        }
         self.adaptedUpdatePayments = {
             
             let updated = updatePayment($0, $1)
@@ -24,7 +29,6 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
             
             return (updated, isValid)
         }
-        self.validate = validate
     }
 }
 
@@ -56,6 +60,7 @@ public extension PaymentReducer {
 public extension PaymentReducer {
     
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
+    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
     
     typealias UpdatePayment = (Payment, Update) -> Payment
     typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool)
@@ -87,10 +92,7 @@ private extension PaymentReducer {
         _ effect: inout Effect?,
         with event: ParameterEvent
     ) {
-        let (payment, e) = parameterReduce(state.payment, event)
-        state.payment = payment
-        state.isValid = validate(payment)
-        effect = e
+        (state.payment, effect, state.isValid) = parameterReduce(state.payment, event)
     }
     
     func reduce(
