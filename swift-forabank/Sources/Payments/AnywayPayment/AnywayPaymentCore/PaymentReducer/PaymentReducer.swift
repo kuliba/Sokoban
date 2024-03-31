@@ -11,6 +11,7 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
     private let adaptedUpdatePayments: AdaptedUpdatePayment
     
     public init(
+        checkFraud: @escaping CheckFraud,
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment,
         validate: @escaping Validate
@@ -23,6 +24,7 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         self.adaptedUpdatePayments = {
             
             let updated = updatePayment($0, $1)
+            checkFraud($1)
             return (updated, validate(updated))
         }
     }
@@ -54,6 +56,8 @@ public extension PaymentReducer {
 }
 
 public extension PaymentReducer {
+    
+    typealias CheckFraud = (Update) -> Void
     
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)

@@ -157,6 +157,18 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssert(payloads.isEmpty)
     }
     
+    func test_update_shouldNotCallFraudCheckOnConnectivityErrorFailure() {
+        
+        var payloads = [Update]()
+        let sut = makeSUT(
+            checkFraud: { payloads.append($0) }
+        )
+        
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
+        
+        XCTAssert(payloads.isEmpty)
+    }
+    
     func test_update_shouldChangeStatusToServerErrorOnServerErrorFailure() {
         
         let message = anyMessage()
@@ -181,6 +193,19 @@ final class PaymentReducerTests: XCTestCase {
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
         
+        XCTAssert(payloads.isEmpty)
+    }
+    
+    func test_update_shouldNotCallFraudCheckOnServerErrorFailure() {
+        
+        let message = anyMessage()
+        var payloads = [Update]()
+        let sut = makeSUT(
+            checkFraud: { payloads.append($0) }
+        )
+        
+        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
+
         XCTAssert(payloads.isEmpty)
     }
     
@@ -219,6 +244,19 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNotEqual(payment, updated)
     }
 
+    func test_update_shouldCallFraudCheckWithUpdate() {
+        
+        let update = makeUpdate()
+        var payloads = [Update]()
+        let sut = makeSUT(
+            checkFraud: { payloads.append($0) }
+        )
+        
+        _ = sut.reduce(makePaymentState(), makeUpdateEvent(update))
+
+        XCTAssertNoDiff(payloads, [update])
+    }
+    
     func test_update_shouldSetPaymentToUpdatedValue() {
         
         let (payment, updated) = (makePayment(), makePayment())
@@ -273,6 +311,7 @@ final class PaymentReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
+        checkFraud: @escaping (Update) -> Void = { _ in },
         parameterReduce: @escaping (Payment, ParameterEvent) -> (Payment, Effect?) = { payment, _ in (payment, nil) },
         updatePayment: @escaping ((Payment, Update) -> Payment) = { payment, _ in payment },
         validate: @escaping (Payment) -> Bool = { _ in false },
@@ -281,6 +320,7 @@ final class PaymentReducerTests: XCTestCase {
     ) -> SUT {
         
         let sut = SUT(
+            checkFraud: checkFraud,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,
             validate: validate
