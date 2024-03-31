@@ -7,9 +7,11 @@
 
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
-    private let parameterReduce: AdaptedParameterReduce
+    private let checkFraud: CheckFraud
     private let makeDigest: MakeDigest
-    private let adaptedUpdatePayment: AdaptedUpdatePayment
+    private let parameterReduce: ParameterReduce
+    private let updatePayment: UpdatePayment
+    private let validatePayment: ValidatePayment
     
     public init(
         checkFraud: @escaping CheckFraud,
@@ -18,17 +20,11 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
+        self.checkFraud = checkFraud
         self.makeDigest = makeDigest
-        self.parameterReduce = {
-            
-            let (payment, effect) = parameterReduce($0, $1)
-            return (payment, effect, validatePayment(payment))
-        }
-        self.adaptedUpdatePayment = {
-            
-            let updated = updatePayment($0, $1)
-            return (updated, validatePayment(updated), checkFraud($1) ? .fraudSuspected : nil)
-        }
+        self.parameterReduce = parameterReduce
+        self.updatePayment = updatePayment
+        self.validatePayment = validatePayment
     }
 }
 
@@ -88,12 +84,6 @@ public extension PaymentReducer {
 
 private extension PaymentReducer {
     
-    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
-    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool, State.Status?)
-}
-
-private extension PaymentReducer {
-    
     func reduce(
         _ state: inout State,
         with transactionResult: Event.TransactionResult
@@ -131,7 +121,10 @@ private extension PaymentReducer {
         _ effect: inout Effect?,
         with event: ParameterEvent
     ) {
-        (state.payment, effect, state.isValid) = parameterReduce(state.payment, event)
+        let payment: Payment
+        (payment, effect) = parameterReduce(state.payment, event)
+        state.payment = payment
+        state.isValid = validatePayment(payment)
     }
     
     func reduceContinue(
@@ -158,7 +151,10 @@ private extension PaymentReducer {
             }
             
         case let .success(update):
-            (state.payment, state.isValid, state.status) = adaptedUpdatePayment(state.payment, update)
+            let updated = updatePayment(state.payment, update)
+            state.payment = updated
+            state.isValid = validatePayment(updated)
+            state.status = checkFraud(update) ? .fraudSuspected : nil
         }
     }
 }
