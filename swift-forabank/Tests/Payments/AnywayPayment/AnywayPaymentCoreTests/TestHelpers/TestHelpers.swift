@@ -67,6 +67,15 @@ func continueEffect(
     .continue(digest)
 }
 
+func makeFraudSuspectedPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, status: .fraudSuspected)
+    precondition(state.status == .fraudSuspected)
+    return state
+}
+    
 func isValid(
     _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
 ) -> Bool {

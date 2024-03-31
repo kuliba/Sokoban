@@ -39,17 +39,22 @@ public extension PaymentReducer {
         var state = state
         var effect: Effect?
         
-        switch event {
-        case let .completePayment(transactionResult):
-            reduce(&state, with: transactionResult)
+        switch (state.status, event) {
+        case (.fraudSuspected, _):
+            break
             
-        case let .parameter(parameterEvent):
-            reduce(&state, &effect, with: parameterEvent)
-            
-        case let .update(updateResult):
-            reduce(&state, with: updateResult)
+        default:
+            switch event {
+            case let .completePayment(transactionResult):
+                reduce(&state, with: transactionResult)
+                
+            case let .parameter(parameterEvent):
+                reduce(&state, &effect, with: parameterEvent)
+                
+            case let .update(updateResult):
+                reduce(&state, with: updateResult)
+            }
         }
-        
         return (state, effect)
     }
 }
