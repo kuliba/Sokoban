@@ -8,14 +8,17 @@
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
     private let parameterReduce: AdaptedParameterReduce
+    private let makeDigest: MakeDigest
     private let adaptedUpdatePayment: AdaptedUpdatePayment
     
     public init(
         checkFraud: @escaping CheckFraud,
+        makeDigest: @escaping MakeDigest,
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
+        self.makeDigest = makeDigest
         self.parameterReduce = {
             
             let (payment, effect) = parameterReduce($0, $1)
@@ -52,6 +55,9 @@ public extension PaymentReducer {
         case let (_, .completePayment(transactionResult)):
             reduce(&state, with: transactionResult)
             
+        case (_, .continue):
+            reduceContinue(&state, &effect)
+            
         case let (_, .parameter(parameterEvent)):
             reduce(&state, &effect, with: parameterEvent)
             
@@ -69,6 +75,7 @@ public extension PaymentReducer {
 public extension PaymentReducer {
     
     typealias CheckFraud = (Update) -> Bool
+    typealias MakeDigest = (Payment) -> Digest
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
     
@@ -125,6 +132,15 @@ private extension PaymentReducer {
         with event: ParameterEvent
     ) {
         (state.payment, effect, state.isValid) = parameterReduce(state.payment, event)
+    }
+    
+    func reduceContinue(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        guard state.isValid, state.status == nil else { return }
+        
+        effect = .continue(makeDigest(state.payment))
     }
     
     func reduce(

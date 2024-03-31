@@ -8,6 +8,7 @@
 public enum PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     case completePayment(TransactionResult)
+    case `continue`
     case fraud(Fraud)
     case parameter(ParameterEvent)
     case update(UpdateResult)

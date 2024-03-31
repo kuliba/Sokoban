@@ -101,7 +101,87 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    // MARK: - fraud event
+    // MARK: - continue
+    
+    func test_continue_shouldNotChangeStateOnInvalidPayment() {
+        
+        assertState(.continue, on: makeInvalidPaymentState())
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnInvalidPayment() {
+        
+        assert(.continue, on: makeInvalidPaymentState(), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeStateOnFraudSuspectedStatus() {
+        
+        assertState(.continue, on: makeFraudSuspectedPaymentState())
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnFraudSuspectedStatus() {
+        
+        assert(.continue, on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeStateOnResultFailureStatus() {
+        
+        assertState(.continue, on: makeResultFailureState())
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnResultFailureStatus() {
+        
+        assert(.continue, on: makeResultFailureState(), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeStateOnResultSuccessStatus() {
+        
+        assertState(.continue, on: makeResultSuccessState())
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnResultSuccessStatus() {
+        
+        assert(.continue, on: makeResultSuccessState(), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeStateOnServerErrorStatus() {
+        
+        assertState(.continue, on: makeServerErrorState())
+    }
+    
+    func test_continue_shouldNotDeliverEffectOnServerErrorStatus() {
+        
+        assert(.continue, on: makeServerErrorState(), effect: nil)
+    }
+    
+    func test_continue_shouldNotChangeStateOnValidPayment() {
+        
+        assertState(.continue, on: makeValidPaymentState())
+    }
+    
+    func test_continue_shouldDeliverEffectOnValidPayment() {
+        
+        let digest = makeDigest()
+        let sut = makeSUT(makeDigest: { _ in digest})
+        
+        assert(sut: sut, .continue, on: makeValidPaymentState(), effect: .continue(digest))
+    }
+    
+    func test_continue_shouldCallMakeDigestWithPaymentOnValidPayment() {
+        
+        let payment = makePayment()
+        var payloads = [Payment]()
+        let sut = makeSUT(makeDigest: {
+        
+            payloads.append($0)
+            return makeDigest()
+        })
+        
+        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        
+        XCTAssertNoDiff(payloads, [payment])
+    }
+    
+    // MARK: - fraud
     
     func test_fraudCancel_shouldNotChangeNonFraudSuspectState() {
         
@@ -505,6 +585,7 @@ final class PaymentReducerTests: XCTestCase {
     
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
+        makeDigest: @escaping SUT.MakeDigest = { _ in makeDigest() },
         parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping SUT.ValidatePayment = { _ in false },
@@ -514,6 +595,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = SUT(
             checkFraud: checkFraud,
+            makeDigest: makeDigest,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,
             validatePayment: validatePayment
