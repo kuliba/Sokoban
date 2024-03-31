@@ -8,7 +8,7 @@
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
     private let parameterReduce: ParameterReduce
-    private let updatePayment: UpdatePayment
+    private let adaptedUpdatePayments: AdaptedUpdatePayment
     private let validate: Validate
     
     public init(
@@ -17,7 +17,13 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         validate: @escaping Validate
     ) {
         self.parameterReduce = parameterReduce
-        self.updatePayment = updatePayment
+        self.adaptedUpdatePayments = {
+            
+            let updated = updatePayment($0, $1)
+            let isValid = validate(updated)
+            
+            return (updated, isValid)
+        }
         self.validate = validate
     }
 }
@@ -50,7 +56,10 @@ public extension PaymentReducer {
 public extension PaymentReducer {
     
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
+    
     typealias UpdatePayment = (Payment, Update) -> Payment
+    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool)
+    
     typealias Validate = (Payment) -> Bool
     
     typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
@@ -99,9 +108,7 @@ private extension PaymentReducer {
             }
             
         case let .success(update):
-            let updatedPayment = updatePayment(state.payment, update)
-            state.payment = updatedPayment
-            state.isValid = validate(updatedPayment)
+            (state.payment, state.isValid) = adaptedUpdatePayments(state.payment, update)
         }
     }
 }
