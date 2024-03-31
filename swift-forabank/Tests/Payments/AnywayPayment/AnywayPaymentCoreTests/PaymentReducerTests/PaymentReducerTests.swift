@@ -81,7 +81,7 @@ final class PaymentReducerTests: XCTestCase {
         var payloads = [Payment]()
         let sut = makeSUT(
             parameterReduce: { _,_ in return (updated, nil) },
-            validate: {
+            validatePayment: {
                 
                 payloads.append($0)
                 return false
@@ -115,7 +115,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldSetPaymentValidationToValidateResult_notValid() {
         
-        let sut = makeSUT(validate: { _ in false })
+        let sut = makeSUT(validatePayment: { _ in false })
         
         let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
         
@@ -124,7 +124,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldSetPaymentValidationToValidateResult_valid() {
         
-        let sut = makeSUT(validate: { _ in true })
+        let sut = makeSUT(validatePayment: { _ in true })
         
         let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
         
@@ -145,7 +145,7 @@ final class PaymentReducerTests: XCTestCase {
         
         var payloads = [Payment]()
         let sut = makeSUT(
-            validate: {
+            validatePayment: {
                 
                 payloads.append($0)
                 return false
@@ -188,7 +188,7 @@ final class PaymentReducerTests: XCTestCase {
         let message = anyMessage()
         var payloads = [Payment]()
         let sut = makeSUT(
-            validate: {
+            validatePayment: {
                 
                 payloads.append($0)
                 return false
@@ -239,7 +239,7 @@ final class PaymentReducerTests: XCTestCase {
         var payloads = [Payment]()
         let sut = makeSUT(
             updatePayment: { _, _ in updated },
-            validate: {
+            validatePayment: {
                 
                 payloads.append($0)
                 return false
@@ -283,7 +283,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldSetPaymentValidationToValidateResult_notValid() {
         
-        let sut = makeSUT(validate: { _ in false })
+        let sut = makeSUT(validatePayment: { _ in false })
         
         let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
         
@@ -292,7 +292,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldSetPaymentValidationToValidateResult_valid() {
         
-        let sut = makeSUT(validate: { _ in true })
+        let sut = makeSUT(validatePayment: { _ in true })
         
         let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
         
@@ -344,7 +344,7 @@ final class PaymentReducerTests: XCTestCase {
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
         parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
-        validate: @escaping SUT.Validate = { _ in false },
+        validatePayment: @escaping SUT.ValidatePayment = { _ in false },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
@@ -353,7 +353,7 @@ final class PaymentReducerTests: XCTestCase {
             checkFraud: checkFraud,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,
-            validate: validate
+            validatePayment: validatePayment
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

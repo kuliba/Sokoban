@@ -14,17 +14,17 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         checkFraud: @escaping CheckFraud,
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment,
-        validate: @escaping Validate
+        validatePayment: @escaping ValidatePayment
     ) {
         self.parameterReduce = {
             
             let (payment, effect) = parameterReduce($0, $1)
-            return (payment, effect, validate(payment))
+            return (payment, effect, validatePayment(payment))
         }
         self.adaptedUpdatePayment = {
             
             let updated = updatePayment($0, $1)
-            return (updated, validate(updated), checkFraud($1) ? .fraudSuspected : nil)
+            return (updated, validatePayment(updated), checkFraud($1) ? .fraudSuspected : nil)
         }
     }
 }
@@ -54,23 +54,23 @@ public extension PaymentReducer {
     }
 }
 
-private extension PaymentReducer {
-    
-    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
-    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool, State.Status?)
-}
-
 public extension PaymentReducer {
     
     typealias CheckFraud = (Update) -> Bool
     typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
     
-    typealias Validate = (Payment) -> Bool
+    typealias ValidatePayment = (Payment) -> Bool
     
     typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
     typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
     typealias Effect = PaymentEffect<Digest, ParameterEffect>
+}
+
+private extension PaymentReducer {
+    
+    typealias AdaptedParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?, Bool)
+    typealias AdaptedUpdatePayment = (Payment, Update) -> (Payment, Bool, State.Status?)
 }
 
 private extension PaymentReducer {
