@@ -77,7 +77,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnDetailIDReport() {
         
         assert(
-            completePaymentReportEvent(makeDetailIDTransactionReport()), 
+            completePaymentReportEvent(makeDetailIDTransactionReport()),
             on: makePaymentState(),
             effect: nil
         )
@@ -96,9 +96,80 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             completePaymentReportEvent(makeOperationDetailsTransactionReport()),
-            on: makePaymentState(), 
+            on: makePaymentState(),
             effect: nil
         )
+    }
+    
+    // MARK: - fraud event
+    
+    func test_fraudCancel_shouldNotChangeNonFraudSuspectState() {
+        
+        assertState(makeFraudCancelEvent(), on: makeNonFraudSuspectedPaymentState())
+    }
+    
+    func test_fraudCancel_shouldNotDeliverEffectOnNonFraudSuspect() {
+        
+        assert(makeFraudCancelEvent(), on: makeNonFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_fraudCancel_shouldSetStatusToFraudTerminatedOnFraudSuspect() {
+        
+        assertState(makeFraudCancelEvent(), on: makeFraudSuspectedPaymentState()) {
+            
+            $0.status = .result(.failure(.fraud(.cancelled)))
+        }
+    }
+    
+    func test_fraudCancel_shouldNotDeliverEffectOnFraudSuspect() {
+        
+        assert(makeFraudCancelEvent(), on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_fraudContinue_shouldNotChangeNonFraudSuspectState() {
+        
+        assertState(makeFraudContinueEvent(), on: makeNonFraudSuspectedPaymentState())
+    }
+    
+    func test_fraudContinue_shouldNotDeliverEffectOnNonFraudSuspect() {
+        
+        assert(makeFraudContinueEvent(), on: makeNonFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_fraudContinue_shouldResetStatusOnFraudSuspect() {
+        
+        assertState(makeFraudContinueEvent(), on: makeFraudSuspectedPaymentState()) {
+            
+            $0.status = nil
+        }
+    }
+    
+    func test_fraudContinue_shouldNotDeliverEffectOnFraudSuspect() {
+        
+        assert(makeFraudContinueEvent(), on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_fraudExpired_shouldNotChangeNonFraudSuspectState() {
+        
+        assertState(makeFraudExpiredEvent(), on: makeNonFraudSuspectedPaymentState())
+    }
+    
+    func test_fraudExpired_shouldNotDeliverEffectOnNonFraudSuspect() {
+        
+        assert(makeFraudExpiredEvent(), on: makeNonFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_fraudExpired_shouldSetStatusToFraudTerminatedOnFraudSuspect() {
+        
+        assertState(makeFraudExpiredEvent(), on: makeFraudSuspectedPaymentState()) {
+            
+            $0.status = .result(.failure(.fraud(.expired)))
+        }
+    }
+    
+    func test_fraudExpired_shouldNotDeliverEffectOnFraudSuspect() {
+        
+        assert(makeFraudExpiredEvent(), on: makeFraudSuspectedPaymentState(), effect: nil)
     }
     
     // MARK: - parameter (or field) event
@@ -143,7 +214,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldNotChangeStateOnFraudSuspectedStatus() {
         
         let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), nil) })
-
+        
         assertState(sut: sut, makeParameterPaymentEvent(), on: makeFraudSuspectedPaymentState())
     }
     
@@ -161,7 +232,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
         let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), makeParameterPaymentEffect()) })
-
+        
         assert(sut: sut, makeParameterPaymentEvent(), on: makeFraudSuspectedPaymentState(), effect: nil)
     }
     
@@ -283,7 +354,7 @@ final class PaymentReducerTests: XCTestCase {
         )
         
         _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(message))
-
+        
         XCTAssert(payloads.isEmpty)
     }
     
@@ -321,7 +392,7 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNoDiff(payloads, [updated])
         XCTAssertNotEqual(payment, updated)
     }
-
+    
     func test_update_shouldCallFraudCheckWithUpdate() {
         
         let update = makeUpdate()
@@ -335,7 +406,7 @@ final class PaymentReducerTests: XCTestCase {
         )
         
         _ = sut.reduce(makePaymentState(), makeUpdateEvent(update))
-
+        
         XCTAssertNoDiff(payloads, [update])
     }
     

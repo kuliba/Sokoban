@@ -41,20 +41,27 @@ public extension PaymentReducer {
         
         switch (state.status, event) {
         case (.fraudSuspected, _):
-            break
+            switch event {
+            case let .fraud(fraudEvent):
+                reduce(&state, &effect, with: fraudEvent)
+                
+            default:
+                break
+            }
+            
+        case let (_, .completePayment(transactionResult)):
+            reduce(&state, with: transactionResult)
+            
+        case let (_, .parameter(parameterEvent)):
+            reduce(&state, &effect, with: parameterEvent)
+            
+        case let (_, .update(updateResult)):
+            reduce(&state, with: updateResult)
             
         default:
-            switch event {
-            case let .completePayment(transactionResult):
-                reduce(&state, with: transactionResult)
-                
-            case let .parameter(parameterEvent):
-                reduce(&state, &effect, with: parameterEvent)
-                
-            case let .update(updateResult):
-                reduce(&state, with: updateResult)
-            }
+            break
         }
+        
         return (state, effect)
     }
 }
@@ -90,6 +97,25 @@ private extension PaymentReducer {
             
         case let .some(report):
             state.status = .result(.success(report))
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: Event.Fraud
+    ) {
+        guard case .fraudSuspected = state.status else { return }
+        
+        switch event {
+        case .cancel:
+            state.status = .result(.failure(.fraud(.cancelled)))
+            
+        case .continue:
+            state.status = nil
+            
+        case .expired:
+            state.status = .result(.failure(.fraud(.expired)))
         }
     }
     

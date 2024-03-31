@@ -34,10 +34,19 @@ public extension PaymentState {
 
 public extension PaymentState.Status {
     
-    enum Terminated: Error {
+    enum Terminated: Error, Equatable {
         
+        case fraud(Fraud)
         case transactionFailure
         case updateFailure
+    }
+}
+
+public extension PaymentState.Status.Terminated {
+    
+    enum Fraud: Equatable {
+        
+        case cancelled, expired
     }
 }
 

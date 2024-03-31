@@ -75,7 +75,7 @@ func makeFraudSuspectedPaymentState(
     precondition(state.status == .fraudSuspected)
     return state
 }
-    
+
 func isValid(
     _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
 ) -> Bool {
@@ -113,6 +113,33 @@ func makeDigest(
 ) -> Digest {
     
     .init(value: value)
+}
+
+func makeFraudCancelEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.cancel)
+}
+
+func makeFraudContinueEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.continue)
+}
+
+func makeFraudExpiredEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.expired)
+}
+
+func makeNonFraudSuspectedPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment)
+    precondition(state.status != .fraudSuspected)
+    return state
 }
 
 func makeOperationDetailsTransactionReport(
