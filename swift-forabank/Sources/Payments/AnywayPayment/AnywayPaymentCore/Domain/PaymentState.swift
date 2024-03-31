@@ -13,7 +13,7 @@ public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     public init(
         payment: Payment,
-        isValid: Bool = false,
+        isValid: Bool,
         status: Status? = nil
     ) {
         self.payment = payment
