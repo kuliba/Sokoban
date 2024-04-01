@@ -1,5 +1,5 @@
 //
-//  PaymentReducerTests.swift
+//  TransactionReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 29.03.2024.
@@ -8,41 +8,41 @@
 import AnywayPaymentCore
 import XCTest
 
-final class PaymentReducerTests: XCTestCase {
+final class TransactionReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
     func test_completePayment_shouldNotChangeResultFailureStateOnReportFailure() {
         
-        assertState(.completePayment(nil), on: makeResultFailureState())
+        assertState(.completePayment(nil), on: makeResultFailureTransaction())
     }
     
     func test_completePayment_shouldNotDeliverEffectOnResultFailureStateOnReportFailure() {
         
-        assert(.completePayment(nil), on: makeResultFailureState(), effect: nil)
+        assert(.completePayment(nil), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_completePayment_shouldNotChangeResultSuccessStateOnReportFailure() {
         
-        assertState(.completePayment(nil), on: makeResultSuccessState())
+        assertState(.completePayment(nil), on: makeResultSuccessTransaction())
     }
     
     func test_completePayment_shouldNotDeliverEffectOnResultSuccessStateOnReportFailure() {
         
-        assert(.completePayment(nil), on: makeResultSuccessState(), effect: nil)
+        assert(.completePayment(nil), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
         assertState(
             .completePayment(nil),
-            on: makeFraudSuspectedPaymentState()
+            on: makeFraudSuspectedTransaction()
         )
     }
     
     func test_completePayment_shouldChangeStatusToTerminatedTransactionFailureOnReportFailure() {
         
-        assertState(.completePayment(nil), on: makePaymentState()) {
+        assertState(.completePayment(nil), on: makeTransaction()) {
             
             $0.status = .result(.failure(.transactionFailure))
         }
@@ -52,7 +52,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeDetailIDTransactionReport()),
-            on: makeResultFailureState()
+            on: makeResultFailureTransaction()
         )
     }
     
@@ -60,7 +60,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(makeDetailIDTransactionReport()),
-            on: makeResultFailureState(),
+            on: makeResultFailureTransaction(),
             effect: nil
         )
     }
@@ -69,7 +69,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeDetailIDTransactionReport()),
-            on: makeResultSuccessState()
+            on: makeResultSuccessTransaction()
         )
     }
     
@@ -77,7 +77,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(makeDetailIDTransactionReport()),
-            on: makeResultSuccessState(),
+            on: makeResultSuccessTransaction(),
             effect: nil
         )
     }
@@ -86,7 +86,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeDetailIDTransactionReport()),
-            on: makeFraudSuspectedPaymentState()
+            on: makeFraudSuspectedTransaction()
         )
     }
     
@@ -94,7 +94,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let report = makeDetailIDTransactionReport()
         
-        assertState(.completePayment(report), on: makePaymentState()) {
+        assertState(.completePayment(report), on: makeTransaction()) {
             
             $0.status = .result(.success(report))
         }
@@ -104,7 +104,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeOperationDetailsTransactionReport()),
-            on: makeResultFailureState()
+            on: makeResultFailureTransaction()
         )
     }
     
@@ -112,7 +112,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(makeOperationDetailsTransactionReport()),
-            on: makeResultFailureState(),
+            on: makeResultFailureTransaction(),
             effect: nil
         )
     }
@@ -121,7 +121,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeOperationDetailsTransactionReport()),
-            on: makeResultSuccessState()
+            on: makeResultSuccessTransaction()
         )
     }
     
@@ -129,7 +129,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(makeOperationDetailsTransactionReport()),
-            on: makeResultSuccessState(),
+            on: makeResultSuccessTransaction(),
             effect: nil
         )
     }
@@ -138,7 +138,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(
             .completePayment(makeOperationDetailsTransactionReport()),
-            on: makeFraudSuspectedPaymentState()
+            on: makeFraudSuspectedTransaction()
         )
     }
     
@@ -146,7 +146,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let report = makeOperationDetailsTransactionReport()
         
-        assertState(.completePayment(report), on: makePaymentState()) {
+        assertState(.completePayment(report), on: makeTransaction()) {
             
             $0.status = .result(.success(report))
         }
@@ -156,7 +156,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(nil),
-            on: makeFraudSuspectedPaymentState(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -165,7 +165,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             .completePayment(nil),
-            on: makePaymentState(),
+            on: makeTransaction(),
             effect: nil
         )
     }
@@ -174,7 +174,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
-            on: makeFraudSuspectedPaymentState(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -183,7 +183,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
-            on: makePaymentState(),
+            on: makeTransaction(),
             effect: nil
         )
     }
@@ -192,7 +192,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
-            on: makeFraudSuspectedPaymentState(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -201,7 +201,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
-            on: makePaymentState(),
+            on: makeTransaction(),
             effect: nil
         )
     }
@@ -210,64 +210,64 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_continue_shouldNotChangeStateOnInvalidPayment() {
         
-        assertState(.continue, on: makeInvalidPaymentState())
+        assertState(.continue, on: makeInvalidTransaction())
     }
     
     func test_continue_shouldNotDeliverEffectOnInvalidPayment() {
         
-        assert(.continue, on: makeInvalidPaymentState(), effect: nil)
+        assert(.continue, on: makeInvalidTransaction(), effect: nil)
     }
     
     func test_continue_shouldNotChangeStateOnFraudSuspectedStatus() {
         
-        assertState(.continue, on: makeFraudSuspectedPaymentState())
+        assertState(.continue, on: makeFraudSuspectedTransaction())
     }
     
     func test_continue_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
-        assert(.continue, on: makeFraudSuspectedPaymentState(), effect: nil)
+        assert(.continue, on: makeFraudSuspectedTransaction(), effect: nil)
     }
     
     func test_continue_shouldNotChangeStateOnResultFailureStatus() {
         
-        assertState(.continue, on: makeResultFailureState())
+        assertState(.continue, on: makeResultFailureTransaction())
     }
     
     func test_continue_shouldNotDeliverEffectOnResultFailureStatus() {
         
-        assert(.continue, on: makeResultFailureState(), effect: nil)
+        assert(.continue, on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_continue_shouldNotChangeStateOnResultSuccessStatus() {
         
-        assertState(.continue, on: makeResultSuccessState())
+        assertState(.continue, on: makeResultSuccessTransaction())
     }
     
     func test_continue_shouldNotDeliverEffectOnResultSuccessStatus() {
         
-        assert(.continue, on: makeResultSuccessState(), effect: nil)
+        assert(.continue, on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_continue_shouldNotChangeStateOnServerErrorStatus() {
         
-        assertState(.continue, on: makeServerErrorState())
+        assertState(.continue, on: makeServerErrorTransaction())
     }
     
     func test_continue_shouldNotDeliverEffectOnServerErrorStatus() {
         
-        assert(.continue, on: makeServerErrorState(), effect: nil)
+        assert(.continue, on: makeServerErrorTransaction(), effect: nil)
     }
     
     func test_continue_shouldNotChangeStateOnValidPaymentWithoutVerificationCode() {
         
         let sut = makeSUT(getVerificationCode: { _ in nil })
         
-        assertState(sut: sut, .continue, on: makeValidPaymentState())
+        assertState(sut: sut, .continue, on: makeValidTransaction())
     }
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutVerificationCode() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let sut = makeSUT(
             getVerificationCode: { _ in nil },
             makeDigest: { _ in digest}
@@ -275,7 +275,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             sut: sut, .continue,
-            on: makeValidPaymentState(),
+            on: makeValidTransaction(),
             effect: .continue(digest)
         )
     }
@@ -283,13 +283,13 @@ final class PaymentReducerTests: XCTestCase {
     func test_continue_shouldCallMakeDigestWithPaymentOnValidPaymentWithoutVerificationCode() {
         
         let payment = makePayment()
-        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let makeDigestSpy = MakeDigestSpy(response: makePaymentDigest())
         let sut = makeSUT(
             getVerificationCode: { _ in nil },
             makeDigest: makeDigestSpy.call
         )
         
-        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
         
         XCTAssertNoDiff(makeDigestSpy.payloads, [payment])
     }
@@ -300,7 +300,7 @@ final class PaymentReducerTests: XCTestCase {
         let getVerificationCodeSpy = GetVerificationCodeSpy(response: nil)
         let sut = makeSUT(getVerificationCode: getVerificationCodeSpy.call)
         
-        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
         
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
@@ -309,7 +309,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(getVerificationCode: { _ in makeVerificationCode() })
         
-        assertState(sut: sut, .continue, on: makeValidPaymentState())
+        assertState(sut: sut, .continue, on: makeValidTransaction())
     }
     
     func test_continue_shouldDeliverMakePaymentEffectWithVerificationCodeOnValidPaymentWithVerificationCode() {
@@ -319,20 +319,20 @@ final class PaymentReducerTests: XCTestCase {
         
         assert(
             sut: sut, .continue,
-            on: makeValidPaymentState(),
+            on: makeValidTransaction(),
             effect: .makePayment(verificationCode)
         )
     }
     
     func test_continue_shouldNotCallMakeDigestWithPaymentOnValidPaymentWithVerificationCode() {
         
-        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let makeDigestSpy = MakeDigestSpy(response: makePaymentDigest())
         let sut = makeSUT(
             getVerificationCode: { _ in makeVerificationCode() },
             makeDigest: makeDigestSpy.call
         )
         
-        _ = sut.reduce(makeValidPaymentState(makePayment()), .continue)
+        _ = sut.reduce(makeValidTransaction(makePayment()), .continue)
         
         XCTAssertNoDiff(makeDigestSpy.payloads, [])
     }
@@ -343,7 +343,7 @@ final class PaymentReducerTests: XCTestCase {
         let getVerificationCodeSpy = GetVerificationCodeSpy(response: makeVerificationCode())
         let sut = makeSUT(getVerificationCode: getVerificationCodeSpy.call)
         
-        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
         
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
@@ -352,47 +352,47 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_dismissRecoverableError_shouldNotChangeResultFailureState() {
         
-        assertState(.dismissRecoverableError, on: makeResultFailureState())
+        assertState(.dismissRecoverableError, on: makeResultFailureTransaction())
     }
     
     func test_dismissRecoverableError_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(.dismissRecoverableError, on: makeResultFailureState(), effect: nil)
+        assert(.dismissRecoverableError, on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_dismissRecoverableError_shouldNotChangeResultSuccessState() {
         
-        assertState(.dismissRecoverableError, on: makeResultSuccessState())
+        assertState(.dismissRecoverableError, on: makeResultSuccessTransaction())
     }
     
     func test_dismissRecoverableError_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(.dismissRecoverableError, on: makeResultSuccessState(), effect: nil)
+        assert(.dismissRecoverableError, on: makeResultSuccessTransaction(), effect: nil)
     }
 
     func test_dismissRecoverableError_shouldNotChangeFraudSuspectedState() {
         
-        assertState(.dismissRecoverableError, on: makeFraudSuspectedPaymentState())
+        assertState(.dismissRecoverableError, on: makeFraudSuspectedTransaction())
     }
     
     func test_dismissRecoverableError_shouldNotDeliverEffectOnFraudSuspectedState() {
         
-        assert(.dismissRecoverableError, on: makeFraudSuspectedPaymentState(), effect: nil)
+        assert(.dismissRecoverableError, on: makeFraudSuspectedTransaction(), effect: nil)
     }
 
     func test_dismissRecoverableError_shouldNotChangeNilStatusState() {
         
-        assertState(.dismissRecoverableError, on: makeNilStatusPaymentState())
+        assertState(.dismissRecoverableError, on: makeNilStatusTransaction())
     }
     
     func test_dismissRecoverableError_shouldNotDeliverEffectOnNilStatusState() {
         
-        assert(.dismissRecoverableError, on: makeNilStatusPaymentState(), effect: nil)
+        assert(.dismissRecoverableError, on: makeNilStatusTransaction(), effect: nil)
     }
 
     func test_dismissRecoverableError_shouldResetServerErrorStatus() {
         
-        assertState(.dismissRecoverableError, on: makeServerErrorState()) {
+        assertState(.dismissRecoverableError, on: makeServerErrorTransaction()) {
             
             $0.status = nil
         }
@@ -400,51 +400,51 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_dismissRecoverableError_shouldNotDeliverEffectOnServerErrorStatusState() {
         
-        assert(.dismissRecoverableError, on: makeServerErrorState(), effect: nil)
+        assert(.dismissRecoverableError, on: makeServerErrorTransaction(), effect: nil)
     }
 
     // MARK: - fraud
     
     func test_fraudCancel_shouldNotChangeResultFailureState() {
         
-        assertState(makeFraudCancelEvent(), on: makeResultFailureState())
+        assertState(makeFraudCancelTransactionEvent(), on: makeResultFailureTransaction())
     }
     
     func test_fraudCancel_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(makeFraudCancelEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makeFraudCancelTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_fraudCancel_shouldNotChangeResultSuccessState() {
         
-        assertState(makeFraudCancelEvent(), on: makeResultSuccessState())
+        assertState(makeFraudCancelTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
     func test_fraudCancel_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(makeFraudCancelEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makeFraudCancelTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_fraudCancel_shouldNotChangeNonFraudSuspectState() {
         
         assertState(
-            makeFraudCancelEvent(),
-            on: makeNonFraudSuspectedPaymentState()
+            makeFraudCancelTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction()
         )
     }
     
     func test_fraudCancel_shouldNotDeliverEffectOnNonFraudSuspect() {
         
         assert(
-            makeFraudCancelEvent(),
-            on: makeNonFraudSuspectedPaymentState(),
+            makeFraudCancelTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction(),
             effect: nil
         )
     }
     
     func test_fraudCancel_shouldSetStatusToFraudTerminatedOnFraudSuspect() {
         
-        assertState(makeFraudCancelEvent(), on: makeFraudSuspectedPaymentState()) {
+        assertState(makeFraudCancelTransactionEvent(), on: makeFraudSuspectedTransaction()) {
             
             $0.status = .result(.failure(.fraud(.cancelled)))
         }
@@ -453,51 +453,51 @@ final class PaymentReducerTests: XCTestCase {
     func test_fraudCancel_shouldNotDeliverEffectOnFraudSuspect() {
         
         assert(
-            makeFraudCancelEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makeFraudCancelTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
     
     func test_fraudContinue_shouldNotChangeResultFailureState() {
         
-        assertState(makeFraudContinueEvent(), on: makeResultFailureState())
+        assertState(makeFraudContinueTransactionEvent(), on: makeResultFailureTransaction())
     }
     
     func test_fraudContinue_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(makeFraudContinueEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makeFraudContinueTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_fraudContinue_shouldNotChangeResultSuccessState() {
         
-        assertState(makeFraudContinueEvent(), on: makeResultSuccessState())
+        assertState(makeFraudContinueTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
     func test_fraudContinue_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(makeFraudContinueEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makeFraudContinueTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_fraudContinue_shouldNotChangeNonFraudSuspectState() {
         
         assertState(
-            makeFraudContinueEvent(),
-            on: makeNonFraudSuspectedPaymentState()
+            makeFraudContinueTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction()
         )
     }
     
     func test_fraudContinue_shouldNotDeliverEffectOnNonFraudSuspect() {
         
         assert(
-            makeFraudContinueEvent(),
-            on: makeNonFraudSuspectedPaymentState(),
+            makeFraudContinueTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction(),
             effect: nil)
     }
     
     func test_fraudContinue_shouldResetStatusOnFraudSuspect() {
         
-        assertState(makeFraudContinueEvent(), on: makeFraudSuspectedPaymentState()) {
+        assertState(makeFraudContinueTransactionEvent(), on: makeFraudSuspectedTransaction()) {
             
             $0.status = nil
         }
@@ -506,52 +506,52 @@ final class PaymentReducerTests: XCTestCase {
     func test_fraudContinue_shouldNotDeliverEffectOnFraudSuspect() {
         
         assert(
-            makeFraudContinueEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makeFraudContinueTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
     
     func test_fraudExpired_shouldNotChangeResultFailureState() {
         
-        assertState(makeFraudExpiredEvent(), on: makeResultFailureState())
+        assertState(makeFraudExpiredTransactionEvent(), on: makeResultFailureTransaction())
     }
     
     func test_fraudExpired_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(makeFraudExpiredEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makeFraudExpiredTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_fraudExpired_shouldNotChangeResultSuccessState() {
         
-        assertState(makeFraudExpiredEvent(), on: makeResultSuccessState())
+        assertState(makeFraudExpiredTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
     func test_fraudExpired_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(makeFraudExpiredEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makeFraudExpiredTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_fraudExpired_shouldNotChangeNonFraudSuspectState() {
         
         assertState(
-            makeFraudExpiredEvent(),
-            on: makeNonFraudSuspectedPaymentState()
+            makeFraudExpiredTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction()
         )
     }
     
     func test_fraudExpired_shouldNotDeliverEffectOnNonFraudSuspect() {
         
         assert(
-            makeFraudExpiredEvent(),
-            on: makeNonFraudSuspectedPaymentState(),
+            makeFraudExpiredTransactionEvent(),
+            on: makeNonFraudSuspectedTransaction(),
             effect: nil
         )
     }
     
     func test_fraudExpired_shouldSetStatusToFraudTerminatedOnFraudSuspect() {
         
-        assertState(makeFraudExpiredEvent(), on: makeFraudSuspectedPaymentState()) {
+        assertState(makeFraudExpiredTransactionEvent(), on: makeFraudSuspectedTransaction()) {
             
             $0.status = .result(.failure(.fraud(.expired)))
         }
@@ -560,8 +560,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_fraudExpired_shouldNotDeliverEffectOnFraudSuspect() {
         
         assert(
-            makeFraudExpiredEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makeFraudExpiredTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -570,187 +570,187 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_initiatePayment_shouldNotChangeResultFailureState() {
         
-        assertState(.initiatePayment, on: makeResultFailureState())
+        assertState(.initiatePayment, on: makeResultFailureTransaction())
     }
     
     func test_initiatePayment_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(.initiatePayment, on: makeResultFailureState(), effect: nil)
+        assert(.initiatePayment, on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_initiatePayment_shouldNotChangeResultSuccessState() {
         
-        assertState(.initiatePayment, on: makeResultSuccessState())
+        assertState(.initiatePayment, on: makeResultSuccessTransaction())
     }
     
     func test_initiatePayment_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(.initiatePayment, on: makeResultSuccessState(), effect: nil)
+        assert(.initiatePayment, on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_initiatePayment_shouldNotChangeState() {
         
-        assertState(.initiatePayment, on: makePaymentState())
+        assertState(.initiatePayment, on: makeTransaction())
     }
     
     func test_initiatePayment_shouldDeliverEffect() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let sut = makeSUT(makeDigest: { _ in digest })
         
-        assert(sut: sut, .initiatePayment, on: makePaymentState(), effect: .initiatePayment(digest))
+        assert(sut: sut, .initiatePayment, on: makeTransaction(), effect: .initiatePayment(digest))
     }
     
     func test_initiatePayment_shouldNotChangeFraudSuspectedStatusState() {
         
-        assertState(.initiatePayment, on: makeFraudSuspectedPaymentState())
+        assertState(.initiatePayment, on: makeFraudSuspectedTransaction())
     }
     
     func test_initiatePayment_shouldDeliverEffectOnFraudSuspectedStatusState() {
         
-        assert(.initiatePayment, on: makeFraudSuspectedPaymentState(), effect: nil)
+        assert(.initiatePayment, on: makeFraudSuspectedTransaction(), effect: nil)
     }
     
     func test_initiatePayment_shouldNotChangeStateOnResultFailureStatus() {
         
-        assertState(.initiatePayment, on: makeResultFailureState())
+        assertState(.initiatePayment, on: makeResultFailureTransaction())
     }
     
     func test_initiatePayment_shouldNotDeliverEffectOnResultFailureStatus() {
         
-        assert(.initiatePayment, on: makeResultFailureState(), effect: nil)
+        assert(.initiatePayment, on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_initiatePayment_shouldNotChangeStateOnResultSuccessStatus() {
         
-        assertState(.initiatePayment, on: makeResultSuccessState())
+        assertState(.initiatePayment, on: makeResultSuccessTransaction())
     }
     
     func test_initiatePayment_shouldNotDeliverEffectOnResultSuccessStatus() {
         
-        assert(.initiatePayment, on: makeResultSuccessState(), effect: nil)
+        assert(.initiatePayment, on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_initiatePayment_shouldNotChangeStateOnServerErrorStatus() {
         
-        assertState(.initiatePayment, on: makeServerErrorState())
+        assertState(.initiatePayment, on: makeServerErrorTransaction())
     }
     
     func test_initiatePayment_shouldNotDeliverEffectOnServerErrorStatus() {
         
-        assert(.initiatePayment, on: makeServerErrorState(), effect: nil)
+        assert(.initiatePayment, on: makeServerErrorTransaction(), effect: nil)
     }
     
-    // MARK: - parameter (or field or payment) event
+    // MARK: - payment
     
-    func test_parameter_shouldNotChangeResultFailureState() {
+    func test_payment_shouldNotChangeResultFailureState() {
         
-        assertState(makeParameterPaymentEvent(), on: makeResultFailureState())
+        assertState(makePaymentTransactionEvent(), on: makeResultFailureTransaction())
     }
     
-    func test_parameter_shouldNotDeliverEffectOnResultFailureState() {
+    func test_payment_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(makeParameterPaymentEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makePaymentTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
-    func test_parameter_shouldNotChangeResultSuccessState() {
+    func test_payment_shouldNotChangeResultSuccessState() {
         
-        assertState(makeParameterPaymentEvent(), on: makeResultSuccessState())
+        assertState(makePaymentTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
-    func test_parameter_shouldNotDeliverEffectOnResultSuccessState() {
+    func test_payment_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(makeParameterPaymentEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makePaymentTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
-    func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
+    func test_payment_shouldCallPaymentReduceWithPaymentAndEvent() {
         
-        let (payment, event) = (makePayment(), makeParameterEvent())
-        let parameterReduceSpy = ParameterReduceSpy(response: (payment, nil))
-        let sut = makeSUT(parameterReduce: parameterReduceSpy.call)
+        let (payment, event) = (makePayment(), makePaymentEvent())
+        let paymentReduceSpy = PaymentReduceSpy(response: (payment, nil))
+        let sut = makeSUT(paymentReduce: paymentReduceSpy.call)
         
-        _ = sut.reduce(makePaymentState(payment), .parameter(event))
+        _ = sut.reduce(makeTransaction(payment), .payment(event))
         
-        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.0), [payment])
-        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.1), [event])
+        XCTAssertNoDiff(paymentReduceSpy.payloads.map(\.0), [payment])
+        XCTAssertNoDiff(paymentReduceSpy.payloads.map(\.1), [event])
     }
     
-    func test_parameter_shouldCallValidateWithUpdatedPayment() {
+    func test_payment_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(
-            parameterReduce: { _,_ in return (updated, nil) },
+            paymentReduce: { _,_ in return (updated, nil) },
             validatePayment: validatePaymentSpy.call
         )
         
-        _ = sut.reduce(makePaymentState(payment), .parameter(makeParameterEvent()))
+        _ = sut.reduce(makeTransaction(payment), .payment(makePaymentEvent()))
         
         XCTAssertNoDiff(validatePaymentSpy.payloads, [updated])
         XCTAssertNotEqual(payment, updated)
     }
     
-    func test_parameter_shouldNotChangeStateOnFraudSuspectedStatus() {
+    func test_payment_shouldNotChangeStateOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), nil) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), nil) })
         
         assertState(
             sut: sut,
-            makeParameterPaymentEvent(),
-            on: makeFraudSuspectedPaymentState()
+            makePaymentTransactionEvent(),
+            on: makeFraudSuspectedTransaction()
         )
     }
     
-    func test_parameter_shouldSetPaymentToParameterReducePayment() {
+    func test_payment_shouldSetPaymentToPaymentReducePayment() {
         
         let newPayment = makePayment()
-        let sut = makeSUT(parameterReduce: { _,_ in (newPayment, nil) })
+        let sut = makeSUT(paymentReduce: { _,_ in (newPayment, nil) })
         
-        assertState(sut: sut, makeParameterPaymentEvent(), on: makePaymentState()) {
+        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
             $0.payment = newPayment
         }
     }
     
-    func test_parameter_shouldNotDeliverEffectOnFraudSuspectedStatus() {
+    func test_payment_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), makeParameterPaymentEffect()) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), makePaymentTransactionEffect()) })
         
         assert(
             sut: sut,
-            makeParameterPaymentEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makePaymentTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
     
-    func test_parameter_shouldDeliverParameterReduceEffect() {
+    func test_payment_shouldDeliverPaymentReduceEffect() {
         
-        let effect = makeParameterPaymentEffect()
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), effect) })
+        let effect = makePaymentTransactionEffect()
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), effect) })
         
         assert(
             sut: sut,
-            makeParameterPaymentEvent(),
-            on: makePaymentState(),
+            makePaymentTransactionEvent(),
+            on: makeTransaction(),
             effect: effect
         )
     }
     
-    func test_parameter_shouldSetPaymentValidationToValidateResult_notValid() {
+    func test_payment_shouldSetPaymentValidationToValidateResult_notValid() {
         
         let sut = makeSUT(validatePayment: { _ in false })
         
-        let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
+        let (state, _) = sut.reduce(makeTransaction(), .payment(makePaymentEvent()))
         
         XCTAssertFalse(isValid(state))
     }
     
-    func test_parameter_shouldSetPaymentValidationToValidateResult_valid() {
+    func test_payment_shouldSetPaymentValidationToValidateResult_valid() {
         
         let sut = makeSUT(validatePayment: { _ in true })
         
-        let (state, _) = sut.reduce(makePaymentState(), .parameter(makeParameterEvent()))
+        let (state, _) = sut.reduce(makeTransaction(), .payment(makePaymentEvent()))
         
         XCTAssertTrue(isValid(state))
     }
@@ -759,32 +759,32 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(), on: makeResultFailureState())
+        assertState(makeUpdateFailureTransactionEvent(), on: makeResultFailureTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultFailureStateOnUpdateConnectivityErrorFailure() {
         
-        assert(makeUpdateFailureEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makeUpdateFailureTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_update_shouldNotChangeResultSuccessStateOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(), on: makeResultSuccessState())
+        assertState(makeUpdateFailureTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultSuccessStateOnUpdateConnectivityErrorFailure() {
         
-        assert(makeUpdateFailureEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makeUpdateFailureTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatusOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(), on: makeFraudSuspectedPaymentState())
+        assertState(makeUpdateFailureTransactionEvent(), on: makeFraudSuspectedTransaction())
     }
     
     func test_update_shouldChangeStatusToTerminatedUpdateFailureOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(), on: makePaymentState()) {
+        assertState(makeUpdateFailureTransactionEvent(), on: makeTransaction()) {
             
             $0.status = .result(.failure(.updatePaymentFailure))
         }
@@ -795,7 +795,7 @@ final class PaymentReducerTests: XCTestCase {
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call)
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
+        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent())
         
         XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
@@ -805,41 +805,41 @@ final class PaymentReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent())
+        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent())
         
         XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(anyMessage()), on: makeResultFailureState())
+        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultFailureTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultFailureStateOnUpdateServerErrorFailure() {
         
-        assert(makeUpdateFailureEvent(anyMessage()), on: makeResultFailureState(), effect: nil)
+        assert(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_update_shouldNotChangeResultSuccessStateOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(anyMessage()), on: makeResultSuccessState())
+        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultSuccessTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultSuccessStateOnUpdateServerErrorFailure() {
         
-        assert(makeUpdateFailureEvent(anyMessage()), on: makeResultSuccessState(), effect: nil)
+        assert(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatusOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureEvent(anyMessage()), on: makeFraudSuspectedPaymentState())
+        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeFraudSuspectedTransaction())
     }
     
     func test_update_shouldChangeStatusToServerErrorOnUpdateServerErrorFailure() {
         
         let message = anyMessage()
         
-        assertState(makeUpdateFailureEvent(message), on: makePaymentState()) {
+        assertState(makeUpdateFailureTransactionEvent(message), on: makeTransaction()) {
             
             $0.status = .serverError(message)
         }
@@ -850,7 +850,7 @@ final class PaymentReducerTests: XCTestCase {
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call(payload:))
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
+        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent(anyMessage()))
         
         XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
@@ -860,7 +860,7 @@ final class PaymentReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makePaymentState(), makeUpdateFailureEvent(anyMessage()))
+        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent(anyMessage()))
         
         XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
@@ -871,7 +871,7 @@ final class PaymentReducerTests: XCTestCase {
         let updatePaymentSpy = UpdatePaymentSpy(response: makePayment())
         let sut = makeSUT(updatePayment: updatePaymentSpy.call)
         
-        _ = sut.reduce(makePaymentState(payment), makeUpdateEvent(update))
+        _ = sut.reduce(makeTransaction(payment), makeUpdateTransactionEvent(update))
         
         XCTAssertNoDiff(updatePaymentSpy.payloads.map(\.0), [payment])
         XCTAssertNoDiff(updatePaymentSpy.payloads.map(\.1), [update])
@@ -886,7 +886,7 @@ final class PaymentReducerTests: XCTestCase {
             validatePayment: validatePaymentSpy.call
         )
         
-        _ = sut.reduce(makePaymentState(payment), makeUpdateEvent())
+        _ = sut.reduce(makeTransaction(payment), makeUpdateTransactionEvent())
         
         XCTAssertNoDiff(validatePaymentSpy.payloads, [updated])
         XCTAssertNotEqual(payment, updated)
@@ -898,7 +898,7 @@ final class PaymentReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        let (updated, _) = sut.reduce(makePaymentState(), makeUpdateEvent(update))
+        let (updated, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
         
         XCTAssertNoDiff(checkFraudSpy.payloads, [updated.payment])
     }
@@ -907,27 +907,27 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(updatePayment: { _, _ in makePayment() })
         
-        assertState(sut: sut, makeUpdateEvent(), on: makeFraudSuspectedPaymentState())
+        assertState(sut: sut, makeUpdateTransactionEvent(), on: makeFraudSuspectedTransaction())
     }
     
     func test_update_shouldNotChangeResultFailureState() {
         
-        assertState(makeUpdateEvent(), on: makeResultFailureState())
+        assertState(makeUpdateTransactionEvent(), on: makeResultFailureTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultFailureState() {
         
-        assert(makeUpdateEvent(), on: makeResultFailureState(), effect: nil)
+        assert(makeUpdateTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
     func test_update_shouldNotChangeResultSuccessState() {
         
-        assertState(makeUpdateEvent(), on: makeResultSuccessState())
+        assertState(makeUpdateTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
     func test_update_shouldNotDeliverEffectOnResultSuccessState() {
         
-        assert(makeUpdateEvent(), on: makeResultSuccessState(), effect: nil)
+        assert(makeUpdateTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
     func test_update_shouldSetPaymentToUpdatedValue() {
@@ -935,7 +935,7 @@ final class PaymentReducerTests: XCTestCase {
         let (payment, updated) = (makePayment(), makePayment())
         let sut = makeSUT(updatePayment: { _, _ in updated })
         
-        assertState(sut: sut, makeUpdateEvent(), on: makePaymentState(payment)) {
+        assertState(sut: sut, makeUpdateTransactionEvent(), on: makeTransaction(payment)) {
             
             $0.payment = updated
         }
@@ -946,7 +946,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(validatePayment: { _ in false })
         
-        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
         
         XCTAssertFalse(isValid(state))
     }
@@ -955,7 +955,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(validatePayment: { _ in true })
         
-        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
         
         XCTAssertTrue(isValid(state))
     }
@@ -964,7 +964,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(checkFraud: { _ in false })
         
-        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
         
         XCTAssertFalse(isFraudSuspected(state))
     }
@@ -973,7 +973,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = makeSUT(checkFraud: { _ in true })
         
-        let (state, _) = sut.reduce(makePaymentState(), makeUpdateEvent())
+        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
         
         XCTAssertTrue(isFraudSuspected(state))
     }
@@ -981,8 +981,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnConnectivityErrorFailure() {
         
         assert(
-            makeUpdateFailureEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makeUpdateFailureTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -990,8 +990,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         assert(
-            makeUpdateFailureEvent(),
-            on: makePaymentState(),
+            makeUpdateFailureTransactionEvent(),
+            on: makeTransaction(),
             effect: nil
         )
     }
@@ -999,8 +999,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnServerErrorFailure() {
         
         assert(
-            makeUpdateFailureEvent(anyMessage()),
-            on: makeFraudSuspectedPaymentState(),
+            makeUpdateFailureTransactionEvent(anyMessage()),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -1008,8 +1008,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnServerErrorFailure() {
         
         assert(
-            makeUpdateFailureEvent(anyMessage()),
-            on: makePaymentState(),
+            makeUpdateFailureTransactionEvent(anyMessage()),
+            on: makeTransaction(),
             effect: nil
         )
     }
@@ -1017,8 +1017,8 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
         assert(
-            makeUpdateEvent(),
-            on: makeFraudSuspectedPaymentState(),
+            makeUpdateTransactionEvent(),
+            on: makeFraudSuspectedTransaction(),
             effect: nil
         )
     }
@@ -1026,32 +1026,32 @@ final class PaymentReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnUpdate() {
         
         assert(
-            makeUpdateEvent(),
-            on: makePaymentState(),
+            makeUpdateTransactionEvent(),
+            on: makeTransaction(),
             effect: nil
         )
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
+    private typealias SUT = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
     private typealias CheckFraudSpy = CallSpy<Payment, Bool>
-    private typealias MakeDigestSpy = CallSpy<Payment, Digest>
+    private typealias MakeDigestSpy = CallSpy<Payment, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
-    private typealias ParameterReduceSpy = CallSpy<(Payment, ParameterEvent), (Payment, SUT.Effect?)>
-    private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
+    private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
+    private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
         getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
-        makeDigest: @escaping SUT.MakeDigest = { _ in makeDigest() },
-        parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
+        makeDigest: @escaping SUT.MakeDigest = { _ in makePaymentDigest() },
+        paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping SUT.ValidatePayment = { _ in false },
         file: StaticString = #file,
@@ -1062,7 +1062,7 @@ final class PaymentReducerTests: XCTestCase {
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
-            parameterReduce: parameterReduce,
+            paymentReduce: paymentReduce,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )

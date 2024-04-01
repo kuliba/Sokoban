@@ -1,20 +1,20 @@
 //
-//  PaymentEffectHandler+ext.swift
+//  TransactionEffectHandler+ext.swift
 //
 //
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     typealias Performer = TransactionPerformer<DocumentStatus, OperationDetails>
     
     convenience init(
-        initiate: @escaping Initiate,
+        initiatePayment: @escaping InitiatePayment,
         getDetails: @escaping Performer.GetDetails,
         makeTransfer: @escaping Performer.MakeTransfer,
-        parameterEffectHandle: @escaping ParameterEffectHandle,
-        process: @escaping Process
+        paymentEffectHandle: @escaping PaymentEffectHandle,
+        processPayment: @escaping ProcessPayment
     ) {
         let transactionPerformer = Performer(
             getDetails: getDetails,
@@ -22,10 +22,10 @@ public extension PaymentEffectHandler {
         )
         
         self.init(
-            initiate: initiate,
+            initiatePayment: initiatePayment,
             makePayment: transactionPerformer.process,
-            parameterEffectHandle: parameterEffectHandle,
-            process: process
+            paymentEffectHandle: paymentEffectHandle,
+            processPayment: processPayment
         )
     }
 }

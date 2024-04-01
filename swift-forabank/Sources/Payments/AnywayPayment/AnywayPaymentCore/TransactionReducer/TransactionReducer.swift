@@ -1,16 +1,16 @@
 //
-//  PaymentReducer.swift
+//  TransactionReducer.swift
 //
 //
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
+public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
     private let checkFraud: CheckFraud
     private let getVerificationCode: GetVerificationCode
     private let makeDigest: MakeDigest
-    private let parameterReduce: ParameterReduce
+    private let paymentReduce: PaymentReduce
     private let updatePayment: UpdatePayment
     private let validatePayment: ValidatePayment
     
@@ -18,20 +18,20 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
-        parameterReduce: @escaping ParameterReduce,
+        paymentReduce: @escaping PaymentReduce,
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
         self.checkFraud = checkFraud
         self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
-        self.parameterReduce = parameterReduce
+        self.paymentReduce = paymentReduce
         self.updatePayment = updatePayment
         self.validatePayment = validatePayment
     }
 }
 
-public extension PaymentReducer {
+public extension TransactionReducer {
     
     func reduce(
         _ state: State,
@@ -72,8 +72,8 @@ public extension PaymentReducer {
         case (_, .initiatePayment):
             initiatePayment(&state, &effect)
             
-        case let (_, .parameter(parameterEvent)):
-            reduce(&state, &effect, with: parameterEvent)
+        case let (_, .payment(event)):
+            reduce(&state, &effect, with: event)
             
         case let (_, .updatePayment(result)):
             reduce(&state, with: result)
@@ -86,22 +86,22 @@ public extension PaymentReducer {
     }
 }
 
-public extension PaymentReducer {
+public extension TransactionReducer {
     
     typealias CheckFraud = (Payment) -> Bool
-    typealias MakeDigest = (Payment) -> Digest
-    typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
-    typealias UpdatePayment = (Payment, Update) -> Payment
+    typealias MakeDigest = (Payment) -> PaymentDigest
+    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
+    typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     
     typealias ValidatePayment = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     
-    typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
-private extension PaymentReducer {
+private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
@@ -138,10 +138,10 @@ private extension PaymentReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: ParameterEvent
+        with event: PaymentEvent
     ) {
         let payment: Payment
-        (payment, effect) = parameterReduce(state.payment, event)
+        (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
         state.isValid = validatePayment(payment)
     }
@@ -170,7 +170,7 @@ private extension PaymentReducer {
     
     func reduce(
         _ state: inout State,
-        with updateResult: Event.UpdateResult
+        with updateResult: Event.PaymentUpdateResult
     ) {
         switch updateResult {
         case let .failure(serviceFailure):
