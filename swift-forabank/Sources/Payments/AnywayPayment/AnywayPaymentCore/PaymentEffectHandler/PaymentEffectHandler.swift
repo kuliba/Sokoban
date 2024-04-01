@@ -114,7 +114,7 @@ private extension PaymentEffectHandler {
             
             guard self != nil else { return }
             
-            dispatch(.parameter($0))
+            dispatch(.payment($0))
         }
     }
 }

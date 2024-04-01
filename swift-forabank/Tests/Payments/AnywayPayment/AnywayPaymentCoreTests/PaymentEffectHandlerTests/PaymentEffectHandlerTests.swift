@@ -231,7 +231,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssert(received.isEmpty)
     }
     
-    // MARK: - parameter
+    // MARK: - payment
     
     func test_parameterEffect_shouldCallParameterEffectHandleWithEffect() {
         
@@ -248,7 +248,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         let event = makeParameterEvent()
         let (sut, parameterEffectHandler, _,_, _) = makeSUT()
         
-        expect(sut, toDeliver: .parameter(event), for:  makeParameterPaymentEffect(), on: {
+        expect(sut, toDeliver: .payment(event), for:  makeParameterPaymentEffect(), on: {
             
             parameterEffectHandler.complete(with: event)
         })

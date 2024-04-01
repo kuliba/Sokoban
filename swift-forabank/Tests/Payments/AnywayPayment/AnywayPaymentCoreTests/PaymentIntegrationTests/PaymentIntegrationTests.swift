@@ -403,7 +403,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.fraud(.continue))
         sut.event(.fraud(.expired))
         sut.event(.initiatePayment)
-        sut.event(.parameter(.select))
+        sut.event(.payment(.select))
         sut.event(.updatePayment(.failure(.connectivityError)))
         
         XCTAssertNoDiff(stateSpy.values, accStates)

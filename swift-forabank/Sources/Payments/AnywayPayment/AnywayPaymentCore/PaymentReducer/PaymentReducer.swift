@@ -72,8 +72,8 @@ public extension PaymentReducer {
         case (_, .initiatePayment):
             initiatePayment(&state, &effect)
             
-        case let (_, .parameter(parameterEvent)):
-            reduce(&state, &effect, with: parameterEvent)
+        case let (_, .payment(event)):
+            reduce(&state, &effect, with: event)
             
         case let (_, .updatePayment(result)):
             reduce(&state, with: result)

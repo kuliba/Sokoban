@@ -215,10 +215,10 @@ func makeParameterEvent(
     .select
 }
 
-func makeParameterTransactionEvent(
+func makePaymentTransactionEvent(
 ) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
-    .parameter(.select)
+    .payment(.select)
 }
 
 func makePayment(
