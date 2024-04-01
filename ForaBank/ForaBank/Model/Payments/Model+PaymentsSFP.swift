@@ -374,11 +374,13 @@ extension Model {
     
         let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
             .sorted(by: { $0.defaultBank && $1.defaultBank })
+            .filter { $0.defaultBank || $0.payment }
         
-        let banksID = banksByPhone?.compactMap({ $0.bankId })
+        let banksID = banksByPhone?
+            .compactMap({ $0.bankId })
         
         let options = self.reduceBanks(
-            bankList: bankList.value,
+            bankList: bankList.value.filter { $0.bankCountry == "RU" } ,
             preferred: banksID ?? []
         )
 
