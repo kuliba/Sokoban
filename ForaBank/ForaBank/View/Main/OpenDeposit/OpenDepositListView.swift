@@ -11,6 +11,7 @@ import ScrollViewProxy
 struct OpenDepositListView: View {
     
     @ObservedObject var viewModel: OpenDepositListViewModel
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -55,7 +56,7 @@ struct OpenDepositListView: View {
         
         switch destination {
         case let .openDeposit(viewModel):
-            OpenDepositDetailView(viewModel: viewModel)
+            OpenDepositDetailView(viewModel: viewModel, getUImage: getUImage)
         }
     }
 }
@@ -69,7 +70,8 @@ struct OpenDepositView_Previews: PreviewProvider {
                 navigationBar: .init(title: "Вклады"),
                 products: [.depositSample, .depositSample],
                 catalogType: .deposit
-            )
+            ), 
+            getUImage: { _ in nil }
         )
     }
 }
