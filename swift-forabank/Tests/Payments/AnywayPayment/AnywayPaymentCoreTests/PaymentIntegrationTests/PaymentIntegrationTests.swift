@@ -21,6 +21,35 @@ final class PaymentIntegrationTests: XCTestCase {
         XCTAssertEqual(processing.callCount, 0)
     }
     
+    func test_initiateFailureFlow_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(initialState: initialState)
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .failure(.connectivityError))
+        
+        sut.event(.completePayment(.none))
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.fraud(.cancel))
+        sut.event(.fraud(.continue))
+        sut.event(.fraud(.expired))
+        sut.event(.initiatePayment)
+        sut.event(.parameter(.select))
+        sut.event(.update(.failure(.connectivityError)))
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.status = .result(.failure(.updateFailure))
+        })
+    }
+    
     func test_flow() {
         
         let initialState = makePaymentState()
@@ -107,7 +136,7 @@ final class PaymentIntegrationTests: XCTestCase {
             handleEffect: effectHandler.handleEffect,
             scheduler: .immediate
         )
-        let stateSpy = StateSpy(sut.$state)
+        let stateSpy = StateSpy(sut.$state.removeDuplicates())
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(stateSpy, file: file, line: line)

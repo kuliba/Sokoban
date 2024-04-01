@@ -42,6 +42,9 @@ public extension PaymentReducer {
         var effect: Effect?
         
         switch (state.status, event) {
+        case (.result, _):
+            break
+            
         case (.fraudSuspected, _):
             switch event {
             case let .fraud(fraudEvent):
