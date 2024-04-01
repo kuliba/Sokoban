@@ -7,21 +7,21 @@
 
 public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
     
-    private let initiate: Initiate
+    private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
     private let parameterEffectHandle: ParameterEffectHandle
-    private let process: Process
+    private let processPayment: ProcessPayment
     
     public init(
-        initiate: @escaping Initiate,
+        initiatePayment: @escaping InitiatePayment,
         makePayment: @escaping MakePayment,
         parameterEffectHandle: @escaping ParameterEffectHandle,
-        process: @escaping Process
+        processPayment: @escaping ProcessPayment
     ) {
-        self.initiate = initiate
+        self.initiatePayment = initiatePayment
         self.makePayment = makePayment
         self.parameterEffectHandle = parameterEffectHandle
-        self.process = process
+        self.processPayment = processPayment
     }
 }
 
@@ -49,11 +49,11 @@ public extension PaymentEffectHandler {
 
 public extension PaymentEffectHandler {
     
-    typealias Initiate = Process
+    typealias InitiatePayment = ProcessPayment
     
     typealias ProcessResult = Event.UpdateResult
     typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias Process = (Digest, @escaping ProcessCompletion) -> Void
+    typealias ProcessPayment = (Digest, @escaping ProcessCompletion) -> Void
     
     typealias MakePaymentResult = Event.TransactionResult
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
@@ -74,7 +74,7 @@ private extension PaymentEffectHandler {
         _ digest: Digest,
         _ dispatch: @escaping Dispatch
     ) {
-        process(digest) { [weak self] in
+        processPayment(digest) { [weak self] in
             
             guard self != nil else { return }
             
@@ -86,7 +86,7 @@ private extension PaymentEffectHandler {
         _ digest: Digest,
         _ dispatch: @escaping Dispatch
     ) {
-        initiate(digest) { [weak self] in
+        initiatePayment(digest) { [weak self] in
             
             guard self != nil else { return }
             

@@ -344,10 +344,10 @@ final class PaymentIntegrationTests: XCTestCase {
         let paymentMaker = PaymentMaker()
         let processing = Processing()
         let effectHandler = EffectHandler(
-            initiate: paymentInitiator.process,
+            initiatePayment: paymentInitiator.process,
             makePayment: paymentMaker.process,
             parameterEffectHandle: parameterEffectHandler.handleEffect,
-            process: processing.process
+            processPayment: processing.process
         )
         
         let sut = SUT(
