@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
+public final class TransactionReducer<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
     
     private let checkFraud: CheckFraud
     private let getVerificationCode: GetVerificationCode
@@ -89,7 +89,7 @@ public extension TransactionReducer {
 public extension TransactionReducer {
     
     typealias CheckFraud = (Payment) -> Bool
-    typealias MakeDigest = (Payment) -> Digest
+    typealias MakeDigest = (Payment) -> PaymentDigest
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
     
@@ -98,7 +98,7 @@ public extension TransactionReducer {
     
     typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
-    typealias Effect = TransactionEffect<Digest, PaymentEffect>
+    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
 private extension TransactionReducer {
@@ -170,7 +170,7 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with updateResult: Event.UpdateResult
+        with updateResult: Event.PaymentUpdateResult
     ) {
         switch updateResult {
         case let .failure(serviceFailure):

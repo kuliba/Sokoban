@@ -302,19 +302,19 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
-    private typealias Effect = TransactionEffect<Digest, PaymentEffect>
+    private typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
-    private typealias EffectHandler = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
+    private typealias Reducer = TransactionReducer<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
+    private typealias EffectHandler = TransactionEffectHandler<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<Digest, EffectHandler.ProcessResult>
+    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
     
     private func makeSUT(
         _ stub: Stub? = nil,
@@ -373,7 +373,7 @@ final class PaymentIntegrationTests: XCTestCase {
     private func makeStub(
         checkFraud: Bool = false,
         getVerificationCode: VerificationCode? = nil,
-        makeDigest: Digest = makeDigest(),
+        makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true

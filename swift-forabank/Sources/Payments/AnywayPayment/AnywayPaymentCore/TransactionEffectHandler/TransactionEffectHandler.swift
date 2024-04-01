@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update> {
+public final class TransactionEffectHandler<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update> {
     
     private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
@@ -51,9 +51,9 @@ public extension TransactionEffectHandler {
     
     typealias InitiatePayment = ProcessPayment
     
-    typealias ProcessResult = Event.UpdateResult
+    typealias ProcessResult = Event.PaymentUpdateResult
     typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias ProcessPayment = (Digest, @escaping ProcessCompletion) -> Void
+    typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
     
     typealias MakePaymentResult = Event.TransactionResult
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
@@ -65,13 +65,13 @@ public extension TransactionEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
-    typealias Effect = TransactionEffect<Digest, PaymentEffect>
+    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
 private extension TransactionEffectHandler {
     
     func process(
-        _ digest: Digest,
+        _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
         processPayment(digest) { [weak self] in
@@ -83,7 +83,7 @@ private extension TransactionEffectHandler {
     }
     
     func initiatePayment(
-        _ digest: Digest,
+        _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
         initiatePayment(digest) { [weak self] in

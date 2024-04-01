@@ -25,7 +25,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     func test_continue_shouldCallProcessingWithDigestOnContinueEvent() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let (sut ,_,_,_,_, paymentProcessing) = makeSUT()
         
         sut.handleEffect(makeContinueTransactionEffect(digest)) { _ in }
@@ -93,7 +93,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     func test_initiatePayment_shouldCallPaymentInitiatorWithDigest() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let (sut, _, paymentInitiator, _,_,_) = makeSUT()
         
         sut.handleEffect(makeInitiateTransactionEffect(digest)) { _ in }
@@ -278,13 +278,13 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
+    private typealias SUT = TransactionEffectHandler<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
     
     private typealias GetDetailsSpy = Spy<SUT.Performer.PaymentOperationDetailID, SUT.Performer.GetDetailsResult>
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.Performer.MakeTransferResult>
-    private typealias PaymentProcessing = Spy<Digest, SUT.ProcessResult>
+    private typealias PaymentProcessing = Spy<PaymentDigest, SUT.ProcessResult>
     
     private func makeSUT(
         file: StaticString = #file,

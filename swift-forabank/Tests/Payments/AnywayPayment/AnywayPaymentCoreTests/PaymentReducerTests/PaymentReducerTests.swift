@@ -267,7 +267,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutVerificationCode() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let sut = makeSUT(
             getVerificationCode: { _ in nil },
             makeDigest: { _ in digest}
@@ -283,7 +283,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_continue_shouldCallMakeDigestWithPaymentOnValidPaymentWithoutVerificationCode() {
         
         let payment = makePayment()
-        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let makeDigestSpy = MakeDigestSpy(response: makePaymentDigest())
         let sut = makeSUT(
             getVerificationCode: { _ in nil },
             makeDigest: makeDigestSpy.call
@@ -326,7 +326,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_continue_shouldNotCallMakeDigestWithPaymentOnValidPaymentWithVerificationCode() {
         
-        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let makeDigestSpy = MakeDigestSpy(response: makePaymentDigest())
         let sut = makeSUT(
             getVerificationCode: { _ in makeVerificationCode() },
             makeDigest: makeDigestSpy.call
@@ -595,7 +595,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_initiatePayment_shouldDeliverEffect() {
         
-        let digest = makeDigest()
+        let digest = makePaymentDigest()
         let sut = makeSUT(makeDigest: { _ in digest })
         
         assert(sut: sut, .initiatePayment, on: makeTransaction(), effect: .initiatePayment(digest))
@@ -1034,14 +1034,14 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
+    private typealias SUT = TransactionReducer<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
     private typealias CheckFraudSpy = CallSpy<Payment, Bool>
-    private typealias MakeDigestSpy = CallSpy<Payment, Digest>
+    private typealias MakeDigestSpy = CallSpy<Payment, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
@@ -1050,7 +1050,7 @@ final class PaymentReducerTests: XCTestCase {
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
         getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
-        makeDigest: @escaping SUT.MakeDigest = { _ in makeDigest() },
+        makeDigest: @escaping SUT.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping SUT.ValidatePayment = { _ in false },

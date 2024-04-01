@@ -10,11 +10,6 @@ import Foundation
 
 // MARK: - Test Types
 
-struct Digest: Equatable {
-    
-    let value: String
-}
-
 enum DocumentStatus: Equatable {
     
     case complete, inflight
@@ -36,6 +31,11 @@ enum PaymentEvent {
 }
 
 struct Payment: Equatable {
+    
+    let value: String
+}
+
+struct PaymentDigest: Equatable {
     
     let value: String
 }
@@ -75,8 +75,8 @@ func makeCompletePaymentReportEvent(
 }
 
 func makeContinueTransactionEffect(
-    _ digest: Digest = makeDigest()
-) -> TransactionEffect<Digest, PaymentEffect> {
+    _ digest: PaymentDigest = makePaymentDigest()
+) -> TransactionEffect<PaymentDigest, PaymentEffect> {
     
     .continue(digest)
 }
@@ -97,13 +97,6 @@ func makeDetailIDTransactionReport(
         documentStatus: documentStatus,
         details: .paymentOperationDetailID(.init(id))
     )
-}
-
-func makeDigest(
-    _ value: String = UUID().uuidString
-) -> Digest {
-    
-    .init(value: value)
 }
 
 func makeFraudCancelTransactionEvent(
@@ -134,8 +127,8 @@ func makeFraudSuspectedTransaction(
 }
 
 func makeInitiateTransactionEffect(
-    _ digest: Digest = makeDigest()
-) -> TransactionEffect<Digest, PaymentEffect> {
+    _ digest: PaymentDigest = makePaymentDigest()
+) -> TransactionEffect<PaymentDigest, PaymentEffect> {
     
     .initiatePayment(digest)
 }
@@ -196,6 +189,13 @@ func makeOperationDetails(
     .init(value: value)
 }
 
+func makePaymentDigest(
+    _ value: String = UUID().uuidString
+) -> PaymentDigest {
+    
+    .init(value: value)
+}
+
 func makePaymentEffect(
 ) -> PaymentEffect {
     
@@ -204,7 +204,7 @@ func makePaymentEffect(
 
 func makePaymentTransactionEffect(
     _ effect: PaymentEffect = makePaymentEffect()
-) -> TransactionEffect<Digest, PaymentEffect> {
+) -> TransactionEffect<PaymentDigest, PaymentEffect> {
     
     .payment(effect)
 }
@@ -230,7 +230,7 @@ func makePayment(
 
 func makeTransactionEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
-) -> TransactionEffect<Digest, PaymentEffect> {
+) -> TransactionEffect<PaymentDigest, PaymentEffect> {
     
     .makePayment(verificationCode)
 }

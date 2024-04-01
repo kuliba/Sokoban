@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public enum TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
+public enum TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
     
     case completePayment(TransactionResult)
     case `continue`
@@ -13,7 +13,7 @@ public enum TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Upd
     case fraud(Fraud)
     case initiatePayment
     case payment(PaymentEvent)
-    case updatePayment(UpdateResult)
+    case updatePayment(PaymentUpdateResult)
 }
 
 public extension TransactionEvent {
@@ -25,7 +25,7 @@ public extension TransactionEvent {
     
     typealias TransactionResult = TransactionReport<DocumentStatus, OperationDetails>?
     
-    typealias UpdateResult = Result<Update, ServiceFailure>
+    typealias PaymentUpdateResult = Result<PaymentUpdate, ServiceFailure>
 }
 
-extension TransactionEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, PaymentEvent: Equatable, Update: Equatable {}
+extension TransactionEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, PaymentEvent: Equatable, PaymentUpdate: Equatable {}
