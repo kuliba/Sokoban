@@ -203,32 +203,99 @@ final class PaymentIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
-    func test_flow() {
+    func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
         let initialState = makePaymentState()
-        let parameterReduced = makePayment()
-        let updatePayment = makePayment()
-        let (sut, stateSpy, _, paymentInitiator, paymentMaker, processing) = makeSUT(
-            makeStub(
-                parameterReduce: (parameterReduced, nil),
-                updatePayment: updatePayment,
-                validatePayment: true
-            ),
+        let verificationCode = makeVerificationCode()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
             initialState: initialState
         )
         
-        sut.event(.parameter(.select))
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
         sut.event(.continue)
-        processing.complete(with: .success(makeUpdate()))
+        paymentMaker.complete(with: .none)
         
         assert(stateSpy, initialState, {
-            $0 = initialState
+            _ in
         }, {
-            $0.payment = parameterReduced
+            $0.payment = updatedPayment
             $0.isValid = true
         }, {
-            $0.payment = updatePayment
+            $0.status = .result(.failure(.transactionFailure))
         })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+    }
+    
+    func test_makePaymentSuccessDetailID_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let verificationCode = makeVerificationCode()
+        let report = makeDetailIDTransactionReport()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        paymentMaker.complete(with: report)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .result(.success(report))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+    }
+    
+    func test_makePaymentSuccessOperationDetailID_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let verificationCode = makeVerificationCode()
+        let report = makeOperationDetailsTransactionReport()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        paymentMaker.complete(with: report)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .result(.success(report))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
     }
     
     // MARK: - Helpers
