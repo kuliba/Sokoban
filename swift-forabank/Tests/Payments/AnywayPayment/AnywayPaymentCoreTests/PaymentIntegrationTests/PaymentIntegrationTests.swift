@@ -60,7 +60,7 @@ final class PaymentIntegrationTests: XCTestCase {
     private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
     private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
     
-    private typealias Stub = (checkFraud: Bool, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
@@ -83,6 +83,7 @@ final class PaymentIntegrationTests: XCTestCase {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             checkFraud: { _ in stub.checkFraud },
+            getVerificationCode: { _ in stub.getVerificationCode },
             makeDigest: { _ in stub.makeDigest },
             parameterReduce: { _,_ in stub.parameterReduce },
             updatePayment: { _,_ in stub.updatePayment },
@@ -122,6 +123,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private func makeStub(
         checkFraud: Bool = false,
+        getVerificationCode: VerificationCode? = nil,
         makeDigest: Digest = makeDigest(),
         parameterReduce: (Payment, Effect?) = (makePayment(), nil),
         updatePayment: Payment = makePayment(),
@@ -129,6 +131,7 @@ final class PaymentIntegrationTests: XCTestCase {
     ) -> Stub {
         (
             checkFraud: checkFraud,
+            getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,

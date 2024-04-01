@@ -170,15 +170,20 @@ final class PaymentReducerTests: XCTestCase {
         assert(.continue, on: makeServerErrorState(), effect: nil)
     }
     
-    func test_continue_shouldNotChangeStateOnValidPayment() {
+    func test_continue_shouldNotChangeStateOnValidPaymentWithoutVerificationCode() {
         
-        assertState(.continue, on: makeValidPaymentState())
+        let sut = makeSUT(getVerificationCode: { _ in nil })
+        
+        assertState(sut: sut, .continue, on: makeValidPaymentState())
     }
     
-    func test_continue_shouldDeliverEffectOnValidPayment() {
+    func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutVerificationCode() {
         
         let digest = makeDigest()
-        let sut = makeSUT(makeDigest: { _ in digest})
+        let sut = makeSUT(
+            getVerificationCode: { _ in nil },
+            makeDigest: { _ in digest}
+        )
         
         assert(
             sut: sut, .continue,
@@ -187,15 +192,72 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    func test_continue_shouldCallMakeDigestWithPaymentOnValidPayment() {
+    func test_continue_shouldCallMakeDigestWithPaymentOnValidPaymentWithoutVerificationCode() {
         
         let payment = makePayment()
-        let makeDigestSpy = CallSpy<Payment, Digest>(response: makeDigest())
-        let sut = makeSUT(makeDigest: makeDigestSpy.call)
+        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let sut = makeSUT(
+            getVerificationCode: { _ in nil },
+            makeDigest: makeDigestSpy.call
+        )
         
         _ = sut.reduce(makeValidPaymentState(payment), .continue)
         
         XCTAssertNoDiff(makeDigestSpy.payloads, [payment])
+    }
+    
+    func test_continue_shouldCallGetVerificationCodeWithPaymentOnValidPaymentWithoutVerificationCode() {
+        
+        let payment = makePayment()
+        let getVerificationCodeSpy = GetVerificationCodeSpy(response: nil)
+        let sut = makeSUT(getVerificationCode: getVerificationCodeSpy.call)
+        
+        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        
+        XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
+    }
+    
+    func test_continue_shouldNotChangeStateOnValidPaymentWithVerificationCode() {
+        
+        let sut = makeSUT(getVerificationCode: { _ in makeVerificationCode() })
+        
+        assertState(sut: sut, .continue, on: makeValidPaymentState())
+    }
+    
+    func test_continue_shouldDeliverMakePaymentEffectWithVerificationCodeOnValidPaymentWithVerificationCode() {
+        
+        let verificationCode = makeVerificationCode()
+        let sut = makeSUT(getVerificationCode: { _ in verificationCode })
+        
+        assert(
+            sut: sut, .continue,
+            on: makeValidPaymentState(),
+            effect: .makePayment(verificationCode)
+        )
+    }
+    
+    func test_continue_shouldNotCallMakeDigestWithPaymentOnValidPaymentWithVerificationCode() {
+        
+        let makeDigestSpy = MakeDigestSpy(response: makeDigest())
+        let sut = makeSUT(
+            getVerificationCode: { _ in makeVerificationCode() },
+            makeDigest: makeDigestSpy.call
+        )
+        
+        _ = sut.reduce(makeValidPaymentState(makePayment()), .continue)
+        
+        XCTAssertNoDiff(makeDigestSpy.payloads, [])
+    }
+    
+    func test_continue_shouldCallGetVerificationCodeWithPaymentOnValidPaymentWithVerificationCode() {
+        
+        let payment = makePayment()
+        let getVerificationCodeSpy = GetVerificationCodeSpy(response: makeVerificationCode())
+        let sut = makeSUT(getVerificationCode: getVerificationCodeSpy.call)
+        
+        _ = sut.reduce(makeValidPaymentState(payment), .continue)
+        
+        XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
     // MARK: - fraud
@@ -676,12 +738,15 @@ final class PaymentReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private typealias CheckFraudSpy = CallSpy<Payment, Bool>
+    private typealias MakeDigestSpy = CallSpy<Payment, Digest>
+    private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
     private typealias ParameterReduceSpy = CallSpy<(Payment, ParameterEvent), (Payment, SUT.Effect?)>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
     private func makeSUT(
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
+        getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
         makeDigest: @escaping SUT.MakeDigest = { _ in makeDigest() },
         parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
@@ -692,6 +757,7 @@ final class PaymentReducerTests: XCTestCase {
         
         let sut = SUT(
             checkFraud: checkFraud,
+            getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,

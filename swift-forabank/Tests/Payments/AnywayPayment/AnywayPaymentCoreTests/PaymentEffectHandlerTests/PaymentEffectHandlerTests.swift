@@ -25,7 +25,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_continue_shouldCallProcessingWithDigest() {
         
         let digest = makeDigest()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _,_,_, processing) = makeSUT()
         
         sut.handleEffect(.continue(digest)) { _ in }
         
@@ -98,7 +98,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_initiatePayment_shouldCallPaymentInitiatorWithDigest() {
         
         let digest = makeDigest()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _, paymentInitiator, _, _) = makeSUT()
         
         sut.handleEffect(makeInitiatePaymentEffect(digest)) { _ in }
         
@@ -107,7 +107,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     func test_initiatePayment_shouldDeliverUpdateWithConnectivityErrorOnPaymentInitiatorConnectivityErrorFailure() {
         
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -120,7 +120,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_initiatePayment_shouldDeliverUpdateWithServerErrorOnPaymentInitiatorServerErrorFailure() {
         
         let message = anyMessage()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -133,7 +133,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_initiatePayment_shouldDeliverUpdateOnPaymentInitiatorSuccess() {
         
         let update = makeUpdate()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -163,7 +163,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_makePayment_shouldCallProcessingWithDigest() {
         
         let code = makeVerificationCode()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, _,_, paymentMaker, _) = makeSUT()
         
         sut.handleEffect(.makePayment(code)) { _ in }
         
@@ -236,7 +236,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_parameterEffect_shouldCallParameterEffectHandleWithEffect() {
         
         let effect = makeParameterEffect()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, parameterEffectHandler, _,_, _) = makeSUT()
         
         sut.handleEffect(.parameter(effect)) { _ in }
         
@@ -246,7 +246,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_parameterEffect_shouldDeliverParameterEffectHandleEvent() {
         
         let event = makeParameterEvent()
-        let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (sut, parameterEffectHandler, _,_, _) = makeSUT()
         
         expect(sut, toDeliver: .parameter(event), for:  makeParameterPaymentEffect(), on: {
             

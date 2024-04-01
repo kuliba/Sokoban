@@ -8,6 +8,7 @@
 public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
     
     private let checkFraud: CheckFraud
+    private let getVerificationCode: GetVerificationCode
     private let makeDigest: MakeDigest
     private let parameterReduce: ParameterReduce
     private let updatePayment: UpdatePayment
@@ -15,12 +16,14 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
     
     public init(
         checkFraud: @escaping CheckFraud,
+        getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
         parameterReduce: @escaping ParameterReduce,
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
         self.checkFraud = checkFraud
+        self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
         self.parameterReduce = parameterReduce
         self.updatePayment = updatePayment
@@ -79,6 +82,7 @@ public extension PaymentReducer {
     typealias UpdatePayment = (Payment, Update) -> Payment
     
     typealias ValidatePayment = (Payment) -> Bool
+    typealias GetVerificationCode = (Payment) -> VerificationCode?
     
     typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
     typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
@@ -136,7 +140,11 @@ private extension PaymentReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        effect = .continue(makeDigest(state.payment))
+        if let verificationCode = getVerificationCode(state.payment) {
+             effect = .makePayment(verificationCode)
+        } else {
+            effect = .continue(makeDigest(state.payment))
+        }
     }
     
     func initiatePayment(
