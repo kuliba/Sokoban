@@ -309,7 +309,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
     private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
@@ -335,6 +335,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             getVerificationCode: { _ in stub.getVerificationCode },
             makeDigest: { _ in stub.makeDigest },
             paymentReduce: { _,_ in stub.paymentReduce },
+            shouldRestartPayment: { _ in stub.shouldRestartPayment },
             updatePayment: { _,_ in stub.updatePayment },
             validatePayment: { _ in stub.validatePayment }
         )
@@ -375,6 +376,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
+        shouldRestartPayment: Bool = false,
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true
     ) -> Stub {
@@ -383,6 +385,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
+            shouldRestartPayment: shouldRestartPayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )

@@ -11,14 +11,16 @@ public final class TransactionReducer<DocumentStatus, OperationDetails, Payment,
     private let getVerificationCode: GetVerificationCode
     private let makeDigest: MakeDigest
     private let paymentReduce: PaymentReduce
+    private let shouldRestartPayment: ShouldRestartPayment
     private let updatePayment: UpdatePayment
     private let validatePayment: ValidatePayment
-    
+
     public init(
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
         paymentReduce: @escaping PaymentReduce,
+        shouldRestartPayment: @escaping ShouldRestartPayment,
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
@@ -26,6 +28,7 @@ public final class TransactionReducer<DocumentStatus, OperationDetails, Payment,
         self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
         self.paymentReduce = paymentReduce
+        self.shouldRestartPayment = shouldRestartPayment
         self.updatePayment = updatePayment
         self.validatePayment = validatePayment
     }
@@ -83,13 +86,13 @@ public extension TransactionReducer {
 public extension TransactionReducer {
     
     typealias CheckFraud = (Payment) -> Bool
+    typealias GetVerificationCode = (Payment) -> VerificationCode?
     typealias MakeDigest = (Payment) -> PaymentDigest
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
+    typealias ShouldRestartPayment = (Payment) -> Bool
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    
     typealias ValidatePayment = (Payment) -> Bool
-    typealias GetVerificationCode = (Payment) -> VerificationCode?
-    
+
     typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
@@ -155,9 +158,13 @@ private extension TransactionReducer {
         guard state.isValid, state.status == nil else { return }
         
         if let verificationCode = getVerificationCode(state.payment) {
-             effect = .makePayment(verificationCode)
+            effect = .makePayment(verificationCode)
         } else {
-            effect = .continue(makeDigest(state.payment))
+            if shouldRestartPayment(state.payment) {
+                effect = .initiatePayment(makeDigest(state.payment))
+            } else {
+                effect = .continue(makeDigest(state.payment))
+            }
         }
     }
     

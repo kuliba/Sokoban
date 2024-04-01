@@ -270,7 +270,7 @@ final class TransactionReducerTests: XCTestCase {
         let digest = makePaymentDigest()
         let sut = makeSUT(
             getVerificationCode: { _ in nil },
-            makeDigest: { _ in digest}
+            makeDigest: { _ in digest }
         )
         
         assert(
@@ -348,6 +348,72 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
+    func test_continue_shouldNotChangeStateOnValidPaymentWithShouldRestartPayment() {
+        
+        let sut = makeSUT(shouldRestartPayment: { _ in true })
+        
+        assertState(sut: sut, .continue, on: makeValidTransaction())
+    }
+    
+    func test_continue_shouldDeliverInitiatePaymentEffectWithPaymentDigestOnValidPaymentWithShouldRestartPayment() {
+        
+        let digest = makePaymentDigest()
+        let sut = makeSUT(
+            makeDigest: { _ in digest },
+            shouldRestartPayment: { _ in true }
+        )
+        
+        assert(
+            sut: sut, .continue,
+            on: makeValidTransaction(),
+            effect: .initiatePayment(digest)
+        )
+    }
+    
+    func test_continue_shouldCallshouldRestartPaymentWithPaymentOnValidPaymentWithShouldRestartPayment() {
+        
+        let payment = makePayment()
+        let shouldRestartPaymentSpy = ShouldRestartPaymentSpy(response: true)
+        let sut = makeSUT(shouldRestartPayment: shouldRestartPaymentSpy.call)
+        
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
+        
+        XCTAssertNoDiff(shouldRestartPaymentSpy.payloads, [payment])
+    }
+    
+    func test_continue_shouldNotChangeStateOnValidPaymentWithoutShouldRestartPayment() {
+        
+        let sut = makeSUT(shouldRestartPayment: { _ in false })
+        
+        assertState(sut: sut, .continue, on: makeValidTransaction())
+    }
+    
+    func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutShouldRestartPayment() {
+        
+        let digest = makePaymentDigest()
+        let sut = makeSUT(
+            makeDigest: { _ in digest },
+            shouldRestartPayment: { _ in false }
+        )
+        
+        assert(
+            sut: sut, .continue,
+            on: makeValidTransaction(),
+            effect: .continue(digest)
+        )
+    }
+    
+    func test_continue_shouldCallshouldRestartPaymentWithPaymentOnValidPaymentWithoutShouldRestartPayment() {
+        
+        let payment = makePayment()
+        let shouldRestartPaymentSpy = ShouldRestartPaymentSpy(response: false)
+        let sut = makeSUT(shouldRestartPayment: shouldRestartPaymentSpy.call)
+        
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
+        
+        XCTAssertNoDiff(shouldRestartPaymentSpy.payloads, [payment])
+    }
+    
     // MARK: - dismissRecoverableError
     
     func test_dismissRecoverableError_shouldNotChangeResultFailureState() {
@@ -369,7 +435,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assert(.dismissRecoverableError, on: makeResultSuccessTransaction(), effect: nil)
     }
-
+    
     func test_dismissRecoverableError_shouldNotChangeFraudSuspectedState() {
         
         assertState(.dismissRecoverableError, on: makeFraudSuspectedTransaction())
@@ -379,7 +445,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assert(.dismissRecoverableError, on: makeFraudSuspectedTransaction(), effect: nil)
     }
-
+    
     func test_dismissRecoverableError_shouldNotChangeNilStatusState() {
         
         assertState(.dismissRecoverableError, on: makeNilStatusTransaction())
@@ -389,7 +455,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assert(.dismissRecoverableError, on: makeNilStatusTransaction(), effect: nil)
     }
-
+    
     func test_dismissRecoverableError_shouldResetServerErrorStatus() {
         
         assertState(.dismissRecoverableError, on: makeServerErrorTransaction()) {
@@ -402,7 +468,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assert(.dismissRecoverableError, on: makeServerErrorTransaction(), effect: nil)
     }
-
+    
     // MARK: - fraud
     
     func test_fraudCancel_shouldNotChangeResultFailureState() {
@@ -1044,6 +1110,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias MakeDigestSpy = CallSpy<Payment, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
+    private typealias ShouldRestartPaymentSpy = CallSpy<Payment, Bool>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
@@ -1052,6 +1119,7 @@ final class TransactionReducerTests: XCTestCase {
         getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
         makeDigest: @escaping SUT.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
+        shouldRestartPayment: @escaping SUT.ShouldRestartPayment = { _ in false },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping SUT.ValidatePayment = { _ in false },
         file: StaticString = #file,
@@ -1063,6 +1131,7 @@ final class TransactionReducerTests: XCTestCase {
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
+            shouldRestartPayment: shouldRestartPayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
