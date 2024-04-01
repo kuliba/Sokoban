@@ -64,7 +64,7 @@ public extension PaymentEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
     typealias Effect = PaymentEffect<Digest, ParameterEffect>
 }
 

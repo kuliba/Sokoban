@@ -1,11 +1,11 @@
 //
-//  PaymentEvent.swift
+//  TransactionEvent.swift
 //
 //
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public enum PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+public enum TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     case completePayment(TransactionResult)
     case `continue`
@@ -16,7 +16,7 @@ public enum PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Updat
     case updatePayment(UpdateResult)
 }
 
-public extension PaymentEvent {
+public extension TransactionEvent {
     
     enum Fraud: Equatable {
         
@@ -28,4 +28,4 @@ public extension PaymentEvent {
     typealias UpdateResult = Result<Update, ServiceFailure>
 }
 
-extension PaymentEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, ParameterEvent: Equatable, Update: Equatable {}
+extension TransactionEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, ParameterEvent: Equatable, Update: Equatable {}

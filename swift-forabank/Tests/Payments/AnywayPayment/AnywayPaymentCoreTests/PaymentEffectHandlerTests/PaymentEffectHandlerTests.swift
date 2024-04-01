@@ -137,7 +137,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             sut,
-            toDeliver: makeUpdateEvent(update),
+            toDeliver: makeUpdateTransactionEvent(update),
             for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .success(update)) }
         )
@@ -369,7 +369,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
 
 private func transactionReportEvent(
     _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
-) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(transactionReport)
 }

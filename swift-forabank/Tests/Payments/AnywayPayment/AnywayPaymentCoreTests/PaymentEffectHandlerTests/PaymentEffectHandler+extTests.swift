@@ -68,7 +68,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             processing,
-            toDeliver: makeUpdateEvent(update),
+            toDeliver: makeUpdateTransactionEvent(update),
             for: makeContinuePaymentEffect(),
             onProcessing: .success(update)
         )
@@ -136,7 +136,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             paymentInitiator,
-            toDeliver: makeUpdateEvent(update),
+            toDeliver: makeUpdateTransactionEvent(update),
             for: makeInitiatePaymentEffect(),
             onProcessing: .success(update)
         )
