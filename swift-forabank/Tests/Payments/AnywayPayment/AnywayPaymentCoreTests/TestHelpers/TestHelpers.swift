@@ -47,35 +47,6 @@ struct Update: Equatable {
 
 // MARK: - Factories
 
-func completePaymentFailureEvent(
-) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
-    
-    .completePayment(nil)
-}
-
-func completePaymentReportEvent(
-    _ report: TransactionReport<DocumentStatus, OperationDetails>
-) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
-    
-    .completePayment(report)
-}
-
-func continueEffect(
-    _ digest: Digest = makeDigest()
-) -> PaymentEffect<Digest, ParameterEffect> {
-    
-    .continue(digest)
-}
-
-func makeFraudSuspectedPaymentState(
-    _ payment: Payment = makePayment()
-) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
-    
-    let state = makePaymentState(payment, status: .fraudSuspected)
-    precondition(state.status == .fraudSuspected)
-    return state
-}
-
 func isValid(
     _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
 ) -> Bool {
@@ -88,6 +59,26 @@ func isFraudSuspected(
 ) -> Bool {
     
     state.status == .fraudSuspected
+}
+
+func makeCompletePaymentFailureEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .completePayment(nil)
+}
+
+func makeCompletePaymentReportEvent(
+    _ report: TransactionReport<DocumentStatus, OperationDetails>
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .completePayment(report)
+}
+
+func makeContinuePaymentEffect(
+    _ digest: Digest = makeDigest()
+) -> PaymentEffect<Digest, ParameterEffect> {
+    
+    .continue(digest)
 }
 
 func makeDetailID(
@@ -133,22 +124,28 @@ func makeFraudExpiredEvent(
     .fraud(.expired)
 }
 
+func makeFraudSuspectedPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, status: .fraudSuspected)
+    precondition(state.status == .fraudSuspected)
+    return state
+}
+
+func makeInitiatePaymentEffect(
+    _ digest: Digest = makeDigest()
+) -> PaymentEffect<Digest, ParameterEffect> {
+    
+    .initiatePayment(digest)
+}
+
 func makeInvalidPaymentState(
     _ payment: Payment = makePayment()
 ) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     let state = makePaymentState(payment, isValid: false)
     precondition(!isValid(state))
-    return state
-}
-
-func makeValidPaymentState(
-    _ payment: Payment = makePayment(),
-    status: PaymentState<Payment, DocumentStatus, OperationDetails>.Status? = nil
-) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
-    
-    let state = makePaymentState(payment, isValid: true, status: status)
-    precondition(isValid(state))
     return state
 }
 
@@ -276,6 +273,16 @@ func makeServerErrorState(
     
     let state = makePaymentState(payment, status: .serverError(message))
     precondition(state.status == .serverError(message))
+    return state
+}
+
+func makeValidPaymentState(
+    _ payment: Payment = makePayment(),
+    status: PaymentState<Payment, DocumentStatus, OperationDetails>.Status? = nil
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, isValid: true, status: status)
+    precondition(isValid(state))
     return state
 }
 

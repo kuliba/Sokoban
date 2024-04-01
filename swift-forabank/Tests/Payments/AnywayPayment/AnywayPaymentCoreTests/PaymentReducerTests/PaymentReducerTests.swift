@@ -12,7 +12,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
-    func test_completePayment_shouldNotChangeStateOnFraudSuspectedStatusOnReportFailure() {
+    func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
         assertState(
             .completePayment(nil),
@@ -85,7 +85,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnFraudSuspectedStatusOnDetailIDReport() {
         
         assert(
-            completePaymentReportEvent(makeDetailIDTransactionReport()),
+            makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
             on: makeFraudSuspectedPaymentState(),
             effect: nil
         )
@@ -94,7 +94,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnDetailIDReport() {
         
         assert(
-            completePaymentReportEvent(makeDetailIDTransactionReport()),
+            makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
             on: makePaymentState(),
             effect: nil
         )
@@ -103,7 +103,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnFraudSuspectedStatusOnOperationDetailsReport() {
         
         assert(
-            completePaymentReportEvent(makeOperationDetailsTransactionReport()),
+            makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
             on: makeFraudSuspectedPaymentState(),
             effect: nil
         )
@@ -112,7 +112,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnOperationDetailsReport() {
         
         assert(
-            completePaymentReportEvent(makeOperationDetailsTransactionReport()),
+            makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
             on: makePaymentState(),
             effect: nil
         )
@@ -301,7 +301,62 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    // MARK: - parameter (or field) event
+    // MARK: - initiatePayment
+    
+    func test_initiatePayment_shouldNotChangeState() {
+        
+        assertState(.initiatePayment, on: makePaymentState())
+    }
+    
+    func test_initiatePayment_shouldDeliverEffect() {
+        
+        let digest = makeDigest()
+        let sut = makeSUT(makeDigest: { _ in digest })
+        
+        assert(sut: sut, .initiatePayment, on: makePaymentState(), effect: .initiatePayment(digest))
+    }
+    
+    func test_initiatePayment_shouldNotChangeFraudSuspectedStatusState() {
+        
+        assertState(.initiatePayment, on: makeFraudSuspectedPaymentState())
+    }
+    
+    func test_initiatePayment_shouldDeliverEffectOnFraudSuspectedStatusState() {
+        
+        assert(.initiatePayment, on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_initiatePayment_shouldNotChangeStateOnResultFailureStatus() {
+        
+        assertState(.initiatePayment, on: makeResultFailureState())
+    }
+    
+    func test_initiatePayment_shouldNotDeliverEffectOnResultFailureStatus() {
+        
+        assert(.initiatePayment, on: makeResultFailureState(), effect: nil)
+    }
+    
+    func test_initiatePayment_shouldNotChangeStateOnResultSuccessStatus() {
+        
+        assertState(.initiatePayment, on: makeResultSuccessState())
+    }
+    
+    func test_initiatePayment_shouldNotDeliverEffectOnResultSuccessStatus() {
+        
+        assert(.initiatePayment, on: makeResultSuccessState(), effect: nil)
+    }
+    
+    func test_initiatePayment_shouldNotChangeStateOnServerErrorStatus() {
+        
+        assertState(.initiatePayment, on: makeServerErrorState())
+    }
+    
+    func test_initiatePayment_shouldNotDeliverEffectOnServerErrorStatus() {
+        
+        assert(.initiatePayment, on: makeServerErrorState(), effect: nil)
+    }
+
+    // MARK: - parameter (or field or payment) event
     
     func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
         
