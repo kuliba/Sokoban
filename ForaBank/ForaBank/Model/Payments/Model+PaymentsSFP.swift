@@ -27,11 +27,7 @@ extension Model {
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameter = Payments.ParameterInputPhone(
-                .init(id: phoneParameterId, value: nil),
-                title: "Номер телефона получателя",
-                countryCode: .russian
-            )
+            let phoneParameter = Self.phoneInput
             
             // bank
             let bankParameter = bankParameter(operation)
@@ -423,15 +419,21 @@ extension Model {
         let allBanks = preferredBanks + otherBanks
         
         return allBanks
-            .filter({ $0.bankType == .sfp })
+            .filter { $0.bankType == .sfp }
             .map { item in
-            Payments.ParameterSelectBank.Option(
-                id: item.id,
-                name: item.memberNameRus,
-                subtitle: nil,
-                icon: .init(with: item.svgImage),
-                searchValue: item.memberNameRus
-            )
-        }
+                Payments.ParameterSelectBank.Option(
+                    id: item.id,
+                    name: item.memberNameRus,
+                    subtitle: nil,
+                    icon: .init(with: item.svgImage),
+                    searchValue: item.memberNameRus
+                )
+            }
     }
+    
+    private static let phoneInput = Payments.ParameterInputPhone(
+        .init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: nil),
+        title: "Номер телефона получателя",
+        countryCode: .russian
+    )
 }
