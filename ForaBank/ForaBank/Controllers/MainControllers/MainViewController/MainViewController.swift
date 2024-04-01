@@ -192,6 +192,7 @@ class MainViewController: UIViewController {
         
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
+            controller.getUImage = { self.model.images.value[$0]?.uiImage }
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
@@ -219,6 +220,7 @@ class MainViewController: UIViewController {
         
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
+            controller.getUImage = { self.model.images.value[$0]?.uiImage }
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)

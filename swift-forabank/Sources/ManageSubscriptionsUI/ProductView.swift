@@ -82,6 +82,9 @@ public struct ProductView: View {
                 ZStack {
                     
                     viewModel.image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
                     
                     if viewModel.isLocked {
                         

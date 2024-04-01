@@ -23,8 +23,9 @@ class C2BDetailsViewModel {
     static var modelCreateC2BTransfer: CreateDirectTransferDecodableModel? = nil
     static var operationDetail: GetOperationDetailsByPaymentIdDatum? = nil
 
-    init(urlString: String) {
+    init(urlString: String, getUImage: @escaping (Md5hash) -> UIImage?) {
 
+        controller?.getUImage = getUImage
         c2bLink = urlString.replacingOccurrences(of: "amp;", with: "")
         getConsent()
         C2BApiRequests.getQRData(link: c2bLink) { model, error in

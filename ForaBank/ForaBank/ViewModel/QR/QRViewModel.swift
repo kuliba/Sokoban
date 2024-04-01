@@ -16,6 +16,7 @@ class QRViewModel: ObservableObject {
     let scanner: QRScannerView.ViewModel
     let title: String
     let subTitle: String
+    let getUImage: (Md5hash) -> UIImage?
     private let model: Model
     
     var flashLight: FlashLight = .on
@@ -44,6 +45,7 @@ class QRViewModel: ObservableObject {
         self.buttons = buttons
         self.closeButton = closeButton
         self.model = model
+        self.getUImage = { model.images.value[$0]?.uiImage }
     }
     
     typealias QRResolve = (String) -> ScanResult
