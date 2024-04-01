@@ -141,38 +141,12 @@ extension PaymentsSelectBankView.ViewModel {
             }.store(in: &bindings)
         
         model.action
-            .compactMap({ $0 as? ModelAction.LatestPayments.BanksList.Response })
+            .compactMap { $0 as? ModelAction.LatestPayments.BanksList.Response }
             .receive(on: scheduler)
-            .sink { [unowned self] payload in
+            .map(\.result)
+            .sink { [unowned self] result in
                 
-                let result = payload.result
-                
-                switch result {
-                case let .success(phoneData):
-                    let defaultBank = phoneData.first { $0.defaultBank == true }
-                    
-                    if let defaultBank {
-                        
-                        let bankValue = self.parameterSelectBank?.options.first { $0.id == defaultBank.bankId }
-                        if let bankId = bankValue?.id {
-                            
-                            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
-                                id: bankId
-                            ))
-                        }
-                        
-                    } else {
-                        if let bankId = phoneData.first?.bankId {
-                            
-                            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
-                                id: bankId
-                            ))
-                        }
-                    }
-                    
-                case .failure:
-                    break
-                }
+                selectDefaultBank(result)
                 
             }.store(in: &bindings)
         
@@ -192,6 +166,51 @@ extension PaymentsSelectBankView.ViewModel {
                 }
               
             }.store(in: &bindings)
+    }
+}
+
+extension PaymentsSelectBankView.ViewModel {
+
+    fileprivate func selectDefaultBank(
+        _ result: Result<[PaymentPhoneData], Error>
+    ) {
+        switch result {
+        case let .success(paymentsPhone):
+            let defaultBank = paymentsPhone.first { $0.defaultBank == true }
+            
+            bankItemTapped(
+                paymentsPhone: paymentsPhone,
+                defaultBank: defaultBank
+            )
+            
+        case .failure:
+            break
+        }
+    }
+    
+    private func bankItemTapped(
+        paymentsPhone: [PaymentPhoneData],
+        defaultBank: PaymentPhoneData?
+    ) {
+        if let defaultBank {
+            
+            let bankValue = self.parameterSelectBank?.options.first { $0.id == defaultBank.bankId }
+            if let bankId = bankValue?.id {
+                
+                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                    id: bankId
+                ))
+            }
+            
+        } else {
+            
+            if let bankId = paymentsPhone.first?.bankId {
+                
+                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                    id: bankId
+                ))
+            }
+        }
     }
 }
 
