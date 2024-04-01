@@ -40,13 +40,7 @@ public extension TransactionReducer {
             reduceDismissRecoverableError(&state)
             
         case (.fraudSuspected, _):
-            switch event {
-            case let .fraud(fraudEvent):
-                reduce(&state, &effect, with: fraudEvent)
-                
-            default:
-                break
-            }
+            reduceFraudSuspected(&state, &effect, with: event)
             
         case let (_, .completePayment(transactionResult)):
             reduce(&state, with: transactionResult)
@@ -92,16 +86,17 @@ private extension TransactionReducer {
         state.status = nil
     }
     
-    func reduce(
+    func reduceFraudSuspected(
         _ state: inout State,
-        with transactionResult: Event.TransactionResult
+        _ effect: inout Effect?,
+        with event: Event
     ) {
-        switch transactionResult {
-        case .none:
-            state.status = .result(.failure(.transactionFailure))
+        switch event {
+        case let .fraud(fraudEvent):
+            reduce(&state, &effect, with: fraudEvent)
             
-        case let .some(report):
-            state.status = .result(.success(report))
+        default:
+            break
         }
     }
     
@@ -121,6 +116,19 @@ private extension TransactionReducer {
             
         case .expired:
             state.status = .result(.failure(.fraud(.expired)))
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with transactionResult: Event.TransactionResult
+    ) {
+        switch transactionResult {
+        case .none:
+            state.status = .result(.failure(.transactionFailure))
+            
+        case let .some(report):
+            state.status = .result(.success(report))
         }
     }
     
