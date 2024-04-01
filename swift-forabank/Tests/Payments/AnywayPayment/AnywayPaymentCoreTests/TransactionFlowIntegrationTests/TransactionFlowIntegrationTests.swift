@@ -203,6 +203,34 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
+    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
+        
+        let initialState = makeTransaction()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
+            makeStub(shouldRestartPayment: true, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
+
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        })
+        
+        XCTAssertEqual(paymentInitiator.callCount, 2)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
+    }
+    
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
         let initialState = makeTransaction()
