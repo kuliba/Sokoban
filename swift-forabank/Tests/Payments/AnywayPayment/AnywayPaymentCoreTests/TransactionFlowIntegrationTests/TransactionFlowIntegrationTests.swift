@@ -203,6 +203,34 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
+    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
+        
+        let initialState = makeTransaction()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
+            makeStub(shouldRestartPayment: true, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
+
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        })
+        
+        XCTAssertEqual(paymentInitiator.callCount, 2)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
+    }
+    
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
         let initialState = makeTransaction()
@@ -309,13 +337,15 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
     private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
     private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
     
+    private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
+
     private func makeSUT(
         _ stub: Stub? = nil,
         initialState: State = makeTransaction(),
@@ -331,14 +361,16 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     ) {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
-            checkFraud: { _ in stub.checkFraud },
-            getVerificationCode: { _ in stub.getVerificationCode },
-            makeDigest: { _ in stub.makeDigest },
             paymentReduce: { _,_ in stub.paymentReduce },
             updatePayment: { _,_ in stub.updatePayment },
-            validatePayment: { _ in stub.validatePayment }
+            paymentInspector: .init(
+                checkFraud: { _ in stub.checkFraud },
+                getVerificationCode: { _ in stub.getVerificationCode },
+                makeDigest: { _ in stub.makeDigest },
+                shouldRestartPayment: { _ in stub.shouldRestartPayment },
+                validatePayment: { _ in stub.validatePayment }
+            )
         )
-        
         let paymentInitiator = PaymentInitiator()
         let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentMaker = PaymentMaker()
@@ -375,6 +407,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
+        shouldRestartPayment: Bool = false,
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true
     ) -> Stub {
@@ -383,6 +416,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
+            shouldRestartPayment: shouldRestartPayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
