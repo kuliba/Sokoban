@@ -101,7 +101,7 @@ public struct ProductSelectView<ProductView: View>: View {
         
         HStack(spacing: 12) {
             
-            productIcon(product.look.icon)
+            productIcon(product.look.background)
             productTitle(product, config: config)
         }
         .contentShape(Rectangle())

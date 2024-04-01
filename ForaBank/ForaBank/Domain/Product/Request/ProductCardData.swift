@@ -276,6 +276,19 @@ extension ProductCardData {
         
         loanBaseParam != nil
     }
+    
+    var isAdditional: Bool {
+        
+        if let cardType {
+            switch cardType {
+            case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+                return true
+            default:
+                return false
+            }
+        }
+        return false
+    }
 }
 
 extension ProductCardData.LoanBaseParamInfoData {
