@@ -1,11 +1,11 @@
 //
-//  PaymentState.swift
+//  Transaction.swift
 //
 //
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
+public struct Transaction<Payment, DocumentStatus, OperationDetails> {
     
     public var payment: Payment
     public var isValid: Bool
@@ -22,7 +22,7 @@ public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     }
 }
 
-public extension PaymentState {
+public extension Transaction {
     
     enum Status {
         
@@ -32,7 +32,7 @@ public extension PaymentState {
     }
 }
 
-public extension PaymentState.Status {
+public extension Transaction.Status {
     
     enum Terminated: Error, Equatable {
         
@@ -42,7 +42,7 @@ public extension PaymentState.Status {
     }
 }
 
-public extension PaymentState.Status.Terminated {
+public extension Transaction.Status.Terminated {
     
     enum Fraud: Equatable {
         
@@ -50,10 +50,10 @@ public extension PaymentState.Status.Terminated {
     }
 }
 
-public extension PaymentState.Status {
+public extension Transaction.Status {
     
     typealias Report = TransactionReport<DocumentStatus, OperationDetails>
 }
 
-extension PaymentState: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension PaymentState.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension Transaction: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension Transaction.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}

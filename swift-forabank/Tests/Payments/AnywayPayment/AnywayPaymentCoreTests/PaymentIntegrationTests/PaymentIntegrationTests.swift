@@ -23,7 +23,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_initiateFailureFlow_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(initialState: initialState)
         
         sut.event(.initiatePayment)
@@ -44,7 +44,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_fraudCancel_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
@@ -75,7 +75,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_fraudContinue_shouldAllowContinuation() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
@@ -108,7 +108,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_fraudExpired_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
@@ -139,7 +139,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_processingServerError_shouldAllowContinuation() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let message = anyMessage()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
@@ -175,7 +175,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_processingConnectivityError_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
             makeStub(updatePayment: updatedPayment),
@@ -205,7 +205,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let updatedPayment = makePayment()
         let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
@@ -236,7 +236,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_makePaymentSuccessDetailID_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let report = makeDetailIDTransactionReport()
         let updatedPayment = makePayment()
@@ -268,7 +268,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_makePaymentSuccessOperationDetailID_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let report = makeOperationDetailsTransactionReport()
         let updatedPayment = makePayment()
@@ -300,7 +300,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
+    private typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     private typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
     private typealias Effect = PaymentEffect<Digest, ParameterEffect>
     
@@ -318,7 +318,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private func makeSUT(
         _ stub: Stub? = nil,
-        initialState: State = makePaymentState(),
+        initialState: State = makeTransaction(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

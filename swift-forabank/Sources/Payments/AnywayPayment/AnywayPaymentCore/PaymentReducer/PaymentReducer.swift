@@ -96,7 +96,7 @@ public extension PaymentReducer {
     typealias ValidatePayment = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     
-    typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
+    typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
     typealias Effect = PaymentEffect<Digest, ParameterEffect>
 }
