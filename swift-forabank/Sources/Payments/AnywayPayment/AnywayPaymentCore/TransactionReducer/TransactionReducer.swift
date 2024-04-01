@@ -46,13 +46,7 @@ public extension TransactionReducer {
             break
             
         case (_, .dismissRecoverableError):
-            switch state.status {
-            case .serverError:
-                state.status = nil
-                
-            default:
-                break
-            }
+            reduceDismissRecoverableError(&state)
             
         case (.fraudSuspected, _):
             switch event {
@@ -102,6 +96,14 @@ public extension TransactionReducer {
 }
 
 private extension TransactionReducer {
+    
+    func reduceDismissRecoverableError(
+        _ state: inout State
+    ) {
+        guard case .serverError = state.status else { return }
+
+        state.status = nil
+    }
     
     func reduce(
         _ state: inout State,
