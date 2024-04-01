@@ -306,7 +306,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
+    private typealias Reducer = TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
     private typealias EffectHandler = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
     
     private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)

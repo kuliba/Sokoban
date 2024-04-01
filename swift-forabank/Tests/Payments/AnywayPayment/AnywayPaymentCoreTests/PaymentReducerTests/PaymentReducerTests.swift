@@ -1034,7 +1034,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
+    private typealias SUT = TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event

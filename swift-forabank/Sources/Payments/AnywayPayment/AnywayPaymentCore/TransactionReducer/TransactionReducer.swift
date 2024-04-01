@@ -1,11 +1,11 @@
 //
-//  PaymentReducer.swift
+//  TransactionReducer.swift
 //
 //
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
+public final class TransactionReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
     
     private let checkFraud: CheckFraud
     private let getVerificationCode: GetVerificationCode
@@ -31,7 +31,7 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Paym
     }
 }
 
-public extension PaymentReducer {
+public extension TransactionReducer {
     
     func reduce(
         _ state: State,
@@ -86,7 +86,7 @@ public extension PaymentReducer {
     }
 }
 
-public extension PaymentReducer {
+public extension TransactionReducer {
     
     typealias CheckFraud = (Payment) -> Bool
     typealias MakeDigest = (Payment) -> Digest
@@ -101,7 +101,7 @@ public extension PaymentReducer {
     typealias Effect = TransactionEffect<Digest, PaymentEffect>
 }
 
-private extension PaymentReducer {
+private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
