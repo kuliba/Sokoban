@@ -19,7 +19,7 @@ extension ServerCommands {
         struct ConfirmC2BSubAcc: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v2/ConfirmC2BSubAcc"
+            let endpoint = "/rest/binding/v1/ConfirmC2BSubAcc"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -51,7 +51,7 @@ extension ServerCommands {
         struct ConfirmC2BSubCard: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v2/ConfirmC2BSubCard"
+            let endpoint = "/rest/binding/v1/ConfirmC2BSubCard"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -82,7 +82,7 @@ extension ServerCommands {
         struct DeniedC2BSubscription: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v2/DeniedC2BSubscription"
+            let endpoint = "/rest/binding/v1/DeniedC2BSubscription"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
