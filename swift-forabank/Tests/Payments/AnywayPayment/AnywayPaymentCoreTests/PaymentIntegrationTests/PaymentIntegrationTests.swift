@@ -302,7 +302,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    private typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    private typealias Effect = TransactionEffect<Digest, ParameterEffect>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>

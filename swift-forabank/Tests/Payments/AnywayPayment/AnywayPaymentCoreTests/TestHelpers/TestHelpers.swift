@@ -74,9 +74,9 @@ func makeCompletePaymentReportEvent(
     .completePayment(report)
 }
 
-func makeContinuePaymentEffect(
+func makeContinueTransactionEffect(
     _ digest: Digest = makeDigest()
-) -> PaymentEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, ParameterEffect> {
     
     .continue(digest)
 }
@@ -133,9 +133,9 @@ func makeFraudSuspectedTransaction(
     return state
 }
 
-func makeInitiatePaymentEffect(
+func makeInitiateTransactionEffect(
     _ digest: Digest = makeDigest()
-) -> PaymentEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, ParameterEffect> {
     
     .initiatePayment(digest)
 }
@@ -202,9 +202,9 @@ func makeParameterEffect(
     .select
 }
 
-func makeParameterPaymentEffect(
+func makeParameterTransactionEffect(
     _ effect: ParameterEffect = makeParameterEffect()
-) -> PaymentEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, ParameterEffect> {
     
     .parameter(effect)
 }
@@ -228,9 +228,9 @@ func makePayment(
     .init(value: value)
 }
 
-func makePaymentEffect(
+func makeTransactionEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
-) -> PaymentEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, ParameterEffect> {
     
     .makePayment(verificationCode)
 }

@@ -98,7 +98,7 @@ public extension PaymentReducer {
     
     typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    typealias Effect = TransactionEffect<Digest, ParameterEffect>
 }
 
 private extension PaymentReducer {

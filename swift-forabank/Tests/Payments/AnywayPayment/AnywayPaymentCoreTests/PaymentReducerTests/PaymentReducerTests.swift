@@ -714,7 +714,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), makeParameterPaymentEffect()) })
+        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), makeParameterTransactionEffect()) })
         
         assert(
             sut: sut,
@@ -726,7 +726,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldDeliverParameterReduceEffect() {
         
-        let effect = makeParameterPaymentEffect()
+        let effect = makeParameterTransactionEffect()
         let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), effect) })
         
         assert(

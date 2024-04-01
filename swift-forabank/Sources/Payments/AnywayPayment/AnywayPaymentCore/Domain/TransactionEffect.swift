@@ -1,11 +1,11 @@
 //
-//  PaymentEffect.swift
+//  TransactionEffect.swift
 //
 //
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public enum PaymentEffect<Digest, ParameterEffect> {
+public enum TransactionEffect<Digest, ParameterEffect> {
     
     case `continue`(Digest)
     case initiatePayment(Digest)
@@ -13,4 +13,4 @@ public enum PaymentEffect<Digest, ParameterEffect> {
     case parameter(ParameterEffect)
 }
 
-extension PaymentEffect: Equatable where Digest: Equatable, ParameterEffect: Equatable {}
+extension TransactionEffect: Equatable where Digest: Equatable, ParameterEffect: Equatable {}
