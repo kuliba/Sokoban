@@ -174,14 +174,14 @@ extension CarouselState {
         guard offset > 0 else { return nil }
         
         var currentLength: CGFloat = 0
+        let productWidth = carouselDimensions.sizes.product.width
+        let separatorWidth = carouselDimensions.sizes.separator.width
+        let productSpacing = carouselDimensions.spacing
         
         for group in productGroups {
             
             let shouldAddSpoiler = shouldAddSpoiler(for: group)
             
-            let productWidth = carouselDimensions.sizes.product.width
-            let separatorWidth = carouselDimensions.sizes.separator.width
-            let productSpacing = carouselDimensions.spacing
             let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
             
             let separatorsCount = separators[group.id]?.count ?? 0
