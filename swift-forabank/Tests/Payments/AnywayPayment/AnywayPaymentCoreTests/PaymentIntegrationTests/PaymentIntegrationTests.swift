@@ -302,18 +302,18 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
     private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    private typealias Effect = TransactionEffect<Digest, ParameterEffect>
+    private typealias Effect = TransactionEffect<Digest, PaymentEffect>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
-    private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
+    private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Payment, Update>
+    private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
     
     private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, ParameterEffect>
+    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, PaymentEffect>
     private typealias Processing = Spy<Digest, EffectHandler.ProcessResult>
     
     private func makeSUT(

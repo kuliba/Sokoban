@@ -25,7 +25,7 @@ struct OperationDetails: Equatable {
     let value: String
 }
 
-enum ParameterEffect {
+enum PaymentEffect {
     
     case select
 }
@@ -76,7 +76,7 @@ func makeCompletePaymentReportEvent(
 
 func makeContinueTransactionEffect(
     _ digest: Digest = makeDigest()
-) -> TransactionEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, PaymentEffect> {
     
     .continue(digest)
 }
@@ -135,7 +135,7 @@ func makeFraudSuspectedTransaction(
 
 func makeInitiateTransactionEffect(
     _ digest: Digest = makeDigest()
-) -> TransactionEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, PaymentEffect> {
     
     .initiatePayment(digest)
 }
@@ -196,17 +196,17 @@ func makeOperationDetails(
     .init(value: value)
 }
 
-func makeParameterEffect(
-) -> ParameterEffect {
+func makePaymentEffect(
+) -> PaymentEffect {
     
     .select
 }
 
-func makeParameterTransactionEffect(
-    _ effect: ParameterEffect = makeParameterEffect()
-) -> TransactionEffect<Digest, ParameterEffect> {
+func makePaymentTransactionEffect(
+    _ effect: PaymentEffect = makePaymentEffect()
+) -> TransactionEffect<Digest, PaymentEffect> {
     
-    .parameter(effect)
+    .payment(effect)
 }
 
 func makeParameterEvent(
@@ -230,7 +230,7 @@ func makePayment(
 
 func makeTransactionEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
-) -> TransactionEffect<Digest, ParameterEffect> {
+) -> TransactionEffect<Digest, PaymentEffect> {
     
     .makePayment(verificationCode)
 }

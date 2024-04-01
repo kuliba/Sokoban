@@ -235,10 +235,10 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     func test_parameterEffect_shouldCallParameterEffectHandleWithEffect() {
         
-        let effect = makeParameterEffect()
+        let effect = makePaymentEffect()
         let (sut, parameterEffectHandler, _,_, _) = makeSUT()
         
-        sut.handleEffect(.parameter(effect)) { _ in }
+        sut.handleEffect(.payment(effect)) { _ in }
         
         XCTAssertNoDiff(parameterEffectHandler.effects, [effect])
     }
@@ -248,7 +248,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         let event = makeParameterEvent()
         let (sut, parameterEffectHandler, _,_, _) = makeSUT()
         
-        expect(sut, toDeliver: .payment(event), for:  makeParameterTransactionEffect(), on: {
+        expect(sut, toDeliver: .payment(event), for:  makePaymentTransactionEffect(), on: {
             
             parameterEffectHandler.complete(with: event)
         })
@@ -261,7 +261,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         (sut, parameterEffectHandler, _,_,_) = makeSUT()
         var received = [SUT.Event]()
         
-        sut?.handleEffect(makeParameterTransactionEffect()) { received.append($0) }
+        sut?.handleEffect(makePaymentTransactionEffect()) { received.append($0) }
         sut = nil
         parameterEffectHandler.complete(with: makeParameterEvent())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -271,11 +271,11 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
+    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
     
     private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, SUT.MakePaymentResult>
-    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, ParameterEffect>
+    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, PaymentEffect>
     private typealias Processing = Spy<Digest, SUT.ProcessResult>
     
     private func makeSUT(
