@@ -12,13 +12,13 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, getDetails, paymentInitiator, makeTransfer, parameterEffectHandler, processing) = makeSUT()
+        let (_, getDetails, paymentInitiator, makeTransfer, paymentEffectHandler, paymentProcessing) = makeSUT()
         
         XCTAssertEqual(getDetails.callCount, 0)
         XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(makeTransfer.callCount, 0)
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     // MARK: - continue
@@ -26,20 +26,20 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     func test_continue_shouldCallProcessingWithDigestOnContinueEvent() {
         
         let digest = makeDigest()
-        let (sut ,_,_,_,_, processing) = makeSUT()
+        let (sut ,_,_,_,_, paymentProcessing) = makeSUT()
         
         sut.handleEffect(makeContinueTransactionEffect(digest)) { _ in }
         
-        XCTAssertNoDiff(processing.payloads, [digest])
+        XCTAssertNoDiff(paymentProcessing.payloads, [digest])
     }
     
     func test_continue_shouldDeliverUpdateWithConnectivityErrorOnProcessingConnectivityErrorFailure() {
         
-        let (sut ,_,_,_,_, processing) = makeSUT()
+        let (sut ,_,_,_,_, paymentProcessing) = makeSUT()
         
         expect(
             sut,
-            processing,
+            paymentProcessing,
             toDeliver: .updatePayment(.failure(.connectivityError)),
             for: makeContinueTransactionEffect(),
             onProcessing: .failure(.connectivityError)
@@ -49,11 +49,11 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     func test_continue_shouldDeliverUpdateWithServerErrorOnProcessingServerErrorFailure() {
         
         let message = anyMessage()
-        let (sut ,_,_,_,_, processing) = makeSUT()
+        let (sut ,_,_,_,_, paymentProcessing) = makeSUT()
         
         expect(
             sut,
-            processing,
+            paymentProcessing,
             toDeliver: .updatePayment(.failure(.serverError(message))),
             for: makeContinueTransactionEffect(),
             onProcessing: .failure(.serverError(message))
@@ -63,11 +63,11 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     func test_continue_shouldDeliverUpdateOnProcessingSuccess() {
         
         let update = makeUpdate()
-        let (sut ,_,_,_,_, processing) = makeSUT()
+        let (sut ,_,_,_,_, paymentProcessing) = makeSUT()
         
         expect(
             sut,
-            processing,
+            paymentProcessing,
             toDeliver: makeUpdateTransactionEvent(update),
             for: makeContinueTransactionEffect(),
             onProcessing: .success(update)
@@ -77,13 +77,13 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     func test_continue_shouldNotDeliverProcessingResultOnInstanceDeallocation() {
         
         var sut: SUT?
-        let processing: Processing
-        (sut, _,_,_,_, processing) = makeSUT()
+        let paymentProcessing: PaymentProcessing
+        (sut, _,_,_,_, paymentProcessing) = makeSUT()
         var receivedEvents = [SUT.Event]()
         
         sut?.handleEffect(makeContinueTransactionEffect()) { receivedEvents.append($0) }
         sut = nil
-        processing.complete(with: .failure(.connectivityError))
+        paymentProcessing.complete(with: .failure(.connectivityError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(receivedEvents.isEmpty)
@@ -243,34 +243,34 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     func test_parameterEffect_shouldCallParameterEffectHandleWithEffect() {
         
         let effect = makePaymentEffect()
-        let (sut, _,_,_, parameterEffectHandler, _) = makeSUT()
+        let (sut, _,_,_, paymentEffectHandler, _) = makeSUT()
         
         sut.handleEffect(.payment(effect)) { _ in }
         
-        XCTAssertNoDiff(parameterEffectHandler.effects, [effect])
+        XCTAssertNoDiff(paymentEffectHandler.effects, [effect])
     }
     
     func test_parameterEffect_shouldDeliverPaymentEffectHandleEvent() {
         
         let event = makeParameterEvent()
-        let (sut, _,_,_, parameterEffectHandler, _) = makeSUT()
+        let (sut, _,_,_, paymentEffectHandler, _) = makeSUT()
         
         expect(sut, toDeliver: .payment(event), for: makePaymentTransactionEffect(), on: {
             
-            parameterEffectHandler.complete(with: event)
+            paymentEffectHandler.complete(with: event)
         })
     }
     
     func test_parameterEffect_shouldNotDeliverPaymentEffectHandleEventOnInstanceDeallocation() {
         
         var sut: SUT?
-        let parameterEffectHandler: ParameterEffectHandleSpy
-        (sut, _,_,_, parameterEffectHandler, _) = makeSUT()
+        let paymentEffectHandler: PaymentEffectHandleSpy
+        (sut, _,_,_, paymentEffectHandler, _) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makePaymentTransactionEffect()) { received.append($0) }
         sut = nil
-        parameterEffectHandler.complete(with: makeParameterEvent())
+        paymentEffectHandler.complete(with: makeParameterEvent())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
@@ -278,13 +278,13 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
+    private typealias SUT = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
     
     private typealias GetDetailsSpy = Spy<SUT.Performer.PaymentOperationDetailID, SUT.Performer.GetDetailsResult>
-    private typealias PaymentInitiator = Processing
+    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
+    private typealias PaymentInitiator = PaymentProcessing
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.Performer.MakeTransferResult>
-    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, PaymentEffect>
-    private typealias Processing = Spy<Digest, SUT.ProcessResult>
+    private typealias PaymentProcessing = Spy<Digest, SUT.ProcessResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -294,43 +294,43 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         getDetails: GetDetailsSpy,
         paymentInitiator: PaymentInitiator,
         makeTransfer: MakeTransferSpy,
-        parameterEffectHandler: ParameterEffectHandleSpy,
-        processing: Processing
+        paymentEffectHandler: PaymentEffectHandleSpy,
+        paymentProcessing: PaymentProcessing
     ) {
         let getDetails = GetDetailsSpy()
-        let parameterEffectHandler = ParameterEffectHandleSpy()
+        let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentInitiator = PaymentInitiator()
         let makeTransfer = MakeTransferSpy()
-        let processing = Processing()
+        let paymentProcessing = PaymentProcessing()
         
         let sut = SUT(
             initiatePayment: paymentInitiator.process,
             getDetails: getDetails.process,
             makeTransfer: makeTransfer.process,
-            parameterEffectHandle: parameterEffectHandler.handleEffect,
-            processPayment: processing.process
+            paymentEffectHandle: paymentEffectHandler.handleEffect,
+            processPayment: paymentProcessing.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(getDetails, file: file, line: line)
         trackForMemoryLeaks(paymentInitiator, file: file, line: line)
         trackForMemoryLeaks(makeTransfer, file: file, line: line)
-        trackForMemoryLeaks(parameterEffectHandler, file: file, line: line)
-        trackForMemoryLeaks(processing, file: file, line: line)
+        trackForMemoryLeaks(paymentEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(paymentProcessing, file: file, line: line)
         
-        return (sut, getDetails, paymentInitiator, makeTransfer, parameterEffectHandler, processing)
+        return (sut, getDetails, paymentInitiator, makeTransfer, paymentEffectHandler, paymentProcessing)
     }
     
     private func expect(
         _ sut: SUT,
-        _ processing: Processing,
+        _ paymentProcessing: PaymentProcessing,
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onProcessing processingResult: SUT.ProcessResult,
+        onProcessing paymentProcessingResult: SUT.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        expect(sut, toDeliver: expectedEvent, for: effect, on: { processing.complete(with: processingResult) }, file: file, line: line)
+        expect(sut, toDeliver: expectedEvent, for: effect, on: { paymentProcessing.complete(with: paymentProcessingResult) }, file: file, line: line)
     }
     
     private func expect(

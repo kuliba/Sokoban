@@ -13,7 +13,7 @@ public extension TransactionEffectHandler {
         initiatePayment: @escaping InitiatePayment,
         getDetails: @escaping Performer.GetDetails,
         makeTransfer: @escaping Performer.MakeTransfer,
-        parameterEffectHandle: @escaping ParameterEffectHandle,
+        paymentEffectHandle: @escaping PaymentEffectHandle,
         processPayment: @escaping ProcessPayment
     ) {
         let transactionPerformer = Performer(
@@ -24,7 +24,7 @@ public extension TransactionEffectHandler {
         self.init(
             initiatePayment: initiatePayment,
             makePayment: transactionPerformer.process,
-            parameterEffectHandle: parameterEffectHandle,
+            paymentEffectHandle: paymentEffectHandle,
             processPayment: processPayment
         )
     }

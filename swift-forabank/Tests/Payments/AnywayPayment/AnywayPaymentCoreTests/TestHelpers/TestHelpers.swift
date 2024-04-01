@@ -30,7 +30,7 @@ enum PaymentEffect {
     case select
 }
 
-enum ParameterEvent {
+enum PaymentEvent {
     
     case select
 }
@@ -62,14 +62,14 @@ func isFraudSuspected(
 }
 
 func makeCompletePaymentFailureEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .completePayment(nil)
 }
 
 func makeCompletePaymentReportEvent(
     _ report: TransactionReport<DocumentStatus, OperationDetails>
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .completePayment(report)
 }
@@ -107,19 +107,19 @@ func makeDigest(
 }
 
 func makeFraudCancelTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .fraud(.cancel)
 }
 
 func makeFraudContinueTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .fraud(.continue)
 }
 
 func makeFraudExpiredTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .fraud(.expired)
 }
@@ -210,13 +210,13 @@ func makePaymentTransactionEffect(
 }
 
 func makeParameterEvent(
-) -> ParameterEvent {
+) -> PaymentEvent {
     
     .select
 }
 
 func makePaymentTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .payment(.select)
 }
@@ -311,7 +311,7 @@ func makeUpdate(
 
 func makeUpdateFailureTransactionEvent(
     _ message: String? = nil
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     if let message {
         return .updatePayment(.failure(.serverError(message)))
@@ -322,7 +322,7 @@ func makeUpdateFailureTransactionEvent(
 
 func makeUpdateTransactionEvent(
     _ update: Update = makeUpdate()
-) -> TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
     
     .updatePayment(.success(update))
 }

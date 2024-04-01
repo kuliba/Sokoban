@@ -5,22 +5,22 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
+public final class TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update> {
     
     private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
-    private let parameterEffectHandle: ParameterEffectHandle
+    private let paymentEffectHandle: PaymentEffectHandle
     private let processPayment: ProcessPayment
     
     public init(
         initiatePayment: @escaping InitiatePayment,
         makePayment: @escaping MakePayment,
-        parameterEffectHandle: @escaping ParameterEffectHandle,
+        paymentEffectHandle: @escaping PaymentEffectHandle,
         processPayment: @escaping ProcessPayment
     ) {
         self.initiatePayment = initiatePayment
         self.makePayment = makePayment
-        self.parameterEffectHandle = parameterEffectHandle
+        self.paymentEffectHandle = paymentEffectHandle
         self.processPayment = processPayment
     }
 }
@@ -59,13 +59,13 @@ public extension TransactionEffectHandler {
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
-    typealias ParameterDispatch = (ParameterEvent) -> Void
-    typealias ParameterEffectHandle = (ParameterEffect, @escaping ParameterDispatch) -> Void
+    typealias PaymentDispatch = (PaymentEvent) -> Void
+    typealias PaymentEffectHandle = (PaymentEffect, @escaping PaymentDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    typealias Effect = TransactionEffect<Digest, ParameterEffect>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
+    typealias Effect = TransactionEffect<Digest, PaymentEffect>
 }
 
 private extension TransactionEffectHandler {
@@ -107,10 +107,10 @@ private extension TransactionEffectHandler {
     }
     
     func handle(
-        _ parameterEffect: ParameterEffect,
+        _ paymentEffect: PaymentEffect,
         _ dispatch: @escaping Dispatch
     ) {
-        parameterEffectHandle(parameterEffect) { [weak self] in
+        paymentEffectHandle(paymentEffect) { [weak self] in
             
             guard self != nil else { return }
             
