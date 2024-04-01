@@ -8,7 +8,7 @@
 import AnywayPaymentCore
 import XCTest
 
-final class PaymentEffectHandler_extTests: XCTestCase {
+final class TransactionEffectHandler_extTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         

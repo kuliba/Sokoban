@@ -1,5 +1,5 @@
 //
-//  PaymentIntegrationTests.swift
+//  TransactionFlowIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 31.03.2024.
@@ -9,7 +9,7 @@ import AnywayPaymentCore
 import RxViewModel
 import XCTest
 
-final class PaymentIntegrationTests: XCTestCase {
+final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
