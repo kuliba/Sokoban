@@ -305,9 +305,9 @@ func makeUpdateFailureEvent(
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     if let message {
-        return .update(.failure(.serverError(message)))
+        return .updatePayment(.failure(.serverError(message)))
     } else {
-        return .update(.failure(.connectivityError))
+        return .updatePayment(.failure(.connectivityError))
     }
 }
 
@@ -315,5 +315,5 @@ func makeUpdateEvent(
     _ update: Update = makeUpdate()
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
-    .update(.success(update))
+    .updatePayment(.success(update))
 }

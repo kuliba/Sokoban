@@ -700,7 +700,7 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertTrue(isValid(state))
     }
     
-    // MARK: - update
+    // MARK: - updatePayment
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateConnectivityErrorFailure() {
         
@@ -731,7 +731,7 @@ final class PaymentReducerTests: XCTestCase {
         
         assertState(makeUpdateFailureEvent(), on: makePaymentState()) {
             
-            $0.status = .result(.failure(.updateFailure))
+            $0.status = .result(.failure(.updatePaymentFailure))
         }
     }
     

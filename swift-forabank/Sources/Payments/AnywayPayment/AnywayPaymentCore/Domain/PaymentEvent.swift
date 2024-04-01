@@ -12,7 +12,7 @@ public enum PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Updat
     case fraud(Fraud)
     case initiatePayment
     case parameter(ParameterEvent)
-    case update(UpdateResult)
+    case updatePayment(UpdateResult)
 }
 
 public extension PaymentEvent {

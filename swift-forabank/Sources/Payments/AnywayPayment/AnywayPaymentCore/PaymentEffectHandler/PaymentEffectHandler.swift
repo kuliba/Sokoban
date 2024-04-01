@@ -78,7 +78,7 @@ private extension PaymentEffectHandler {
             
             guard self != nil else { return }
             
-            dispatch(.update($0))
+            dispatch(.updatePayment($0))
         }
     }
     
@@ -90,7 +90,7 @@ private extension PaymentEffectHandler {
             
             guard self != nil else { return }
             
-            dispatch(.update($0))
+            dispatch(.updatePayment($0))
         }
     }
     

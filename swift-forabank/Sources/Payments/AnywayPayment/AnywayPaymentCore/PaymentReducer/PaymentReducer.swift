@@ -66,8 +66,8 @@ public extension PaymentReducer {
         case let (_, .parameter(parameterEvent)):
             reduce(&state, &effect, with: parameterEvent)
             
-        case let (_, .update(updateResult)):
-            reduce(&state, with: updateResult)
+        case let (_, .updatePayment(result)):
+            reduce(&state, with: result)
             
         default:
             break
@@ -167,7 +167,7 @@ private extension PaymentReducer {
         case let .failure(serviceFailure):
             switch serviceFailure {
             case .connectivityError:
-                state.status = .result(.failure(.updateFailure))
+                state.status = .result(.failure(.updatePaymentFailure))
                 
             case let .serverError(message):
                 state.status = .serverError(message)

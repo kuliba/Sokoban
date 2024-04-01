@@ -111,7 +111,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             sut,
-            toDeliver: .update(.failure(.connectivityError)),
+            toDeliver: .updatePayment(.failure(.connectivityError)),
             for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .failure(.connectivityError)) }
         )
@@ -124,7 +124,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             sut,
-            toDeliver: .update(.failure(.serverError(message))),
+            toDeliver: .updatePayment(.failure(.serverError(message))),
             for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .failure(.serverError(message))) }
         )
@@ -313,14 +313,14 @@ final class PaymentEffectHandlerTests: XCTestCase {
         _ update: Update
     ) -> SUT.Event {
         
-        .update(.success(update))
+        .updatePayment(.success(update))
     }
     
     private func updateEvent(
         _ serviceFailure: ServiceFailure
     ) -> SUT.Event {
         
-        .update(.failure(serviceFailure))
+        .updatePayment(.failure(serviceFailure))
     }
     
     private func expect(

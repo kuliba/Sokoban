@@ -38,7 +38,7 @@ public extension PaymentState.Status {
         
         case fraud(Fraud)
         case transactionFailure
-        case updateFailure
+        case updatePaymentFailure
     }
 }
 
