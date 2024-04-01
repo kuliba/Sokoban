@@ -177,15 +177,9 @@ extension CarouselState {
         let productWidth = carouselDimensions.sizes.product.width
         let separatorWidth = carouselDimensions.sizes.separator.width
         let productSpacing = carouselDimensions.spacing
-        var newGroupId: ProductType? = nil
         
         for group in productGroups {
             
-            var currentLengthGroup: CGFloat = 0
-            
-            let shouldAddSticker = shouldAddSticker(for: group)
-            let stickerWidth = Int(shouldAddSticker ? carouselDimensions.sizes.product.width : 0)
-
             let shouldAddSpoiler = shouldAddSpoiler(for: group)
             
             let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
@@ -197,22 +191,14 @@ extension CarouselState {
             let separatorsWidth = separatorsCount * Int(separatorWidth)
             let productsInsets = visibleProductsCount * Int(productSpacing)
             
-            currentLengthGroup = CGFloat(visibleProductsWidth + separatorsWidth + productsInsets + spoilerWidth + stickerWidth)
+            currentLength += CGFloat(visibleProductsWidth + separatorsWidth + productsInsets + spoilerWidth)
             
-            currentLength += currentLengthGroup
-
-            print("group.id - \(group.id) offset - \(offset) currentLengthGroup - \(currentLengthGroup) currentLength - \(currentLength) ")
-            
-            if (currentLength >= offset) {
-                newGroupId = group.id
-                break
-            }
-
             guard currentLength >= offset else { continue }
-            newGroupId = group.id
+            
+            return group.id
         }
         
-        return newGroupId
+        return nil
     }
 }
 

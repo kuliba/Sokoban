@@ -37,8 +37,7 @@ extension CarouselReducer {
             
         case let .scrolledTo(groupID):
             state.selectedProductType = groupID
-            state.selector.selected = groupID
-
+            
         case let .select(productType, delay):
             effect = .scrollTo(productType, delay)
         
