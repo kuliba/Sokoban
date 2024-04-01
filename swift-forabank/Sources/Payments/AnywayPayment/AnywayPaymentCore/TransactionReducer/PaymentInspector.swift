@@ -1,11 +1,11 @@
 //
-//  PaymentWitness.swift
+//  PaymentInspector.swift
 //  
 //
 //  Created by Igor Malyarov on 01.04.2024.
 //
 
-public struct PaymentWitness<Payment, PaymentDigest> {
+public struct PaymentInspector<Payment, PaymentDigest> {
     
     public let checkFraud: CheckFraud
     public let getVerificationCode: GetVerificationCode
@@ -28,7 +28,7 @@ public struct PaymentWitness<Payment, PaymentDigest> {
     }
 }
 
-public extension PaymentWitness {
+public extension PaymentInspector {
     
     typealias CheckFraud = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?

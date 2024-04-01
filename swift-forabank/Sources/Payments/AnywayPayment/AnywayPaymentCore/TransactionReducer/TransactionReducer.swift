@@ -9,16 +9,16 @@ public final class TransactionReducer<DocumentStatus, OperationDetails, Payment,
     
     private let paymentReduce: PaymentReduce
     private let updatePayment: UpdatePayment
-    private let paymentWitness: Witness
+    private let paymentInspector: Inspector
 
     public init(
         paymentReduce: @escaping PaymentReduce,
         updatePayment: @escaping UpdatePayment,
-        paymentWitness: Witness
+        paymentInspector: Inspector
     ) {
         self.paymentReduce = paymentReduce
         self.updatePayment = updatePayment
-        self.paymentWitness = paymentWitness
+        self.paymentInspector = paymentInspector
     }
 }
 
@@ -69,7 +69,7 @@ public extension TransactionReducer {
     
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    typealias Witness = PaymentWitness<Payment, PaymentDigest>
+    typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
     typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
@@ -140,7 +140,7 @@ private extension TransactionReducer {
         let payment: Payment
         (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
-        state.isValid = paymentWitness.validatePayment(payment)
+        state.isValid = paymentInspector.validatePayment(payment)
     }
     
     func reduceContinue(
@@ -149,13 +149,13 @@ private extension TransactionReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        if let verificationCode = paymentWitness.getVerificationCode(state.payment) {
+        if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
             effect = .makePayment(verificationCode)
         } else {
-            if paymentWitness.shouldRestartPayment(state.payment) {
-                effect = .initiatePayment(paymentWitness.makeDigest(state.payment))
+            if paymentInspector.shouldRestartPayment(state.payment) {
+                effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
             } else {
-                effect = .continue(paymentWitness.makeDigest(state.payment))
+                effect = .continue(paymentInspector.makeDigest(state.payment))
             }
         }
     }
@@ -166,7 +166,7 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else { return }
     
-        effect = .initiatePayment(paymentWitness.makeDigest(state.payment))
+        effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
     }
     
     func reduce(
@@ -186,8 +186,8 @@ private extension TransactionReducer {
         case let .success(update):
             let updated = updatePayment(state.payment, update)
             state.payment = updated
-            state.isValid = paymentWitness.validatePayment(updated)
-            state.status = paymentWitness.checkFraud(updated) ? .fraudSuspected : nil
+            state.isValid = paymentInspector.validatePayment(updated)
+            state.status = paymentInspector.checkFraud(updated) ? .fraudSuspected : nil
         }
     }
 }

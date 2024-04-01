@@ -1114,16 +1114,16 @@ final class TransactionReducerTests: XCTestCase {
     private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
-    private typealias Witness = PaymentWitness<Payment, PaymentDigest>
+    private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
     private func makeSUT(
-        checkFraud: @escaping Witness.CheckFraud = { _ in false },
-        getVerificationCode: @escaping Witness.GetVerificationCode = { _ in nil },
-        makeDigest: @escaping Witness.MakeDigest = { _ in makePaymentDigest() },
+        checkFraud: @escaping Inspector.CheckFraud = { _ in false },
+        getVerificationCode: @escaping Inspector.GetVerificationCode = { _ in nil },
+        makeDigest: @escaping Inspector.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
-        shouldRestartPayment: @escaping Witness.ShouldRestartPayment = { _ in false },
+        shouldRestartPayment: @escaping Inspector.ShouldRestartPayment = { _ in false },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
-        validatePayment: @escaping Witness.ValidatePayment = { _ in false },
+        validatePayment: @escaping Inspector.ValidatePayment = { _ in false },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
@@ -1131,7 +1131,7 @@ final class TransactionReducerTests: XCTestCase {
         let sut = SUT(
             paymentReduce: paymentReduce,
             updatePayment: updatePayment,
-            paymentWitness: .init(
+            paymentInspector: .init(
                 checkFraud: checkFraud,
                 getVerificationCode: getVerificationCode,
                 makeDigest: makeDigest,
