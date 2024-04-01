@@ -42,6 +42,42 @@ final class PaymentIntegrationTests: XCTestCase {
         })
     }
     
+    func test_processingServerError_shouldAllowContinuation() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let message = anyMessage()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        processing.complete(with: .failure(.serverError(message)))
+        
+        sut.event(.dismissRecoverableError)
+        
+        sut.event(.continue)
+        processing.complete(with: .success(makeUpdate()), at: 1)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .serverError(message)
+        }, {
+            $0.status = nil
+        })
+    }
+    
     func test_processingConnectivityError_shouldIgnoreSuccessiveEvents() {
         
         let initialState = makePaymentState()
