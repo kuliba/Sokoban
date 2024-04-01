@@ -54,8 +54,8 @@ public extension PaymentReducer {
         case (_, .continue):
             reduceContinue(&state, &effect)
             
-        case (_, .initiate):
-            reduceInitiate(&state, &effect)
+        case (_, .initiatePayment):
+            initiatePayment(&state, &effect)
             
         case let (_, .parameter(parameterEvent)):
             reduce(&state, &effect, with: parameterEvent)
@@ -139,7 +139,7 @@ private extension PaymentReducer {
         effect = .continue(makeDigest(state.payment))
     }
     
-    func reduceInitiate(
+    func initiatePayment(
         _ state: inout State,
         _ effect: inout Effect?
     ) {

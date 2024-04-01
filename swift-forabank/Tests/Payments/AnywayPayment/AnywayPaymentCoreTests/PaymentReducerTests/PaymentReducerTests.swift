@@ -301,59 +301,59 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    // MARK: - initiate
+    // MARK: - initiatePayment
     
-    func test_initiate_shouldNotChangeState() {
+    func test_initiatePayment_shouldNotChangeState() {
         
-        assertState(.initiate, on: makePaymentState())
+        assertState(.initiatePayment, on: makePaymentState())
     }
     
-    func test_initiate_shouldDeliverEffect() {
+    func test_initiatePayment_shouldDeliverEffect() {
         
         let digest = makeDigest()
         let sut = makeSUT(makeDigest: { _ in digest })
         
-        assert(sut: sut, .initiate, on: makePaymentState(), effect: .initiatePayment(digest))
+        assert(sut: sut, .initiatePayment, on: makePaymentState(), effect: .initiatePayment(digest))
     }
     
-    func test_initiate_shouldNotChangeFraudSuspectedStatusState() {
+    func test_initiatePayment_shouldNotChangeFraudSuspectedStatusState() {
         
-        assertState(.initiate, on: makeFraudSuspectedPaymentState())
+        assertState(.initiatePayment, on: makeFraudSuspectedPaymentState())
     }
     
-    func test_initiate_shouldDeliverEffectOnFraudSuspectedStatusState() {
+    func test_initiatePayment_shouldDeliverEffectOnFraudSuspectedStatusState() {
         
-        assert(.initiate, on: makeFraudSuspectedPaymentState(), effect: nil)
+        assert(.initiatePayment, on: makeFraudSuspectedPaymentState(), effect: nil)
     }
     
-    func test_initiate_shouldNotChangeStateOnResultFailureStatus() {
+    func test_initiatePayment_shouldNotChangeStateOnResultFailureStatus() {
         
-        assertState(.initiate, on: makeResultFailureState())
+        assertState(.initiatePayment, on: makeResultFailureState())
     }
     
-    func test_initiate_shouldNotDeliverEffectOnResultFailureStatus() {
+    func test_initiatePayment_shouldNotDeliverEffectOnResultFailureStatus() {
         
-        assert(.initiate, on: makeResultFailureState(), effect: nil)
+        assert(.initiatePayment, on: makeResultFailureState(), effect: nil)
     }
     
-    func test_initiate_shouldNotChangeStateOnResultSuccessStatus() {
+    func test_initiatePayment_shouldNotChangeStateOnResultSuccessStatus() {
         
-        assertState(.initiate, on: makeResultSuccessState())
+        assertState(.initiatePayment, on: makeResultSuccessState())
     }
     
-    func test_initiate_shouldNotDeliverEffectOnResultSuccessStatus() {
+    func test_initiatePayment_shouldNotDeliverEffectOnResultSuccessStatus() {
         
-        assert(.initiate, on: makeResultSuccessState(), effect: nil)
+        assert(.initiatePayment, on: makeResultSuccessState(), effect: nil)
     }
     
-    func test_initiate_shouldNotChangeStateOnServerErrorStatus() {
+    func test_initiatePayment_shouldNotChangeStateOnServerErrorStatus() {
         
-        assertState(.initiate, on: makeServerErrorState())
+        assertState(.initiatePayment, on: makeServerErrorState())
     }
     
-    func test_initiate_shouldNotDeliverEffectOnServerErrorStatus() {
+    func test_initiatePayment_shouldNotDeliverEffectOnServerErrorStatus() {
         
-        assert(.initiate, on: makeServerErrorState(), effect: nil)
+        assert(.initiatePayment, on: makeServerErrorState(), effect: nil)
     }
 
     // MARK: - parameter (or field or payment) event
