@@ -149,6 +149,15 @@ func makeInvalidPaymentState(
     return state
 }
 
+func makeNilStatusPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment)
+    precondition(state.status == nil)
+    return state
+}
+
 func makeNonFraudSuspectedPaymentState(
     _ payment: Payment = makePayment()
 ) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
@@ -305,9 +314,9 @@ func makeUpdateFailureEvent(
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     if let message {
-        return .update(.failure(.serverError(message)))
+        return .updatePayment(.failure(.serverError(message)))
     } else {
-        return .update(.failure(.connectivityError))
+        return .updatePayment(.failure(.connectivityError))
     }
 }
 
@@ -315,5 +324,5 @@ func makeUpdateEvent(
     _ update: Update = makeUpdate()
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
-    .update(.success(update))
+    .updatePayment(.success(update))
 }

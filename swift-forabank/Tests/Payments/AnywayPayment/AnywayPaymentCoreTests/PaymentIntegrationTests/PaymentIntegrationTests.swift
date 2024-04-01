@@ -14,11 +14,98 @@ final class PaymentIntegrationTests: XCTestCase {
     func test_init_shouldNotCallCollaborators() {
         
         let (_,_, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
-     
+        
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
         XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
         XCTAssertEqual(processing.callCount, 0)
+    }
+    
+    func test_initiateFailureFlow_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(initialState: initialState)
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .failure(.connectivityError))
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.status = .result(.failure(.updatePaymentFailure))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+    }
+    
+    func test_processingServerError_shouldAllowContinuation() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let message = anyMessage()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        processing.complete(with: .failure(.serverError(message)))
+        
+        sut.event(.dismissRecoverableError)
+        
+        sut.event(.continue)
+        processing.complete(with: .success(makeUpdate()), at: 1)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .serverError(message)
+        }, {
+            $0.status = nil
+        })
+    }
+    
+    func test_processingConnectivityError_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        processing.complete(with: .failure(.connectivityError))
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .result(.failure(.updatePaymentFailure))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     func test_flow() {
@@ -60,7 +147,7 @@ final class PaymentIntegrationTests: XCTestCase {
     private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
     private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
     
-    private typealias Stub = (checkFraud: Bool, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
@@ -83,12 +170,13 @@ final class PaymentIntegrationTests: XCTestCase {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             checkFraud: { _ in stub.checkFraud },
+            getVerificationCode: { _ in stub.getVerificationCode },
             makeDigest: { _ in stub.makeDigest },
             parameterReduce: { _,_ in stub.parameterReduce },
             updatePayment: { _,_ in stub.updatePayment },
             validatePayment: { _ in stub.validatePayment }
         )
-
+        
         let paymentInitiator = PaymentInitiator()
         let parameterEffectHandler = ParameterEffectHandleSpy()
         let paymentMaker = PaymentMaker()
@@ -106,7 +194,7 @@ final class PaymentIntegrationTests: XCTestCase {
             handleEffect: effectHandler.handleEffect,
             scheduler: .immediate
         )
-        let stateSpy = StateSpy(sut.$state)
+        let stateSpy = StateSpy(sut.$state.removeDuplicates())
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(stateSpy, file: file, line: line)
@@ -122,6 +210,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private func makeStub(
         checkFraud: Bool = false,
+        getVerificationCode: VerificationCode? = nil,
         makeDigest: Digest = makeDigest(),
         parameterReduce: (Payment, Effect?) = (makePayment(), nil),
         updatePayment: Payment = makePayment(),
@@ -129,6 +218,7 @@ final class PaymentIntegrationTests: XCTestCase {
     ) -> Stub {
         (
             checkFraud: checkFraud,
+            getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             parameterReduce: parameterReduce,
             updatePayment: updatePayment,
@@ -136,13 +226,36 @@ final class PaymentIntegrationTests: XCTestCase {
         )
     }
     
+    private func assertSuccessiveEventsDeliverNoStateChanges(
+        _ sut: SUT,
+        _ stateSpy: StateSpy,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let accStates = stateSpy.values
+        
+        sut.event(.completePayment(.none))
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.fraud(.cancel))
+        sut.event(.fraud(.continue))
+        sut.event(.fraud(.expired))
+        sut.event(.initiatePayment)
+        sut.event(.parameter(.select))
+        sut.event(.updatePayment(.failure(.connectivityError)))
+        
+        XCTAssertNoDiff(stateSpy.values, accStates)
+    }
+    
+    @discardableResult
     private func assert(
-        _ spy: StateSpy,
+        _ stateSpy: StateSpy,
         _ initialState: State,
         _ updates: ((inout State) -> Void)...,
         file: StaticString = #file,
         line: UInt = #line
-    ) {
+    ) -> [State] {
+        
         var state = initialState
         var values = [State]()
         
@@ -152,6 +265,8 @@ final class PaymentIntegrationTests: XCTestCase {
             values.append(state)
         }
         
-        XCTAssertNoDiff(spy.values, values, file: file, line: line)
+        XCTAssertNoDiff(stateSpy.values, values, file: file, line: line)
+        
+        return values
     }
 }

@@ -40,7 +40,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             processing,
-            toDeliver: .update(.failure(.connectivityError)),
+            toDeliver: .updatePayment(.failure(.connectivityError)),
             for: makeContinuePaymentEffect(),
             onProcessing: .failure(.connectivityError)
         )
@@ -54,7 +54,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             processing,
-            toDeliver: .update(.failure(.serverError(message))),
+            toDeliver: .updatePayment(.failure(.serverError(message))),
             for: makeContinuePaymentEffect(),
             onProcessing: .failure(.serverError(message))
         )
@@ -108,7 +108,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             paymentInitiator,
-            toDeliver: .update(.failure(.connectivityError)),
+            toDeliver: .updatePayment(.failure(.connectivityError)),
             for: makeInitiatePaymentEffect(),
             onProcessing: .failure(.connectivityError)
         )
@@ -122,7 +122,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
         expect(
             sut,
             paymentInitiator,
-            toDeliver: .update(.failure(.serverError(message))),
+            toDeliver: .updatePayment(.failure(.serverError(message))),
             for: makeInitiatePaymentEffect(),
             onProcessing: .failure(.serverError(message))
         )
