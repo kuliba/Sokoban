@@ -14,7 +14,7 @@ final class PaymentIntegrationTests: XCTestCase {
     func test_init_shouldNotCallCollaborators() {
         
         let (_,_, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
-     
+        
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
         XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
@@ -29,15 +29,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.initiatePayment)
         paymentInitiator.complete(with: .failure(.connectivityError))
         
-        sut.event(.completePayment(.none))
-        sut.event(.continue)
-        sut.event(.continue)
-        sut.event(.fraud(.cancel))
-        sut.event(.fraud(.continue))
-        sut.event(.fraud(.expired))
-        sut.event(.initiatePayment)
-        sut.event(.parameter(.select))
-        sut.event(.update(.failure(.connectivityError)))
+        emitEvents(sut)
         
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
@@ -46,7 +38,37 @@ final class PaymentIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.status = .result(.failure(.updateFailure))
+            $0.status = .result(.failure(.updatePaymentFailure))
+        })
+    }
+    
+    func test_processingConnectivityError_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.continue)
+        processing.complete(with: .failure(.connectivityError))
+        
+        emitEvents(sut)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+        }, {
+            $0.status = .result(.failure(.updatePaymentFailure))
         })
     }
     
@@ -118,7 +140,7 @@ final class PaymentIntegrationTests: XCTestCase {
             updatePayment: { _,_ in stub.updatePayment },
             validatePayment: { _ in stub.validatePayment }
         )
-
+        
         let paymentInitiator = PaymentInitiator()
         let parameterEffectHandler = ParameterEffectHandleSpy()
         let paymentMaker = PaymentMaker()
@@ -166,6 +188,20 @@ final class PaymentIntegrationTests: XCTestCase {
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
+    }
+    
+    private func emitEvents(
+        _ sut: SUT
+    ) {
+        sut.event(.completePayment(.none))
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.fraud(.cancel))
+        sut.event(.fraud(.continue))
+        sut.event(.fraud(.expired))
+        sut.event(.initiatePayment)
+        sut.event(.parameter(.select))
+        sut.event(.updatePayment(.failure(.connectivityError)))
     }
     
     private func assert(
