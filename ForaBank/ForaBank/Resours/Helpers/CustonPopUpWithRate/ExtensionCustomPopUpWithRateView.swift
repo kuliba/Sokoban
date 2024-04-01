@@ -378,6 +378,7 @@ extension CustomPopUpWithRateView {
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
                         self.reversCard = ""
+                        self.cardToField.getUImage = { self.model.images.value[$0]?.uiImage }
                         self.cardToField.model = card
                         
                         self.hideView(self.cardToListView, needHide: true) {
