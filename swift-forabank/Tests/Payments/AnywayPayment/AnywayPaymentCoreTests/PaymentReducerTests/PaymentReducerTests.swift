@@ -643,30 +643,30 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - payment
     
-    func test_parameter_shouldNotChangeResultFailureState() {
+    func test_payment_shouldNotChangeResultFailureState() {
         
         assertState(makePaymentTransactionEvent(), on: makeResultFailureTransaction())
     }
     
-    func test_parameter_shouldNotDeliverEffectOnResultFailureState() {
+    func test_payment_shouldNotDeliverEffectOnResultFailureState() {
         
         assert(makePaymentTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
     }
     
-    func test_parameter_shouldNotChangeResultSuccessState() {
+    func test_payment_shouldNotChangeResultSuccessState() {
         
         assertState(makePaymentTransactionEvent(), on: makeResultSuccessTransaction())
     }
     
-    func test_parameter_shouldNotDeliverEffectOnResultSuccessState() {
+    func test_payment_shouldNotDeliverEffectOnResultSuccessState() {
         
         assert(makePaymentTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
     }
     
-    func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
+    func test_payment_shouldCallPaymentReduceWithPaymentAndEvent() {
         
-        let (payment, event) = (makePayment(), makeParameterEvent())
-        let paymentReduceSpy = ParameterReduceSpy(response: (payment, nil))
+        let (payment, event) = (makePayment(), makePaymentEvent())
+        let paymentReduceSpy = PaymentReduceSpy(response: (payment, nil))
         let sut = makeSUT(paymentReduce: paymentReduceSpy.call)
         
         _ = sut.reduce(makeTransaction(payment), .payment(event))
@@ -675,7 +675,7 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNoDiff(paymentReduceSpy.payloads.map(\.1), [event])
     }
     
-    func test_parameter_shouldCallValidateWithUpdatedPayment() {
+    func test_payment_shouldCallValidateWithUpdatedPayment() {
         
         let (payment, updated) = (makePayment(), makePayment())
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
@@ -684,13 +684,13 @@ final class PaymentReducerTests: XCTestCase {
             validatePayment: validatePaymentSpy.call
         )
         
-        _ = sut.reduce(makeTransaction(payment), .payment(makeParameterEvent()))
+        _ = sut.reduce(makeTransaction(payment), .payment(makePaymentEvent()))
         
         XCTAssertNoDiff(validatePaymentSpy.payloads, [updated])
         XCTAssertNotEqual(payment, updated)
     }
     
-    func test_parameter_shouldNotChangeStateOnFraudSuspectedStatus() {
+    func test_payment_shouldNotChangeStateOnFraudSuspectedStatus() {
         
         let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), nil) })
         
@@ -701,7 +701,7 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    func test_parameter_shouldSetPaymentToParameterReducePayment() {
+    func test_payment_shouldSetPaymentToPaymentReducePayment() {
         
         let newPayment = makePayment()
         let sut = makeSUT(paymentReduce: { _,_ in (newPayment, nil) })
@@ -712,7 +712,7 @@ final class PaymentReducerTests: XCTestCase {
         }
     }
     
-    func test_parameter_shouldNotDeliverEffectOnFraudSuspectedStatus() {
+    func test_payment_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
         let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), makePaymentTransactionEffect()) })
         
@@ -724,7 +724,7 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    func test_parameter_shouldDeliverParameterReduceEffect() {
+    func test_payment_shouldDeliverPaymentReduceEffect() {
         
         let effect = makePaymentTransactionEffect()
         let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), effect) })
@@ -737,20 +737,20 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    func test_parameter_shouldSetPaymentValidationToValidateResult_notValid() {
+    func test_payment_shouldSetPaymentValidationToValidateResult_notValid() {
         
         let sut = makeSUT(validatePayment: { _ in false })
         
-        let (state, _) = sut.reduce(makeTransaction(), .payment(makeParameterEvent()))
+        let (state, _) = sut.reduce(makeTransaction(), .payment(makePaymentEvent()))
         
         XCTAssertFalse(isValid(state))
     }
     
-    func test_parameter_shouldSetPaymentValidationToValidateResult_valid() {
+    func test_payment_shouldSetPaymentValidationToValidateResult_valid() {
         
         let sut = makeSUT(validatePayment: { _ in true })
         
-        let (state, _) = sut.reduce(makeTransaction(), .payment(makeParameterEvent()))
+        let (state, _) = sut.reduce(makeTransaction(), .payment(makePaymentEvent()))
         
         XCTAssertTrue(isValid(state))
     }
@@ -1043,7 +1043,7 @@ final class PaymentReducerTests: XCTestCase {
     private typealias CheckFraudSpy = CallSpy<Payment, Bool>
     private typealias MakeDigestSpy = CallSpy<Payment, Digest>
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
-    private typealias ParameterReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
+    private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     

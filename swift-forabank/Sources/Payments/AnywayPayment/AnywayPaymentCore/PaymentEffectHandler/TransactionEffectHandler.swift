@@ -41,8 +41,8 @@ public extension TransactionEffectHandler {
         case let .makePayment(verificationCode):
             makePayment(verificationCode, dispatch)
             
-        case let .payment(parameterEffect):
-            handle(parameterEffect, dispatch)
+        case let .payment(effect):
+            handle(effect, dispatch)
         }
     }
 }

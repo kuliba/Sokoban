@@ -233,7 +233,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - payment
     
-    func test_parameterEffect_shouldCallParameterEffectHandleWithEffect() {
+    func test_paymentEffect_shouldCallPaymentEffectHandleWithEffect() {
         
         let effect = makePaymentEffect()
         let (sut, paymentEffectHandler, _,_, _) = makeSUT()
@@ -243,9 +243,9 @@ final class PaymentEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(paymentEffectHandler.effects, [effect])
     }
     
-    func test_parameterEffect_shouldDeliverParameterEffectHandleEvent() {
+    func test_paymentEffect_shouldDeliverPaymentEffectHandleEvent() {
         
-        let event = makeParameterEvent()
+        let event = makePaymentEvent()
         let (sut, paymentEffectHandler, _,_, _) = makeSUT()
         
         expect(sut, toDeliver: .payment(event), for:  makePaymentTransactionEffect(), on: {
@@ -254,7 +254,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         })
     }
     
-    func test_parameterEffect_shouldNotDeliverParameterEffectHandleEventOnInstanceDeallocation() {
+    func test_paymentEffect_shouldNotDeliverPaymentEffectHandleEventOnInstanceDeallocation() {
         
         var sut: SUT?
         let paymentEffectHandler: PaymentEffectHandleSpy
@@ -263,7 +263,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makePaymentTransactionEffect()) { received.append($0) }
         sut = nil
-        paymentEffectHandler.complete(with: makeParameterEvent())
+        paymentEffectHandler.complete(with: makePaymentEvent())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)

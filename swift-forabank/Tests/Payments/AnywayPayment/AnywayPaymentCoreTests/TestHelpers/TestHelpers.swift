@@ -209,7 +209,7 @@ func makePaymentTransactionEffect(
     .payment(effect)
 }
 
-func makeParameterEvent(
+func makePaymentEvent(
 ) -> PaymentEvent {
     
     .select
