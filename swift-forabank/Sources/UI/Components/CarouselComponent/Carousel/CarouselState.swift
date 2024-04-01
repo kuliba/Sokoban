@@ -63,13 +63,13 @@ public extension CarouselState {
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
-            .map { $0.productType }
+            .map(\.productType)
             .uniqueValues
             .sorted(by: { $0.order < $1.order })
         
         let groupedByType = Dictionary(
             grouping: products,
-            by: { $0.productType }
+            by:(\.productType)
         )
         
         let productGroups = productTypes
