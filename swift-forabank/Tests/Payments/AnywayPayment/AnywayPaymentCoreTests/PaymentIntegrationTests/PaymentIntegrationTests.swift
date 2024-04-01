@@ -20,6 +20,34 @@ final class PaymentIntegrationTests: XCTestCase {
         XCTAssertEqual(processing.callCount, 0)
     }
     
+    func test_flow() {
+        
+        let initialState = makePaymentState()
+        let parameterReduced = makePayment()
+        let updatePayment = makePayment()
+        let (sut, stateSpy, _, paymentMaker, processing) = makeSUT(
+            makeStub(
+                parameterReduce: (parameterReduced, nil),
+                updatePayment: updatePayment,
+                validatePayment: true
+            ),
+            initialState: initialState
+        )
+        
+        sut.event(.parameter(.select))
+        sut.event(.continue)
+        processing.complete(with: .success(makeUpdate()))
+        
+        assert(stateSpy, initialState, {
+            $0 = initialState
+        }, {
+            $0.payment = parameterReduced
+            $0.isValid = true
+        }, {
+            $0.payment = updatePayment
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>

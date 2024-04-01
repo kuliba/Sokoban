@@ -12,7 +12,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - completePayment
     
-    func test_completePayment_shouldNotChangeStateOnFraudSuspectedStatusOnReportFailure() {
+    func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
         assertState(
             .completePayment(nil),
@@ -301,7 +301,62 @@ final class PaymentReducerTests: XCTestCase {
         )
     }
     
-    // MARK: - parameter (or field) event
+    // MARK: - initiate
+    
+    func test_initiate_shouldNotChangeState() {
+        
+        assertState(.initiate, on: makePaymentState())
+    }
+    
+    func test_initiate_shouldDeliverEffect() {
+        
+        let digest = makeDigest()
+        let sut = makeSUT(makeDigest: { _ in digest })
+        
+        assert(sut: sut, .initiate, on: makePaymentState(), effect: .initiate(digest))
+    }
+    
+    func test_initiate_shouldNotChangeFraudSuspectedStatusState() {
+        
+        assertState(.initiate, on: makeFraudSuspectedPaymentState())
+    }
+    
+    func test_initiate_shouldDeliverEffectOnFraudSuspectedStatusState() {
+        
+        assert(.initiate, on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+    
+    func test_initiate_shouldNotChangeStateOnResultFailureStatus() {
+        
+        assertState(.initiate, on: makeResultFailureState())
+    }
+    
+    func test_initiate_shouldNotDeliverEffectOnResultFailureStatus() {
+        
+        assert(.initiate, on: makeResultFailureState(), effect: nil)
+    }
+    
+    func test_initiate_shouldNotChangeStateOnResultSuccessStatus() {
+        
+        assertState(.initiate, on: makeResultSuccessState())
+    }
+    
+    func test_initiate_shouldNotDeliverEffectOnResultSuccessStatus() {
+        
+        assert(.initiate, on: makeResultSuccessState(), effect: nil)
+    }
+    
+    func test_initiate_shouldNotChangeStateOnServerErrorStatus() {
+        
+        assertState(.initiate, on: makeServerErrorState())
+    }
+    
+    func test_initiate_shouldNotDeliverEffectOnServerErrorStatus() {
+        
+        assert(.initiate, on: makeServerErrorState(), effect: nil)
+    }
+
+    // MARK: - parameter (or field or payment) event
     
     func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
         

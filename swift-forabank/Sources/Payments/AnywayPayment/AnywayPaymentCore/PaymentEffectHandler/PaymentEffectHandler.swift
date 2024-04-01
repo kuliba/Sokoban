@@ -32,6 +32,9 @@ public extension PaymentEffectHandler {
         case let .continue(digest):
             process(digest, dispatch)
             
+        case let .initiate(digest):
+            initiate(digest, dispatch)
+            
         case let .makePayment(verificationCode):
             makePayment(verificationCode, dispatch)
             
@@ -63,6 +66,18 @@ public extension PaymentEffectHandler {
 private extension PaymentEffectHandler {
     
     func process(
+        _ digest: Digest,
+        _ dispatch: @escaping Dispatch
+    ) {
+        process(digest) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            dispatch(.update($0))
+        }
+    }
+    
+    func initiate(
         _ digest: Digest,
         _ dispatch: @escaping Dispatch
     ) {
