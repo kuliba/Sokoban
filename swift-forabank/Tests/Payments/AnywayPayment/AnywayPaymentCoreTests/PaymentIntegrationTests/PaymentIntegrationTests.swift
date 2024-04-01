@@ -29,7 +29,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.initiatePayment)
         paymentInitiator.complete(with: .failure(.connectivityError))
         
-        emitEvents(sut)
+        emitSuccessiveEvents(sut)
         
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
@@ -93,7 +93,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.continue)
         processing.complete(with: .failure(.connectivityError))
         
-        emitEvents(sut)
+        emitSuccessiveEvents(sut)
         
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
@@ -226,7 +226,7 @@ final class PaymentIntegrationTests: XCTestCase {
         )
     }
     
-    private func emitEvents(
+    private func emitSuccessiveEvents(
         _ sut: SUT
     ) {
         sut.event(.completePayment(.none))
