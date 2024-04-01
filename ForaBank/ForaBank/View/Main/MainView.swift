@@ -166,13 +166,13 @@ struct MainView<NavigationOperationView: View>: View {
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openCard(authProductsViewModel):
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
