@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update> {
+public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
     
     private let checkFraud: CheckFraud
     private let getVerificationCode: GetVerificationCode
     private let makeDigest: MakeDigest
-    private let parameterReduce: ParameterReduce
+    private let paymentReduce: PaymentReduce
     private let updatePayment: UpdatePayment
     private let validatePayment: ValidatePayment
     
@@ -18,14 +18,14 @@ public final class PaymentReducer<Digest, DocumentStatus, OperationDetails, Para
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
-        parameterReduce: @escaping ParameterReduce,
+        paymentReduce: @escaping PaymentReduce,
         updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment
     ) {
         self.checkFraud = checkFraud
         self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
-        self.parameterReduce = parameterReduce
+        self.paymentReduce = paymentReduce
         self.updatePayment = updatePayment
         self.validatePayment = validatePayment
     }
@@ -90,15 +90,15 @@ public extension PaymentReducer {
     
     typealias CheckFraud = (Payment) -> Bool
     typealias MakeDigest = (Payment) -> Digest
-    typealias ParameterReduce = (Payment, ParameterEvent) -> (Payment, Effect?)
+    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, Update) -> Payment
     
     typealias ValidatePayment = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     
     typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    typealias Effect = TransactionEffect<Digest, ParameterEffect>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
+    typealias Effect = TransactionEffect<Digest, PaymentEffect>
 }
 
 private extension PaymentReducer {
@@ -138,10 +138,10 @@ private extension PaymentReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: ParameterEvent
+        with event: PaymentEvent
     ) {
         let payment: Payment
-        (payment, effect) = parameterReduce(state.payment, event)
+        (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
         state.isValid = validatePayment(payment)
     }

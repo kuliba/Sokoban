@@ -666,13 +666,13 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldCallParameterReduceWithPaymentAndEvent() {
         
         let (payment, event) = (makePayment(), makeParameterEvent())
-        let parameterReduceSpy = ParameterReduceSpy(response: (payment, nil))
-        let sut = makeSUT(parameterReduce: parameterReduceSpy.call)
+        let paymentReduceSpy = ParameterReduceSpy(response: (payment, nil))
+        let sut = makeSUT(paymentReduce: paymentReduceSpy.call)
         
         _ = sut.reduce(makeTransaction(payment), .payment(event))
         
-        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.0), [payment])
-        XCTAssertNoDiff(parameterReduceSpy.payloads.map(\.1), [event])
+        XCTAssertNoDiff(paymentReduceSpy.payloads.map(\.0), [payment])
+        XCTAssertNoDiff(paymentReduceSpy.payloads.map(\.1), [event])
     }
     
     func test_parameter_shouldCallValidateWithUpdatedPayment() {
@@ -680,7 +680,7 @@ final class PaymentReducerTests: XCTestCase {
         let (payment, updated) = (makePayment(), makePayment())
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(
-            parameterReduce: { _,_ in return (updated, nil) },
+            paymentReduce: { _,_ in return (updated, nil) },
             validatePayment: validatePaymentSpy.call
         )
         
@@ -692,7 +692,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldNotChangeStateOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), nil) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), nil) })
         
         assertState(
             sut: sut,
@@ -704,7 +704,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldSetPaymentToParameterReducePayment() {
         
         let newPayment = makePayment()
-        let sut = makeSUT(parameterReduce: { _,_ in (newPayment, nil) })
+        let sut = makeSUT(paymentReduce: { _,_ in (newPayment, nil) })
         
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
@@ -714,7 +714,7 @@ final class PaymentReducerTests: XCTestCase {
     
     func test_parameter_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), makePaymentTransactionEffect()) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), makePaymentTransactionEffect()) })
         
         assert(
             sut: sut,
@@ -727,7 +727,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_parameter_shouldDeliverParameterReduceEffect() {
         
         let effect = makePaymentTransactionEffect()
-        let sut = makeSUT(parameterReduce: { _,_ in (makePayment(), effect) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makePayment(), effect) })
         
         assert(
             sut: sut,
@@ -1051,7 +1051,7 @@ final class PaymentReducerTests: XCTestCase {
         checkFraud: @escaping SUT.CheckFraud = { _ in false },
         getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
         makeDigest: @escaping SUT.MakeDigest = { _ in makeDigest() },
-        parameterReduce: @escaping SUT.ParameterReduce = { payment, _ in (payment, nil) },
+        paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping SUT.ValidatePayment = { _ in false },
         file: StaticString = #file,
@@ -1062,7 +1062,7 @@ final class PaymentReducerTests: XCTestCase {
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
-            parameterReduce: parameterReduce,
+            paymentReduce: paymentReduce,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )

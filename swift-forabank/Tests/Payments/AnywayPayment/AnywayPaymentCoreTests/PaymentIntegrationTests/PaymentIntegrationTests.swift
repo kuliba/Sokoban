@@ -309,7 +309,7 @@ final class PaymentIntegrationTests: XCTestCase {
     private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
     private typealias EffectHandler = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
@@ -334,7 +334,7 @@ final class PaymentIntegrationTests: XCTestCase {
             checkFraud: { _ in stub.checkFraud },
             getVerificationCode: { _ in stub.getVerificationCode },
             makeDigest: { _ in stub.makeDigest },
-            parameterReduce: { _,_ in stub.parameterReduce },
+            paymentReduce: { _,_ in stub.paymentReduce },
             updatePayment: { _,_ in stub.updatePayment },
             validatePayment: { _ in stub.validatePayment }
         )
@@ -374,7 +374,7 @@ final class PaymentIntegrationTests: XCTestCase {
         checkFraud: Bool = false,
         getVerificationCode: VerificationCode? = nil,
         makeDigest: Digest = makeDigest(),
-        parameterReduce: (Payment, Effect?) = (makePayment(), nil),
+        paymentReduce: (Payment, Effect?) = (makePayment(), nil),
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true
     ) -> Stub {
@@ -382,7 +382,7 @@ final class PaymentIntegrationTests: XCTestCase {
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
-            parameterReduce: parameterReduce,
+            paymentReduce: paymentReduce,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
