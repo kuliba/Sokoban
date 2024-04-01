@@ -145,7 +145,7 @@ private extension PaymentReducer {
     ) {
         guard state.status == nil else { return }
     
-        effect = .initiate(makeDigest(state.payment))
+        effect = .initiatePayment(makeDigest(state.payment))
     }
     
     func reduce(

@@ -67,6 +67,13 @@ func continueEffect(
     .continue(digest)
 }
 
+func initiatePaymentEffect(
+    _ digest: Digest = makeDigest()
+) -> PaymentEffect<Digest, ParameterEffect> {
+    
+    .initiatePayment(digest)
+}
+
 func makeFraudSuspectedPaymentState(
     _ payment: Payment = makePayment()
 ) -> PaymentState<Payment, DocumentStatus, OperationDetails> {

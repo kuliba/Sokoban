@@ -10,6 +10,7 @@ public extension PaymentEffectHandler {
     typealias Performer = TransactionPerformer<DocumentStatus, OperationDetails>
     
     convenience init(
+        initiate: @escaping Initiate,
         getDetails: @escaping Performer.GetDetails,
         makeTransfer: @escaping Performer.MakeTransfer,
         parameterEffectHandle: @escaping ParameterEffectHandle,
@@ -21,6 +22,7 @@ public extension PaymentEffectHandler {
         )
         
         self.init(
+            initiate: initiate,
             makePayment: transactionPerformer.process,
             parameterEffectHandle: parameterEffectHandle,
             process: process

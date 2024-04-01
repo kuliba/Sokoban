@@ -7,15 +7,18 @@
 
 public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
     
+    private let initiate: Initiate
     private let makePayment: MakePayment
     private let parameterEffectHandle: ParameterEffectHandle
     private let process: Process
     
     public init(
+        initiate: @escaping Initiate,
         makePayment: @escaping MakePayment,
         parameterEffectHandle: @escaping ParameterEffectHandle,
         process: @escaping Process
     ) {
+        self.initiate = initiate
         self.makePayment = makePayment
         self.parameterEffectHandle = parameterEffectHandle
         self.process = process
@@ -32,8 +35,8 @@ public extension PaymentEffectHandler {
         case let .continue(digest):
             process(digest, dispatch)
             
-        case let .initiate(digest):
-            initiate(digest, dispatch)
+        case let .initiatePayment(digest):
+            initiatePayment(digest, dispatch)
             
         case let .makePayment(verificationCode):
             makePayment(verificationCode, dispatch)
@@ -45,6 +48,8 @@ public extension PaymentEffectHandler {
 }
 
 public extension PaymentEffectHandler {
+    
+    typealias Initiate = Process
     
     typealias ProcessResult = Event.UpdateResult
     typealias ProcessCompletion = (ProcessResult) -> Void
@@ -77,11 +82,11 @@ private extension PaymentEffectHandler {
         }
     }
     
-    func initiate(
+    func initiatePayment(
         _ digest: Digest,
         _ dispatch: @escaping Dispatch
     ) {
-        process(digest) { [weak self] in
+        initiate(digest) { [weak self] in
             
             guard self != nil else { return }
             

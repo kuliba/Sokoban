@@ -13,9 +13,10 @@ final class PaymentIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, parameterEffectHandler, paymentMaker, processing) = makeSUT()
+        let (_,_, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
      
         XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
         XCTAssertEqual(processing.callCount, 0)
     }
@@ -25,7 +26,7 @@ final class PaymentIntegrationTests: XCTestCase {
         let initialState = makePaymentState()
         let parameterReduced = makePayment()
         let updatePayment = makePayment()
-        let (sut, stateSpy, _, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, _, paymentInitiator, paymentMaker, processing) = makeSUT(
             makeStub(
                 parameterReduce: (parameterReduced, nil),
                 updatePayment: updatePayment,
@@ -61,6 +62,7 @@ final class PaymentIntegrationTests: XCTestCase {
     
     private typealias Stub = (checkFraud: Bool, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
+    private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
     private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, ParameterEffect>
     private typealias Processing = Spy<Digest, EffectHandler.ProcessResult>
@@ -74,6 +76,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut: SUT,
         stateSpy: StateSpy,
         parameterEffectHandler: ParameterEffectHandleSpy,
+        paymentInitiator: PaymentInitiator,
         paymentMaker: PaymentMaker,
         processing: Processing
     ) {
@@ -86,10 +89,12 @@ final class PaymentIntegrationTests: XCTestCase {
             validatePayment: { _ in stub.validatePayment }
         )
 
-        let processing = Processing()
+        let paymentInitiator = PaymentInitiator()
         let parameterEffectHandler = ParameterEffectHandleSpy()
         let paymentMaker = PaymentMaker()
+        let processing = Processing()
         let effectHandler = EffectHandler(
+            initiate: paymentInitiator.process,
             makePayment: paymentMaker.process,
             parameterEffectHandle: parameterEffectHandler.handleEffect,
             process: processing.process
@@ -108,10 +113,11 @@ final class PaymentIntegrationTests: XCTestCase {
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         trackForMemoryLeaks(parameterEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(paymentInitiator, file: file, line: line)
         trackForMemoryLeaks(paymentMaker, file: file, line: line)
         trackForMemoryLeaks(processing, file: file, line: line)
         
-        return (sut, stateSpy, parameterEffectHandler, paymentMaker, processing)
+        return (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing)
     }
     
     private func makeStub(

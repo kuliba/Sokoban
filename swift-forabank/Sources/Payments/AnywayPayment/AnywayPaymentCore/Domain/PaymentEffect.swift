@@ -8,7 +8,7 @@
 public enum PaymentEffect<Digest, ParameterEffect> {
     
     case `continue`(Digest)
-    case initiate(Digest)
+    case initiatePayment(Digest)
     case makePayment(VerificationCode)
     case parameter(ParameterEffect)
 }

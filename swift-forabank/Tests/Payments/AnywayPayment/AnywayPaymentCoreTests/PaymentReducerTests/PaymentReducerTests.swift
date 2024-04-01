@@ -313,7 +313,7 @@ final class PaymentReducerTests: XCTestCase {
         let digest = makeDigest()
         let sut = makeSUT(makeDigest: { _ in digest })
         
-        assert(sut: sut, .initiate, on: makePaymentState(), effect: .initiate(digest))
+        assert(sut: sut, .initiate, on: makePaymentState(), effect: .initiatePayment(digest))
     }
     
     func test_initiate_shouldNotChangeFraudSuspectedStatusState() {
