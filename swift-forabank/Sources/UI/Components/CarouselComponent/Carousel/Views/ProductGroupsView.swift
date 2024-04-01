@@ -54,7 +54,7 @@ where Product: CarouselProduct & Equatable & Identifiable,
                             .frame(config.productDimensions, for: \.new)
                     }
                 }
-                .onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })
+                /*.onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })*/
                 .onChange(of: state.selectedProductType) { productType in
                     
                     guard let productType else { return }

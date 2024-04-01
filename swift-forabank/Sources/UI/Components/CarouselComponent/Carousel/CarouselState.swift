@@ -71,10 +71,10 @@ public extension CarouselState {
             grouping: products,
             by: { $0.productType }
         )
-                
+        
         let productGroups = productTypes
             .compactMap { productType -> (ProductType, [Product])? in
-                                
+                
                 guard let productsArray = groupedByType[productType] else {
                     return nil
                 }
@@ -132,7 +132,7 @@ public extension CarouselState {
             
             return firstProduct
         }
-
+        
         if firstProduct.isAdditional == true
             && secondProduct.isAdditional == false {
             
@@ -177,9 +177,15 @@ extension CarouselState {
         let productWidth = carouselDimensions.sizes.product.width
         let separatorWidth = carouselDimensions.sizes.separator.width
         let productSpacing = carouselDimensions.spacing
+        var newGroupId: ProductType? = nil
         
         for group in productGroups {
             
+            var currentLengthGroup: CGFloat = 0
+            
+            let shouldAddSticker = shouldAddSticker(for: group)
+            let stickerWidth = Int(shouldAddSticker ? carouselDimensions.sizes.product.width : 0)
+
             let shouldAddSpoiler = shouldAddSpoiler(for: group)
             
             let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
@@ -191,14 +197,22 @@ extension CarouselState {
             let separatorsWidth = separatorsCount * Int(separatorWidth)
             let productsInsets = visibleProductsCount * Int(productSpacing)
             
-            currentLength += CGFloat(visibleProductsWidth + separatorsWidth + productsInsets + spoilerWidth)
+            currentLengthGroup = CGFloat(visibleProductsWidth + separatorsWidth + productsInsets + spoilerWidth + stickerWidth)
             
+            currentLength += currentLengthGroup
+
+            print("group.id - \(group.id) offset - \(offset) currentLengthGroup - \(currentLengthGroup) currentLength - \(currentLength) ")
+            
+            if (currentLength >= offset) {
+                newGroupId = group.id
+                break
+            }
+
             guard currentLength >= offset else { continue }
-            
-            return group.id
+            newGroupId = group.id
         }
         
-        return nil
+        return newGroupId
     }
 }
 
@@ -235,7 +249,7 @@ extension CarouselState {
     func productGroupIsCollapsed(_ productGroup: Group) -> Bool {
         
         productGroups
-            .contains(where: { $0 == productGroup && $0.state == .collapsed })        
+            .contains(where: { $0 == productGroup && $0.state == .collapsed })
     }
     
     func shouldAddSpoiler(for productGroup: Group) -> Bool {
