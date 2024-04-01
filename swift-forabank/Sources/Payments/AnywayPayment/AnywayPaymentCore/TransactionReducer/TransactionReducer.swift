@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class TransactionReducer<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update> {
+public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
     private let checkFraud: CheckFraud
     private let getVerificationCode: GetVerificationCode
@@ -91,13 +91,13 @@ public extension TransactionReducer {
     typealias CheckFraud = (Payment) -> Bool
     typealias MakeDigest = (Payment) -> PaymentDigest
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
-    typealias UpdatePayment = (Payment, Update) -> Payment
+    typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     
     typealias ValidatePayment = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     
-    typealias State = Transaction<Payment, DocumentStatus, OperationDetails>
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
+    typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 

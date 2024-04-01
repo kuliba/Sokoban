@@ -1034,7 +1034,7 @@ final class PaymentReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionReducer<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Payment, Update>
+    private typealias SUT = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -1044,7 +1044,7 @@ final class PaymentReducerTests: XCTestCase {
     private typealias MakeDigestSpy = CallSpy<Payment, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
-    private typealias UpdatePaymentSpy = CallSpy<(Payment, Update), Payment>
+    private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
     private func makeSUT(

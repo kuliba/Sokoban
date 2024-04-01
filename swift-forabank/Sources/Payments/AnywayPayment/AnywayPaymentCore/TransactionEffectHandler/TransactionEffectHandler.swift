@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class TransactionEffectHandler<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update> {
+public final class TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
@@ -64,7 +64,7 @@ public extension TransactionEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 

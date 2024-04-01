@@ -271,7 +271,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionEffectHandler<PaymentDigest, DocumentStatus, OperationDetails, PaymentEffect, PaymentEvent, Update>
+    private typealias SUT = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
@@ -310,7 +310,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     }
     
     private func updateEvent(
-        _ update: Update
+        _ update: PaymentUpdate
     ) -> SUT.Event {
         
         .updatePayment(.success(update))
@@ -369,7 +369,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
 
 private func transactionReportEvent(
     _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Update> {
+) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
     
     .completePayment(transactionReport)
 }

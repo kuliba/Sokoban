@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public struct Transaction<Payment, DocumentStatus, OperationDetails> {
+public struct Transaction<DocumentStatus, OperationDetails, Payment> {
     
     public var payment: Payment
     public var isValid: Bool
