@@ -149,6 +149,15 @@ func makeInvalidPaymentState(
     return state
 }
 
+func makeNilStatusPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment)
+    precondition(state.status == nil)
+    return state
+}
+
 func makeNonFraudSuspectedPaymentState(
     _ payment: Payment = makePayment()
 ) -> PaymentState<Payment, DocumentStatus, OperationDetails> {

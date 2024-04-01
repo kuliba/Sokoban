@@ -45,6 +45,15 @@ public extension PaymentReducer {
         case (.result, _):
             break
             
+        case (_, .dismissRecoverableError):
+            switch state.status {
+            case .serverError:
+                state.status = nil
+                
+            default:
+                break
+            }
+            
         case (.fraudSuspected, _):
             switch event {
             case let .fraud(fraudEvent):

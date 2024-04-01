@@ -348,6 +348,61 @@ final class PaymentReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
+    // MARK: - dismissRecoverableError
+    
+    func test_dismissRecoverableError_shouldNotChangeResultFailureState() {
+        
+        assertState(.dismissRecoverableError, on: makeResultFailureState())
+    }
+    
+    func test_dismissRecoverableError_shouldNotDeliverEffectOnResultFailureState() {
+        
+        assert(.dismissRecoverableError, on: makeResultFailureState(), effect: nil)
+    }
+    
+    func test_dismissRecoverableError_shouldNotChangeResultSuccessState() {
+        
+        assertState(.dismissRecoverableError, on: makeResultSuccessState())
+    }
+    
+    func test_dismissRecoverableError_shouldNotDeliverEffectOnResultSuccessState() {
+        
+        assert(.dismissRecoverableError, on: makeResultSuccessState(), effect: nil)
+    }
+
+    func test_dismissRecoverableError_shouldNotChangeFraudSuspectedState() {
+        
+        assertState(.dismissRecoverableError, on: makeFraudSuspectedPaymentState())
+    }
+    
+    func test_dismissRecoverableError_shouldNotDeliverEffectOnFraudSuspectedState() {
+        
+        assert(.dismissRecoverableError, on: makeFraudSuspectedPaymentState(), effect: nil)
+    }
+
+    func test_dismissRecoverableError_shouldNotChangeNilStatusState() {
+        
+        assertState(.dismissRecoverableError, on: makeNilStatusPaymentState())
+    }
+    
+    func test_dismissRecoverableError_shouldNotDeliverEffectOnNilStatusState() {
+        
+        assert(.dismissRecoverableError, on: makeNilStatusPaymentState(), effect: nil)
+    }
+
+    func test_dismissRecoverableError_shouldResetServerErrorStatus() {
+        
+        assertState(.dismissRecoverableError, on: makeServerErrorState()) {
+            
+            $0.status = nil
+        }
+    }
+    
+    func test_dismissRecoverableError_shouldNotDeliverEffectOnServerErrorStatusState() {
+        
+        assert(.dismissRecoverableError, on: makeServerErrorState(), effect: nil)
+    }
+
     // MARK: - fraud
     
     func test_fraudCancel_shouldNotChangeResultFailureState() {
