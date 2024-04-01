@@ -151,7 +151,7 @@ where Product: CarouselProduct & Equatable & Identifiable,
                 stickerView()
                     .id(group.id)
                     .frame(config.productDimensions, for: \.product)
-                    .accessibilityIdentifier("mainProduct")
+                    .accessibilityIdentifier("sticker")
                 StickerCloseButtonView(action: { event(.closeSticker) })
             }
         }
@@ -211,7 +211,6 @@ private extension View {
         for keyPath: KeyPath<Dimensions.Sizes, CGSize>
     ) -> some View {
         
-        EmptyView()
         let size: CGSize = dimensions.sizes[keyPath: keyPath]
         self.frame(
             width: size.width,
