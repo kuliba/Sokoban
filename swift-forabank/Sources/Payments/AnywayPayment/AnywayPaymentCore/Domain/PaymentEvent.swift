@@ -7,13 +7,13 @@
 
 public enum PaymentEvent<DocumentStatus, OperationDetails, Update> {
     
-    case update(UpdateResult)
     case completePayment(TransactionResult)
+    case update(UpdateResult)
 }
 
 public extension PaymentEvent {
     
-    typealias TransactionResult = TransactionDetails<DocumentStatus, OperationDetails>?
+    typealias TransactionResult = TransactionReport<DocumentStatus, OperationDetails>?
     
     typealias UpdateResult = Result<Update, ServiceFailure>
 }

@@ -7,15 +7,15 @@
 
 public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, Update> {
     
-    private let process: Process
     private let makePayment: MakePayment
+    private let process: Process
     
     public init(
-        process: @escaping Process,
-        makePayment: @escaping MakePayment
+        makePayment: @escaping MakePayment,
+        process: @escaping Process
     ) {
-        self.process = process
         self.makePayment = makePayment
+        self.process = process
     }
 }
 

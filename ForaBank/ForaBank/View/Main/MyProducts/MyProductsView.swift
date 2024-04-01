@@ -18,6 +18,7 @@ struct MyProductsView: View {
     @ObservedObject var viewModel: MyProductsViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -115,7 +116,8 @@ struct MyProductsView: View {
                     case let .productProfile(productProfileViewModel):
                         ProductProfileView(
                             viewModel: productProfileViewModel,
-                            viewFactory: viewFactory
+                            viewFactory: viewFactory,
+                            getUImage: getUImage
                         )
                     }
                 }
@@ -189,7 +191,8 @@ struct MyProductsView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ), 
+            getUImage: { _ in nil }
         )
     }
 }

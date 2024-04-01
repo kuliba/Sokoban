@@ -41,10 +41,16 @@ struct ProductStatementViewModel {
     
     let product: ProductData
     let closeAction: () -> Void
-    
-    init(product: ProductData, closeAction: @escaping () -> Void) {
+    let getUImage: (Md5hash) -> UIImage?
+
+    init(
+        product: ProductData,
+        closeAction: @escaping () -> Void,
+        getUImage: @escaping (Md5hash) -> UIImage?
+    ) {
         
         self.product = product
         self.closeAction = closeAction
+        self.getUImage = getUImage
     }
 }

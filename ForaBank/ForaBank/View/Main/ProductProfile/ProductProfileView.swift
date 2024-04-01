@@ -16,7 +16,8 @@ struct ProductProfileView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     let viewFactory: PaymentsTransfersViewFactory
-
+    let getUImage: (Md5hash) -> UIImage?
+    
     var accentColor: some View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
@@ -165,13 +166,15 @@ struct ProductProfileView: View {
         case let .myProducts(viewModel):
             MyProductsView(
                 viewModel: viewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                getUImage: getUImage
             )
             
         case let .paymentsTransfers(viewModel):
             PaymentsTransfersView(
                 viewModel: viewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                getUImage: getUImage
             )
         }
     }
@@ -402,7 +405,8 @@ struct ProfileView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ), 
+            getUImage: { _ in nil }
         )
     }
 }

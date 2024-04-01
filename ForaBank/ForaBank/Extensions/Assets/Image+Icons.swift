@@ -876,4 +876,5 @@ public extension Image {
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }
+    static var cardPlaceholder: Image { Image(#function) }
 }
