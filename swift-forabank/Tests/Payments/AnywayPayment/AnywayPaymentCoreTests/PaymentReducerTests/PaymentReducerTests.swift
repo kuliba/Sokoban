@@ -85,7 +85,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnFraudSuspectedStatusOnDetailIDReport() {
         
         assert(
-            completePaymentReportEvent(makeDetailIDTransactionReport()),
+            makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
             on: makeFraudSuspectedPaymentState(),
             effect: nil
         )
@@ -94,7 +94,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnDetailIDReport() {
         
         assert(
-            completePaymentReportEvent(makeDetailIDTransactionReport()),
+            makeCompletePaymentReportEvent(makeDetailIDTransactionReport()),
             on: makePaymentState(),
             effect: nil
         )
@@ -103,7 +103,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnFraudSuspectedStatusOnOperationDetailsReport() {
         
         assert(
-            completePaymentReportEvent(makeOperationDetailsTransactionReport()),
+            makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
             on: makeFraudSuspectedPaymentState(),
             effect: nil
         )
@@ -112,7 +112,7 @@ final class PaymentReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnOperationDetailsReport() {
         
         assert(
-            completePaymentReportEvent(makeOperationDetailsTransactionReport()),
+            makeCompletePaymentReportEvent(makeOperationDetailsTransactionReport()),
             on: makePaymentState(),
             effect: nil
         )

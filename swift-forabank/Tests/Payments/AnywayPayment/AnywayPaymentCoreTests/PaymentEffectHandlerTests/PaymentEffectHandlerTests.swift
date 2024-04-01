@@ -36,7 +36,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             toDeliver: updateEvent(.connectivityError),
-            for: continueEffect(),
+            for: makeContinuePaymentEffect(),
             onProcessing: .failure(.connectivityError)
         )
     }
@@ -47,7 +47,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             toDeliver: updateEvent(.serverError(message)),
-            for: continueEffect(),
+            for: makeContinuePaymentEffect(),
             onProcessing: .failure(.serverError(message))
         )
     }
@@ -58,7 +58,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         
         expect(
             toDeliver: updateEvent(update),
-            for: continueEffect(),
+            for: makeContinuePaymentEffect(),
             onProcessing: .success(update)
         )
     }
@@ -70,7 +70,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         (sut, _,_,_, processing) = makeSUT()
         var received = [SUT.Event]()
         
-        sut?.handleEffect(continueEffect()) { received.append($0) }
+        sut?.handleEffect(makeContinuePaymentEffect()) { received.append($0) }
         sut = nil
         processing.complete(with: .failure(.connectivityError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -85,7 +85,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         (sut, _,_,_, processing) = makeSUT()
         var received = [SUT.Event]()
         
-        sut?.handleEffect(continueEffect()) { received.append($0) }
+        sut?.handleEffect(makeContinuePaymentEffect()) { received.append($0) }
         sut = nil
         processing.complete(with: .success(makeUpdate()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -100,7 +100,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         let digest = makeDigest()
         let (sut, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
         
-        sut.handleEffect(initiatePaymentEffect(digest)) { _ in }
+        sut.handleEffect(makeInitiatePaymentEffect(digest)) { _ in }
         
         XCTAssertNoDiff(paymentInitiator.payloads, [digest])
     }
@@ -112,7 +112,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             sut,
             toDeliver: .update(.failure(.connectivityError)),
-            for: initiatePaymentEffect(),
+            for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .failure(.connectivityError)) }
         )
     }
@@ -125,7 +125,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             sut,
             toDeliver: .update(.failure(.serverError(message))),
-            for: initiatePaymentEffect(),
+            for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .failure(.serverError(message))) }
         )
     }
@@ -138,7 +138,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         expect(
             sut,
             toDeliver: makeUpdateEvent(update),
-            for: initiatePaymentEffect(),
+            for: makeInitiatePaymentEffect(),
             on: { paymentInitiator.complete(with: .success(update)) }
         )
     }
@@ -150,7 +150,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
         (sut, _, paymentInitiator, _,_) = makeSUT()
         var receivedEvents = [SUT.Event]()
         
-        sut?.handleEffect(initiatePaymentEffect()) { receivedEvents.append($0) }
+        sut?.handleEffect(makeInitiatePaymentEffect()) { receivedEvents.append($0) }
         sut = nil
         paymentInitiator.complete(with: .failure(.connectivityError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -173,7 +173,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     func test_makePayment_shouldDeliverTransactionFailureOnMakePaymentFailure() {
         
         expect(
-            toDeliver: completePaymentFailureEvent(),
+            toDeliver: makeCompletePaymentFailureEvent(),
             for: makePaymentEffect(),
             onMakePayment: nil
         )
