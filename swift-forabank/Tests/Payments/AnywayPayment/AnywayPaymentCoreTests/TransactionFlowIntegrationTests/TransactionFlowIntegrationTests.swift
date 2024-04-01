@@ -1,5 +1,5 @@
 //
-//  PaymentIntegrationTests.swift
+//  TransactionFlowIntegrationTests.swift
 //
 //
 //  Created by Igor Malyarov on 31.03.2024.
@@ -9,22 +9,22 @@ import AnywayPaymentCore
 import RxViewModel
 import XCTest
 
-final class PaymentIntegrationTests: XCTestCase {
+final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_,_, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+        let (_,_, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT()
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     func test_initiateFailureFlow_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(initialState: initialState)
+        let initialState = makeTransaction()
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(initialState: initialState)
         
         sut.event(.initiatePayment)
         paymentInitiator.complete(with: .failure(.connectivityError))
@@ -37,16 +37,16 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     func test_fraudCancel_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -68,16 +68,16 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     func test_fraudContinue_shouldAllowContinuation() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -88,7 +88,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.fraud(.continue))
         
         sut.event(.continue)
-        processing.complete(with: .success(makeUpdate()))
+        paymentProcessing.complete(with: .success(makeUpdate()))
         
         assert(stateSpy, initialState, {
             _ in
@@ -102,15 +102,15 @@ final class PaymentIntegrationTests: XCTestCase {
             $0.status = .fraudSuspected
         })
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     func test_fraudExpired_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(checkFraud: true, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -132,17 +132,17 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
-    func test_processingServerError_shouldAllowContinuation() {
+    func test_paymentProcessingServerError_shouldAllowContinuation() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
         let message = anyMessage()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -151,14 +151,14 @@ final class PaymentIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        processing.complete(with: .failure(.serverError(message)))
+        paymentProcessing.complete(with: .failure(.serverError(message)))
         
         sut.event(.dismissRecoverableError)
         
         sut.event(.continue)
-        processing.complete(with: .success(makeUpdate()), at: 1)
+        paymentProcessing.complete(with: .success(makeUpdate()), at: 1)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
         
         assert(stateSpy, initialState, {
@@ -173,11 +173,11 @@ final class PaymentIntegrationTests: XCTestCase {
         })
     }
     
-    func test_processingConnectivityError_shouldIgnoreSuccessiveEvents() {
+    func test_paymentProcessingConnectivityError_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -186,7 +186,7 @@ final class PaymentIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        processing.complete(with: .failure(.connectivityError))
+        paymentProcessing.complete(with: .failure(.connectivityError))
         
         assert(stateSpy, initialState, {
             _ in
@@ -199,16 +199,16 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -230,17 +230,17 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     func test_makePaymentSuccessDetailID_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let report = makeDetailIDTransactionReport()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -262,17 +262,17 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     func test_makePaymentSuccessOperationDetailID_shouldIgnoreSuccessiveEvents() {
         
-        let initialState = makePaymentState()
+        let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let report = makeOperationDetailsTransactionReport()
         let updatedPayment = makePayment()
-        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
             makeStub(getVerificationCode: verificationCode, updatePayment: updatedPayment),
             initialState: initialState
         )
@@ -294,60 +294,60 @@ final class PaymentIntegrationTests: XCTestCase {
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
         
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
     // MARK: - Helpers
     
-    private typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
-    private typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    private typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    private typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
+    private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    private typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
-    private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
+    private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
+    private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
     
-    private typealias PaymentInitiator = Processing
+    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
+    private typealias PaymentInitiator = PaymentProcessing
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, ParameterEffect>
-    private typealias Processing = Spy<Digest, EffectHandler.ProcessResult>
+    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
     
     private func makeSUT(
         _ stub: Stub? = nil,
-        initialState: State = makePaymentState(),
+        initialState: State = makeTransaction(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
-        parameterEffectHandler: ParameterEffectHandleSpy,
+        paymentEffectHandler: PaymentEffectHandleSpy,
         paymentInitiator: PaymentInitiator,
         paymentMaker: PaymentMaker,
-        processing: Processing
+        paymentProcessing: PaymentProcessing
     ) {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             checkFraud: { _ in stub.checkFraud },
             getVerificationCode: { _ in stub.getVerificationCode },
             makeDigest: { _ in stub.makeDigest },
-            parameterReduce: { _,_ in stub.parameterReduce },
+            paymentReduce: { _,_ in stub.paymentReduce },
             updatePayment: { _,_ in stub.updatePayment },
             validatePayment: { _ in stub.validatePayment }
         )
         
         let paymentInitiator = PaymentInitiator()
-        let parameterEffectHandler = ParameterEffectHandleSpy()
+        let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentMaker = PaymentMaker()
-        let processing = Processing()
+        let paymentProcessing = PaymentProcessing()
         let effectHandler = EffectHandler(
             initiatePayment: paymentInitiator.process,
             makePayment: paymentMaker.process,
-            parameterEffectHandle: parameterEffectHandler.handleEffect,
-            processPayment: processing.process
+            paymentEffectHandle: paymentEffectHandler.handleEffect,
+            processPayment: paymentProcessing.process
         )
         
         let sut = SUT(
@@ -362,19 +362,19 @@ final class PaymentIntegrationTests: XCTestCase {
         trackForMemoryLeaks(stateSpy, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
-        trackForMemoryLeaks(parameterEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(paymentEffectHandler, file: file, line: line)
         trackForMemoryLeaks(paymentInitiator, file: file, line: line)
         trackForMemoryLeaks(paymentMaker, file: file, line: line)
-        trackForMemoryLeaks(processing, file: file, line: line)
+        trackForMemoryLeaks(paymentProcessing, file: file, line: line)
         
-        return (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing)
+        return (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing)
     }
     
     private func makeStub(
         checkFraud: Bool = false,
         getVerificationCode: VerificationCode? = nil,
-        makeDigest: Digest = makeDigest(),
-        parameterReduce: (Payment, Effect?) = (makePayment(), nil),
+        makeDigest: PaymentDigest = makePaymentDigest(),
+        paymentReduce: (Payment, Effect?) = (makePayment(), nil),
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true
     ) -> Stub {
@@ -382,7 +382,7 @@ final class PaymentIntegrationTests: XCTestCase {
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
-            parameterReduce: parameterReduce,
+            paymentReduce: paymentReduce,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
@@ -403,7 +403,7 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.fraud(.continue))
         sut.event(.fraud(.expired))
         sut.event(.initiatePayment)
-        sut.event(.parameter(.select))
+        sut.event(.payment(.select))
         sut.event(.updatePayment(.failure(.connectivityError)))
         
         XCTAssertNoDiff(stateSpy.values, accStates)

@@ -1,31 +1,31 @@
 //
-//  PaymentEffectHandler.swift
+//  TransactionEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
+public final class TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
-    private let parameterEffectHandle: ParameterEffectHandle
+    private let paymentEffectHandle: PaymentEffectHandle
     private let processPayment: ProcessPayment
     
     public init(
         initiatePayment: @escaping InitiatePayment,
         makePayment: @escaping MakePayment,
-        parameterEffectHandle: @escaping ParameterEffectHandle,
+        paymentEffectHandle: @escaping PaymentEffectHandle,
         processPayment: @escaping ProcessPayment
     ) {
         self.initiatePayment = initiatePayment
         self.makePayment = makePayment
-        self.parameterEffectHandle = parameterEffectHandle
+        self.paymentEffectHandle = paymentEffectHandle
         self.processPayment = processPayment
     }
 }
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -41,37 +41,37 @@ public extension PaymentEffectHandler {
         case let .makePayment(verificationCode):
             makePayment(verificationCode, dispatch)
             
-        case let .parameter(parameterEffect):
-            handle(parameterEffect, dispatch)
+        case let .payment(effect):
+            handle(effect, dispatch)
         }
     }
 }
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     typealias InitiatePayment = ProcessPayment
     
-    typealias ProcessResult = Event.UpdateResult
+    typealias ProcessResult = Event.PaymentUpdateResult
     typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias ProcessPayment = (Digest, @escaping ProcessCompletion) -> Void
+    typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
     
     typealias MakePaymentResult = Event.TransactionResult
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
-    typealias ParameterDispatch = (ParameterEvent) -> Void
-    typealias ParameterEffectHandle = (ParameterEffect, @escaping ParameterDispatch) -> Void
+    typealias PaymentDispatch = (PaymentEvent) -> Void
+    typealias PaymentEffectHandle = (PaymentEffect, @escaping PaymentDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
-    typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
-private extension PaymentEffectHandler {
+private extension TransactionEffectHandler {
     
     func process(
-        _ digest: Digest,
+        _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
         processPayment(digest) { [weak self] in
@@ -83,7 +83,7 @@ private extension PaymentEffectHandler {
     }
     
     func initiatePayment(
-        _ digest: Digest,
+        _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
         initiatePayment(digest) { [weak self] in
@@ -107,14 +107,14 @@ private extension PaymentEffectHandler {
     }
     
     func handle(
-        _ parameterEffect: ParameterEffect,
+        _ paymentEffect: PaymentEffect,
         _ dispatch: @escaping Dispatch
     ) {
-        parameterEffectHandle(parameterEffect) { [weak self] in
+        paymentEffectHandle(paymentEffect) { [weak self] in
             
             guard self != nil else { return }
             
-            dispatch(.parameter($0))
+            dispatch(.payment($0))
         }
     }
 }
