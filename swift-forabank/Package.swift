@@ -961,10 +961,11 @@ private extension Target {
         dependencies: [
             // external packages
             .customDump,
+            .tagged,
             // internal modules
             .anywayPaymentCore,
             .remoteServices,
-            .tagged,
+            .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
     )

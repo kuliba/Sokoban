@@ -8,11 +8,19 @@
 public enum PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     case completePayment(TransactionResult)
+    case `continue`
+    case fraud(Fraud)
+    case initiatePayment
     case parameter(ParameterEvent)
     case update(UpdateResult)
 }
 
 public extension PaymentEvent {
+    
+    enum Fraud: Equatable {
+        
+        case cancel, `continue`, expired
+    }
     
     typealias TransactionResult = TransactionReport<DocumentStatus, OperationDetails>?
     

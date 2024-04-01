@@ -47,31 +47,38 @@ struct Update: Equatable {
 
 // MARK: - Factories
 
-func completePaymentFailureEvent(
+func isValid(
+    _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
+) -> Bool {
+    
+    state.isValid
+}
+
+func isFraudSuspected(
+    _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
+) -> Bool {
+    
+    state.status == .fraudSuspected
+}
+
+func makeCompletePaymentFailureEvent(
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(nil)
 }
 
-func completePaymentReportEvent(
+func makeCompletePaymentReportEvent(
     _ report: TransactionReport<DocumentStatus, OperationDetails>
 ) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
     
     .completePayment(report)
 }
 
-func continueEffect(
+func makeContinuePaymentEffect(
     _ digest: Digest = makeDigest()
 ) -> PaymentEffect<Digest, ParameterEffect> {
     
     .continue(digest)
-}
-
-func isValid(
-    _ state: PaymentState<Payment, DocumentStatus, OperationDetails>
-) -> Bool {
-    
-    state.isValid
 }
 
 func makeDetailID(
@@ -97,6 +104,58 @@ func makeDigest(
 ) -> Digest {
     
     .init(value: value)
+}
+
+func makeFraudCancelEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.cancel)
+}
+
+func makeFraudContinueEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.continue)
+}
+
+func makeFraudExpiredEvent(
+) -> PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update> {
+    
+    .fraud(.expired)
+}
+
+func makeFraudSuspectedPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, status: .fraudSuspected)
+    precondition(state.status == .fraudSuspected)
+    return state
+}
+
+func makeInitiatePaymentEffect(
+    _ digest: Digest = makeDigest()
+) -> PaymentEffect<Digest, ParameterEffect> {
+    
+    .initiatePayment(digest)
+}
+
+func makeInvalidPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, isValid: false)
+    precondition(!isValid(state))
+    return state
+}
+
+func makeNonFraudSuspectedPaymentState(
+    _ payment: Payment = makePayment()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment)
+    precondition(state.status != .fraudSuspected)
+    return state
 }
 
 func makeOperationDetailsTransactionReport(
@@ -153,6 +212,13 @@ func makeParameterPaymentEvent(
     .parameter(.select)
 }
 
+func makePayment(
+    _ value: String = UUID().uuidString
+) -> Payment {
+    
+    .init(value: value)
+}
+
 func makePaymentEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
 ) -> PaymentEffect<Digest, ParameterEffect> {
@@ -162,10 +228,11 @@ func makePaymentEffect(
 
 func makePaymentState(
     _ payment: Payment = makePayment(),
+    isValid: Bool = false,
     status: PaymentState<Payment, DocumentStatus, OperationDetails>.Status? = nil
 ) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
     
-    .init(payment: payment, status: status)
+    .init(payment: payment, isValid: isValid, status: status)
 }
 
 func makeResponse(
@@ -179,11 +246,44 @@ func makeResponse(
     )
 }
 
-func makePayment(
-    _ value: String = UUID().uuidString
-) -> Payment {
+func makeResultFailureState(
+    _ payment: Payment = makePayment(),
+    failure: PaymentState<Payment, DocumentStatus, OperationDetails>.Status.Terminated = .transactionFailure
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
     
-    .init(value: value)
+    let state = makePaymentState(payment, status: .result(.failure(failure)))
+    precondition(state.status == .result(.failure(failure)))
+    return state
+}
+
+func makeResultSuccessState(
+    _ payment: Payment = makePayment(),
+    report: TransactionReport<DocumentStatus, OperationDetails> = makeDetailIDTransactionReport()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, status: .result(.success(report)))
+    precondition(state.status == .result(.success(report)))
+    return state
+}
+
+func makeServerErrorState(
+    _ payment: Payment = makePayment(),
+    _ message: String = anyMessage()
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, status: .serverError(message))
+    precondition(state.status == .serverError(message))
+    return state
+}
+
+func makeValidPaymentState(
+    _ payment: Payment = makePayment(),
+    status: PaymentState<Payment, DocumentStatus, OperationDetails>.Status? = nil
+) -> PaymentState<Payment, DocumentStatus, OperationDetails> {
+    
+    let state = makePaymentState(payment, isValid: true, status: status)
+    precondition(isValid(state))
+    return state
 }
 
 func makeVerificationCode(

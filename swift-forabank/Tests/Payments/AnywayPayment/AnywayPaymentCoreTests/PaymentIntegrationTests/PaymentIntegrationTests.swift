@@ -1,0 +1,157 @@
+//
+//  PaymentIntegrationTests.swift
+//
+//
+//  Created by Igor Malyarov on 31.03.2024.
+//
+
+import AnywayPaymentCore
+import RxViewModel
+import XCTest
+
+final class PaymentIntegrationTests: XCTestCase {
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (_,_, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT()
+     
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentInitiator.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+    }
+    
+    func test_flow() {
+        
+        let initialState = makePaymentState()
+        let parameterReduced = makePayment()
+        let updatePayment = makePayment()
+        let (sut, stateSpy, _, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(
+                parameterReduce: (parameterReduced, nil),
+                updatePayment: updatePayment,
+                validatePayment: true
+            ),
+            initialState: initialState
+        )
+        
+        sut.event(.parameter(.select))
+        sut.event(.continue)
+        processing.complete(with: .success(makeUpdate()))
+        
+        assert(stateSpy, initialState, {
+            $0 = initialState
+        }, {
+            $0.payment = parameterReduced
+            $0.isValid = true
+        }, {
+            $0.payment = updatePayment
+        })
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias State = PaymentState<Payment, DocumentStatus, OperationDetails>
+    private typealias Event = PaymentEvent<DocumentStatus, OperationDetails, ParameterEvent, Update>
+    private typealias Effect = PaymentEffect<Digest, ParameterEffect>
+    
+    private typealias SUT = RxViewModel<State, Event, Effect>
+    private typealias StateSpy = ValueSpy<State>
+    private typealias Reducer = PaymentReducer<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Payment, Update>
+    private typealias EffectHandler = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update>
+    
+    private typealias Stub = (checkFraud: Bool, makeDigest: Digest, parameterReduce: (Payment, Effect?), updatePayment: Payment, validatePayment: Bool)
+    
+    private typealias PaymentInitiator = Processing
+    private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
+    private typealias ParameterEffectHandleSpy = EffectHandlerSpy<ParameterEvent, ParameterEffect>
+    private typealias Processing = Spy<Digest, EffectHandler.ProcessResult>
+    
+    private func makeSUT(
+        _ stub: Stub? = nil,
+        initialState: State = makePaymentState(),
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        stateSpy: StateSpy,
+        parameterEffectHandler: ParameterEffectHandleSpy,
+        paymentInitiator: PaymentInitiator,
+        paymentMaker: PaymentMaker,
+        processing: Processing
+    ) {
+        let stub = stub ?? makeStub()
+        let reducer = Reducer(
+            checkFraud: { _ in stub.checkFraud },
+            makeDigest: { _ in stub.makeDigest },
+            parameterReduce: { _,_ in stub.parameterReduce },
+            updatePayment: { _,_ in stub.updatePayment },
+            validatePayment: { _ in stub.validatePayment }
+        )
+
+        let paymentInitiator = PaymentInitiator()
+        let parameterEffectHandler = ParameterEffectHandleSpy()
+        let paymentMaker = PaymentMaker()
+        let processing = Processing()
+        let effectHandler = EffectHandler(
+            initiate: paymentInitiator.process,
+            makePayment: paymentMaker.process,
+            parameterEffectHandle: parameterEffectHandler.handleEffect,
+            process: processing.process
+        )
+        
+        let sut = SUT(
+            initialState: initialState,
+            reduce: reducer.reduce,
+            handleEffect: effectHandler.handleEffect,
+            scheduler: .immediate
+        )
+        let stateSpy = StateSpy(sut.$state)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(stateSpy, file: file, line: line)
+        trackForMemoryLeaks(reducer, file: file, line: line)
+        trackForMemoryLeaks(effectHandler, file: file, line: line)
+        trackForMemoryLeaks(parameterEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(paymentInitiator, file: file, line: line)
+        trackForMemoryLeaks(paymentMaker, file: file, line: line)
+        trackForMemoryLeaks(processing, file: file, line: line)
+        
+        return (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing)
+    }
+    
+    private func makeStub(
+        checkFraud: Bool = false,
+        makeDigest: Digest = makeDigest(),
+        parameterReduce: (Payment, Effect?) = (makePayment(), nil),
+        updatePayment: Payment = makePayment(),
+        validatePayment: Bool = true
+    ) -> Stub {
+        (
+            checkFraud: checkFraud,
+            makeDigest: makeDigest,
+            parameterReduce: parameterReduce,
+            updatePayment: updatePayment,
+            validatePayment: validatePayment
+        )
+    }
+    
+    private func assert(
+        _ spy: StateSpy,
+        _ initialState: State,
+        _ updates: ((inout State) -> Void)...,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var state = initialState
+        var values = [State]()
+        
+        for update in updates {
+            
+            update(&state)
+            values.append(state)
+        }
+        
+        XCTAssertNoDiff(spy.values, values, file: file, line: line)
+    }
+}

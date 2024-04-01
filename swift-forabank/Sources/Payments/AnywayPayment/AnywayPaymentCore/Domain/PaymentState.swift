@@ -13,7 +13,7 @@ public struct PaymentState<Payment, DocumentStatus, OperationDetails> {
     
     public init(
         payment: Payment,
-        isValid: Bool = false,
+        isValid: Bool,
         status: Status? = nil
     ) {
         self.payment = payment
@@ -26,6 +26,7 @@ public extension PaymentState {
     
     enum Status {
         
+        case fraudSuspected
         case result(Result<Report, Terminated>)
         case serverError(String)
     }
@@ -33,10 +34,19 @@ public extension PaymentState {
 
 public extension PaymentState.Status {
     
-    enum Terminated: Error {
+    enum Terminated: Error, Equatable {
         
+        case fraud(Fraud)
         case transactionFailure
         case updateFailure
+    }
+}
+
+public extension PaymentState.Status.Terminated {
+    
+    enum Fraud: Equatable {
+        
+        case cancelled, expired
     }
 }
 
