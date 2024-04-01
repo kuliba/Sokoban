@@ -1,5 +1,5 @@
 //
-//  PaymentEffectHandler+extTests.swift
+//  TransactionEffectHandler+extTests.swift
 //
 //
 //  Created by Igor Malyarov on 29.03.2024.
@@ -278,7 +278,7 @@ final class PaymentEffectHandler_extTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
+    private typealias SUT = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
     
     private typealias GetDetailsSpy = Spy<SUT.Performer.PaymentOperationDetailID, SUT.Performer.GetDetailsResult>
     private typealias PaymentInitiator = Processing

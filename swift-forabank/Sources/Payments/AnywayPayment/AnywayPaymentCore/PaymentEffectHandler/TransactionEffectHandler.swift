@@ -1,11 +1,11 @@
 //
-//  PaymentEffectHandler.swift
+//  TransactionEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
+public final class TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, ParameterEffect, ParameterEvent, Update> {
     
     private let initiatePayment: InitiatePayment
     private let makePayment: MakePayment
@@ -25,7 +25,7 @@ public final class PaymentEffectHandler<Digest, DocumentStatus, OperationDetails
     }
 }
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -47,7 +47,7 @@ public extension PaymentEffectHandler {
     }
 }
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     typealias InitiatePayment = ProcessPayment
     
@@ -68,7 +68,7 @@ public extension PaymentEffectHandler {
     typealias Effect = TransactionEffect<Digest, ParameterEffect>
 }
 
-private extension PaymentEffectHandler {
+private extension TransactionEffectHandler {
     
     func process(
         _ digest: Digest,

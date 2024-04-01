@@ -1,11 +1,11 @@
 //
-//  PaymentEffectHandler+ext.swift
+//  TransactionEffectHandler+ext.swift
 //
 //
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
-public extension PaymentEffectHandler {
+public extension TransactionEffectHandler {
     
     typealias Performer = TransactionPerformer<DocumentStatus, OperationDetails>
     

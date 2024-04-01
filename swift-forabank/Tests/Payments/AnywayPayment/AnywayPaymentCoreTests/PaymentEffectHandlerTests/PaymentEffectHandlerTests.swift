@@ -271,7 +271,7 @@ final class PaymentEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
+    private typealias SUT = TransactionEffectHandler<Digest, DocumentStatus, OperationDetails, PaymentEffect, ParameterEvent, Update>
     
     private typealias PaymentInitiator = Processing
     private typealias PaymentMaker = Spy<VerificationCode, SUT.MakePaymentResult>
