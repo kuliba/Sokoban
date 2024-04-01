@@ -42,6 +42,101 @@ final class PaymentIntegrationTests: XCTestCase {
         XCTAssertEqual(processing.callCount, 0)
     }
     
+    func test_fraudCancel_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(checkFraud: true, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.fraud(.cancel))
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+            $0.status = .fraudSuspected
+        }, {
+            $0.status = .result(.failure(.fraud(.cancelled)))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+    }
+    
+    func test_fraudContinue_shouldAllowContinuation() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(checkFraud: true, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.fraud(.continue))
+        
+        sut.event(.continue)
+        processing.complete(with: .success(makeUpdate()))
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+            $0.status = .fraudSuspected
+        }, {
+            $0.status = nil
+        }, {
+            $0.status = .fraudSuspected
+        })
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+    }
+    
+    func test_fraudExpired_shouldIgnoreSuccessiveEvents() {
+        
+        let initialState = makePaymentState()
+        let updatedPayment = makePayment()
+        let (sut, stateSpy, parameterEffectHandler, paymentInitiator, paymentMaker, processing) = makeSUT(
+            makeStub(checkFraud: true, updatePayment: updatedPayment),
+            initialState: initialState
+        )
+        
+        sut.event(.initiatePayment)
+        paymentInitiator.complete(with: .success(makeUpdate()))
+        
+        sut.event(.fraud(.expired))
+        
+        assert(stateSpy, initialState, {
+            _ in
+        }, {
+            $0.payment = updatedPayment
+            $0.isValid = true
+            $0.status = .fraudSuspected
+        }, {
+            $0.status = .result(.failure(.fraud(.expired)))
+        })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+    }
+    
     func test_processingServerError_shouldAllowContinuation() {
         
         let initialState = makePaymentState()
