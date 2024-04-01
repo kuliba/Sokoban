@@ -29,17 +29,17 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.initiatePayment)
         paymentInitiator.complete(with: .failure(.connectivityError))
         
-        emitSuccessiveEvents(sut)
-        
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(paymentMaker.callCount, 0)
-        XCTAssertEqual(processing.callCount, 0)
-        
         assert(stateSpy, initialState, {
             _ in
         }, {
             $0.status = .result(.failure(.updatePaymentFailure))
         })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
+        XCTAssertEqual(processing.callCount, 0)
     }
     
     func test_processingServerError_shouldAllowContinuation() {
@@ -93,11 +93,6 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.continue)
         processing.complete(with: .failure(.connectivityError))
         
-        emitSuccessiveEvents(sut)
-        
-        XCTAssertEqual(parameterEffectHandler.callCount, 0)
-        XCTAssertEqual(paymentMaker.callCount, 0)
-        
         assert(stateSpy, initialState, {
             _ in
         }, {
@@ -106,6 +101,11 @@ final class PaymentIntegrationTests: XCTestCase {
         }, {
             $0.status = .result(.failure(.updatePaymentFailure))
         })
+        
+        assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
+        
+        XCTAssertEqual(parameterEffectHandler.callCount, 0)
+        XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
     func test_flow() {
@@ -226,9 +226,14 @@ final class PaymentIntegrationTests: XCTestCase {
         )
     }
     
-    private func emitSuccessiveEvents(
-        _ sut: SUT
+    private func assertSuccessiveEventsDeliverNoStateChanges(
+        _ sut: SUT,
+        _ stateSpy: StateSpy,
+        file: StaticString = #file,
+        line: UInt = #line
     ) {
+        let accStates = stateSpy.values
+        
         sut.event(.completePayment(.none))
         sut.event(.continue)
         sut.event(.continue)
@@ -238,15 +243,19 @@ final class PaymentIntegrationTests: XCTestCase {
         sut.event(.initiatePayment)
         sut.event(.parameter(.select))
         sut.event(.updatePayment(.failure(.connectivityError)))
+        
+        XCTAssertNoDiff(stateSpy.values, accStates)
     }
     
+    @discardableResult
     private func assert(
-        _ spy: StateSpy,
+        _ stateSpy: StateSpy,
         _ initialState: State,
         _ updates: ((inout State) -> Void)...,
         file: StaticString = #file,
         line: UInt = #line
-    ) {
+    ) -> [State] {
+        
         var state = initialState
         var values = [State]()
         
@@ -256,6 +265,8 @@ final class PaymentIntegrationTests: XCTestCase {
             values.append(state)
         }
         
-        XCTAssertNoDiff(spy.values, values, file: file, line: line)
+        XCTAssertNoDiff(stateSpy.values, values, file: file, line: line)
+        
+        return values
     }
 }
