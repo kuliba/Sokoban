@@ -1114,26 +1114,30 @@ final class TransactionReducerTests: XCTestCase {
     private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
+    private typealias Witness = PaymentWitness<Payment, PaymentDigest>
+    
     private func makeSUT(
-        checkFraud: @escaping SUT.CheckFraud = { _ in false },
-        getVerificationCode: @escaping SUT.GetVerificationCode = { _ in nil },
-        makeDigest: @escaping SUT.MakeDigest = { _ in makePaymentDigest() },
+        checkFraud: @escaping Witness.CheckFraud = { _ in false },
+        getVerificationCode: @escaping Witness.GetVerificationCode = { _ in nil },
+        makeDigest: @escaping Witness.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
-        shouldRestartPayment: @escaping SUT.ShouldRestartPayment = { _ in false },
+        shouldRestartPayment: @escaping Witness.ShouldRestartPayment = { _ in false },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
-        validatePayment: @escaping SUT.ValidatePayment = { _ in false },
+        validatePayment: @escaping Witness.ValidatePayment = { _ in false },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
         let sut = SUT(
-            checkFraud: checkFraud,
-            getVerificationCode: getVerificationCode,
-            makeDigest: makeDigest,
             paymentReduce: paymentReduce,
-            shouldRestartPayment: shouldRestartPayment,
             updatePayment: updatePayment,
-            validatePayment: validatePayment
+            paymentWitness: .init(
+                checkFraud: checkFraud,
+                getVerificationCode: getVerificationCode,
+                makeDigest: makeDigest,
+                shouldRestartPayment: shouldRestartPayment,
+                validatePayment: validatePayment
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

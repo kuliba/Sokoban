@@ -316,6 +316,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
     private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
     
+    private typealias Witness = PaymentWitness<Payment, PaymentDigest>
+
     private func makeSUT(
         _ stub: Stub? = nil,
         initialState: State = makeTransaction(),
@@ -331,15 +333,16 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     ) {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
-            checkFraud: { _ in stub.checkFraud },
-            getVerificationCode: { _ in stub.getVerificationCode },
-            makeDigest: { _ in stub.makeDigest },
             paymentReduce: { _,_ in stub.paymentReduce },
-            shouldRestartPayment: { _ in stub.shouldRestartPayment },
             updatePayment: { _,_ in stub.updatePayment },
-            validatePayment: { _ in stub.validatePayment }
+            paymentWitness: .init(
+                checkFraud: { _ in stub.checkFraud },
+                getVerificationCode: { _ in stub.getVerificationCode },
+                makeDigest: { _ in stub.makeDigest },
+                shouldRestartPayment: { _ in stub.shouldRestartPayment },
+                validatePayment: { _ in stub.validatePayment }
+            )
         )
-        
         let paymentInitiator = PaymentInitiator()
         let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentMaker = PaymentMaker()

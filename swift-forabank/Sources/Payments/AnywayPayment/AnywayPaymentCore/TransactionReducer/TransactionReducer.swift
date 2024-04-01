@@ -7,30 +7,18 @@
 
 public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
-    private let checkFraud: CheckFraud
-    private let getVerificationCode: GetVerificationCode
-    private let makeDigest: MakeDigest
     private let paymentReduce: PaymentReduce
-    private let shouldRestartPayment: ShouldRestartPayment
     private let updatePayment: UpdatePayment
-    private let validatePayment: ValidatePayment
+    private let paymentWitness: Witness
 
     public init(
-        checkFraud: @escaping CheckFraud,
-        getVerificationCode: @escaping GetVerificationCode,
-        makeDigest: @escaping MakeDigest,
         paymentReduce: @escaping PaymentReduce,
-        shouldRestartPayment: @escaping ShouldRestartPayment,
         updatePayment: @escaping UpdatePayment,
-        validatePayment: @escaping ValidatePayment
+        paymentWitness: Witness
     ) {
-        self.checkFraud = checkFraud
-        self.getVerificationCode = getVerificationCode
-        self.makeDigest = makeDigest
         self.paymentReduce = paymentReduce
-        self.shouldRestartPayment = shouldRestartPayment
         self.updatePayment = updatePayment
-        self.validatePayment = validatePayment
+        self.paymentWitness = paymentWitness
     }
 }
 
@@ -85,14 +73,10 @@ public extension TransactionReducer {
 
 public extension TransactionReducer {
     
-    typealias CheckFraud = (Payment) -> Bool
-    typealias GetVerificationCode = (Payment) -> VerificationCode?
-    typealias MakeDigest = (Payment) -> PaymentDigest
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
-    typealias ShouldRestartPayment = (Payment) -> Bool
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    typealias ValidatePayment = (Payment) -> Bool
-
+    typealias Witness = PaymentWitness<Payment, PaymentDigest>
+    
     typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
@@ -148,7 +132,7 @@ private extension TransactionReducer {
         let payment: Payment
         (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
-        state.isValid = validatePayment(payment)
+        state.isValid = paymentWitness.validatePayment(payment)
     }
     
     func reduceContinue(
@@ -157,13 +141,13 @@ private extension TransactionReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        if let verificationCode = getVerificationCode(state.payment) {
+        if let verificationCode = paymentWitness.getVerificationCode(state.payment) {
             effect = .makePayment(verificationCode)
         } else {
-            if shouldRestartPayment(state.payment) {
-                effect = .initiatePayment(makeDigest(state.payment))
+            if paymentWitness.shouldRestartPayment(state.payment) {
+                effect = .initiatePayment(paymentWitness.makeDigest(state.payment))
             } else {
-                effect = .continue(makeDigest(state.payment))
+                effect = .continue(paymentWitness.makeDigest(state.payment))
             }
         }
     }
@@ -174,7 +158,7 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else { return }
     
-        effect = .initiatePayment(makeDigest(state.payment))
+        effect = .initiatePayment(paymentWitness.makeDigest(state.payment))
     }
     
     func reduce(
@@ -194,8 +178,8 @@ private extension TransactionReducer {
         case let .success(update):
             let updated = updatePayment(state.payment, update)
             state.payment = updated
-            state.isValid = validatePayment(updated)
-            state.status = checkFraud(updated) ? .fraudSuspected : nil
+            state.isValid = paymentWitness.validatePayment(updated)
+            state.status = paymentWitness.checkFraud(updated) ? .fraudSuspected : nil
         }
     }
 }
