@@ -99,17 +99,9 @@ extension ProductData {
             let isDark = (background.first?.description == "F6F6F7")
             switch card.cardType {
             case .main:
-                if isDark {
-                    return .image(.ic16MainCardGrey)
-                } else {
-                    return .image(.ic16MainCardWhite)
-                }
+                return .image(isDark ? .ic16MainCardGrey : .ic16MainCardWhite)
             case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
-                if isDark {
-                    return .image(.ic16AdditionalCardGrey)
-                } else {
-                    return .image(.ic16AdditionalCardWhite)
-                }
+                return .image(isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite)
             default:
                 return .svg("")
             }

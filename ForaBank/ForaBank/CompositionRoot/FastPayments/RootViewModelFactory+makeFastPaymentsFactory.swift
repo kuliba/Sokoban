@@ -119,8 +119,9 @@ private extension Model {
             icon: {
                 if let image = productData.clover.image {
                     return .image(image)
+                } else {
+                    return .svg("")
                 }
-                else { return .svg("") }
             }()
         )
     }

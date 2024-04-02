@@ -279,12 +279,11 @@ extension ProductCardData {
     
     var isAdditional: Bool {
         
-        if let cardType {
-            return cardType == .additionalSelf ||
-            cardType == .additionalSelfAccOwn ||
-            cardType == .additionalOther
-        }
-        return false
+        guard let cardType else {  return false }
+        
+        return cardType == .additionalSelf ||
+        cardType == .additionalSelfAccOwn ||
+        cardType == .additionalOther
     }
 }
 
