@@ -116,13 +116,17 @@ extension AnywayPaymentUpdate.Parameter {
         let subTitle: String?
         let svgImage: String?
         let title: String
-#warning("change to enum")
-        let type: String
+        let type: FieldType
         let viewType: ViewType
     }
 }
 
 extension AnywayPaymentUpdate.Parameter.UIAttributes {
+    
+    enum FieldType: Equatable {
+        
+        case input, select, maskList
+    }
     
     enum InputFieldType: Equatable {
         
@@ -301,9 +305,21 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
             subTitle: parameter.subTitle,
             svgImage: parameter.svgImage,
             title: parameter.title,
-            type: parameter.type,
+            type: .init(parameter.type),
             viewType: .init(parameter.viewType)
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.FieldType {
+    
+    init(_ type: ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldType) {
+        
+        switch type {
+        case .input:      self = .input
+        case .select:     self = .select
+        case .maskList:   self = .maskList
+        }
     }
 }
 
@@ -376,7 +392,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         order: 1,
                         svgImage: "svgImage",
                         title: "Лицевой счет",
-                        type: "Input",
                         viewType: .input
                     )
                 )
@@ -412,7 +427,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         order: 1,
                         svgImage: "svgImage",
                         title: "Лицевой счет",
-                        type: "Input",
                         viewType: .input
                     )
                 )
@@ -448,7 +462,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         order: 1,
                         svgImage: .svgSample6,
                         title: "Лицевой счет",
-                        type: "Input",
                         viewType: .input
                     )
                 )
@@ -485,7 +498,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 2,
                         title: "Признак платежа",
-                        type: "Select",
+                        type: .select,
                         viewType: .input
                     )
                 )
@@ -530,7 +543,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         isPrint: true,
                         order: 5,
                         title: "Период(ММГГГГ)",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -546,7 +558,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 9,
                         title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -562,7 +573,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 13,
                         title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -578,7 +588,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 17,
                         title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -594,7 +603,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 21,
                         title: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -610,7 +618,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         order: 25,
                         title: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -628,7 +635,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         order: 29,
                         svgImage: .svgSample7,
                         title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
-                        type: "Input",
                         viewType: .input
                     )
                 ),
@@ -932,7 +938,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         subTitle: String? = nil,
         svgImage: String? = nil,
         title: String,
-        type: String,
+        type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
         viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
     ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
         

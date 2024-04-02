@@ -117,7 +117,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
                         regExp: "^.{1,250}$",
                         svgImage: "svgImage",
                         title: "Лицевой счет",
-                        type: "Input",
+                        type: .input,
                         viewType: .input
                     )
                 ],

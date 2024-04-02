@@ -136,7 +136,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let subTitle: String?
         public let svgImage: String?
         public let title: String
-        public let type: String
+        public let type: FieldType
         public let viewType: ViewType
         
         public init(
@@ -162,7 +162,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             subTitle: String? = nil,
             svgImage: String?,
             title: String,
-            type: String,
+            type: FieldType,
             viewType: ViewType
         ) {
             self.content = content
@@ -194,6 +194,11 @@ extension ResponseMapper.CreateAnywayTransferResponse {
 }
 
 extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
+    
+    public enum FieldType: Equatable {
+        
+        case input, select, maskList
+    }
     
     public enum InputFieldType: Equatable {
         
