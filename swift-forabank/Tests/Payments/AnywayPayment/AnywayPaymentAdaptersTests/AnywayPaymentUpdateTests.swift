@@ -12,17 +12,15 @@ import XCTest
 
 struct AnywayPaymentUpdate: Equatable {
     
-    let fields: [Field]
     let details: Details
+    let fields: [Field]
     let parameters: [Parameter]
 }
 
 extension AnywayPaymentUpdate {
     
-    struct Field: Equatable {}
-    
     struct Details: Equatable {
-        
+#warning("split fields further")
         let amount: Decimal?
         let creditAmount: Decimal?
         let currencyAmount: String?
@@ -43,26 +41,51 @@ extension AnywayPaymentUpdate {
         let isFraudSuspected: Bool
     }
     
+    struct Field: Equatable {}
+    
     struct Parameter: Equatable {
+        
+        let field: Field
+        let masking: Masking
+        let validation: Validation
+        let uiAttributes: UIAttributes
+    }
+}
+
+extension AnywayPaymentUpdate.Parameter {
+    
+    struct Field: Equatable {
         
         let content: String?
         let dataDictionary: String?
         let dataDictionaryРarent: String?
         let dataType: String
-        let group: String?
         let id: String
-        let inputFieldType: InputFieldType?
+    }
+    
+    struct Masking: Equatable {
+        
         let inputMask: String?
-        let isPrint: Bool
+        let mask: String?
+    }
+    
+    struct Validation: Equatable {
+        
         let isRequired: Bool
         let maxLength: Int?
-        let mask: String?
         let minLength: Int?
+        let rawLength: Int
+        let regExp: String
+    }
+    
+    struct UIAttributes: Equatable {
+        
+        let group: String?
+        let inputFieldType: InputFieldType?
+        let isPrint: Bool
         let order: Int?
         let phoneBook: Bool
-        let rawLength: Int
         let isReadOnly: Bool
-        let regExp: String
         let subGroup: String?
         let subTitle: String?
         let svgImage: String?
@@ -72,7 +95,7 @@ extension AnywayPaymentUpdate {
     }
 }
 
-extension AnywayPaymentUpdate.Parameter {
+extension AnywayPaymentUpdate.Parameter.UIAttributes {
     
     enum InputFieldType: Equatable {
         
@@ -105,8 +128,8 @@ extension AnywayPaymentUpdate {
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
         self.init(
-            fields: [],
             details: .init(response),
+            fields: [],
             parameters: response.parametersForNextStep.map { .init($0) }
         )
     }
@@ -144,24 +167,64 @@ private extension AnywayPaymentUpdate.Parameter {
     init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         self.init(
+            field: .init(parameter),
+            masking: .init(parameter),
+            validation: .init(parameter),
+            uiAttributes: .init(parameter)
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.Field {
+    
+    init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        self.init(
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
             dataType: parameter.dataType,
-            group: parameter.group,
-            id: parameter.id,
-            inputFieldType: parameter.inputFieldType.map { .init($0) },
+            id: parameter.id
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.Masking {
+    
+    init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        self.init(
             inputMask: parameter.inputMask,
-            isPrint: parameter.isPrint,
+            mask: parameter.mask
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.Validation {
+    
+    init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        self.init(
             isRequired: parameter.isRequired,
             maxLength: parameter.maxLength,
-            mask: parameter.mask,
             minLength: parameter.minLength,
+            rawLength: parameter.rawLength,
+            regExp: parameter.regExp
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.UIAttributes {
+    
+    init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        self.init(
+            group: parameter.group,
+            inputFieldType: parameter.inputFieldType.map { .init($0) },
+            isPrint: parameter.isPrint,
             order: parameter.order,
             phoneBook: parameter.phoneBook,
-            rawLength: parameter.rawLength,
             isReadOnly: parameter.isReadOnly,
-            regExp: parameter.regExp,
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
             svgImage: parameter.svgImage,
@@ -172,7 +235,7 @@ private extension AnywayPaymentUpdate.Parameter {
     }
 }
 
-private extension AnywayPaymentUpdate.Parameter.InputFieldType {
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType {
     
     init(_ type: ResponseMapper.CreateAnywayTransferResponse.Parameter.InputFieldType) {
         
@@ -197,10 +260,10 @@ private extension AnywayPaymentUpdate.Parameter.InputFieldType {
     }
 }
 
-private extension AnywayPaymentUpdate.Parameter.ViewType {
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.ViewType {
     
     init(_ type: ResponseMapper.CreateAnywayTransferResponse.Parameter.ViewType) {
-     
+        
         switch type {
         case .constant: self = .constant
         case .input:    self = .input
@@ -214,29 +277,36 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_validData() throws {
         
         try assert(.validData, mapsTo: .init(
-            fields: [],
             details: makeDetails(
                 finalStep: false,
+                isFraudSuspected: false,
                 needMake: false,
                 needOTP: false,
                 needSum: false,
-                paymentOperationDetailID: 54321,
-                isFraudSuspected: false
+                paymentOperationDetailID: 54321
             ),
+            fields: [],
             parameters: [
-                makeParameter(
-                    dataType: "%String",
-                    id: "1",
-                    inputFieldType: .account,
-                    isPrint: true,
-                    isRequired: true,
-                    order: 1,
-                    rawLength: 0,
-                    regExp: "^.{1,250}$",
-                    svgImage: "svgImage",
-                    title: "Лицевой счет",
-                    type: "Input",
-                    viewType: .input
+                .init(
+                    field: makeParameterField(
+                        dataType: "%String",
+                        id: "1"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: true,
+                        rawLength: 0,
+                        regExp: "^.{1,250}$"
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        inputFieldType: .account,
+                        isPrint: true,
+                        order: 1,
+                        svgImage: "svgImage",
+                        title: "Лицевой счет",
+                        type: "Input",
+                        viewType: .input
+                    )
                 )
             ]
         ))
@@ -245,91 +315,98 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_validData2() throws {
         
         try assert(.validData2, mapsTo: .init(
-            fields: [],
             details: makeDetails(
                 finalStep: true,
+                isFraudSuspected: true,
                 needMake: true,
                 needOTP: true,
-                needSum: true,
-                isFraudSuspected: true
+                needSum: true
             ),
+            fields: [],
             parameters: [
-                makeParameter(
-                    dataType: "%String",
-                    id: "1",
-                    inputFieldType: .account,
-                    isPrint: true,
-                    isRequired: true,
-                    order: 1,
-                    rawLength: 0,
-                    regExp: "^.{1,250}$",
-                    svgImage: "svgImage",
-                    title: "Лицевой счет",
-                    type: "Input",
-                    viewType: .input
+                .init(
+                    field: makeParameterField(
+                        dataType: "%String",
+                        id: "1"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: true,
+                        rawLength: 0,
+                        regExp: "^.{1,250}$"
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        inputFieldType: .account,
+                        isPrint: true,
+                        order: 1,
+                        svgImage: "svgImage",
+                        title: "Лицевой счет",
+                        type: "Input",
+                        viewType: .input
+                    )
                 )
             ]
         ))
     }
     
-//    func test_init_valid_sber01() throws {
-//        
-//        try assert(.valid_sber01, mapsTo: .init(
-//            fields: [],
-//            details: makeDetails(
-//                finalStep: false,
-//                needMake: false,
-//                needOTP: false,
-//                needSum: false,
-//                isFraudSuspected: false
-//            ),
-//            parameters: []
-//        ))
-//    }
+    //    func test_init_valid_sber01() throws {
+    //
+    //        try assert(.valid_sber01, mapsTo: .init(
+    //            fields: [],
+    //            details: makeDetails(
+    //                finalStep: false,
+    //                needMake: false,
+    //                needOTP: false,
+    //                needSum: false,
+    //                isFraudSuspected: false
+    //            ),
+    //            parameters: []
+    //        ))
+    //    }
     
-//    func test_init_valid_sber02() throws {
-//        
-//        try assert(.valid_sber02, mapsTo: .init(
-//            fields: [],
-//            details: makeDetails(
-//                finalStep: false,
-//                needMake: false,
-//                needOTP: false,
-//                needSum: false,
-//                isFraudSuspected: false
-//            ),
-//            parameters: []
-//        ))
-//    }
-//    
-//    func test_init_valid_sber03() throws {
-//        
-//        try assert(.valid_sber03, mapsTo: .init(
-//            fields: [],
-//            details: makeDetails(
-//                amount: 5_888.1,
-//                finalStep: false,
-//                needMake: false,
-//                needOTP: false,
-//                needSum: true,
-//                isFraudSuspected: false
-//            ),
-//            parameters: []
-//        ))
-//    }
+    //    func test_init_valid_sber02() throws {
+    //
+    //        try assert(.valid_sber02, mapsTo: .init(
+    //            fields: [],
+    //            details: makeDetails(
+    //                finalStep: false,
+    //                needMake: false,
+    //                needOTP: false,
+    //                needSum: false,
+    //                isFraudSuspected: false
+    //            ),
+    //            parameters: []
+    //        ))
+    //    }
+    //
+    //    func test_init_valid_sber03() throws {
+    //
+    //        try assert(.valid_sber03, mapsTo: .init(
+    //            fields: [],
+    //            details: makeDetails(
+    //                amount: 5_888.1,
+    //                finalStep: false,
+    //                needMake: false,
+    //                needOTP: false,
+    //                needSum: true,
+    //                isFraudSuspected: false
+    //            ),
+    //            parameters: []
+    //        ))
+    //    }
     
     func test_init_valid_sber04() throws {
         
         try assert(.valid_sber04, mapsTo: .init(
-            fields: [],
             details: makeDetails(
                 amount: 5_888.1,
                 finalStep: false,
+                isFraudSuspected: false,
                 needMake: false,
                 needOTP: false,
-                needSum: true,
-                isFraudSuspected: false
+                needSum: true
             ),
+            fields: [],
             parameters: []
         ))
     }
@@ -337,18 +414,18 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_valid_sber05() throws {
         
         try assert(.valid_sber05, mapsTo: .init(
-            fields: [],
             details: makeDetails(
                 amount: 5_888.1,
                 currencyAmount: "RUB",
                 debitAmount: 5_888.1,
                 fee: 0,
                 finalStep: true,
+                isFraudSuspected: false,
                 needMake: false,
                 needOTP: false,
-                needSum: true,
-                isFraudSuspected: false
+                needSum: true
             ),
+            fields: [],
             parameters: []
         ))
     }
@@ -367,13 +444,13 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fee: Decimal? = nil,
         finalStep: Bool,
         infoMessage: String? = nil,
+        isFraudSuspected: Bool,
         needMake: Bool,
         needOTP: Bool,
         needSum: Bool,
         paymentOperationDetailID: Int? = nil,
         payeeName: String? = nil,
-        printFormType: String? = nil,
-        isFraudSuspected: Bool
+        printFormType: String? = nil
     ) -> AnywayPaymentUpdate.Details {
         
         .init(
@@ -398,52 +475,73 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         )
     }
     
-    private func makeParameter(
+    private func makeParameterField(
         content: String? = nil,
         dataDictionary: String? = nil,
         dataDictionaryРarent: String? = nil,
         dataType: String,
-        group: String? = nil,
-        id: String,
-        inputFieldType: AnywayPaymentUpdate.Parameter.InputFieldType? = nil,
-        inputMask: String? = nil,
-        isPrint: Bool = false,
-        isRequired: Bool = false,
-        maxLength: Int? = nil,
-        mask: String? = nil,
-        minLength: Int? = nil,
-        order: Int? = nil,
-        phoneBook: Bool = false,
-        rawLength: Int,
-        isReadOnly: Bool = false,
-        regExp: String,
-        subGroup: String? = nil,
-        subTitle: String? = nil,
-        svgImage: String? = nil,
-        title: String,
-        type: String,
-        viewType: AnywayPaymentUpdate.Parameter.ViewType
-    ) -> AnywayPaymentUpdate.Parameter {
+        id: String
+    ) -> AnywayPaymentUpdate.Parameter.Field {
         
         .init(
             content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
             dataType: dataType,
-            group: group,
-            id: id,
-            inputFieldType: inputFieldType,
+            id: id
+        )
+    }
+    
+    private func makeParameterMasking(
+        inputMask: String? = nil,
+        mask: String? = nil
+    ) -> AnywayPaymentUpdate.Parameter.Masking {
+        
+        .init(
             inputMask: inputMask,
-            isPrint: isPrint,
+            mask: mask
+        )
+    }
+    
+    private func makeParameterValidation(
+        isRequired: Bool = false,
+        maxLength: Int? = nil,
+        minLength: Int? = nil,
+        rawLength: Int,
+        regExp: String
+    ) -> AnywayPaymentUpdate.Parameter.Validation {
+        
+        .init(
             isRequired: isRequired,
             maxLength: maxLength,
-            mask: mask,
             minLength: minLength,
+            rawLength: rawLength,
+            regExp: regExp
+        )
+    }
+    
+    private func makeParameterUIAttributes(
+        group: String? = nil,
+        inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
+        isPrint: Bool = false,
+        order: Int? = nil,
+        phoneBook: Bool = false,
+        isReadOnly: Bool = false,
+        subGroup: String? = nil,
+        subTitle: String? = nil,
+        svgImage: String? = nil,
+        title: String,
+        type: String,
+        viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
+    ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
+        
+        .init(
+            group: group,
+            inputFieldType: inputFieldType,
+            isPrint: isPrint,
             order: order,
             phoneBook: phoneBook,
-            rawLength: rawLength,
             isReadOnly: isReadOnly,
-            regExp: regExp,
             subGroup: subGroup,
             subTitle: subTitle,
             svgImage: svgImage,
