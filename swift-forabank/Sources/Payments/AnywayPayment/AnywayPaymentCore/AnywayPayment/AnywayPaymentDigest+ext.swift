@@ -24,10 +24,10 @@ public extension AnywayPaymentDigest {
                 
                 switch $0.product {
                 case let .account(accountID):
-                    return .init(cardId: nil, accountId: accountID.rawValue, phoneNumber: $0.phoneNumber?.rawValue, inn: $0.inn?.rawValue)
+                    return .init(cardId: nil, accountId: accountID.rawValue)
                     
                 case let .card(cardID):
-                    return .init(cardId: cardID.rawValue, accountId: nil, phoneNumber: $0.phoneNumber?.rawValue, inn: $0.inn?.rawValue)
+                    return .init(cardId: cardID.rawValue, accountId: nil)
                 }
             },
             comment: comment,
@@ -66,8 +66,6 @@ public extension AnywayPaymentDigest {
             
             let cardId: Int?
             let accountId: Int?
-            let phoneNumber: String?
-            let inn: String?
         }
     }
 }

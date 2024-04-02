@@ -113,8 +113,6 @@ final class AnywayPaymentDigestTests: XCTestCase {
     func test_json_shouldDeliverDataWithCardID() throws {
         
         let cardIDRawValue = generateRandom11DigitNumber()
-        let phoneNumberRawValue = anyMessage()
-        let innRawValue = anyMessage()
         let comment = anyMessage()
         let purefRawValue = anyMessage()
         let mccRawValue = anyMessage()
@@ -125,9 +123,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
                 currency: "RUB"
             ),
             payer: .init(
-                product: .card(.init(cardIDRawValue)),
-                phoneNumber: .init(phoneNumberRawValue),
-                inn: .init(innRawValue)
+                product: .card(.init(cardIDRawValue))
             ),
             comment: comment,
             puref: .init(purefRawValue),
@@ -143,9 +139,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             currencyAmount: "RUB",
             payer: .init(
                 cardId: cardIDRawValue,
-                accountId: nil,
-                phoneNumber: phoneNumberRawValue,
-                inn: innRawValue
+                accountId: nil
             ),
             comment: comment,
             puref: purefRawValue,
@@ -157,8 +151,6 @@ final class AnywayPaymentDigestTests: XCTestCase {
     func test_json_shouldDeliverDataWithAccountID() throws {
         
         let accountIDRawValue = generateRandom11DigitNumber()
-        let phoneNumberRawValue = anyMessage()
-        let innRawValue = anyMessage()
         let comment = anyMessage()
         let purefRawValue = anyMessage()
         let mccRawValue = anyMessage()
@@ -169,9 +161,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
                 currency: "RUB"
             ),
             payer: .init(
-                product: .account(.init(accountIDRawValue)),
-                phoneNumber: .init(phoneNumberRawValue),
-                inn: .init(innRawValue)
+                product: .account(.init(accountIDRawValue))
             ),
             comment: comment,
             puref: .init(purefRawValue),
@@ -187,9 +177,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             currencyAmount: "RUB",
             payer: .init(
                 cardId: nil,
-                accountId: accountIDRawValue,
-                phoneNumber: phoneNumberRawValue,
-                inn: innRawValue
+                accountId: accountIDRawValue
             ),
             comment: comment,
             puref: purefRawValue,
@@ -243,8 +231,6 @@ final class AnywayPaymentDigestTests: XCTestCase {
             
             let cardId: Int?
             let accountId: Int?
-            let phoneNumber: String?
-            let inn: String?
         }
     }
 }

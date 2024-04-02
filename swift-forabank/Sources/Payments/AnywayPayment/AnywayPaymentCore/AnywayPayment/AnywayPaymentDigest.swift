@@ -83,17 +83,11 @@ extension AnywayPaymentDigest {
     public struct Payer: Equatable {
         
         public let product: Product // if just product field is left, remove excessive hierarchy
-        public let phoneNumber: PhoneNumber? // remove?
-        public let inn: INN? // remove?
         
         public init(
-            product: Product, 
-            phoneNumber: PhoneNumber?, 
-            inn: INN?
+            product: Product
         ) {
             self.product = product
-            self.phoneNumber = phoneNumber
-            self.inn = inn
         }
     }
 }
@@ -111,11 +105,6 @@ public extension AnywayPaymentDigest.Payer {
         case account(AccountID)
         case card(CardID)
     }
-    
-    typealias PhoneNumber = Tagged<_PhoneNumber, String>
-    enum _PhoneNumber {}
-    typealias INN = Tagged<_INN, String>
-    enum _INN {}
 }
 
 public extension AnywayPaymentDigest.Payer.Product {
