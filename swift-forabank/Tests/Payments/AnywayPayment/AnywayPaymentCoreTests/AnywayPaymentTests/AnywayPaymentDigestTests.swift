@@ -122,9 +122,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
                 value: 1_234.56,
                 currency: "RUB"
             ),
-            payer: .init(
-                product: .card(.init(cardIDRawValue))
-            ),
+            product: .card(.init(cardIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
             additionals: [],
@@ -160,9 +158,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
                 value: 1_234.56,
                 currency: "RUB"
             ),
-            payer: .init(
-                product: .account(.init(accountIDRawValue))
-            ),
+            product: .account(.init(accountIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
             additionals: [],
@@ -191,7 +187,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
     private func makeAnywayPaymentDigest(
         check: Bool,
         amount: AnywayPaymentDigest.Amount? = nil,
-        payer: AnywayPaymentDigest.Payer? = nil,
+        product: AnywayPaymentDigest.Product? = nil,
         comment: String? = nil,
         puref: AnywayPaymentDigest.Puref? = nil,
         additionals: [AnywayPaymentDigest.Additional],
@@ -201,7 +197,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
         .init(
             check: check,
             amount: amount,
-            payer: payer,
+            product: product,
             comment: comment,
             puref: puref,
             additionals: additionals,

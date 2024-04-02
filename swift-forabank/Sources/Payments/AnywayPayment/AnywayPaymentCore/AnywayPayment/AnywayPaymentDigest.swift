@@ -13,7 +13,7 @@ public struct AnywayPaymentDigest: Equatable {
     // Признак проверки операции (если check="true", то OTP не отправляется, если check="false" - OTP отправляется)
     public let check: Bool
     public let amount: Amount?
-    public let payer: Payer?
+    public let product: Product?
     public let comment: String?
     public let puref: Puref?
     public let additionals: [Additional]
@@ -22,7 +22,7 @@ public struct AnywayPaymentDigest: Equatable {
     public init(
         check: Bool, 
         amount: Amount?,
-        payer: Payer?,
+        product: Product?,
         comment: String?,
         puref: Puref?,
         additionals: [Additional],
@@ -30,7 +30,7 @@ public struct AnywayPaymentDigest: Equatable {
     ) {
         self.check = check
         self.amount = amount
-        self.payer = payer
+        self.product = product
         self.comment = comment
         self.puref = puref
         self.additionals = additionals
@@ -79,17 +79,6 @@ extension AnywayPaymentDigest {
             self.currency = currency
         }
     }
-    
-    public struct Payer: Equatable {
-        
-        public let product: Product // if just product field is left, remove excessive hierarchy
-        
-        public init(
-            product: Product
-        ) {
-            self.product = product
-        }
-    }
 }
 
 public extension AnywayPaymentDigest.Amount {
@@ -98,7 +87,7 @@ public extension AnywayPaymentDigest.Amount {
     enum _Currency {}
 }
 
-public extension AnywayPaymentDigest.Payer {
+public extension AnywayPaymentDigest {
     
     enum Product: Equatable {
         
@@ -107,7 +96,7 @@ public extension AnywayPaymentDigest.Payer {
     }
 }
 
-public extension AnywayPaymentDigest.Payer.Product {
+public extension AnywayPaymentDigest.Product {
     
     typealias AccountID = Tagged<_AccountID, Int>
     enum _AccountID {}
