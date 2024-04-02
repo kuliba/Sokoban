@@ -60,6 +60,12 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
     
+    public let cloverImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -86,6 +92,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         
         let viewModel = CardsScrollModel(card: card, getUIImage: getUImage)
         backgroundImageView.image = viewModel.backgroundImage
+        cloverImageView.image = viewModel.card.cloverImage?.withRenderingMode(.alwaysOriginal)
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -112,7 +119,8 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
-        
+        addSubview(cloverImageView)
+
         backgroundImageView.fillSuperview()
         
         maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
@@ -125,6 +133,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
         
+        cloverImageView.anchor(top: self.topAnchor, right: self.rightAnchor, paddingTop: 8, paddingRight: 8)
     }
-    
 }
