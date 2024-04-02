@@ -24,6 +24,7 @@ public extension Product {
     
     private static func _product(
         id: ID,
+        isAdditional: Bool = false,
         header: String? = nil,
         title: String = "title",
         amountFormatted: String,
@@ -37,6 +38,7 @@ public extension Product {
         
         .init(
             id: id,
+            isAdditional: isAdditional,
             header: header ?? id.typeString,
             title: title,
             number: id.numberString,

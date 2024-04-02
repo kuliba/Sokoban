@@ -116,7 +116,13 @@ private extension Model {
         .init(
             background: .image(self.images.value[productData.largeDesignMd5Hash]?.image ?? .cardPlaceholder),
             color: productData.backgroundColor.description,
-            icon: .image(self.images.value[productData.smallDesignMd5hash]?.image ?? .cardPlaceholder)
+            icon: {
+                if let image = productData.clover.image {
+                    return .image(image)
+                } else {
+                    return .svg("")
+                }
+            }()
         )
     }
     
@@ -230,6 +236,7 @@ private extension ProductAccountData {
         
         .init(
             id: .account(.init(id)),
+            isAdditional: false,
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",
@@ -265,6 +272,7 @@ private extension ProductCardData {
         
         .init(
             id: .card(.init(id), accountID: .init(accountID)),
+            isAdditional: isAdditional,
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",

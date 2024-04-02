@@ -8,6 +8,7 @@
 import ProductSelectComponent
 import SberQR
 import SwiftUI
+import UIPrimitives
 
 extension Array where Element == ProductData {
     
@@ -53,7 +54,7 @@ extension ProductData {
             return .init(
                 id: .init(card.id),
                 type: .card,
-                isAdditional: false, // TODO: add real value for Additional card
+                isAdditional: card.isAdditional,
                 header: "Счет списания",
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
@@ -62,7 +63,7 @@ extension ProductData {
                 look: .init(
                     background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
                     color: card.backgroundColor.description,
-                    icon: .image(getImage(card.smallDesignMd5hash) ?? .cardPlaceholder)
+                    icon: clover
                 )
             )
         }
@@ -81,11 +82,30 @@ extension ProductData {
                 look: .init(
                     background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
                     color: account.backgroundColor.description,
-                    icon: .image(getImage(account.smallDesignMd5hash) ?? .cardPlaceholder)
+                    icon: .svg("")
                 )
             )
         }
         
         return nil
+    }
+}
+
+extension ProductData {
+    
+    var clover: Icon {
+        
+        if let card = self as? ProductCardData {
+            let isDark = (background.first?.description == "F6F6F7")
+            switch card.cardType {
+            case .main:
+                return .image(isDark ? .ic16MainCardGrey : .ic16MainCardWhite)
+            case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+                return .image(isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite)
+            default:
+                return .svg("")
+            }
+        }
+        return .svg("")
     }
 }

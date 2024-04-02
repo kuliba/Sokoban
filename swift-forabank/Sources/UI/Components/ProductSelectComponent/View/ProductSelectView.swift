@@ -101,7 +101,7 @@ public struct ProductSelectView<ProductView: View>: View {
         
         HStack(spacing: 12) {
             
-            productIcon(product.look.icon)
+            productIcon(product.look.background)
             productTitle(product, config: config)
         }
         .contentShape(Rectangle())
@@ -147,7 +147,8 @@ public struct ProductSelectView<ProductView: View>: View {
         let viewModel: CarouselViewModel<ProductSelect.Product> = .init(
             initialState: .init(
                 products: products,
-                needShowSticker: false
+                needShowSticker: false,
+                carouselDimensions: carouselConfig.carousel.productDimensions
             ),
             reduce: CarouselReducer().reduce,
             handleEffect: CarouselEffectHandler().handleEffect)
