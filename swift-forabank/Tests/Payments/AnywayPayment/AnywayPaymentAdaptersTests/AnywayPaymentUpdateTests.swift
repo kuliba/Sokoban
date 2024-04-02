@@ -53,7 +53,7 @@ extension AnywayPaymentUpdate.Details {
     
     struct Control: Equatable {
         
-        let finalStep: Bool
+        let isFinalStep: Bool
         let isFraudSuspected: Bool
         let needMake: Bool
         let needOTP: Bool
@@ -187,7 +187,7 @@ private extension AnywayPaymentUpdate.Details.Control {
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
         self.init(
-            finalStep: response.finalStep,
+            isFinalStep: response.finalStep,
             isFraudSuspected: response.scenario == .suspect,
             needMake: response.needMake,
             needOTP: response.needOTP,
@@ -328,7 +328,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             details: .init(
                 amounts: makeDetailsAmounts(),
                 control: makeDetailsControl(
-                    finalStep: false,
+                    isFinalStep: false,
                     isFraudSuspected: false,
                     needMake: false,
                     needOTP: false,
@@ -371,7 +371,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             details: .init(
                 amounts: makeDetailsAmounts(),
                 control: makeDetailsControl(
-                    finalStep: true,
+                    isFinalStep: true,
                     isFraudSuspected: true,
                     needMake: true,
                     needOTP: true,
@@ -460,7 +460,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     amount: 5_888.1
                 ),
                 control: makeDetailsControl(
-                    finalStep: false,
+                    isFinalStep: false,
                     isFraudSuspected: false,
                     needMake: false,
                     needOTP: false,
@@ -484,7 +484,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     fee: 0
                 ),
                 control: makeDetailsControl(
-                    finalStep: true,
+                    isFinalStep: true,
                     isFraudSuspected: false,
                     needMake: false,
                     needOTP: false,
@@ -523,7 +523,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeDetailsControl(
-        finalStep: Bool,
+        isFinalStep: Bool,
         isFraudSuspected: Bool,
         needMake: Bool,
         needOTP: Bool,
@@ -531,7 +531,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     ) -> AnywayPaymentUpdate.Details.Control {
         
         .init(
-            finalStep: finalStep,
+            isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
             needMake: needMake,
             needOTP: needOTP,
