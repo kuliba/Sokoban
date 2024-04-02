@@ -357,16 +357,23 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "AnywayPaymentBackendTests",
         "name" : "AnywayPaymentBackendTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "AnywayPaymentCoreTests",
         "name" : "AnywayPaymentCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
       }
     }
   ],
