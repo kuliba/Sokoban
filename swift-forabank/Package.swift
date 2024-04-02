@@ -112,6 +112,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // Payments
+        .anywayPaymentAdapters,
+        .anywayPaymentAdaptersTests,
         .anywayPaymentBackend,
         .anywayPaymentBackendTests,
         .anywayPaymentCore,
@@ -525,6 +527,7 @@ private extension Product {
     static let anywayPayment = library(
         name: .anywayPayment,
         targets: [
+            .anywayPaymentAdapters,
             .anywayPaymentBackend,
             .anywayPaymentCore,
         ]
@@ -926,6 +929,29 @@ private extension Target {
     )
     
     // MARK: - Payments
+    
+    static let anywayPaymentAdapters = target(
+        name: .anywayPaymentAdapters,
+        dependencies: [
+            .anywayPaymentCore,
+            .anywayPaymentBackend,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentAdapters)"
+    )
+    static let anywayPaymentAdaptersTests = testTarget(
+        name: .anywayPaymentAdaptersTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .anywayPaymentAdapters,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentAdaptersTests)"
+    )
     
     static let anywayPaymentBackend = target(
         name: .anywayPaymentBackend,
@@ -2017,6 +2043,10 @@ private extension Target.Dependency {
     
     // MARK: - Payments
 
+    static let anywayPaymentAdapters = byName(
+        name: .anywayPaymentAdapters
+    )
+
     static let anywayPaymentBackend = byName(
         name: .anywayPaymentBackend
     )
@@ -2231,6 +2261,8 @@ private extension String {
     // MARK: - Payments
     
     static let anywayPayment = "AnywayPayment"
+    static let anywayPaymentAdapters = "AnywayPaymentAdapters"
+    static let anywayPaymentAdaptersTests = "AnywayPaymentAdaptersTests"
     static let anywayPaymentBackend = "AnywayPaymentBackend"
     static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
     static let anywayPaymentCore = "AnywayPaymentCore"

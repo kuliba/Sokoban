@@ -7,27 +7,18 @@
 
 public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
-    private let checkFraud: CheckFraud
-    private let getVerificationCode: GetVerificationCode
-    private let makeDigest: MakeDigest
     private let paymentReduce: PaymentReduce
     private let updatePayment: UpdatePayment
-    private let validatePayment: ValidatePayment
-    
+    private let paymentInspector: Inspector
+
     public init(
-        checkFraud: @escaping CheckFraud,
-        getVerificationCode: @escaping GetVerificationCode,
-        makeDigest: @escaping MakeDigest,
         paymentReduce: @escaping PaymentReduce,
         updatePayment: @escaping UpdatePayment,
-        validatePayment: @escaping ValidatePayment
+        paymentInspector: Inspector
     ) {
-        self.checkFraud = checkFraud
-        self.getVerificationCode = getVerificationCode
-        self.makeDigest = makeDigest
         self.paymentReduce = paymentReduce
         self.updatePayment = updatePayment
-        self.validatePayment = validatePayment
+        self.paymentInspector = paymentInspector
     }
 }
 
@@ -46,22 +37,10 @@ public extension TransactionReducer {
             break
             
         case (_, .dismissRecoverableError):
-            switch state.status {
-            case .serverError:
-                state.status = nil
-                
-            default:
-                break
-            }
+            reduceDismissRecoverableError(&state)
             
         case (.fraudSuspected, _):
-            switch event {
-            case let .fraud(fraudEvent):
-                reduce(&state, &effect, with: fraudEvent)
-                
-            default:
-                break
-            }
+            reduceFraudSuspected(&state, &effect, with: event)
             
         case let (_, .completePayment(transactionResult)):
             reduce(&state, with: transactionResult)
@@ -88,13 +67,9 @@ public extension TransactionReducer {
 
 public extension TransactionReducer {
     
-    typealias CheckFraud = (Payment) -> Bool
-    typealias MakeDigest = (Payment) -> PaymentDigest
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    
-    typealias ValidatePayment = (Payment) -> Bool
-    typealias GetVerificationCode = (Payment) -> VerificationCode?
+    typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
     typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
     typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
@@ -103,16 +78,25 @@ public extension TransactionReducer {
 
 private extension TransactionReducer {
     
-    func reduce(
-        _ state: inout State,
-        with transactionResult: Event.TransactionResult
+    func reduceDismissRecoverableError(
+        _ state: inout State
     ) {
-        switch transactionResult {
-        case .none:
-            state.status = .result(.failure(.transactionFailure))
+        guard case .serverError = state.status else { return }
+
+        state.status = nil
+    }
+    
+    func reduceFraudSuspected(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: Event
+    ) {
+        switch event {
+        case let .fraud(fraudEvent):
+            reduce(&state, &effect, with: fraudEvent)
             
-        case let .some(report):
-            state.status = .result(.success(report))
+        default:
+            break
         }
     }
     
@@ -137,13 +121,26 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
+        with transactionResult: Event.TransactionResult
+    ) {
+        switch transactionResult {
+        case .none:
+            state.status = .result(.failure(.transactionFailure))
+            
+        case let .some(report):
+            state.status = .result(.success(report))
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
         _ effect: inout Effect?,
         with event: PaymentEvent
     ) {
         let payment: Payment
         (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
-        state.isValid = validatePayment(payment)
+        state.isValid = paymentInspector.validatePayment(payment)
     }
     
     func reduceContinue(
@@ -152,10 +149,14 @@ private extension TransactionReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        if let verificationCode = getVerificationCode(state.payment) {
-             effect = .makePayment(verificationCode)
+        if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
+            effect = .makePayment(verificationCode)
         } else {
-            effect = .continue(makeDigest(state.payment))
+            if paymentInspector.shouldRestartPayment(state.payment) {
+                effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
+            } else {
+                effect = .continue(paymentInspector.makeDigest(state.payment))
+            }
         }
     }
     
@@ -165,7 +166,7 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else { return }
     
-        effect = .initiatePayment(makeDigest(state.payment))
+        effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
     }
     
     func reduce(
@@ -185,8 +186,8 @@ private extension TransactionReducer {
         case let .success(update):
             let updated = updatePayment(state.payment, update)
             state.payment = updated
-            state.isValid = validatePayment(updated)
-            state.status = checkFraud(updated) ? .fraudSuspected : nil
+            state.isValid = paymentInspector.validatePayment(updated)
+            state.status = paymentInspector.checkFraud(updated) ? .fraudSuspected : nil
         }
     }
 }
