@@ -107,7 +107,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     regExp: "^.{1,250}$",
                     svgImage: "svgImage",
                     title: "Лицевой счет",
-                    type: "Input",
+                    type: .input,
                     viewType: .input
                 )
             ],

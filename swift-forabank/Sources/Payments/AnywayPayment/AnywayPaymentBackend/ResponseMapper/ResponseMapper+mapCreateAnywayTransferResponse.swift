@@ -102,7 +102,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             subTitle: parameter.subTitle,
             svgImage: parameter.svgImage,
             title: parameter.title,
-            type: parameter.type,
+            type: .init(parameter.type),
             viewType: .init(parameter.viewType)
         )
     }
@@ -130,6 +130,18 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.InputFie
         case "RECIPIENT": self = .recipient
         case "VIEW":      self = .view
         default:          return nil
+        }
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldType {
+    
+    init(_ rawValue: ResponseMapper._Data._Parameter.FieldType) {
+        
+        switch rawValue {
+        case .input:      self = .input
+        case .select:     self = .select
+        case .maskList:   self = .maskList
         }
     }
 }
@@ -209,12 +221,19 @@ private extension ResponseMapper._Data {
         let subTitle: String?
         let svgImage: String?
         let title: String
-        let type: String
+        let type: FieldType
         let viewType: ViewType
     }
 }
 
 private extension ResponseMapper._Data._Parameter {
+    
+    enum FieldType: String, Decodable {
+        
+        case input    = "Input"
+        case select   = "Select"
+        case maskList = "MaskList"
+    }
     
     enum ViewType: String, Decodable {
         
