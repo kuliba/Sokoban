@@ -95,17 +95,25 @@ extension ProductData {
     
     var clover: Icon {
         
+        if let cloverImage {
+            return .image(cloverImage)
+        }
+        return .svg("")
+    }
+    
+    var cloverImage: Image? {
+        
         if let card = self as? ProductCardData {
             let isDark = (background.first?.description == "F6F6F7")
             switch card.cardType {
             case .main:
-                return .image(isDark ? .ic16MainCardGrey : .ic16MainCardWhite)
+                return isDark ? .ic16MainCardGrey : .ic16MainCardWhite
             case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
-                return .image(isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite)
+                return isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite
             default:
-                return .svg("")
+                return nil
             }
         }
-        return .svg("")
+        return nil
     }
 }

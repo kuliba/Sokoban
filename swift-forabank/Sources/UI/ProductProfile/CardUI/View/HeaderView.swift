@@ -11,7 +11,7 @@ public struct HeaderDetails {
     
     let number: String?
     let period: String?
-    let icon: Image?
+    var icon: Image?
     
     public init(
         number: String?,
@@ -21,6 +21,10 @@ public struct HeaderDetails {
         self.number = number
         self.period = period
         self.icon = icon
+    }
+    
+    public mutating func updateIcon(_ newIcon: Image?) {
+        icon = newIcon
     }
 }
 
