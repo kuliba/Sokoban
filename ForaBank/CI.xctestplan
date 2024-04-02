@@ -380,6 +380,13 @@
         "identifier" : "AnywayPaymentCoreTests",
         "name" : "AnywayPaymentCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
+      }
     }
   ],
   "version" : 1
