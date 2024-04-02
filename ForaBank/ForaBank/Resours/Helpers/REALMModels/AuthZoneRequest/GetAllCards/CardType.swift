@@ -14,4 +14,10 @@ enum CardType: Codable {
     case additionalSelf
     case additionalSelfAccOwn
     case additionalOther
+    
+    var isAdditional: Bool {
+        self == .additionalOther ||
+        self == .additionalSelf ||
+        self == .additionalSelfAccOwn
+    }
 }
