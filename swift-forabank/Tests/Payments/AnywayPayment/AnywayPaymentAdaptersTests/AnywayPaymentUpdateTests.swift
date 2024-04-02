@@ -20,25 +20,10 @@ struct AnywayPaymentUpdate: Equatable {
 extension AnywayPaymentUpdate {
     
     struct Details: Equatable {
-#warning("split fields further")
-        let amount: Decimal?
-        let creditAmount: Decimal?
-        let currencyAmount: String?
-        let currencyPayee: String?
-        let currencyPayer: String?
-        let currencyRate: Decimal?
-        let debitAmount: Decimal?
-        let documentStatus: String? // enum!
-        let fee: Decimal?
-        let finalStep: Bool
-        let infoMessage: String?
-        let needMake: Bool
-        let needOTP: Bool
-        let needSum: Bool
-        let paymentOperationDetailID: Int?
-        let payeeName: String?
-        let printFormType: String?
-        let isFraudSuspected: Bool
+        
+        let amounts: Amounts
+        let control: Control
+        let info: Info
     }
     
     struct Field: Equatable {}
@@ -49,6 +34,39 @@ extension AnywayPaymentUpdate {
         let masking: Masking
         let validation: Validation
         let uiAttributes: UIAttributes
+    }
+}
+
+extension AnywayPaymentUpdate.Details {
+    
+    struct Amounts: Equatable {
+        
+        let amount: Decimal?
+        let creditAmount: Decimal?
+        let currencyAmount: String?
+        let currencyPayee: String?
+        let currencyPayer: String?
+        let currencyRate: Decimal?
+        let debitAmount: Decimal?
+        let fee: Decimal?
+    }
+    
+    struct Control: Equatable {
+        
+        let finalStep: Bool
+        let isFraudSuspected: Bool
+        let needMake: Bool
+        let needOTP: Bool
+        let needSum: Bool
+    }
+    
+    struct Info: Equatable {
+        
+        let documentStatus: String? // enum!
+        let infoMessage: String?
+        let payeeName: String?
+        let paymentOperationDetailID: Int?
+        let printFormType: String?
     }
 }
 
@@ -140,6 +158,18 @@ private extension AnywayPaymentUpdate.Details {
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
         self.init(
+            amounts: .init(response),
+            control: .init(response),
+            info: .init(response)
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Details.Amounts {
+    
+    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+        
+        self.init(
             amount: response.amount,
             creditAmount: response.creditAmount,
             currencyAmount: response.currencyAmount,
@@ -147,17 +177,35 @@ private extension AnywayPaymentUpdate.Details {
             currencyPayer: response.currencyPayer,
             currencyRate: response.currencyRate,
             debitAmount: response.debitAmount,
-            documentStatus: response.documentStatus,
-            fee: response.fee,
+            fee: response.fee
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Details.Control {
+    
+    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+        
+        self.init(
             finalStep: response.finalStep,
-            infoMessage: response.infoMessage,
+            isFraudSuspected: response.scenario == .suspect,
             needMake: response.needMake,
             needOTP: response.needOTP,
-            needSum: response.needSum,
-            paymentOperationDetailID: response.paymentOperationDetailID,
+            needSum: response.needSum
+        )
+    }
+}
+
+private extension AnywayPaymentUpdate.Details.Info {
+    
+    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+        
+        self.init(
+            documentStatus: response.documentStatus,
+            infoMessage: response.infoMessage,
             payeeName: response.payeeName,
-            printFormType: response.printFormType,
-            isFraudSuspected: response.scenario == .suspect
+            paymentOperationDetailID: response.paymentOperationDetailID,
+            printFormType: response.printFormType
         )
     }
 }
@@ -277,13 +325,18 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_validData() throws {
         
         try assert(.validData, mapsTo: .init(
-            details: makeDetails(
-                finalStep: false,
-                isFraudSuspected: false,
-                needMake: false,
-                needOTP: false,
-                needSum: false,
-                paymentOperationDetailID: 54321
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    finalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: false
+                ),
+                info: makeDetailsInfo(
+                    paymentOperationDetailID: 54321
+                )
             ),
             fields: [],
             parameters: [
@@ -315,12 +368,16 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_validData2() throws {
         
         try assert(.validData2, mapsTo: .init(
-            details: makeDetails(
-                finalStep: true,
-                isFraudSuspected: true,
-                needMake: true,
-                needOTP: true,
-                needSum: true
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    finalStep: true,
+                    isFraudSuspected: true,
+                    needMake: true,
+                    needOTP: true,
+                    needSum: true
+                ),
+                info: makeDetailsInfo()
             ),
             fields: [],
             parameters: [
@@ -398,13 +455,18 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_valid_sber04() throws {
         
         try assert(.valid_sber04, mapsTo: .init(
-            details: makeDetails(
-                amount: 5_888.1,
-                finalStep: false,
-                isFraudSuspected: false,
-                needMake: false,
-                needOTP: false,
-                needSum: true
+            details: .init(
+                amounts: makeDetailsAmounts(
+                    amount: 5_888.1
+                ),
+                control: makeDetailsControl(
+                    finalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: true
+                ),
+                info: makeDetailsInfo()
             ),
             fields: [],
             parameters: []
@@ -414,16 +476,21 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_valid_sber05() throws {
         
         try assert(.valid_sber05, mapsTo: .init(
-            details: makeDetails(
-                amount: 5_888.1,
-                currencyAmount: "RUB",
-                debitAmount: 5_888.1,
-                fee: 0,
-                finalStep: true,
-                isFraudSuspected: false,
-                needMake: false,
-                needOTP: false,
-                needSum: true
+            details: .init(
+                amounts: makeDetailsAmounts(
+                    amount: 5_888.1,
+                    currencyAmount: "RUB",
+                    debitAmount: 5_888.1,
+                    fee: 0
+                ),
+                control: makeDetailsControl(
+                    finalStep: true,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: true
+                ),
+                info: makeDetailsInfo()
             ),
             fields: [],
             parameters: []
@@ -432,7 +499,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeDetails(
+    private func makeDetailsAmounts(
         amount: Decimal? = nil,
         creditAmount: Decimal? = nil,
         currencyAmount: String? = nil,
@@ -440,18 +507,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         currencyPayer: String? = nil,
         currencyRate: Decimal? = nil,
         debitAmount: Decimal? = nil,
-        documentStatus: String? = nil,
-        fee: Decimal? = nil,
-        finalStep: Bool,
-        infoMessage: String? = nil,
-        isFraudSuspected: Bool,
-        needMake: Bool,
-        needOTP: Bool,
-        needSum: Bool,
-        paymentOperationDetailID: Int? = nil,
-        payeeName: String? = nil,
-        printFormType: String? = nil
-    ) -> AnywayPaymentUpdate.Details {
+        fee: Decimal? = nil
+    ) -> AnywayPaymentUpdate.Details.Amounts {
         
         .init(
             amount: amount,
@@ -461,17 +518,41 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             currencyPayer: currencyPayer,
             currencyRate: currencyRate,
             debitAmount: debitAmount,
-            documentStatus: documentStatus,
-            fee: fee,
+            fee: fee
+        )
+    }
+    
+    private func makeDetailsControl(
+        finalStep: Bool,
+        isFraudSuspected: Bool,
+        needMake: Bool,
+        needOTP: Bool,
+        needSum: Bool
+    ) -> AnywayPaymentUpdate.Details.Control {
+        
+        .init(
             finalStep: finalStep,
-            infoMessage: infoMessage,
+            isFraudSuspected: isFraudSuspected,
             needMake: needMake,
             needOTP: needOTP,
-            needSum: needSum,
-            paymentOperationDetailID: paymentOperationDetailID,
+            needSum: needSum
+        )
+    }
+    
+    private func makeDetailsInfo(
+        documentStatus: String? = nil,
+        infoMessage: String? = nil,
+        payeeName: String? = nil,
+        paymentOperationDetailID: Int? = nil,
+        printFormType: String? = nil
+    ) -> AnywayPaymentUpdate.Details.Info {
+        
+        .init(
+            documentStatus: documentStatus,
+            infoMessage: infoMessage,
             payeeName: payeeName,
-            printFormType: printFormType,
-            isFraudSuspected: isFraudSuspected
+            paymentOperationDetailID: paymentOperationDetailID,
+            printFormType: printFormType
         )
     }
     
