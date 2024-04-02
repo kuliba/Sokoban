@@ -20,6 +20,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var contractId = ""
     var closeAction: () -> Void = {}
     var operationLimit = 0.0
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
     
     @IBOutlet weak var viewLimit: UIView!
     
@@ -405,6 +406,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         DispatchQueue.main.async {
             C2BDetailsViewModel.sourceModel = self.cardFromField.model
             let vc = C2BSuccessViewController()
+            vc.getUImage = self.getUImage
             vc.id = C2BDetailsViewModel.modelCreateC2BTransfer?.data?.paymentOperationDetailID ?? 0
             vc.printFormType = "c2b"
             vc.modalPresentationStyle = .fullScreen

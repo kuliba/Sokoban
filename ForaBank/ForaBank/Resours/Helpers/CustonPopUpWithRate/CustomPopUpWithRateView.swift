@@ -70,6 +70,7 @@ class CustomPopUpWithRateView: UIViewController {
     init(cardTo: UserAllCardsModel) {
         super.init(nibName: nil, bundle: nil)
         self.cardTo = cardTo
+        self.cardToField.getUImage = { self.model.images.value[$0]?.uiImage }
         self.cardToField.model = cardTo
     }
     
@@ -78,6 +79,7 @@ class CustomPopUpWithRateView: UIViewController {
         self.sumMax = maxSum
         
         self.cardFrom = cardFrom
+        self.cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         self.cardFromField.model = cardFrom
         self.cardFromField.choseButton?.isHidden = true
         self.cardFromField.choseButton?.isHidden = true
@@ -117,6 +119,7 @@ class CustomPopUpWithRateView: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.sumMax = totalAmount
         self.cardFrom = cardFrom
+        self.cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         self.cardFromField.model = cardFrom
         self.cardFromField.choseButton?.isHidden = true
         self.cardFromField.choseButton?.isHidden = true
@@ -327,6 +330,8 @@ class CustomPopUpWithRateView: UIViewController {
     
     func updateCards(cards: [UserAllCardsModel]) {
         
+        self.cardToField.getUImage = { self.model.images.value[$0]?.uiImage }
+
         if let cardTo = cardTo, cardTo.productType != ProductType.loan.rawValue {
             
             self.cardToField.model = cardTo
