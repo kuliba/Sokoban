@@ -117,14 +117,9 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     withAnimation {
                         
-                        let banksByPhone = model.paymentsByPhone.value[phone.value?.digits ?? ""]?
-                            .sorted(by: { $0.defaultBank && $1.defaultBank })
-                        
-                        let banksID = banksByPhone?.compactMap({ $0.bankId })
-                        
                         let sortedBanks = Self.reduce(
                             bankList: model.bankList.value,
-                            preferred: banksID ?? []
+                            preferred: banksID
                         ) { [weak self]  bank in
                             { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
                         }
@@ -316,6 +311,18 @@ extension ContactsBanksSectionViewModel {
 //MARK: - Helpers
 
 extension ContactsBanksSectionViewModel {
+    
+    var banksID: [String] {
+        
+        let banksByPhone = model.paymentsByPhone.value[phone.value?.digits ?? ""]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+        
+        guard let banksID = banksByPhone?.compactMap({ $0.bankId }) else {
+            return []
+        }
+
+        return banksID
+    }
     
     static func createOptionViewModel() -> OptionSelectorView.ViewModel {
         
