@@ -61,10 +61,15 @@ extension Model {
     }
     
     // update parameter value with source
-    func paymentsProcessSourceReducerSFP(phone: String, bankId: BankData.ID, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsProcessSourceReducerSFP(
+        phone: String,
+        bankId: BankData.ID,
+        parameterId: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value? {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
+            self.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone.digits))
             return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
