@@ -171,7 +171,7 @@ extension PaymentsSelectBankView.ViewModel {
 
 extension PaymentsSelectBankView.ViewModel {
 
-    fileprivate func selectDefaultBank(
+    func selectDefaultBank(
         _ result: Result<[PaymentPhoneData], Error>
     ) {
         switch result {
