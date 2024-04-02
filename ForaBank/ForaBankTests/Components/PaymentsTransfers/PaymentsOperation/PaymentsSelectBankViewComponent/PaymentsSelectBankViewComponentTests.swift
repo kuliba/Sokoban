@@ -205,6 +205,36 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         
         XCTAssertEqual(collapsedViewModel.title, .selected(title: "Банк получателя", name: "0445566"))
     }
+    
+    func test_selectDefaultBank_shouldChangeValue() throws {
+
+        let sut = try makeSut(selectedOptionId: "0")
+        sut.selectDefaultBank(.success([.init(
+            bankId: "1",
+            bankName: "bankName",
+            payment: true,
+            defaultBank: true
+        )]))
+        
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value.current, "1")
+    }
+    
+    func test_selectNotDefaultBank_shouldChangeValue() throws {
+
+        let sut = try makeSut(selectedOptionId: "0")
+        sut.selectDefaultBank(.success([.init(
+            bankId: "1",
+            bankName: "bankName",
+            payment: true,
+            defaultBank: false
+        )]))
+        
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value.current, "1")
+    }
 }
 
 private extension PaymentsSelectBankViewComponentTests {
