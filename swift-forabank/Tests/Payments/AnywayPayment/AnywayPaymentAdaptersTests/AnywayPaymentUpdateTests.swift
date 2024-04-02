@@ -116,6 +116,7 @@ extension AnywayPaymentUpdate.Parameter {
         let subTitle: String?
         let svgImage: String?
         let title: String
+#warning("change to enum")
         let type: String
         let viewType: ViewType
     }
@@ -365,15 +366,10 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(
-                        dataType: "%String",
                         id: "1"
                     ),
                     masking: makeParameterMasking(),
-                    validation: makeParameterValidation(
-                        isRequired: true,
-                        rawLength: 0,
-                        regExp: "^.{1,250}$"
-                    ),
+                    validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .account,
                         isPrint: true,
@@ -406,15 +402,10 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(
-                        dataType: "%String",
                         id: "1"
                     ),
                     masking: makeParameterMasking(),
-                    validation: makeParameterValidation(
-                        isRequired: true,
-                        rawLength: 0,
-                        regExp: "^.{1,250}$"
-                    ),
+                    validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .account,
                         isPrint: true,
@@ -429,51 +420,221 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         ))
     }
     
-    //    func test_init_valid_sber01() throws {
-    //
-    //        try assert(.valid_sber01, mapsTo: .init(
-    //            fields: [],
-    //            details: makeDetails(
-    //                finalStep: false,
-    //                needMake: false,
-    //                needOTP: false,
-    //                needSum: false,
-    //                isFraudSuspected: false
-    //            ),
-    //            parameters: []
-    //        ))
-    //    }
+    func test_init_valid_sber01() throws {
+        
+        try assert(.valid_sber01, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    isFinalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: false
+                ),
+                info: makeDetailsInfo()
+            ),
+            fields: [],
+            parameters: [
+                .init(
+                    field: makeParameterField(
+                        id: "1"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(),
+                    uiAttributes: makeParameterUIAttributes(
+                        inputFieldType: .account,
+                        isPrint: true,
+                        order: 1,
+                        svgImage: .svgSample6,
+                        title: "Лицевой счет",
+                        type: "Input",
+                        viewType: .input
+                    )
+                )
+            ]
+        ))
+    }
     
-    //    func test_init_valid_sber02() throws {
-    //
-    //        try assert(.valid_sber02, mapsTo: .init(
-    //            fields: [],
-    //            details: makeDetails(
-    //                finalStep: false,
-    //                needMake: false,
-    //                needOTP: false,
-    //                needSum: false,
-    //                isFraudSuspected: false
-    //            ),
-    //            parameters: []
-    //        ))
-    //    }
-    //
-    //    func test_init_valid_sber03() throws {
-    //
-    //        try assert(.valid_sber03, mapsTo: .init(
-    //            fields: [],
-    //            details: makeDetails(
-    //                amount: 5_888.1,
-    //                finalStep: false,
-    //                needMake: false,
-    //                needOTP: false,
-    //                needSum: true,
-    //                isFraudSuspected: false
-    //            ),
-    //            parameters: []
-    //        ))
-    //    }
+    func test_init_valid_sber02() throws {
+        
+        try assert(.valid_sber02, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    isFinalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: false
+                ),
+                info: makeDetailsInfo()
+            ),
+            fields: [],
+            parameters: [
+                .init(
+                    field: makeParameterField(
+                        dataType: "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ",
+                        id: "2"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        rawLength: 0,
+                        regExp:  "^.{1,250}$"
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 2,
+                        title: "Признак платежа",
+                        type: "Select",
+                        viewType: .input
+                    )
+                )
+            ]
+        ))
+    }
+    
+    func test_init_valid_sber03() throws {
+        
+        try assert(.valid_sber03, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(
+                    amount: 5_888.1
+                ),
+                control: makeDetailsControl(
+                    isFinalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: true
+                ),
+                info: makeDetailsInfo()
+            ),
+            fields: [
+                makeField(
+                    fieldName: "advisedAmount",
+                    fieldValue: "5888.1",
+                    fieldTitle: "Рекомендованная сумма"
+                )
+            ],
+            parameters: [
+                .init(
+                    field: makeParameterField(
+                        content: "022024",
+                        id: "5"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        isPrint: true,
+                        order: 5,
+                        title: "Период(ММГГГГ)",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "9"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 9,
+                        title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "13"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 13,
+                        title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "17"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 17,
+                        title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "21"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 21,
+                        title: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "25"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        order: 25,
+                        title: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+                .init(
+                    field: makeParameterField(
+                        content: " ",
+                        id: "29"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        inputFieldType: .counter,
+                        order: 29,
+                        svgImage: .svgSample7,
+                        title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                        type: "Input",
+                        viewType: .input
+                    )
+                ),
+            ]
+        ))
+    }
     
     func test_init_valid_sber04() throws {
         
@@ -719,7 +880,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         content: String? = nil,
         dataDictionary: String? = nil,
         dataDictionaryРarent: String? = nil,
-        dataType: String,
+        dataType: String = "%String",
         id: String
     ) -> AnywayPaymentUpdate.Parameter.Field {
         
@@ -744,11 +905,11 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeParameterValidation(
-        isRequired: Bool = false,
+        isRequired: Bool = true,
         maxLength: Int? = nil,
         minLength: Int? = nil,
-        rawLength: Int,
-        regExp: String
+        rawLength: Int = 0,
+        regExp: String = "^.{1,250}$"
     ) -> AnywayPaymentUpdate.Parameter.Validation {
         
         .init(
@@ -1499,6 +1660,10 @@ private extension String {
 }
 """
     
+    static let svgSample = """
+"<svg width=\\"32\\" height=\\"32\\" viewBox=\\"0 0 32 32\\" fill=\\"none\\" xmlns=\\"http://www.w3.org/2000/svg\\">\\n<path d=\\"M16.2512 26.2525C21.7748 26.2525 26.2525 21.7748 26.2525 16.2512C26.2525 10.7277 21.7748 6.25 16.2512 6.25C10.7277 6.25 6.25 10.7277 6.25 16.2512C6.25 21.7748 10.7277 26.2525 16.2512 26.2525Z\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M11.4673 11.3586L9.64894 9.61293\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M21.11 11.3586L22.9285 9.61293\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M6.69214 16.2512L9.21288 16.2483\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M23.2896 16.2545L25.8103 16.2516\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2838 9.25842L16.2324 6.73821\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M18.3184 22.2816L14.1909 22.2752\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2576 12.6445L16.2576 14.7685\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.251 17.6154L16.251 18.5973\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2511 17.6151C17.0043 17.6151 17.6149 17.0045 17.6149 16.2513C17.6149 15.498 17.0043 14.8875 16.2511 14.8875C15.4979 14.8875 14.8873 15.498 14.8873 16.2513C14.8873 17.0045 15.4979 17.6151 16.2511 17.6151Z\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n</svg>\\n"
+"""
+    
     static let svgSample1 = """
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.8808 6H9.99969C9.46934 6 8.96071 6.21074 8.58569 6.58586C8.21068 6.96098 8 7.46975 8 8.00025V24.0023C8 24.5327 8.21068 25.0415 8.58569 25.4166C8.96071 25.7918 9.46934 26.0025 9.99969 26.0025H21.9978C22.5282 26.0025 23.0368 25.7918 23.4118 25.4166C23.7868 25.0415 23.9975 24.5327 23.9975 24.0023V12.1184M17.8808 6L23.9975 12.1184M17.8808 6V12.1184H23.9975" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1553,7 +1718,27 @@ private extension String {
 
 """
     
-    static let svgSample = """
-"<svg width=\\"32\\" height=\\"32\\" viewBox=\\"0 0 32 32\\" fill=\\"none\\" xmlns=\\"http://www.w3.org/2000/svg\\">\\n<path d=\\"M16.2512 26.2525C21.7748 26.2525 26.2525 21.7748 26.2525 16.2512C26.2525 10.7277 21.7748 6.25 16.2512 6.25C10.7277 6.25 6.25 10.7277 6.25 16.2512C6.25 21.7748 10.7277 26.2525 16.2512 26.2525Z\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M11.4673 11.3586L9.64894 9.61293\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M21.11 11.3586L22.9285 9.61293\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M6.69214 16.2512L9.21288 16.2483\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M23.2896 16.2545L25.8103 16.2516\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2838 9.25842L16.2324 6.73821\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M18.3184 22.2816L14.1909 22.2752\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2576 12.6445L16.2576 14.7685\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.251 17.6154L16.251 18.5973\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n<path d=\\"M16.2511 17.6151C17.0043 17.6151 17.6149 17.0045 17.6149 16.2513C17.6149 15.498 17.0043 14.8875 16.2511 14.8875C15.4979 14.8875 14.8873 15.498 14.8873 16.2513C14.8873 17.0045 15.4979 17.6151 16.2511 17.6151Z\\" stroke=\\"#999999\\" stroke-width=\\"1.25\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\"/>\\n</svg>\\n"
+    static let svgSample6 = """
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.8808 6H9.99969C9.46934 6 8.96071 6.21074 8.58569 6.58586C8.21068 6.96098 8 7.46975 8 8.00025V24.0023C8 24.5327 8.21068 25.0415 8.58569 25.4166C8.96071 25.7918 9.46934 26.0025 9.99969 26.0025H21.9978C22.5282 26.0025 23.0368 25.7918 23.4118 25.4166C23.7868 25.0415 23.9975 24.5327 23.9975 24.0023V12.1184M17.8808 6L23.9975 12.1184M17.8808 6V12.1184H23.9975" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10.9404 19.5313H15.4775M10.9404 21.2962H15.4775M12.6418 17.7664L12.0746 23.0611M14.3432 17.7664L13.7761 23.0611" stroke="#999999" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+"""
+    
+    static let svgSample7 = """
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.2512 26.2525C21.7748 26.2525 26.2525 21.7748 26.2525 16.2512C26.2525 10.7277 21.7748 6.25 16.2512 6.25C10.7277 6.25 6.25 10.7277 6.25 16.2512C6.25 21.7748 10.7277 26.2525 16.2512 26.2525Z" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.4673 11.3586L9.64894 9.61293" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21.11 11.3586L22.9285 9.61293" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.69214 16.2512L9.21288 16.2483" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M23.2896 16.2545L25.8103 16.2516" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.2838 9.25842L16.2324 6.73821" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18.3184 22.2816L14.1909 22.2752" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.2576 12.6445L16.2576 14.7685" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.251 17.6154L16.251 18.5973" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.2511 17.6151C17.0043 17.6151 17.6149 17.0045 17.6149 16.2513C17.6149 15.498 17.0043 14.8875 16.2511 14.8875C15.4979 14.8875 14.8873 15.498 14.8873 16.2513C14.8873 17.0045 15.4979 17.6151 16.2511 17.6151Z" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
 """
 }
