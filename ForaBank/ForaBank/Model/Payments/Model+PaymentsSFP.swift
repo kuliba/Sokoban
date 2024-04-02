@@ -348,7 +348,7 @@ extension Payments.ParameterAmount {
 
 extension Model {
     
-    private func bankParameter(
+    func bankParameter(
         _ operation: Payments.Operation
     ) -> Payments.ParameterSelectBank {
     
