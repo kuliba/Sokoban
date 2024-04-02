@@ -22,6 +22,7 @@ func anyProductID(
 
 func makeProduct(
     _ id: Product.ID = anyProductID(),
+    isAdditional: Bool = false,
     header: String = "Header",
     title: String = "title",
     number: String = "number",
@@ -36,6 +37,7 @@ func makeProduct(
     
     .init(
         id: id,
+        isAdditional: isAdditional,
         header: header,
         title: title,
         number: number,
