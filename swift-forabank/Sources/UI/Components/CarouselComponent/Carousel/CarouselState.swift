@@ -42,7 +42,11 @@ public struct CarouselState<Product: CarouselProduct & Equatable>: Equatable {
 
 public extension CarouselState {
     
-    init(products: [Product], needShowSticker: Bool) {
+    init(
+        products: [Product],
+        needShowSticker: Bool,
+        carouselDimensions: CarouselConfig.ProductDimensions = .regular
+    ) {
         
         let productsMapper = Self.map(products: products)
         
@@ -54,7 +58,8 @@ public extension CarouselState {
             selector: selector,
             productGroups: productGroups,
             needShowSticker: needShowSticker,
-            separators: separators
+            separators: separators,
+            carouselDimensions: carouselDimensions
         )
     }
     
