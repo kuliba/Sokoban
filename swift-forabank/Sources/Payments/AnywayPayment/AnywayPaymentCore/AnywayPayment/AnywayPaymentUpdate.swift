@@ -48,6 +48,7 @@ extension AnywayPaymentUpdate {
         public let fieldName: String
         public let fieldValue: String
         public let fieldTitle: String
+        @available(*, deprecated, message: "not used according to analytics")
         public let recycle: Bool
         public let svgImage: String?
         public let typeIdParameterList: String?
@@ -183,8 +184,11 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct Field: Equatable {
         
+        @available(*, deprecated, message: "not used according to analytics")
         public let content: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let dataDictionary: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let dataDictionaryРarent: String?
         public let id: String
         
@@ -217,10 +221,12 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct Validation: Equatable {
         
+        @available(*, deprecated, message: "not used according to analytics")
         public let isRequired: Bool
         public let maxLength: Int?
         public let minLength: Int?
-        public let rawLength: Int
+        @available(*, deprecated, message: "not used according to analytics")
+        public let rawLength: Int // not used
         public let regExp: String
         
         public init(
@@ -240,10 +246,12 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct UIAttributes: Equatable {
         
-        public let dataType: String // https://shorturl.at/hnrE1
+        public let dataType: String // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
         public let group: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let inputFieldType: InputFieldType?
-        public let isPrint: Bool
+        public let isPrint: Bool // not used for `type: FieldType = .input`
+        @available(*, deprecated, message: "not used according to analytics")
         public let order: Int? // not used https://shorturl.at/guIJ8
         public let phoneBook: Bool
         public let isReadOnly: Bool
