@@ -123,20 +123,17 @@ public extension Config {
         let background: Color
         let rateFill: Color
         let rateForeground: Color
-        let checkForeground: Color
         
         public init(
             foreground: Color,
             background: Color,
             rateFill: Color,
-            rateForeground: Color,
-            checkForeground: Color
+            rateForeground: Color
         ) {
             self.foreground = foreground
             self.background = background
             self.rateFill = rateFill
             self.rateForeground = rateForeground
-            self.checkForeground = checkForeground
         }
     }
     
