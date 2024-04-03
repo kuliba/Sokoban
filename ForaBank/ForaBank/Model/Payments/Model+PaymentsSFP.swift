@@ -30,7 +30,7 @@ extension Model {
             let phoneParameter = Self.phoneInput
             
             // bank
-            let bankParameter = bankParameter(operation)
+            let bankParameter = bankParameter(operation, operationPhone: nil)
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
 
             // product
@@ -88,6 +88,10 @@ extension Model {
     ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
+        case Payments.Parameter.Identifier.sfpBank.rawValue:
+            let operationPhone = try? parameters.value(forIdentifier: .sfpPhone)
+            return bankParameter(operation, operationPhone: operationPhone)
+            
         case Payments.Parameter.Identifier.amount.rawValue:
             
             guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
@@ -353,32 +357,33 @@ extension Payments.ParameterAmount {
 extension Model {
     
     func bankParameter(
-        _ operation: Payments.Operation
+        _ operation: Payments.Operation,
+        operationPhone: String?
     ) -> Payments.ParameterSelectBank {
     
         switch operation.source {
         case let .latestPayment(latestPaymentId):
-            
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
             
-                return filterByPhone(latestPayment.phoneNumber.digits)
+                return filterByPhone(operationPhone ?? latestPayment.phoneNumber.digits, bankId: latestPayment.bankId)
             } else {
-                return filterByPhone(nil)
+                return filterByPhone(nil, bankId: nil)
             }
             
-        case let .sfp(phone: phone, bankId: _):
-            return filterByPhone(phone)
+        case let .sfp(phone: phone, bankId: bankId):
+            return filterByPhone(operationPhone ?? phone, bankId: bankId)
             
         case let .mock(mock):
-            return filterByPhone(mock.parameters.first?.value)
+            return filterByPhone(mock.parameters.first?.value, bankId: nil)
             
         default:
-            return filterByPhone(nil)
+            return filterByPhone(nil, bankId: nil)
         }
     }
     
     private func filterByPhone(
-        _ phone: String?
+        _ phone: String?,
+        bankId: String?
     ) -> Payments.ParameterSelectBank{
     
         let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
@@ -395,7 +400,7 @@ extension Model {
 
         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
         return Payments.ParameterSelectBank(
-            .init(id: bankParameterId, value: nil),
+            .init(id: bankParameterId, value: bankId),
             icon: .iconPlaceholder,
             title: "Банк получателя",
             options: options,
