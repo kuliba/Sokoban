@@ -137,7 +137,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(
-                        dataType: "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ",
                         id: "2"
                     ),
                     masking: makeParameterMasking(),
@@ -146,6 +145,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         regExp:  "^.{1,250}$"
                     ),
                     uiAttributes: makeParameterUIAttributes(
+                        dataType: "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ",
                         order: 2,
                         title: "Признак платежа",
                         type: .select,
@@ -536,7 +536,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         content: String? = nil,
         dataDictionary: String? = nil,
         dataDictionaryРarent: String? = nil,
-        dataType: String = "%String",
         id: String
     ) -> AnywayPaymentUpdate.Parameter.Field {
         
@@ -544,7 +543,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
-            dataType: dataType,
             id: id
         )
     }
@@ -578,6 +576,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeParameterUIAttributes(
+        dataType: String = "%String",
         group: String? = nil,
         inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
         isPrint: Bool = false,
@@ -593,6 +592,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
         
         .init(
+            dataType: dataType,
             group: group,
             inputFieldType: inputFieldType,
             isPrint: isPrint,

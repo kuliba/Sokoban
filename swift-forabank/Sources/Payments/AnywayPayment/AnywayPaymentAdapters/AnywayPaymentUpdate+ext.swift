@@ -126,7 +126,6 @@ private extension AnywayPaymentUpdate.Parameter.Field {
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
-            dataType: parameter.dataType,
             id: parameter.id
         )
     }
@@ -162,6 +161,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
     init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         self.init(
+            dataType: parameter.dataType,
             group: parameter.group,
             inputFieldType: parameter.inputFieldType.map { .init($0) },
             isPrint: parameter.isPrint,

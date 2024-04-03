@@ -186,20 +186,17 @@ extension AnywayPaymentUpdate.Parameter {
         public let content: String?
         public let dataDictionary: String?
         public let dataDictionaryРarent: String?
-        public let dataType: String
         public let id: String
         
         public init(
             content: String?,
             dataDictionary: String?,
             dataDictionaryРarent: String?,
-            dataType: String,
             id: String
         ) {
             self.content = content
             self.dataDictionary = dataDictionary
             self.dataDictionaryРarent = dataDictionaryРarent
-            self.dataType = dataType
             self.id = id
         }
     }
@@ -243,10 +240,11 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct UIAttributes: Equatable {
         
+        public let dataType: String // https://shorturl.at/hnrE1
         public let group: String?
         public let inputFieldType: InputFieldType?
         public let isPrint: Bool
-        public let order: Int?
+        public let order: Int? // not used https://shorturl.at/guIJ8
         public let phoneBook: Bool
         public let isReadOnly: Bool
         public let subGroup: String?
@@ -257,6 +255,7 @@ extension AnywayPaymentUpdate.Parameter {
         public let viewType: ViewType
         
         public init(
+            dataType: String,
             group: String?,
             inputFieldType: InputFieldType?,
             isPrint: Bool,
@@ -270,6 +269,7 @@ extension AnywayPaymentUpdate.Parameter {
             type: FieldType,
             viewType: ViewType
         ) {
+            self.dataType = dataType
             self.group = group
             self.inputFieldType = inputFieldType
             self.isPrint = isPrint
