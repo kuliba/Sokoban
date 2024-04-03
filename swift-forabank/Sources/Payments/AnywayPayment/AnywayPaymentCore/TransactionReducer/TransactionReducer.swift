@@ -8,15 +8,18 @@
 public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
     private let paymentReduce: PaymentReduce
+    private let stagePayment: StagePayment
     private let updatePayment: UpdatePayment
     private let paymentInspector: Inspector
 
     public init(
         paymentReduce: @escaping PaymentReduce,
+        stagePayment: @escaping StagePayment,
         updatePayment: @escaping UpdatePayment,
         paymentInspector: Inspector
     ) {
         self.paymentReduce = paymentReduce
+        self.stagePayment = stagePayment
         self.updatePayment = updatePayment
         self.paymentInspector = paymentInspector
     }
@@ -68,6 +71,7 @@ public extension TransactionReducer {
 public extension TransactionReducer {
     
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
+    typealias StagePayment = (Payment) -> Payment
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
@@ -148,6 +152,8 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.isValid, state.status == nil else { return }
+        
+        state.payment = stagePayment(state.payment)
         
         if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
             effect = .makePayment(verificationCode)

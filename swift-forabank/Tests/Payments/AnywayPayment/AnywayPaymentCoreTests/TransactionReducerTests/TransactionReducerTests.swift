@@ -414,6 +414,79 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(shouldRestartPaymentSpy.payloads, [payment])
     }
     
+    func test_continue_shouldNotCallStagePaymentOnInvalidTransaction() {
+        
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeInvalidTransaction(), .continue)
+        
+        XCTAssertEqual(stagePaymentSpy.callCount, 0)
+    }
+    
+    func test_continue_shouldNotCallStagePaymentOnFraudSuspectedTransaction() {
+        
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeFraudSuspectedTransaction(), .continue)
+        
+        XCTAssertEqual(stagePaymentSpy.callCount, 0)
+    }
+    
+    func test_continue_shouldNotCallStagePaymentOnResultFailureTransaction() {
+        
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeResultFailureTransaction(), .continue)
+        
+        XCTAssertEqual(stagePaymentSpy.callCount, 0)
+    }
+    
+    func test_continue_shouldNotCallStagePaymentOnResultSuccessTransaction() {
+        
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeResultSuccessTransaction(), .continue)
+        
+        XCTAssertEqual(stagePaymentSpy.callCount, 0)
+    }
+    
+    func test_continue_shouldNotCallStagePaymentOnServerErrorTransaction() {
+        
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeServerErrorTransaction(), .continue)
+        
+        XCTAssertEqual(stagePaymentSpy.callCount, 0)
+    }
+    
+    func test_continue_shouldCallStagePaymentWithPaymentOnValidTransaction() {
+        
+        let payment = makePayment()
+        let stagePaymentSpy = StagePaymentSpy(response: makePayment())
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        _ = sut.reduce(makeValidTransaction(payment), .continue)
+        
+        XCTAssertNoDiff(stagePaymentSpy.payloads, [payment])
+    }
+    
+    func test_continue_shouldChangePaymentToStagedOnValidTransaction() {
+        
+        let staged = makePayment()
+        let stagePaymentSpy = StagePaymentSpy(response: staged)
+        let sut = makeSUT(stagePayment: stagePaymentSpy.call)
+        
+        assertState(sut: sut, .continue, on: makeValidTransaction(makePayment())) {
+            
+            $0.payment = staged
+        }
+    }
+    
     // MARK: - dismissRecoverableError
     
     func test_dismissRecoverableError_shouldNotChangeResultFailureState() {
@@ -1111,6 +1184,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias GetVerificationCodeSpy = CallSpy<Payment, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Payment, PaymentEvent), (Payment, SUT.Effect?)>
     private typealias ShouldRestartPaymentSpy = CallSpy<Payment, Bool>
+    private typealias StagePaymentSpy = CallSpy<Payment, Payment>
     private typealias UpdatePaymentSpy = CallSpy<(Payment, PaymentUpdate), Payment>
     private typealias ValidatePaymentSpy = CallSpy<Payment, Bool>
     
@@ -1122,6 +1196,7 @@ final class TransactionReducerTests: XCTestCase {
         makeDigest: @escaping Inspector.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
         shouldRestartPayment: @escaping Inspector.ShouldRestartPayment = { _ in false },
+        stagePayment: @escaping SUT.StagePayment = { $0 },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping Inspector.ValidatePayment = { _ in false },
         file: StaticString = #file,
@@ -1130,6 +1205,7 @@ final class TransactionReducerTests: XCTestCase {
         
         let sut = SUT(
             paymentReduce: paymentReduce,
+            stagePayment: stagePayment,
             updatePayment: updatePayment,
             paymentInspector: .init(
                 checkFraud: checkFraud,
