@@ -116,7 +116,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         
         case complete, inProgress, rejected
     }
-
+    
     public struct Parameter: Equatable {
         
         public let content: String?
@@ -228,5 +228,43 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     public enum ViewType: Equatable {
         
         case constant, input, output
+    }
+}
+
+extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
+    
+    public enum DataType: Equatable {
+        
+        case string
+        case pairs([Pairs])
+        
+        public struct Pairs: Equatable {
+            
+            public let key: String
+            public let value: String
+            
+            public init(
+                key: String,
+                value: String
+            ) {
+                self.key = key
+                self.value = value
+            }
+        }
+    }
+}
+
+extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
+    
+    public init?(_ string: String) {
+        
+        guard string != "%String" 
+        else { self = .string; return }
+        
+        guard let pairs = try? string.splitDataType(),
+              !pairs.isEmpty
+        else { return nil }
+        
+        self = .pairs(pairs.map { .init(key: $0.key, value: $0.value) })
     }
 }
