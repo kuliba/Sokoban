@@ -549,7 +549,9 @@ extension CurrencyWalletSelectorView {
                     
                     HStack(alignment: .center, spacing: 10) {
                         
-                        viewModel.paymentSystemIcon
+                        viewModel.paymentSystemIcon?
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .frame(width: 24, height: 24)
                         
                         Text(viewModel.name)
