@@ -81,7 +81,11 @@ extension Model {
     }
     
     // update depependend parameters
-    func paymentsProcessDependencyReducerSFP(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducerSFP(
+        operation: Payments.Operation,
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable]
+    ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
         case Payments.Parameter.Identifier.amount.rawValue:
