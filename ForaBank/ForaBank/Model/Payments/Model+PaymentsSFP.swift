@@ -89,9 +89,28 @@ extension Model {
         
         switch parameterId {
         case Payments.Parameter.Identifier.sfpBank.rawValue:
-            let operationPhone = try? parameters.value(forIdentifier: .sfpPhone)
-            return bankParameter(operation, operationPhone: operationPhone)
+            guard let parameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterSelectBank else {
+                return nil
+            }
             
+            if let operationPhone = try? parameters.value(forIdentifier: .sfpPhone),
+               PhoneValidator().isValid(operationPhone) {
+                
+                let newBankParameter = bankParameter(operation, operationPhone: operationPhone)
+                
+                if parameter.options == newBankParameter.options {
+                    
+                    return parameter
+                } else {
+                    
+                    return newBankParameter
+                }
+                
+            } else {
+                
+                return parameter
+            }
+                        
         case Payments.Parameter.Identifier.amount.rawValue:
             
             guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
@@ -388,9 +407,9 @@ extension Model {
     
         let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
             .sorted(by: { $0.defaultBank && $1.defaultBank })
-            .filter { $0.defaultBank || $0.payment }
         
-        let defaultBank = paymentsByPhone.value[phone?.digits ?? ""]?.filter { $0.defaultBank == true }.first
+        let defaultBank = paymentsByPhone.value[phone?.digits ?? ""]?
+            .filter { $0.defaultBank == true }.first
         
         let banksID = banksByPhone?
             .compactMap({ $0.bankId })
@@ -432,13 +451,8 @@ extension Model {
     ) -> [Payments.ParameterSelectBank.Option] {
         
         let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
-        let otherBanks = bankList.filter{ preferred.contains($0.id) == false }
-            .sorted(by: {$0.memberNameRus.lowercased() < $1.memberNameRus.lowercased()})
-            .sorted(by: {$0.memberNameRus.localizedCaseInsensitiveCompare($1.memberNameRus) == .orderedAscending})
         
-        let allBanks = preferredBanks + otherBanks
-        
-        return allBanks
+        return preferredBanks
             .filter { $0.bankType == .sfp }
             .map { item in
                 Payments.ParameterSelectBank.Option(

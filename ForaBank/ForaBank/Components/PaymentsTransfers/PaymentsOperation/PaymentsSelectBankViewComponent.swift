@@ -200,15 +200,7 @@ extension PaymentsSelectBankView.ViewModel {
                 self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
                     id: bankId
                 ))
-            }
-            
-        } else {
-            
-            if let bankId = paymentsPhone.first?.bankId {
-                
-                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
-                    id: bankId
-                ))
+                self.update(value: bankId)
             }
         }
     }
