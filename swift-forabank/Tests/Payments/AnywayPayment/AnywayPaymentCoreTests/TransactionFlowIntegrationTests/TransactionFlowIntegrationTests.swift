@@ -337,7 +337,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
     private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool)
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
@@ -362,6 +362,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             paymentReduce: { _,_ in stub.paymentReduce },
+            stagePayment: { stub.stagePayment ?? $0 },
             updatePayment: { _,_ in stub.updatePayment },
             paymentInspector: .init(
                 checkFraud: { _ in stub.checkFraud },
@@ -408,6 +409,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
         shouldRestartPayment: Bool = false,
+        stagePayment: Payment? = nil,
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true
     ) -> Stub {
@@ -417,6 +419,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
             shouldRestartPayment: shouldRestartPayment,
+            stagePayment: stagePayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment
         )
