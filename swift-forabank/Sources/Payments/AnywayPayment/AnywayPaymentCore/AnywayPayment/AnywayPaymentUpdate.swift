@@ -48,6 +48,7 @@ extension AnywayPaymentUpdate {
         public let fieldName: String
         public let fieldValue: String
         public let fieldTitle: String
+        @available(*, deprecated, message: "not used according to analytics")
         public let recycle: Bool
         public let svgImage: String?
         public let typeIdParameterList: String?
@@ -149,14 +150,14 @@ extension AnywayPaymentUpdate.Details {
     
     public struct Info: Equatable {
         
-        public let documentStatus: String? // enum!
+        public let documentStatus: DocumentStatus?
         public let infoMessage: String?
         public let payeeName: String?
         public let paymentOperationDetailID: Int?
         public let printFormType: String?
         
         public init(
-            documentStatus: String?,
+            documentStatus: DocumentStatus?,
             infoMessage: String?,
             payeeName: String?,
             paymentOperationDetailID: Int?,
@@ -171,27 +172,35 @@ extension AnywayPaymentUpdate.Details {
     }
 }
 
+public extension AnywayPaymentUpdate.Details.Info {
+    
+    enum DocumentStatus: Equatable {
+        
+        case complete, inProgress, rejected
+    }
+}
+
 extension AnywayPaymentUpdate.Parameter {
     
     public struct Field: Equatable {
         
+        @available(*, deprecated, message: "not used according to analytics")
         public let content: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let dataDictionary: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let dataDictionaryРarent: String?
-        public let dataType: String
         public let id: String
         
         public init(
             content: String?,
             dataDictionary: String?,
             dataDictionaryРarent: String?,
-            dataType: String,
             id: String
         ) {
             self.content = content
             self.dataDictionary = dataDictionary
             self.dataDictionaryРarent = dataDictionaryРarent
-            self.dataType = dataType
             self.id = id
         }
     }
@@ -212,10 +221,12 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct Validation: Equatable {
         
+        @available(*, deprecated, message: "not used according to analytics")
         public let isRequired: Bool
         public let maxLength: Int?
         public let minLength: Int?
-        public let rawLength: Int
+        @available(*, deprecated, message: "not used according to analytics")
+        public let rawLength: Int // not used
         public let regExp: String
         
         public init(
@@ -235,10 +246,13 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct UIAttributes: Equatable {
         
+        public let dataType: String // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
         public let group: String?
+        @available(*, deprecated, message: "not used according to analytics")
         public let inputFieldType: InputFieldType?
-        public let isPrint: Bool
-        public let order: Int?
+        public let isPrint: Bool // not used for `type: FieldType = .input`
+        @available(*, deprecated, message: "not used according to analytics")
+        public let order: Int? // not used https://shorturl.at/guIJ8
         public let phoneBook: Bool
         public let isReadOnly: Bool
         public let subGroup: String?
@@ -249,6 +263,7 @@ extension AnywayPaymentUpdate.Parameter {
         public let viewType: ViewType
         
         public init(
+            dataType: String,
             group: String?,
             inputFieldType: InputFieldType?,
             isPrint: Bool,
@@ -262,6 +277,7 @@ extension AnywayPaymentUpdate.Parameter {
             type: FieldType,
             viewType: ViewType
         ) {
+            self.dataType = dataType
             self.group = group
             self.inputFieldType = inputFieldType
             self.isPrint = isPrint
@@ -310,4 +326,3 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
         case constant, input, output
     }
 }
-

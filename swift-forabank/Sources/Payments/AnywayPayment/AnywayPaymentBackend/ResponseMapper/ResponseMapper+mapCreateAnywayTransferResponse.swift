@@ -32,7 +32,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             currencyPayer: data.currencyPayer,
             currencyRate: data.currencyRate,
             debitAmount: data.debitAmount,
-            documentStatus: data.documentStatus,
+            documentStatus: .init(data.documentStatus),
             fee: data.fee,
             finalStep: data.finalStep,
             infoMessage: data.infoMessage,
@@ -71,6 +71,19 @@ private extension ResponseMapper.CreateAnywayTransferResponse.AntiFraudScenario 
         case "OK":                 self = .ok
         case "SCOR_SUSPECT_FRAUD": self = .suspect
         default:                   return nil
+        }
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse.DocumentStatus {
+    
+    init?(_ rawValue: String?) {
+        
+        switch rawValue {
+        case "COMPLETE":    self = .complete
+        case "IN_PROGRESS": self = .inProgress
+        case "REJECTED":    self = .rejected
+        default:            return nil
         }
     }
 }
