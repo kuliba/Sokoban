@@ -770,12 +770,12 @@ struct PaymentsSelectBankView: View {
             VStack {
                 
                 switch viewModel {
-                case .image(let image):
+                case let .image(image):
                     image
                         .resizable()
                         .accessibilityIdentifier("SelectBankIconImage")
                     
-                case .icon(let image):
+                case let .icon(image):
                     image
                         .resizable()
                         .renderingMode(.template)
