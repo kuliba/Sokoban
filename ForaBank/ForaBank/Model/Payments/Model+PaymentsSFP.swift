@@ -390,12 +390,15 @@ extension Model {
             .sorted(by: { $0.defaultBank && $1.defaultBank })
             .filter { $0.defaultBank || $0.payment }
         
+        let defaultBank = paymentsByPhone.value[phone?.digits ?? ""]?.filter { $0.defaultBank == true }.first
+        
         let banksID = banksByPhone?
             .compactMap({ $0.bankId })
         
         let options = self.reduceBanks(
             bankList: bankList.value.filter { $0.bankCountry == "RU" } ,
-            preferred: banksID ?? []
+            preferred: banksID ?? [],
+            defaultBankId: defaultBank?.bankId
         )
 
         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
@@ -424,7 +427,8 @@ extension Model {
     
     private func reduceBanks(
         bankList: [BankData],
-        preferred: [String]
+        preferred: [String],
+        defaultBankId: String?
     ) -> [Payments.ParameterSelectBank.Option] {
         
         let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
@@ -442,6 +446,7 @@ extension Model {
                     name: item.memberNameRus,
                     subtitle: nil,
                     icon: .init(with: item.svgImage),
+                    isFavorite: item.id == defaultBankId,
                     searchValue: item.memberNameRus
                 )
             }

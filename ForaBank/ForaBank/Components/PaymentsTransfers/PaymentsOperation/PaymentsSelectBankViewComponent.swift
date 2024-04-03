@@ -286,7 +286,7 @@ extension PaymentsSelectBankView.ViewModel {
         let icon: IconViewModel
         let name: String
         let subtitle: String?
-        
+        let isFavorite: Bool
         let searchValue: String
     }
     
@@ -374,6 +374,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
                 icon: .init(with: option, defaultIcon: defaultIcon),
                 name: option.name,
                 subtitle: option.subtitle,
+                isFavorite: option.isFavorite,
                 searchValue: option.searchValue)
         }
         
@@ -688,6 +689,7 @@ struct PaymentsSelectBankView: View {
                     .frame(width: 40, height: 40)
                     .padding(.bottom, 8)
                     .accessibilityIdentifier("SelectBankItemBankIcon")
+                    .overlay(ContactsBankPrefferedItemView.FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -12))
                 
                 Text(viewModel.name)
                     .font(.textBodyXsR11140())
@@ -824,8 +826,8 @@ extension PaymentsSelectBankView.ViewModel {
             icon: .init(named: "ic24Bank")!,
             title: "Банк получателя",
             options: [
-                .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
-                .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+                .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, isFavorite: false, searchValue: "сбербанк"),
+                .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, isFavorite: false, searchValue: "альфабанк"),
             ],
             placeholder: "Выберите банк",
             selectAll: .init(type: .banks),
@@ -840,8 +842,8 @@ extension PaymentsSelectBankView.ViewModel {
                 icon: .init(named: "ic24Bank")!,
                 title: "Банк получателя",
                 options: [
-                    .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
-                    .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+                    .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, isFavorite: false, searchValue: "сбербанк"),
+                    .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, isFavorite: false, searchValue: "альфабанк"),
                 ],
                 placeholder: "Выберите банк",
                 selectAll: .init(type: .banks),

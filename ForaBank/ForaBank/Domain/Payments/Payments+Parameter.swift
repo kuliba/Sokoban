@@ -367,7 +367,7 @@ extension Payments {
             let name: String
             let subtitle: String?
             let icon: ImageData?
-            
+            let isFavorite: Bool
             let searchValue: String
         }
         
