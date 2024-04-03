@@ -20,7 +20,7 @@ extension ResponseMapper {
         public let currencyPayer: String?
         public let currencyRate: Decimal?
         public let debitAmount: Decimal?
-        public let documentStatus: String? // enum!
+        public let documentStatus: DocumentStatus?
         public let fee: Decimal?
         public let finalStep: Bool
         public let infoMessage: String?
@@ -42,7 +42,7 @@ extension ResponseMapper {
             currencyPayer: String? = nil,
             currencyRate: Decimal? = nil,
             debitAmount: Decimal? = nil,
-            documentStatus: String? = nil,
+            documentStatus: DocumentStatus? = nil,
             fee: Decimal? = nil,
             finalStep: Bool,
             infoMessage: String? = nil,
@@ -110,6 +110,11 @@ extension ResponseMapper.CreateAnywayTransferResponse {
     public enum AntiFraudScenario: Equatable {
         
         case ok, suspect
+    }
+    
+    public enum DocumentStatus: Equatable {
+        
+        case complete, inProgress, rejected
     }
 
     public struct Parameter: Equatable {

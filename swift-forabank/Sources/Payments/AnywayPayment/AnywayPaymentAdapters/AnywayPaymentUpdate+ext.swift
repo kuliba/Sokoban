@@ -69,12 +69,24 @@ private extension AnywayPaymentUpdate.Details.Info {
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
         self.init(
-            documentStatus: response.documentStatus,
+            documentStatus: response.documentStatus.map { .init($0) },
             infoMessage: response.infoMessage,
             payeeName: response.payeeName,
             paymentOperationDetailID: response.paymentOperationDetailID,
             printFormType: response.printFormType
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Details.Info.DocumentStatus {
+    
+    init(_ documentStatus: ResponseMapper.CreateAnywayTransferResponse.DocumentStatus) {
+        
+        switch documentStatus {
+        case .complete:   self = .complete
+        case .inProgress: self = .inProgress
+        case .rejected:   self = .rejected
+        }
     }
 }
 
@@ -171,9 +183,9 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.FieldType {
     init(_ type: ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldType) {
         
         switch type {
-        case .input:      self = .input
-        case .select:     self = .select
-        case .maskList:   self = .maskList
+        case .input:    self = .input
+        case .select:   self = .select
+        case .maskList: self = .maskList
         }
     }
 }
@@ -214,4 +226,3 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.ViewType {
         }
     }
 }
-

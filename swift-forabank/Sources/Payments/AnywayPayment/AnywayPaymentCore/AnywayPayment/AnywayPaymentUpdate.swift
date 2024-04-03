@@ -149,14 +149,14 @@ extension AnywayPaymentUpdate.Details {
     
     public struct Info: Equatable {
         
-        public let documentStatus: String? // enum!
+        public let documentStatus: DocumentStatus?
         public let infoMessage: String?
         public let payeeName: String?
         public let paymentOperationDetailID: Int?
         public let printFormType: String?
         
         public init(
-            documentStatus: String?,
+            documentStatus: DocumentStatus?,
             infoMessage: String?,
             payeeName: String?,
             paymentOperationDetailID: Int?,
@@ -168,6 +168,14 @@ extension AnywayPaymentUpdate.Details {
             self.paymentOperationDetailID = paymentOperationDetailID
             self.printFormType = printFormType
         }
+    }
+}
+
+public extension AnywayPaymentUpdate.Details.Info {
+    
+    enum DocumentStatus: Equatable {
+        
+        case complete, inProgress, rejected
     }
 }
 
@@ -310,4 +318,3 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
         case constant, input, output
     }
 }
-

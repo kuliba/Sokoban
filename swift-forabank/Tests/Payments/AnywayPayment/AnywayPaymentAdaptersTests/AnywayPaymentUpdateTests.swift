@@ -497,7 +497,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeDetailsInfo(
-        documentStatus: String? = nil,
+        documentStatus: AnywayPaymentUpdate.Details.Info.DocumentStatus? = nil,
         infoMessage: String? = nil,
         payeeName: String? = nil,
         paymentOperationDetailID: Int? = nil,
