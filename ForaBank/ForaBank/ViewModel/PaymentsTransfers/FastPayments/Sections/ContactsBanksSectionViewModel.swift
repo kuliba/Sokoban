@@ -316,6 +316,7 @@ extension ContactsBanksSectionViewModel {
         
         let banksByPhone = model.paymentsByPhone.value[phone.value?.digits ?? ""]?
             .sorted(by: { $0.defaultBank && $1.defaultBank })
+            .filter { $0.defaultBank || $0.payment }
         
         guard let banksID = banksByPhone?.compactMap({ $0.bankId }) else {
             return []
