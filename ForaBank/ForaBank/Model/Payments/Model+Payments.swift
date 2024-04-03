@@ -1232,9 +1232,11 @@ extension Model {
                 
                 let phoneNumber = paymentData.phoneNumber
                 let bankId = paymentData.bankId
-                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
-                                                       bankId: bankId,
-                                                       parameterId: parameterId)
+                self.action.send(ModelAction.LatestPayments.BanksList.Request(
+                    prePayment: true,
+                    phone: phoneNumber
+                ))
+                
                 
             case .mobile:
                 guard let latestPayment = latestPayment as? PaymentServiceData else {

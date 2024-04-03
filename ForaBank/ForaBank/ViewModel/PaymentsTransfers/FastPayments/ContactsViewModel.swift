@@ -368,7 +368,10 @@ extension Model {
         let makeRequest: (String) -> Void = { [weak model] phone in
             
             model?.action.send(ModelAction.BankClient.Request(phone: phone.digits))
-            model?.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
+            model?.action.send(ModelAction.LatestPayments.BanksList.Request(
+                prePayment: true,
+                phone: phone
+            ))
         }
         let bankFromID: (BankData.ID) -> BankData? = { [weak model] bankId in
             

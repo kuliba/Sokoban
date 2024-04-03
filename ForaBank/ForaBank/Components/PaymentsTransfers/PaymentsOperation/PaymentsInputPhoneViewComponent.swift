@@ -140,7 +140,10 @@ extension PaymentsInputPhoneView {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
-                        self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: payload.phone))
+                        self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(
+                            prePayment: false,
+                            phone: payload.phone
+                        ))
                         
                     default:
                         break
