@@ -256,11 +256,11 @@ private extension PaymentsSelectBankViewComponentTests {
 
 private extension Payments.ParameterSelectBank.Option {
 
-  static let sber: Self = .init(id: "0", name: "Сбербанк", subtitle: "0445566", icon: nil, searchValue: "0445566")
-  static let sberNoSubTitle: Self = .init(id: "0", name: "Сбербанк", subtitle: nil, icon: nil, searchValue: "0445566")
+    static let sber: Self = .init(id: "0", name: "Сбербанк", subtitle: "0445566", icon: nil, isFavorite: false, searchValue: "0445566")
+  static let sberNoSubTitle: Self = .init(id: "0", name: "Сбербанк", subtitle: nil, icon: nil, isFavorite: false, searchValue: "0445566")
 
-  static let alfa: Self = .init(id: "1", name: "Альфа-банк", subtitle: "0447788", icon: nil, searchValue: "0447788")
-  static let alfaNoSubtitle: Self = .init(id: "1", name: "Альфа-банк", subtitle: nil, icon: nil, searchValue: "0447788")
+  static let alfa: Self = .init(id: "1", name: "Альфа-банк", subtitle: "0447788", icon: nil, isFavorite: false, searchValue: "0447788")
+  static let alfaNoSubtitle: Self = .init(id: "1", name: "Альфа-банк", subtitle: nil, icon: nil, isFavorite: false, searchValue: "0447788")
 }
 
 private extension Array where Element == Payments.ParameterSelectBank.Option {

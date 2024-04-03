@@ -95,7 +95,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             source: .sfp(phone: "phone", bankId: "1")
         )
         
-        let bankParameter = sut.bankParameter(operation)
+        let bankParameter = sut.bankParameter(operation, operationPhone: nil)
         
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
@@ -120,7 +120,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             source: .latestPayment(1)
         )
         
-        let bankParameter = sut.bankParameter(operation)
+        let bankParameter = sut.bankParameter(operation, operationPhone: nil)
         
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }

@@ -1027,7 +1027,7 @@ final class ContactsViewModelTests: XCTestCase {
         
         sut.typeAndWait("+7 911 111 11 11", on: scheduler)
         
-        XCTAssertNoDiff(spy.values, [.init(phone: "+7 911 111-11-11")])
+        XCTAssertNoDiff(spy.values, [.init(prePayment: true, phone: "+7 911 111-11-11")])
 
         sut.typeAndWait("Abc", on: scheduler)
         

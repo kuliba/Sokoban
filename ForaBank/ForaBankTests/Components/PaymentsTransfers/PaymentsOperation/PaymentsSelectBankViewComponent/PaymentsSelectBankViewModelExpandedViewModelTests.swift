@@ -288,7 +288,7 @@ private extension Payments.ParameterSelectBank.Option {
         searchValue: String
     ) -> Self {
         
-        .init(id: id, name: name, subtitle: subtitle, icon: icon, searchValue: searchValue)
+        .init(id: id, name: name, subtitle: subtitle, icon: icon, isFavorite: false, searchValue: searchValue)
     }
 }
 
