@@ -69,8 +69,8 @@ extension Model {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            self.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone.digits))
-            return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
+            let phoneFormatted = phone.digits.addCodeRuIfNeeded()
+            return PhoneNumberKitFormater().format(phoneFormatted)
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
