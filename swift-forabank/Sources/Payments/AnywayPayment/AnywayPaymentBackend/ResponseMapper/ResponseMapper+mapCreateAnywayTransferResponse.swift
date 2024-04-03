@@ -96,7 +96,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
-            dataType: parameter.dataType,
+            dataType: .init(parameter.dataType),
             group: parameter.group,
             id: parameter.id,
             inputFieldType: .init(parameter.inputFieldType),
@@ -118,6 +118,21 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             type: .init(parameter.type),
             viewType: .init(parameter.viewType)
         )
+    }
+}
+
+extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
+    
+    init?(_ string: String) {
+        
+        guard string != "%String"
+        else { self = .string; return }
+        
+        guard let pairs = try? string.splitDataType(),
+              !pairs.isEmpty
+        else { return nil }
+        
+        self = .pairs(pairs.map { .init(key: $0.key, value: $0.value) })
     }
 }
 

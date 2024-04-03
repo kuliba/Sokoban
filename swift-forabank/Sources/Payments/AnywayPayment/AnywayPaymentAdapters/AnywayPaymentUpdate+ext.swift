@@ -161,7 +161,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
     init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         self.init(
-            dataType: parameter.dataType,
+            dataType: parameter.dataType.map { .init($0) },
             group: parameter.group,
             inputFieldType: parameter.inputFieldType.map { .init($0) },
             isPrint: parameter.isPrint,
@@ -175,6 +175,19 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
             type: .init(parameter.type),
             viewType: .init(parameter.viewType)
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType {
+    
+    init(_ dataType: ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType) {
+        
+        switch dataType {
+        case .string:
+            self = .string
+        case let .pairs(pairs):
+            self = .pairs(pairs.map { .init(key: $0.key, value: $0.value) })
+        }
     }
 }
 

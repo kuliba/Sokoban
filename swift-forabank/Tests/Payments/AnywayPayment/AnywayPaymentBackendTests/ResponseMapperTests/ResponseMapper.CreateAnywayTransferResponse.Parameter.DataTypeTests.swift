@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.04.2024.
 //
 
-import AnywayPaymentBackend
+@testable import AnywayPaymentBackend
 import RemoteServices
 import XCTest
 

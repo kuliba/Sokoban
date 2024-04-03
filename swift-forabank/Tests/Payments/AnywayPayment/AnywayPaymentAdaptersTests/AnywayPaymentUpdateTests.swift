@@ -145,7 +145,11 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         regExp:  "^.{1,250}$"
                     ),
                     uiAttributes: makeParameterUIAttributes(
-                        dataType: "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ",
+                        dataType: .pairs([
+                            .init(key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС", value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"),
+                            .init(key: "БЕЗ СТРАХОВОГО ВЗНОСА", value: "БЕЗ СТРАХОВОГО ВЗНОСА"),
+                            .init(key: "ПРОЧИЕ ПЛАТЕЖИ", value: "ПРОЧИЕ ПЛАТЕЖИ"),
+                            ]),
                         order: 2,
                         title: "Признак платежа",
                         type: .select,
@@ -576,7 +580,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeParameterUIAttributes(
-        dataType: String = "%String",
+        dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
         group: String? = nil,
         inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
         isPrint: Bool = false,

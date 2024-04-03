@@ -246,7 +246,7 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct UIAttributes: Equatable {
         
-        public let dataType: String // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
+        public let dataType: DataType? // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
         public let group: String?
         @available(*, deprecated, message: "not used according to analytics")
         public let inputFieldType: InputFieldType?
@@ -263,7 +263,7 @@ extension AnywayPaymentUpdate.Parameter {
         public let viewType: ViewType
         
         public init(
-            dataType: String,
+            dataType: DataType?,
             group: String?,
             inputFieldType: InputFieldType?,
             isPrint: Bool,
@@ -296,6 +296,26 @@ extension AnywayPaymentUpdate.Parameter {
 
 public extension AnywayPaymentUpdate.Parameter.UIAttributes {
     
+    enum DataType: Equatable {
+        
+        case string
+        case pairs([Pairs])
+        
+        public struct Pairs: Equatable {
+            
+            public let key: String
+            public let value: String
+            
+            public init(
+                key: String,
+                value: String
+            ) {
+                self.key = key
+                self.value = value
+            }
+        }
+    }
+
     enum FieldType: Equatable {
         
         case input, select, maskList
