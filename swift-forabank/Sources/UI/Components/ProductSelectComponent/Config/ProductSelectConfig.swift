@@ -45,17 +45,20 @@ public extension ProductSelectConfig {
         let cardSize: CGSize
         let number: TextConfig
         let title: TextConfig
+        let selectedImage: Image
         
         public init(
             amount: TextConfig,
             cardSize: CGSize = .init(width: 112, height: 71),
             number: TextConfig,
-            title: TextConfig
+            title: TextConfig,
+            selectedImage: Image
         ) {
             self.amount = amount
             self.cardSize = cardSize
             self.number = number
             self.title = title
+            self.selectedImage = selectedImage
         }
     }
     

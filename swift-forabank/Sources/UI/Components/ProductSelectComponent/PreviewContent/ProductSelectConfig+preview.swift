@@ -57,6 +57,7 @@ extension ProductSelectConfig.Card {
         title: .init(
             textFont: .body,
             textColor: .purple
-        )
+        ), 
+        selectedImage: Image(systemName: "checkmark.circle.fill")
     )
 }

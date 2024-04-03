@@ -24,6 +24,7 @@ extension ProductCardConfig {
             textFont: .caption.weight(.thin),
             textColor: .white
         ),
-        shadowColor: .black.opacity(0.3)
+        shadowColor: .black.opacity(0.3), 
+        selectedImage: Image(systemName: "checkmark.circle.fill")
     )
 }
