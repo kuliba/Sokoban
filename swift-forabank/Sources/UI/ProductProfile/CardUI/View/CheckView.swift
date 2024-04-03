@@ -20,7 +20,7 @@ struct CheckView: View {
                     width: config.sizes.checkView.width,
                     height: config.sizes.checkView.height
                 )
-                .foregroundColor(config.colors.checkForeground.opacity(0.12))
+                .foregroundColor(config.colors.checkForeground)
             
             config.images.check
                 .resizable()
@@ -31,7 +31,7 @@ struct CheckView: View {
         .frame(
             maxWidth: .infinity,
             maxHeight: .infinity,
-            alignment: .topTrailing
+            alignment: .topLeading
         )
         .padding(config.front.checkPadding)
     }

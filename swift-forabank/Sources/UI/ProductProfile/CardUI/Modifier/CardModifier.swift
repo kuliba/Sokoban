@@ -70,7 +70,7 @@ struct CardModifier<StatusAction: View>: ViewModifier {
         content
             .padding(config.front.cardPadding)
             .background(background())
-            .overlay(checkView(), alignment: .topTrailing)
+            .overlay(checkView(), alignment: .topLeading)
             .overlay(statusActionView(), alignment: .center)
             .overlay(updatingView(), alignment: .center)
             .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius, style: .circular))
