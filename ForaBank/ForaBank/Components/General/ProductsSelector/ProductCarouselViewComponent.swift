@@ -168,6 +168,7 @@ extension ProductCarouselView {
                                     // create new product view model
                                     let productViewModel = ProductView.ViewModel(
                                         with: product,
+                                        isChecked: (selectedProductId == product.id),
                                         size: style.productAppearanceSize,
                                         style: .main,
                                         model: model,

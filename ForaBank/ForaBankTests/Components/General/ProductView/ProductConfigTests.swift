@@ -23,7 +23,7 @@ final class ProductConfigTests: XCTestCase {
         XCTAssertEqual(sut.front.nameSpacing, 4)
         XCTAssertEqual(sut.front.cardPadding, 8)
         XCTAssertEqual(sut.front.cornerRadius, 8)
-        XCTAssertEqual(sut.front.checkPadding, 8)
+        XCTAssertEqual(sut.front.checkPadding, 9.5)
     }
     
     func test_frontConfig_normalSize() {
@@ -97,7 +97,7 @@ final class ProductConfigTests: XCTestCase {
         let sut = makeSUT(size: .small)
         
         XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 20, height: 20))
-        XCTAssertEqual(sut.sizes.checkView, .init(width: 16, height: 16))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 17, height: 17))
         XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 10, height: 10))
     }
     
@@ -106,7 +106,7 @@ final class ProductConfigTests: XCTestCase {
         let sut = makeSUT(size: .normal)
         
         XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 28, height: 28))
-        XCTAssertEqual(sut.sizes.checkView, .init(width: 18, height: 18))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 19, height: 19))
         XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 12, height: 12))
     }
     
@@ -115,7 +115,7 @@ final class ProductConfigTests: XCTestCase {
         let sut = makeSUT(size: .large)
         
         XCTAssertEqual(sut.sizes.paymentSystemIcon, .init(width: 28, height: 28))
-        XCTAssertEqual(sut.sizes.checkView, .init(width: 18, height: 18))
+        XCTAssertEqual(sut.sizes.checkView, .init(width: 19, height: 19))
         XCTAssertEqual(sut.sizes.checkViewImage, .init(width: 12, height: 12))
     }
     
