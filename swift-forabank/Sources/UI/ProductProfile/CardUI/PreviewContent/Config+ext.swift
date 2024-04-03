@@ -87,8 +87,7 @@ extension Config.Colors {
         foreground: .white,
         background: Color(red: 0.6, green: 0.6, blue: 0.6),
         rateFill: Color(red: 0.827, green: 0.827, blue: 0.827),
-        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11),
-        checkForeground: Color(red: 0.11, green: 0.11, blue: 0.11)
+        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11)
     )
 }
 
@@ -132,13 +131,11 @@ extension Config.Sizes {
         case .large, .normal:
             return .init(
                 paymentSystemIcon: .init(width: 28, height: 28),
-                checkView: .init(width: 18, height: 18),
                 checkViewImage: .init(width: 12, height: 12))
             
         case .small:
             return .init(
                 paymentSystemIcon: .init(width: 20, height: 20),
-                checkView: .init(width: 16, height: 16),
                 checkViewImage: .init(width: 10, height: 10))
         }
     }

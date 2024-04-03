@@ -107,16 +107,13 @@ public extension Config {
     struct Sizes {
         
         public let paymentSystemIcon: CGSize
-        public let checkView: CGSize
         public let checkViewImage: CGSize
         
         public init(
             paymentSystemIcon: CGSize,
-            checkView: CGSize,
             checkViewImage: CGSize
         ) {
             self.paymentSystemIcon = paymentSystemIcon
-            self.checkView = checkView
             self.checkViewImage = checkViewImage
         }
     }
@@ -126,20 +123,17 @@ public extension Config {
         let background: Color
         let rateFill: Color
         let rateForeground: Color
-        let checkForeground: Color
         
         public init(
             foreground: Color,
             background: Color,
             rateFill: Color,
-            rateForeground: Color,
-            checkForeground: Color
+            rateForeground: Color
         ) {
             self.foreground = foreground
             self.background = background
             self.rateFill = rateFill
             self.rateForeground = rateForeground
-            self.checkForeground = checkForeground
         }
     }
     

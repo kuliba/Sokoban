@@ -63,7 +63,8 @@ struct ActiveContractView: View {
         ) {
             ProductCardView(
                 productCard: .init(product: $0),
-                config: config.productSelect.card.productCardConfig
+                config: config.productSelect.card.productCardConfig,
+                isSelected: contractDetails.productSelect.selected?.id == $0.id
             )
         }
     }

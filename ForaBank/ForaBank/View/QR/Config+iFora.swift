@@ -63,7 +63,8 @@ extension ProductSelectComponent.ProductSelectConfig {
             title: .init(
                 textFont: .textBodyXsR11140(),
                 textColor: .textWhite.opacity(0.4)
-            )
+            ), 
+            selectedImage: .ic18Check
         ),
         chevron: .init(
             color: .iconGray,

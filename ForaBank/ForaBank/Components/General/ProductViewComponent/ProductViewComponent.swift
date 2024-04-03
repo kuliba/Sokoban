@@ -24,7 +24,7 @@ extension ProductView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let id: ProductData.ID
-        let header: HeaderDetails
+        var header: HeaderDetails
         let isChecked: Bool
         let productType: ProductType
         let cardAction: CardAction?
@@ -101,10 +101,9 @@ extension ProductView {
             let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[.init($0)]?.image })
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
-            let icon = Self.iconForCard(product: productData)
             self.init(
                 id: productData.id,
-                header: .init(number: number, period: period, icon: icon),
+                header: .init(number: number, period: period, icon: productData.cloverImage),
                 cardInfo: cardInfo,
                 footer: .init(balance: balance, interestRate: interestRate),
                 statusAction: statusAction,
@@ -194,6 +193,7 @@ extension ProductView {
             cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
             cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
+            header.updateIcon(productData.cloverImage)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
             let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
             appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
@@ -210,14 +210,6 @@ extension ProductView {
             default:
                 return nil
             }
-        }
-        
-        static func iconForCard(product: ProductData) -> Image? {
-            
-            /*let isDark: Bool = product.background.first?.description == "F6F6F7"
-            return isDark ? .ic16MainCardGrey : .ic16MainCardWhite*/
-            //TODO: add real image for card - clover
-            return nil
         }
         
         static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {

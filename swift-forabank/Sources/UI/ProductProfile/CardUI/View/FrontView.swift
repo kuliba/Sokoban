@@ -124,6 +124,29 @@ struct FrontView_Previews: PreviewProvider {
                     EmptyView()
                 })
             .fixedSize()
+            
+            FrontView(
+                name: "Name",
+                modifierConfig: .previewChecked,
+                config: .config(.previewAccount),
+                headerView: {
+                    HeaderView(
+                        config: .config(.previewCard),
+                        header: .init(
+                            number: "111111",
+                            icon: Image(systemName: "snowflake.circle.fill"))
+                    )
+                },
+                footerView: {
+                    FooterView(
+                        config: .config(.previewCard),
+                        footer: .init(balance: "123012 RUB", interestRate: "8.05"))
+                },
+                statusActionView: {
+                    EmptyView()
+                })
+            .fixedSize()
+
         }
     }
 }

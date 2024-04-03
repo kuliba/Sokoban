@@ -225,7 +225,8 @@ struct ProductSelectView_Previews: PreviewProvider {
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),
-                    config: .preview
+                    config: .preview, 
+                    isSelected: state.selected?.id == $0.id
                 )
             }
             .border(.red)

@@ -11,7 +11,8 @@ struct CardsScrollModel {
     
     let card: UserAllCardsModel
     var getUIImage: (Md5hash) -> UIImage? = { _ in UIImage() }
-    
+    var isChecked: Bool = false
+
     var cardNumber: String? {
         return card.number
     }

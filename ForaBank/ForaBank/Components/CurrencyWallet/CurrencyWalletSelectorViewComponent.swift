@@ -256,7 +256,7 @@ extension CurrencyWalletSelectorView {
                 return nil
             }
             
-            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
+            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType, productId: productViewModel.productId)
             bind(products)
             
             let listViewModel: CurrencyWalletListViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
@@ -264,11 +264,13 @@ extension CurrencyWalletSelectorView {
             return listViewModel
         }
         
-        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
+        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, productId: Int) -> [ProductView.ViewModel] {
             
             let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
-            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
+            let products = filteredProducts.map {
+                ProductView.ViewModel(with: $0, isChecked: ($0.id == productId), size: .small, style: .main, model: model)
+            }
             
             return products
         }
