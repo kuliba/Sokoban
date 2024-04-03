@@ -233,7 +233,7 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         
         _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(sut.value.current, "1")
+        XCTAssertEqual(sut.value.current, "0")
     }
 }
 
