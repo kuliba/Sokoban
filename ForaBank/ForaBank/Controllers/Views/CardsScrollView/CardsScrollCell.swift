@@ -10,6 +10,7 @@ import UIKit
 class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
     var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
+    var isChecked: Bool = false
     
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
@@ -25,7 +26,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     static var reuseId: String = "CardCell"
     //MARK: - Properties
     var card: UserAllCardsModel? {
-        didSet { configure(getUImage: getUImage) }
+        didSet { configure(getUImage: getUImage, isChecked: isChecked) }
     }
     
 
@@ -66,6 +67,13 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
     
+    public let isCheckedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.alpha = 0.9
+        return imageView
+    }()
+    
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -86,7 +94,8 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     
     //MARK: - Helpers
     func configure(
-        getUImage: @escaping (Md5hash) -> UIImage?
+        getUImage: @escaping (Md5hash) -> UIImage?,
+        isChecked: Bool
     ) {
         guard let card = card else { return }
         
@@ -100,6 +109,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
+        isCheckedImageView.image = isChecked ? UIImage(named: "ic18Check")!.withRenderingMode(.alwaysOriginal) : UIImage()
     }
     
     func setupUI() {
@@ -120,6 +130,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         addSubview(cloverImageView)
+        addSubview(isCheckedImageView)
 
         backgroundImageView.fillSuperview()
         
@@ -134,5 +145,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
                             paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
         
         cloverImageView.anchor(top: self.topAnchor, right: self.rightAnchor, paddingTop: 8, paddingRight: 8)
+        
+        isCheckedImageView.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 9, paddingLeft: 9)
     }
 }

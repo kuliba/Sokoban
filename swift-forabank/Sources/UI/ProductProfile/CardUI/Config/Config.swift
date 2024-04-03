@@ -107,16 +107,13 @@ public extension Config {
     struct Sizes {
         
         public let paymentSystemIcon: CGSize
-        public let checkView: CGSize
         public let checkViewImage: CGSize
         
         public init(
             paymentSystemIcon: CGSize,
-            checkView: CGSize,
             checkViewImage: CGSize
         ) {
             self.paymentSystemIcon = paymentSystemIcon
-            self.checkView = checkView
             self.checkViewImage = checkViewImage
         }
     }
