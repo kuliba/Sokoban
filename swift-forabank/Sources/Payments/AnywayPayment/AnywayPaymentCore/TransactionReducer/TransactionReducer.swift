@@ -95,13 +95,9 @@ private extension TransactionReducer {
         _ effect: inout Effect?,
         with event: Event
     ) {
-        switch event {
-        case let .fraud(fraudEvent):
-            reduce(&state, &effect, with: fraudEvent)
-            
-        default:
-            break
-        }
+        guard case let .fraud(fraudEvent) = event else { return }
+        
+        reduce(&state, &effect, with: fraudEvent)
     }
     
     func reduce(
