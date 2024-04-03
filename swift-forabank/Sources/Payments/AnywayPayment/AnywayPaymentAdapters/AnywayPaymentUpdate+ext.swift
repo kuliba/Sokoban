@@ -161,7 +161,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
     init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         self.init(
-            dataType: parameter.dataType.map { .init($0) },
+            dataType: .init(parameter.dataType),
             group: parameter.group,
             inputFieldType: parameter.inputFieldType.map { .init($0) },
             isPrint: parameter.isPrint,

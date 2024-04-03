@@ -246,7 +246,7 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct UIAttributes: Equatable {
         
-        public let dataType: DataType? // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
+        public let dataType: DataType // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
         public let group: String?
         @available(*, deprecated, message: "not used according to analytics")
         public let inputFieldType: InputFieldType?
@@ -263,7 +263,7 @@ extension AnywayPaymentUpdate.Parameter {
         public let viewType: ViewType
         
         public init(
-            dataType: DataType?,
+            dataType: DataType,
             group: String?,
             inputFieldType: InputFieldType?,
             isPrint: Bool,
