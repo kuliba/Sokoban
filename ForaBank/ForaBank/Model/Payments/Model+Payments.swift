@@ -1249,7 +1249,7 @@ extension Model {
                 let bankId = paymentData.bankId
                 self.action.send(ModelAction.LatestPayments.BanksList.Request(
                     prePayment: true,
-                    phone: phoneNumber
+                    phone: phoneNumber.addCodeRuIfNeeded()
                 ))
                 
                 return paymentsProcessSourceReducerSFP(
