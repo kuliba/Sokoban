@@ -5,8 +5,9 @@
 //  Created by Igor Malyarov on 02.04.2024.
 //
 
+import AnywayPaymentCore
 import Foundation
-#warning("adapter")
+
 public extension AnywayPaymentDigest {
     
     var json: Data {

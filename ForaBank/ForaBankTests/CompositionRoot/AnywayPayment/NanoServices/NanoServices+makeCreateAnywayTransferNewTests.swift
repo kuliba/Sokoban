@@ -105,7 +105,7 @@ final class NanoServices_makeCreateAnywayTransferNewTests: XCTestCase {
                 needSum: false,
                 parametersForNextStep: [
                     .init(
-                        dataType: "%String",
+                        dataType: .string,
                         id: "1",
                         inputFieldType: .account,
                         isPrint: true,
