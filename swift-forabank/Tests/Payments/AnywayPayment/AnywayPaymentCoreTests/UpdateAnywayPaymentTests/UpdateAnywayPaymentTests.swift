@@ -10,6 +10,7 @@ import XCTest
 
 struct AnywayPayment: Equatable {
     
+    let isFinalStep: Bool
     let hasAmount: Bool
     let hasOTP: Bool
     var status: Status?
@@ -33,6 +34,7 @@ extension AnywayPayment {
         }
         
         return .init(
+            isFinalStep: update.details.control.isFinalStep,
             hasAmount: update.details.control.needSum,
             hasOTP: update.details.control.needOTP,
             status: status
@@ -45,7 +47,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
         
         assert(
-            makeNoOTPAnywayPayment(),
+            makeAnywayPaymentWithoutOTP(),
             on: makeAnywayPaymentUpdate(needOTP: false)
         )
     }
@@ -53,15 +55,23 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
         
         let update = makeAnywayPaymentUpdate(needOTP: true)
-        let updated = makeNoOTPAnywayPayment().update(with: update)
+        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
         
         XCTAssert(hasOTPField(updated))
+    }
+    
+    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: false)
+        let updated = makeAnywayPaymentWithOTP().update(with: update)
+        
+        XCTAssertFalse(hasOTPField(updated))
     }
     
     func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
         
         assert(
-            makeNoAmountAnywayPayment(),
+            makeAnywayPaymentWithoutAmount(),
             on: makeAnywayPaymentUpdate(needSum: false)
         )
     }
@@ -69,9 +79,41 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAddAmountFieldOnNeedSumTrue() {
         
         let update = makeAnywayPaymentUpdate(needSum: true)
-        let updated = makeNoAmountAnywayPayment().update(with: update)
+        let updated = makeAnywayPaymentWithoutAmount().update(with: update)
         
         XCTAssert(hasAmountField(updated))
+    }
+    
+    func test_update_shouldRemoveAmountFieldOnNeedSumFalse() {
+        
+        let update = makeAnywayPaymentUpdate(needSum: false)
+        let updated = makeAnywayPaymentWithAmount().update(with: update)
+        
+        XCTAssertFalse(hasAmountField(updated))
+    }
+    
+    func test_update_shouldNotChangeIsFinalStepFlagOnIsFinalStepFalse() {
+        
+        assert(
+            makeNonFinalStepAnywayPayment(),
+            on: makeAnywayPaymentUpdate(isFinalStep: false)
+        )
+    }
+    
+    func test_update_shouldSetIsFinalStepFlagOnIsFinalStepTrue() {
+        
+        let update = makeAnywayPaymentUpdate(isFinalStep: true)
+        let updated = makeNonFinalStepAnywayPayment().update(with: update)
+        
+        XCTAssert(isFinalStep(updated))
+    }
+    
+    func test_update_shouldSetIsFinalStepFlagOnIsFinalStepFalse() {
+        
+        let update = makeAnywayPaymentUpdate(isFinalStep: false)
+        let updated = makeFinalStepAnywayPayment().update(with: update)
+        
+        XCTAssertFalse(isFinalStep(updated))
     }
     
     func test_update_shouldNotChangeStatusOnNilInfoMessage() {
@@ -118,6 +160,13 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
+private func isFinalStep(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.isFinalStep
+}
+
 private func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
@@ -133,37 +182,39 @@ private func hasOTPField(
 }
 
 private func makeAnywayPayment(
+    isFinalStep: Bool = false,
     hasAmount: Bool = false,
     hasOTP: Bool = false
 ) -> AnywayPayment {
     
     .init(
+        isFinalStep: isFinalStep,
         hasAmount: hasAmount,
         hasOTP: hasOTP
     )
 }
 
-private func makeNoAmountAnywayPayment(
+private func makeAnywayPaymentWithAmount(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(hasAmount: true)
+    XCTAssert(hasAmountField(payment), "Expected amount field.", file: file, line: line)
+    return payment
+}
+
+private func makeAnywayPaymentWithoutAmount(
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment()
-    XCTAssert(!hasAmountField(payment), "Expected no amount field.", file: file, line: line)
+    XCTAssertFalse(hasAmountField(payment), "Expected no amount field.", file: file, line: line)
     return payment
 }
 
-private func makeNoOTPAnywayPayment(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment()
-    XCTAssert(!hasOTPField(payment), "Expected no OTP field.", file: file, line: line)
-    return payment
-}
-
-private func makeOTPAnywayPayment(
+private func makeAnywayPaymentWithOTP(
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
@@ -173,8 +224,39 @@ private func makeOTPAnywayPayment(
     return payment
 }
 
+private func makeAnywayPaymentWithoutOTP(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment()
+    XCTAssertFalse(hasOTPField(payment), "Expected no OTP field.", file: file, line: line)
+    return payment
+}
+
+private func makeFinalStepAnywayPayment(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(isFinalStep: true)
+    XCTAssert(isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
+    return payment
+}
+
+private func makeNonFinalStepAnywayPayment(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(isFinalStep: false)
+    XCTAssert(!isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
+    return payment
+}
+
 private func makeAnywayPaymentUpdate(
     infoMessage: String? = nil,
+    isFinalStep: Bool = false,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate {
@@ -182,6 +264,7 @@ private func makeAnywayPaymentUpdate(
     makeAnywayPaymentUpdate(
         details: makeAnywayPaymentUpdateDetails(
             control: makeAnywayPaymentUpdateDetailsControl(
+                isFinalStep: isFinalStep,
                 needOTP: needOTP,
                 needSum: needSum
             ),
