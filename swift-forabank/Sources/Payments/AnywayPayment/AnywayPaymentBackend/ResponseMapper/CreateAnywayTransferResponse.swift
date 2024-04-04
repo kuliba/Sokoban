@@ -20,7 +20,7 @@ extension ResponseMapper {
         public let currencyPayer: String?
         public let currencyRate: Decimal?
         public let debitAmount: Decimal?
-        public let documentStatus: String? // enum!
+        public let documentStatus: DocumentStatus?
         public let fee: Decimal?
         public let finalStep: Bool
         public let infoMessage: String?
@@ -42,7 +42,7 @@ extension ResponseMapper {
             currencyPayer: String? = nil,
             currencyRate: Decimal? = nil,
             debitAmount: Decimal? = nil,
-            documentStatus: String? = nil,
+            documentStatus: DocumentStatus? = nil,
             fee: Decimal? = nil,
             finalStep: Bool,
             infoMessage: String? = nil,
@@ -111,13 +111,18 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         
         case ok, suspect
     }
-
+    
+    public enum DocumentStatus: Equatable {
+        
+        case complete, inProgress, rejected
+    }
+    
     public struct Parameter: Equatable {
         
         public let content: String?
         public let dataDictionary: String?
         public let dataDictionaryРarent: String?
-        public let dataType: String
+        public let dataType: DataType
         public let group: String?
         public let id: String
         public let inputFieldType: InputFieldType?
@@ -136,14 +141,14 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let subTitle: String?
         public let svgImage: String?
         public let title: String
-        public let type: String
+        public let type: FieldType
         public let viewType: ViewType
         
         public init(
             content: String? = nil,
             dataDictionary: String? = nil,
             dataDictionaryРarent: String? = nil,
-            dataType: String,
+            dataType: DataType,
             group: String? = nil,
             id: String,
             inputFieldType: InputFieldType?,
@@ -162,7 +167,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             subTitle: String? = nil,
             svgImage: String?,
             title: String,
-            type: String,
+            type: FieldType,
             viewType: ViewType
         ) {
             self.content = content
@@ -194,6 +199,31 @@ extension ResponseMapper.CreateAnywayTransferResponse {
 }
 
 extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
+    
+    public enum DataType: Equatable {
+        
+        case string
+        case pairs([Pairs])
+        
+        public struct Pairs: Equatable {
+            
+            public let key: String
+            public let value: String
+            
+            public init(
+                key: String,
+                value: String
+            ) {
+                self.key = key
+                self.value = value
+            }
+        }
+    }
+
+    public enum FieldType: Equatable {
+        
+        case input, select, maskList
+    }
     
     public enum InputFieldType: Equatable {
         

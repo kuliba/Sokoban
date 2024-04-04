@@ -95,7 +95,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             needSum: false,
             parametersForNextStep: [
                 .init(
-                    dataType: "%String",
+                    dataType: .string,
                     id: "1",
                     inputFieldType: .account,
                     isPrint: true,
@@ -107,7 +107,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     regExp: "^.{1,250}$",
                     svgImage: "svgImage",
                     title: "Лицевой счет",
-                    type: "Input",
+                    type: .input,
                     viewType: .input
                 )
             ],

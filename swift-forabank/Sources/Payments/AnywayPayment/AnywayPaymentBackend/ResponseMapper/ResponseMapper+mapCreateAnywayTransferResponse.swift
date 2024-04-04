@@ -32,14 +32,14 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             currencyPayer: data.currencyPayer,
             currencyRate: data.currencyRate,
             debitAmount: data.debitAmount,
-            documentStatus: data.documentStatus,
+            documentStatus: .init(data.documentStatus),
             fee: data.fee,
             finalStep: data.finalStep,
             infoMessage: data.infoMessage,
             needMake: data.needMake ?? false,
             needOTP: data.needOTP ?? false,
             needSum: data.needSum,
-            parametersForNextStep: data.parameterListForNextStep.map { .init($0) },
+            parametersForNextStep: data.parameterListForNextStep.compactMap { .init($0) },
             paymentOperationDetailID: data.paymentOperationDetailId,
             payeeName: data.payeeName,
             printFormType: data.printFormType,
@@ -75,15 +75,31 @@ private extension ResponseMapper.CreateAnywayTransferResponse.AntiFraudScenario 
     }
 }
 
+private extension ResponseMapper.CreateAnywayTransferResponse.DocumentStatus {
+    
+    init?(_ rawValue: String?) {
+        
+        switch rawValue {
+        case "COMPLETE":    self = .complete
+        case "IN_PROGRESS": self = .inProgress
+        case "REJECTED":    self = .rejected
+        default:            return nil
+        }
+    }
+}
+
 private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
-    init(_ parameter: ResponseMapper._Data._Parameter) {
+    init?(_ parameter: ResponseMapper._Data._Parameter) {
+        
+        guard let dataType = DataType(parameter.dataType)
+        else { return nil }
         
         self.init(
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
-            dataType: parameter.dataType,
+            dataType: dataType,
             group: parameter.group,
             id: parameter.id,
             inputFieldType: .init(parameter.inputFieldType),
@@ -102,9 +118,24 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             subTitle: parameter.subTitle,
             svgImage: parameter.svgImage,
             title: parameter.title,
-            type: parameter.type,
+            type: .init(parameter.type),
             viewType: .init(parameter.viewType)
         )
+    }
+}
+
+extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
+    
+    init?(_ string: String) {
+        
+        guard string != "%String"
+        else { self = .string; return }
+        
+        guard let pairs = try? string.splitDataType(),
+              !pairs.isEmpty
+        else { return nil }
+        
+        self = .pairs(pairs.map { .init(key: $0.key, value: $0.value) })
     }
 }
 
@@ -130,6 +161,18 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.InputFie
         case "RECIPIENT": self = .recipient
         case "VIEW":      self = .view
         default:          return nil
+        }
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldType {
+    
+    init(_ rawValue: ResponseMapper._Data._Parameter.FieldType) {
+        
+        switch rawValue {
+        case .input:      self = .input
+        case .select:     self = .select
+        case .maskList:   self = .maskList
         }
     }
 }
@@ -209,12 +252,19 @@ private extension ResponseMapper._Data {
         let subTitle: String?
         let svgImage: String?
         let title: String
-        let type: String
+        let type: FieldType
         let viewType: ViewType
     }
 }
 
 private extension ResponseMapper._Data._Parameter {
+    
+    enum FieldType: String, Decodable {
+        
+        case input    = "Input"
+        case select   = "Select"
+        case maskList = "MaskList"
+    }
     
     enum ViewType: String, Decodable {
         
