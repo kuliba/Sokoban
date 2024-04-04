@@ -202,6 +202,15 @@ extension PaymentsSelectBankView.ViewModel {
                 ))
                 self.update(value: bankId)
             }
+        } else {
+            
+            if let value = self.value.current {
+                
+                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                    id: value
+                ))
+                self.update(value: value)
+            }
         }
     }
 }
