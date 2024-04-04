@@ -501,6 +501,8 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productType: ProductType = .card,
+        cardStatus: ProductCardData.StatusCard? = .active,
+        cardType: ProductCardData.CardType? = .main,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
         showCVV: ProductView.ViewModel.ShowCVV? = nil,
         size: Appearance.Size = .small,
@@ -521,7 +523,9 @@ final class CardViewComponentTests: XCTestCase {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            showCvv: showCVV
+            showCvv: showCVV,
+            cardType: cardType,
+            cardStatus: cardStatus
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

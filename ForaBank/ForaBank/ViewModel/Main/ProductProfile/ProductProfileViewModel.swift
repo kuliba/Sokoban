@@ -194,9 +194,11 @@ class ProductProfileViewModel: ObservableObject {
                     cardId: cardId,
                     completion: completion)
             },
-            state: alert,
-            event: {
-                switch $0 {
+            event: { [weak self] event in
+                    
+                guard let self else { return }
+                
+                switch event {
                     
                 case .showBlockAlert:
                     self.event(.showBlockAlert)

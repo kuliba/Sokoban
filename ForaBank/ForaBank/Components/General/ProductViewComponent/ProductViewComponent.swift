@@ -44,7 +44,6 @@ extension ProductView {
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
         
-        private let state: Alert.ViewModel?
         private let event: (AlertEvent) -> Void
 
         internal init(
@@ -59,7 +58,6 @@ extension ProductView {
             productType: ProductType,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            state: Alert.ViewModel? = nil,
             event: @escaping (AlertEvent) -> Void = { _ in },
             cardType: ProductCardData.CardType? = nil,
             cardStatus: ProductCardData.StatusCard? = nil
@@ -76,7 +74,6 @@ extension ProductView {
             self.cardAction = cardAction
             self.showCvv = showCvv
             self.config = .config(appearance: appearance)
-            self.state = state
             self.event = event
             self.cardType = cardType
             self.cardStatus = cardStatus
@@ -90,7 +87,6 @@ extension ProductView {
             model: Model,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            state: Alert.ViewModel? = nil,
             event: @escaping (AlertEvent) -> Void = { _ in },
             cardType: ProductCardData.CardType? = nil,
             cardStatus: ProductCardData.StatusCard? = nil
@@ -138,7 +134,6 @@ extension ProductView {
                 productType: productType,
                 cardAction: cardAction,
                 showCvv: showCvv,
-                state: state,
                 event: event,
                 cardType: cardType,
                 cardStatus: cardStatus

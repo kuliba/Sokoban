@@ -30,7 +30,6 @@ extension ProductProfileCardView {
         private let model: Model
         private let cardAction: CardAction?
         private let showCvv: ShowCVV?
-        private let state: Alert.ViewModel?
         private let event: (AlertEvent) -> Void
 
         private var bindings = Set<AnyCancellable>()
@@ -43,7 +42,6 @@ extension ProductProfileCardView {
             model: Model = .emptyMock,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            state: Alert.ViewModel? = nil ,
             event: @escaping (AlertEvent) -> Void = {_ in }
         ) {
             self.selector = selector
@@ -53,7 +51,6 @@ extension ProductProfileCardView {
             self.model = model
             self.cardAction = cardAction
             self.showCvv = showCvv
-            self.state = state
             self.event = event
         }
         
@@ -62,7 +59,6 @@ extension ProductProfileCardView {
             productData: ProductData,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            state: Alert.ViewModel? = nil ,
             event: @escaping (AlertEvent) -> Void = {_ in }
         ) {
             // fetch app products of type
@@ -76,6 +72,17 @@ extension ProductProfileCardView {
             var productsViewModels = [ProductView.ViewModel]()
             for product in productsWithRelated {
                 
+                let cardType: ProductCardData.CardType?
+                let cardStatus: ProductCardData.StatusCard?
+
+                if let card = product as? ProductCardData {
+                    cardType = card.cardType
+                    cardStatus = card.statusCard
+                } else {
+                    cardType = nil
+                    cardStatus = nil
+                }
+                
                 let productViewModel = ProductView.ViewModel(
                     with: product,
                     size: .large,
@@ -83,16 +90,9 @@ extension ProductProfileCardView {
                     model: model,
                     cardAction: cardAction,
                     showCvv: showCvv,
-                    state: state,
                     event: event,
-                    cardType: {
-                        if let card = product as? ProductCardData { return card.cardType }
-                        return .none
-                    }(),
-                    cardStatus: {
-                        if let card = product as? ProductCardData { return card.statusCard }
-                        return .none
-                    }()
+                    cardType: cardType,
+                    cardStatus: cardStatus
                 )
                 productsViewModels.append(productViewModel)
             }
@@ -112,7 +112,6 @@ extension ProductProfileCardView {
             self.model = model
             self.showCvv = showCvv
             self.cardAction = cardAction
-            self.state = state
             self.event = event
             bind()
             bind(selector)
@@ -200,7 +199,6 @@ extension ProductProfileCardView {
                                     model: model,
                                     cardAction: cardAction,
                                     showCvv: showCvv,
-                                    state: state,
                                     event: event,
                                     cardType: {
                                         if let card = product as? ProductCardData { return card.cardType }
