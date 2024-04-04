@@ -404,6 +404,28 @@ extension Model {
         }
     }
     
+    func banksList(
+        _ operation: Payments.Operation
+    ) async -> [String]? {
+
+        switch operation.source {
+        case let .sfp(phone: phone, bankId: _):
+            let banksList = await paymentsByPhoneBankList(phone)
+            return banksList
+            
+        case let .latestPayment(latestPaymentId):
+            if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+                
+                let banksList = await paymentsByPhoneBankList(latestPayment.phoneNumber)
+                return banksList
+                
+            } else {
+                return nil
+            }
+        default:
+            return nil
+        }
+    }
     
     func bankParameter(
         _ operation: Payments.Operation,
