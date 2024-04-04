@@ -10,21 +10,53 @@ import XCTest
 
 struct AnywayPayment: Equatable {
     
+    let hasAmount: Bool
+    let hasOTP: Bool
 }
 
 extension AnywayPayment {
     
     func update(with update: AnywayPaymentUpdate) -> Self {
         
-        .init()
+        .init(
+            hasAmount: update.details.control.needSum,
+            hasOTP: update.details.control.needOTP
+        )
     }
 }
 
 final class UpdateAnywayPaymentTests: XCTestCase {
     
-    func test_() {
+    func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
         
-        assert(makeAnywayPayment(), on: makeAnywayPaymentUpdate()) { _ in }
+        assert(
+            makeNoOTPAnywayPayment(),
+            on: makeAnywayPaymentUpdate(needOTP: false)
+        )
+    }
+    
+    func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: true)
+        let updated = makeNoOTPAnywayPayment().update(with: update)
+        
+        XCTAssert(hasOTPField(updated))
+    }
+    
+    func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
+        
+        assert(
+            makeNoAmountAnywayPayment(),
+            on: makeAnywayPaymentUpdate(needSum: false)
+        )
+    }
+    
+    func test_update_shouldAddAmountFieldOnNeedSumTrue() {
+        
+        let update = makeAnywayPaymentUpdate(needSum: true)
+        let updated = makeNoAmountAnywayPayment().update(with: update)
+        
+        XCTAssert(hasAmountField(updated))
     }
     
     // MARK: - Helpers
@@ -51,10 +83,74 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
+private func hasAmountField(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.hasAmount
+}
+
+private func hasOTPField(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.hasOTP
+}
+
 private func makeAnywayPayment(
+    hasAmount: Bool = false,
+    hasOTP: Bool = false
 ) -> AnywayPayment {
     
-    .init()
+    .init(
+        hasAmount: hasAmount,
+        hasOTP: hasOTP
+    )
+}
+
+private func makeNoAmountAnywayPayment(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment()
+    XCTAssert(!hasAmountField(payment), "Expected no amount field.", file: file, line: line)
+    return payment
+}
+
+private func makeNoOTPAnywayPayment(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment()
+    XCTAssert(!hasOTPField(payment), "Expected no OTP field.", file: file, line: line)
+    return payment
+}
+
+private func makeOTPAnywayPayment(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(hasOTP: true)
+    XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
+    return payment
+}
+
+private func makeAnywayPaymentUpdate(
+    needOTP: Bool = false,
+    needSum: Bool = false
+) -> AnywayPaymentUpdate {
+    
+    makeAnywayPaymentUpdate(
+        details: makeAnywayPaymentUpdateDetails(
+            control: makeAnywayPaymentUpdateDetailsControl(
+                needOTP: needOTP,
+                needSum: needSum
+            )
+        )
+    )
 }
 
 private func makeAnywayPaymentUpdate(
