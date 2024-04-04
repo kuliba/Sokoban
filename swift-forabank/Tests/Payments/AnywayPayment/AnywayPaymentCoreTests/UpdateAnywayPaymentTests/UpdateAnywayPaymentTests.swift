@@ -11,6 +11,7 @@ import XCTest
 struct AnywayPayment: Equatable {
     
     let isFinalStep: Bool
+    let isFraudSuspected: Bool
     let hasAmount: Bool
     let hasOTP: Bool
     var status: Status?
@@ -35,6 +36,7 @@ extension AnywayPayment {
         
         return .init(
             isFinalStep: update.details.control.isFinalStep,
+            isFraudSuspected: update.details.control.isFraudSuspected,
             hasAmount: update.details.control.needSum,
             hasOTP: update.details.control.needOTP,
             status: status
@@ -43,6 +45,30 @@ extension AnywayPayment {
 }
 
 final class UpdateAnywayPaymentTests: XCTestCase {
+    
+    func test_update_shouldNotChangeFraudSuspectedOnFraudSuspectedFalse() {
+        
+        assert(
+            makeAnywayPaymentWithoutFraudSuspected(),
+            on: makeAnywayPaymentUpdate(isFraudSuspected: false)
+        )
+    }
+    
+    func test_update_shouldSetFraudSuspectedOnFraudSuspectedTrue() {
+        
+        let update = makeAnywayPaymentUpdate(isFraudSuspected: true)
+        let updated = makeAnywayPaymentWithoutFraudSuspected().update(with: update)
+        
+        XCTAssert(isFraudSuspected(updated))
+    }
+    
+    func test_update_shouldRemoveFraudSuspectedFieldOnFraudSuspectedFalse() {
+        
+        let update = makeAnywayPaymentUpdate(isFraudSuspected: false)
+        let updated = makeAnywayPaymentWithFraudSuspected().update(with: update)
+        
+        XCTAssertFalse(isFraudSuspected(updated))
+    }
     
     func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
         
@@ -160,13 +186,6 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
-private func isFinalStep(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.isFinalStep
-}
-
 private func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
@@ -181,14 +200,30 @@ private func hasOTPField(
     payment.hasOTP
 }
 
+private func isFinalStep(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.isFinalStep
+}
+
+private func isFraudSuspected(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.isFraudSuspected
+}
+
 private func makeAnywayPayment(
     isFinalStep: Bool = false,
+    isFraudSuspected: Bool = false,
     hasAmount: Bool = false,
     hasOTP: Bool = false
 ) -> AnywayPayment {
     
     .init(
         isFinalStep: isFinalStep,
+        isFraudSuspected: isFraudSuspected,
         hasAmount: hasAmount,
         hasOTP: hasOTP
     )
@@ -211,6 +246,26 @@ private func makeAnywayPaymentWithoutAmount(
     
     let payment = makeAnywayPayment()
     XCTAssertFalse(hasAmountField(payment), "Expected no amount field.", file: file, line: line)
+    return payment
+}
+
+private func makeAnywayPaymentWithFraudSuspected(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(isFraudSuspected: true)
+    XCTAssert(isFraudSuspected(payment), "Expected fraud suspected payment.", file: file, line: line)
+    return payment
+}
+
+private func makeAnywayPaymentWithoutFraudSuspected(
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment()
+    XCTAssertFalse(isFraudSuspected(payment), "Expected pyament without fraud suspected.", file: file, line: line)
     return payment
 }
 
@@ -255,6 +310,7 @@ private func makeNonFinalStepAnywayPayment(
 }
 
 private func makeAnywayPaymentUpdate(
+    isFraudSuspected: Bool = false,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     needOTP: Bool = false,
@@ -265,6 +321,7 @@ private func makeAnywayPaymentUpdate(
         details: makeAnywayPaymentUpdateDetails(
             control: makeAnywayPaymentUpdateDetailsControl(
                 isFinalStep: isFinalStep,
+                isFraudSuspected: isFraudSuspected,
                 needOTP: needOTP,
                 needSum: needSum
             ),
