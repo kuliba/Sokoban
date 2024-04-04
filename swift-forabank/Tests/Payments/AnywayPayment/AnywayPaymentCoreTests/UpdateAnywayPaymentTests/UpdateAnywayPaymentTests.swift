@@ -46,53 +46,7 @@ extension AnywayPayment {
 
 final class UpdateAnywayPaymentTests: XCTestCase {
     
-    func test_update_shouldNotChangeFraudSuspectedOnFraudSuspectedFalse() {
-        
-        assert(
-            makeAnywayPaymentWithoutFraudSuspected(),
-            on: makeAnywayPaymentUpdate(isFraudSuspected: false)
-        )
-    }
-    
-    func test_update_shouldSetFraudSuspectedOnFraudSuspectedTrue() {
-        
-        let update = makeAnywayPaymentUpdate(isFraudSuspected: true)
-        let updated = makeAnywayPaymentWithoutFraudSuspected().update(with: update)
-        
-        XCTAssert(isFraudSuspected(updated))
-    }
-    
-    func test_update_shouldRemoveFraudSuspectedFieldOnFraudSuspectedFalse() {
-        
-        let update = makeAnywayPaymentUpdate(isFraudSuspected: false)
-        let updated = makeAnywayPaymentWithFraudSuspected().update(with: update)
-        
-        XCTAssertFalse(isFraudSuspected(updated))
-    }
-    
-    func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
-        
-        assert(
-            makeAnywayPaymentWithoutOTP(),
-            on: makeAnywayPaymentUpdate(needOTP: false)
-        )
-    }
-    
-    func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
-        
-        let update = makeAnywayPaymentUpdate(needOTP: true)
-        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
-        
-        XCTAssert(hasOTPField(updated))
-    }
-    
-    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
-        
-        let update = makeAnywayPaymentUpdate(needOTP: false)
-        let updated = makeAnywayPaymentWithOTP().update(with: update)
-        
-        XCTAssertFalse(hasOTPField(updated))
-    }
+    // MARK: - amount
     
     func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
         
@@ -118,6 +72,34 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         XCTAssertFalse(hasAmountField(updated))
     }
     
+    // MARK: - fraud
+    
+    func test_update_shouldNotChangeFraudSuspectedOnFraudSuspectedFalse() {
+        
+        assert(
+            makeAnywayPaymentWithoutFraudSuspected(),
+            on: makeAnywayPaymentUpdate(isFraudSuspected: false)
+        )
+    }
+    
+    func test_update_shouldSetFraudSuspectedOnFraudSuspectedTrue() {
+        
+        let update = makeAnywayPaymentUpdate(isFraudSuspected: true)
+        let updated = makeAnywayPaymentWithoutFraudSuspected().update(with: update)
+        
+        XCTAssert(isFraudSuspected(updated))
+    }
+    
+    func test_update_shouldRemoveFraudSuspectedFieldOnFraudSuspectedFalse() {
+        
+        let update = makeAnywayPaymentUpdate(isFraudSuspected: false)
+        let updated = makeAnywayPaymentWithFraudSuspected().update(with: update)
+        
+        XCTAssertFalse(isFraudSuspected(updated))
+    }
+    
+    // MARK: - isFinalStep
+    
     func test_update_shouldNotChangeIsFinalStepFlagOnIsFinalStepFalse() {
         
         assert(
@@ -142,6 +124,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         XCTAssertFalse(isFinalStep(updated))
     }
     
+    // MARK: - infoMessage
+    
     func test_update_shouldNotChangeStatusOnNilInfoMessage() {
         
         assert(
@@ -160,6 +144,32 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         ) {
             $0.status = .infoMessage(message)
         }
+    }
+    
+    // MARK: - OTP
+    
+    func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
+        
+        assert(
+            makeAnywayPaymentWithoutOTP(),
+            on: makeAnywayPaymentUpdate(needOTP: false)
+        )
+    }
+    
+    func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: true)
+        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
+        
+        XCTAssert(hasOTPField(updated))
+    }
+    
+    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: false)
+        let updated = makeAnywayPaymentWithOTP().update(with: update)
+        
+        XCTAssertFalse(hasOTPField(updated))
     }
     
     // MARK: - Helpers
