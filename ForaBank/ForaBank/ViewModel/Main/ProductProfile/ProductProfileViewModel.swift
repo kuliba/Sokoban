@@ -56,10 +56,9 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
-    private let cvvAlertsFactory: CvvAlertsFactory
     private var cardAction: CardAction?
     
-    private let navigationManager: ProductNavigationStateManager
+    private let productNavigationStateManager: ProductNavigationStateManager
 
     private var bindings = Set<AnyCancellable>()
     
@@ -86,8 +85,7 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
-         cvvAlertsFactory: CvvAlertsFactory,
-         navigationManager: ProductNavigationStateManager,
+         productNavigationStateManager: ProductNavigationStateManager,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String,
          scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -108,10 +106,9 @@ class ProductProfileViewModel: ObservableObject {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
-        self.cvvAlertsFactory = cvvAlertsFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
-        self.navigationManager = navigationManager
+        self.productNavigationStateManager = productNavigationStateManager
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         self.bottomSheetSubject
             //.removeDuplicates(by: <#T##(BottomSheet?, BottomSheet?) -> Bool#>)
@@ -142,8 +139,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
-        cvvAlertsFactory: CvvAlertsFactory,
-        navigationManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductNavigationStateManager,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -175,8 +171,7 @@ class ProductProfileViewModel: ObservableObject {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
-            cvvAlertsFactory: cvvAlertsFactory,
-            navigationManager: navigationManager,
+            productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
             rootView: rootView,
             scheduler: scheduler
@@ -1575,8 +1570,7 @@ private extension ProductProfileViewModel {
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
-            cvvAlertsFactory: cvvAlertsFactory,
-            navigationManager: navigationManager,
+            productNavigationStateManager: productNavigationStateManager,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -2417,7 +2411,7 @@ extension ProductProfileViewModel {
     
     func event(_ event: AlertEvent) {
 
-        let (alert, _) = navigationManager.alertReduce(alert, event)
+        let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
         alertSubject.send(alert)
         
         /*if let effect {

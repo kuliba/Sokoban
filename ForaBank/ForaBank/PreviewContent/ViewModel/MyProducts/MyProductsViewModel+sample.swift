@@ -28,8 +28,7 @@ extension MyProductsViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            cvvAlertsFactory: .preview,
-            navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
+            productNavigationStateManager: .preview
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {}
@@ -54,8 +53,7 @@ extension MyProductsViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            cvvAlertsFactory: .preview,
-            navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
+            productNavigationStateManager: .preview
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],

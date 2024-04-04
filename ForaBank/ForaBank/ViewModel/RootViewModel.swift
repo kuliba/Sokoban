@@ -28,9 +28,10 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
+    private let productNavigationStateManager: ProductNavigationStateManager
+
     let model: Model
     private let infoDictionary: [String : Any]?
-    private let cvvAlertsFactory: CvvAlertsFactory
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
@@ -38,17 +39,18 @@ class RootViewModel: ObservableObject, Resetable {
     init(
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
+        productNavigationStateManager: ProductNavigationStateManager,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
-        cvvAlertsFactory: CvvAlertsFactory,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
+        self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -56,7 +58,6 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
-        self.cvvAlertsFactory = cvvAlertsFactory
         self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions

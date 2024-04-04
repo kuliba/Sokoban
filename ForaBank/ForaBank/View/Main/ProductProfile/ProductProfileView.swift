@@ -428,8 +428,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
-        cvvAlertsFactory: .preview,
-        navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce),
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -447,8 +446,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
-        cvvAlertsFactory: .preview,
-        navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce),
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

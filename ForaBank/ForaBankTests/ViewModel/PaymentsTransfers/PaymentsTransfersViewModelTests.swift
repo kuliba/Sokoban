@@ -734,8 +734,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
-            cvvAlertsFactory: .preview, 
-            navigationManager: .preview
+            productNavigationStateManager: .preview
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
