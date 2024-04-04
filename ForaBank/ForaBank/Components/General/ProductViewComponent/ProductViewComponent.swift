@@ -58,7 +58,7 @@ extension ProductView {
             productType: ProductType,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            event: @escaping (AlertEvent) -> Void = { _ in },
+            event: @escaping (Event) -> Void = { _ in },
             cardType: ProductCardData.CardType? = nil,
             cardStatus: ProductCardData.StatusCard? = nil
         ) {
@@ -87,7 +87,7 @@ extension ProductView {
             model: Model,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            event: @escaping (AlertEvent) -> Void = { _ in },
+            event: @escaping (Event) -> Void = { _ in },
             cardType: ProductCardData.CardType? = nil,
             cardStatus: ProductCardData.StatusCard? = nil
         ) {
@@ -772,6 +772,11 @@ extension ProductView.ViewModel {
             }
         }
     }
+}
+
+extension ProductView.ViewModel {
+    
+    typealias Event = AlertEvent
 }
 
 //MARK: - Preview

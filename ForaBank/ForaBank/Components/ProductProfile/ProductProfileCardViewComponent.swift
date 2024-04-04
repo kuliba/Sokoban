@@ -42,7 +42,7 @@ extension ProductProfileCardView {
             model: Model = .emptyMock,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            event: @escaping (AlertEvent) -> Void = {_ in }
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             self.selector = selector
             self.products = products
@@ -59,7 +59,7 @@ extension ProductProfileCardView {
             productData: ProductData,
             cardAction: CardAction? = nil,
             showCvv: ShowCVV? = nil,
-            event: @escaping (AlertEvent) -> Void = {_ in }
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
@@ -388,6 +388,11 @@ enum ProductProfileCardViewModelAction {
         let title: String
         let message: String
     }
+}
+
+extension ProductProfileCardView.ViewModel {
+    
+    typealias Event = AlertEvent
 }
 
 extension ProductProfileCardView.ViewModel {
