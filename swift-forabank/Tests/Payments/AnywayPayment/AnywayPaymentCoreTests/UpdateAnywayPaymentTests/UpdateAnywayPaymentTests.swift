@@ -107,6 +107,44 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         XCTAssertFalse(hasAmountField(updated))
     }
     
+    // MARK: - complimentary fields
+    
+    func test_update_shouldAppendComplementaryField() {
+        
+        let update = makeAnywayPaymentUpdate(
+            fields: [
+                makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
+            ]
+        )
+        
+        assert(makeAnywayPayment(), on: update) {
+            
+            $0.fields = [
+                .init(id: .string("a"), value: "aa", title: "aaa"),
+            ]
+        }
+    }
+    
+    func test_update_shouldAppendComplementaryFields() {
+        
+        let update = makeAnywayPaymentUpdate(
+            fields: [
+                makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
+                makeAnywayPaymentUpdateField("b", value: "bb", title: "bbb"),
+                makeAnywayPaymentUpdateField("c", value: "cc", title: "ccc")
+            ]
+        )
+        
+        assert(makeAnywayPayment(), on: update) {
+            
+            $0.fields = [
+                .init(id: .string("a"), value: "aa", title: "aaa"),
+                .init(id: .string("b"), value: "bb", title: "bbb"),
+                .init(id: .string("c"), value: "cc", title: "ccc"),
+            ]
+        }
+    }
+    
     // MARK: - fraud
     
     func test_update_shouldNotChangeFraudSuspectedOnFraudSuspectedFalse() {
@@ -210,52 +248,32 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let emptyComplementaryFields = [ComplementaryField]()
+        let emptyFields = [AnywayPaymentUpdate.Field]()
         let update = makeAnywayPaymentUpdate(
-            complementaryFields: emptyComplementaryFields,
+            fields: emptyFields,
             needOTP: true
         )
         
         let updated = payment.update(with: update)
         
-        assertOTP(in: updated, precedes: emptyComplementaryFields)
+        assertOTP(in: updated, precedes: emptyFields)
     }
     
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let complementaryFields = makeComplementaryFields()
+        let updateFields = [
+            makeAnywayPaymentUpdateField(),
+            makeAnywayPaymentUpdateField(),
+        ]
         let update = makeAnywayPaymentUpdate(
-            complementaryFields: complementaryFields,
+            fields: updateFields,
             needOTP: true
         )
         
         let updated = payment.update(with: update)
         
-        assertOTP(in: updated, precedes: complementaryFields)
-    }
-    
-    // MARK: - complimentary fields
-    
-    func test_update_shouldAppendComplementaryFieldsAsInfo() {
-        
-        let complementaryFields = [
-            makeComplementaryField("a", value: "aa", title: "aaa"),
-            makeComplementaryField("b", value: "bb", title: "bbb"),
-            makeComplementaryField("c", value: "cc", title: "ccc")
-        ]
-        let update = makeAnywayPaymentUpdate(
-            complementaryFields: complementaryFields
-        )
-        
-        assert(makeAnywayPayment(), on: update) {
-            
-            $0.fields = [
-                .init(id: .string("a"), value: "aa", title: "aaa"),
-                .init(id: .string("b"), value: "bb", title: "bbb"),
-                .init(id: .string("c"), value: "cc", title: "ccc"),
-            ]
-        }
+        assertOTP(in: updated, precedes: updateFields)
     }
     
     // MARK: - Helpers
@@ -282,26 +300,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
-private struct ComplementaryField: Identifiable {
-    
-    let id: String
-    let value: String
-    let title: String
-    
-    var field: AnywayPayment.Field {
-        
-        .init(id: .string(id), value: value, title: title)
-    }
-    
-    var updateField: AnywayPaymentUpdate.Field {
-        
-        makeAnywayPaymentUpdateField(self)
-    }
-}
-
 private func assertOTP(
     in payment: AnywayPayment,
-    precedes complementaryFields: [ComplementaryField],
+    precedes fields: [AnywayPaymentUpdate.Field],
     file: StaticString = #file,
     line: UInt = #line
 ) {
@@ -311,13 +312,25 @@ private func assertOTP(
         file: file, line: line
     )
     
-    let fields = complementaryFields.map(\.field)
+    let fields = fields.map(\.field)
     
     XCTAssert(
         payment.fields.isElementAfterAll(.otp, inGroup: fields),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
+}
+
+private extension AnywayPaymentUpdate.Field {
+    
+    var field: AnywayPayment.Field {
+        
+        .init(
+            id: .string(fieldName),
+            value: fieldValue,
+            title: fieldTitle
+        )
+    }
 }
 
 private func hasAmountField(
@@ -431,27 +444,6 @@ private func makeAnywayPaymentWithoutOTP(
     return payment
 }
 
-private func makeComplementaryField(
-    _ idString: String = UUID().uuidString,
-    value: String = UUID().uuidString,
-    title: String = UUID().uuidString
-) -> ComplementaryField {
-    
-    .init(id: idString, value: value, title: title)
-}
-
-private func makeComplementaryFields(
-    _ ids: [String] = [UUID().uuidString],
-    file: StaticString = #file,
-    line: UInt = #line
-) -> [ComplementaryField] {
-    
-    let fields = ids.map { _ in makeComplementaryField() }
-    
-    XCTAssertFalse(fields.isEmpty, "Expected non-empty array of ComplementaryFields", file: file, line: line)
-    return fields
-}
-
 private func makeFinalStepAnywayPayment(
     file: StaticString = #file,
     line: UInt = #line
@@ -473,7 +465,7 @@ private func makeNonFinalStepAnywayPayment(
 }
 
 private func makeAnywayPaymentUpdate(
-    complementaryFields: [ComplementaryField] = [],
+    fields: [AnywayPaymentUpdate.Field] = [],
     isFraudSuspected: Bool = false,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
@@ -493,21 +485,7 @@ private func makeAnywayPaymentUpdate(
                 infoMessage: infoMessage
             )
         ),
-        fields: complementaryFields.map(\.updateField)
-    )
-}
-
-private func makeAnywayPaymentUpdateField(
-    _ field: ComplementaryField
-) -> AnywayPaymentUpdate.Field {
-    
-    .init(
-        fieldName: field.id,
-        fieldValue: field.value,
-        fieldTitle: field.title,
-        recycle: false,
-        svgImage: nil,
-        typeIdParameterList: nil
+        fields: fields
     )
 }
 
@@ -591,5 +569,21 @@ private func makeAnywayPaymentUpdateDetailsInfo(
         payeeName: payeeName,
         paymentOperationDetailID: paymentOperationDetailID,
         printFormType: printFormType
+    )
+}
+
+private func makeAnywayPaymentUpdateField(
+    _ name: String = UUID().uuidString,
+    value: String = UUID().uuidString,
+    title: String = UUID().uuidString
+) -> AnywayPaymentUpdate.Field {
+    
+    .init(
+        fieldName: name,
+        fieldValue: value,
+        fieldTitle: title,
+        recycle: false,
+        svgImage: nil,
+        typeIdParameterList: nil
     )
 }
